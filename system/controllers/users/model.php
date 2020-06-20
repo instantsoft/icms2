@@ -45,12 +45,13 @@ class modelUsers extends cmsModel {
 
             unset($user['pass_token'], $user['password'], $user['password_salt'], $user['password_hash']);
 
+            $user['slug']            = !empty($user['slug']) ? $user['slug'] : $user['id'];
             $user['groups']          = cmsModel::yamlToArray($user['groups']);
             $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
             $user['theme']           = cmsModel::yamlToArray($user['theme']);
             $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
-            $user['item_css_class']  = array();
-            $user['notice_title']    = array();
+            $user['item_css_class']  = [];
+            $user['notice_title']    = [];
             $user['ctype_name']      = 'users';
 
             if (is_array($actions)){
@@ -163,6 +164,7 @@ class modelUsers extends cmsModel {
 
         if (!$user) { return false; }
 
+        $user['slug']            = !empty($user['slug']) ? $user['slug'] : $user['id'];
         $user['groups']          = cmsModel::yamlToArray($user['groups']);
         $user['theme']           = cmsModel::yamlToArray($user['theme']);
         $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
@@ -170,7 +172,13 @@ class modelUsers extends cmsModel {
         $user['ctype_name']      = 'users';
 
         return $user;
+    }
 
+    public function getUserBySlug($slug){
+
+        if(!$slug){ return false; }
+
+        return $this->filterEqual('slug', $slug)->getUser();
     }
 
     public function getUserByEmail($email){
@@ -178,7 +186,6 @@ class modelUsers extends cmsModel {
         if(!$email){ return false; }
 
         return $this->filterEqual('email', $email)->getUser();
-
     }
 
     public function getUserByAuth($email, $password) {
@@ -689,6 +696,7 @@ class modelUsers extends cmsModel {
         $this->selectList(array(
             'i.id'             => 'id',
             'i.email'          => 'email',
+            'i.slug'           => 'slug',
             'i.nickname'       => 'nickname',
             'i.notify_options' => 'notify_options'
         ), true);
@@ -702,6 +710,7 @@ class modelUsers extends cmsModel {
 
         $users = $this->get('{users}', function($user, $model){
 
+            $user['slug']           = !empty($user['slug']) ? $user['slug'] : $user['id'];
             $user['notify_options'] = cmsModel::yamlToArray($user['notify_options']);
 
             return $user;

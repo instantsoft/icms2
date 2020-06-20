@@ -2515,6 +2515,7 @@ class modelContent extends cmsModel {
         $table_name = $this->table_prefix . $ctype_name;
 
         $this->select('u.nickname', 'user_nickname');
+        $this->select('u.slug', 'user_slug');
         $this->select('u.avatar', 'user_avatar');
         $this->select('u.groups', 'user_groups');
         $this->select('f.title', 'folder_title');
@@ -2536,6 +2537,7 @@ class modelContent extends cmsModel {
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
+                'slug'      => $item['user_slug'],
                 'nickname'  => $item['user_nickname'],
                 'avatar'    => $item['user_avatar'],
                 'groups'    => $item['user_groups'],
@@ -2581,6 +2583,7 @@ class modelContent extends cmsModel {
             $item['user'] = array(
                 'id'       => $item['user_id'],
                 'groups'   => $item['user_groups'],
+                'slug'     => $item['user_slug'],
                 'nickname' => $item['user_nickname'],
                 'avatar'   => $item['user_avatar']
             );

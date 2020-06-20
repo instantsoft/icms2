@@ -4,7 +4,7 @@ class onUsersSitemapUrls extends cmsAction {
 
     public function run($type){
 
-        $urls = array();
+        $urls = [];
 
         if ($type != 'profiles') { return $urls; }
 
@@ -13,6 +13,7 @@ class onUsersSitemapUrls extends cmsAction {
             limit(false)->
             selectOnly('i.id', 'id')->
             select('i.nickname', 'nickname')->
+            select('i.slug', 'slug')->
             select('i.date_log', 'date_log');
 
         $users = $this->model->get('{users}');
@@ -22,7 +23,7 @@ class onUsersSitemapUrls extends cmsAction {
                 $urls[] = array(
                     'last_modified' => $user['date_log'],
                     'title'         => $user['nickname'],
-                    'url'           => href_to_abs($this->name, $user['id'])
+                    'url'           => href_to_abs($this->name, (!empty($user['slug']) ? $user['slug'] : $user['id']))
                 );
             }
         }

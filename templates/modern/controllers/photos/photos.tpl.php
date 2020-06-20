@@ -18,7 +18,7 @@
         </a>
         <div class="icms-photo-album__photo_info d-flex align-items-center justify-content-between">
             <?php if(!empty($photo['user']['nickname'])){ ?>
-                <a class="text-truncate" title="<?php echo LANG_AUTHOR; ?>" href="<?php echo href_to('users', $photo['user']['id']); ?>">
+                <a class="text-truncate" title="<?php echo LANG_AUTHOR; ?>" href="<?php echo href_to_profile($photo['user']); ?>">
                     <?php html($photo['user']['nickname']); ?>
                 </a>
             <?php } ?>

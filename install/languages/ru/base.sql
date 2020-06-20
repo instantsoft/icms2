@@ -861,7 +861,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (183, 'form_groups_options', 'wall', 183, 1),
 (184, 'form_users_options', 'wall', 184, 1),
 (185, 'user_privacy_types', 'wall', 185, 1),
-(186, 'ctype_field_users_after_update', 'bootstrap4', 186, 1);
+(186, 'ctype_field_users_after_update', 'bootstrap4', 186, 1),
+(187, 'widget_menu_form', 'bootstrap4', 187, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -1395,6 +1396,7 @@ CREATE TABLE `{#}users` (
   `password_salt` varchar(16) DEFAULT NULL COMMENT 'Соль пароля (устаревшее поле)',
   `is_admin` tinyint(1) unsigned DEFAULT NULL COMMENT 'Администратор?',
   `nickname` varchar(100) NOT NULL COMMENT 'Имя',
+  `slug` varchar(100) DEFAULT NULL,
   `date_reg` timestamp NULL DEFAULT NULL COMMENT 'Дата регистрации',
   `date_log` timestamp NULL DEFAULT NULL COMMENT 'Дата последней авторизации',
   `date_group` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Время последней смены группы',
@@ -1445,7 +1447,8 @@ CREATE TABLE `{#}users` (
   KEY `date_group` (`date_group`),
   KEY `inviter_id` (`inviter_id`),
   KEY `date_invites` (`date_invites`),
-  KEY `ip` (`ip`)
+  KEY `ip` (`ip`),
+  KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Пользователи';
 
 INSERT INTO `{#}users` (`id`, `groups`, `email`, `password_hash`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `pass_token`, `date_token`, `friends_count`, `subscribers_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `city_cache`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES

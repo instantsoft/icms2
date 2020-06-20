@@ -17,6 +17,11 @@ class actionAdminWidgetsEdit extends cmsAction {
             return cmsCore::error404();
         }
 
+        $tpls = cmsCore::getTemplates();
+        if (!in_array($template, $tpls)) {
+            $template = cmsConfig::get('template');
+        }
+
         $widget = cmsCore::getModel('widgets')->getWidgetBinding($binded_id);
         if (!$widget) {
             return cmsCore::error404();
@@ -29,6 +34,10 @@ class actionAdminWidgetsEdit extends cmsAction {
         $widget_object = cmsCore::getWidgetObject($widget);
 
         $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], $widget['options'], $template, $widget_object->isAllowCacheableOption());
+
+        $widget_event_name = 'widget_'.($widget['controller'] ? $widget['controller'].'_' : '').$widget['name'].'_form';
+
+        list($form, $widget, $widget_object, $template) = cmsEventsManager::hook(['widget_form', $widget_event_name], [$form, $widget, $widget_object, $template]);
 
         return $this->cms_template->render('widgets_settings', array(
             'form'   => $form,

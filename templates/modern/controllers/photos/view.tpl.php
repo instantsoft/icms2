@@ -66,14 +66,14 @@
     </div>
     <div class="col-sm col-lg-4">
         <div class="d-flex align-items-center mb-3 mt-3 mt-lg-0">
-            <a href="<?php echo href_to('users', $photo['user']['id']); ?>" class="icms-user-avatar mr-2 small <?php if (!empty($photo['user']['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
+            <a href="<?php echo href_to_profile($photo['user']); ?>" class="icms-user-avatar mr-2 small <?php if (!empty($photo['user']['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
                 <?php if($photo['user']['avatar']){ ?>
                     <?php echo html_avatar_image($photo['user']['avatar'], 'micro', $photo['user']['nickname']); ?>
                 <?php } else { ?>
                     <?php echo html_avatar_image_empty($photo['user']['nickname'], 'avatar__mini'); ?>
                 <?php } ?>
             </a>
-            <a href="<?php echo href_to('users', $photo['user']['id']); ?>" title="<?php echo LANG_AUTHOR ?>" class="mr-2">
+            <a href="<?php echo href_to_profile($photo['user']); ?>" title="<?php echo LANG_AUTHOR ?>" class="mr-2">
                 <?php echo $photo['user']['nickname']; ?>
             </a>
             <span class="text-muted" title="<?php echo LANG_DATE_PUB; ?>">

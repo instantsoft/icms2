@@ -1316,6 +1316,7 @@ class cmsModel {
         if (!$user_fields){
             $user_fields = array(
                 $as . '.nickname'   => 'user_nickname',
+                $as . '.slug'       => 'user_slug',
                 $as . '.is_deleted' => 'user_is_deleted',
                 $as . '.groups'     => 'user_groups',
                 $as . '.avatar'     => 'user_avatar'

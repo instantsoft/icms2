@@ -38,6 +38,11 @@ class actionAdminWidgetsAdd extends cmsAction {
         $widget_object = cmsCore::getWidgetObject($widget_bind);
 
         $form = $this->getWidgetOptionsForm($widget_bind['name'], $widget_bind['controller'], false, $template, $widget_object->isAllowCacheableOption());
+
+        $widget_event_name = 'widget_'.($widget_bind['controller'] ? $widget_bind['controller'].'_' : '').$widget_bind['name'].'_form';
+
+        list($form, $widget_bind, $widget_object, $template) = cmsEventsManager::hook(['widget_form', $widget_event_name], [$form, $widget_bind, $widget_object, $template]);
+
         $data = $form->parse(new cmsRequest($widget_bind));
 
         $widgets_model->updateWidgetBinding($res['id'], $data);

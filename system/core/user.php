@@ -473,7 +473,7 @@ class cmsUser {
         // если используете ТОЛЬКО https, раскомментируйте строку ниже,
         // а следующую за ней закомментируйте
         //session_set_cookie_params(0, '/', $cookie_domain, true, true);
-        session_set_cookie_params(0, '/', $cookie_domain, false, true);
+        session_set_cookie_params(0, '/;SameSite=Lax', $cookie_domain, false, true);
 
         session_start();
 
@@ -550,8 +550,18 @@ class cmsUser {
             $domain = $cookie_domain;
         }
 
-        return setcookie('icms['.$key.']', $value, time()+$time, $path, $domain, false, $http_only);
-
+        if (PHP_VERSION_ID < 70300) {
+            return setcookie('icms['.$key.']', $value, time()+$time, $path, $domain, false, $http_only);
+        } else {
+            return setcookie('icms['.$key.']', $value, [
+                'expires'  => time() + $time,
+                'path'     => $path,
+                'domain'   => $domain,
+                'samesite' => 'Lax',
+                'secure'   => false,
+                'httponly' => $http_only
+            ]);
+        }
     }
 
     public static function setCookiePublic($key, $value, $time=3600, $path='/'){

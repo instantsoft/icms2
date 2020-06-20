@@ -1,0 +1,24 @@
+<?php
+define('LANG_BS4_MENU_TYPE', 'Тип меню');
+define('LANG_BS4_MENU_TYPE_NAV', 'Обычное меню');
+define('LANG_BS4_MENU_TYPE_NAVBAR', 'Навигационная панель');
+define('LANG_BS4_NAVBAR_EXPAND', 'Показывать меню на разрешениях');
+define('LANG_BS4_NAVBAR_EXPAND_ON', 'Показывать на разрешениях %s');
+define('LANG_BS4_NAVBAR_COLOR_SCHEME', 'Цветовая схема блока, где расположено меню');
+define('LANG_BS4_NAVBAR_COLOR_SCHEME_D', 'Темная');
+define('LANG_BS4_NAVBAR_COLOR_SCHEME_L', 'Светлая');
+define('LANG_BS4_SHOW_SEARCH_FORM', 'Показывать форму поиска');
+define('LANG_BS4_SHOW_SEARCH_FORM_2', 'Только когда меню скрыто');
+define('LANG_BS4_TOGGLER_ICON', 'Показывать иконку показа меню, когда оно скрыто');
+define('LANG_BS4_TOGGLER_ICON_HINT', 'Если выключено, вы можете разместить HTML иконки на любой другой позиции');
+define('LANG_BS4_TOGGLER_SHOW_SITENAME', 'Показывать название сайта');
+define('LANG_BS4_MENU_NAV_STYLE', 'Расположение меню');
+define('LANG_BS4_MENU_NAV_STYLE_HL', 'Горизонтальное, по левому краю');
+define('LANG_BS4_MENU_NAV_STYLE_HC', 'Горизонтальное, по центру');
+define('LANG_BS4_MENU_NAV_STYLE_HR', 'Горизонтальное, по правому краю');
+define('LANG_BS4_MENU_NAV_STYLE_V', 'Вертикальное');
+define('LANG_BS4_MENU_NAV_STYLE_COLUMN', 'Становиться вертикальным при разрешениях');
+define('LANG_BS4_MENU_IS_PILLS', 'Активные пункты как кнопки');
+define('LANG_BS4_MENU_IS_FILL', 'Заполнять всю ширину контейнера');
+define('LANG_BS4_MENU_IS_FILL_JUS', 'Равного размера');
+define('LANG_BS4_ALWAYS_SHOW', 'Всегда показывать');

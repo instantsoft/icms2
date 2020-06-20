@@ -270,6 +270,7 @@ icms.forms = (function ($) {
             _this.form_changed = (JSON.stringify(init_data[form.attr('data-notice_id')]) !== JSON.stringify(_this.toJSON(form))) ? true : false;
         });
         $(document).on('submit', 'form', function () {
+            $(this).find('.button-submit').addClass('disabled is-busy');
             icms.forms.submitted = true;
         });
         $(window).on('beforeunload', function (e) {
@@ -318,7 +319,7 @@ icms.forms = (function ($) {
     this.submit = function(selector){
         selector = selector || '.button-submit';
         icms.forms.submitted = true;
-        $(selector).trigger('click');
+        $(selector).addClass('disabled is-busy').trigger('click');
     };
 
 	this.updateChildList = function (child_id, url, value, current_value){
@@ -374,11 +375,11 @@ icms.forms = (function ($) {
 
         var submit_btn = $(form).find('.button-submit');
 
-        $(submit_btn).prop('disabled', true);
+        $(submit_btn).prop('disabled', true).addClass('is-busy');
 
         $.post(url, form_data, function(result){
 
-            $(submit_btn).prop('disabled', false);
+            $(submit_btn).prop('disabled', false).removeClass('is-busy');
 
             if (result.errors == false){
                 if ("callback" in result){

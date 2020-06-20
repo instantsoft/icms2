@@ -12,7 +12,7 @@
                     <a href="<?php echo $url; ?>" target="_blank"><?php html($item['title']); ?></a>
                 </b>
                 <div class="small">
-                    <a href="<?php echo href_to('users', $item['user']['id']); ?>" class="mr-2">
+                    <a href="<?php echo href_to_profile($item['user']); ?>" class="mr-2">
                     <?php html_svg_icon('solid', 'user'); ?>
                     <?php html($item['user']['nickname']); ?>
                 </a>

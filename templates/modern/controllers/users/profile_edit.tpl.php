@@ -7,7 +7,7 @@
     if($this->controller->listIsAllowed()){
         $this->addBreadcrumb(LANG_USERS, href_to('users'));
     }
-    $this->addBreadcrumb($profile['nickname'], href_to('users', $id));
+    $this->addBreadcrumb($profile['nickname'], href_to_profile($profile));
 
     $this->addToolButton(array(
         'class' => 'save',

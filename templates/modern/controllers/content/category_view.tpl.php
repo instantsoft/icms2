@@ -100,7 +100,7 @@
     <?php } else { ?>
         <ul class="list-inline icms-content-subcats">
             <?php foreach($subcats as $c){ ?>
-                <li class="list-inline-item h4 text-warning <?php echo $c['list_params']['class']; ?>">
+                <li class="list-inline-item h4 text-warning mr-3 <?php echo $c['list_params']['class']; ?>">
                     <?php html_svg_icon('solid', 'folder'); ?>
                     <a href="<?php echo $c['list_params']['href']; ?>">
                         <?php echo $c['title']; ?>

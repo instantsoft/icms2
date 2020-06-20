@@ -1,6 +1,7 @@
 <?php
 
     define('LANG_ADMIN_CONTROLLER',     'Панель управления');
+    define('LANG_CP_NEVER',                      'Никогда');
     define('LANG_CP_INSTALL_FOLDER_EXISTS',     'Внимание! Директория установки <b>/install</b> не удалена.');
     define('LANG_CP_TOOLTIP_HELP',              'Полезная документация к разделу');
     define('LANG_CP_TOOLTIP_HELP_HINT',         'Отключить анимацию можно в настройках шаблона');

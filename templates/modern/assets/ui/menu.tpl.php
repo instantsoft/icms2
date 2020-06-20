@@ -50,7 +50,7 @@
                     if(!isset($icon_params[1])){ array_unshift($icon_params, 'solid'); }
                     html_svg_icon($icon_params[0], $icon_params[1]);
                 } ?>
-                <?php if (!empty($item['title'])) { html($item['title']); } ?>
+                <?php if (!empty($item['title'])) { echo $item['title']; } ?>
                 <?php if (!empty($item['counter'])){ ?>
                     <span class="counter badge badge-primary"><?php html($item['counter']); ?></span>
                 <?php } ?>

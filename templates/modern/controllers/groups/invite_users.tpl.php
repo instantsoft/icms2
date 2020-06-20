@@ -16,7 +16,7 @@
 } ?>
 
 <div id="ivite_users_list"><?php echo $profiles_list_html; ?></div>
-
+<?php ob_start(); ?>
 <script type="text/javascript">
     function inviteFormSuccess (current_user, result){
         $(current_user).addClass('invite_sended');
@@ -24,3 +24,4 @@
         $(current_user).find('.actions').attr('data-notice_title', result.text);
     }
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

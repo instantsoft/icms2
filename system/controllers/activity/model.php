@@ -120,6 +120,7 @@ class modelActivity extends cmsModel{
 
         $this->select('u.nickname', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
+        $this->select('u.slug', 'user_slug');
         $this->join('{users}', 'u', 'u.id = i.user_id AND u.is_deleted IS NULL');
 
         $this->is_joined_user = true;
@@ -164,6 +165,7 @@ class modelActivity extends cmsModel{
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
+                'slug'      => $item['user_slug'],
                 'nickname'  => $item['user_nickname'],
                 'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']

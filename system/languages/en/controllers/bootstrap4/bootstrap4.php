@@ -1,0 +1,24 @@
+<?php
+define('LANG_BS4_MENU_TYPE', 'Menu Type');
+define('LANG_BS4_MENU_TYPE_NAV', 'Base nav');
+define('LANG_BS4_MENU_TYPE_NAVBAR', 'Navbar');
+define('LANG_BS4_NAVBAR_EXPAND', 'Show menu at resolutions');
+define('LANG_BS4_NAVBAR_EXPAND_ON', 'Show at %s resolutions');
+define('LANG_BS4_NAVBAR_COLOR_SCHEME', 'Menu block color scheme');
+define('LANG_BS4_NAVBAR_COLOR_SCHEME_D', 'Dark');
+define('LANG_BS4_NAVBAR_COLOR_SCHEME_L', 'Light');
+define('LANG_BS4_SHOW_SEARCH_FORM', 'Show search form');
+define('LANG_BS4_SHOW_SEARCH_FORM_2', 'Only when the menu is hidden');
+define('LANG_BS4_TOGGLER_ICON', 'Show the menu icon when it is hidden');
+define('LANG_BS4_TOGGLER_ICON_HINT', 'If disabled, you can place HTML icons in any other position');
+define('LANG_BS4_TOGGLER_SHOW_SITENAME', 'Show site name');
+define('LANG_BS4_MENU_NAV_STYLE', 'Menu style');
+define('LANG_BS4_MENU_NAV_STYLE_HL', 'Horizontal, Left');
+define('LANG_BS4_MENU_NAV_STYLE_HC', 'Horizontal, centered');
+define('LANG_BS4_MENU_NAV_STYLE_HR', 'Horizontal, Right');
+define('LANG_BS4_MENU_NAV_STYLE_V', 'Vertical');
+define('LANG_BS4_MENU_NAV_STYLE_COLUMN', 'Change to vertical at resolutions');
+define('LANG_BS4_MENU_IS_PILLS', 'Active items as buttons');
+define('LANG_BS4_MENU_IS_FILL', 'Fill the entire width of the container');
+define('LANG_BS4_MENU_IS_FILL_JUS', 'Equal Size');
+define('LANG_BS4_ALWAYS_SHOW', 'Always show');

@@ -1,11 +1,15 @@
 <?php
 /**
- * 2.13.1 => 2.13.2
+ * 2.13.1 => 2.14.0
  */
 function install_package(){
 
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
+
+    if(!$core->db->isFieldExists('{users}', 'slug')){
+        $core->db->query("ALTER TABLE `{users}` ADD `slug` VARCHAR(100) NULL DEFAULT NULL AFTER `nickname`, ADD INDEX (`slug`);");
+    }
 
     if(!$core->db->isFieldExists('geo_countries', 'is_enabled')){
         $core->db->query("ALTER TABLE `{#}geo_countries` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");

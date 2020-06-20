@@ -52,7 +52,7 @@
             <?php echo html_submit($attributes['submit']['title'], 'submit', $attributes['submit']); ?>
         <?php } ?>
         <?php if ($attributes['cancel']['show']) { echo html_button($attributes['cancel']['title'], 'cancel', "location.href='{$attributes['cancel']['href']}'", array('class'=>'btn-secondary button-cancel')); } ?>
-        <?php if(isset($attributes['buttons'])){ ?>
+        <?php if(!empty($attributes['buttons'])){ ?>
             <div class="dropdown d-inline-block dropup">
                 <button class="btn btn-secondary" type="button" data-toggle="dropdown" data-display="static">
                     <?php html_svg_icon('solid', 'ellipsis-h'); ?>

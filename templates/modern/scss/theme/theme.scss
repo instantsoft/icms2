@@ -18,6 +18,13 @@
 // Кастомный SCSS
 @import "custom";
 
+.icms-user-menu {
+    background-color: rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    &.show {
+        background-color: rgba(0, 0, 0, 0.25);
+    }
+}
 .loading {
     background-image: url("../images/loading.svg");
     background-repeat: no-repeat;
@@ -34,7 +41,9 @@ input.loading {
         background-position: $input-padding-x-sm center;
     }
 }
-
+button.loading {
+    background-position: center center;
+}
 .is_collapse > .field, .is_collapse > .field_tabbed, .hide_field {
     display: none !important;
 }

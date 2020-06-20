@@ -61,7 +61,7 @@
             <?php if ($content_counts) { ?>
                 <?php foreach($content_counts as $ctype_name=>$count){ ?>
                     <?php if (!$count['is_in_list']) { continue; } ?>
-                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-2" href="<?php echo href_to('users', $profile['id'], array('content', $ctype_name)); ?>">
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-2" href="<?php echo href_to_profile($profile, ['content', $ctype_name]); ?>">
                         <?php html($count['title']); ?>
                         <span class="badge badge-primary"><?php html($count['count']); ?></span>
                     </a>

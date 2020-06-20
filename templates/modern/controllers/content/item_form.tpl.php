@@ -66,10 +66,9 @@
         'action' => '',
         'submit' => array('title' => $button_save_text, 'show' => (isset($show_save_button) ? $show_save_button : true)),
         'cancel' => array('show' => (bool)$cancel_url, 'href' => $cancel_url),
-        'buttons' => array(
+        'buttons' => $hide_draft_btn ? [] : array(
             array(
                 'title' => $button_draft_text,
-                'hide' => $hide_draft_btn,
                 'name' => 'to_draft',
                 'attributes' => array(
                     'type' => 'submit',

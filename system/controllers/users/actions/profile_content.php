@@ -135,8 +135,11 @@ class actionUsersProfileContent extends cmsAction {
             )
         )));
 
+        $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
+
         return $this->cms_template->render('profile_content', array(
             'filter_titles'   => $this->controller_content->getFilterTitles(),
+            'fields'          => $fields,
             'user'            => $this->cms_user,
             'toolbar_html'    => $toolbar_html,
             'id'              => $profile['id'],

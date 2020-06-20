@@ -283,6 +283,7 @@ class modelComments extends cmsModel {
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
+                'slug'      => $item['user_slug'],
                 'nickname'  => $item['user_nickname'],
                 'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']

@@ -6,7 +6,7 @@ class formWidgetMenuOptions extends cmsForm {
 
         return array(
 
-            array(
+            'menu_options' => array(
                 'type' => 'fieldset',
                 'title' => LANG_OPTIONS,
                 'childs' => array(

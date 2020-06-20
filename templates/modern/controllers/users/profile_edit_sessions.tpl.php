@@ -5,8 +5,8 @@
     if($this->controller->listIsAllowed()){
         $this->addBreadcrumb(LANG_USERS, href_to('users'));
     }
-    $this->addBreadcrumb($profile['nickname'], href_to('users', $id));
-    $this->addBreadcrumb(LANG_USERS_EDIT_PROFILE, href_to('users', $id, 'edit'));
+    $this->addBreadcrumb($profile['nickname'], href_to_profile($profile));
+    $this->addBreadcrumb(LANG_USERS_EDIT_PROFILE, href_to('users', $profile['id'], 'edit'));
     $this->addBreadcrumb(LANG_USERS_SESSIONS);
 
     $this->renderChild('profile_edit_header', array('profile'=>$profile));

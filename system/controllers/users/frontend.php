@@ -34,14 +34,28 @@ class users extends cmsFrontend {
 
     public function routeAction($action_name){
 
-        if (!is_numeric($action_name)){ return $action_name; }
+        if (is_numeric($action_name)) {
+
+            // $action_name это id пользователя
+            $profile = $this->model->getUser($action_name);
+            if (!$profile) { cmsCore::error404(); }
+
+            if($profile['slug'] != $action_name){
+                return $this->redirect(href_to('users', $profile['slug'], $this->current_params), 301);
+            }
+
+        } else {
+
+            if ($this->isActionExists($action_name)){
+                return $action_name;
+            }
+
+            $profile = $this->model->getUserBySlug($action_name);
+            if (!$profile) { cmsCore::error404(); }
+        }
 
         // разблокируем вызов экшенов, которым запрещено вызываться напрямую
         $this->lock_explicit_call = false;
-
-        // $action_name это id пользователя
-        $profile = $this->model->getUser($action_name);
-        if (!$profile) { cmsCore::error404(); }
 
         $this->setCurrentProfile($profile);
 
@@ -108,8 +122,8 @@ class users extends cmsFrontend {
         $menu = array(
             array(
                 'title'    => LANG_USERS_PROFILE_INDEX,
-                'url'      => href_to($this->name, $profile['id']),
-                'url_mask' => href_to($this->name, $profile['id'])
+                'url'      => href_to_profile($profile),
+                'url_mask' => href_to_profile($profile)
             )
         );
 
@@ -140,7 +154,7 @@ class users extends cmsFrontend {
 
 				$default_tab_info = array(
 					'title' => $tab['title'],
-                    'url'   => href_to($this->name, $profile['id'], $tab['name'])
+                    'url'   => href_to_profile($profile, [$tab['name']])
                 );
 
 				if (empty($this->tabs_controllers[$tab['controller']])){
@@ -173,54 +187,42 @@ class users extends cmsFrontend {
 
     public function getProfileEditMenu($profile){
 
-        $menu = array();
+        $menu = [];
 
         $menu[] = array(
             'title' => LANG_USERS_EDIT_PROFILE_MAIN,
-            'controller' => $this->name,
-            'action' => $profile['id'],
-            'params' => 'edit',
+            'url'   => href_to_profile($profile, ['edit'])
         );
 
         if ($this->cms_template->hasProfileThemesOptions() && $this->options['is_themes_on']){
             $menu[] = array(
                 'title' => LANG_USERS_EDIT_PROFILE_THEME,
-                'controller' => $this->name,
-                'action' => $profile['id'],
-                'params' => array('edit', 'theme'),
+                'url'   => href_to_profile($profile, ['edit', 'theme'])
             );
         }
 
         if(cmsEventsManager::getEventListeners('user_notify_types')){
             $menu[] = array(
                 'title' => LANG_USERS_EDIT_PROFILE_NOTICES,
-                'controller' => $this->name,
-                'action' => $profile['id'],
-                'params' => array('edit', 'notices'),
+                'url'   => href_to_profile($profile, ['edit', 'notices'])
             );
         }
 
         if (!empty($this->options['is_friends_on'])){
             $menu[] = array(
                 'title' => LANG_USERS_EDIT_PROFILE_PRIVACY,
-                'controller' => $this->name,
-                'action' => $profile['id'],
-                'params' => array('edit', 'privacy'),
+                'url'   => href_to_profile($profile, ['edit', 'privacy'])
             );
         }
 
         $menu[] = array(
             'title' => LANG_SECURITY,
-            'controller' => $this->name,
-            'action' => $profile['id'],
-            'params' => array('edit', 'password'),
+            'url'   => href_to_profile($profile, ['edit', 'password'])
         );
 
         $menu[] = array(
-            'title'      => LANG_USERS_SESSIONS,
-            'controller' => $this->name,
-            'action'     => $profile['id'],
-            'params'     => array('edit', 'sessions')
+            'title' => LANG_USERS_SESSIONS,
+            'url'   => href_to_profile($profile, ['edit', 'sessions'])
         );
 
         list($menu, $profile) = cmsEventsManager::hook('profile_edit_menu', array($menu, $profile));

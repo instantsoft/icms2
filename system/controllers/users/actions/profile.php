@@ -150,13 +150,13 @@ class actionUsersProfile extends cmsAction {
                 if(!$this->is_subscribe_profile){
                     $tool_buttons['subscribe'] = array(
                         'title' => LANG_USERS_SUBSCRIBE,
-                        'class' => 'subscribe ajax-modal',
+                        'class' => 'subscribe ajax-modal', 'icon' => 'bell',
                         'href'  => href_to('users', 'subscribe', $profile['id'])
                     );
                 } else {
                     $tool_buttons['unsubscribe'] = array(
                         'title' => LANG_USERS_UNSUBSCRIBE,
-                        'class' => 'unsubscribe ajax-modal',
+                        'class' => 'unsubscribe ajax-modal', 'icon' => 'bell-slash',
                         'href'  => href_to('users', 'unsubscribe', $profile['id'])
                     );
                 }
@@ -170,13 +170,13 @@ class actionUsersProfile extends cmsAction {
                     if ($this->is_friend_profile){
                         $tool_buttons['friend_delete'] = array(
                             'title' => LANG_USERS_FRIENDS_DELETE,
-                            'class' => 'user_delete ajax-modal',
+                            'class' => 'user_delete ajax-modal', 'icon' => 'user-minus',
                             'href'  => href_to('users', 'friend_delete', $profile['id'])
                         );
                     } else if(!$this->is_friend_req) {
                         $tool_buttons['friend_add'] = array(
                             'title' => LANG_USERS_FRIENDS_ADD,
-                            'class' => 'user_add ajax-modal',
+                            'class' => 'user_add ajax-modal', 'icon' => 'user-plus',
                             'href'  => href_to('users', 'friend_add', $profile['id'])
                         );
                     }
@@ -188,24 +188,24 @@ class actionUsersProfile extends cmsAction {
             if ($this->is_own_profile && $profile['invites_count']){
                 $tool_buttons['invites'] = array(
                     'title'   => LANG_USERS_MY_INVITES,
-                    'class'   => 'invites',
+                    'class'   => 'invites', 'icon' => 'user-tag',
                     'counter' => $profile['invites_count'],
-                    'href'    => href_to('users', $profile['id'], 'invites')
+                    'href'    => href_to_profile($profile, ['invites'])
                 );
             }
 
             if ($this->is_own_profile || $this->cms_user->is_admin){
                 $tool_buttons['settings'] = array(
                     'title' => LANG_USERS_EDIT_PROFILE,
-                    'class' => 'settings',
-                    'href'  => href_to('users', $profile['id'], 'edit')
+                    'class' => 'settings', 'icon' => 'edit',
+                    'href'  => href_to_profile($profile, ['edit'])
                 );
             }
 
             if ($this->cms_user->is_admin){
                 $tool_buttons['edit'] = array(
                     'title' => LANG_USERS_EDIT_USER,
-                    'class' => 'edit',
+                    'class' => 'edit ajax-modal', 'icon' => 'user-edit',
                     'href'  => href_to('admin', 'users', array('edit', $profile['id'])) . "?back=" . href_to('users', $profile['id'])
                 );
             }
@@ -213,8 +213,8 @@ class actionUsersProfile extends cmsAction {
             if (cmsUser::isAllowed('users', 'delete', 'any', true) && !$this->is_own_profile){
                 $tool_buttons['delete'] = array(
                     'title' => LANG_USERS_DELETE_PROFILE,
-                    'class' => 'user_delete ajax-modal',
-                    'href'  => href_to('users', $profile['id'], 'delete')
+                    'class' => 'user_delete ajax-modal', 'icon' => 'minus-circle',
+                    'href'  => href_to_profile($profile, ['delete'])
                 );
             }
 
@@ -223,8 +223,8 @@ class actionUsersProfile extends cmsAction {
         if ($profile['is_deleted'] && cmsUser::isAllowed('users', 'delete', 'any')) {
                 $tool_buttons['restore'] = array(
                     'title' => LANG_USERS_RESTORE_PROFILE,
-                    'class' => 'basket_remove ajax-modal',
-                    'href'  => href_to('users', $profile['id'], 'restore')
+                    'class' => 'basket_remove ajax-modal', 'icon' => 'trash-restore',
+                    'href'  => href_to_profile($profile, ['restore'])
                 );
         }
 
