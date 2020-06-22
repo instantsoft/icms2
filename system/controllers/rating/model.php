@@ -90,7 +90,7 @@ class modelRating extends cmsModel {
 
         $this->useCache('rating.votes');
 
-        $this->joinUser('user_id', array(), 'left');
+        $this->joinUserLeft();
 
         return $this->get('rating_log', function($item, $model){
 
@@ -101,6 +101,7 @@ class modelRating extends cmsModel {
 
             $item['user'] = array(
                 'id'       => $item['user_id'],
+                'slug'     => $item['user_slug'],
                 'nickname' => (!empty($item['user_nickname']) ? $item['user_nickname'] : LANG_GUEST.' №'.array_sum($_okets)),
                 'avatar'   => $item['user_avatar']
             );

@@ -15,7 +15,7 @@
   background-color: transparent;
 }
 .breadcrumb:after {
-    background: linear-gradient(270deg, $white 40%, rgba(247, 247, 247, 0));
+    background: linear-gradient(270deg, $body-bg 40%, rgba(247, 247, 247, 0));
     bottom: 0;
     content: "";
     pointer-events: none;

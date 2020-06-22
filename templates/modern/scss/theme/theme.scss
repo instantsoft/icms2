@@ -15,9 +15,14 @@
 @import "content";
 // Комментарии
 @import "comments";
+// Рейтинг
+@import "rating";
 // Кастомный SCSS
 @import "custom";
 
+.clickable {
+    cursor: pointer;
+}
 .icms-user-menu {
     background-color: rgba(0, 0, 0, 0.05);
     cursor: pointer;
@@ -46,6 +51,11 @@ button.loading {
 }
 .is_collapse > .field, .is_collapse > .field_tabbed, .hide_field {
     display: none !important;
+}
+.ft_rmfield {
+    > label {
+        display: block;
+    }
 }
 .icms-form__symbols_count_wrap {
     .symbols_count {
@@ -295,6 +305,11 @@ form fieldset {
         width: ($input-btn-padding-x * 2);
         height: ($input-btn-padding-x * 2);
         margin: -$input-btn-padding-x;
+    }
+    &.btn-sm:after {
+        width: ($input-btn-padding-x-sm * 2);
+        height: ($input-btn-padding-x-sm * 2);
+        margin: -$input-btn-padding-x-sm;
     }
 }
 // Спиннеры
