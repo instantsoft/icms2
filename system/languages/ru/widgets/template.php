@@ -1,6 +1,7 @@
 <?php
 
 define('LANG_WD_T_TYPE',  'Что выводить?');
+define('LANG_WD_T_TYPE_HINT',  'Тело страницы выведется только в одном виджете, остальные проигнорируются.');
 define('LANG_WD_T_SMESSAGES',  'Сообщения сессии');
 define('LANG_WD_T_COPYRIGHT',  'Блок копирайта и отладки');
 define('LANG_WD_T_LOGO',  'Логотип');

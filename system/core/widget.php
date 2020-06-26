@@ -16,7 +16,7 @@ class cmsWidget {
     private $allow_cacheable_option = true;
 
     protected $template;
-    protected $wrapper = 'wrapper';
+    protected $wrapper = '';
 
     public function __construct($widget){
 

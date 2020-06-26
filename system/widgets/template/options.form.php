@@ -13,6 +13,7 @@ class formWidgetTemplateOptions extends cmsForm {
 
                     new fieldList('options:type', array(
                         'title' => LANG_WD_T_TYPE,
+                        'hint' => LANG_WD_T_TYPE_HINT,
                         'items' => [
                             'body'        => LANG_PAGE_BODY,
                             'breadcrumbs' => LANG_PAGE_BREADCRUMB,

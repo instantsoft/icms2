@@ -64,3 +64,11 @@
     </div>
 
 </form>
+<?php ob_start(); ?>
+<script type="text/javascript">
+    <?php echo $this->getLangJS('LANG_SUBMIT_NOT_SAVE'); ?>
+    $(function (){
+        icms.forms.initUnsaveNotice();
+    });
+</script>
+<?php $this->addBottom(ob_get_clean()); ?>

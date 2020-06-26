@@ -745,23 +745,12 @@ class admin extends cmsFrontend {
 		//
 		$design_fieldset_id = $form->addFieldset(LANG_DESIGN, 'design');
 
-            $form->addField($design_fieldset_id, new fieldString('class_wrap', array(
-                'title' => LANG_CSS_CLASS_WRAP
-            )));
-
-            $form->addField($design_fieldset_id, new fieldString('class_title', array(
-                'title' => LANG_CSS_CLASS_TITLE
-            )));
-
-            $form->addField($design_fieldset_id, new fieldString('class', array(
-                'title' => LANG_CSS_CLASS_BODY
-            )));
-
             $form->addField($design_fieldset_id, new fieldList('tpl_wrap', array(
                 'title' => LANG_WIDGET_WRAPPER_TPL,
 				'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
+				'default' => 'wrapper',
                 'generator' => function($item) use ($template){
-                    return $this->cms_template->getAvailableTemplatesFiles('widgets', 'wrapper*.tpl.php', $template);
+                    return ['' => LANG_WIDGET_WRAPPER_TPL_NO] + $this->cms_template->getAvailableTemplatesFiles('widgets', 'wrapper*.tpl.php', $template);
                 }
             )));
 
@@ -773,6 +762,20 @@ class admin extends cmsFrontend {
                     $w_path = cmsCore::getWidgetPath($item['name'], $item['controller']);
                     return $this->cms_template->getAvailableTemplatesFiles($w_path, '*.tpl.php', $template);
                }
+            )));
+
+            $form->addField($design_fieldset_id, new fieldString('class_wrap', array(
+                'title' => LANG_CSS_CLASS_WRAP
+            )));
+
+            $form->addField($design_fieldset_id, new fieldString('class_title', array(
+                'title' => LANG_CSS_CLASS_TITLE,
+                'visible_depend' => ['tpl_wrap' => ['hide' => ['', 'wrapper_plain']]]
+            )));
+
+            $form->addField($design_fieldset_id, new fieldString('class', array(
+                'title' => LANG_CSS_CLASS_BODY,
+                'visible_depend' => ['tpl_wrap' => ['hide' => ['', 'wrapper_plain']]]
             )));
 
         //

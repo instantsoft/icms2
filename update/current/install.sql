@@ -1,5 +1,6 @@
 ALTER TABLE `{users}` CHANGE `pass_token` `pass_token` VARCHAR(64) NULL DEFAULT NULL COMMENT 'Ключ для восстановления пароля';
 ALTER TABLE `{users}_auth_tokens` CHANGE `auth_token` `auth_token` VARCHAR(128) NULL DEFAULT NULL;
+UPDATE `{#}widgets_bind` SET `tpl_wrap`= 'wrapper' WHERE `tpl_wrap` IS NULL;
 
 DROP TABLE IF EXISTS `{#}layout_cols`;
 CREATE TABLE `{#}layout_cols` (

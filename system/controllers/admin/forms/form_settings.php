@@ -155,7 +155,9 @@ class formAdminSettings extends cmsForm {
                             $items = array();
                             if ($tpls) {
                                 foreach ($tpls as $tpl) {
-                                    $items[$tpl] = $tpl;
+                                    if(file_exists(cmsConfig::get('root_path') . cmsTemplate::TEMPLATE_BASE_PATH. $tpl .'/main.tpl.php')){
+                                        $items[$tpl] = $tpl;
+                                    }
                                 }
                             }
                             return $items;
@@ -170,7 +172,9 @@ class formAdminSettings extends cmsForm {
                             $items = array(''=>LANG_BY_DEFAULT);
                             if ($tpls) {
                                 foreach ($tpls as $tpl) {
-                                    $items[$tpl] = $tpl;
+                                    if(file_exists(cmsConfig::get('root_path') . cmsTemplate::TEMPLATE_BASE_PATH. $tpl .'/admin.tpl.php')){
+                                        $items[$tpl] = $tpl;
+                                    }
                                 }
                             }
                             return $items;
@@ -185,7 +189,9 @@ class formAdminSettings extends cmsForm {
                             $items = array(''=>LANG_BY_DEFAULT);
                             if ($tpls) {
                                 foreach ($tpls as $tpl) {
-                                    $items[$tpl] = $tpl;
+                                    if(file_exists(cmsConfig::get('root_path') . cmsTemplate::TEMPLATE_BASE_PATH. $tpl .'/main.tpl.php')){
+                                        $items[$tpl] = $tpl;
+                                    }
                                 }
                             }
                             return $items;
@@ -200,7 +206,9 @@ class formAdminSettings extends cmsForm {
                             $items = array(''=>LANG_BY_DEFAULT);
                             if ($tpls) {
                                 foreach ($tpls as $tpl) {
-                                    $items[$tpl] = $tpl;
+                                    if(file_exists(cmsConfig::get('root_path') . cmsTemplate::TEMPLATE_BASE_PATH. $tpl .'/main.tpl.php')){
+                                        $items[$tpl] = $tpl;
+                                    }
                                 }
                             }
                             return $items;

@@ -92,10 +92,19 @@ class cmsDatabase {
         }
 	}
 
+    /**
+     * Устанавливает массив опций для работы с БД
+     * @param array $options
+     */
     public function setOptions($options) {
         $this->options = array_merge($this->options, $options);
     }
 
+    /**
+     * Устанавливает опцию по ключу
+     * @param string $key Ключ опции
+     * @param mixed $value Значение
+     */
     public function setOption($key, $value) {
         $this->options[$key] = $value;
     }
@@ -128,6 +137,12 @@ class cmsDatabase {
 
         if(!empty($this->options['clear_sql_mode'])){
             $this->mysqli->query("SET sql_mode=''");
+        }
+
+        // Устанавливаем ключ шифрования, если он задан в конфиге
+        if (!empty($this->options['aes_key'])){
+            $key = $this->mysqli->real_escape_string($this->options['aes_key']);
+            $this->mysqli->query("SELECT @aeskey:='{$key}'");
         }
 
         if (!empty($this->options['debug'])){
@@ -541,9 +556,10 @@ class cmsDatabase {
 	 * @param string $table Таблица
 	 * @param array $data Массив данных для вставки в таблицу
 	 * @param array $update_data Массив данных для обновления при совпадении ключей
+     * @param boolean $array_as_json Переходная опция для миграции с Yaml на Json
 	 * @return boolean|integer
 	 */
-	public function insertOrUpdate($table, $data, $update_data = false){
+	public function insertOrUpdate($table, $data, $update_data = false, $array_as_json = false){
 
         $fields = array();
         $values = array();
@@ -553,7 +569,7 @@ class cmsDatabase {
 
 			foreach ($data as $field => $value){
 
-                $value = $this->prepareValue($field, $value);
+                $value = $this->prepareValue($field, $value, $array_as_json);
 
                 $fields[] = "`$field`";
                 $values[] = $value;
@@ -572,7 +588,7 @@ class cmsDatabase {
             if(is_array($update_data)){
                 foreach ($update_data as $field=>$value) {
 
-                    $value = $this->prepareValue($field, $value);
+                    $value = $this->prepareValue($field, $value, $array_as_json);
 
                     $set[] = "`{$field}` = {$value}";
 

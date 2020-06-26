@@ -40,6 +40,11 @@ class cmsTemplate {
      */
     protected $output;
     /**
+     * Флаг, что тело страницы уже было выведено
+     * @var boolean
+     */
+    protected $output_is_displayed = false;
+    /**
      * Массив кастомных блоков страницы
      * @var array
      */
@@ -201,10 +206,15 @@ class cmsTemplate {
         return !empty($this->output);
     }
 
+    public function isBodyDisplayed(){
+        return $this->output_is_displayed;
+    }
+
 	/**
 	 * Выводит тело страницы
 	 */
 	public function body(){
+        $this->output_is_displayed = true;
 		echo $this->output;
 	}
 
@@ -416,7 +426,11 @@ class cmsTemplate {
                     include($tpl_file);
 
                 } else {
-                    echo $widget['body'];
+                    if ($widget['class_wrap']) {
+                        echo '<div class="'.$widget['class_wrap'].'">'.$widget['body'].'</div>';
+                    } else {
+                        echo $widget['body'];
+                    }
                 }
 
             } else {

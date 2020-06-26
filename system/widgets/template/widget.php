@@ -12,7 +12,7 @@ class widgetTemplate extends cmsWidget {
         $type = $this->getOption('type');
 
         if($type === 'body'){
-            if(!$template->isBody()){
+            if(!$template->isBody() || $template->isBodyDisplayed()){
                 return false;
             }
         } elseif($type === 'breadcrumbs') {

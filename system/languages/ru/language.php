@@ -73,6 +73,7 @@
     define('LANG_WIDGET_TITLE_LINKS',        'Ссылки в заголовке виджета');
     define('LANG_WIDGET_TITLE_LINKS_HINT',   'В формате <b><em>Заголовок | URL</em></b>, например <b><em>Яндекс | http://www.yandex.ru</em></b><br>Если ссылка обернута в фигурные скобки <b>{ }</b> она будет показана только авторизованным пользователям<br>Одна ссылка в каждой строке');
     define('LANG_WIDGET_WRAPPER_TPL',		 'Шаблон контейнера');
+    define('LANG_WIDGET_WRAPPER_TPL_NO',	 'Без шаблона контейнера');
     define('LANG_WIDGET_WRAPPER_TPL_HINT',	 'Название файла из папки <b>widgets</b> вашего шаблона, без расширения <b>.tpl.php</b>');
     define('LANG_WIDGET_BODY_TPL',			 'Шаблон виджета');
     define('LANG_WIDGET_BODY_TPL_HINT',	     'Название файла из папки <b>%s</b> вашего шаблона, без расширения <b>.tpl.php</b>');

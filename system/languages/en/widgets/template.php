@@ -1,6 +1,7 @@
 <?php
 
 define('LANG_WD_T_TYPE', 'What should I output?');
+define ('LANG_WD_T_TYPE_HINT', 'The page body will be displayed in only one widget, the rest will be ignored.');
 define('LANG_WD_T_SMESSAGES', 'Session Messages');
 define('LANG_WD_T_COPYRIGHT', 'Copyright and Debugging Block');
 define('LANG_WD_T_LOGO', 'Logo');

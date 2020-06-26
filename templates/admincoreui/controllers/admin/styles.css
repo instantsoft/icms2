@@ -429,6 +429,8 @@ ul.field_tabbed > li.field_tabbed_en > a, .icon-lang-en  {
 }
 .datagrid .flag_trigger.loading{
     animation: sk-pulseScaleOut 0.5s infinite linear;
+    background: none;
+    padding: 0;
 }
 
 .datagrid .flag_on { color: #4dbd74; }

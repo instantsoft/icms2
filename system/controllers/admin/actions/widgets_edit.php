@@ -27,10 +27,6 @@ class actionAdminWidgetsEdit extends cmsAction {
             return cmsCore::error404();
         }
 
-        if (!$widget['tpl_wrap']) {
-            $widget['tpl_wrap'] = 'wrapper';
-        }
-
         $widget_object = cmsCore::getWidgetObject($widget);
 
         $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], $widget['options'], $template, $widget_object->isAllowCacheableOption());

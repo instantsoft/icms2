@@ -185,12 +185,12 @@ class cmsBackend extends cmsController {
 
         if (empty($this->useDefaultOptionsAction)){ cmsCore::error404(); }
 
-        $form = $this->getForm('options');
+        $options = cmsController::loadOptions($this->name);
+
+        $form = $this->getForm('options', [$options]);
         if (!$form) { cmsCore::error404(); }
 
         $form = $this->addControllerSeoOptions($form);
-
-        $options = cmsController::loadOptions($this->name);
 
         if ($this->request->has('submit')){
 
