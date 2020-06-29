@@ -8,8 +8,6 @@ class onMessagesMenuMessages extends cmsAction {
 
         if (!$user->is_logged) { return false; }
 
-        $this->cms_template->addTplJSName('messages');
-
         $action = $item['action'];
 
         if ($action == 'view'){

@@ -136,7 +136,11 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
     $script = '<script type="text/javascript">';
     $script .= '$(function(){ var datepicker_params = '.json_encode($datepicker_default).';datepicker_params.onSelect = datepickerSelected; $("#'.$id.'").datepicker(datepicker_params); var datepickerSelected = function(dateText,inst){icms.events.run("icms_datepicker_selected_'.$name.'", inst);} });';
     $script .= '</script>';
-    cmsTemplate::getInstance()->addBottom($script);
+    if(cmsCore::getInstance()->request->isAjax()){
+        $html .= $script;
+    } else {
+        cmsTemplate::getInstance()->addBottom($script);
+    }
     return $html;
 }
 

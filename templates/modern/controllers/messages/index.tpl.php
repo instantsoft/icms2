@@ -1,7 +1,14 @@
-<?php // Шаблон окна личных сообщений // ?>
+<?php if(!$is_modal){
+
+    $this->setPageTitle(LANG_PM_MY_MESSAGES);
+    $this->addBreadcrumb(LANG_PM_MY_MESSAGES);
+
+} ?>
+
+<?php $this->addTplJSNameFromContext('messages'); ?>
 
 <?php if (!$is_allowed) { ?>
-    <div class="notice"><?php echo LANG_PM_NO_ACCESS; ?></div>
+    <div class="notice alert alert-info m-4"><?php echo LANG_PM_NO_ACCESS; ?></div>
     <?php return; ?>
 <?php } ?>
 
@@ -11,7 +18,7 @@
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>
 
-<div id="pm_window"<?php if($is_modal){ ?> class="modal-messages"<?php } ?>
+<div id="pm_window" class="icms-messages<?php if($is_modal){ ?> modal-messages m-n3<?php } else { ?> mb-3 mb-md-4<?php } ?>"
      data-contact-url="<?php echo $this->href_to('contact'); ?>"
      data-refresh-url="<?php echo $this->href_to('refresh'); ?>"
      data-show-older-url="<?php echo $this->href_to('show_older'); ?>"
@@ -23,39 +30,55 @@
      >
 
     <?php if (!$contacts) { ?>
-        <div class="notice alert alert-info m-0"><?php echo LANG_PM_NO_MESSAGES; ?></div>
+        <div class="notice alert alert-info m-4"><?php echo LANG_PM_NO_MESSAGES; ?></div>
     <?php } ?>
 
     <?php if ($contacts) { ?>
 
-        <div class="layout row">
+        <div class="layout row no-gutters">
 
-            <div class="right-panel col-sm-4">
-                <div id="user_search_panel">
-                    <?php echo html_input('text', '', '', array('placeholder' => LANG_PM_USER_SEARCH)); ?>
-                </div>
-                <div class="contacts">
-                    <?php $first_id = false; ?>
-                    <?php foreach($contacts as $contact){ ?>
-                        <?php $first_id = $first_id ? $first_id : $contact['id']; ?>
-                        <?php $nickname = mb_strlen($contact['nickname']) > 15 ? mb_substr($contact['nickname'], 0, 15).'...' : $contact['nickname']; ?>
-                        <div id="contact-<?php echo $contact['id']; ?>" class="contact" rel="<?php echo $contact['id']; ?>">
-                            <a href="#<?php echo $contact['id']; ?>" onclick="return icms.messages.selectContact(<?php echo $contact['id']; ?>);" title="<?php echo $contact['nickname']; ?>">
-                                <span <?php if ($contact['is_online']) { ?>class="peer_online"<?php } ?>><?php echo html_avatar_image($contact['avatar'], 'micro'); ?></span>
-                                <span class="contact_nickname"><?php echo $nickname; ?></span>
-                                <?php if (!$contact['is_online']) { ?>
-                                    <strong title="<?php echo LANG_USERS_PROFILE_LOGDATE; ?>"><?php echo string_date_age_max($contact['date_log'], true); ?></strong>
-                                <?php } ?>
+            <div class="right-panel col-md-3 border-right d-none d-md-block">
+                <div class="sticky-top">
+                    <div id="user_search_panel" class="bg-gray p-2 border-bottom pannel-toolbar">
+                        <?php echo html_input('text', '', '', array('placeholder' => LANG_PM_USER_SEARCH)); ?>
+                    </div>
+                    <div class="contacts list-group">
+                        <?php $first_id = false; ?>
+                        <?php foreach($contacts as $contact){ ?>
+                            <?php $first_id = $first_id ? $first_id : $contact['id']; ?>
+                            <?php $nickname = mb_strlen($contact['nickname']) > 15 ? mb_substr($contact['nickname'], 0, 15).'...' : $contact['nickname']; ?>
+                            <a id="contact-<?php echo $contact['id']; ?>" href="#<?php echo $contact['id']; ?>" class="text-decoration-none d-flex align-items-center contact list-group-item border-0 rounded-0 p-2" onclick="return icms.messages.selectContact(<?php echo $contact['id']; ?>);" title="<?php echo $contact['nickname']; ?>" rel="<?php echo $contact['id']; ?>">
+
+                                <span class="icms-user-avatar mr-2 small <?php if (!empty($contact['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" rel="<?php echo $contact['id']; ?>">
+                                    <?php if($contact['avatar']){ ?>
+                                        <?php echo html_avatar_image($contact['avatar'], 'micro', $contact['nickname']); ?>
+                                    <?php } else { ?>
+                                        <?php echo html_avatar_image_empty($contact['nickname'], 'avatar__mini'); ?>
+                                    <?php } ?>
+                                </span>
+
+                                <span class="contact_nickname">
+                                    <span><?php echo $nickname; ?></span>
+                                    <small title="<?php echo LANG_USERS_PROFILE_LOGDATE; ?>" class="d-block text-muted">
+                                        <?php if (!$contact['is_online']) { ?>
+                                           <?php echo string_date_age_max($contact['date_log'], true); ?>
+                                       <?php } else { ?>
+                                           <?php echo LANG_ONLINE; ?>
+                                       <?php } ?>
+                                    </small>
+                                </span>
                                 <?php if ($contact['new_messages']) { ?>
-                                    <span class="counter"><?php echo $contact['new_messages']; ?></span>
+                                    <span class="counter ml-auto badge badge-pill badge-danger">
+                                        <?php echo $contact['new_messages']; ?>
+                                    </span>
                                 <?php } ?>
                             </a>
-                        </div>
-                    <?php } ?>
+                        <?php } ?>
+                    </div>
                 </div>
             </div>
 
-            <div class="left-panel col-sm-8"></div>
+            <div class="left-panel col-md-9"></div>
 
         </div>
 
@@ -69,21 +92,9 @@
             icms.messages.selectContact(<?php echo $first_id; ?>);
             icms.messages.bindMyMsg();
             <?php if($is_modal){ ?>
-                var resize_func = function(){
-                    var pm_window = $('#pm_window:visible');
-                    if ($(pm_window).length == 0){
-                        $(window).off('resize', resize_func);
-                        return false;
-                    }
-                    icms.modal.resize();
-                };
-                $(window).on('resize', resize_func);
-                $('#pm_window').on('click', '.toogle-actions', function(){
-                    $('.actions').toggleClass('actions-active');
-                    $(this).toggleClass('toogle-actions-active');
-                });
+                $('#icms_modal .modal-dialog').addClass('modal-xl');
                 icms.modal.setCallback('close', function (){
-                    $('#popup-manager').removeClass('nyroModalMessage');
+                    $('#icms_modal .modal-dialog').removeClass('modal-xl');
                 });
             <?php } ?>
         </script>

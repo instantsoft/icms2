@@ -74,6 +74,7 @@ class modelMessages extends cmsModel {
 
         $this->select('u.id', 'id');
         $this->select('u.nickname', 'nickname');
+        $this->select('u.slug', 'slug');
         $this->select('u.date_log', 'date_log');
         $this->select('u.avatar', 'avatar');
         $this->select('u.is_admin', 'is_admin');

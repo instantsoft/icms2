@@ -49,6 +49,7 @@ class actionMessagesRefresh extends cmsAction {
             'error'      => false,
             'contact_id' => $contact['contact_id'],
             'is_online'  => (int) $contact['is_online'],
+            'log_date_text'  => ($contact['is_online'] ? LANG_ONLINE : string_date_age_max($contact['date_log'], true)),
             'date_log'   => mb_strtolower(string_date_age_max($contact['date_log'], true)),
             'html'       => ($messages ? $messages_html : false)
         ));

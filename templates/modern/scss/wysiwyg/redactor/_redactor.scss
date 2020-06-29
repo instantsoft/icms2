@@ -49,6 +49,13 @@
 #redactor_modal,
 .redactor_dropdown {
   z-index: 1051 !important;
+  > * {
+    -webkit-filter: blur(0) !important;
+    -moz-filter: blur(0) !important;
+    -ms-filter: blur(0) !important;
+    -o-filter: blur(0) !important;
+    filter: blur(0) !important;
+  }
 }
 /*
 	AIR

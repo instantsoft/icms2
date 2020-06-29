@@ -2,7 +2,7 @@
     <div class="d-flex align-items-center px-3 py-2" data-toggle="dropdown">
         <div class="icms-user-avatar  d-flex align-items-center">
             <?php if($user->avatar){ ?>
-                <?php echo html_avatar_image($user->avatar, 'mikro', $user->nickname); ?>
+                <?php echo html_avatar_image($user->avatar, 'micro', $user->nickname); ?>
             <?php } else { ?>
                 <?php echo html_avatar_image_empty($user->nickname, 'avatar__mini'); ?>
             <?php } ?>

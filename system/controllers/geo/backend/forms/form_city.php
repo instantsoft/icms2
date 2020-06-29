@@ -29,7 +29,7 @@ class formGeoCity extends cmsForm {
                         'rules'  => array(array('required')),
                         'parent' => array(
                             'list' => 'country_id',
-                            'url'  => href_to('admin/controllers/edit/geo', 'get_regions_ajax')
+                            'url'  => href_to('admin', 'get_table_list', ['geo_regions', 'id', 'name'])
                         ),
                         'items'  => $regions
                     )),

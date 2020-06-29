@@ -336,6 +336,10 @@ h1 > span:empty {
 .sidebar .nav {
   min-height: auto;
 }
+#admin_toolbar .nav-pills .show > .nav-link {
+    background-color: rgba(32, 168, 216, 0.04);
+    color: #20a8d8;
+}
 form .ft_date select {
     width: 70px;
     display: inline-block;
@@ -520,9 +524,6 @@ form .child_field{margin-left: 20px}
 }
 .grid_field_edit > .button {
     margin: 1rem 0 0 0;
-}
-.grid_field_edit > .button[disabled] {
-    display: none;
 }
 .grid_field_edit {
     display: none;

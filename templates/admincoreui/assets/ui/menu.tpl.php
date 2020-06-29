@@ -23,8 +23,9 @@
                 $css_classes[] = 'open';
             }
             if ($item['childs_count'] > 0) {
-                $css_classes[] = 'nav-dropdown';
-                $css_aclasses[] = 'nav-dropdown-toggle';
+                $css_classes[] = 'dropdown';
+                $css_aclasses[] = 'dropdown-toggle';
+                $item['attributes']['data-toggle'] = 'dropdown';
             }
             if (!empty($item['options']['class'])) { $css_classes[] = $item['options']['class']; }
 
@@ -45,7 +46,7 @@
                 </a>
             <?php } ?>
 
-            <?php if ($item['childs_count'] > 0) { ?><ul class="nav-dropdown-items"><?php } ?>
+            <?php if ($item['childs_count'] > 0) { ?><ul class="nav-dropdown-items dropdown-menu"><?php } ?>
 
         <?php $last_level = $item['level']; ?>
 

@@ -322,13 +322,11 @@ icms.forms = (function ($) {
         $(selector).addClass('disabled is-busy').trigger('click');
     };
 
-	this.updateChildList = function (child_id, url, value, current_value){
+	this.updateChildList = function (child_id, url, value, current_value, filter_field_name){
 
 		var child_list = $('#'+child_id);
 
-		if ($('#f_'+child_id+' .loading').length==0){
-			$('#f_'+child_id+' label').append(' <div class="loading"></div>');
-		}
+		$('#f_'+child_id+' label').addClass('loading');
 
 		child_list.html('');
 
@@ -338,7 +336,7 @@ icms.forms = (function ($) {
             current_value = [current_value];
         }
 
-		$.post(url, {value: value}, function(result){
+		$.post(url, {value: value, filter_field_name: filter_field_name}, function(result){
 
 			for(var k in result){if(result.hasOwnProperty(k)){
                 if(typeof result[k].value !== 'undefined'){
@@ -353,7 +351,7 @@ icms.forms = (function ($) {
 
             $(child_list).trigger('chosen:updated');
 
-			$('#f_'+child_id+' .loading').remove();
+			$('#f_'+child_id+ ' label').removeClass('loading');
 
             icms.events.run('icms_forms_updatechildlist', result);
 

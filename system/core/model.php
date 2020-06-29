@@ -1168,11 +1168,17 @@ class cmsModel {
         return $this->filterNotNull('online.user_id')->filterTimestampYounger('online.date_created', cmsUser::USER_ONLINE_INTERVAL, 'SECOND');
     }
 
-    public function applyDatasetFilters($dataset, $ignore_sorting = false){
+    public function applyDatasetFilters($dataset, $ignore_sorting = false, $allowed_fields = []){
 
         if (!empty($dataset['filters'])){
 
             foreach($dataset['filters'] as $filter){
+
+                // Если заданы разрешенные поля, проверяем
+                // валидация
+                if($allowed_fields && !in_array($filter['field'], $allowed_fields, true)){
+                    continue;
+                }
 
                 if (isset($filter['callback']) && is_callable($filter['callback'])){
                     $filter['callback']($this, $dataset); continue;

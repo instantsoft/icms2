@@ -139,8 +139,7 @@ icms.datagrid = (function ($) {
 
         $(document).on('click', '.inline_submit', function(){
             var s_button = $(this);
-            $(s_button).prop('disabled', true);
-            $(s_button).closest('.grid_field_edit').append('<div class="spinner mt-3"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
+            $(s_button).prop('disabled', true).addClass('is-busy');
             var tr_wrap = $(s_button).closest('tr');
             var action_url = $(s_button).data('action');
             var fields = {};
@@ -150,14 +149,13 @@ icms.datagrid = (function ($) {
                 placeholders[$(this).attr('name')] = $(this).attr('placeholder') ? $(this).attr('placeholder') : '';
             });
             $.post(action_url, {data: fields}, function(data){
-                $(s_button).prop('disabled', false).closest('.grid_field_edit').find('.spinner').remove();
+                $(s_button).prop('disabled', false).removeClass('is-busy');
                 if(data.error){ toastr.error(data.error); } else {
                     $(tr_wrap).find('.grid_field_edit input').addClass('is-valid');
                     $('body').trigger('click');
                     for(var _field in fields){
                         var g_value_wrap = $(tr_wrap).find('.'+_field+'_grid_value');
                         var new_value = data.values[_field] ? data.values[_field] : placeholders[_field];
-                        console.log(new_value);
                         if($(g_value_wrap).children().length){
                             $(g_value_wrap).find('*').last().html(new_value);
                         } else {
@@ -185,10 +183,10 @@ icms.datagrid = (function ($) {
             $(current_tr).addClass('current-edit-line');
             $(current_tr).find('td').css('position', 'relative');
             var grid_field_edit = $(this).closest('td').find('.grid_field_edit');
-            if($('.inline_submit', grid_field_edit).length === 0){
-                $(grid_field_edit).append($(current_tr).find('.inline_submit').clone(true));
-            }
             $(grid_field_edit).show().find('input.input').focus();
+            if($('.inline_submit', grid_field_edit).length === 0){
+                $(grid_field_edit).append($(current_tr).find('.inline_submit').last().clone(true));
+            }
             var hide_func = function (){
                 $(document).one('click', function(event) {
                     if ($(event.target).closest(grid_field_edit).length > 0) { hide_func(); return; }

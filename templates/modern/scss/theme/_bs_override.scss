@@ -44,19 +44,6 @@
         }
     }
 }
-.navbar-expand {
-    @each $breakpoint in map-keys($grid-breakpoints) {
-        $next: breakpoint-next($breakpoint, $grid-breakpoints);
-        $infix: breakpoint-infix($next, $grid-breakpoints);
-        &#{$infix} {
-            @include media-breakpoint-up($next) {
-                .icms-navbar-brand__show_on_hide, .icms-navbar-form__show_on_hide {
-                    display: none !important;
-                }
-            }
-        }
-    }
-}
 
 .nav-tabs {
   .nav-link {
@@ -159,6 +146,24 @@ form {
             color: rgba(255,255,255,0.65);
             &:hover, &:focus {
                 background-color: rgba(255, 255, 255, 0.25);
+            }
+        }
+    }
+}
+.list-group-item.active {
+    .text-muted {
+        color: lighten($text-muted, 30) !important;
+    }
+}
+.navbar-expand {
+    @each $breakpoint in map-keys($grid-breakpoints) {
+        $next: breakpoint-next($breakpoint, $grid-breakpoints);
+        $infix: breakpoint-infix($next, $grid-breakpoints);
+        &#{$infix} {
+            @include media-breakpoint-up($next) {
+                .icms-navbar-brand__show_on_hide, .icms-navbar-form__show_on_hide {
+                    display: none !important;
+                }
             }
         }
     }
