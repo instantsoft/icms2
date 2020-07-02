@@ -36,7 +36,7 @@ class formWidgetContentCategoriesOptions extends cmsForm {
                 'childs' => array(
 
                     new fieldList('options:ctype_name', array(
-                        'generator' => function($item) {
+                        'generator' => function($c) {
 
                             $model = cmsCore::getModel('content');
                             $tree = $model->getContentTypes();

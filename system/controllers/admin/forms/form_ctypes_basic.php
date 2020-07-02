@@ -256,11 +256,11 @@ class formAdminCtypesBasic extends cmsForm {
                         'is_multiple'  => true,
                         'dynamic_list' => true,
                         'select_title' => LANG_CP_CONTEXT_SELECT_LIST,
-                        'generator' => function($ctype) use ($do){
+                        'generator' => function($item) use ($do, $ctype){
 
                             $lists = cmsEventsManager::hookAll('ctype_lists_context', 'template'.($do != 'add' ? ':'.$ctype['name'] : ''));
 
-                            $items = array();
+                            $items = [];
 
                             if($lists){
                                 foreach ($lists as $list) {
@@ -460,7 +460,7 @@ class formAdminCtypesBasic extends cmsForm {
                 'title' => LANG_CP_IS_COLLAPSED,
                 'childs' => array(
                     new fieldListMultiple('options:is_collapsed', array(
-                        'generator' => function ($ctype) use($do){
+                        'generator' => function ($item) use($do, $ctype){
 
                             $items = array(
                                 'folder' => LANG_CP_FOLDERS,

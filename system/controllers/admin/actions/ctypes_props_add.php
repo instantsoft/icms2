@@ -12,7 +12,7 @@ class actionAdminCtypesPropsAdd extends cmsAction {
         $ctype = $content_model->getContentType($ctype_id);
         if (!$ctype) { cmsCore::error404(); }
 
-        $form = $this->getForm('ctypes_prop', array('add'));
+        $form = $this->getForm('ctypes_prop', ['add', $ctype]);
 
         $is_submitted = $this->request->has('submit');
 

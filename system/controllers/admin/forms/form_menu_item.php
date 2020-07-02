@@ -1,7 +1,7 @@
 <?php
 class formAdminMenuItem extends cmsForm {
 
-    public function init() {
+    public function init($menu_id, $current_id) {
 
         return array(
             array(
@@ -18,17 +18,17 @@ class formAdminMenuItem extends cmsForm {
                     new fieldHidden('menu_id', array()),
                     new fieldList('parent_id', array(
                         'title' => LANG_CP_MENU_ITEM_PARENT,
-                        'generator' => function($item) {
+                        'generator' => function($item) use($menu_id, $current_id) {
 
                             $menu_model = cmsCore::getModel('menu');
-                            $tree = $menu_model->getMenuItemsTree($item['menu_id'], false);
+                            $tree = $menu_model->getMenuItemsTree($menu_id, false);
 
-                            $items = array(0 => LANG_ROOT_NODE);
+                            $items = [0 => LANG_ROOT_NODE];
 
                             if ($tree) {
                                 foreach ($tree as $tree_item) {
-									if (isset($item['id'])){
-										if ($tree_item['id'] == $item['id']) { continue; }
+									if (!empty($current_id)){
+										if ($tree_item['id'] == $current_id) { continue; }
 									}
                                     $items[$tree_item['id']] = str_repeat('- ', $tree_item['level']) . ' ' . $tree_item['title'];
                                 }

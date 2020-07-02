@@ -758,9 +758,8 @@ class admin extends cmsFrontend {
                 'title' => LANG_WIDGET_BODY_TPL,
 				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
                 'default' => $widget_name,
-                'generator' => function($item) use ($template){
-                    $w_path = cmsCore::getWidgetPath($item['name'], $item['controller']);
-                    return $this->cms_template->getAvailableTemplatesFiles($w_path, '*.tpl.php', $template);
+                'generator' => function($item) use ($template, $widget_path){
+                    return $this->cms_template->getAvailableTemplatesFiles($widget_path, '*.tpl.php', $template);
                }
             )));
 

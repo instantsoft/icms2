@@ -39,6 +39,8 @@ class actionImagesPresetsAdd extends cmsAction {
                 // создаем дефолтные миниатюры
                 $this->createDefaultImages($preset);
 
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
                 $this->redirectToAction('presets');
 
             }

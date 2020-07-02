@@ -143,9 +143,10 @@ class cmsForm {
     /**
      * Возвращает подготовленный массив полей формы
      *
+     * @param array $item Массив данных формы
      * @return array
      */
-    public function getFormStructure(){
+    public function getFormStructure($item = null){
 
         $default_lang = cmsConfig::get('language');
         $is_change_lang = cmsConfig::get('is_user_change_lang');
@@ -161,6 +162,10 @@ class cmsForm {
             $childs = [];
 
             foreach($fieldset['childs'] as $id => $field){
+
+                if($item){
+                    $field->setItem($item);
+                }
 
                 $name = $field->getName();
 
@@ -188,7 +193,7 @@ class cmsForm {
                     'ft_'.strtolower(substr(get_class($field), 5))
                 ];
 
-                if(array_search(['required'], $field->getRules()) !== false){ $field->classes[] = 'reguired_field'; }
+                if(array_search(['required'], $field->rules) !== false){ $field->classes[] = 'reguired_field'; }
 
                 if (!empty($field->groups_edit)){
                     if (!in_array(0, $field->groups_edit)){
@@ -736,11 +741,11 @@ class cmsForm {
      * @param array $item Массив предыдущих значений формы
      * @return array
      */
-    public function parse($request, $is_submitted = false, $item = false) {
+    public function parse($request, $is_submitted = false, $item = null) {
 
         $result = [];
 
-        foreach($this->getFormStructure() as $fieldset){
+        foreach($this->getFormStructure($item) as $fieldset){
 
             if (!isset($fieldset['childs'])) { continue; }
 
@@ -772,7 +777,6 @@ class cmsForm {
                         }
                     }
 
-                    $field->setItem($item);
                     $field->request = $request;
 
                     $value = $field->store($value, $is_submitted, $old_value);
@@ -837,7 +841,7 @@ class cmsForm {
         //
         // Перебираем поля формы
         //
-        foreach($this->getFormStructure() as $fieldset){
+        foreach($this->getFormStructure($data) as $fieldset){
 
             if (!isset($fieldset['childs'])) { continue; }
 
@@ -871,8 +875,6 @@ class cmsForm {
                     if ($is_array !== false){
                         $value = array_value_recursive($name, $data);
                     }
-
-                    if ($data) { $field->setItem($data); }
 
                     //
                     // перебираем правила для поля

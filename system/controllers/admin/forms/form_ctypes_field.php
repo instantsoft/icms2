@@ -57,8 +57,8 @@ class formAdminCtypesField extends cmsForm {
                 'childs' => array(
                     new fieldList('fieldset', array(
                         'title' => LANG_CP_FIELD_FIELDSET_SELECT,
-                        'generator' => function($field) use ($model){
-                            $fieldsets = $model->getContentFieldsets($field['ctype_id']);
+                        'generator' => function($field) use ($model, $ctype_name){
+                            $fieldsets = $model->getContentFieldsets($ctype_name);
                             $items = array('');
                             foreach($fieldsets as $fieldset) { $items[$fieldset] = $fieldset; }
                             return $items;
@@ -125,12 +125,12 @@ class formAdminCtypesField extends cmsForm {
 
                             $parents = $model->getContentTypeParents($ctype['id']);
 
-                            $items = array('0' => LANG_NO);
+                            $items = array('' => LANG_NO);
 
                             if (is_array($parents)){
                                 foreach($parents as $parent){
                                     $items[$parent['id']] = "{$ctype['title']} > {$parent['ctype_title']}";
-                                };
+                                }
                             }
 
                             return $items;

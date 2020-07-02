@@ -610,7 +610,7 @@ class content extends cmsFrontend {
 
     public function getCategoryForm($ctype, $action){
 
-        $form = $this->getForm('category');
+        $form = $this->getForm('category', [$ctype, $action]);
 
         // Если заданы пресеты
         if (!empty($ctype['options']['cover_sizes'])){

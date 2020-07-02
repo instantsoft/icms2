@@ -11,7 +11,7 @@ class actionAdminContentCatsAdd extends cmsAction {
         $ctype = $content_model->getContentType($ctype_id);
         if (!$ctype) { return cmsCore::error404(); }
 
-        $form = $this->getForm('content_category');
+        $form = $this->getForm('content_category', [$ctype]);
 
         if (!$content_model->isContentPropsExists($ctype['name'])){
             $form->removeField('basic', 'is_inherit_binds');

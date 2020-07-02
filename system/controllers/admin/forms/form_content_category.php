@@ -1,7 +1,7 @@
 <?php
 class formAdminContentCategory extends cmsForm {
 
-    public function init() {
+    public function init($ctype) {
 
         return array(
 
@@ -11,24 +11,14 @@ class formAdminContentCategory extends cmsForm {
 
                     new fieldList('parent_id', array(
                         'title' => LANG_PARENT_CATEGORY,
-                        'generator' => function($cat){
+                        'generator' => function($cat) use ($ctype){
 
                             $content_model = cmsCore::getModel('content');
-                            $tree = $content_model->limit(0)->getCategoriesTree($cat['ctype_name']);
+                            $tree = $content_model->limit(0)->getCategoriesTree($ctype['name']);
 
                             if ($tree){
                                 foreach($tree as $item){
-
-                                    // при редактировании исключаем себя и вложенные
-                                    // подкатегории из списка выбора родителя
-                                    if (isset($cat['ns_left'])){
-                                        if ($item['ns_left'] >= $cat['ns_left'] && $item['ns_right'] <= $cat['ns_right']){
-                                            continue;
-                                        }
-                                    }
-
                                     $items[$item['id']] = str_repeat('- ', $item['ns_level']).' '.$item['title'];
-
                                 }
                             }
 

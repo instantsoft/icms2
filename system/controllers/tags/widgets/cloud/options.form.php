@@ -16,7 +16,7 @@ class formWidgetTagsCloudOptions extends cmsForm {
                     new fieldListMultiple('options:subjects', array(
                         'title'     => LANG_WD_TAGS_SUBJECTS,
                         'show_all'  => true,
-                        'generator' => function($item) {
+                        'generator' => function() {
                             $cts = cmsCore::getModel('content')->getContentTypes();
                             $items = array();
                             if ($cts) {

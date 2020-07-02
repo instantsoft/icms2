@@ -12,7 +12,7 @@ class actionAdminMenuItemEdit extends cmsAction {
         $menu = $this->model_menu->getMenu($item['menu_id']);
         if (!$menu) { cmsCore::error404(); }
 
-        $form = $this->getForm('menu_item');
+        $form = $this->getForm('menu_item', [$item['menu_id'], $item['id']]);
 
         if ($this->request->has('submit')){
 

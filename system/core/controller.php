@@ -1228,6 +1228,7 @@ class cmsController {
     }
 
     public function validate_array_key($array, $value){
+        if ($value === null || $value === false) { return true; }
         if (is_array($value)) {
             $result = true;
             foreach ($value as $val) {

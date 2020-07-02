@@ -26,8 +26,6 @@ $this->addMenuItem('breadcrumb-menu', [
     ]
 ]);
 
-$category['ctype_name'] = $ctype['name'];
-
 $this->renderForm($form, $category, array(
     'action' => '',
     'method' => 'post'

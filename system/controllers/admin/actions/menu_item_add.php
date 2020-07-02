@@ -7,7 +7,7 @@ class actionAdminMenuItemAdd extends cmsAction {
         $menu = $this->model_menu->getMenu($menu_id);
         if (!$menu) { cmsCore::error404(); }
 
-        $form = $this->getForm('menu_item');
+        $form = $this->getForm('menu_item', [$menu_id, $parent_id]);
 
         $is_submitted = $this->request->has('submit');
 

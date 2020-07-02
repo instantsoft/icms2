@@ -58,7 +58,7 @@ class formWidgetContentListOptions extends cmsForm {
 
                     new fieldList('options:ctype_id', array(
                         'title' => LANG_CONTENT_TYPE,
-                        'generator' => function($item) {
+                        'generator' => function($ctype) {
 
                             $model = cmsCore::getModel('content');
                             $tree = $model->getContentTypes();

@@ -114,31 +114,6 @@ class fieldListBitmask extends cmsFormField {
 
     }
 
-    public function getListItems(){
-
-        $items = [];
-
-        if (isset($this->items)){
-
-            $items = $this->items;
-
-        } else if (isset($this->generator)) {
-
-            $generator = $this->generator;
-            $items = $this->items = $generator($this->item);
-
-        } else if ($this->hasDefaultValue()) {
-
-            $items = string_explode_list($this->getDefaultValue());
-
-            ksort($items);
-
-            $this->items = $items;
-        }
-
-        return $items;
-    }
-
     public function setOptions($options){
         parent::setOptions($options);
         if (!isset($this->items) && $this->hasDefaultValue()){

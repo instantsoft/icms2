@@ -1,5 +1,5 @@
 <?php $visible_depend = []; $index = 0; ?>
-<?php foreach($form->getFormStructure() as $fieldset_id => $fieldset){ ?>
+<?php foreach($form->getFormStructure($data) as $fieldset_id => $fieldset){ ?>
 
 <?php if ($fieldset['type'] == 'html'){ ?>
     <div id="fset_<?php echo $fieldset_id; ?>"><?php if (!empty($fieldset['content'])) { echo $fieldset['content']; } ?></div>
@@ -38,8 +38,6 @@
                 <?php }
 
                 foreach ($_field as $key => $field) {
-
-                    if ($data) { $field->setItem($data); }
 
                     $name = $field->getName();
 

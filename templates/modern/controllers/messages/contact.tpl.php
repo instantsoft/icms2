@@ -5,7 +5,7 @@
 
     <div class="border-bottom py-2 pl-md-2 d-flex align-items-center icms-messages-toolbar pannel-toolbar sticky-top bg-white">
         <div class="icms-messages-toolbar__info d-flex w-100 align-items-center">
-            <button id="contact_toggle" class="btn btn-info mr-2 d-block d-md-none">
+            <button id="contact_toggle" class="btn mr-2 d-block d-md-none">
                 <?php html_svg_icon('solid', 'chevron-left'); ?>
             </button>
             <a href="<?php echo href_to_profile($contact); ?>" class="icms-user-avatar mr-2 small <?php if (!empty($contact['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">

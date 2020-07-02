@@ -43,6 +43,8 @@ class actionImagesPresetsEdit extends cmsAction {
 
                 $this->createDefaultImages(array_merge($original_preset, $preset));
 
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
                 $this->redirectToAction('presets');
 
             }

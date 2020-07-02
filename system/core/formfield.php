@@ -564,4 +564,31 @@ class cmsFormField {
         return $this;
     }
 
+    /*
+     * Метод для получения списка в полях
+     */
+    public function getListItems(){
+
+        $items = [];
+
+        if (isset($this->items)){
+
+            $items = $this->items;
+
+        } else if (isset($this->generator)) {
+
+            $generator = $this->generator;
+            $items = $this->items = $generator($this->item);
+
+        } else if ($this->hasDefaultValue()) {
+
+            $items = $this->items = (!empty($this->show_empty_value) ? ['' => ''] : [])  + string_explode_list($this->getDefaultValue());
+
+            ksort($items);
+
+        }
+
+        return $items;
+    }
+
 }

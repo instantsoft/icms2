@@ -205,7 +205,7 @@ class actionUsersProfile extends cmsAction {
             if ($this->cms_user->is_admin){
                 $tool_buttons['edit'] = array(
                     'title' => LANG_USERS_EDIT_USER,
-                    'class' => 'edit ajax-modal', 'icon' => 'user-edit',
+                    'class' => 'edit', 'icon' => 'user-edit',
                     'href'  => href_to('admin', 'users', array('edit', $profile['id'])) . "?back=" . href_to('users', $profile['id'])
                 );
             }

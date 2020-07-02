@@ -1,7 +1,7 @@
 <?php
 class formAdminCtypesProp extends cmsForm {
 
-    public function init($do) {
+    public function init($do, $ctype) {
 
         $model = cmsCore::getModel('content');
 
@@ -27,8 +27,8 @@ class formAdminCtypesProp extends cmsForm {
                 'childs' => array(
                     new fieldList('fieldset', array(
                         'title' => LANG_CP_FIELD_FIELDSET_SELECT,
-                        'generator' => function($prop) use($model){
-                            $fieldsets = $model->getContentPropsFieldsets($prop['ctype_id']);
+                        'generator' => function($prop) use($model, $ctype){
+                            $fieldsets = $model->getContentPropsFieldsets($ctype['name']);
                             $items = array('');
                             if (is_array($fieldsets)){
                                 foreach($fieldsets as $fieldset) { $items[$fieldset] = $fieldset; }
@@ -98,8 +98,7 @@ class formAdminCtypesProp extends cmsForm {
                             'is_multiple' => true,
                             'multiple_select_deselect' => true,
                             'is_tree' => true,
-                            'generator' => function($prop) use($model){
-                                $ctype = $model->getContentType($prop['ctype_id']);
+                            'generator' => function($prop) use($model, $ctype){
                                 $tree = $model->limit(0)->getCategoriesTree($ctype['name'], false);
                                 foreach($tree as $c){
                                     $items[$c['id']] = str_repeat('- ', $c['ns_level']).' '.$c['title'];

@@ -1,7 +1,7 @@
 <?php
 class formContentCategory extends cmsForm {
 
-    public function init() {
+    public function init($ctype, $action) {
 
         return array(
 
@@ -21,9 +21,9 @@ class formContentCategory extends cmsForm {
 
                     new fieldList('parent_id', array(
                         'title' => LANG_PARENT_CATEGORY,
-                        'generator' => function($cat){
+                        'generator' => function($cat) use($ctype){
 
-                            $tree = cmsCore::getModel('content')->limit(0)->getCategoriesTree($cat['ctype_name']);
+                            $tree = cmsCore::getModel('content')->limit(0)->getCategoriesTree($ctype['name']);
 
                             if ($tree){
                                 foreach($tree as $item){

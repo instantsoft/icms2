@@ -59,12 +59,13 @@ class fieldList extends cmsFormField {
 
     public function getRules() {
 
-        if($this->item){
-            $this->rules[] = array('array_key', $this->getListItems());
+        if(!$this->dynamic_list){
+            $this->rules[] = ['array_key', $this->getListItems()];
+        } else {
+            $this->rules[] = ['array_key_dynamic'];
         }
 
         return $this->rules;
-
     }
 
     public function getStringValue($value){
@@ -99,28 +100,6 @@ class fieldList extends cmsFormField {
 
     }
 
-    public function getListItems(){
-
-        $items = [];
-
-        if (isset($this->items)){
-
-            $items = $this->items;
-
-        } else if (isset($this->generator)) {
-
-            $generator = $this->generator;
-            $items = $this->items = $generator($this->item);
-
-        } else if ($this->hasDefaultValue()) {
-
-            $items = $this->items = ($this->show_empty_value ? array('' => '') : array()) + $this->parseListItems($this->getDefaultValue());
-
-        }
-
-        return $items;
-    }
-
     public function getListValuesItems(){
 
         $items = array();
@@ -138,10 +117,6 @@ class fieldList extends cmsFormField {
 
         return $items;
 
-    }
-
-    public function parseListItems($string){
-        return string_explode_list($string);
     }
 
     public function getDefaultVarType($is_filter = false) {
@@ -203,6 +178,71 @@ class fieldList extends cmsFormField {
         }
 
         return parent::getInput($value);
+
+    }
+
+    public function validate_array_key_dynamic($value){
+
+        if (empty($value)) { return true; }
+
+        if (!is_array($value)) { return ERR_VALIDATE_INVALID; }
+
+        $items = [
+            // Еще может быть ячейка field_value, в ней обычный input
+            'field' => $this->getListItems(),
+            'field_select' => $this->getListValuesItems()
+        ];
+
+        // Если разбиты по группам
+        // избавляемся от вложенности
+        if($items['field_select']){
+            $first_value_item = reset($items['field_select']);
+            if(is_array($first_value_item)){
+                $field_select = [];
+                foreach ($items['field_select'] as $fskey => $fsvalue) {
+                    foreach ($fsvalue as $fsv_key => $fsv_value) {
+                        $field_select[$fsv_key] = [$fsv_value];
+                    }
+                }
+                $items['field_select'] = $field_select;
+            }
+        }
+
+        if(isset($this->multiple_keys)){
+            foreach ($value as $val) {
+                foreach ($this->multiple_keys as $name => $type) {
+                    if(!array_key_exists($name, $val)){
+                        return ERR_VALIDATE_INVALID;
+                    }
+                    // Не пустой список
+                    if(!empty($items[$type])){
+                        if(!isset($items[$type][$val[$name]])){
+                            dump($items[$type]);
+                            return ERR_VALIDATE_INVALID;
+                        }
+                    }
+                }
+            }
+            return true;
+        } else {
+            foreach ($value as $k => $val) {
+                if(!$k){
+                    if(!isset($items['field'][0]) && !isset($items['field'][''])){
+                        return ERR_VALIDATE_INVALID;
+                    }
+                } else {
+                    if(!isset($items['field'][$k])){
+                        return ERR_VALIDATE_INVALID;
+                    }
+                }
+                if(!isset($items['field_select'][$val])){
+                    return ERR_VALIDATE_INVALID;
+                }
+            }
+            return true;
+        }
+
+        return ERR_VALIDATE_INVALID;
 
     }
 

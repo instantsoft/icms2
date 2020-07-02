@@ -11,7 +11,7 @@ class actionAdminCtypesPropsEdit extends cmsAction {
         $ctype = $content_model->getContentType($ctype_id);
         if (!$ctype) { cmsCore::error404(); }
 
-        $form = $this->getForm('ctypes_prop', array('edit', $ctype['name']));
+        $form = $this->getForm('ctypes_prop', ['edit', $ctype]);
 
         $is_submitted = $this->request->has('submit');
 

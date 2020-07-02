@@ -31,7 +31,7 @@ class formWidgetContentFieldsOptions extends cmsForm {
                     new fieldList('options:ctype_id', array(
                         'title' => LANG_CONTENT_TYPE,
                         'hint' => LANG_WD_CONTENT_FIELDS_CT_HINT,
-                        'generator' => function($item) {
+                        'generator' => function($ctype) {
 
                             $model = cmsCore::getModel('content');
                             $tree  = $model->getContentTypes();

@@ -39,6 +39,9 @@ icms.dynamicList = function(field_id, element_name, current_values, fields_mappi
             }
         } else {
             mapping_data = data || {};
+            if(typeof (mapping_data) !== 'object'){
+                mapping_data = {field: '', field_select: mapping_data};
+            }
         }
 
         var default_data = {field: false, field_select: false, field_value: false};
