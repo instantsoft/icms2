@@ -73,6 +73,9 @@ class actionAdminInlineSave extends cmsAction {
 
 		$this->model->update($table, $item_id, $data);
 
+        list($data, $_data, $i) = cmsEventsManager::hook('admin_inline_save_after', array($data, $_data, $i));
+        list($data, $_data, $i) = cmsEventsManager::hook('admin_inline_save_after_'.str_replace(['{','}'], '', $table), array($data, $_data, $i));
+
 		return $this->cms_template->renderJSON(array(
 			'error'  => false,
 			'info'   => LANG_SUCCESS_MSG,

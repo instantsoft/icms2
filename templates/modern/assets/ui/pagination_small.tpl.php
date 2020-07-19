@@ -1,4 +1,4 @@
-<div class="input-group mb-3 mb-md-4">
+<div class="input-group mb-0  mt-3 mt-md-4">
     <?php if ($prev_url) { ?>
         <div class="input-group-prepend">
             <a href="<?php html($prev_url); ?>" class="btn btn-outline-secondary">

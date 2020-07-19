@@ -52,7 +52,7 @@
                 } ?>
                 <?php if (!empty($item['title'])) { echo $item['title']; } ?>
                 <?php if (!empty($item['counter'])){ ?>
-                    <span class="counter badge badge-primary"><?php html($item['counter']); ?></span>
+                    <span class="counter badge"><?php html($item['counter']); ?></span>
                 <?php } ?>
             </a>
         <?php } ?>

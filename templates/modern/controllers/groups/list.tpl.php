@@ -17,7 +17,7 @@
         $pos_colors = ['text-muted', 'text-warning','text-info', 'text-secondary'];
     ?>
 
-    <div class="groups-list striped-list my-3 my-md-4">
+    <div class="groups-list striped-list mt-3 mt-md-4">
 
         <?php foreach($groups as $group){ ?>
 

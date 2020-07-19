@@ -45,7 +45,7 @@
         </form>
     </div>
 
-    <div id="entries_list" class="my-3 my-md-4">
+    <div id="entries_list" class="mt-3 mt-md-4">
 
         <?php if (!$entries) { ?>
             <p class="no_entries alert alert-info my-4">

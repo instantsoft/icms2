@@ -5,7 +5,7 @@ $this->addTplJSName([
     );
 ?>
 <?php if ($items){ ?>
-    <div id="comments_list" class="striped-list my-3 my-md-4">
+    <div id="comments_list" class="striped-list mt-3 mt-md-4">
         <?php
             echo $this->renderChild('comment', array(
                 'comments'         => $items,

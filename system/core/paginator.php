@@ -64,6 +64,8 @@ class cmsPaginator {
                 'first' => $base_uri,
                 'base'  => $base_uri
             );
+        } elseif(!isset($base_uri['first'])){
+            $base_uri['first'] = $base_uri['base'];
         }
 
         $this->base_uri = $base_uri;

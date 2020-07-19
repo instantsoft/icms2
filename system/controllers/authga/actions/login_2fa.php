@@ -3,7 +3,7 @@ class actionAuthgaLogin2fa extends cmsAction {
 
     public $lock_explicit_call = true;
 
-    public function run($logged_user, $form, $data){
+    public function run($logged_user, $form, $data, $form_action){
 
         $this->cms_template->setContext($this);
 
@@ -34,9 +34,10 @@ class actionAuthgaLogin2fa extends cmsAction {
         }
 
         $tpl_params = [
-            'data'   => $data,
-            'form'   => $form_confirm,
-            'errors' => isset($errors) ? $errors : false
+            'form_action' => $form_action,
+            'data'        => $data,
+            'form'        => $form_confirm,
+            'errors'      => isset($errors) ? $errors : false
         ];
 
         // Для вызовов из InstantCMS JSON API

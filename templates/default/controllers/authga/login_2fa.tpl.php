@@ -7,7 +7,7 @@
 
 <?php
     $this->renderForm($form, $data, array(
-        'action' => href_to('auth', 'login'),
+        'action' => $form_action,
         'method' => 'post',
         'submit' => array(
             'title' => LANG_LOG_IN

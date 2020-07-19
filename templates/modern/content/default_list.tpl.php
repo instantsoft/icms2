@@ -23,7 +23,7 @@
     </p>
 <?php return; } ?>
 
-<div class="content_list default_list <?php echo $ctype['name']; ?>_list my-3 my-md-4">
+<div class="content_list default_list <?php echo $ctype['name']; ?>_list mt-3 mt-md-4">
 
     <?php foreach($items as $item){ ?>
 

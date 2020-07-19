@@ -65,7 +65,7 @@
                     <div class="d-flex justify-content-start flex-wrap">
                         <?php foreach($item['images'] as $image){ ?>
                             <a href="<?php echo $image['url']; ?>" class="mr-1 mt-1">
-                                <img src="<?php echo $image['src']; ?>" alt="<?php html(!empty($image['title']) ? $image['title'] : $item['subject_title']); ?>">
+                                <img src="<?php echo $image['src']; ?>" class="img-fluid" alt="<?php html(!empty($image['title']) ? $image['title'] : $item['subject_title']); ?>">
                             </a>
                         <?php } ?>
                         <?php if($item['images_count'] > 5){ ?>

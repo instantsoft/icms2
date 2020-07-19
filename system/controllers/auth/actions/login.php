@@ -78,7 +78,7 @@ class actionAuthLogin extends cmsAction {
                         $context_request->setContext(cmsRequest::CTX_INTERNAL);
 
                         $result = cmsCore::getController($twofa_params['controller'], $context_request)->
-                                executeAction($twofa_params['action'], [$logged_user, $form, $data]);
+                                executeAction($twofa_params['action'], [$logged_user, $form, $data, href_to('auth', 'login')]);
 
                         // передаём управление другому экшену
                         if($result !== true){

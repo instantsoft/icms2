@@ -68,6 +68,19 @@
     }
   }
 }
+.nav-link {
+    > .counter.badge {
+        color: $white;
+        background-color: $primary;
+    }
+}
+.navbar-dark {
+    .nav-link {
+        > .counter.badge {
+            background-color: $danger;
+        }
+    }
+}
 .dropdown-menu-arrow {
     &:before {
         position: absolute;

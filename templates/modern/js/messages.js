@@ -545,7 +545,7 @@ icms.messages = (function ($) {
         $('.counter', button).remove();
 
         if (value > 0){
-            var html = '<span class="counter">' + value + '</span>';
+            var html = '<span class="counter badge">' + value + '</span>';
             $('a', button).append(html);
         } else {
             $(button).remove();

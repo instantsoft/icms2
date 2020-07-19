@@ -24,7 +24,7 @@
 
 <?php $first_item = reset($items); ?>
 
-<div class="content_list table <?php echo $ctype['name']; ?>_list table-responsive-md my-3 my-md-4">
+<div class="content_list table <?php echo $ctype['name']; ?>_list table-responsive-md mt-3 mt-md-4">
 
     <table class="table table-hover">
         <thead>

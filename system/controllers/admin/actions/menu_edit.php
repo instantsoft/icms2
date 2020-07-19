@@ -26,7 +26,7 @@ class actionAdminMenuEdit extends cmsAction {
                 cmsUser::setCookiePublic('menu_tree_path', "{$id}.0");
 
                 // обновление виджетов меню, в которых используется это меню
-                if ($menu['name'] !== $new_menu['name']){
+                if (!$menu['is_fixed'] && $menu['name'] !== $new_menu['name']){
 
                     $widgets_model = cmsCore::getModel('widgets');
 

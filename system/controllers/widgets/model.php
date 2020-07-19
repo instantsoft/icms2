@@ -51,9 +51,13 @@ class modelWidgets extends cmsModel {
             foreach ($items as $item) {
                 if($item['parent_id']){
 
-                    if($last_row_id != $item['row_id']){
-
+                    if(!isset($child_positions[$item['parent_id']])){
                         $child_positions[$item['parent_id']] = [$item['name']];
+                    } else {
+                        $child_positions[$item['parent_id']][] = $item['name'];
+                    }
+
+                    if($last_row_id != $item['row_id']){
 
                         $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']] = [
                             'id'        => $item['row_id'],
@@ -70,8 +74,6 @@ class modelWidgets extends cmsModel {
                     } else {
                         $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['positions'][] = $item['name'];
                         $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['cols'][$item['id']] = $item;
-
-                        $child_positions[$item['parent_id']][] = $item['name'];
                     }
 
                     $last_row_id = $item['row_id'];
@@ -120,7 +122,6 @@ class modelWidgets extends cmsModel {
         }
 
         return $rows;
-
     }
 
     public function addLayoutRow($row, $default_col = []) {

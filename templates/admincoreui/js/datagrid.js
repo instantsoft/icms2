@@ -15,13 +15,13 @@ icms.datagrid = (function ($) {
     };
 
     this.bind_sortable = function(){
-        $('.datagrid th.sortable').on('click', function(){
+        $('.datagrid th.sortable').off('click').on('click', function(){
 			console.log('click');
             _this.clickHeader($(this).attr('rel'));
         });
     };
     this.bind_filter = function(){
-        $('.datagrid .filter .input, .datagrid .filter .date-input, .datagrid .filter select').on('input', function () {
+        $('.datagrid .filter .input, .datagrid .filter .date-input, .datagrid .filter select').off('input').on('input', function () {
             $('.datagrid .filter .input, .datagrid .filter .date-input, .datagrid .filter select').each(function(){
                 var filter = $(this).attr('rel');
                 $('#datagrid_filter input[name="'+filter+'"]').val($(this).val());
@@ -450,7 +450,7 @@ icms.datagrid = (function ($) {
                     firstLastUse: true,
                     first: LANG_PAGE_FIRST,
                     last: LANG_PAGE_LAST
-                }).on('page', function (event, num) {
+                }).off('page').on('page', function (event, num) {
                     _this.setPage(num);
                     _this.loadRows();
                 });
