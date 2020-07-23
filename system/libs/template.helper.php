@@ -181,7 +181,7 @@ function html_button($caption, $name, $onclick = '', $attributes = []) {
     if (!empty($attributes['class'])) { $class .= ' '.$attributes['class']; }
     else { $class .= ' btn-secondary'; }
 
-	return '<button value="'.html($caption, false).'" class="'.$class.'" name="'.$name.'" onclick="'.$onclick.'" '.$attr_str.'><span>'.html($caption, false).'</span></button>';
+	return '<button value="'.html($caption, false).'" class="'.$class.'" name="'.$name.'" onclick="'.html($onclick, false).'" '.$attr_str.'><span>'.html($caption, false).'</span></button>';
 }
 
 /**

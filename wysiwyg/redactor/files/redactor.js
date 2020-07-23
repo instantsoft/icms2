@@ -4626,7 +4626,7 @@
 					html = html.replace(/^<a(.*?)>(.*?)<\/a>$/i, "$2");
 				}
 			}
-
+            html = html.replace(/on([a-z]+)=|javascript\:/gi, '');
 			if (this.opts.pastePlainText)
 			{
 				var tmp = this.document.createElement('div');
@@ -4781,7 +4781,7 @@
 					if (matches !== null)
 					{
 						this.pasteClipboardMozilla = matches;
-						for (k in matches)
+						for (var k in matches)
 						{
 							var img = matches[k].replace('<img', '<img data-mozilla-paste-image="' + k + '" ');
 							html = html.replace(matches[k], img);
@@ -4845,7 +4845,7 @@
 				this.rtePaste = false;
 				if (this.browser('mozilla'))
 				{
-					this.$editor.find('p:empty').remove()
+					this.$editor.find('p:empty').remove();
 				}
 				if (this.pasteClipboardMozilla !== false)
 				{

@@ -195,7 +195,7 @@ function html_attr_str($attributes){
                 }
                 continue;
             }
-            $attr_str .= "{$key}=\"{$val}\" ";
+            $attr_str .= $key.'="'.html($val, false).'" ';
         }
     }
     return $attr_str;
