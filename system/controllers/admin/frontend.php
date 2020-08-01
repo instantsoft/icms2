@@ -124,35 +124,43 @@ class admin extends cmsFrontend {
                 } else {
                     $cmd = "grep -P '^physical id' /proc/cpuinfo|wc -l";
                 }
-                $cpu_count = console_exec_command($cmd);
 
-                if(!empty($cpu_count[0])){
-                    $cpu_count = trim($cpu_count[0]) ? trim($cpu_count[0]) : 1;
-                } else {
-                    $cpu_count = 1;
+                try {
+                    $cpu_count = console_exec_command($cmd);
+
+                    if(!empty($cpu_count[0])){
+                        $cpu_count = trim($cpu_count[0]) ? trim($cpu_count[0]) : 1;
+                    } else {
+                        $cpu_count = 1;
+                    }
+
+                } catch (Exception $exc) {
+                    $cpu_count = 'error';
                 }
 
                 cmsUser::sessionSet('cpu_count', $cpu_count);
-
             }
 
-            $la = sys_getloadavg();
+            if($cpu_count && is_numeric($cpu_count)){
 
-            $current_load_average = round(100*($la[2]/$cpu_count));
+                $la = sys_getloadavg();
 
-            // вероятно определили неверно
-            if($current_load_average > 100){
-                $cpu_count = round($current_load_average/100);
-                cmsUser::sessionSet('cpu_count', $cpu_count);
                 $current_load_average = round(100*($la[2]/$cpu_count));
-            }
 
-            $su['cpu'] = [
-                'title'   => LANG_CP_SU_CPU,
-                'hint'    => $current_load_average.'%',
-                'percent' => $current_load_average,
-                'style'   => ($current_load_average <= 50 ? 'info' : ($current_load_average <= 75 ? 'warning' : 'danger'))
-            ];
+                // вероятно определили неверно
+                if($current_load_average > 100){
+                    $cpu_count = round($current_load_average/100);
+                    cmsUser::sessionSet('cpu_count', $cpu_count);
+                    $current_load_average = round(100*($la[2]/$cpu_count));
+                }
+
+                $su['cpu'] = [
+                    'title'   => LANG_CP_SU_CPU,
+                    'hint'    => $current_load_average.'%',
+                    'percent' => $current_load_average,
+                    'style'   => ($current_load_average <= 50 ? 'info' : ($current_load_average <= 75 ? 'warning' : 'danger'))
+                ];
+            }
 
         }
 

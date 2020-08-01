@@ -29,7 +29,7 @@ class actionAdminWidgetsUpdate extends cmsAction {
 
         $widget_object = cmsCore::getWidgetObject($widget);
 
-        $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], false, $template, $widget_object->isAllowCacheableOption());
+        $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], $widget['options'], $template, $widget_object->isAllowCacheableOption());
 
         $widget_event_name = 'widget_'.($widget['controller'] ? $widget['controller'].'_' : '').$widget['name'].'_form';
 

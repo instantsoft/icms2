@@ -15,22 +15,28 @@ class cmsCacheFiles {
             'value' => $value
         );
 
-        list($path, $file) = $this->getPathAndFile($key);
+        list($path, $file_path) = $this->getPathAndFile($key);
 
         @mkdir($path, 0777, true);
         @chmod($path, 0777);
         @chmod(pathinfo($path, PATHINFO_DIRNAME), 0777);
 
-        return file_put_contents($file, '<?php return '.var_export($data, true).';');
+        $file_path_tmp = $file_path.'.tmp';
 
+        $success = file_put_contents($file_path_tmp, '<?php return '.var_export($data, true).';');
+
+        if($success){
+            rename($file_path_tmp, $file_path);
+        }
+
+        return $success;
     }
 
     public function has($key){
 
         list($path, $file) = $this->getPathAndFile($key);
 
-        return file_exists($file);
-
+        return is_readable($file);
     }
 
     public function get($key){

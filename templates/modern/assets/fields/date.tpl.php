@@ -1,3 +1,8 @@
+<?php $this->addTplJSNameFromContext([
+    'jquery-ui',
+    'i18n/jquery-ui/'.cmsCore::getLanguageName()
+    ]); ?>
+<?php $this->addTplCSSNameFromContext('jquery-ui'); ?>
 <?php if($field->title){ ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 <div class="form-inline">
 <?php echo html_datepicker($field->data['fname_date'], $field->data['date'], ['id'=>$field->id, 'class' => 'mr-sm-2 mb-2 mb-sm-0'], ['minDate'=>date('d.m.Y', 86400)]); ?>
