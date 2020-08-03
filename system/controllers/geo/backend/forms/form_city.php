@@ -6,13 +6,6 @@ class formGeoCity extends cmsForm {
 
         $model = cmsCore::getModel('geo');
 
-        $regions   = array();
-        $countries = $model->getCountries();
-
-        if($country_id){
-            $regions = $model->getRegions($country_id);
-        }
-
         return array(
             array(
                 'type'   => 'fieldset',
@@ -21,7 +14,7 @@ class formGeoCity extends cmsForm {
                     new fieldList('country_id', array(
                         'title' => LANG_COUNTRY,
                         'rules' => array(array('required')),
-                        'items' => $countries
+                        'items' => $model->getCountries()
                     )),
 
                     new fieldList('region_id', array(
@@ -31,7 +24,17 @@ class formGeoCity extends cmsForm {
                             'list' => 'country_id',
                             'url'  => href_to('admin', 'get_table_list', ['geo_regions', 'id', 'name'])
                         ),
-                        'items'  => $regions
+                        'generator' => function($item, $request) use($model) {
+                            $list     = ['0' => ''];
+                            $country_id = is_array($item) ? array_value_recursive('country_id', $item) : false;
+                            if (!$country_id && $request) {
+                                $country_id = $request->get('country_id', 0);
+                            }
+                            if (!$country_id) {
+                                return $list;
+                            }
+                            return $model->getRegions($country_id);
+                        }
                     )),
 
                     new fieldString('name', array(

@@ -4,6 +4,8 @@ class formAdminCtypesRelation extends cmsForm {
 
     public function init($do, $ctype_id) {
 
+        $content_model = cmsCore::getModel('content');
+
         return array(
             'basic' => array(
                 'type' => 'fieldset',
@@ -11,7 +13,7 @@ class formAdminCtypesRelation extends cmsForm {
 
                     new fieldList('child_ctype_id', array(
                         'title' => LANG_CP_RELATION_CHILD,
-                        'generator' => function() use ($ctype_id, $do) {
+                        'generator' => function() use ($ctype_id, $do, $content_model) {
 
                             $items = $rel_names = array();
 
@@ -19,7 +21,7 @@ class formAdminCtypesRelation extends cmsForm {
 
                             if (is_array($relation_childs)){
 
-                                $relations = cmsCore::getModel('content')->getContentTypeChilds($ctype_id);
+                                $relations = $content_model->getContentTypeChilds($ctype_id);
 
                                 if($relations){
                                     foreach ($relations as $relation) {
@@ -58,7 +60,21 @@ class formAdminCtypesRelation extends cmsForm {
 							'list' => 'child_ctype_id',
 							'url'  => href_to('content', 'widget_datasets_ajax')
 						),
-						'items' => array('0'=>'')
+                        'generator' => function($item, $request) use($content_model) {
+                            $list     = ['0' => ''];
+                            $ctype_id = is_array($item) ? array_value_recursive('child_ctype_id', $item) : false;
+                            if (!$ctype_id && $request) {
+                                $ctype_id = $request->get('child_ctype_id', 0);
+                            }
+                            if (!$ctype_id) {
+                                return $list;
+                            }
+                            $datasets = $content_model->getContentDatasets($ctype_id);
+                            if ($datasets) {
+                                $list = $list + array_collection_to_list($datasets, 'id', 'title');
+                            }
+                            return $list;
+                        }
                     ))
 
                 )

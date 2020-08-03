@@ -4,24 +4,33 @@ class formWidgetContentFieldsOptions extends cmsForm {
 
     public function init($options = false) {
 
-        $fields_list = ['' => ''];
+        $content_model = cmsCore::getModel('content');
 
-        if (!empty($options['ctype_id'])) {
-
-            $content_model = cmsCore::getModel('content');
-
-            $ctype = $content_model->getContentType($options['ctype_id']);
-
+        $field_generator = function ($item, $request) use($content_model) {
+            $list     = ['' => ''];
+            $ctype_id = is_array($item) ? array_value_recursive('options:ctype_id', $item) : false;
+            if (!$ctype_id && $request) {
+                $ctype_id = $request->get('options:ctype_id', 0);
+            }
+            if (!$ctype_id) {
+                return $list;
+            }
+            $ctype = $content_model->getContentType($ctype_id);
+            if (!$ctype) {
+                return $list;
+            }
             $fields = $content_model->getContentFields($ctype['name']);
+
             if ($fields) {
                 foreach ($fields as $field) {
                     if($field['is_system']){
                         continue;
                     }
-                    $fields_list[$field['name']] = $field['title'];
+                    $list[$field['name']] = $field['title'];
                 }
             }
-        }
+            return $list;
+        };
 
         return array(
             array(
@@ -61,7 +70,7 @@ class formWidgetContentFieldsOptions extends cmsForm {
                                 ]
                             ]])
                         ),
-                        'items' => $fields_list
+                        'generator' => $field_generator
                     )),
                     new fieldList('options:image_preset', array(
                         'title' => LANG_WD_CONTENT_FIELDS_IFP,
@@ -86,7 +95,7 @@ class formWidgetContentFieldsOptions extends cmsForm {
                                 ]
                             ]])
                         ),
-                        'items' => $fields_list,
+                        'generator' => $field_generator,
                         'rules' => array(
                             array('required')
                         )

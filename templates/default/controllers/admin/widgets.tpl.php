@@ -88,7 +88,11 @@
                  data-delete-page-url="<?php echo $this->href_to('widgets', 'page_delete'); ?>"
                  data-reorder-url="<?php echo $this->href_to('widgets', 'reorder'); ?>"
                  >
-                <?php echo $scheme_html; ?>
+                <?php if(!$is_dynamic_scheme){ ?>
+                    <?php echo $scheme_html; ?>
+                <?php } else { ?>
+                    <p><?php echo LANG_CP_WIDGETS_DSCH_ERROR; ?></p>
+                <?php } ?>
                 <div id="cp-widgets-unused">
                     <h3><?php echo LANG_CP_WIDGETS_UNUSED; ?></h3>
                     <ul class="position" rel="_unused" id="pos-_unused"></ul>

@@ -7,10 +7,10 @@ class actionContentWidgetFieldsAjax extends cmsAction {
 		if (!$this->request->isAjax() || !cmsUser::isAdmin()){ return cmsCore::error404(); }
 
 		$ctype_id = $this->request->get('value', 0);
-		if (!$ctype_id) { return cmsCore::error404(); }
+		if (!$ctype_id) { return $this->cms_template->renderJSON(['' => '']); }
 
 		$ctype = $this->model->getContentType($ctype_id);
-		if (!$ctype) { return cmsCore::error404(); }
+		if (!$ctype) { return $this->cms_template->renderJSON(['' => '']); }
 
         $filter = $this->request->get('filter',[]);
 

@@ -12,6 +12,7 @@
     <div class="location_list location_group_<?php echo $field->data['location_group']; ?>">
         <?php echo html_select($field->element_name, $field->data['items'], $value, $field->data['dom_attr']); ?>
     </div>
+    <?php ob_start(); ?>
     <script type="text/javascript">
         <?php if($field->data['location_group']){ ?>
             icms.geo.addToGroup('location_group_<?php echo $field->data['location_group']; ?>', '<?php echo $field->data['location_type']; ?>');
@@ -20,6 +21,7 @@
             $('#<?php echo $field->data['dom_attr']['id']; ?>').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', placeholder_text_single: '<?php echo LANG_SELECT; ?>', disable_search_threshold: 8, allow_single_deselect: true, width: '100%', search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>'});
         });
     </script>
+    <?php $this->addBottom(ob_get_clean()); ?>
 
 <?php } else { ?>
 

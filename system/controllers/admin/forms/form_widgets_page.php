@@ -1,6 +1,8 @@
 <?php
 class formAdminWidgetsPage extends cmsForm {
 
+    protected $disabled_fields = ['fast_add_cat', 'fast_add_ctype', 'fast_add_type', 'fast_add_item', 'fast_add_into'];
+
     public function init() {
 
         return array(

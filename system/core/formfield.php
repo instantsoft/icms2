@@ -578,7 +578,7 @@ class cmsFormField {
         } else if (isset($this->generator)) {
 
             $generator = $this->generator;
-            $items = $this->items = $generator($this->item);
+            $items = $this->items = $generator($this->item, $this->request);
 
         } else if ($this->hasDefaultValue()) {
 

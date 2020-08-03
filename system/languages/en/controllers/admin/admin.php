@@ -435,6 +435,7 @@
     define('LANG_CP_WIDGETS_FA_TO_POS',         'To positive');
     define('LANG_CP_WIDGETS_FA_TO_NOT',         'To negative');
     define('LANG_CP_WIDGETS_FA_ADD',            'Add');
+    define('LANG_CP_WIDGETS_DSCH_ERROR',        'The current admin panel template does not support dynamic widget scheme. <a target="_blank" href="https://docs.instantcms.ru/en/manual/widgets">More details...</a>');
 
     define('LANG_CP_USER_PMAILING',             'Create pm messages');
     define('LANG_CP_USER_ADD',                  'Add user');

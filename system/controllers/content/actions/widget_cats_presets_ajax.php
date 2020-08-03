@@ -13,12 +13,14 @@ class actionContentWidgetCatsPresetsAjax extends cmsAction {
 
         if($ctype_name){
             $ctype = $this->model->getContentTypeByName($ctype_name);
-            if (!$ctype) { return cmsCore::error404(); }
+            if (!$ctype) {
+                return $this->cms_template->renderJSON(['' => '']);
+            }
         } else {
             return $this->cms_template->renderJSON($presets);
         }
 
-        $_presets = array();
+        $_presets = [];
 
 		if ($presets && !empty($ctype['options']['cover_sizes'])){
 			foreach($presets as $key => $name){
