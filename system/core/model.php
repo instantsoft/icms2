@@ -2083,6 +2083,7 @@ class cmsModel {
                     }
 
                     switch ($column['filter']){
+                        case 'in': $this->filterIn($filter_field, explode(',', $filter[$field])); break;
                         case 'exact': $this->filterEqual($filter_field, $filter[$field]); break;
                         case 'like': $this->filterLike($filter_field, "%{$filter[$field]}%"); break;
                         case 'date':

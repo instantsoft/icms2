@@ -17,7 +17,7 @@ icms.admin = (function ($) {
             new PerfectScrollbar('#'+$(this).attr('id'));
         });
 
-        $('.form-tabs').on('focus', '.field.ft_string > input, .field.ft_text > textarea', function (){
+        $('.form-tabs').on('focus', '.field.ft_string input, .field.ft_text textarea', function (){
             $('.pattern_fields_panel').hide();
             $('.pattern_fields_panel_hint').show();
             $(this).closest('.field').find('.pattern_fields_panel_hint').hide();

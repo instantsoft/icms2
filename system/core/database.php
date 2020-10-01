@@ -280,6 +280,10 @@ class cmsDatabase {
      */
 	public function query($sql, $params = false, $quiet = false){
 
+        if(!$this->ready()){
+            return false;
+        }
+
         if (!empty($this->options['debug'])){
             cmsDebugging::pointStart('db');
         }
@@ -340,6 +344,9 @@ class cmsDatabase {
     }
 
     public function numRows($result){
+        if(!$result){
+            return 0;
+        }
         return $result->num_rows;
     }
 
@@ -455,7 +462,8 @@ class cmsDatabase {
 
         else {
 
-            $value = $this->escape(trim($value));
+            // Убираем только пробелы и NUL-байт
+            $value = $this->escape(trim($value, " \0"));
             $value = "'{$value}'";
 
         }

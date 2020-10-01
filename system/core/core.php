@@ -363,13 +363,18 @@ class cmsCore {
      */
     public static function getController($controller_name, $request = null){
 
+        if (!$request) { $request = new cmsRequest(array(), cmsRequest::CTX_INTERNAL); }
+
         $config = cmsConfig::getInstance();
 
         $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/frontend.php';
 
         if (!class_exists($controller_name, false)) {
             if(!is_readable($ctrl_file)){
-                return self::error404();
+                if($request->isStandard()){
+                    return self::error404();
+                }
+                return self::error(ERR_COMPONENT_NOT_FOUND . ': '. str_replace($config->root_path, '', $ctrl_file));
             }
             include_once($ctrl_file);
         }
@@ -389,10 +394,7 @@ class cmsCore {
             return self::error(ERR_COMPONENT_NOT_FOUND . ': '. str_replace($config->root_path, '', $ctrl_file));
         }
 
-        if (!$request) { $request = new cmsRequest(array(), cmsRequest::CTX_INTERNAL); }
-
         return new $controller_class($request);
-
     }
 
     public static function getControllerInstance($controller_name, $request=null){

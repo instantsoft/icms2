@@ -31,7 +31,7 @@ class actionSearchIndex extends cmsAction {
             $this->model->setDateInterval($date);
             $this->model->limitPage($page, $this->options['perpage']);
 
-            $search_controllers = cmsEventsManager::hookAll('fulltext_search', false, array());
+            $search_controllers = cmsEventsManager::hookAll('fulltext_search', $this, []);
 
             if (!$target){
 

@@ -2,7 +2,7 @@
 @import "variables";
 
 // Функции Bootstrap
-// Bootstrap 4.5.0
+// Bootstrap 4.5.2
 @import "../bootstrap/bootstrap";
 
 // Миксины
@@ -11,6 +11,7 @@
 // Переопределяемые/дополняемые стили Bootstrap
 @import "bs_override";
 
+@import "errors";
 // Типы контента
 @import "content";
 // Комментарии

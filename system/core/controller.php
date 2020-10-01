@@ -264,14 +264,15 @@ class cmsController {
 
         self::loadControllers();
 
-        foreach (self::$controllers as $controller) {
-            if(!empty($controller['slug'])){
-                self::$mapping[$controller['name']] = $controller['slug'];
+        if(self::$controllers){
+            foreach (self::$controllers as $controller) {
+                if(!empty($controller['slug'])){
+                    self::$mapping[$controller['name']] = $controller['slug'];
+                }
             }
         }
 
         return self::$mapping;
-
     }
 
     private static function loadControllers() {

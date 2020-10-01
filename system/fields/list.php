@@ -217,7 +217,6 @@ class fieldList extends cmsFormField {
                     // Не пустой список
                     if(!empty($items[$type])){
                         if(!isset($items[$type][$val[$name]])){
-                            dump($items[$type]);
                             return ERR_VALIDATE_INVALID;
                         }
                     }

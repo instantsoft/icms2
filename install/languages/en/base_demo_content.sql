@@ -771,7 +771,7 @@ INSERT INTO `{#}widgets_bind` (`id`, `template_layouts`, `languages`, `widget_id
 (14, NULL, NULL, 2, 'New users', 'All | users', NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', NULL, 'wrapper', NULL),
 (15, NULL, NULL, 3, 'Bottom menu', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', NULL, NULL, NULL),
 (16, NULL, NULL, 4, 'News', 'All | news\r\nDiscussed | news-discussed\r\n{Private | news/from_friends}', NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nteaser_field:\nstyle: featured\nshow_details: 1\nteaser_len:\nlimit: 5\n', NULL, 'wrapper', NULL),
-(17, NULL, NULL, 11, 'Content slider', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nbig_image_field:\nbig_image_preset: big\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', NULL, NULL, NULL),
+(17, NULL, NULL, 11, 'Content slider', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nbig_image_field:\nbig_image_preset: big\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', NULL, 'wrapper', NULL),
 (21, NULL, NULL, 13, 'Search', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '', NULL, 'wrapper', NULL);
 
 INSERT INTO `{#}widgets_bind_pages` (`id`, `bind_id`, `template`, `is_enabled`, `page_id`, `position`, `ordering`) VALUES

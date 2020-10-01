@@ -1,8 +1,6 @@
-html, body{ height: 100%; }
+html, body{ height: 100%; margin: 0; padding: 0}
 
 body {
-    padding:0;
-    margin:0;
     background: url("../images/bg.jpg");
     font-family: 'Trebuchet MS', Helvetica, 'DejaVu Sans', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', sans-serif;
     font-size:14px;
@@ -173,6 +171,7 @@ body {
     border-top: solid 1px #ECECEC;
     font-size:13px;
     color:#666;
+    border-collapse: collapse;
 }
 
 #layout #body .grid td,
