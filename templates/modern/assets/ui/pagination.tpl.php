@@ -1,6 +1,6 @@
 <ul class="pagination mb-0 mt-3 mt-md-4">
 <?php if ($prev_url) { ?>
-    <li class="page-item">
+    <li class="page-item page-item-prev">
         <a class="page-link" href="<?php html($prev_url); ?>">
             <?php html_svg_icon('solid', 'arrow-left'); ?>
             <span class="d-none d-sm-inline-block"><?php echo LANG_PAGE_PREV; ?></span>
@@ -21,7 +21,7 @@
     <?php } ?>
 <?php } ?>
 <?php if ($next_url) { ?>
-    <li class="page-item">
+    <li class="page-item page-item-next">
         <a class="page-link" href="<?php html($next_url); ?>">
             <span class="d-none d-sm-inline-block"><?php echo LANG_PAGE_NEXT; ?></span>
             <?php html_svg_icon('solid', 'arrow-right'); ?>
