@@ -5,9 +5,9 @@ class actionAdminSettingsTheme extends cmsAction {
     public function run($template_name){
 
         $template = new cmsTemplate($template_name);
-        if (!$template->hasOptions()){ cmsCore::error404(); }
 
         $form = $template->getOptionsForm();
+        if (!$form){ cmsCore::error404(); }
 
         $options = $template->getOptions();
 

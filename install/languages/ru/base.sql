@@ -1816,6 +1816,7 @@ CREATE TABLE `{#}widgets_bind` (
   `options` text COMMENT 'Опции',
   `tpl_body` varchar(128) DEFAULT NULL,
   `tpl_wrap` varchar(128) DEFAULT NULL,
+  `tpl_wrap_style` varchar(50) DEFAULT NULL,
   `device_types` varchar(50) DEFAULT NULL,
   `is_cacheable` tinyint(1) UNSIGNED DEFAULT '1',
   PRIMARY KEY (`id`),

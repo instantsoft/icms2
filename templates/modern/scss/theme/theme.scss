@@ -10,8 +10,8 @@
 
 // Переопределяемые/дополняемые стили Bootstrap
 @import "bs_override";
-
-@import "errors";
+// Виджеты
+@import "widgets";
 // Типы контента
 @import "content";
 // Комментарии
@@ -284,18 +284,6 @@ form fieldset {
     font-size: $small-font-size;
     border-radius: $border-radius;
     padding: $badge-padding-y $badge-padding-x;
-}
-.widget {
-    .edit_wlinks {
-        @include transition($transition-fade);
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        opacity: 0;
-    }
-    &:hover .edit_wlinks {
-        opacity: 1;
-    }
 }
 .is-busy {
     position: relative;

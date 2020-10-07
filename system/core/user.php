@@ -243,7 +243,7 @@ class cmsUser {
                 filterEqual('au.auth_token', $auth_token)->filterIsNull('is_deleted')->select('au.date_auth')->getUser();
         if (!$user || $user['is_locked']){ return 0; }
         // проверяем не истек ли срок действия токена
-        if((time() - strtotime($user['date_auth'])) > self::AUTH_TOKEN_EXPIRATION_INT){
+        if((time() - strtotime($user['date_log'])) > self::AUTH_TOKEN_EXPIRATION_INT){
             $model->deleteAuthToken($auth_token);
             return 0;
         }

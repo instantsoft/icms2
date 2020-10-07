@@ -1,0 +1,35 @@
+.widget, .widget_tabbed {
+    .edit_wlinks {
+        @include transition($transition-fade);
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        opacity: 0;
+    }
+    &:hover .edit_wlinks {
+        opacity: 1;
+    }
+}
+.widget_tabbed {
+    > .card-header {
+        .nav-link {
+            padding: $card-spacer-y $card-spacer-x;
+        }
+    }
+}
+.widgets-transparent {
+    &.card {
+        border: none;
+        background-color: transparent;
+    }
+    .card-header {
+        background-color: transparent;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .card-body {
+        padding-bottom: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+}

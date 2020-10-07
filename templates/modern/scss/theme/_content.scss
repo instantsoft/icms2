@@ -40,6 +40,10 @@
             margin-bottom: 0;
         }
         &:last-child { @include clearfix; }
+        &.ft_html .value img {
+            max-width: 100%;
+            height: auto;
+        }
     }
     td > .info_bar {
         background-color: transparent;

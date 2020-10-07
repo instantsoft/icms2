@@ -184,9 +184,9 @@ class cmsTemplate {
 
         }
 
-        $this->options = $this->getOptions();
-
         $this->setInheritNames($this->getInheritTemplates());
+
+        $this->options = $this->getOptions();
 
 		$this->title = $this->site_config->sitename;
 
@@ -2942,7 +2942,7 @@ class cmsTemplate {
             'wrapper'     => $widget->getWrapper(),
             'class'       => isset($widget->css_class) ? $widget->css_class : false,
             'class_title' => isset($widget->css_class_title) ? $widget->css_class_title : false,
-            'class_wrap'  => isset($widget->css_class_wrap) ? $widget->css_class_wrap : false,
+            'class_wrap'  => (isset($widget->tpl_wrap_style) ? $widget->tpl_wrap_style : '').(isset($widget->css_class_wrap) ? ' '.$widget->css_class_wrap : ''),
             'body'        => $html
         );
 
@@ -3041,17 +3041,14 @@ class cmsTemplate {
 
         if($this->options !== null){ return $this->options; }
 
-		if (!$this->hasOptions()){ return []; }
-
         cmsCore::loadTemplateLanguage($this->name);
 
         return $this->loadOptions();
-
     }
 
     public function loadOptions(){
 
-        if (!$this->hasOptions()){ return false; }
+        if (!$this->hasOptions()){ return []; }
 
         $options_file = $this->site_config->root_path . "system/config/theme_{$this->name}.yml";
 

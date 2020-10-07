@@ -762,6 +762,30 @@ class admin extends cmsFrontend {
                 }
             )));
 
+            // Стили обёрток
+            $preset_file = $this->cms_template->getTplFilePath('widgets/wrapper_styles.php');
+            if($preset_file){
+
+                cmsCore::loadTemplateLanguage($template);
+
+                $preset_styles = include $preset_file;
+
+                $form->addField($design_fieldset_id, new fieldList('tpl_wrap_style', array(
+                    'title' => LANG_CP_WIDGETS_STYLE,
+                    'generator' => function($item) use ($preset_styles){
+                        $items = ['' => ''];
+                        foreach ($preset_styles as $key => $value) {
+                            $items['opt'.$key] = [$key];
+                            foreach ($value as $k => $v) {
+                                $items[$k] = $v;
+                            }
+                        }
+                        return $items;
+                    },
+                    'visible_depend' => ['tpl_wrap' => ['show' => array_keys($preset_styles)]]
+                )));
+            }
+
             $form->addField($design_fieldset_id, new fieldList('tpl_body', array(
                 'title' => LANG_WIDGET_BODY_TPL,
 				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),

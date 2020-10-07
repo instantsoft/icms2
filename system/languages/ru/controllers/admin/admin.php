@@ -440,6 +440,7 @@
     define('LANG_CP_WIDGETS_FA_TO_NOT',         'В отрицательные');
     define('LANG_CP_WIDGETS_FA_ADD',            'Добавить');
     define('LANG_CP_WIDGETS_DSCH_ERROR',        'Текущий шаблон админпанели не поддерживает динамические схемы виджетов. <a target="_blank" href="https://docs.instantcms.ru/manual/widgets">Подробнее...</a>');
+    define('LANG_CP_WIDGETS_STYLE',             'Стиль');
 
     define('LANG_CP_USER_PMAILING',             'Создать рассылку');
     define('LANG_CP_USER_ADD',                  'Создать пользователя');
