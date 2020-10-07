@@ -95,6 +95,8 @@
     define('LANG_SITE_METAKEYS',            "Ключевые слова");
     define('LANG_SITE_METADESC',            "Описание сайта");
     define('LANG_SITE_CHECK_UPDATE',        "Автоматически проверять обновления InstantCMS");
+    define('LANG_SITE_TEMPLATE',            'Шаблон сайта');
+    define('LANG_SITE_TEMPLATE_ADMIN',      'Шаблон админпанели');
 
     define('LANG_SITE_SITENAME_ERROR',      "Требуется указать название сайта");
     define('LANG_SITE_HOMETITLE_ERROR',     "Требуется указать заголовок главной страницы");

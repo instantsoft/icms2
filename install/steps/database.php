@@ -105,13 +105,38 @@ function check_db(){
         );
     }
 
+    // Для innodb оборачиваем в транзакцию, это быстрее и удобней
+    if($db['engine'] == 'InnoDB'){
+        $mysqli->autocommit(false);
+    }
+
+    // Основной дамп
     $success = import_dump($mysqli, 'base.sql', $db['prefix'], $db['engine'], ';', $db['db_charset']);
+    // Гео
     if($success === true){
         $success = import_dump($mysqli, 'geo.sql', $db['prefix'], $db['engine'], ';', $db['db_charset']);
     }
+    // Виджеты для шаблона
+    if($success === true){
+        $success = import_dump($mysqli, 'widgets_bind_'.$_SESSION['install']['site']['template'].'.sql', $db['prefix'], $db['engine'], ';', $db['db_charset']);
+    }
 
+    // Демо данные
     if ($success === true && !empty($db['is_install_demo_content'])) {
         $success = import_dump($mysqli, 'base_demo_content.sql', $db['prefix'], $db['engine'], ';', $db['db_charset']);
+        // Демо виджеты для шаблона
+        if($success === true){
+            $success = import_dump($mysqli, 'widgets_bind_demo_'.$_SESSION['install']['site']['template'].'.sql', $db['prefix'], $db['engine'], ';', $db['db_charset']);
+        }
+    }
+
+    if($db['engine'] == 'InnoDB'){
+        if ($success) {
+            $mysqli->commit();
+        } else {
+            $mysqli->rollback();
+        }
+        $mysqli->autocommit(true);
     }
 
     if ($success === true){
@@ -180,9 +205,12 @@ function import_dump($mysqli, $file, $prefix, $engine='MyISAM', $delimiter = ';'
     clearstatcache();
     @set_time_limit(0);
 
-    $file = PATH . 'languages' . DS . LANG . DS . $file;
+    $file = PATH . 'languages' . DS . LANG . DS . 'sql' . DS . $file;
 
     if (function_exists('opcache_invalidate')) { @opcache_invalidate($file, true); }
+
+    // Кастомные SQL могут отсутствовать
+    if (!file_exists($file)){ return true; }
 
     if (!is_readable($file)){ return false; }
 

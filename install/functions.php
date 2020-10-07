@@ -132,6 +132,26 @@ function get_langs(){
 
 }
 
+function get_templates(){
+
+    $dir = dirname(PATH).DS. 'templates';
+    $dir_context = opendir($dir);
+
+    $list = array();
+
+    while ($next = readdir($dir_context)){
+
+        if (in_array($next, array('.', '..'))){ continue; }
+        if (strpos($next, '.') === 0){ continue; }
+        if (!is_dir($dir.'/'.$next)) { continue; }
+
+        $list[$dir.'/'.$next] = $next;
+
+    }
+
+    return $list;
+}
+
 function copy_folder($dir_source, $dir_target) {
 
     if (is_dir($dir_source))  {
