@@ -37,6 +37,7 @@ class formAdminCtypesFilter extends cmsForm {
 
             $field->display_input = 'getFilterInput';
             $field->show_filter_input_title = true;
+            $field->is_denormalization = false;
 
             $field->setContext('filter')->setItem(array('ctype_name' => $ctype['name'], 'id' => null));
 

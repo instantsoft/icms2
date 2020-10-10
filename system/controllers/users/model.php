@@ -355,13 +355,7 @@ class modelUsers extends cmsModel {
         $id = $this->insert('{users}', $user);
 
         if ($id){
-
             $this->saveUserGroupsMembership($id, $groups);
-
-            cmsCore::getController('activity')->addEntry('users', 'signup', array(
-                'user_id' => $id
-            ));
-
         }
 
         cmsCache::getInstance()->clean('users.list');
@@ -1089,11 +1083,7 @@ class modelUsers extends cmsModel {
 
             $friend = $this->getUser($friend_id);
 
-            cmsCore::getController('activity')->addEntry('users', 'friendship', array(
-                'subject_title' => $friend['nickname'],
-                'subject_id'    => $friend_id,
-                'subject_url'   => href_to_rel('users', $friend_id)
-            ));
+            list($user_id, $friend) = cmsEventsManager::hook('users_add_friendship_mutual', [$user_id, $friend]);
 
         }
 
@@ -1118,29 +1108,41 @@ class modelUsers extends cmsModel {
 
         }
 
+        list($user_id, $friend_id, $is_mutual) = cmsEventsManager::hook('users_add_friendship', [$user_id, $friend_id, $is_mutual]);
+
         cmsCache::getInstance()->clean('users.friends');
 
         return $is_mutual;
-
     }
 
     public function deleteFriendship($user_id, $friend_id){
 
-        if ($this->isFriendshipMutual($user_id, $friend_id)){
+        $is_mutual = $this->isFriendshipMutual($user_id, $friend_id);
+
+        list($user_id, $friend_id, $is_mutual) = cmsEventsManager::hook('users_before_delete_friendship', [$user_id, $friend_id, $is_mutual]);
+
+        if ($is_mutual){
             $this->filterEqual('id', $user_id)->decrement('{users}', 'friends_count');
             $this->filterEqual('id', $friend_id)->decrement('{users}', 'friends_count');
         }
 
         $this->filterEqual('user_id', $user_id);
         $this->filterEqual('friend_id', $friend_id);
-        $this->deleteFiltered('{users}_friends');
+        $success = $this->deleteFiltered('{users}_friends');
 
-        $this->filterEqual('user_id', $friend_id);
-        $this->filterEqual('friend_id', $user_id);
-        $this->deleteFiltered('{users}_friends');
+        if($success){
+            $this->filterEqual('user_id', $friend_id);
+            $this->filterEqual('friend_id', $user_id);
+            $success = $this->deleteFiltered('{users}_friends');
+        }
+
+        if($success){
+            list($user_id, $friend_id, $is_mutual) = cmsEventsManager::hook('users_after_delete_friendship', [$user_id, $friend_id, $is_mutual]);
+        }
 
         cmsCache::getInstance()->clean('users.friends');
 
+        return $success;
     }
 
     public function keepInSubscribers($user_id, $friend_id){

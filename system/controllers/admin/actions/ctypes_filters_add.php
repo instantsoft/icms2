@@ -30,6 +30,8 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
 
         if ($this->request->has('submit')){
 
+            $filter['filters'] = [];
+
 			$filter = array_replace_recursive($filter, $form->parse($this->request, true));
 
             $errors = $form->validate($this, $filter);

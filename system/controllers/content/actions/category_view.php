@@ -404,6 +404,12 @@ class actionContentCategoryView extends cmsAction {
                     // если нашли, то это отсеченное - slug фильтра,
                     // оставшееся - slug категории
                     if ($category) {
+
+                        // Категории выключены
+                        if(!$ctype['is_cats']){
+                            $category = false;
+                        }
+
                         break;
                     }
                 }
@@ -412,7 +418,13 @@ class actionContentCategoryView extends cmsAction {
 
                     $filters_segments = array_reverse($filters_segments);
 
-                    $filter = $this->model->getContentFilter($ctype, implode('/', $filters_segments));
+                    $filter_slug = implode('/', $filters_segments);
+
+                    if(!is_numeric($filter_slug)){
+                        $filter = $this->model->getContentFilter($ctype, $filter_slug);
+                    } else {
+                        $filter = false;
+                    }
 
                     if ($filter) {
 

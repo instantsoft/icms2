@@ -960,6 +960,11 @@ a.hashtag {
 .mce-toc ul li > a {
     text-decoration: none;
 }
+.access_image {
+    float: left;
+    font-size: 70px;
+    margin: 0 20px 0 0;
+}
 @media screen and (max-width: 980px) {
 	.share .ya-share2__container_size_s .ya-share2__item {
 		margin-right: 10px;

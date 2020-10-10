@@ -888,7 +888,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (184, 'form_users_options', 'wall', 184, 1),
 (185, 'user_privacy_types', 'wall', 185, 1),
 (186, 'ctype_field_users_after_update', 'bootstrap4', 186, 1),
-(187, 'widget_menu_form', 'bootstrap4', 187, 1);
+(187, 'widget_menu_form', 'bootstrap4', 187, 1),
+(188, 'users_add_friendship_mutual', 'activity', 188, 1),
+(189, 'user_registered', 'activity', 189, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

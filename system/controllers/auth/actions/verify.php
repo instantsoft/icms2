@@ -65,7 +65,7 @@ class actionAuthVerify extends cmsAction {
 
                 $users_model->unlockUser($user['id'])->clearUserPassToken($user['id']);
 
-                cmsEventsManager::hook('user_registered', $user);
+                $user = cmsEventsManager::hook('user_registered', $user);
 
                 cmsUser::addSessionMessage($this->options['reg_auto_auth'] ? LANG_REG_SUCCESS_VERIFIED_AND_AUTH : LANG_REG_SUCCESS_VERIFIED, 'success');
 

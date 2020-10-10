@@ -2942,7 +2942,7 @@ class cmsTemplate {
             'wrapper'     => $widget->getWrapper(),
             'class'       => isset($widget->css_class) ? $widget->css_class : false,
             'class_title' => isset($widget->css_class_title) ? $widget->css_class_title : false,
-            'class_wrap'  => (isset($widget->tpl_wrap_style) ? $widget->tpl_wrap_style : '').(isset($widget->css_class_wrap) ? ' '.$widget->css_class_wrap : ''),
+            'class_wrap'  => (!empty($widget->tpl_wrap_style) ? $widget->tpl_wrap_style : '').(!empty($widget->css_class_wrap) ? ' '.$widget->css_class_wrap : ''),
             'body'        => $html
         );
 

@@ -179,7 +179,7 @@ class actionAuthRegister extends cmsAction {
 
                     } else {
 
-						cmsEventsManager::hook('user_registered', $user);
+						$user = cmsEventsManager::hook('user_registered', $user);
 
                         // авторизуем пользователя автоматически
                         if ($this->options['reg_auto_auth']){

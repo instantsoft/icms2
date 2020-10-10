@@ -398,7 +398,7 @@ class cmsUploader {
      */
     public function uploadXHR($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false){
 
-        $dest_name = files_sanitize_name($_GET['qqfile']);
+        $dest_name = files_sanitize_name($_GET['qqfile'], false);
         $dest_ext  = pathinfo($dest_name, PATHINFO_EXTENSION);
 
         if(!$this->checkExt($dest_ext, $allowed_ext)){
@@ -499,7 +499,7 @@ class cmsUploader {
             'success' => true,
             'path'    => $destination,
             'url'     => str_replace($this->site_cfg->upload_path, '', $destination),
-            'name'    => basename($destination),
+            'name'    => $orig_name,
             'size'    => $real_size
         );
 

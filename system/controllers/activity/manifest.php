@@ -13,6 +13,8 @@
             'admin_inline_save_subscriptions',
             'subscribe',
             'unsubscribe',
+            'user_registered',
+            'users_add_friendship_mutual',
             'user_tab_show'
         )
 

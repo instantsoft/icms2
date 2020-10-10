@@ -215,23 +215,26 @@ function files_user_file_hash($file_path = ''){
 /**
  * Очищает имя файла от специальных символов
  *
- * @param string $filename
+ * @param string $filename Имя файла
+ * @param boolean $convert_slug Транслитировать?
  * @return string
  */
-function files_sanitize_name($filename){
+function files_sanitize_name($filename, $convert_slug = true){
 
 	$path_parts = pathinfo($filename);
-    $filename = lang_slug($path_parts['filename']) . (isset($path_parts['extension']) ?  '.' . $path_parts['extension'] : '');
+    if($convert_slug){
+        $filename = lang_slug($path_parts['filename']) . ((isset($path_parts['extension']) ?  '.' . $path_parts['extension'] : ''));
+    } else {
+        $filename = trim(strip_tags($path_parts['filename']) . ((isset($path_parts['extension']) ?  '.' . $path_parts['extension'] : '')));
+    }
     $filename = mb_strtolower($filename);
     $filename = preg_replace(array('/[\&]/', '/[\@]/', '/[\#]/'), array('-and-', '-at-', '-number-'), $filename);
-    $filename = preg_replace('/[^(\x20-\x7F)]*/','', $filename);
     $filename = str_replace(' ', '-', $filename);
     $filename = str_replace('\'', '', $filename);
-    $filename = preg_replace('/[^\w\-\.]+/', '', $filename);
+    $filename = preg_replace('/[^\w\-\.]+/u', '', $filename);
     $filename = preg_replace('/[\-]+/', '-', $filename);
 
 	return $filename;
-
 }
 
 /**
