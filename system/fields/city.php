@@ -39,18 +39,32 @@ class fieldCity extends cmsFormField {
             new fieldString('output_string', array(
                 'title' => LANG_PARSER_CITY_OUTPUT_STRING,
                 'hint'  => LANG_PARSER_CITY_OUTPUT_STRING_HINT
+            )),
+            new fieldCheckbox('is_autolink', array(
+                'title' => LANG_PARSER_LIST_IS_AUTOLINK,
+                'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
+                'default' => false
             ))
         );
 
     }
 
     public function parse($value){
+
         $output_string = $this->getOption('output_string');
+
         if($output_string){
             $output_string = str_replace('}', cmsFormField::FIELD_CACHE_POSTFIX.'}', $output_string);
-            return htmlspecialchars(string_replace_keys_values($output_string, $this->item));
+            $result_string = string_replace_keys_values($output_string, $this->item);
+        } else {
+            $result_string = $this->item[$this->getDenormalName()];
         }
-        return htmlspecialchars($this->item[$this->getDenormalName()]);
+
+        if ($this->getOption('is_autolink')){
+            return '<a class="list_autolink '.$this->item['ctype_name'].'_list_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($value).'">'.html($result_string, false).'</a>';
+        }
+
+        return html($result_string, false);
     }
 
     public function getStringValue($value){

@@ -70,6 +70,17 @@ class actionUsersProfileEdit extends cmsAction {
             }
         )));
 
+        // Добавляем поле SLUG
+        $fieldset_id = $form->addFieldset(LANG_SLUG);
+        $form->addField($fieldset_id, new fieldString('slug', array(
+            'prefix' => href_to('users').'/',
+            'options'=>array(
+                'min_length'=> 2,
+                'max_length'=> 100
+            ),
+            'rules' => array(['unique_exclude', '{users}', 'slug', $profile['id']])
+        )));
+
         // Форма отправлена?
         $is_submitted = $this->request->has('submit');
 

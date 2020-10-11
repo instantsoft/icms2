@@ -10,19 +10,22 @@ class widgetUsersList extends cmsWidget {
 
         $user = cmsUser::getInstance();
         $model = cmsCore::getModel('users');
+        $content_model = cmsCore::getModel('content');
 
-        $fields = array();
+        $show_fields = [];
 
-        if($list_fields){
-
-            $content_model = cmsCore::getModel('content');
-            $content_model->setTablePrefix('')->orderBy('ordering');
-            $content_model->filterIn('id', $list_fields);
-            $fields = $content_model->getContentFields('{users}');
-
-        }
+        $content_model->setTablePrefix('')->orderBy('ordering');
+        $fields = $content_model->getContentFields('{users}');
 
         list($fields, $model) = cmsEventsManager::hook('profiles_list_filter', array($fields, $model));
+
+        if($list_fields){
+            foreach ($fields as $name => $field) {
+                if(in_array($field['id'], $list_fields)){
+                    $show_fields[$name] = $field;
+                }
+            }
+        }
 
         switch ($show){
 
@@ -59,12 +62,13 @@ class widgetUsersList extends cmsWidget {
         $profiles = $model->limit($this->getOption('limit', 10))->getUsers();
         if (!$profiles) { return false; }
 
-        $model->makeProfileFields($fields, $profiles, $user);
+        $model->makeProfileFields($show_fields, $profiles, $user);
 
-        list($profiles, $fields) = cmsEventsManager::hook('profiles_before_list', [$profiles, $fields]);
+        list($profiles, $show_fields) = cmsEventsManager::hook('profiles_before_list', [$profiles, $show_fields]);
 
         return array(
             'profiles'   => $profiles,
+            'fields'     => $fields,
             'style'      => $this->getOption('style', 'list'),
             'is_avatars' => $this->getOption('is_avatars')
         );

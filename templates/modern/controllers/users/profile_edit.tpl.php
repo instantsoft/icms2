@@ -25,6 +25,7 @@
 
     $this->renderChild('profile_edit_header', array('profile'=>$profile));
 
+    if(!empty($profile['id']) && $profile['slug'] == $profile['id']){ $profile['slug'] = null; }
     $this->renderForm($form, $profile, array(
         'action'  => '',
         'cancel'  => array('show' => true, 'href' => $cancel_url),

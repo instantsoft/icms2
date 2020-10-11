@@ -70,6 +70,7 @@ class formWidgetUsersListOptions extends cmsForm {
                             return $items;
 
                         },
+                        'visible_depend' => array('options:style' => array('show' => array('list')))
                     )),
 
                     new fieldListGroups('options:groups', array(

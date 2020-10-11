@@ -7,7 +7,7 @@
     if($this->controller->listIsAllowed()){
         $this->addBreadcrumb(LANG_USERS, href_to('users'));
     }
-    $this->addBreadcrumb($profile['nickname'], href_to('users', $id));
+    $this->addBreadcrumb($profile['nickname'], href_to_profile($profile));
 
     $this->addToolButton(array(
         'class' => 'save',
@@ -40,6 +40,7 @@
     <?php } ?>
 
 <?php
+    if(!empty($profile['id']) && $profile['slug'] == $profile['id']){ $profile['slug'] = null; }
     $this->renderForm($form, $profile, array(
         'action'      => '',
         'append_html' => $append_html,

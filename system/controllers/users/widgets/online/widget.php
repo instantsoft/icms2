@@ -1,7 +1,8 @@
 <?php
+
 class widgetUsersOnline extends cmsWidget {
 
-    public function run(){
+    public function run() {
 
         $model = cmsCore::getModel('users');
 
@@ -14,8 +15,13 @@ class widgetUsersOnline extends cmsWidget {
         $profiles = $model->filterOnlineUsers()->getUsers();
         if (!$profiles) { return false; }
 
+        $fields = cmsCore::getModel('content')->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
+
+        list($fields, $model) = cmsEventsManager::hook('profiles_list_filter', array($fields, $model));
+
         return array(
-            'profiles' => $profiles,
+            'profiles'   => $profiles,
+            'fields'     => $fields,
             'is_avatars' => $this->getOption('is_avatars')
         );
 

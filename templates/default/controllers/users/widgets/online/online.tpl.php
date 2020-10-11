@@ -3,7 +3,7 @@
     <div class="widget_online_list">
         <?php foreach($profiles as $profile) { ?>
 
-            <?php $url = href_to('users', $profile['id']); ?>
+            <?php $url = href_to_profile($profile); ?>
 
             <?php if ($is_avatars) { ?>
                 <a class="item item-avatar" href="<?php echo $url; ?>" title="<?php html($profile['nickname']); ?>"><?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname']); ?></a>
