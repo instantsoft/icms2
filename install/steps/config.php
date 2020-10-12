@@ -46,6 +46,7 @@ function create_config($path, $file){
         'date_format'			=> LANG_CFG_DATE_FORMAT,
         'date_format_js'		=> LANG_CFG_DATE_FORMAT_JS,
         'time_zone'				=> LANG_CFG_TIME_ZONE,
+        'allow_users_time_zone' => 1,
         'template'				=> $_SESSION['install']['site']['template'],
         'template_admin'		=> $_SESSION['install']['site']['template_admin'],
         'template_mobile'		=> '',
@@ -96,7 +97,8 @@ function create_config($path, $file){
         'session_name'          => strtoupper(uniqid('icms')),
         'session_save_path'     => $_SESSION['install']['paths']['session_save_path'],
         'session_maxlifetime'   => ini_get('session.gc_maxlifetime')/60,
-        'controllers_without_widgets' => array('admin')
+        'controllers_without_widgets' => array('admin'),
+        'ctype_default' => []
     );
 
     write_config($file, $config);

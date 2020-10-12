@@ -1,5 +1,5 @@
 <?php
-
+if (!$is_frontpage){
     if (cmsUser::isAllowed($ctype['name'], 'add')) {
 
         if (!$category['id'] || $user->isInGroups($category['allow_add'])){
@@ -53,6 +53,7 @@
             'href'  => href_to('admin', 'ctypes', array('edit', $ctype['id']))
         ));
     }
+}
 
 ?>
 <?php if ($this->hasPageH1() && !$request->isInternal() && !$is_frontpage){  ?>

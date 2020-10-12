@@ -62,13 +62,15 @@ class actionUsersProfileEdit extends cmsAction {
         }
 
         // Добавляем поле выбора часового пояса
-        $fieldset_id = $form->addFieldset( LANG_TIME_ZONE );
-        $form->addField($fieldset_id, new fieldList('time_zone', array(
-            'default' => $this->cms_config->time_zone,
-            'generator' => function($item){
-                return cmsCore::getTimeZones();
-            }
-        )));
+        if($this->cms_config->allow_users_time_zone){
+            $fieldset_id = $form->addFieldset( LANG_TIME_ZONE );
+            $form->addField($fieldset_id, new fieldList('time_zone', array(
+                'default' => $this->cms_config->time_zone,
+                'generator' => function($item){
+                    return cmsCore::getTimeZones();
+                }
+            )));
+        }
 
         // Добавляем поле SLUG
         $fieldset_id = $form->addFieldset(LANG_SLUG);

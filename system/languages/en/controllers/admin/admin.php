@@ -544,6 +544,7 @@
     define('LANG_CP_SETTINGS_FP_SHOW_PROFILE',  'User profile or authorization form');
     define('LANG_CP_SETTINGS_FP_SHOW_CONTENT',  'Content: %s');
     define('LANG_CP_SETTINGS_TIMEZONE',         'Time zone');
+    define('LANG_CP_SETTINGS_ALLOW_USERS_TIMEZONE', 'Allow users to choose their time zone');
     define('LANG_CP_SETTINGS_DATE_FORMAT',      'PHP date format');
     define('LANG_CP_SETTINGS_DATE_FORMAT_JS',   'JavaScript date format');
     define('LANG_CP_SETTINGS_MAIL_TRANSPORT',   'Mail transport');

@@ -227,9 +227,11 @@ class actionContentCategoryView extends cmsAction {
 
         $hooks_html = cmsEventsManager::hookAll("content_{$ctype['name']}_items_html", array('category_view', $ctype, $category, $current_dataset));
 
-        $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], $category, $current_dataset, array()));
-        if ($toolbar_html) {
-            $this->cms_template->addToBlock('before_body', html_each($toolbar_html));
+        if(!$is_frontpage){
+            $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], $category, $current_dataset, array()));
+            if ($toolbar_html) {
+                $this->cms_template->addToBlock('before_body', html_each($toolbar_html));
+            }
         }
 
         $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
@@ -291,7 +293,6 @@ class actionContentCategoryView extends cmsAction {
             'is_frontpage'    => $is_frontpage,
             'is_hide_items'   => $is_hide_items,
             'hooks_html'      => $hooks_html,
-            'toolbar_html'    => $toolbar_html,
             'slug'            => $slug,
             'ctype'           => $ctype,
             'datasets'        => $datasets,

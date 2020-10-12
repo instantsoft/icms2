@@ -160,6 +160,8 @@ class messages extends cmsFrontend {
 
         $letter_text = string_replace_keys_values($letter_text, $notice);
 
+        list($recipients, $letter_name, $notice, $notice_type, $letter_text) = cmsEventsManager::hook('messages_send_notice_email', [$recipients, $letter_name, $notice, $notice_type, $letter_text]);
+
         $success = true;
 
         foreach($recipients as $recipient){

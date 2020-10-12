@@ -105,14 +105,6 @@ class cmsConfig {
         // таймзона может быть изменена в процессе работы
         $this->set('cfg_time_zone', $this->data['time_zone']);
 
-        // переходная проверка на версии 2.11.1
-        if(!empty($this->data['ctype_default']) && !is_array($this->data['ctype_default'])){
-            $this->data['ctype_default'] = [$this->data['ctype_default']];
-        }
-        if(empty($this->data['ctype_default'])){
-            $this->data['ctype_default'] = [];
-        }
-
         if(empty($this->data['detect_ip_key']) || !isset($_SERVER[$this->data['detect_ip_key']])){
             $this->data['detect_ip_key'] = 'REMOTE_ADDR';
         }
@@ -131,20 +123,9 @@ class cmsConfig {
 
         }
 
-        if(empty($this->data['db_charset'])){
-            $this->data['db_charset'] = 'utf8';
-        }
-
-        if(empty($this->data['session_save_handler'])){
-            $this->data['session_save_handler'] = 'files';
-        }
-
-        if(!isset($this->data['controllers_without_widgets'])){
-            $this->data['controllers_without_widgets'] = array('admin');
-        }
-
-        if(!isset($this->data['session_name'])){
-            $this->data['session_name'] = 'ICMSSID';
+        // Переходное для 2.14.0
+        if(!array_key_exists('allow_users_time_zone', $this->data)){
+            $this->data['allow_users_time_zone'] = 1;
         }
 
         if(empty($this->data['native_yaml']) || !function_exists('yaml_emit')){

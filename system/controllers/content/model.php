@@ -2122,7 +2122,7 @@ class modelContent extends cmsModel {
 
         preg_match_all('/{([a-z0-9\_]+)}/i', $pattern, $matches);
 
-        if (!$matches) { return lang_slug($item['id']); }
+        if (!$matches) { return lang_slug($item['id'], false); }
 
         list($tags, $names) = $matches;
 
@@ -2134,8 +2134,6 @@ class modelContent extends cmsModel {
 
         $pattern = trim($pattern, '/');
 
-        $disallow_numeric = (count($names) <= 1);
-
         foreach($names as $idx=>$field_name){
             if (!empty($item[$field_name])){
 
@@ -2145,7 +2143,7 @@ class modelContent extends cmsModel {
 
                     $value = $fields[$field_name]['handler']->getStringValue($value);
 
-                    $value = lang_slug(trim($value, '/'), $disallow_numeric);
+                    $value = lang_slug(trim($value, '/'), false);
 
                 }
 

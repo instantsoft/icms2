@@ -548,6 +548,7 @@
     define('LANG_CP_SETTINGS_FP_SHOW_PROFILE',  'Профиль / авторизация');
     define('LANG_CP_SETTINGS_FP_SHOW_CONTENT',  'Контент: %s');
     define('LANG_CP_SETTINGS_TIMEZONE',         'Часовой пояс');
+    define('LANG_CP_SETTINGS_ALLOW_USERS_TIMEZONE', 'Разрешить пользователям выбирать свой часовой пояс');
     define('LANG_CP_SETTINGS_DATE_FORMAT',      'Формат даты PHP');
     define('LANG_CP_SETTINGS_DATE_FORMAT_JS',   'Формат даты JavaScript');
     define('LANG_CP_SETTINGS_MAIL_TRANSPORT',   'Почтовый транспорт');

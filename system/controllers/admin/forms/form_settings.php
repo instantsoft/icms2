@@ -292,6 +292,11 @@ class formAdminSettings extends cmsForm {
                         }
                     )),
 
+                    new fieldCheckbox('allow_users_time_zone', array(
+                        'title' => LANG_CP_SETTINGS_ALLOW_USERS_TIMEZONE,
+                        'default' => 1
+                    )),
+
                     new fieldString('date_format', array(
                         'title' => LANG_CP_SETTINGS_DATE_FORMAT,
                         'rules' => array(
