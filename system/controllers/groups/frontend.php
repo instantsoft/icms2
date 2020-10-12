@@ -547,13 +547,15 @@ class groups extends cmsFrontend {
                 );
             }
         }
-
-        $menu[] = array(
-            'title'      => LANG_GROUPS_PROFILE_ACTIVITY,
-            'controller' => $this->name,
-            'action'     => $group['slug'],
-            'params'     => 'activity',
-        );
+	
+	if ($this->isControllerEnabled('activity')){
+		$menu[] = array(
+		    'title'      => LANG_GROUPS_PROFILE_ACTIVITY,
+		    'controller' => $this->name,
+		    'action'     => $group['slug'],
+		    'params'     => 'activity',
+		);
+	}
 
         $menu[] = array(
             'title'      => LANG_GROUPS_PROFILE_MEMBERS,
