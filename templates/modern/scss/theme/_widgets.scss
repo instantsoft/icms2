@@ -9,6 +9,9 @@
     &:hover .edit_wlinks {
         opacity: 1;
     }
+    &:last-child {
+        margin-bottom: 0 !important;
+    }
 }
 .widget_tabbed {
     > .card-header {
@@ -22,12 +25,12 @@
         border: none;
         background-color: transparent;
     }
-    .card-header {
+    > .card-header {
         background-color: transparent;
         padding-left: 0;
         padding-right: 0;
     }
-    .card-body {
+    > .card-body {
         padding-bottom: 0;
         padding-left: 0;
         padding-right: 0;

@@ -143,10 +143,18 @@ class actionContentItemView extends cmsAction {
         // Получаем поля для данного типа контента
         $fields = $this->model->getContentFields($ctype['name']);
 
+        // Запоминаем копию записи для заполнения отпарсенных полей
+        $item_parsed = $item;
+
         // Парсим значения полей
-        foreach($fields as $name=>$field){
-            $fields[ $name ]['html'] = $field['handler']->setItem($item)->parse( $item[$name] );
-            $fields[ $name ]['string_value'] = $field['handler']->getStringValue( $item[$name] );
+        foreach ($fields as $name => $field) {
+            $fields[$name]['html'] = $field['handler']->setItem($item)->parse($item[$name]);
+            $item_parsed[$name] = $fields[$name]['html'];
+        }
+        // Для каких необходимо, обрабатываем дополнительно
+        foreach ($fields as $name => $field) {
+            $fields[$name]['string_value'] = $field['handler']->setItem($item_parsed)->getStringValue($item[$name]);
+            $fields[$name]['html'] = $field['handler']->afterParse($fields[$name]['html'], $item_parsed);
         }
 
         // формируем связи (дочерние списки)

@@ -19,7 +19,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 align-self-center">
-                    <img src="<?php echo $this->getTemplateFilePath('images/404.svg'); ?>" alt="404" />
+                    <img src="<?php echo $this->getTemplateFilePath('images/404.svg', true); ?>" alt="404" />
                 </div>
                 <div class="col-md-6 align-self-center">
                     <h1 class="display-1">404</h1>

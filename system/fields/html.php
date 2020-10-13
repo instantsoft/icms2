@@ -100,6 +100,15 @@ class fieldHtml extends cmsFormField {
         return trim(strip_tags($value));
     }
 
+    public function afterParse($value, $item){
+
+        if ($this->getOption('parse_patterns')){
+            $value = string_replace_keys_values_extended($value, $item);
+        }
+
+        return $value;
+    }
+
     public function parse($value){
 
         if ($this->getOption('is_html_filter')){
@@ -111,12 +120,7 @@ class fieldHtml extends cmsFormField {
             ));
         }
 
-        if ($this->getOption('parse_patterns') && !empty($this->item)){
-            $value = string_replace_keys_values_extended($value, $this->item);
-        }
-
         return $value;
-
     }
 
     public function parseTeaser($value) {

@@ -439,6 +439,15 @@ class cmsFormField {
     public function parseTeaser($value){ return $this->parse($value); }
 
     /**
+     * Выполняет некие действия после отработки метода parse
+     * для всех полей одной записи
+     * @param mixed $value Значение уже отформатированного поля
+     * @param array $item Массив полей записи, с уже обработанными данными
+     * @return mixed
+     */
+    public function afterParse($value, $item){ return $value; }
+
+    /**
      * Если значение вашего поля предполагает тип, отличный от типа «string» или же
      * значение поля формируется как некий HTML код, то этот метод должен вернуть
      * как минимум строковое представление значения.

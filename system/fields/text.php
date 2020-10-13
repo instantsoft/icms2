@@ -70,10 +70,6 @@ class fieldText extends cmsFormField {
 
     public function parse($value){
 
-        if ($this->getOption('parse_patterns') && !empty($this->item)){
-            $value = string_replace_keys_values_extended($value, $this->item);
-        }
-
         if ($this->getOption('is_html_filter')){
             return cmsEventsManager::hook('html_filter', array(
                 'text'                => $value,
@@ -84,6 +80,15 @@ class fieldText extends cmsFormField {
             return nl2br(html($value, false));
         }
 
+    }
+
+    public function afterParse($value, $item){
+
+        if ($this->getOption('parse_patterns')){
+            $value = string_replace_keys_values_extended($value, $item);
+        }
+
+        return $value;
     }
 
     public function getStringValue($value){

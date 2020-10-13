@@ -18,7 +18,7 @@
     }
 
 ?>
-<div class="card mt-3 mt-md-4 <?php echo implode(' ', $wrap_class); ?>">
+<div class="card mb-3 mb-md-4 <?php echo implode(' ', $wrap_class); ?>">
     <h5 class="card-header py-0 pl-0 d-flex align-items-center<?php if ($widget['class_title']) { ?> <?php echo $widget['class_title'];  } ?>">
         <ul class="nav nav-tabs border-0" role="tablist">
             <?php foreach($widgets as $index => $widget) { ?>

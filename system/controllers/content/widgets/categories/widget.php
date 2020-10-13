@@ -88,17 +88,20 @@ class widgetContentCategories extends cmsWidget {
                 }
             }
 
+            $cat['is_active'] = $cat['is_hidden'] = false;
             $cat['childs_count'] = 0;
             $cat['img_src'] = html_image_src($cat['cover'], $cover_preset, true);
 
             $css_classes = [];
 
             if (!empty($active_cat['id']) && $cat['id'] == $active_cat['id']) {
-                $css_classes[] = 'active';
+                $css_classes[] = 'active'; // Совместимость cо старыми шаблонами
+                $cat['is_active'] = true;
             }
 
             if (!(isset($path[$cat['id']]) || isset($path[$cat['parent_id']]) || $cat['ns_level'] <= 1) && !$show_full_tree) {
-                $css_classes[] = 'folder_hidden';
+                $css_classes[] = 'folder_hidden'; // Совместимость cо старыми шаблонами
+                $cat['is_hidden'] = true;
             }
 
             if($cat['img_src']){

@@ -729,11 +729,13 @@ class admin extends cmsFrontend {
 
     }
 
-    public function getWidgetOptionsForm($widget_name, $controller_name = false, $options = false, $template = false, $allow_set_cacheable = true){
+    public function getWidgetOptionsForm($widget_name, $controller_name = false, $options = false, $template_name = false, $allow_set_cacheable = true){
 
-        if(!$template){
-            $template = $this->cms_config->template;
+        if(!$template_name){
+            $template_name = $this->cms_config->template;
         }
+
+        $template = new cmsTemplate($template_name);
 
 		$widget_path = cmsCore::getWidgetPath($widget_name, $controller_name);
 
@@ -743,7 +745,7 @@ class admin extends cmsFrontend {
 
         $form_name = 'widget' . ($controller_name ? "_{$controller_name}_" : '_') . "{$widget_name}_options";
 
-        $form = cmsForm::getForm($form_file, $form_name, array($options, $template));
+        $form = cmsForm::getForm($form_file, $form_name, array($options, $template_name));
         if (!$form) { $form = new cmsForm(); }
 
         $form->is_tabbed = true;
@@ -757,16 +759,16 @@ class admin extends cmsFrontend {
                 'title' => LANG_WIDGET_WRAPPER_TPL,
 				'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
 				'default' => 'wrapper',
-                'generator' => function($item) use ($template){
-                    return ['' => LANG_WIDGET_WRAPPER_TPL_NO] + $this->cms_template->getAvailableTemplatesFiles('widgets', 'wrapper*.tpl.php', $template);
+                'generator' => function($item) use ($template_name){
+                    return ['' => LANG_WIDGET_WRAPPER_TPL_NO] + $this->cms_template->getAvailableTemplatesFiles('widgets', 'wrapper*.tpl.php', $template_name);
                 }
             )));
 
             // Стили обёрток
-            $preset_file = $this->cms_template->getTplFilePath('widgets/wrapper_styles.php');
+            $preset_file = $template->getTplFilePath('widgets/wrapper_styles.php');
             if($preset_file){
 
-                cmsCore::loadTemplateLanguage($template);
+                cmsCore::loadTemplateLanguage($template_name);
 
                 $preset_styles = include $preset_file;
 
@@ -790,8 +792,8 @@ class admin extends cmsFrontend {
                 'title' => LANG_WIDGET_BODY_TPL,
 				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
                 'default' => $widget_name,
-                'generator' => function($item) use ($template, $widget_path){
-                    return $this->cms_template->getAvailableTemplatesFiles($widget_path, '*.tpl.php', $template);
+                'generator' => function($item) use ($template_name, $widget_path){
+                    return $this->cms_template->getAvailableTemplatesFiles($widget_path, '*.tpl.php', $template_name);
                }
             )));
 
@@ -857,13 +859,13 @@ class admin extends cmsFrontend {
                 'title'   => LANG_WIDGET_TEMPLATE_LAYOUT,
                 'default' => 0,
                 'show_all'=> true,
-                'generator' => function($item) use ($template){
-                    $layouts = $this->cms_template->getAvailableTemplatesFiles('', '*.tpl.php', $template);
+                'generator' => function($item) use ($template_name){
+                    $layouts = $this->cms_template->getAvailableTemplatesFiles('', '*.tpl.php', $template_name);
                     $items = [];
                     if ($layouts) {
                         foreach ($layouts as $layout) {
                             if($layout == 'admin'){ continue; }
-                            $items[$layout] = string_lang('LANG_'.$template.'_THEME_LAYOUT_'.$layout, $layout);
+                            $items[$layout] = string_lang('LANG_'.$template_name.'_THEME_LAYOUT_'.$layout, $layout);
                         }
                     }
                     return $items;
@@ -881,7 +883,7 @@ class admin extends cmsFrontend {
             )));
             $form->addField($title_fieldset_id, new fieldString('template', array(
                 'is_hidden'=>true,
-                'default' => $template
+                'default' => $template_name
             )));
 
             // Заголовок виджета
@@ -1047,6 +1049,20 @@ class admin extends cmsFrontend {
                     if(!$value){return '';}
                     $value = !is_array($value) ? cmsModel::yamlToArray($value) : $value;
                     return html_image($value, $presets, '', array('class' => 'grid_image_preview img-thumbnail'));
+                };
+            }else
+            if(in_array($field['type'], ['list', 'listbitmask', 'listmultiple'])){
+                $items[$type][$key]['handlers_only'] = '&mdash;';
+                $items[$type][$key]['handler_only'] = function($value, $item)use($field){
+                    if(!$value){return '';}
+                    return $field['handler']->parse($value);
+                };
+            }else
+            if($field['handler']->is_denormalization){
+                $items[$type][$key]['handlers_only'] = '&mdash;';
+                $items[$type][$key]['handler_only'] = function($value, $item)use($field){
+                    if(!$value){return '';}
+                    return $item[$field['handler']->getDenormalName()];
                 };
             }
         }

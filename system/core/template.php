@@ -2356,7 +2356,7 @@ class cmsTemplate {
                         $field = $column['key_alias'];
                     }
 
-                    if (!is_array($row[$field])){
+                    if (!is_array($row[$field]) && !isset($column['handler'])){
                         $value = html($row[$field], false);
                     } else {
                         $value = $row[$field];

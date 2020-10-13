@@ -30,7 +30,7 @@ class actionContentWidgetCatsPresetsAjax extends cmsAction {
 			}
 		}
 
-		return $this->cms_template->renderJSON($_presets ? $_presets : $presets);
+		return $this->cms_template->renderJSON(['' => ''] + ($_presets ? $_presets : $presets));
 
     }
 

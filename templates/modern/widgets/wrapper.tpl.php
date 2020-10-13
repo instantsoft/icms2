@@ -1,4 +1,4 @@
-<div class="card mt-3 mt-md-4 widget<?php if ($widget['class_wrap']) { ?> <?php echo $widget['class_wrap'];  } ?>" id="widget_wrapper_<?php echo $widget['id']; ?>">
+<div class="card mb-3 mb-md-4 widget<?php if ($widget['class_wrap']) { ?> <?php echo $widget['class_wrap'];  } ?>" id="widget_wrapper_<?php echo $widget['id']; ?>">
     <?php if ($widget['title'] && $is_titles){ ?>
     <h5 class="card-header d-flex align-items-center<?php if ($widget['class_title']) { ?> <?php echo $widget['class_title'];  } ?>">
         <?php echo $widget['title']; ?>
