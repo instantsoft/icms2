@@ -428,7 +428,6 @@ class admin extends cmsFrontend {
     public function getSettingsMenu(){
 
         return cmsEventsManager::hook('admin_settings_menu', array(
-
             array(
                 'title' => LANG_BASIC_OPTIONS,
                 'url' => href_to($this->name, 'settings'),
@@ -445,7 +444,14 @@ class admin extends cmsFrontend {
                     'icon'  => 'nav-icon icon-clock'
                 )
             ),
-
+            array(
+                'title' => LANG_CP_CHECK_NESTED,
+                'url' => href_to($this->name, 'settings', array('check_nested')),
+                'level' => 2,
+                'options' => array(
+                    'icon'  => 'nav-icon icon-organization'
+                )
+            )
         ));
 
     }

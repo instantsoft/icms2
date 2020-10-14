@@ -713,6 +713,13 @@
     define('LANG_MODERATION_IN_TRASH_TIME',   'Is in the trash, will be deleted through %s');
     define('LANG_MODERATION_LOGS',            'Moderation logs');
 
+    define('LANG_CP_CHECK_NESTED',                  'Checking ns trees');
+    define('LANG_CP_NS_NO_TABLES',                  'There are no tables available to check');
+    define('LANG_CP_NS_SUCCESSFUL',                 'Successful checks');
+    define('LANG_CP_NS_UNSUCCESSFUL',               'Errors found');
+    define('LANG_CP_NS_FIX',                        'Fix');
+    define('LANG_CP_NS_FIX_SUCCESS',                'Nested sets for %s table is restored');
+    define('LANG_CP_NS_FIX_ERROR',                  'Failed to restore nested sets for %s table');
     define('LANG_CP_SCHEDULER',                     'Scheduler');
     define('LANG_CP_SCHEDULER_TASK',                'Task');
     define('LANG_CP_SCHEDULER_TASK_ADD',            'Add Task');
@@ -785,6 +792,7 @@
     define('LANG_HELP_URL_SETTINGS',                'https://docs.instantcms.ru/en/manual/settings');
     define('LANG_HELP_URL_SETTINGS_GLOBAL',         'https://docs.instantcms.ru/en/manual/settings/global');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER',      'https://docs.instantcms.ru/en/manual/settings/scheduler');
+    define('LANG_HELP_URL_CHECK_NESTED',            'https://docs.instantcms.ru/en/manual/settings/check_nested');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER_TASK', 'https://docs.instantcms.ru/en/manual/settings/scheduler/task');
     define('LANG_HELP_URL_EVENTS',                  'https://docs.instantcms.ru/en/manual/settings/events');
     define('LANG_HELP_URL_COM_MESSAGES',                'https://docs.instantcms.ru/en/manual/components/messages');

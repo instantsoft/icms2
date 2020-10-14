@@ -716,6 +716,13 @@
     define('LANG_MODERATION_IN_TRASH_TIME',   'В корзине, будет удалён через %s');
     define('LANG_MODERATION_LOGS',            'Лог модераций');
 
+    define('LANG_CP_CHECK_NESTED',                  'Проверка деревьев');
+    define('LANG_CP_NS_NO_TABLES',                  'Нет доступных таблиц для проверки');
+    define('LANG_CP_NS_SUCCESSFUL',                 'Успешные проверки');
+    define('LANG_CP_NS_UNSUCCESSFUL',               'Обнаружены ошибки');
+    define('LANG_CP_NS_FIX',                        'Исправить');
+    define('LANG_CP_NS_FIX_SUCCESS',                'Вложенные множества для таблицы %s восстановлены');
+    define('LANG_CP_NS_FIX_ERROR',                  'Не удалось восстановить вложенные множества для таблицы %s');
     define('LANG_CP_SCHEDULER',                     'Планировщик');
     define('LANG_CP_SCHEDULER_TASK',                'Задача');
     define('LANG_CP_SCHEDULER_TASK_ADD',            'Создать задачу');
@@ -788,6 +795,7 @@
     define('LANG_HELP_URL_SETTINGS',                'https://docs.instantcms.ru/manual/settings');
     define('LANG_HELP_URL_SETTINGS_GLOBAL',         'https://docs.instantcms.ru/manual/settings/global');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER',      'https://docs.instantcms.ru/manual/settings/scheduler');
+    define('LANG_HELP_URL_CHECK_NESTED',            'https://docs.instantcms.ru/manual/settings/check_nested');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER_TASK', 'https://docs.instantcms.ru/manual/settings/scheduler/task');
     define('LANG_HELP_URL_EVENTS',                  'https://docs.instantcms.ru/manual/settings/events');
     define('LANG_HELP_URL_COM_MESSAGES',                'https://docs.instantcms.ru/manual/components/messages');

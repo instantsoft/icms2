@@ -579,8 +579,8 @@ form .input-prefix-suffix:after {
     content: '';
     display: block;
 }
-input.button-submit,
-input.button {
+.button-submit,
+.button {
     font-size: 100%;
 	margin: 0 2px 0 0;
 	padding: 10px 15px;
@@ -607,14 +607,14 @@ form .ft_date select {
     width: 50px;
     padding: 2px;
 }
-input.button-submit:hover,
-input.button:hover {
+.button-submit:hover,
+.button:hover {
     box-shadow: 0 0 3px #aaa;
     color: #069;
 }
 
-input.button-submit:active,
-input.button:active {
+.button-submit:active,
+.button:active {
     box-shadow: inset 0 1px 3px #999;
     background: #DDDDDD; /* Old browsers */
     background: -moz-linear-gradient(top,  #DDDDDD 0%, #FFF 100%); /* FF3.6+ */
@@ -627,7 +627,7 @@ input.button:active {
     color:#333;
 }
 
-input.button-small {
+.button-small {
     padding:4px 10px;
 }
 
@@ -1885,7 +1885,7 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 #pm_notices_list .item .buttons .button{
     border-color:#BDC3C7;
 }
-#pm_notices_window > input.button {
+#pm_notices_window > .button {
     border-radius: 0;
     width: 100%;
     box-sizing: border-box;

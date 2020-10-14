@@ -477,6 +477,16 @@ form .child_field{margin-left: 20px}
 .parent_field {
     margin-left: 25px;
 }
+.alert .card.form-tabs {
+    border: none;
+    background-color: transparent;
+}
+.alert .card.form-tabs .card-body {
+    padding: 0;
+}
+.alert form > .buttons {
+    margin-bottom: 0.5rem !important;
+}
 .field.multilanguage.child_field, .field_tabbed.child_field {
     margin-left: 20px;
 }

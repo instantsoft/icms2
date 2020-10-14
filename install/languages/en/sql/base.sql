@@ -890,7 +890,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (186, 'ctype_field_users_after_update', 'bootstrap4', 186, 1),
 (187, 'widget_menu_form', 'bootstrap4', 187, 1),
 (188, 'users_add_friendship_mutual', 'activity', 188, 1),
-(189, 'user_registered', 'activity', 189, 1);
+(189, 'user_registered', 'activity', 189, 1),
+(190, 'db_nested_tables', 'content', 190, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -1191,7 +1192,8 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (46, 'content', 'view_list', 'list', 'all,other,allow'),
 (47, 'content', 'limit24', 'number', NULL),
 (48, 'users', 'change_email', 'flag', NULL),
-(49, 'users', 'change_email_period', 'number', NULL);
+(49, 'users', 'change_email_period', 'number', NULL),
+(50, 'users', 'change_slug', 'flag', NULL);
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (

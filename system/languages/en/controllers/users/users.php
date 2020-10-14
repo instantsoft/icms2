@@ -8,6 +8,7 @@
     define('LANG_USERS_EDIT_PROFILE',       'Edit Profile');
     define('LANG_USERS_EDIT_USER',          'Edit User');
 
+    define('LANG_RULE_USERS_CHANGE_SLUG',   'Change profile page URL');
     define('LANG_USERS_RESTORE_PROFILE',    'Restore profile');
     define('LANG_USERS_DELETE_PROFILE',     'Delete profile');
     define('LANG_RULE_USERS_DELETE',        'Delete profile');

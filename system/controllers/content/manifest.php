@@ -22,7 +22,8 @@
             'admin_content_dataset_fields_list',
             'moderation_list',
             'admin_subscriptions_list',
-            'ctype_lists_context'
+            'ctype_lists_context',
+            'db_nested_tables'
         )
 
     );

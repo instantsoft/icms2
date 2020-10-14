@@ -8,6 +8,7 @@
     define('LANG_USERS_EDIT_PROFILE',       'Редактировать профиль');
     define('LANG_USERS_EDIT_USER',          'Редактировать пользователя');
 
+    define('LANG_RULE_USERS_CHANGE_SLUG',   'Изменять URL страницы профиля');
     define('LANG_USERS_RESTORE_PROFILE',    'Восстановить профиль');
     define('LANG_USERS_DELETE_PROFILE',     'Удалить профиль');
     define('LANG_RULE_USERS_DELETE',        'Удалять профиль');
