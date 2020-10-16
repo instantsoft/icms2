@@ -151,6 +151,7 @@ class widgetContentFilter extends cmsWidget {
 		}
 
         return array(
+			'form_id'      => $this->name.'_'.$this->position.$this->id.'_'.$this->bind_id,
 			'ctype_name'   => $ctype_name,
 			'category'     => $category,
             'page_url'     => $page_url,

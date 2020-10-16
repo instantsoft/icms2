@@ -7,6 +7,6 @@
 
 return [
     'wrapper' => [
-        'widgets-transparent' => LANG_MODERN_WIDGETS_TRANSPARENT
+        'icms-widget__transparent' => LANG_MODERN_WIDGETS_TRANSPARENT
     ]
 ];

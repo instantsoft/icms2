@@ -2,7 +2,7 @@
 
     if(!isset($widgets)){ $widgets = [$widget]; }
 
-    $wrap_class = ['widget_tabbed'];
+    $wrap_class = ['icms-widget__tabbed'];
     $widget_links = [];
 
     foreach($widgets as $widget) {
@@ -43,7 +43,7 @@
             </div>
         <?php } ?>
     </h5>
-    <div class="widgets tab-content">
+    <div class="icms-widgets tab-content">
         <?php foreach($widgets as $index=>$widget) { ?>
             <div id="widget-<?php echo $widget['id']; ?>" class="card-body tab-pane<?php if ($index==0) { ?> active<?php } ?><?php if ($widget['class']) { ?> <?php echo $widget['class'];  } ?>" role="tabpanel">
                 <?php echo $widget['body']; ?>

@@ -1,6 +1,6 @@
 <div class="widget_content_filter">
 	<div class="filter-container">
-		<form action="<?php echo $page_url; ?>" method="get">
+		<form action="<?php echo $page_url; ?>" method="get" id="<?php echo $form_id; ?>">
 			<?php echo html_input('hidden', 'page', 1); ?>
 			<div class="fields">
 				<?php foreach($fields as $name => $field){ ?>
@@ -31,9 +31,16 @@
 			<div class="buttons">
 				<?php echo html_submit(LANG_FILTER_APPLY); ?>
 				<?php if (sizeof($filters)){ ?>
-                    <a href="<?php echo $page_url; ?>"><?php echo LANG_CANCEL; ?></a>
+                    <a class="cancel_filter_link" href="<?php echo $page_url; ?>"><?php echo LANG_CANCEL; ?></a>
 				<?php } ?>
 			</div>
 		</form>
 	</div>
 </div>
+<?php ob_start(); ?>
+<script type="text/javascript">
+    $(function (){
+        icms.forms.initFilterForm('#<?php echo $form_id; ?>');
+    });
+</script>
+<?php $this->addBottom(ob_get_clean()); ?>

@@ -143,6 +143,15 @@ button.loading {
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    &-bottom-gradient::before {
+        content: '';
+        width: 100%;
+        height: 50%;
+        display: block;
+        position: absolute;
+        bottom: 0;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 80%);
+    }
 }
 blockquote {
     margin: 0 0 $spacer*0.5;
@@ -256,7 +265,17 @@ form fieldset {
         background-color: $yellow;
     }
 }
-
+.collapse__angle-down {
+    display: none;
+}
+.collapsed {
+    > .collapse__angle-down {
+        display: inline-block;
+    }
+    > .collapse__angle-up {
+        display: none;
+    }
+}
 .icms-svg-icon {
     display: inline-block;
     font-size: inherit;

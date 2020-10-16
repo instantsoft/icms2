@@ -106,7 +106,7 @@
     $this->applyToolbarHook('admin_users_toolbar');
 
 ?>
-<div class="row align-items-stretch mb-4">
+<div class="row flex-nowrap align-items-stretch mb-4">
     <div class="col-auto quickview-wrapper" id="left-quickview">
         <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
         <div id="datatree" class="bg-white h-100 pt-3 pb-3 pr-3">

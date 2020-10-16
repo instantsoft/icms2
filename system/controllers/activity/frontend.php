@@ -64,26 +64,28 @@ class activity extends cmsFrontend {
 
         $type = $this->model->getType($controller, $name);
 
-        return $this->model->updateEntry($type['id'], $subject_id, $entry);
+        list($type, $subject_id, $entry) = cmsEventsManager::hook('activity_before_update_entry', [$type, $subject_id, $entry]);
 
+        return $this->model->updateEntry($type['id'], $subject_id, $entry);
     }
 
     public function deleteEntry($controller, $name, $subject_id){
 
         $type = $this->model->getType($controller, $name);
 
-        return $this->model->deleteEntry($type['id'], $subject_id);
+        list($type, $subject_id) = cmsEventsManager::hook('activity_before_delete_entry', [$type, $subject_id]);
 
+        return $this->model->deleteEntry($type['id'], $subject_id);
     }
 
     public function deleteEntries($controller, $name){
 
         $type = $this->model->getType($controller, $name);
 
+        $type = cmsEventsManager::hook('activity_before_delete_entries', $type);
+
         return $this->model->deleteEntries($type['id']);
-
     }
-
 
 //============================================================================//
 //============================================================================//

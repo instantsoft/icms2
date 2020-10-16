@@ -1,4 +1,4 @@
-.widget, .widget_tabbed {
+.icms-widget, .icms-widget__tabbed {
     .edit_wlinks {
         @include transition($transition-fade);
         position: absolute;
@@ -13,14 +13,14 @@
         margin-bottom: 0 !important;
     }
 }
-.widget_tabbed {
+.icms-widget__tabbed {
     > .card-header {
         .nav-link {
             padding: $card-spacer-y $card-spacer-x;
         }
     }
 }
-.widgets-transparent {
+.icms-widget__transparent {
     &.card {
         border: none;
         background-color: transparent;

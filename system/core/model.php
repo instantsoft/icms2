@@ -129,6 +129,9 @@ class cmsModel {
         return $this->getContentTypeTableName($name).$this->table_category_postfix;
     }
 
+    /**
+     * @todo вынести все структуры таблиц из кода в отдельные файлы-конфиги
+     */
     public function getContentTableStruct(){
 
         return array(
@@ -166,7 +169,9 @@ class cmsModel {
         );
 
     }
-
+    /**
+     * @todo вынести все структуры таблиц из кода в отдельные файлы-конфиги
+     */
     public function getFieldsTableStruct(){
 
         return array(
@@ -195,7 +200,9 @@ class cmsModel {
         );
 
     }
-
+    /**
+     * @todo вынести все структуры таблиц из кода в отдельные файлы-конфиги
+     */
     public function getPropsTableStruct(){
 
         return array(
@@ -210,7 +217,9 @@ class cmsModel {
         );
 
     }
-
+    /**
+     * @todo вынести все структуры таблиц из кода в отдельные файлы-конфиги
+     */
     public function getPropsBindTableStruct(){
 
         return array(
@@ -221,7 +230,9 @@ class cmsModel {
         );
 
     }
-
+    /**
+     * @todo вынести все структуры таблиц из кода в отдельные файлы-конфиги
+     */
     public function getPropsValuesTableStruct(){
 
         return array(
@@ -230,6 +241,31 @@ class cmsModel {
             'value'   => array('type' => 'varchar', 'size' => 255),
         );
 
+    }
+
+    public function checkCorrectEqualSlug($table_name, $slug, $item_id, $max_len = 255) {
+
+        $get_scount = function($slug) use($item_id, $table_name){
+            return $this->filterNotEqual('id', $item_id)->
+                filterLike('slug', $slug)->
+                getCount($table_name, 'id', true);
+        };
+
+        if($get_scount($slug)){
+            if(mb_strlen($slug) >= $max_len){
+                $slug = mb_substr($slug, 0, ($max_len - 1));
+            }
+            $i = 2;
+            while($get_scount($slug.$i)){
+                $i++;
+                if(mb_strlen($slug.$i) > $max_len){
+                    $slug = mb_substr($slug, 0, ($max_len - strlen($i)));
+                }
+            }
+            $slug .= $i;
+        }
+
+        return $slug;
     }
 
 //============================================================================//
@@ -265,7 +301,7 @@ class cmsModel {
 
     }
 
-    public function getCategorySLUG($category){
+    public function getCategorySLUG($category, $ctype_name){
 
         $slug = '';
 
@@ -275,8 +311,11 @@ class cmsModel {
             $slug .= lang_slug( empty($c['slug_key']) ? str_replace('/', '', $c['title']) : $c['slug_key'] );
         }
 
-        return $slug;
+        $slug = mb_substr($slug, 0, 255);
 
+        $slug = $this->checkCorrectEqualSlug($this->getContentCategoryTableName($ctype_name), $slug, $category['id'], 255);
+
+        return $slug;
     }
 
 //============================================================================//
@@ -370,13 +409,11 @@ class cmsModel {
 
         if (!$category['id']){ return false; }
 
-        $category['title'] = $this->db->escape($category['title']);
-
         $this->update($table_name, $category['id'], $category);
 
         $category['path'] = $this->getCategoryPath($ctype_name, $category);
 
-        $category['slug'] = $this->getCategorySLUG($category);
+        $category['slug'] = $this->getCategorySLUG($category, $ctype_name);
 
         $this->update($table_name, $category['id'], array(
             'slug' => $category['slug']
@@ -385,7 +422,6 @@ class cmsModel {
         cmsCache::getInstance()->clean('content.categories');
 
         return $category;
-
     }
 
 //============================================================================//
@@ -408,7 +444,7 @@ class cmsModel {
 
         $category['id'] = $id;
         $category['path'] = $this->getCategoryPath($ctype_name, array('id' => $id));
-        $category['slug'] = $this->getCategorySLUG($category);
+        $category['slug'] = $this->getCategorySLUG($category, $ctype_name);
 
         $this->update($table_name, $id, array(
             'slug' => $category['slug']
@@ -419,7 +455,7 @@ class cmsModel {
         if ($subcats){
             foreach($subcats as $subcat){
                 $subcat['path'] = $this->getCategoryPath($ctype_name, array('id' => $subcat['id']));
-                $subcat['slug'] = $this->getCategorySLUG($subcat);
+                $subcat['slug'] = $this->getCategorySLUG($subcat, $ctype_name);
                 $this->update($table_name, $subcat['id'], array('slug' => $subcat['slug']));
             }
         }
@@ -489,7 +525,7 @@ class cmsModel {
             $slug = $this->getCategorySLUG(array(
                 'path' => $path,
                 'title' => $node['title']
-            ));
+            ), $ctype_name);
 
             $this->update($table_name, $node['key'], array(
                 'slug' => $slug

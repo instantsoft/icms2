@@ -879,6 +879,11 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
+    /**
+     * @todo вынести все структуры таблиц из кода в отдельные файлы-конфиги
+     * @param string $table_name
+     * @return boolean
+     */
     public function createCategoriesTable($table_name) {
 
         $sql = "CREATE TABLE `{#}{$table_name}` (

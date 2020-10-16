@@ -2160,30 +2160,9 @@ class modelContent extends cmsModel {
             return $slug;
         }
 
-        $get_scount = function($slug) use($item, $ctype){
-            return $this->filterNotEqual('id', $item['id'])->
-                filterLike('slug', $slug)->
-                getCount($this->table_prefix.$ctype['name'], 'id', true);
-        };
-
-        if($get_scount($slug)){
-            if(mb_strlen($slug) >= $slug_len){
-                $slug = mb_substr($slug, 0, ($slug_len - 1));
-            }
-
-            $i = 2;
-            while($get_scount($slug.$i)){
-                $i++;
-                if(mb_strlen($slug.$i) > $slug_len){
-                    $slug = mb_substr($slug, 0, ($slug_len - strlen($i)));
-                }
-            }
-
-            $slug .= $i;
-        }
+        $slug = $this->checkCorrectEqualSlug($this->getContentTypeTableName($ctype['name']), $slug, $item['id'], $slug_len);
 
         return $slug;
-
     }
 
 //============================================================================//

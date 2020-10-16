@@ -2191,6 +2191,8 @@ class cmsTemplate {
 
         ob_start();
 
+        $device_type = cmsRequest::getDeviceType();
+
         extract($data); include($tpl_file);
 
         $html = ob_get_clean();
@@ -2609,6 +2611,8 @@ class cmsTemplate {
 
         list($tpl_file, $data, $request) = cmsEventsManager::hook($hook_name, [$tpl_file, $data, $request]);
 
+        $device_type = cmsRequest::getDeviceType();
+
         extract($data); include($tpl_file);
 
         if($request){
@@ -2921,6 +2925,8 @@ class cmsTemplate {
         $hook_name = 'render_widget_'.($widget->controller ? $widget->controller.'_' : '').$widget->name.'_'.basename(str_replace('-', '_', $tpl_file), '.tpl.php');
 
         list($widget, $tpl_file, $data) = cmsEventsManager::hook($hook_name, [$widget, $tpl_file, $data]);
+
+        $device_type = cmsRequest::getDeviceType();
 
         extract($data);
 

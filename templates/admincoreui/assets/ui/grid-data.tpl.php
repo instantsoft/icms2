@@ -24,57 +24,59 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
     <?php $this->toolbar('menu-toolbar'); ?>
 <?php } ?>
 
-<div class="position-relative datagrid_wrapper table-responsive-md dataTables_wrapper dt-bootstrap4 mb-4">
-    <table id="datagrid" class="datagrid <?php if ($options['is_selectable']) { ?>datagrid_selectable<?php } ?> table table-striped table-bordered dataTable bg-white">
-        <thead>
-            <tr>
-                <?php foreach($columns as $name=>$column){ ?>
-                    <?php if ($name=='id' && !$options['show_id']){ continue; } ?>
-                    <th rel="<?php echo $name; ?>" class="<?php if(!empty($column['class'])){ echo $column['class']; } ?> <?php if($options['is_sortable']){ ?>sortable<?php } ?>">
-                        <?php echo $column['title']; ?>
-                    </th>
-                <?php } ?>
-                <?php if($actions){ ?>
-                    <th class="center" rel="dg_actions">
-                        <?php echo LANG_CP_ACTIONS; ?>
-                    </th>
-                <?php } ?>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if ($options['is_filter']){ ?>
-            <tr class="filter table-align-middle">
-                <?php foreach($columns as $name=>$column){ ?>
-                    <td class="p-2 <?php if(!empty($column['class'])){ ?><?php echo $column['class']; ?><?php } ?>">
-                        <?php if (!empty($column['filter']) && $column['filter'] != 'none'){ ?>
-                            <?php $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : array(); ?>
-                            <?php if(strpos($name, 'date_') === 0){ ?>
+<div class="position-relative dataTables_wrapper dt-bootstrap4 mb-4">
+    <div class="table-responsive">
+        <table id="datagrid" class="datagrid <?php if ($options['is_selectable']) { ?>datagrid_selectable<?php } ?> table table-striped table-bordered dataTable bg-white">
+            <thead>
+                <tr>
+                    <?php foreach($columns as $name=>$column){ ?>
+                        <?php if ($name=='id' && !$options['show_id']){ continue; } ?>
+                        <th rel="<?php echo $name; ?>" class="<?php if(!empty($column['class'])){ echo $column['class']; } ?> <?php if($options['is_sortable']){ ?>sortable<?php } ?>">
+                            <?php echo $column['title']; ?>
+                        </th>
+                    <?php } ?>
+                    <?php if($actions){ ?>
+                        <th class="center" rel="dg_actions">
+                            <?php echo LANG_CP_ACTIONS; ?>
+                        </th>
+                    <?php } ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($options['is_filter']){ ?>
+                <tr class="filter table-align-middle">
+                    <?php foreach($columns as $name=>$column){ ?>
+                        <td class="p-2 <?php if(!empty($column['class'])){ ?><?php echo $column['class']; ?><?php } ?>">
+                            <?php if (!empty($column['filter']) && $column['filter'] != 'none'){ ?>
+                                <?php $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : array(); ?>
+                                <?php if(strpos($name, 'date_') === 0){ ?>
 
-                                <?php echo html_datepicker('filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input form-control-sm')), array('minDate'=>date(cmsConfig::get('date_format'), 86400))); ?>
-
-                            <?php } else { ?>
-                                <?php if (!empty($column['filter_select'])){ ?>
-
-                                    <?php echo html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'custom-select custom-select-sm'))); ?>
+                                    <?php echo html_datepicker('filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input form-control-sm')), array('minDate'=>date(cmsConfig::get('date_format'), 86400))); ?>
 
                                 <?php } else { ?>
+                                    <?php if (!empty($column['filter_select'])){ ?>
 
-                                    <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'form-control-sm'))); ?>
+                                        <?php echo html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'custom-select custom-select-sm'))); ?>
 
+                                    <?php } else { ?>
+
+                                        <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'form-control-sm'))); ?>
+
+                                    <?php } ?>
                                 <?php } ?>
                             <?php } ?>
-                        <?php } ?>
-                    </td>
+                        </td>
+                    <?php } ?>
+                    <?php if ($actions) { ?>
+                        <td class="text-right">
+                            &nbsp;
+                        </td>
+                    <?php } ?>
+                </tr>
                 <?php } ?>
-                <?php if ($actions) { ?>
-                    <td class="text-right">
-                        &nbsp;
-                    </td>
-                <?php } ?>
-            </tr>
-            <?php } ?>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 <?php if ($options['is_pagination'] || $options['is_selectable']){ ?>
     <div class="row">
         <div class="col-auto col-lg-5 d-flex">
