@@ -10,7 +10,6 @@ class widgetContentList extends cmsWidget {
         $image_field     = $this->getOption('image_field');
         $teaser_field    = $this->getOption('teaser_field');
         $is_show_details = $this->getOption('show_details');
-        $style           = $this->getOption('style', 'basic');
         $limit           = $this->getOption('limit', 10);
         $teaser_len      = $this->getOption('teaser_len', 100);
 
@@ -127,12 +126,6 @@ class widgetContentList extends cmsWidget {
         list($ctype, $items) = cmsEventsManager::hook("content_before_list", array($ctype, $items));
         list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));
 
-        if($style){
-            $this->setTemplate('list_'.$style);
-        } else {
-            $this->setTemplate($this->tpl_body);
-        }
-
         return array(
             'ctype'             => $ctype,
             'hide_except_title' => $hide_except_title,
@@ -140,7 +133,6 @@ class widgetContentList extends cmsWidget {
             'image_field'       => $image_field,
             'teaser_field'      => $teaser_field,
             'is_show_details'   => $is_show_details,
-            'style'             => $style,
             'items'             => $items
         );
 

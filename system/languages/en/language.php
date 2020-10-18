@@ -75,9 +75,9 @@
     define('LANG_WIDGET_TITLE_LINKS_HINT',   'In the <b><em>Title | URL</em></b> format, for example, <b><em>Google | http://www.google.com</em></b><br>If a link is wrapped in curly brackets <b>{ }</b>, it will be shown to authorized users only<br>One link in a line');
     define('LANG_WIDGET_WRAPPER_TPL',		 'Container template');
     define('LANG_WIDGET_WRAPPER_TPL_NO',     'Without container template');
-    define('LANG_WIDGET_WRAPPER_TPL_HINT',	 'File title is taken from the <b>widgets</b> folder of your theme, without the <b>.tpl.php</b> extension');
+    define('LANG_WIDGET_WRAPPER_TPL_HINT',	 'File from the <b>widgets</b> directory of your template');
     define('LANG_WIDGET_BODY_TPL',			 'Widget template');
-    define('LANG_WIDGET_BODY_TPL_HINT',	     'File title is taken from the <b>%s</b> folder of your theme, without the <b>.tpl.php</b> extension');
+    define('LANG_WIDGET_BODY_TPL_HINT',	     'File from the <b>%s</b> directory of your template');
     define('LANG_WIDGET_DEVICE',			 'Which devices show the widget');
     define('LANG_WIDGET_LANG_SELECT',		 'For which languages will the widget be displayed?');
     define('LANG_WIDGET_TEMPLATE_LAYOUT',	 'Display on layouts');

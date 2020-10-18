@@ -1,4 +1,10 @@
-<?php if ($items){ ?>
+<?php
+/**
+ * Template Name: LANG_WD_CONTENT_LIST_STYLE_TILES_BIG
+ * Template Type: widget
+ */
+
+if ($items){ ?>
 
     <div class="widget_content_list tiles-big">
         <?php foreach($items as $item) { ?>

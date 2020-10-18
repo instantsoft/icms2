@@ -1,4 +1,8 @@
 <?php
+/**
+ * Template Name: LANG_CP_LISTVIEW_STYLE_BASIC
+ * Template Type: widget
+ */
 
     $this->addTplJSName([
         'photos',

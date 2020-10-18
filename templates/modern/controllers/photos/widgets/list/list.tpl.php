@@ -1,4 +1,8 @@
 <?php
+/**
+ * Template Name: LANG_CP_LISTVIEW_STYLE_BASIC
+ * Template Type: widget
+ */
 
     $this->addTplJSName([
         'photos',
@@ -8,7 +12,6 @@
     $this->addTplCSS('controllers/photos/styles');
 
     $photo_wrap_id = 'widget-photos-'.$widget->id;
-
 ?>
 
 <div class="album-photos-wrap d-flex flex-wrap m-n1" id="<?php echo $photo_wrap_id; ?>"<?php if ($is_owner) { ?> data-delete-url="<?php echo href_to('photos', 'delete'); ?>"<?php } ?>>

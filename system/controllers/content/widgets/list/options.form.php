@@ -163,18 +163,6 @@ class formWidgetContentListOptions extends cmsForm {
                         'title' => LANG_CP_WO_AUTO_GROUP,
                         'hint'  => LANG_CP_WO_AUTO_GROUP_HINT
                     )),
-                    new fieldList('options:style', array(
-                        'title'   => LANG_WD_CONTENT_LIST_STYLE,
-                        'default' => 'basic',
-                        'items'   => array(
-                            'basic'       => LANG_WD_CONTENT_LIST_STYLE_BASIC,
-                            'featured'    => LANG_WD_CONTENT_LIST_STYLE_FEATURED,
-                            'tiles_big'   => LANG_WD_CONTENT_LIST_STYLE_TILES_BIG,
-                            'tiles_small' => LANG_WD_CONTENT_LIST_STYLE_TILES_SMALL,
-                            'compact'     => LANG_WD_CONTENT_LIST_STYLE_COMPACT,
-                            ''            => LANG_WD_CONTENT_LIST_STYLE_CUSTOM
-                        )
-                    )),
                     new fieldCheckbox('options:show_details', array(
                         'title' => LANG_WD_CONTENT_LIST_DETAILS
                     )),

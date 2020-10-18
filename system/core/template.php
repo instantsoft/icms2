@@ -2697,14 +2697,21 @@ class cmsTemplate {
 
         if($files){
             foreach ($files as $file) {
-                $k = str_replace('.tpl', '', $file);
-                $__files[$k] = $k;
+
+                $file_name = $file_title = str_replace('.tpl', '', $file);
+
+                // Ищем название шаблона внутри файла
+                $file_header = [];
+                if(preg_match( '|Template Name:(.*)$|umi', file_get_contents($this->getTemplateFileName($path.'/'.$file_name)), $file_header) && !empty($file_header[1])){
+                    $file_title = string_lang(trim(preg_replace('/\s*(?:\*\/|\?>).*/', '', $file_header[1]))).' ('.$file_name.')';
+                }
+
+                $__files[$file_name] = $file_title;
             }
             $files = $__files; asort($files);
         }
 
         return $files;
-
     }
 
 
@@ -2719,22 +2726,18 @@ class cmsTemplate {
 
         $styles = [];
 
-        foreach($files as $file){
+        foreach($files as $file => $file_title){
 
             preg_match('/^default_list_([a-z0-9_\-]*)$/i', $file, $matches);
 
             if (!$matches){
-                $styles[''] = 'default_list (' . LANG_CP_LISTVIEW_STYLE_BASIC .')';
+                $styles[''] = $file_title;
             } else {
-                $constant_name = 'LANG_CP_LISTVIEW_STYLE_'.mb_strtoupper($matches[1]);
-                $title = defined($constant_name) ? '('.constant($constant_name).')' : '';
-                $styles[$matches[1]] = pathinfo($file, PATHINFO_FILENAME).$title;
+                $styles[$matches[1]] = $file_title;
             }
-
         }
 
         return $styles;
-
     }
 
     /**
@@ -2751,18 +2754,17 @@ class cmsTemplate {
 
         $styles = [];
 
-        foreach($files as $file){
+        foreach($files as $file => $file_title){
 
             preg_match('/^'.$ctype_name.'_item_([a-z0-9_\-]*)$/i', $file, $matches);
 
             if(!empty($matches[1])){
-                $styles[$matches[1]] = pathinfo($file, PATHINFO_BASENAME);
+                $styles[$matches[1]] = $file_title;
             }
 
         }
 
         return $styles;
-
     }
 
     /**

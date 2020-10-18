@@ -196,6 +196,7 @@
     define('LANG_CP_LIST_STYLE_NAMES',          'Names for list styles');
     define('LANG_CP_CONTEXT_LIST_STYLE',        'Styles for other lists');
     define('LANG_CP_CONTEXT_SELECT_LIST',       'Select a list');
+    define('LANG_CP_LISTVIEW_STYLE_SLIDER',     'Slider');
     define('LANG_CP_LISTVIEW_STYLE_BASIC',      'Basic list');
     define('LANG_CP_LISTVIEW_STYLE_FEATURED',   'Featured list');
     define('LANG_CP_LISTVIEW_STYLE_TILES',      'Tiles');

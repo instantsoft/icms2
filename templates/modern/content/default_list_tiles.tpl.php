@@ -1,4 +1,8 @@
 <?php
+/**
+ * Template Name: LANG_CP_LISTVIEW_STYLE_TILES
+ * Template Type: content
+ */
     $info_bar_max_count = 0;
     if($ctype['options']['list_show_filter']) {
         $this->renderAsset('ui/filter-panel', array(
