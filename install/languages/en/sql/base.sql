@@ -891,7 +891,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (187, 'widget_menu_form', 'bootstrap4', 187, 1),
 (188, 'users_add_friendship_mutual', 'activity', 188, 1),
 (189, 'user_registered', 'activity', 189, 1),
-(190, 'db_nested_tables', 'content', 190, 1);
+(190, 'db_nested_tables', 'content', 190, 1),
+(191, 'widget_content_list_form', 'content', 191, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

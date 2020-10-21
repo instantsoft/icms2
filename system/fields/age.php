@@ -14,19 +14,24 @@ class fieldAge extends cmsFormField {
                 'rules' => array( array('required') )
             )),
             new fieldCheckbox('show_y', array(
-                'title' => LANG_YEARS
+                'title' => LANG_YEARS,
+				'extended_option' => true
             )),
             new fieldCheckbox('show_m', array(
-                'title' => LANG_MONTHS
+                'title' => LANG_MONTHS,
+				'extended_option' => true
             )),
             new fieldCheckbox('show_d', array(
-                'title' => LANG_DAYS
+                'title' => LANG_DAYS,
+				'extended_option' => true
             )),
             new fieldCheckbox('show_h', array(
-                'title' => LANG_HOURS
+                'title' => LANG_HOURS,
+				'extended_option' => true
             )),
             new fieldCheckbox('show_i', array(
-                'title' => LANG_MINUTES
+                'title' => LANG_MINUTES,
+				'extended_option' => true
             )),
             new fieldList('range', array(
                 'title' => LANG_PARSER_AGE_FILTER_RANGE,
@@ -39,6 +44,7 @@ class fieldAge extends cmsFormField {
 			new fieldDate('from_date', array(
 				'title' => LANG_PARSER_AGE_FROM_DATE,
 				'hint' => LANG_PARSER_AGE_FROM_DATE_HINT,
+				'extended_option' => true
 			))
         );
     }

@@ -3,7 +3,7 @@
     <?php $this->toolbar('menu-toolbar'); ?>
 <?php } ?>
 
-<form id="<?php echo $attributes['form_id']; ?>" action="<?php echo $attributes['action']; ?>"
+<form id="<?php html($attributes['form_id']); ?>" action="<?php echo $attributes['action']; ?>"
       method="<?php echo $attributes['method']; ?>"
       class="<?php if ($this->controller->request->isAjax()){ ?>ajax-form<?php } ?>"
       enctype="multipart/form-data"
@@ -18,9 +18,9 @@
         <?php if($form->is_tabbed){ ?>
             <ul class="nav nav-tabs flex-wrap" role="tablist">
                 <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
-                    <?php if (empty($fieldset['childs'])) { continue; } ?>
+                    <?php if (empty($fieldset['is_empty']) && empty($fieldset['childs'])) { continue; } ?>
                     <li class="nav-item">
-                        <a class="nav-link<?php if(empty($active_tab)){ $active_tab = true; ?> active<?php } ?>" href="#tab-<?php echo $fieldset_id; ?>" data-toggle="tab" role="tab">
+                        <a class="nav-link<?php if(empty($active_tab)){ $active_tab = true; ?> active<?php } ?><?php if(!empty($fieldset['parent']['list'])){ ?> icms-form-tab__demand<?php } ?>" <?php if(!empty($fieldset['parent']['list'])){ ?>data-parent="<?php echo str_replace(':', '_', $fieldset['parent']['list']); ?>" data-parent_url="<?php echo $fieldset['parent']['url']; ?>"<?php } ?> href="#tab-<?php echo $fieldset_id; ?>" data-toggle="tab" role="tab">
                             <?php echo $fieldset['title']; ?>
                         </a>
                     </li>
@@ -87,6 +87,7 @@
             return icms.forms.submitAjax(this, <?php echo !empty($attributes['params']) ? json_encode($attributes['params']) : 'undefined'; ?>);
         });
     <?php } ?>
+        icms.forms.initFieldsetChildList('<?php echo $attributes['form_id']; ?>');
     });
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

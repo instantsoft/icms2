@@ -33,10 +33,16 @@ class fieldString extends cmsFormField {
                     'checkbox'  => LANG_PARSER_STRING_CHECKBOX
                 )
             )),
+            new fieldNumber('teaser_len', array(
+                'title' => LANG_PARSER_HTML_TEASER_LEN,
+                'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
+				'extended_option' => true
+            )),
             new fieldCheckbox('is_autolink', array(
                 'title' => LANG_PARSER_LIST_IS_AUTOLINK,
                 'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_HINT.LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
-                'default' => false
+                'default' => false,
+				'extended_option' => true
             ))
         );
     }
@@ -55,6 +61,22 @@ class fieldString extends cmsFormField {
 
     }
 
+    public function parseTeaser($value) {
+
+        if (!empty($this->item['is_private_item'])) {
+            return '<p class="private_field_hint text-muted">'.$this->item['private_item_hint'].'</p>';
+        }
+
+        $max_len = $this->getOption('teaser_len');
+
+        if ($max_len){
+            $value = string_short($value, $max_len);
+            return $value;
+        }
+
+        return parent::parseTeaser($value);
+    }
+
     public function parse($value){
 
         if ($this->getOption('is_autolink')){
@@ -64,7 +86,6 @@ class fieldString extends cmsFormField {
         }
 
         return html($value, false);
-
     }
 
     public function applyFilter($model, $value) {

@@ -16,7 +16,8 @@ class fieldListBitmask extends cmsFormField {
             )),
             new fieldString('list_class', array(
                 'title'   => LANG_PARSER_BITMASK_LIST_CLASS,
-                'default' => 'multiple_tags_list'
+                'default' => 'multiple_tags_list',
+				'extended_option' => true
             )),
             new fieldNumber('max_length', array(
                 'title'   => LANG_PARSER_BITMASK_MAX,
@@ -29,7 +30,8 @@ class fieldListBitmask extends cmsFormField {
             new fieldCheckbox('is_autolink', array(
                 'title' => LANG_PARSER_LIST_IS_AUTOLINK,
                 'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
-                'default' => false
+                'default' => false,
+				'extended_option' => true
             ))
         );
     }

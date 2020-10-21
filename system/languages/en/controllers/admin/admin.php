@@ -70,6 +70,7 @@
     define('LANG_CP_CTYPE_DELETE_CONFIRM',      'Delete content type "{title}"?');
     define('LANG_CP_CTYPE_ERROR_NAME',          'It should not be called the name of an existing component');
     define('LANG_CP_CTYPE_TO_LIST',             'To the content types list');
+    define('LANG_CP_CTYPE_NOT_SET',             'No content type set');
 
     define('LANG_CP_CTYPE_SETTINGS',            'Settings');
     define('LANG_CP_CTYPE_LABELS',              'Labels');

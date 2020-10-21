@@ -27,7 +27,7 @@ class formWidgetContentListOptions extends cmsForm {
         };
 
         return array(
-            array(
+            'woptions' => array(
                 'type'   => 'fieldset',
                 'title'  => LANG_OPTIONS,
                 'childs' => array(
@@ -141,34 +141,41 @@ class formWidgetContentListOptions extends cmsForm {
                         },
                         'visible_depend' => array('options:ctype_id' => array('hide' => array('0')))
                     )),
-                    new fieldList('options:image_field', array(
-                        'title'     => LANG_WD_CONTENT_LIST_IMAGE,
+                    new fieldList('options:filter_id', array(
+                        'title'     => LANG_WD_CONTENT_LIST_FILTER,
                         'parent'    => array(
                             'list' => 'options:ctype_id',
-                            'url'  => href_to('content', 'widget_fields_ajax')
+                            'url'  => href_to('content', 'widget_filters_ajax')
                         ),
-                        'generator' => $field_generator,
-                        'visible_depend' => array('options:ctype_id' => array('hide' => array('0')))
-                    )),
-                    new fieldList('options:teaser_field', array(
-                        'title'     => LANG_WD_CONTENT_LIST_TEASER,
-                        'parent'    => array(
-                            'list' => 'options:ctype_id',
-                            'url'  => href_to('content', 'widget_fields_ajax')
-                        ),
-                        'generator' => $field_generator,
+                        'generator' => function($item, $request) use($content_model) {
+                            $list     = ['0' => ''];
+                            $ctype_id = is_array($item) ? array_value_recursive('options:ctype_id', $item) : false;
+                            if (!$ctype_id && $request) {
+                                $ctype_id = $request->get('options:ctype_id', 0);
+                            }
+                            if (!$ctype_id) {
+                                return $list;
+                            }
+                            $ctype = $content_model->getContentType($ctype_id);
+                            if (!$ctype) {
+                                return $list;
+                            }
+                            if(!$content_model->isFiltersTableExists($ctype['name'])){
+                                return $list;
+                            }
+                            $filters = $content_model->getContentFilters($ctype['name']);
+                            if (is_array($filters)) {
+                                foreach ($filters as $filter) {
+                                    $list[$filter['id']] = $filter['title'];
+                                }
+                            }
+                            return $list;
+                        },
                         'visible_depend' => array('options:ctype_id' => array('hide' => array('0')))
                     )),
                     new fieldCheckbox('options:auto_group', array(
                         'title' => LANG_CP_WO_AUTO_GROUP,
                         'hint'  => LANG_CP_WO_AUTO_GROUP_HINT
-                    )),
-                    new fieldCheckbox('options:show_details', array(
-                        'title' => LANG_WD_CONTENT_LIST_DETAILS
-                    )),
-                    new fieldNumber('options:teaser_len', array(
-                        'title' => LANG_PARSER_HTML_TEASER_LEN,
-                        'hint'  => LANG_PARSER_HTML_TEASER_LEN_HINT
                     )),
                     new fieldNumber('options:limit', array(
                         'title'   => LANG_LIST_LIMIT,
@@ -176,6 +183,55 @@ class formWidgetContentListOptions extends cmsForm {
                         'rules'   => array(
                             array('required')
                         )
+                    ))
+                )
+            ),
+            'fields_options' => array(
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_CTYPE_FIELDS,
+                'is_empty' => true,
+                'parent' => array(
+                    'list' => 'options:ctype_id',
+                    'url'  => href_to('content', 'widget_fields_options_ajax')
+                ),
+                'childs' => array(
+                    new cmsFormField('fake',array(
+                        'title' => LANG_CP_CTYPE_NOT_SET,
+                        'html' => ''
+                    ))
+                )
+            ),
+            'deprecated' => array(
+                'type'   => 'fieldset',
+                'title'  => LANG_WD_CONTENT_DEPRECATED,
+                'childs' => array(
+                    new cmsFormField('fake_deprecated_hint',array(
+                        'title' => '',
+                        'hint' => LANG_WD_CONTENT_LIST_FIELD_HINT,
+                        'html' => ''
+                    )),
+                    new fieldList('options:image_field', array(
+                        'title'  => LANG_WD_CONTENT_LIST_IMAGE,
+                        'parent' => array(
+                            'list' => 'options:ctype_id',
+                            'url'  => href_to('content', 'widget_fields_ajax')
+                        ),
+                        'generator' => $field_generator
+                    )),
+                    new fieldList('options:teaser_field', array(
+                        'title'  => LANG_WD_CONTENT_LIST_TEASER,
+                        'parent' => array(
+                            'list' => 'options:ctype_id',
+                            'url'  => href_to('content', 'widget_fields_ajax')
+                        ),
+                        'generator' => $field_generator
+                    )),
+                    new fieldNumber('options:teaser_len', array(
+                        'title' => LANG_PARSER_HTML_TEASER_LEN,
+                        'hint'  => LANG_PARSER_HTML_TEASER_LEN_HINT
+                    )),
+                    new fieldCheckbox('options:show_details', array(
+                        'title' => LANG_WD_CONTENT_LIST_DETAILS
                     ))
                 )
             )

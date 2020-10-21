@@ -6,8 +6,9 @@
 }
 .content_item, .content_list {
     .field {
-        margin-bottom: $spacer*0.75;
+        margin-bottom: $spacer*0.5;
         @include media-breakpoint-up(sm) {
+            margin-bottom: $spacer*0.75;
             &.left_field {
                 float: left;
                 margin-right: $spacer;
@@ -92,6 +93,7 @@
                             float: left;
                             margin-right: $spacer;
                             margin-bottom: 0;
+                            max-width: 50%;
                         }
                     }
                     &:last-child:after {

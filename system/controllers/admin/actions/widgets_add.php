@@ -41,7 +41,7 @@ class actionAdminWidgetsAdd extends cmsAction {
 
         $widget_event_name = 'widget_'.($widget_bind['controller'] ? $widget_bind['controller'].'_' : '').$widget_bind['name'].'_form';
 
-        list($form, $widget_bind, $widget_object, $template) = cmsEventsManager::hook(['widget_form', $widget_event_name], [$form, $widget_bind, $widget_object, $template]);
+        list($form, $widget_bind, $widget_object, $template) = cmsEventsManager::hook(['widget_form', $widget_event_name], [$form, $widget_bind, $widget_object, $template], null, $this->request);
 
         $data = $form->parse(new cmsRequest($widget_bind));
 

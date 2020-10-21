@@ -3,19 +3,18 @@
  * Template Name: LANG_CP_LISTVIEW_STYLE_TILES
  * Template Type: content
  */
-    $info_bar_max_count = 0;
-    if($ctype['options']['list_show_filter']) {
-        $this->renderAsset('ui/filter-panel', array(
-            'css_prefix'   => $ctype['name'],
-            'page_url'     => $page_url,
-            'fields'       => $fields,
-            'props_fields' => $props_fields,
-            'props'        => $props,
-            'filters'      => $filters,
-            'ext_hidden_params' => $ext_hidden_params,
-            'is_expanded'  => $ctype['options']['list_expand_filter']
-        ));
-    }
+if($ctype['options']['list_show_filter']) {
+    $this->renderAsset('ui/filter-panel', array(
+        'css_prefix'   => $ctype['name'],
+        'page_url'     => $page_url,
+        'fields'       => $fields,
+        'props_fields' => $props_fields,
+        'props'        => $props,
+        'filters'      => $filters,
+        'ext_hidden_params' => $ext_hidden_params,
+        'is_expanded'  => $ctype['options']['list_expand_filter']
+    ));
+}
 ?>
 <?php if (!$items){ ?>
     <p class="alert alert-info mt-4" role="alert">

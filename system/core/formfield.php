@@ -212,6 +212,23 @@ class cmsFormField {
      */
     public function getOptions() { return array(); }
 
+    public function getOptionsExtended() {
+
+        $ext_options = [];
+
+        $options = $this->getOptions();
+
+        if($options){
+            foreach ($options as $option_field) {
+                if(!empty($option_field->extended_option)){
+                    $ext_options[] = $option_field;
+                }
+            }
+        }
+
+        return $ext_options;
+    }
+
     /**
      * Возвращает значение опции поля
      * @param string $key Имя опции

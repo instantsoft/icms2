@@ -5,7 +5,7 @@
     </div>
 <?php } ?>
 
-<form id="<?php echo $attributes['form_id']; ?>" action="<?php echo $attributes['action']; ?>"
+<form id="<?php html($attributes['form_id']); ?>" action="<?php echo $attributes['action']; ?>"
       method="<?php echo $attributes['method']; ?>"
       <?php if ($this->controller->request->isAjax()){ ?>
         class="modal"
@@ -22,8 +22,12 @@
         <?php if($form->is_tabbed){ ?>
             <ul class="tabbed">
                 <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
-                    <?php if (empty($fieldset['childs'])) { continue; } ?>
-                    <li><a href="#tab-<?php echo $fieldset_id; ?>"><?php echo $fieldset['title']; ?></a></li>
+                    <?php if (empty($fieldset['is_empty']) && empty($fieldset['childs'])) { continue; } ?>
+                    <li>
+                        <a class="<?php if(!empty($fieldset['parent']['list'])){ ?>icms-form-tab__demand<?php } ?>" <?php if(!empty($fieldset['parent']['list'])){ ?>data-parent="<?php echo str_replace(':', '_', $fieldset['parent']['list']); ?>" data-parent_url="<?php echo $fieldset['parent']['url']; ?>"<?php } ?> href="#tab-<?php echo $fieldset_id; ?>">
+                            <?php echo $fieldset['title']; ?>
+                        </a>
+                    </li>
                 <?php } ?>
             </ul>
         <?php } ?>
@@ -86,6 +90,7 @@
             return icms.forms.submitAjax(this, <?php echo !empty($attributes['params']) ? json_encode($attributes['params']) : 'undefined'; ?>);
         });
     <?php } ?>
+        icms.forms.initFieldsetChildList('<?php echo $attributes['form_id']; ?>');
     });
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

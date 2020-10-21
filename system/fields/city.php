@@ -38,12 +38,14 @@ class fieldCity extends cmsFormField {
             )),
             new fieldString('output_string', array(
                 'title' => LANG_PARSER_CITY_OUTPUT_STRING,
-                'hint'  => LANG_PARSER_CITY_OUTPUT_STRING_HINT
+                'hint'  => LANG_PARSER_CITY_OUTPUT_STRING_HINT,
+				'extended_option' => true
             )),
             new fieldCheckbox('is_autolink', array(
                 'title' => LANG_PARSER_LIST_IS_AUTOLINK,
                 'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
-                'default' => false
+                'default' => false,
+				'extended_option' => true
             ))
         );
 

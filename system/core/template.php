@@ -2279,6 +2279,7 @@ class cmsTemplate {
 
         $attributes = array_replace_recursive([
             'is_ajax'      => false,
+            'only_fields'  => false,
             'submit'       => ['title' => LANG_SAVE, 'show' => true],
             'cancel'       => ['title' => LANG_CANCEL, 'href' => href_to_home(), 'show' => false],
             'action'       => '',

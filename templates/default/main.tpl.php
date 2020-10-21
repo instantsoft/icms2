@@ -17,6 +17,9 @@
     <?php if ($config->debug && cmsUser::isAdmin()){ ?>
         <?php $this->addTplCSSName('debug'); ?>
     <?php } ?>
+    <?php if(cmsUser::isAdmin()){ ?>
+        <?php $this->addTplJSName('widgets'); ?>
+    <?php } ?>
     <?php $this->head(); ?>
     <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
     <meta name="generator" content="InstantCMS" />

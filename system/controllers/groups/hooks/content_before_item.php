@@ -19,6 +19,7 @@ class onGroupsContentBeforeItem extends cmsAction {
 
                     $this->cms_template->addToolButton(array(
                         'class' => 'newspaper_delete ajax-modal',
+                        'icon'  => 'unlink',
                         'title' => LANG_GROUPS_UNBIND,
                         'href'  => href_to($this->name, $group['slug'], array('unbind', $ctype['name'], $item['id']))
                     ));

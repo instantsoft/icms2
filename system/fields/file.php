@@ -14,7 +14,8 @@ class fieldFile extends cmsFormField {
                 'items' => array(
                     0 => LANG_PARSER_FILE_LABEL_GET,
                     1 => LANG_PARSER_FILE_LABEL_NAME
-                )
+                ),
+				'extended_option' => true
             )),
             new fieldString('extensions', array(
                 'title' => LANG_PARSER_FILE_EXTS,
@@ -25,10 +26,12 @@ class fieldFile extends cmsFormField {
                 'hint'  => sprintf(LANG_PARSER_FILE_MAX_SIZE_PHP, $max_size)
             )),
             new fieldCheckbox('show_size', array(
-                'title' => LANG_PARSER_FILE_SHOW_SIZE
+                'title' => LANG_PARSER_FILE_SHOW_SIZE,
+				'extended_option' => true
             )),
             new fieldCheckbox('show_counter', array(
-                'title' => LANG_PARSER_FILE_SHOW_COUNTER
+                'title' => LANG_PARSER_FILE_SHOW_COUNTER,
+				'extended_option' => true
             ))
         );
     }

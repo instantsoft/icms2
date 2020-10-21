@@ -67,7 +67,6 @@ class actionAdminCtypesFieldsOptions extends cmsAction {
         }
 
         $this->cms_template->renderForm($form, $values, [
-            'only_fields' => true,
             'form_id' => $form_id,
             'form_tpl_file' => 'form_fields'
         ]);

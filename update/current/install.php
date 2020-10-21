@@ -35,6 +35,33 @@ function install_package(){
         $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`, `files`) VALUES ('content', 'fields', 'Поля контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL, NULL);");
     }
 
+    $admin->model->filterEqual('w.controller', 'content');
+    $admin->model->filterEqual('w.name', 'list');
+    $admin->model->joinInner('widgets', 'w', 'w.id = i.widget_id');
+    $admin->model->selectOnly('i.id');
+    $admin->model->select('i.options');
+    $widgets = $admin->model->get('widgets_bind', function ($item, $model){
+        $item['options'] = cmsModel::yamlToArray($item['options']);
+        return $item;
+    });
+    if($widgets){
+        foreach ($widgets as $widget) {
+            if(array_key_exists('style', $widget['options'])){
+
+                $update = [];
+
+                if($widget['options']['style']){
+                    $update['tpl_body'] = 'list_'.$widget['options']['style'];
+                }
+
+                unset($widget['options']['style']);
+                $update['options'] = $widget['options'];
+
+                $admin->model->update('widgets_bind', $widget['id'], $update);
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

@@ -33,7 +33,7 @@ class actionAdminWidgetsUpdate extends cmsAction {
 
         $widget_event_name = 'widget_'.($widget['controller'] ? $widget['controller'].'_' : '').$widget['name'].'_form';
 
-        list($form, $widget, $widget_object, $template) = cmsEventsManager::hook(['widget_form', $widget_event_name], [$form, $widget, $widget_object, $template]);
+        list($form, $widget, $widget_object, $template) = cmsEventsManager::hook(['widget_form', $widget_event_name], [$form, $widget, $widget_object, $template], null, $this->request);
 
         $widget = $form->parse($this->request, true);
 

@@ -24,6 +24,7 @@ class fieldText extends cmsFormField {
             )),
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
+				'extended_option' => true
             )),
             new fieldCheckbox('parse_patterns', array(
                 'title' => LANG_PARSER_PARSE_PATTERNS,
@@ -32,6 +33,11 @@ class fieldText extends cmsFormField {
             new fieldCheckbox('build_redirect_link', array(
                 'title' => LANG_PARSER_BUILD_REDIRECT_LINK,
                 'is_visible' => cmsController::enabled('redirect')
+            )),
+            new fieldNumber('teaser_len', array(
+                'title' => LANG_PARSER_HTML_TEASER_LEN,
+                'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
+				'extended_option' => true
             )),
             new fieldCheckbox('in_fulltext_search', array(
                 'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
@@ -63,6 +69,19 @@ class fieldText extends cmsFormField {
 
         if (!empty($this->item['is_private_item'])) {
             return '<p class="private_field_hint text-muted">'.$this->item['private_item_hint'].'</p>';
+        }
+
+        $max_len = $this->getOption('teaser_len');
+
+        if ($max_len){
+
+            $value = string_short($value, $max_len);
+
+            if(!empty($this->item['ctype']['name']) && !empty($this->item['slug'])){
+                $value .= '<a class="read-more btn btn-outline-info btn-sm" href="'.href_to($this->item['ctype']['name'], $this->item['slug'].'.html').'">'.LANG_MORE.'</a>';
+            }
+
+            return $value;
         }
 
         return parent::parseTeaser($value);

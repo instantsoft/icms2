@@ -12,7 +12,8 @@ class fieldDate extends cmsFormField {
         return array(
             new fieldCheckbox('show_time', array(
                 'title' => LANG_PARSER_DATE_SHOW_TIME,
-                'default' => false
+                'default' => false,
+				'extended_option' => true
             )),
             new fieldCheckbox('filter_range', array(
                 'title' => LANG_PARSER_NUMBER_FILTER_RANGE,

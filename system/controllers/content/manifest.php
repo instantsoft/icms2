@@ -23,7 +23,8 @@
             'moderation_list',
             'admin_subscriptions_list',
             'ctype_lists_context',
-            'db_nested_tables'
+            'db_nested_tables',
+            'widget_content_list_form'
         )
 
     );

@@ -18,7 +18,8 @@ class fieldImage extends cmsFormField {
                     $presets = cmsCore::getModel('images')->getPresetsList(true);
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return $presets;
-                }
+                },
+				'extended_option' => true
             )),
             new fieldList('size_full', array(
                 'title'     => LANG_PARSER_IMAGE_SIZE_FULL,

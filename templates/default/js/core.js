@@ -238,6 +238,7 @@ icms.forms = (function ($) {
                 }
                 $(sbutton).val(result.hint).prop('disabled', false).find('span').text(result.hint);
                 $(spinner).fadeOut('slow');
+                icms.events.run('icms_content_filter_changed', form);
             }, 'json');
 
         };
@@ -251,7 +252,7 @@ icms.forms = (function ($) {
                     change.apply(context, args);
                 }, 500);
             };
-        }
+        };
 
         $(selector).find('select, input[type=checkbox]').on('change', change);
         $(selector).find('input:not([type=checkbox]), textarea').on('input', delay());
@@ -355,6 +356,19 @@ icms.forms = (function ($) {
         selector = selector || '.button-submit';
         icms.forms.submitted = true;
         $(selector).trigger('click');
+    };
+
+	this.initFieldsetChildList = function (form_id){
+        $('#'+form_id+' .icms-form-tab__demand').each(function (){
+            var demand_wrap = $(this).attr('href');
+            var url = $(this).data('parent_url');
+            $('#'+$(this).data('parent')).on('change', function (){
+                var value = $(this).val();
+                $.post(url, {value: value, form_id: form_id}, function(result){
+                    $(demand_wrap).html(result);
+                }, 'html');
+            });
+        });
     };
 
 	this.updateChildList = function (child_id, url, value, current_value){
@@ -532,6 +546,7 @@ icms.forms = (function ($) {
         return (typeof name !== 'string' && name.length > 1) ? name.shift()+'['+name.join('][')+']' :  name;
     };
     this.VDListeners = {};
+    this.VDListenersInitialized = [];
     this.VDRules = {from:{},depends:{}};
     this.addVisibleDepend = function(form_id, field_id, rules){
         if(typeof this.VDRules.depends[form_id+'-'+field_id] === 'undefined'){ /* здесь все зависимости поля field_name */
@@ -592,7 +607,10 @@ icms.forms = (function ($) {
     };
     this.VDReInit = function(){
         for(var l in this.VDListeners){if(this.VDListeners.hasOwnProperty(l)){
-            $(this.VDListeners[l]).triggerHandler('change');
+            if(this.VDListenersInitialized.indexOf(this.VDListeners[l]) === -1) {
+                $(this.VDListeners[l]).triggerHandler('change');
+                this.VDListenersInitialized.push(this.VDListeners[l]);
+            }
         }}
     };
 

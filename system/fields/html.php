@@ -66,6 +66,7 @@ class fieldHtml extends cmsFormField {
             )),
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
+				'extended_option' => true
             )),
             new fieldCheckbox('parse_patterns', array(
                 'title' => LANG_PARSER_PARSE_PATTERNS,
@@ -78,6 +79,7 @@ class fieldHtml extends cmsFormField {
             new fieldNumber('teaser_len', array(
                 'title' => LANG_PARSER_HTML_TEASER_LEN,
                 'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
+				'extended_option' => true
             )),
             new fieldCheckbox('in_fulltext_search', array(
                 'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,

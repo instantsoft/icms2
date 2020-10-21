@@ -25,7 +25,8 @@ class fieldList extends cmsFormField {
             new fieldCheckbox('is_autolink', array(
                 'title' => LANG_PARSER_LIST_IS_AUTOLINK,
                 'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
-                'default' => false
+                'default' => false,
+				'extended_option' => true
             ))
         );
     }

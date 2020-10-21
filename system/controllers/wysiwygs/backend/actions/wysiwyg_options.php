@@ -46,7 +46,6 @@ class actionWysiwygsWysiwygOptions extends cmsAction {
         ob_start();
 
         $this->cms_template->renderForm($form, $preset, [
-            'only_fields' => true,
             'form_tpl_file' => 'form_fields'
         ]);
 
