@@ -19,7 +19,7 @@
         ]); ?>
 
         <?php ob_start(); ?>
-        <script type="text/javascript">
+        <script>
             toastr.options = {progressBar: true, preventDuplicates: true, timeOut: 3000, newestOnTop: true, closeButton: true, hideDuration: 600};
             <?php if ($messages){ ?>
                 $(function(){

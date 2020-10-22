@@ -3,14 +3,14 @@
     <h5 class="card-header d-flex align-items-center<?php if ($widget['class_title']) { ?> <?php echo $widget['class_title'];  } ?>">
         <?php echo $widget['title']; ?>
         <?php if (!empty($widget['links'])) { ?>
-            <div class="links ml-auto">
+            <span class="links ml-auto">
                 <?php $links = string_parse_list($widget['links']); ?>
                 <?php foreach($links as $link){ ?>
                     <a class="btn btn-outline-info btn-sm" href="<?php html((strpos($link['value'], 'http') === 0) ? $link['value'] : href_to($link['value'])); ?>">
                         <?php html($link['id']); ?>
                     </a>
                 <?php } ?>
-            </div>
+            </span>
         <?php } ?>
     </h5>
     <?php } ?>

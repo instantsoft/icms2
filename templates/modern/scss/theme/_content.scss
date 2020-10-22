@@ -40,7 +40,10 @@
         .value > *:last-child {
             margin-bottom: 0;
         }
-        &:last-child { @include clearfix; }
+        &:last-child {
+            margin-bottom: 0;
+            @include clearfix;
+        }
         &.ft_html .value img {
             max-width: 100%;
             height: auto;
@@ -52,6 +55,11 @@
     }
 }
 .content_list {
+    &.compact {
+        .field {
+            margin-bottom: $spacer*0.25;
+        }
+    }
     &.tiled {
         .article {
             margin-bottom: $grid-gutter-width;

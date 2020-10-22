@@ -41,7 +41,7 @@
     if (!empty($childs['tabs']) && $relation['layout'] == 'tab'){
 
         $this->addMenuItem('item-menu', array(
-            'title' => string_ucfirst($ctype['labels']['one']),
+            'title' => !empty($ctype['labels']['relations_tab_title']) ? $ctype['labels']['relations_tab_title'] : string_ucfirst($ctype['labels']['one']),
             'url'   => href_to($ctype['name'], $item['slug'] . '.html')
         ));
 

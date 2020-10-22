@@ -25,7 +25,7 @@
     <a class="fullscreen_click" href="#"><img></a>
 <?php } ?>
 <?php ob_start(); ?>
-<script type="text/javascript">
+<script>
     <?php if(!empty($photos_url_params)){ ?>
         $(function(){
             $('.photo_navigation').each(function (){

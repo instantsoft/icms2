@@ -183,7 +183,7 @@
     <?php echo $photo['comments_widget']; ?>
 <?php } ?>
 <?php ob_start(); ?>
-<script type="text/javascript">
+<script>
     icms.photos.init = true;
     icms.photos.mode = 'photo';
     icms.photos.row_height = '<?php echo $row_height; ?>';

@@ -19,8 +19,8 @@
 
 ?>
 <div class="card mb-3 mb-md-4 <?php echo implode(' ', $wrap_class); ?>">
-    <h5 class="card-header py-0 pl-0 d-flex align-items-center<?php if ($widget['class_title']) { ?> <?php echo $widget['class_title'];  } ?>">
-        <ul class="nav nav-tabs border-0" role="tablist">
+    <div class="card-header h5 py-0 pl-0 d-flex align-items-center<?php if ($widget['class_title']) { ?> <?php echo $widget['class_title'];  } ?>">
+        <ul class="nav nav-tabs border-0">
             <?php foreach($widgets as $index => $widget) { ?>
                 <li class="nav-item<?php if ($widget['class_title']) { ?> <?php echo $widget['class_title'];  } ?>">
                     <a class="nav-link<?php if ($index==0) { ?> active<?php } ?>" data-toggle="tab" data-id="<?php echo $widget['id']; ?>" href="#widget-<?php echo $widget['id']; ?>">
@@ -42,7 +42,7 @@
                 <?php } ?>
             </div>
         <?php } ?>
-    </h5>
+    </div>
     <div class="icms-widgets tab-content">
         <?php foreach($widgets as $index=>$widget) { ?>
             <div id="widget-<?php echo $widget['id']; ?>" class="card-body tab-pane<?php if ($index==0) { ?> active<?php } ?><?php if ($widget['class']) { ?> <?php echo $widget['class'];  } ?>" role="tabpanel">

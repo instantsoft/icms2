@@ -30,7 +30,7 @@
 </div>
 
 <?php ob_start(); ?>
-<script type="text/javascript">
+<script>
     $(function(){
         icms.photos.initCarousel('#<?php echo $photo_wrap_id; ?>');
     });

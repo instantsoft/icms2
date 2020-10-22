@@ -124,7 +124,7 @@ $this->addTplJSNameFromContext('vendors/slick/slick.min');
 $this->addTplCSSNameFromContext('slick');
 ob_start();
 ?>
-<script type="text/javascript">
+<script>
     icms.menu.initSwipe('.info_bar', {variableWidth: true<?php if (!empty($item['info_bar']) && count($item['info_bar']) > 3){ ?>, mobileFirst: false<?php } ?>});
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

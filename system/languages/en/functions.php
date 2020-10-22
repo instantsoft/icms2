@@ -42,9 +42,9 @@ function lang_date($date_string){
  */
 function lang_slug($string, $disallow_numeric = true){
 
-    $string    = strip_tags(trim($string));
-    $string    = mb_strtolower($string, 'utf-8');
-    $string    = str_replace(' ', '-', $string);
+    $string = strip_tags(trim($string));
+    $string = mb_strtolower($string);
+    $string = str_replace(' ', '-', $string);
 
     $slug = preg_replace ('/[^a-z0-9\-\/]/u', '-', $string);
     $slug = preg_replace('/([-]+)/i', '-', $slug);
@@ -54,7 +54,6 @@ function lang_slug($string, $disallow_numeric = true){
     if ($disallow_numeric && is_numeric($slug)){ $slug .= strtolower(date('F')); }
 
     return $slug;
-
 }
 
 /**

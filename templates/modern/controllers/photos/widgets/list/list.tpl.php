@@ -25,7 +25,7 @@
 </div>
 
 <?php ob_start(); ?>
-    <script type="text/javascript">
+    <script>
         <?php echo $this->getLangJS('LANG_PHOTOS_DELETE_PHOTO_CONFIRM'); ?>
         icms.photos.row_height = '<?php echo $row_height; ?>';
         $(function(){

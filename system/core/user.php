@@ -377,8 +377,9 @@ class cmsUser {
 
         self::sessionUnset('user');
 
-        return true;
+        self::getInstance()->id = 0;
 
+        return true;
     }
 
 //============================================================================//

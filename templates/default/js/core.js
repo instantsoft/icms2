@@ -34,6 +34,8 @@ $(document).ready(function(){
 
 icms.menu = (function ($) {
 
+    this.allow_mobile_select = true;
+
     this.onDocumentReady = function(){
 
         $(document).on('click', function(event) {
@@ -44,29 +46,29 @@ icms.menu = (function ($) {
             $('.dropdown_menu > input').prop('checked', false);
         });
 
-        var dropdown = $('<select class="mobile_menu_select" />').appendTo("nav");
-        $("<option value='/'></option>").appendTo(dropdown);
+        if(this.allow_mobile_select){
 
-        $("nav .menu li > a").each(function() {
-            var el = $(this);
-            var nav_level = $("nav .menu").parents().length;
-            var el_level = $(this).parents().length - nav_level;
-            var pad = new Array(el_level-2 + 1).join('-') + ' ';
-            var attr = {
-                value   : el.attr('href'),
-                text    : pad + el.text()
-            };
-            if(window.location.pathname.indexOf(el.attr('href')) === 0){
-                attr.selected = true;
-            }
-            $("<option>", attr).appendTo(dropdown);
-        });
+            var dropdown = $('<select class="mobile_menu_select" />').appendTo("nav");
+            $("<option value='/'></option>").appendTo(dropdown);
 
-        $("nav select.mobile_menu_select").change(function() {
-            window.location = $(this).find("option:selected").val();
-        });
+            $("nav .menu li > a").each(function() {
+                var el = $(this);
+                var nav_level = $("nav .menu").parents().length;
+                var el_level = $(this).parents().length - nav_level;
+                var pad = (el_level-2 + 1) >= 1 ? new Array(el_level-2 + 1).join('-') + ' ' : '';
+                var attr = {
+                    value   : el.attr('href'),
+                    text    : pad + el.text()
+                };
+                if(window.location.pathname.indexOf(el.attr('href')) === 0){
+                    attr.selected = true;
+                }
+                $("<option>", attr).appendTo(dropdown);
+            });
 
-        if ($('.tabs-menu').length){
+            $("nav select.mobile_menu_select").change(function() {
+                window.location = $(this).find("option:selected").val();
+            });
 
             $(".tabs-menu").each(function() {
 
@@ -88,9 +90,7 @@ icms.menu = (function ($) {
                 $(dropdown).change(function() {
                     window.location = $(this).find("option:selected").val();
                 });
-
             });
-
         }
 
         if($('div.widget.fixed_actions_menu').length){

@@ -133,7 +133,7 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
     $attr_str = html_attr_str($attributes);
 	$html  = '<input type="text" placeholder="'.LANG_SELECT.'" name="'.$name.'" value="'.htmlspecialchars($value).'" class="'.$class.'"  id="'.$id.'" '.$attr_str.'/>';
-    $script = '<script type="text/javascript">';
+    $script = '<script>';
     $script .= '$(function(){ var datepicker_params = '.json_encode($datepicker_default).';datepicker_params.onSelect = function(dateText,inst){$("#'.$id.'").trigger("input");icms.events.run("icms_datepicker_selected_'.$name.'", inst);}; $("#'.$id.'").datepicker(datepicker_params);});';
     $script .= '</script>';
     if(cmsCore::getInstance()->request->isAjax()){

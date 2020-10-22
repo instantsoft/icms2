@@ -41,12 +41,11 @@
     if (!empty($childs['tabs']) && $relation['layout'] == 'tab'){
 
         $this->addMenuItem('item-menu', array(
-            'title' => string_ucfirst($ctype['labels']['one']),
+            'title' => !empty($ctype['labels']['relations_tab_title']) ? $ctype['labels']['relations_tab_title'] : string_ucfirst($ctype['labels']['one']),
             'url'   => href_to($ctype['name'], $item['slug'] . '.html')
         ));
 
         $this->addMenuItems('item-menu', $childs['tabs']);
-
     }
 
 ?>
@@ -73,13 +72,9 @@
     </h1>
 <?php } ?>
 
-<?php $this->menu('item-menu', true, 'nav nav-tabs my-3'); ?>
+<?php $this->menu('item-menu', true, 'nav nav-tabs mt-3'); ?>
 
-<?php
-    if (!empty($toolbar_html)) {
-        echo html_each($toolbar_html);
-    }
-?>
+<div class="icms-body-toolbox m-0">
 <?php if (!empty($datasets)){
     $this->renderAsset('ui/datasets-panel', array(
         'datasets'        => $datasets,
@@ -88,4 +83,10 @@
         'base_ds_url'     => rel_to_href($base_ds_url)
     ));
 } ?>
+<?php if (!empty($toolbar_html)) { ?>
+    <div class="ml-auto">
+        <?php echo html_each($toolbar_html); ?>
+    </div>
+<?php } ?>
+</div>
 <?php echo $html;

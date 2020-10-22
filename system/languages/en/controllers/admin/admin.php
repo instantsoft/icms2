@@ -225,6 +225,8 @@
     define('LANG_CP_LIST_LABEL',                'List heading');
     define('LANG_CP_PROFILE_LABEL',             'List heading in profile');
     define('LANG_CP_LIST_LABELS_HINT',          'If not specified, the content type title will be used');
+    define('LANG_CP_LIST_LABELS_RTAB_TITLE',    'Relation tab title');
+    define('LANG_CP_LIST_LABELS_RTAB_TITLE_HINT', 'If this content type is a parent');
 
     define('LANG_CP_TAB',                       'Tab');
     define('LANG_CP_TAB_TITLE',                 'Tab title');

@@ -136,7 +136,7 @@
         $this->addTplCSSNameFromContext('slick');
         ob_start();
         ?>
-        <script type="text/javascript">
+        <script>
             icms.menu.initSwipe('.icms-profile__tabs', {variableWidth: true, initialSlide: $('.icms-profile__tabs > li.is-active').index()});
         </script>
         <?php $this->addBottom(ob_get_clean()); ?>

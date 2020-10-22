@@ -46,13 +46,16 @@ class cmsCacheFiles {
         $data = include $file;
         if (!$data) { return false; }
 
-        if (time() > $data['time'] + $data['ttl']){
+        if (!isset($data['value']) ||
+                !isset($data['time']) ||
+                !isset($data['ttl']) ||
+                time() > ($data['time'] + $data['ttl'])){
+
             $this->clean($key);
             return false;
         }
 
         return $data['value'];
-
     }
 
     public function clean($key=false){

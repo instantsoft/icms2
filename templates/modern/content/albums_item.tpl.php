@@ -143,7 +143,7 @@
     $this->addTplCSSNameFromContext('slick');
     ob_start();
     ?>
-    <script type="text/javascript">
+    <script>
         icms.menu.initSwipe('.icms-photo-album__info_bar', {variableWidth: true});
     </script>
     <?php $this->addBottom(ob_get_clean()); ?>

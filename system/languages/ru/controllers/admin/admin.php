@@ -226,6 +226,8 @@
     define('LANG_CP_LIST_LABEL',                'Заголовок списка записей');
     define('LANG_CP_PROFILE_LABEL',             'Заголовок списка в профиле');
     define('LANG_CP_LIST_LABELS_HINT',          'Если не указан - используется название типа контента');
+    define('LANG_CP_LIST_LABELS_RTAB_TITLE',    'Заголовок вкладки связей');
+    define('LANG_CP_LIST_LABELS_RTAB_TITLE_HINT', 'Если этот тип контента родитель');
 
     define('LANG_CP_TAB',                       'Вкладка');
     define('LANG_CP_TAB_TITLE',                 'Название вкладки');

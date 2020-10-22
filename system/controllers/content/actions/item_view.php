@@ -443,12 +443,11 @@ class actionContentItemView extends cmsAction {
         if (!empty($childs['tabs'])){
 
             $this->cms_template->addMenuItem('item-menu', array(
-                'title' => string_ucfirst($ctype['labels']['one']),
+                'title' => !empty($ctype['labels']['relations_tab_title']) ? $ctype['labels']['relations_tab_title'] : string_ucfirst($ctype['labels']['one']),
                 'url'   => href_to($ctype['name'], $item['slug'] . '.html')
             ));
 
             $this->cms_template->addMenuItems('item-menu', $childs['tabs']);
-
         }
 
         return $this->cms_template->render('item_view', array(

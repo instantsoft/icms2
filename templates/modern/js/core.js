@@ -8,7 +8,7 @@ $(document).ready(function(){
         }
     }
 
-    $('.widget_tabbed').each(function(){
+    $('.icms-widget__tabbed').each(function(){
         $('.nav.nav-tabs .nav-link', $(this)).click(function(){
             var wid = $(this).data('id');
             $('.links-wrap', $(this).closest('.card-header')).hide();

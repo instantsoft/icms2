@@ -1,12 +1,13 @@
 <?php
+
 class formAdminCtypesLabels extends cmsForm {
 
     public function init() {
 
         return array(
             array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_NUMERALS_LABELS,
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_NUMERALS_LABELS,
                 'childs' => array(
                     new fieldString('labels:one', array(
                         'title' => LANG_CP_NUMERALS_1_LABEL,
@@ -32,8 +33,8 @@ class formAdminCtypesLabels extends cmsForm {
                 )
             ),
             array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_ACTIONS_LABELS,
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_ACTIONS_LABELS,
                 'childs' => array(
                     new fieldString('labels:create', array(
                         'title' => LANG_CP_ACTION_ADD_LABEL,
@@ -45,25 +46,38 @@ class formAdminCtypesLabels extends cmsForm {
                 )
             ),
             array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_LIST_LABELS,
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_LIST_LABELS,
                 'childs' => array(
                     new fieldString('labels:list', array(
                         'title' => LANG_CP_LIST_LABEL,
-                        'hint' => LANG_CP_LIST_LABELS_HINT,
+                        'hint'  => LANG_CP_LIST_LABELS_HINT,
                         'rules' => array(
                             array('max_length', 100)
                         )
                     )),
                     new fieldString('labels:profile', array(
                         'title' => LANG_CP_PROFILE_LABEL,
-                        'hint' => LANG_CP_LIST_LABELS_HINT,
+                        'hint'  => LANG_CP_LIST_LABELS_HINT,
                         'rules' => array(
                             array('max_length', 100)
                         )
                     )),
                 )
             ),
+            'ctype_relations' => array(
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_CTYPE_RELATIONS,
+                'childs' => array(
+                    new fieldString('labels:relations_tab_title', array(
+                        'title' => LANG_CP_LIST_LABELS_RTAB_TITLE,
+                        'hint'  => LANG_CP_LIST_LABELS_RTAB_TITLE_HINT,
+                        'rules' => array(
+                            array('max_length', 100)
+                        )
+                    ))
+                )
+            )
         );
 
     }
