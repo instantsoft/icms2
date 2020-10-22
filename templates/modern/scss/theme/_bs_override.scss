@@ -46,27 +46,33 @@
 }
 
 .nav-tabs {
-  .nav-link {
-    border: 0;
-    position: relative;
-    background-color: transparent;
-    &::before {
-      position: absolute;
-      display: block;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background-color: transparent;
-      content: '';
+    .nav-link {
+        outline-color: $nav-tabs-border-color;
+        border: 0;
+        position: relative;
+        background-color: transparent;
+        &::before {
+            position: absolute;
+            display: block;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: transparent;
+            content: '';
+        }
+        &.active {
+            background-color: transparent;
+        }
+        &.active::before {
+            background-color: $primary;
+        }
+        &:hover {
+            &::before {
+                background-color: $nav-tabs-border-color;
+            }
+        }
     }
-    &.active {
-      background-color: transparent;
-    }
-    &.active::before {
-      background-color: $primary;
-    }
-  }
 }
 .nav-link {
     > .counter.badge {
