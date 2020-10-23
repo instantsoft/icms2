@@ -30,6 +30,9 @@
         icms.photos.row_height = '<?php echo $row_height; ?>';
         $(function(){
             icms.photos.initAlbum('#<?php echo $photo_wrap_id; ?>');
+            $('.icms-widget__tabbed > .card-header a[data-toggle="tab"]').one('shown.bs.tab', function (e) {
+                icms.photos.flexImagesInit('<?php echo (isset($photo_wrap_id) ? '#'.$photo_wrap_id : ''); ?>');
+            });
         });
     </script>
 <?php $this->addBottom(ob_get_clean()); ?>

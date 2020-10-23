@@ -196,8 +196,14 @@ class widgetContentList extends cmsWidget {
                         if ($item['user_id'] != $user->id){ continue; }
                     }
 
+                    if (!isset($shown_fields_options[$field['name']]['label_in_list'])) {
+                        $label_pos = 'none';
+                    } else {
+                        $label_pos = $shown_fields_options[$field['name']]['label_in_list'];
+                    }
+
                     $current_field_data = [
-                        'label_pos' => 'none',
+                        'label_pos' => $label_pos,
                         'type'      => $field['type'],
                         'name'      => $field['name'],
                         'title'     => $field['title']
@@ -211,6 +217,7 @@ class widgetContentList extends cmsWidget {
                     if(!empty($shown_fields_options[$field['name']])){
                         foreach ($shown_fields_options[$field['name']] as $opt_name => $opt_value) {
                             $field['handler']->setOption($opt_name, $opt_value);
+                            $field['options'][$opt_name] = $opt_value;
                         }
                     }
 

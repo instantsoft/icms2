@@ -11,6 +11,12 @@
             <?php foreach($item['fields'] as $field){ ?>
                 <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_type']; ?>_field" <?php if($field['options']['wrap_width']){ ?> style="width: <?php echo $field['options']['wrap_width']; ?>;"<?php } ?>>
 
+                    <?php if ($field['label_pos'] != 'none'){ ?>
+                        <div class="title_<?php echo $field['label_pos']; ?>">
+                            <?php echo $field['title'] . ($field['label_pos']=='left' ? ': ' : ''); ?>
+                        </div>
+                    <?php } ?>
+
                     <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
                         <h3 class="value">
                         <?php if ($item['parent_id']){ ?>
@@ -44,7 +50,7 @@
             </div>
 
             <?php if (!empty($item['info_bar'])){ ?>
-                <div class="info_bar d-flex p-0 bg-transparent border-0 text-muted">
+                <div class="info_bar mt-2 d-flex p-0 bg-transparent border-0 text-muted">
                     <?php foreach($item['info_bar'] as $bar){ ?>
                         <div class="mr-2 bar_item text-truncate <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
                             <?php if (!empty($bar['icon'])){ ?>

@@ -530,7 +530,7 @@ icms.forms = (function ($) {
             }
             if(typeof this.VDListeners[form_id+'-'+f] === 'undefined'){
                 this.VDListeners[form_id+'-'+f] = '#'+form_id+' [name="'+this.inputNameToElName(f)+'"]';
-                $('#'+form_id+' [name="'+this.inputNameToElName(f)+'"]').on('change', function (){
+                $('#'+form_id+' [name="'+this.inputNameToElName(f)+'"]').on('change input', function (){
                     for(var field in _this.VDRules.from[form_id+'-'+f]){if(_this.VDRules.from[form_id+'-'+f].hasOwnProperty(field)){ /* перебор тех, кто зависит от этого поля f */
                         var display = null; /* если не будет show */
 
@@ -576,6 +576,7 @@ icms.forms = (function ($) {
         for(var l in this.VDListeners){if(this.VDListeners.hasOwnProperty(l)){
             if(this.VDListenersInitialized.indexOf(this.VDListeners[l]) === -1) {
                 $(this.VDListeners[l]).triggerHandler('change');
+                $(this.VDListeners[l]).triggerHandler('input');
                 this.VDListenersInitialized.push(this.VDListeners[l]);
             }
         }}

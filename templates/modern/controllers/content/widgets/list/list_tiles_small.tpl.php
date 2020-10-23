@@ -9,7 +9,12 @@
         <div class="col-auto mr-2 mb-2">
             <div class="icms-content-fields d-flex flex-column h-100">
             <?php foreach($item['fields'] as $field){ ?>
-                <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
+                <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_type']; ?>_field"<?php if($field['options']['wrap_width']){ ?> style="width: <?php echo $field['options']['wrap_width']; ?>;"<?php } ?>>
+                    <?php if ($field['label_pos'] != 'none'){ ?>
+                        <div class="title_<?php echo $field['label_pos']; ?>">
+                            <?php echo $field['title'] . ($field['label_pos']=='left' ? ': ' : ''); ?>
+                        </div>
+                    <?php } ?>
                     <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
                         <h5 class="value">
                         <?php if ($item['parent_id']){ ?>

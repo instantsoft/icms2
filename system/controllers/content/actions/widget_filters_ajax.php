@@ -21,7 +21,7 @@ class actionContentWidgetFiltersAjax extends cmsAction {
         }
 
         if(!$this->model->isFiltersTableExists($ctype['name'])){
-            return $list;
+            return $this->cms_template->renderJSON($list);
         }
 
         $filters = $this->model->getContentFilters($ctype['name']);

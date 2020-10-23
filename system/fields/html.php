@@ -81,6 +81,12 @@ class fieldHtml extends cmsFormField {
                 'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
 				'extended_option' => true
             )),
+            new fieldCheckbox('show_show_more', array(
+                'title' => LANG_PARSER_SHOW_SHOW_MORE,
+                'default' => false,
+                'visible_depend' => array('options:teaser_len' => array('hide' => array(''))),
+				'extended_option' => true
+            )),
             new fieldCheckbox('in_fulltext_search', array(
                 'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
                 'hint'  => LANG_PARSER_IN_FULLTEXT_SEARCH_HINT,
@@ -137,8 +143,8 @@ class fieldHtml extends cmsFormField {
 
             $value = string_short($value, $max_len);
 
-            if(!empty($this->item['ctype']['name']) && !empty($this->item['slug'])){
-                $value .= '<a class="read-more btn btn-outline-info btn-sm" href="'.href_to($this->item['ctype']['name'], $this->item['slug'].'.html').'">'.LANG_MORE.'</a>';
+            if($this->getOption('show_show_more') && !empty($this->item['ctype']['name']) && !empty($this->item['slug'])){
+                $value .= '<span class="d-block mt-2"><a class="read-more btn btn-outline-info btn-sm" href="'.href_to($this->item['ctype']['name'], $this->item['slug'].'.html').'">'.LANG_MORE.'</a></span>';
             }
 
         } else if ($this->getOption('is_html_filter')){

@@ -8,7 +8,7 @@
         <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
         <meta name="generator" content="InstantCMS" />
         <?php $this->addMainTplCSSName([
-            'theme',
+            'theme'
         ]); ?>
         <?php $this->addMainTplJSName('jquery', true); ?>
         <?php $this->addMainTplJSName('vendors/popper.js/js/popper.min'); ?>

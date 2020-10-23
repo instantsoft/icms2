@@ -413,6 +413,8 @@ class cmsTemplate {
 
         if (!$this->hasWidgetsOn($position)){ return false; }
 
+        $device_type = cmsRequest::getDeviceType();
+
         foreach($this->widgets[$position] as $group){
 
             if (sizeof($group)==1){

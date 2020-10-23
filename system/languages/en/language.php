@@ -137,6 +137,7 @@
     define('LANG_PARSER_BUILD_REDIRECT_LINK', 'External links via a redirect if sanitize input');
     define('LANG_PARSER_HTML_TEASER_LEN',    'Truncate text length in list view');
     define('LANG_PARSER_HTML_TEASER_LEN_HINT','The text will be truncated to a specified length, the formatting will be removed');
+    define('LANG_PARSER_SHOW_SHOW_MORE',     'Show "More" button');
     define('LANG_PARSER_BBCODE',             'Textarea with BB-code');
     define('LANG_PARSER_LIST',               'List');
     define('LANG_PARSER_LIST_FILTER_HINT',   'Item index');
