@@ -181,15 +181,9 @@ class actionContentItemAdd extends cmsAction {
 
         if ($is_submitted){
 
+            // Добавляем поля свойств для валидации
             if ($ctype['props']){
-                $props_cat_id = $this->request->get('category_id', 0);
-                if ($props_cat_id){
-                    $item_props = $this->model->getContentProps($ctype['name'], $props_cat_id);
-                    $item_props_fields = $this->getPropsFields($item_props);
-                    foreach($item_props_fields as $field){
-                        $form->addField('props', $field);
-                    }
-                }
+                $form = $this->addFormPropsFields($form, $ctype, [], $is_submitted);
             }
 
             // Парсим форму и получаем поля записи
@@ -226,21 +220,6 @@ class actionContentItemAdd extends cmsAction {
 
 			list($item, $errors) = cmsEventsManager::hook('content_validate', array($item, $errors), null, $this->request);
             list($item, $errors, $ctype, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_validate", array($item, $errors, $ctype, $fields), null, $this->request);
-
-            // несколько категорий
-            if (!empty($ctype['options']['is_cats_multi'])){
-                $add_cats = $this->request->get('add_cats', array());
-                if (is_array($add_cats)){
-                    foreach($add_cats as $index=>$cat_id){
-                        if (!is_numeric($cat_id) || !$cat_id){
-                            unset($add_cats[$index]);
-                        }
-                    }
-                    if ($add_cats){
-                        $item['add_cats'] = $add_cats;
-                    }
-                }
-            }
 
             if (!$errors){
 
@@ -355,9 +334,7 @@ class actionContentItemAdd extends cmsAction {
             'button_save_text' => (($is_premoderation && !$is_moderator) ? LANG_MODERATION_SEND : LANG_SAVE),
             'button_draft_text' => LANG_CONTENT_SAVE_DRAFT,
             'hide_draft_btn'   => !empty($ctype['options']['disable_drafts']),
-            'is_multi_cats'    => !empty($ctype['options']['is_cats_multi']),
             'is_load_props'    => !isset($errors),
-            'add_cats'         => isset($add_cats) ? $add_cats : array(),
             'errors'           => isset($errors) ? $errors : false
         ));
 

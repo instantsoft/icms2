@@ -102,6 +102,15 @@ class actionContentItemEdit extends cmsAction {
 		list($ctype, $item) = cmsEventsManager::hook('content_edit', array($ctype, $item));
         list($form, $item)  = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
 
+        // Категории записи
+		$item['add_cats'] = $item_cats = $this->model->getContentItemCategories($ctype['name'], $id);
+		if ($item['add_cats']){
+            // Отдельно дополнительные категории
+			foreach($item['add_cats'] as $index => $cat_id){
+				if ($cat_id == $item['category_id']) { unset($item['add_cats'][$index]); break; }
+			}
+		}
+
         // Форма отправлена?
         $is_submitted = $this->request->has('submit') || $this->request->has('to_draft');
 
@@ -110,20 +119,14 @@ class actionContentItemEdit extends cmsAction {
 
         if ($ctype['props']){
 
-            $category_id = !$is_submitted ? $item['category_id'] :
-                (($this->request->has('category_id') && $ctype['options']['is_cats_change']) ?
-                    $this->request->get('category_id', 0) :
-                    $item['category_id']);
+            if(!$item_cats){
+                $item_cats = [$item['category_id']];
+            }
 
-            $item_props = $this->model->getContentProps($ctype['name'], $category_id);
-            $item_props_fields = $this->getPropsFields($item_props);
+            $form = $this->addFormPropsFields($form, $ctype, $item_cats, $is_submitted);
 
             $item['props'] = $this->model->localizedOff()->getPropsValues($ctype['name'], $id);
             $this->model->localizedRestore();
-
-            foreach($item_props_fields as $field){
-                $form->addField('props', $field);
-            }
         }
 
 		$is_pub_control = cmsUser::isAllowed($ctype['name'], 'pub_on');
@@ -136,14 +139,6 @@ class actionContentItemEdit extends cmsAction {
 			$item['pub_days'] = 0;
 		}
 
-		$add_cats = $this->model->getContentItemCategories($ctype['name'], $id);
-
-		if ($add_cats){
-			foreach($add_cats as $index => $cat_id){
-				if ($cat_id == $item['category_id']) { unset($add_cats[$index]); break; }
-			}
-		}
-
         $show_save_button = ($is_owner || (!$is_premoderation && $item['is_approved']));
 
         if ($is_submitted){
@@ -152,7 +147,7 @@ class actionContentItemEdit extends cmsAction {
             $item = array_merge($item, $form->parse($this->request, $is_submitted, $item));
 
             // Проверям правильность заполнения
-            $errors = $form->validate($this,  $item);
+            $errors = $form->validate($this, $item);
 
 			list($item, $errors) = cmsEventsManager::hook('content_validate', array($item, $errors), null, $this->request);
             list($item, $errors, $ctype, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_validate", array($item, $errors, $ctype, $fields), null, $this->request);
@@ -209,20 +204,6 @@ class actionContentItemEdit extends cmsAction {
 					$item['is_pub'] = $is_pub;
 					if (!$is_pub){
 						cmsUser::addSessionMessage(LANG_CONTENT_IS_PUB_OFF);
-					}
-				}
-
-				if (!empty($ctype['options']['is_cats_multi'])){
-					$add_cats = $this->request->get('add_cats', array());
-					if (is_array($add_cats)){
-						foreach($add_cats as $index=>$cat_id){
-							if (!is_numeric($cat_id) || !$cat_id){
-								unset($add_cats[$index]);
-							}
-						}
-						if ($add_cats){
-							$item['add_cats'] = $add_cats;
-						}
 					}
 				}
 
@@ -327,9 +308,7 @@ class actionContentItemEdit extends cmsAction {
             'button_save_text' => (($is_premoderation && !$is_moderator) ? LANG_MODERATION_SEND : ($item['is_approved'] ? LANG_SAVE : LANG_PUBLISH)),
             'button_draft_text' => $button_draft_text,
             'hide_draft_btn'   => !empty($ctype['options']['disable_drafts']),
-            'is_multi_cats'    => !empty($ctype['options']['is_cats_multi']),
             'is_load_props'    => false,
-            'add_cats'         => $add_cats,
             'errors'           => isset($errors) ? $errors : false
         ));
 

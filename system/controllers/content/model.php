@@ -1001,8 +1001,15 @@ class modelContent extends cmsModel {
 
         if ($category_id){
             $this->selectOnly('p.*');
+            $this->select('c.title', 'cat_title');
+            $this->select('i.cat_id');
             $this->join($props_table_name, 'p', 'p.id = i.prop_id');
-            $this->filterEqual('cat_id', $category_id);
+            $this->join($this->table_prefix . $ctype_name . '_cats', 'c', 'c.id = i.cat_id');
+            if(is_array($category_id)){
+                $this->filterIn('cat_id', $category_id);
+            } else {
+                $this->filterEqual('cat_id', $category_id);
+            }
             $this->orderBy('ordering');
             $table_name = $bind_table_name;
         } else {
@@ -1956,10 +1963,15 @@ class modelContent extends cmsModel {
 
         unset($item['new_folder']);
 
-		$add_cats = array();
+		$add_cats = [];
 
 		if (isset($item['add_cats'])){
-			$add_cats = $item['add_cats'];
+            foreach($item['add_cats'] as $cat_id){
+                if(!$cat_id){
+                    continue;
+                }
+                $add_cats[] = $cat_id;
+            }
 			unset($item['add_cats']);
 		}
 
@@ -2054,7 +2066,12 @@ class modelContent extends cmsModel {
 		$add_cats = [];
 
 		if (isset($update_item['add_cats'])){
-			$add_cats = $update_item['add_cats'];
+            foreach($update_item['add_cats'] as $cat_id){
+                if(!$cat_id){
+                    continue;
+                }
+                $add_cats[] = $cat_id;
+            }
 			unset($update_item['add_cats']);
 		}
 

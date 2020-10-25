@@ -311,7 +311,12 @@ class actionContentItemView extends cmsAction {
         // Получаем поля-свойства
         if ($ctype['is_cats'] && $item['category_id'] > 1){
 
-            $props = $this->model->getContentProps($ctype['name'], $item['category_id']);
+            $prop_cats = [$item['category_id']];
+            if(!empty($item['categories'])){
+                $prop_cats = array_keys($item['categories']);
+            }
+
+            $props = $this->model->getContentProps($ctype['name'], $prop_cats);
 
             $props_values = array_filter((array)$this->model->getPropsValues($ctype['name'], $item['id']));
 

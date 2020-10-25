@@ -886,7 +886,7 @@ class cmsModel {
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_array($value)){
             foreach($value as $k=>$v){
-                $v = $this->db->escape($v);
+                $v = $this->db->escape(strval($v));
                 $value[$k] = "'{$v}'";
             }
             $value = implode(',', $value);

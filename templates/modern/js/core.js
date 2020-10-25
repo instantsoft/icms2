@@ -51,7 +51,7 @@ icms.menu = (function ($) {
             $('.nav-item.dropdown').each(function (){
                 var link = $(this).find('>a');
                 if(link.attr('href').charAt(0) === '/'){
-                    $(this).find('>ul').append('<li class="dropdown-divider"></li>').append('<li class="nav-item"><a class="dropdown-item" href="'+link.attr('href')+'" >Все</a></li>');
+                    $(this).find('>ul').append('<li class="dropdown-divider"></li>').append('<li class="nav-item"><a class="dropdown-item" href="'+link.attr('href')+'" >'+LANG_ALL+'</a></li>');
                 }
             });
 

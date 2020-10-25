@@ -509,7 +509,6 @@ class content extends cmsFrontend {
 
     }
 
-
     public function getItemInfoBar($ctype, $item, $fields, $subject = 'item') {
 
         $bar = [];
@@ -703,7 +702,7 @@ class content extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function getItemForm($ctype, $fields, $action, $data=array(), $item_id=false, $item=false){
+    public function getItemForm($ctype, $fields, $action, $data = [], $item_id = false, $item = false) {
 
         // Контейнер для передачи дополнительных списков:
         // $groups_list, $folders_list и т.д.
@@ -711,7 +710,6 @@ class content extends cmsFrontend {
 
         // Строим форму
         $form = new cmsForm();
-        $fieldset_id = $form->addFieldset();
 
         // Если включены категории, добавляем в форму поле выбора категории
         if ($ctype['is_cats'] && ($action != 'edit' || $ctype['options']['is_cats_change'])){
@@ -737,11 +735,15 @@ class content extends cmsFrontend {
             }
 
 			if (!empty($ctype['options']['is_cats_multi'])){
-
-				$fieldset_id = $form->addFieldset(LANG_ADDITIONAL_CATEGORIES, 'multi_cats', array(
-					'is_empty' => true
-				));
-
+                unset($cats['']);
+                $form->addField($fieldset_id,
+                    new fieldList('add_cats', array(
+                            'title' => LANG_ADDITIONAL_CATEGORIES,
+                            'is_chosen_multiple' => true,
+                            'items' => $cats
+                        )
+                    )
+                );
 			}
 
         }
@@ -762,11 +764,12 @@ class content extends cmsFrontend {
             )));
         }
 
-        // Если есть поля-свойства, то добавляем область для них
+        // Если есть поля-свойства, то добавляем область
+        // После этого поля будут добавляться свойства
         if (!empty($ctype['props'])){
             $form->addFieldset('', 'props', array(
                 'is_empty' => true,
-                'class' => 'highlight'
+                'is_hidden' => true
             ));
         }
 
@@ -1117,6 +1120,51 @@ class content extends cmsFrontend {
 
         return $fields;
 
+    }
+
+    public function addFormPropsFields($form, $ctype, $item_cats, $is_submitted = false){
+
+        if($is_submitted && $ctype['options']['is_cats_change']){
+            $item_cats = [];
+            if ($this->request->has('add_cats') && !empty($ctype['options']['is_cats_multi'])){
+                $item_cats = $this->request->get('add_cats', []);
+                foreach($item_cats as $index => $cat_id){
+                    if (!is_numeric($cat_id) || !$cat_id){
+                        unset($item_cats[$index]);
+                    }
+                }
+            }
+            if($this->request->has('category_id')){
+                $item_cats[] = $this->request->get('category_id', 0);
+            }
+        }
+
+        if(!$item_cats){
+            return $form;
+        }
+
+        $item_props = $this->model->getContentProps($ctype['name'], $item_cats);
+        $item_props_fields = $this->getPropsFields($item_props);
+
+        $props = [];
+
+        foreach ($item_props as $p) {
+            $props[$p['cat_id']]['title'] = $p['cat_title'];
+            $props[$p['cat_id']]['props'][] = $p['id'];
+        }
+
+        $fid = 'props';
+
+        foreach ($props as $cat_id => $p) {
+
+            $fid = $form->addFieldsetAfter($fid, $p['title'], 'props'.$cat_id, ['class' => 'icms-content-props__fieldset highlight bg-light']);
+
+            foreach($p['props'] as $prop_id) {
+                $form->addField($fid, $item_props_fields[$prop_id]);
+            }
+        }
+
+        return $form;
     }
 
 //============================================================================//

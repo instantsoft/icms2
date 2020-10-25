@@ -26,6 +26,7 @@
     </head>
     <body id="<?php echo $device_type; ?>_device_type" data-device="<?php echo $device_type; ?>" class="d-flex flex-column h-100">
         <?php $this->renderLayoutChild('scheme', ['rows' => $rows]); ?>
+        <script><?php echo $this->getLangJS('LANG_LOADING', 'LANG_ALL'); ?></script>
         <?php $this->printJavascriptTags(); ?>
         <?php $this->bottom(); ?>
         <?php $this->onDemandPrint(); ?>

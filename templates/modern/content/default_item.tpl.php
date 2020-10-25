@@ -53,7 +53,7 @@
     <?php } ?>
 
     <?php if ($props_fieldsets) { ?>
-        <div class="content_item_props <?php echo $ctype['name']; ?>_item_props table-responsive-sm">
+        <div class="content_item_props <?php echo $ctype['name']; ?>_item_props table-responsive-sm mt-3">
             <table class="table table-hover table-sm">
                 <?php foreach($props_fieldsets as $fieldset_id => $fieldset){ ?>
                     <?php if ($fieldset['title']){ ?>

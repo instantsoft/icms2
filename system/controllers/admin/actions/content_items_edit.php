@@ -42,22 +42,6 @@ class actionAdminContentItemsEdit extends cmsAction {
             'caption', 'html', 'string', 'text'
         ];
 
-        // Добавляем поле мультикатегорий
-        // @todo убрать, как это поле будет добавлено в форму
-        if($form->isFieldsetExists('multi_cats')){
-
-            $form->addField('multi_cats',
-                new fieldList('add_cats', [
-                    'is_chosen_multiple' => true,
-                    'generator' => function($item)use($ctype){
-                        return $this->controller_content->getFormCategories($ctype['name']);
-                    }
-                ])
-            );
-
-            $form->setFieldsetAttribute('multi_cats', 'is_empty', null);
-        }
-
         $structure = $form->getStructure();
 
         $form_select->addFieldset(LANG_BASIC_OPTIONS, 'default_fields');
