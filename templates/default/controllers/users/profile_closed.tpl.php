@@ -19,7 +19,7 @@
 ?>
 
 <div id="user_profile_header">
-    <?php $this->renderChild('profile_header', array('profile'=>$profile, 'tabs'=>false, 'is_can_view'=>false)); ?>
+    <?php $this->renderChild('profile_header', ['profile'=>$profile, 'meta_profile' => $meta_profile, 'tabs'=>false, 'is_can_view'=>false]); ?>
 </div>
 
 <div id="user_profile">

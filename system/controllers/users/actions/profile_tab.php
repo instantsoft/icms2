@@ -43,8 +43,16 @@ class actionUsersProfileTab extends cmsAction {
         // Получаем поля
         $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
 
+        // Парсим значения полей
+        foreach($fields as $name => $field){
+            $fields[$name]['string_value'] = $field['handler']->setItem($profile)->getStringValue($profile[$name]);
+        }
+
+        $meta_profile = $this->prepareItemSeo($profile, $fields, ['name' => 'users']);
+
         $this->cms_template->render('profile_tab', array(
             'tabs'    => $tabs_menu,
+            'meta_profile' => $meta_profile,
             'fields'  => $fields,
             'tab'     => $tab,
             'profile' => $profile,

@@ -11,6 +11,6 @@
 
 ?>
 
-<?php $this->renderChild('profile_header', ['profile' => $profile, 'tabs' => $tabs, 'fields' => $fields]); ?>
+<?php $this->renderChild('profile_header', ['profile' => $profile, 'meta_profile' => $meta_profile, 'tabs' => $tabs, 'fields' => $fields]); ?>
 
 <div id="user_content_list"><?php echo $profiles_list_html; ?></div>

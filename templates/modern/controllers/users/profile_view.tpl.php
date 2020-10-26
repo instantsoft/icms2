@@ -1,7 +1,7 @@
 <?php
 
-    $this->setPagePatternTitle($profile, 'nickname');
-    $this->setPagePatternDescription($profile, 'nickname');
+    $this->setPagePatternTitle($meta_profile, 'nickname');
+    $this->setPagePatternDescription($meta_profile, 'nickname');
 
     if($this->controller->listIsAllowed()){
         $this->addBreadcrumb(LANG_USERS, href_to('users'));
@@ -12,7 +12,7 @@
 
 ?>
 
-<?php $this->renderChild('profile_header', ['profile' => $profile, 'tabs' => $tabs, 'fields' => $fields]); ?>
+<?php $this->renderChild('profile_header', ['profile' => $profile, 'meta_profile' => $meta_profile, 'tabs' => $tabs, 'fields' => $fields]); ?>
 
 <div id="user_profile" class="icms-users-profile__view row mt-3">
 

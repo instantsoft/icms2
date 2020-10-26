@@ -846,7 +846,7 @@ th[rel="dg_actions"] {
     background-size: 20px;
     content: '';
     display: block;
-    left: -20px;
+    left: calc(100% - 20px);
     position: absolute;
     top: 0.75rem;
     opacity: 0;

@@ -26,10 +26,14 @@ class actionUsersProfile extends cmsAction {
             $fields[$name]['string_value'] = $field['handler']->getStringValue($profile[$name]);
         }
 
+        // Формируем метатеги
+        $meta_profile = $this->prepareItemSeo($profile, $fields, ['name' => 'users']);
+
         // Доступность профиля для данного пользователя
         if ( !$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view') ){
             return $this->cms_template->render('profile_closed', array(
                 'profile'        => $profile,
+                'meta_profile'   => $meta_profile,
                 'sys_fields'     => $sys_fields,
                 'fields'         => $fields,
                 'user'           => $this->cms_user,
@@ -77,6 +81,7 @@ class actionUsersProfile extends cmsAction {
 
         return $this->cms_template->render('profile_view', array(
             'options'        => $this->options,
+            'meta_profile'   => $meta_profile,
             'profile'        => $profile,
             'user'           => $this->cms_user,
             'is_own_profile' => $this->is_own_profile,

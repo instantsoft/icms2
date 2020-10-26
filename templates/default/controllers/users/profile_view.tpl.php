@@ -16,7 +16,7 @@
 ?>
 
 <div id="user_profile_header">
-    <?php $this->renderChild('profile_header', array('profile'=>$profile, 'tabs'=>$tabs)); ?>
+    <?php $this->renderChild('profile_header', ['profile'=>$profile, 'meta_profile' => $meta_profile, 'tabs'=>$tabs]); ?>
 </div>
 
 <div id="user_profile">

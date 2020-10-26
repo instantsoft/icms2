@@ -245,11 +245,11 @@ class actionContentCategoryView extends cmsAction {
 
         if (empty($ctype['options']['list_off_breadcrumb'])) {
 
-            if ($ctype['options']['list_on'] && !$is_frontpage && !empty($base_url)) {
+            if ($ctype['options']['list_on'] && !$is_frontpage) {
                 $this->cms_template->addBreadcrumb($list_header, href_to($ctype['name']));
             }
 
-            if (isset($category['path']) && $category['path']) {
+            if (!empty($category['path'])) {
                 foreach ($category['path'] as $c) {
                     $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
                 }
@@ -494,7 +494,15 @@ class actionContentCategoryView extends cmsAction {
                     !$this->request->get('dataset', '') &&
                     $this->cms_config->ctype_default &&
                     in_array($ctype['name'], $this->cms_config->ctype_default))) {
-                $this->redirect(href_to($category['slug']), 301);
+                if(!empty($category['slug'])){
+                    if(!empty($this->list_filter['slug'])){
+                        $this->redirect(href_to($category['slug'], $this->list_filter['slug']), 301);
+                    }
+                    $this->redirect(href_to($category['slug']), 301);
+                }
+                if(!empty($this->list_filter['slug'])){
+                    $this->redirect(href_to($this->list_filter['slug']), 301);
+                }
             }
 
             // если тип контента сменился

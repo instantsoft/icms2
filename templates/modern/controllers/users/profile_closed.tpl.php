@@ -18,7 +18,7 @@
 
 ?>
 
-<?php $this->renderChild('profile_header', ['profile' => $profile, 'tabs' => false, 'is_can_view' => false, 'fields' => $fields]); ?>
+<?php $this->renderChild('profile_header', ['profile' => $profile, 'meta_profile' => $meta_profile, 'tabs' => false, 'is_can_view' => false, 'fields' => $fields]); ?>
 
 <div class="icms-users-profile__view row mt-3 mt-md-4">
 

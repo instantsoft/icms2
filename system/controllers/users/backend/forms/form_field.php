@@ -27,6 +27,7 @@ class formUsersField extends cmsForm {
                     )),
                     new fieldString('hint', array(
                         'title' => LANG_CP_FIELD_HINT,
+                        'is_clean_disable' => true,
                         'rules' => array(
                             array('max_length', 255)
                         )

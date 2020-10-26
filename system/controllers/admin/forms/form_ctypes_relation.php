@@ -64,12 +64,13 @@ class formAdminCtypesRelation extends cmsForm {
                             $list     = ['0' => ''];
                             $ctype_id = is_array($item) ? array_value_recursive('child_ctype_id', $item) : false;
                             if (!$ctype_id && $request) {
-                                $ctype_id = $request->get('child_ctype_id', 0);
+                                $ctype_id = $request->get('child_ctype_id', '');
                             }
                             if (!$ctype_id) {
                                 return $list;
                             }
-                            $datasets = $content_model->getContentDatasets($ctype_id);
+                            list($target, $id) = explode(':', $ctype_id);
+                            $datasets = $content_model->getContentDatasets($id ? $id : $target);
                             if ($datasets) {
                                 $list = $list + array_collection_to_list($datasets, 'id', 'title');
                             }

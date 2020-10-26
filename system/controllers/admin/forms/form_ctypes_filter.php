@@ -96,7 +96,7 @@ class formAdminCtypesFilter extends cmsForm {
                 'childs' => array(
                     new fieldString('slug', array(
                         'title' => LANG_SYSTEM_NAME,
-                        'prefix' => '/'.$ctype['name'].'/',
+                        'prefix' => href_to(((cmsConfig::get('ctype_default') && in_array($ctype['name'], cmsConfig::get('ctype_default'))) ? '' : $ctype['name'])),
                         'options'=>array(
                             'max_length' => 100,
                             'show_symbol_count' => true

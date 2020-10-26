@@ -20,8 +20,11 @@ class actionUsersProfileKarma extends cmsAction {
 
         $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
 
+        $meta_profile = $this->prepareItemSeo($profile, $fields, ['name' => 'users']);
+
         $this->cms_template->render('profile_karma', array(
             'user'    => $this->cms_user,
+            'meta_profile' => $meta_profile,
             'tabs'    => $tabs,
             'fields'  => $fields,
             'tab'     => $this->tabs['karma'],

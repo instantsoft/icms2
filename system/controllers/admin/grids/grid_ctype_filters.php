@@ -31,7 +31,7 @@ function grid_ctype_filters($controller, $ctype = []){
         array(
             'title' => LANG_VIEW,
             'class' => 'view',
-            'href'  => href_to($ctype['name'], '{slug}')
+            'href'  => href_to(((cmsConfig::get('ctype_default') && in_array($ctype['name'], cmsConfig::get('ctype_default'))) ? '' : $ctype['name']), '{slug}')
         ),
         array(
             'title' => LANG_EDIT,

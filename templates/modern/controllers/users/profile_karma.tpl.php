@@ -11,7 +11,7 @@
 
 ?>
 
-<?php $this->renderChild('profile_header', ['profile' => $profile, 'tabs' => $tabs, 'fields' => $fields]); ?>
+<?php $this->renderChild('profile_header', ['profile' => $profile, 'meta_profile' => $meta_profile, 'tabs' => $tabs, 'fields' => $fields]); ?>
 
 <div id="users_karma_log_window">
 

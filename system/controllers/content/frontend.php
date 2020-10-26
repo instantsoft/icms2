@@ -1265,46 +1265,6 @@ class content extends cmsFrontend {
 
     }
 
-    public function prepareItemSeo($item, $fields, $ctype) {
-
-        list($ctype, $fields, $item) = cmsEventsManager::hook('prepare_item_seo', array($ctype, $fields, $item));
-
-        $_item = $item;
-
-        foreach ($fields as $field) {
-
-            if (!isset($item[$field['name']])) { $_item[$field['name']] = null;  continue; }
-
-            if (empty($item[$field['name']]) && $item[$field['name']] !== '0') {
-                $_item[$field['name']] = null; continue;
-            }
-
-            if(isset($field['string_value'])){
-                $_item[$field['name']] = strip_tags($field['string_value']);
-            } else {
-                $_item[$field['name']] = strip_tags($field['handler']->setItem($item)->getStringValue($item[$field['name']]));
-            }
-
-        }
-
-        if(!empty($item['tags']) && is_array($item['tags'])){
-            $_item['tags'] = implode(', ', $item['tags']);
-        }
-
-        if(!isset($item['category']) && !empty($item['category_id'])){
-            $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
-        }
-
-        if(!empty($item['category']['title'])){
-            $_item['category'] = $item['category']['title'];
-        } else {
-            $_item['category'] = null;
-        }
-
-        return $_item;
-
-    }
-
     public function applyCategorySeo($ctype, $category, $dataset, $add_meta_item = []) {
 
         // паттерны
