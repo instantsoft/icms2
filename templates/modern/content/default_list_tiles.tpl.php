@@ -26,12 +26,12 @@ if($ctype['options']['list_show_filter']) {
     </p>
 <?php return; } ?>
 
-<div class="content_list tiled <?php echo $ctype['name']; ?>_list row">
+<div class="content_list tiled <?php echo $ctype['name']; ?>_list mb-n3 mb-md-n4 row">
 
     <?php foreach($items as $item){ ?>
 
-        <div class="tile <?php echo $ctype['name']; ?>_list_item col-md-6 col-lg-4">
-            <div class="article">
+        <div class="tile <?php echo $ctype['name']; ?>_list_item col-md-6 col-lg-4 mb-3 mb-md-4">
+            <div class="icms-content-fields d-flex flex-column h-100">
             <?php foreach($item['fields'] as $field){ ?>
 
                 <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
@@ -43,7 +43,7 @@ if($ctype['options']['list_show_filter']) {
                     <?php } ?>
 
                     <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
-                        <h3 class="value">
+                        <h4 class="value">
                         <?php if (!empty($this->menus['list_actions_menu'])){ ?>
                             <div class="dropdown ml-2 float-right">
                                 <button class="btn" type="button" data-toggle="dropdown">
@@ -78,7 +78,7 @@ if($ctype['options']['list_show_filter']) {
                                 </span>
                             <?php } ?>
                         <?php } ?>
-                        </h3>
+                        </h4>
                     <?php } else { ?>
                         <div class="value">
                             <?php echo $field['html']; ?>
@@ -94,7 +94,7 @@ if($ctype['options']['list_show_filter']) {
             <?php } ?>
 
             <?php if (!empty($item['info_bar'])){ ?>
-                <div class="info_bar d-flex text-muted mt-3">
+                <div class="info_bar p-0 bg-transparent border-0 d-flex text-muted mt-auto">
                     <?php foreach($item['info_bar'] as $bar){ ?>
                         <div class="mr-3 bar_item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
                             <?php if (!empty($bar['icon'])){ ?>
@@ -118,13 +118,3 @@ if($ctype['options']['list_show_filter']) {
 
 </div>
 <?php echo html_pagebar($page, $perpage, $total, $page_url, array_merge($filters, $ext_hidden_params)); ?>
-
-<?php
-$this->addTplJSNameFromContext('vendors/slick/slick.min');
-$this->addTplCSSNameFromContext('slick');
-ob_start();
-?>
-<script>
-    icms.menu.initSwipe('.info_bar', {variableWidth: true<?php if (!empty($item['info_bar']) && count($item['info_bar']) > 3){ ?>, mobileFirst: false<?php } ?>});
-</script>
-<?php $this->addBottom(ob_get_clean()); ?>

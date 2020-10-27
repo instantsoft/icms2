@@ -8,6 +8,10 @@ class onRatingContentBeforeItem extends cmsAction {
 
         if ($ctype['is_rating']){
 
+            if(array_key_exists('rating_is_in_item', $ctype['options']) && empty($ctype['options']['rating_is_in_item'])){
+                return $data;
+            }
+
             $this->setContext('content', $ctype['name']);
 
             $this->loadCurrentUserVoted([$item['id']]);

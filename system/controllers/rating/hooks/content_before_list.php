@@ -8,6 +8,10 @@ class onRatingContentBeforeList extends cmsAction {
 
         if ($ctype['is_rating'] && $items){
 
+            if(array_key_exists('rating_is_in_list', $ctype['options']) && empty($ctype['options']['rating_is_in_list'])){
+                return $data;
+            }
+
             if(!empty($ctype['options']['rating_template'])){
                 $this->setOption('template', $ctype['options']['rating_template']);
             }

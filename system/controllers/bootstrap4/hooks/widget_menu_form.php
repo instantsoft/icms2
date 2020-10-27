@@ -73,9 +73,17 @@ class onBootstrap4WidgetMenuForm extends cmsAction {
             'title' => LANG_BS4_MENU_NAV_STYLE,
             'items' => [
                 'nav' => LANG_BS4_MENU_NAV_STYLE_HL,
-                'nav justify-content-center' => LANG_BS4_MENU_NAV_STYLE_HC,
-                'nav justify-content-end'    => LANG_BS4_MENU_NAV_STYLE_HR,
-                'nav flex-column'            => LANG_BS4_MENU_NAV_STYLE_V
+                'nav justify-content-center'    => LANG_BS4_MENU_NAV_STYLE_HC,
+                'nav justify-content-sm-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥576px',
+                'nav justify-content-md-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥768px',
+                'nav justify-content-lg-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥992px',
+                'nav justify-content-xl-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥1200px',
+                'nav justify-content-end'       => LANG_BS4_MENU_NAV_STYLE_HR,
+                'nav justify-content-sm-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥576px',
+                'nav justify-content-md-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥768px',
+                'nav justify-content-lg-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥992px',
+                'nav justify-content-xl-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥1200px',
+                'nav flex-column'               => LANG_BS4_MENU_NAV_STYLE_V
             ],
             'visible_depend' => ['options:menu_type' => ['show' => ['nav']]]
         )));

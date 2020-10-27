@@ -34,6 +34,7 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
         if ($field['is_system']) {
             $form->hideField('basic', 'hint');
             $form->hideField('visibility', 'options:relation_id');
+            $form->hideField('visibility', 'options:is_in_item_pos');
             $form->hideFieldset('group');
             $form->hideFieldset('format');
             $form->hideFieldset('values');

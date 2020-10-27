@@ -31,6 +31,16 @@ class onRatingCtypeBasicForm extends cmsAction {
             'visible_depend' => array('is_rating' => array('show' => array('1')))
         )));
 
+        $form->addField($fieldset, new fieldCheckbox('options:rating_is_in_item', array(
+            'title' => LANG_CP_FIELD_IN_ITEM,
+            'default' => true
+        )));
+
+        $form->addField($fieldset, new fieldCheckbox('options:rating_is_in_list', array(
+            'title' => LANG_CP_FIELD_IN_LIST,
+            'default' => true
+        )));
+
         return $form;
 
     }

@@ -17,7 +17,7 @@
         $pos_colors = ['text-muted', 'text-warning','text-info', 'text-secondary'];
     ?>
 
-    <div class="groups-list striped-list mt-3 mt-md-4">
+    <div class="groups-list content_list striped-list mt-3 mt-md-4">
 
         <?php foreach($groups as $group){ ?>
 
@@ -37,11 +37,9 @@
                 <?php } ?>
 
                 <?php if (!empty($fields['logo']) && $fields['logo']['is_in_list'] && $group['logo']){ ?>
-                    <div class="mr-3">
-                        <a href="<?php echo href_to('groups', $group['slug']); ?>">
-                            <?php echo html_image($group['logo'], $fields['logo']['handler']->getOption('size_teaser'), $group['title']); ?>
-                        </a>
-                    </div>
+                    <a class="icms-user-avatar d-flex mr-3" href="<?php echo href_to('groups', $group['slug']); ?>">
+                        <?php echo html_image($group['logo'], $fields['logo']['handler']->getOption('size_teaser'), $group['title']); ?>
+                    </a>
                 <?php } ?>
 
                 <div class="media-body text-truncate">

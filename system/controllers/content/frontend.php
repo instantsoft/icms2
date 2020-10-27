@@ -367,10 +367,16 @@ class content extends cmsFrontend {
             $filter_link = false;
 
             if($search_filter){
-                $filter_link = (is_array($page_url) ? (!empty($page_url['cancel']) ? $page_url['cancel'] : $page_url['base']) : $page_url).'/'.$search_filter['slug'];
-            }
 
-            if($this->list_filter && !empty($filter_query)){
+                $filter_link = (is_array($page_url) ? (!empty($page_url['cancel']) ? $page_url['cancel'] : $page_url['base']) : $page_url).'/'.$search_filter['slug'];
+                $this->list_filter = $search_filter;
+                $filter_query = $this->getActiveFiltersQuery();
+
+                if($filter_query){
+                    $filter_link .= '?'.$filter_query;
+                }
+
+            } else if($this->list_filter && !empty($filter_query)){
                 $filter_link = $page_url['filter_link'];
             }
 
