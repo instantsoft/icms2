@@ -5,12 +5,18 @@
         bottom: 0;
         right: 0;
         opacity: 0;
+        z-index: 1;
     }
     &:hover .edit_wlinks {
         opacity: 1;
     }
     &:last-child {
         margin-bottom: 0 !important;
+    }
+    > .card-header {
+        > .icms-svg-icon {
+            margin-right: $spacer*0.5;
+        }
     }
 }
 .icms-widget__tabbed {

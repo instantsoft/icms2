@@ -508,7 +508,7 @@ class modelWidgets extends cmsModel {
                 'id'           => $bind['id'],
                 'bind_id'      => $bind['bind_id'],
                 'widget_id'    => $bind['widget_id'],
-                'title'        => $bind['title'],
+                'title'        => string_replace_svg_icons($bind['title']),
                 'position'     => $bind['position'],
                 'languages'    => $bind['languages'],
                 'image_hint_path' => $bind['image_hint_path'],

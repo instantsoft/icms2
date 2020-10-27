@@ -26,7 +26,7 @@
             <?php foreach($widgets as $index => $widget) { ?>
                 <li class="nav-item<?php if ($widget['class_title']) { ?> <?php echo $widget['class_title'];  } ?>">
                     <a class="nav-link px-2 px-lg-3<?php if ($index==0) { ?> active<?php } ?>" data-toggle="tab" data-id="<?php echo $widget['id']; ?>" href="#widget-<?php echo $widget['id']; ?>">
-                        <?php echo $widget['title'] ? $widget['title'] : ($index+1); ?>
+                        <?php echo $widget['title'] ? string_replace_svg_icons($widget['title']) : ($index+1); ?>
                     </a>
                 </li>
             <?php } ?>

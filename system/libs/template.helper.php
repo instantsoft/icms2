@@ -5,13 +5,19 @@
  * @param string $file Имя файла SVG спрайта в templates/NAME/images/icons/
  * @param string $name Имя иконки
  * @param integer $size Размер
+ * @param boolean $print Печатать или возвращать строку
  */
-function html_svg_icon($file, $name, $size = 16){
+function html_svg_icon($file, $name, $size = 16, $print = true){
     static $template_path = null;
     if(!isset($template_path)){
         $template_path = cmsTemplate::getInstance()->getTemplateFilePath('images/icons/', true);
     }
-	echo '<svg class="icms-svg-icon w-'.$size.'" fill="currentColor"><use xlink:href="'.$template_path.$file.'.svg#'.$name.'"></use></svg>';
+	$icon = '<svg class="icms-svg-icon w-'.$size.'" fill="currentColor"><use xlink:href="'.$template_path.$file.'.svg#'.$name.'"></use></svg>';
+    if($print){
+        echo $icon;
+    } else {
+        return $icon;
+    }
 }
 /**
  * Выводит тег <a>

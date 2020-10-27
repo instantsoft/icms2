@@ -405,7 +405,31 @@ function string_date_format($date, $is_time = false){
     return $result;
 
 }
+/**
+ * Находит в строке все выражения вида {file_name%icon_name} и заменяет на svg иконку
+ * где file_name - имя svg файла по пути /templates/шаблон/images/icons/
+ * icon_name - имя иконки svg спрайта
+ *
+ * @param string $string
+ * @return string
+ */
+function string_replace_svg_icons($string){
 
+    $matches_count = preg_match_all('/{([a-z0-9_\-]+)%([a-z0-9_\-]+)}/i', $string, $matches);
+
+    if ($matches_count){
+        for($i=0; $i<$matches_count; $i++){
+
+            $tag  = $matches[0][$i];
+            $file = $matches[1][$i];
+            $name = $matches[2][$i];
+
+            $string = str_replace($tag, html_svg_icon($file, $name, 16, false), $string);
+        }
+    }
+
+    return $string;
+}
 /**
  * Находит в строке все выражения вида {user.property} и заменяет property
  * на соответствующее свойство объекта cmsUser

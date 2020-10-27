@@ -51,7 +51,16 @@ class formAuthOptions extends cmsForm {
                         'show_all' => false,
 						'default' => array(3),
                         'rules' => array(
-                            array('required')
+                            array(function($controller, $data, $value) {
+                                if($value){
+                                    return true;
+                                }
+                                $public_groups = cmsCore::getModel('users')->getPublicGroups();
+                                if(!$public_groups){
+                                    return ERR_VALIDATE_REQUIRED;
+                                }
+                                return true;
+                            })
                         )
                     )),
 

@@ -24,6 +24,7 @@ class onBootstrap4WidgetMenuForm extends cmsAction {
         // ****************************************************************** //
         $form->addField('menu_options', new fieldList('options:navbar_expand', array(
             'title' => LANG_BS4_NAVBAR_EXPAND,
+            'default' => 'navbar-expand-lg',
             'items' => [
                 ''  => LANG_BS4_ALWAYS_SHOW,
                 'navbar-expand-sm' => sprintf(LANG_BS4_NAVBAR_EXPAND_ON, '≥576px'),

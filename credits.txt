@@ -10,9 +10,17 @@ Third-party plugins, libraries and resources included in InstantCMS:
         by Twitter, Inc
         https://getbootstrap.com
 
+    Font Awesome Free
+        by Fonticons, Inc.
+        https://fontawesome.com
+
     PhotoSwipe
         by Dmitry Semenov
         http://photoswipe.com
+
+    Slick
+        by Ken Wheeler
+        https://kenwheeler.github.io/slick/
 
     FatCow Free Icons
         by FatCow Team

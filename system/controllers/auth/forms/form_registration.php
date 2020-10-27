@@ -7,6 +7,7 @@ class formAuthRegistration extends cmsForm {
         return array(
 
             'basic' => array(
+                'title' => LANG_AUTH_REG_AUTH,
                 'type' => 'fieldset',
                 'childs' => array(
                     new fieldString('email', array(

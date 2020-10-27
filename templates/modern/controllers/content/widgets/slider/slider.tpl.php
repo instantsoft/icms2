@@ -24,9 +24,11 @@
                     <div class="embed-responsive<?php if ($device_type == 'desktop') { ?> embed-responsive-21by9<?php } else { ?> embed-responsive-4by3<?php } ?>">
                         <div class="embed-responsive-item icms-bg__cover icms-bg__cover-bottom-gradient bg-secondary" style="background-image: url(<?php echo html_image_src($image, $big_image_preset, true); ?>)">
                             <div class="carousel-caption text-left">
-                                <a class="btn mb-3 <?php echo $cat_btns_styles[mt_rand(0,7)];?>" href="<?php echo href_to($ctype['name'], $item['cat_slug']); ?>">
-                                    <?php html($item['cat_title']); ?>
-                                </a>
+                                <?php if($item['category_id'] > 1){ ?>
+                                    <a class="btn mb-3 <?php echo $cat_btns_styles[mt_rand(0,7)];?>" href="<?php echo href_to($ctype['name'], $item['cat_slug']); ?>">
+                                        <?php html($item['cat_title']); ?>
+                                    </a>
+                                <?php } ?>
                                 <?php if($is_private){ ?>
                                     <h3 class="h2 d-block mb-0 mb-md-3 text-white"><?php html($item['title']); ?></h3>
                                 <?php } else { ?>

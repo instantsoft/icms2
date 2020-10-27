@@ -79,3 +79,4 @@ define('LANG_AUTH_INVITES_SUSER', 'Or user');
 define('LANG_AUTH_INVITES_SPARAMS', 'Issuing parameters to a group of users');
 define('LANG_AUTH_IS_OLD_AUTH', 'You have not changed your password for a long time, <a href="%s">you can do it now</a>.');
 define('LANG_AUTH_CLEAN_REG_EMAIL', 'I entered an invalid email');
+define('LANG_AUTH_REG_AUTH', 'Login details');

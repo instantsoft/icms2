@@ -154,7 +154,6 @@ class auth extends cmsFrontend {
                     )
                 )
             );
-
         }
 
         //
@@ -171,15 +170,8 @@ class auth extends cmsFrontend {
             $fieldset_id = $form->addFieldset($fieldset['title']);
 
             foreach($fieldset['fields'] as $field){
-
-                if ($field['name'] == 'nickname') {
-                    $form->addFieldToBeginning('basic', $field['handler']); continue;
-                }
-
                 $form->addField($fieldset_id, $field['handler']);
-
             }
-
         }
 
         // Капча

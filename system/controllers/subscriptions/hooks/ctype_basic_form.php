@@ -4,7 +4,7 @@ class onSubscriptionsCtypeBasicForm extends cmsAction {
 
     public function run($form){
 
-        $fieldset = $form->addFieldsetAfter('rss', LANG_SUBSCRIPTIONS_CONTROLLER, 'subscriptions', array('is_collapsed' => true));
+        $fieldset = $form->addFieldsetAfter('folders', LANG_SUBSCRIPTIONS_CONTROLLER, 'subscriptions', array('is_collapsed' => true));
 
         $form->addField($fieldset, new fieldCheckbox('options:enable_subscriptions', array(
             'title'   => LANG_SBSCR_CTYPE_ON,

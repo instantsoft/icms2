@@ -24,7 +24,7 @@
     </div>
 
     <?php ob_start(); ?>
-    <script type="text/javascript">
+    <script>
         window.opener = null;
         $(function () {
             var timer    = $('#timer');
