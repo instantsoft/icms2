@@ -355,7 +355,7 @@
     define('ERR_CLASS_NOT_FOUND', 		 	 'Class not found or cannot be read');
     define('ERR_CLASS_NOT_DEFINED', 		 'In the %s file class <b>%s</b> not defined');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Module not found');
-    define('ERR_DATABASE_QUERY', 		 	 '<b>DB query error</b>: <p>%s</p>');
+    define('ERR_DATABASE_QUERY', 		 	 '<b>DB query error</b>: <div>%s</div>');
     define('ERR_PAGE_NOT_FOUND', 		 	 'Page not found');
     define('ERR_FORBIDDEN', 		 	     'Forbidden');
     define('ERR_SITE_OFFLINE',               'Site is offline');
@@ -363,6 +363,8 @@
     define('ERR_SEARCH_TITLE',               'Search');
     define('ERR_SEARCH_QUERY_INPUT',         'What?');
     define('ERR_USER_NOT_FOUND',             'User does not exist');
+    define('LANG_ERROR_503',                 'Service Unavailable');
+    define('LANG_ERROR_503_HINT',            'Please, enable debug mode in the site settings');
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'File was successfully uploaded');

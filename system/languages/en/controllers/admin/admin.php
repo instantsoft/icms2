@@ -32,23 +32,18 @@
     define('LANG_CP_DASHBOARD_SI_ION',          'IonCube Loader installed');
     define('LANG_CP_DASHBOARD_SI_ZEND',         'Zend OPcache installed');
     define('LANG_CP_DASHBOARD_SI_ZENDG',        'Zend Guard Loader installed');
-
     define('LANG_CP_DASHBOARD_LEAD_SPONSOR',    'General sponsor');
-
     define('LANG_CP_DASHBOARD_LINKS_SITE',      'Official Site');
     define('LANG_CP_DASHBOARD_LINKS_DOCS',      'Documentation');
     define('LANG_CP_DASHBOARD_LINKS_ADDONS',    'Extensions');
     define('LANG_CP_DASHBOARD_LINKS_FORUMS',    'Community Forum');
-
     define('LANG_CP_DASHBOARD_LINKS_DONATE',    'Donate');
     define('LANG_CP_DASHBOARD_LINKS_SPONSORS',  'Become a Sponsor');
-
     define('LANG_CP_DASHBOARD_PREMIUM',         'Premium components');
     define('LANG_CP_DASHBOARD_BILLING',         'Billing');
     define('LANG_CP_DASHBOARD_BILLING_HINT',    'Monetize your site');
     define('LANG_CP_DASHBOARD_INVIDEO_HINT',    'Professional video catalog');
     define('LANG_CP_DASHBOARD_INMAPS_HINT',     'Object catalog on the map');
-
     define('LANG_CP_SECTION_INDEX',             'Index');
     define('LANG_CP_SECTION_CTYPES',            'Content Types');
     define('LANG_CP_SECTION_CONTENT',           'Content');
@@ -59,11 +54,9 @@
     define('LANG_CP_SECTION_CONTROLLERS',       'Components');
     define('LANG_CP_SECTION_SETTINGS',          'Settings');
     define('LANG_CP_SECTION_UPDATE',            'Updates');
-
     define('LANG_CP_ACTIONS',                   'Actions');
     define('LANG_CP_SELECTED_EDIT',             'Edit');
     define('LANG_CP_SELECTED_DELETE',           'Delete');
-
     define('LANG_CP_CTYPES_ADD',                'Add Content Type');
     define('LANG_CP_CTYPES_EDIT',               'Edit Content Type');
     define('LANG_CP_CTYPE_CREATED',             'Content type &laquo;%s&raquo; created');
@@ -71,7 +64,6 @@
     define('LANG_CP_CTYPE_ERROR_NAME',          'It should not be called the name of an existing component');
     define('LANG_CP_CTYPE_TO_LIST',             'To the content types list');
     define('LANG_CP_CTYPE_NOT_SET',             'No content type set');
-
     define('LANG_CP_CTYPE_SETTINGS',            'Settings');
     define('LANG_CP_CTYPE_LABELS',              'Labels');
     define('LANG_CP_CTYPE_FIELDS',              'Fields');
@@ -80,7 +72,6 @@
     define('LANG_CP_CTYPE_DATASETS',            'Datasets');
     define('LANG_CP_CTYPE_FILTERS',             'Filters');
     define('LANG_CP_CTYPE_DATASET',             'Dataset');
-
     define('LANG_CP_GRID_COLYMNS_SETTINGS',     'Columns settings');
     define('LANG_CP_GRID_COLYMNS_SYSTEM',       'System');
     define('LANG_CP_GRID_COLYMNS_USER',         'User');
@@ -96,9 +87,7 @@
     define('LANG_CP_GRID_COLYMNS_IMAGES_NMB',   'Number of images');
     define('LANG_CP_GRID_COLYMNS_PREVIEW',      'Preview');
     define('LANG_CP_GRID_COLYMNS_TO_FILTER',    'Put in filter');
-
     define('LANG_CP_SYSTEM_NAME_HINT',          'Used in URLs and database table names<br>Cannot be changed later!');
-
     define('LANG_CP_CONTENT_ITEM_ADD',          'Add Entry');
     define('LANG_CP_CONTENT_ITEMS_EDIT',        'Change entries');
     define('LANG_CP_CONTENT_FIELDS_IS_ADD',     'Add Values to Existing');
@@ -119,21 +108,20 @@
     define('LANG_CP_CONTENT_CATS_TITLES_HINT',  'Enter one item per line to create multiple categories<br>Add a hyphen before the title to make a nested category<br><a href="https://docs.instantcms.ru/en/manual/content/cats" target="_blank">Detailed Manual</a>');
     define('LANG_CP_CONTENT_CATS_BIND',         'Bind parent category properties');
     define('LANG_CP_SELECT_HINT',               'Click on a row to select or ');
-
     define('LANG_CP_BASIC',                     'Basic settings');
     define('LANG_CP_IS_COLLAPSED',              'Collapsible blocks in the add/edit item form');
     define('LANG_CP_PUBLICATION',               'Publication');
     define('LANG_CP_IS_PUB_CONTROL',            'Custom publication date');
     define('LANG_CP_DISABLE_DRAFTS',            'Disable drafts');
-	define('LANG_CP_IS_PUB_CONTROL_HINT',		'Users with the corresponding permission configured on the "Permissions" tab can specify the custom date and publication period for each entry');
+    define('LANG_CP_IS_PUB_CONTROL_HINT',		'Users with the corresponding permission configured on the "Permissions" tab can specify the custom date and publication period for each entry');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS',    'Expired entry action');
     define('LANG_CP_NOTIFY_END_DATE_DAYS',      'How many days before the end of the publication notify users');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE','Hide');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS_DEL','Delete');
     define('LANG_CP_CATEGORIES_ON',             'Enable categories');
     define('LANG_CP_CATEGORIES_RECURSIVE',      'Show entries from child categories in parent category');
-	define('LANG_CP_CATEGORIES_EMPTY_ROOT',		'Do not show entries in the root category');
-	define('LANG_CP_CATEGORIES_MULTI',			'Allow multiple categories for a single entry');
+    define('LANG_CP_CATEGORIES_EMPTY_ROOT',		'Do not show entries in the root category');
+    define('LANG_CP_CATEGORIES_MULTI',			'Allow multiple categories for a single entry');
     define('LANG_CP_CATEGORIES_CHANGE',         'Allow to change the category of an already existing entry');
     define('LANG_CP_CATEGORIES_OPEN_ROOT',      'Allow to add entries to the root category');
     define('LANG_CP_CATEGORIES_ONLY_LAST',      'Allow to add entries only to the last level of nested categories');
@@ -214,7 +202,6 @@
     define('LANG_CP_PRIVACY_TYPE_HIDE',         'Hide');
     define('LANG_CP_PRIVACY_TYPE_SHOW_TITLE',   'Show only title');
     define('LANG_CP_PRIVACY_TYPE_SHOW_ALL',     'Show full');
-
     define('LANG_CP_NUMERALS_LABELS',           'Plurals');
     define('LANG_CP_NUMERALS_1_LABEL',          'One (...)');
     define('LANG_CP_NUMERALS_2_LABEL',          'Two (...)');
@@ -227,12 +214,10 @@
     define('LANG_CP_LIST_LABELS_HINT',          'If not specified, the content type title will be used');
     define('LANG_CP_LIST_LABELS_RTAB_TITLE',    'Relation tab title');
     define('LANG_CP_LIST_LABELS_RTAB_TITLE_HINT', 'If this content type is a parent');
-
     define('LANG_CP_TAB',                       'Tab');
     define('LANG_CP_TAB_TITLE',                 'Tab title');
     define('LANG_CP_TAB_IS_ACTIVE',             'Tab is enabled');
     define('LANG_CP_TAB_SHOW_ONLY_OWNER',       'Show tab to the profile owner only');
-
     define('LANG_CP_FIELD',                     'Field');
     define('LANG_CP_FIELD_FORMAT',              'Field validation');
     define('LANG_CP_FIELD_TYPE',                'Field type');
@@ -260,9 +245,9 @@
     define('LANG_CP_FIELD_NOT_IN_LIST_CONTEXT', 'For which lists do not show');
     define('LANG_CP_FIELD_IN_ITEM',             'Show in entry view');
     define('LANG_CP_FIELD_IN_ITEM_POS',         'Field position');
-    define('LANG_CP_FIELD_IN_ITEM_POS_HINT',    'If you select a special widget, set the entry page in the right place widget "Content Fields" and configure it.');
-    define ('LANG_CP_FIELD_IN_ITEM_POS0',       'In the body of the entry');
-    define ('LANG_CP_FIELD_IN_ITEM_POS1',       'On a position in a special widget');
+    define('LANG_CP_FIELD_IN_ITEM_POS_HINT',    'If you select a special widget, set the entry page in the right place widget "Content Fields" and configure it.');
+    define('LANG_CP_FIELD_IN_ITEM_POS0',       'In the body of the entry');
+    define('LANG_CP_FIELD_IN_ITEM_POS1',       'On a position in a special widget');
     define('LANG_CP_FIELD_IN_PROFILE',          'Show in profile');
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'In list');
     define('LANG_CP_FIELD_IN_ITEM_SHORT',       'In entry');
@@ -281,7 +266,6 @@
     define('LANG_CP_FIELD_WRAP_ATYPE',          'Auto');
     define('LANG_CP_FIELD_WRAP_WIDTH',          'Field width');
     define('LANG_CP_FIELD_WRAP_WIDTH_HINT',     'Not Set - automatic width. Used in conjunction with the unit of measurement, such as 200px, 60%, etc.');
-
     define('LANG_CP_PROPS_NO_CATS',             'Content type &laquo;%s&raquo; has no categories.');
     define('LANG_CP_PROPS_NO_CATS_ADD',         '<a href="%s">Create Categories</a> to add properties.');
     define('LANG_CP_PROPS_ADD',                 'Create Property');
@@ -306,17 +290,14 @@
     define('LANG_CP_FILTER_DESC_HINT',          'Additional description of the category');
     define('LANG_CP_FILTER_FIELDS',             'Fields filters');
     define('LANG_CP_FILTER_PROPS',              'Props filters');
-
     define('LANG_CP_DATASET',                   'Dataset');
     define('LANG_CP_DATASET_ADD',               'Add Dataset');
     define('LANG_CP_DATASET_TITLE',             'Dataset title');
     define('LANG_CP_DATASET_CREATED',           'Dataset &laquo;%s&raquo; has been created');
     define('LANG_CP_DATASET_DELETE_CONFIRM',    'Delete dataset "{title}"?');
     define('LANG_CP_DATASET_IS_VISIBLE',        'Show dataset on the site');
-
     define('LANG_CP_CATS_VIEW',        'Show in categories');
     define('LANG_CP_CATS_HIDE',        'Do not show in categories');
-
     define('LANG_CP_CTYPE_RELATIONS',           'Relations');
     define('LANG_CP_RELATION',                  'Relation');
     define('LANG_CP_RELATION_ADD',              'Add Relation');
@@ -343,7 +324,6 @@
     define('LANG_CP_RELATION_TAB_SEO_DESC',     'Tab Meta-description');
     define('LANG_CP_RELATION_ERROR_LEN',        'Are too long names are linkable system types. The name length should not be more than 30 characters.');
     define('LANG_CP_RELATION_LAYOUT_LIST_ERROR', 'You can create only a single relation with "List" type');
-
     define('LANG_CP_MENU',                      'Menu');
     define('LANG_CP_MENU_ADD',                  'Add Menu');
     define('LANG_CP_MENU_EDIT',                 'Menu Settings');
@@ -367,17 +347,16 @@
     define('LANG_CP_MENU_ITEM_TARGET_PARENT',   'Parent window');
     define('LANG_CP_MENU_ITEM_TARGET_TOP',      'On top of all frames');
     define('LANG_CP_MENU_IS_FIXED',             'This menu cannot be deleted');
-
     define('LANG_CP_WIDGETS_ROW_NONE',          'You have not created a single row');
-    define ('LANG_CP_WIDGETS_COL_VA',           'Vertical Column Alignment');
-    define ('LANG_CP_WIDGETS_COL_VA1',          'Top');
-    define ('LANG_CP_WIDGETS_COL_VA2',          'Middle');
-    define ('LANG_CP_WIDGETS_COL_VA3',          'Bottom');
-    define ('LANG_CP_WIDGETS_COL_HA',           'Horizontal column alignment');
-    define ('LANG_CP_WIDGETS_COL_HA1',          'Left to right');
-    define ('LANG_CP_WIDGETS_COL_HA3',          'Right to Left');
-    define ('LANG_CP_WIDGETS_COL_HA4',          'Space Around');
-    define ('LANG_CP_WIDGETS_COL_HA5',          'Space Between');
+    define('LANG_CP_WIDGETS_COL_VA',           'Vertical Column Alignment');
+    define('LANG_CP_WIDGETS_COL_VA1',          'Top');
+    define('LANG_CP_WIDGETS_COL_VA2',          'Middle');
+    define('LANG_CP_WIDGETS_COL_VA3',          'Bottom');
+    define('LANG_CP_WIDGETS_COL_HA',           'Horizontal column alignment');
+    define('LANG_CP_WIDGETS_COL_HA1',          'Left to right');
+    define('LANG_CP_WIDGETS_COL_HA3',          'Right to Left');
+    define('LANG_CP_WIDGETS_COL_HA4',          'Space Around');
+    define('LANG_CP_WIDGETS_COL_HA5',          'Space Between');
     define('LANG_CP_WIDGETS_COL_CLASS',         'Extra CSS Column Class');
     define('LANG_CP_WIDGETS_ROW_CLASS',         'Extra CSS Row Class');
     define('LANG_CP_WIDGETS_COL_ORDER',         'Visual order column for %s resolutions');
@@ -404,10 +383,10 @@
     define('LANG_CP_WIDGETS_COL_NAME',          'Position name');
     define('LANG_CP_WIDGETS_COL_NAME_HINT',     'Not specified, will be generated automatically. Must be unique.');
     define('LANG_CP_WIDGETS_COL_TYPE',          'Which column?');
-    define('LANG_CP_WIDGETS_COL_TYPE1',         'Typical');
-    define('LANG_CP_WIDGETS_COL_TYPE2',         'Custom Template');
-    define('LANG_CP_WIDGETS_COL_WRAPPER',       'Column Template');
-    define('LANG_CP_WIDGETS_COL_WRAPPER_H',     'Write the HTML column template. Use the expression {position} at the output location of the widgets.');
+    define('LANG_CP_WIDGETS_COL_TYPE1',         'Typical');
+    define('LANG_CP_WIDGETS_COL_TYPE2',         'Custom Template');
+    define('LANG_CP_WIDGETS_COL_WRAPPER',       'Column Template');
+    define('LANG_CP_WIDGETS_COL_WRAPPER_H',     'Write the HTML column template. Use the expression {position} at the output location of the widgets.');
     define('LANG_CP_WIDGETS_PAGE',              'Page');
     define('LANG_CP_WIDGETS_PAGES',             'Pages');
     define('LANG_CP_WIDGETS_ALL',               'All widgets');
@@ -442,7 +421,6 @@
     define('LANG_CP_WIDGETS_FA_ADD',            'Add');
     define('LANG_CP_WIDGETS_DSCH_ERROR',        'The current admin panel template does not support dynamic widget scheme. <a target="_blank" href="https://docs.instantcms.ru/en/manual/widgets">More details...</a>');
     define('LANG_CP_WIDGETS_STYLE',             'Style');
-
     define('LANG_CP_USER_PMAILING',             'Create pm messages');
     define('LANG_CP_USER_ADD',                  'Add user');
     define('LANG_CP_USER_CREATED',              'User &laquo;%s&raquo; is created');
@@ -471,15 +449,12 @@
     define('LANG_CP_USERS_ALL',                 'Total Users');
     define('LANG_CP_USERS_ISDELETED',           'Deleted');
     define('LANG_CP_USERS_LOCKED',              'Blocked');
-
     define('LANG_CP_TOTAL',       'Total');
     define('LANG_CP_ONMODERATE',  'Moderation');
     define('LANG_CP_NOTPUB',      'Unpublished');
-
     define('LANG_CP_CONTROLLERS_OPTIONS',       'Component options');
     define('LANG_CP_CONTROLLERS_ADD',           'Install Component');
     define('LANG_CP_ERR_BACKEND_NOT_FOUND',     'The &laquo;%s&raquo; component has no settings');
-
     define('LANG_CP_SETTINGS_SITE',             'Site');
     define('LANG_CP_SETTINGS_GUI',              'Interface');
     define('LANG_CP_SETTINGS_FRONTPAGE',        'Homepage');
@@ -493,16 +468,14 @@
     define('LANG_CP_SETTINGS_DB_CHARSET_HINT',  'Changing the charset may take a long time');
     define('LANG_CP_SETTINGS_MISC',             'Misc');
     define('LANG_CP_SETTINGS_SECURITY',         'Security');
-
     define('LANG_CP_SETTINGS_SESSIONS',         'Sessions');
     define('LANG_CP_SETTINGS_SESSION_MAXLIFETIME', 'Sessions maxlifetime');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_HANDLER', 'Sessions save handler');
     define('LANG_CP_SETTINGS_SESSION_NAME', 'Session name');
-    define ('LANG_CP_SETTINGS_SESSION_NAME_HINT', 'Must be the same for all sites with a single authorization');
+    define('LANG_CP_SETTINGS_SESSION_NAME_HINT', 'Must be the same for all sites with a single authorization');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH', 'Sessions save path');
     define('LANG_CP_SETTINGS_SESSIONS_BASEDIR', ', which must enter one of the paths ');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'For files, the full path must be specified%s. For Memcache "tcp://" prefixed must be specified, for example, <b>tcp://localhost:11211</b>. For Memcached must be without the "tcp://" prefix, for example, <b>localhost: 11211</b>.');
-
     define('LANG_CP_CHECK_SPOOFING_TYPE', 'Control of changing the IP address when entering the admin area');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'By changing the subnet');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT2', 'Strictly for ip address');
@@ -520,10 +493,10 @@
     define('LANG_CP_SETTINGS_METAKEYS',         'Site keywords (meta keywords)');
     define('LANG_CP_SETTINGS_METADESC',         'Site description (meta description)');
     define('LANG_CP_SETTINGS_DISABLE_METAKEYS', 'Disable meta keywords tag');
-	define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Apply the above-specified words and description to the homepage only');
+    define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Apply the above-specified words and description to the homepage only');
     define('LANG_CP_SETTINGS_META_NO_DEFAULT_HINT',  'If disabled, these words will be displayed on pages with no specified parameters.');
     define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Add page numbers in the title tag when pagination');
-	define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Add site name to the page title tag');
+    define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Add site name to the page title tag');
     define('LANG_CP_SETTINGS_SET_HEAD_PRELOAD',  'Build HTTP Preload headers');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Language');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Default theme');
@@ -577,23 +550,18 @@
     define('LANG_CP_SETTINGS_COOKIE_DOMAIN',    'Cookie Domain');
     define('LANG_CP_SETTINGS_COOKIE_DOMAIN_HINT', 'Your site\'s cookies will be distributed to the specified domain and all of its subdomains. End-to-end authentication will be available. If not specified, the cookie will be valid within the current domain.');
     define('LANG_CP_SETTINGS_CURRENT_DOMAIN',   'Current domain: ');
-
     define('LANG_CP_MEMCACHE_NOT_AVAILABLE',    'Memcached module not found');
     define('LANG_CP_MEMCACHE_CONNECT_ERROR',    'Cannot connect to Memcached - check server and port');
-
     define('LANG_CP_FILE_NOT_WRITABLE',         'Cannot overwrite file "%s". Set write permissions for it.');
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Configuration file is not writable!');
     define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Template configuration file is not writable!');
     define('LANG_CP_SAVE_SUCCESS',              'Settings saved successfully');
     define('LANG_CP_ORDER_SUCCESS',             'The order was successfully saved');
     define('LANG_CP_PERMISSIONS_SUCCESS',       'The access rules saved successfully');
-
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Debug mode enabled');
     define('LANG_CP_SETTINGS_MANIFEST_FROM_FILES', 'Load events from manifest.php files');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Emulate network lag');
-
     define('LANG_CP_SETTINGS_CACHE_CLEAN',      'Clear cache');
-
     define('LANG_CP_ADDONS_DATA_ERROR',         'Error getting data, try again later.');
     define('LANG_CP_ADDONS_CURL_ERROR',         'Browse the add-ons catalog failed, because CURL is not available on the server. You can select addons from a <a target="_blank" href="https://addons.instantcms.ru/">official add-ons catalog</a>.');
     define('LANG_CP_INSTALL_PACKAGE_LINK_HINT', 'For example, by copying a download link from the <a target="_blank" href="https://addons.instantcms.ru/">official add-ons catalog</a>');
@@ -657,7 +625,6 @@
     define('LANG_CP_PACKAGE_CONTENTS',          'Package contents');
     define('LANG_CP_PACKAGE_DEPENDS',           'Package dependencies');
     define('LANG_CP_PACKAGE_DEPENDS_CORE',      'Required core version');
-
     define('LANG_CP_PACKAGE_DEPENDS_PACKAGE',   'Required installed package version');
     define('LANG_CP_PACKAGE_TYPE_COMPONENT_INSTALL', 'Component installation package');
     define('LANG_CP_PACKAGE_TYPE_COMPONENT_UPDATE', 'Component service pack');
@@ -670,39 +637,34 @@
     define('LANG_CP_PACKAGE_TYPE', 'Package type');
     define('LANG_CP_PACKAGE_NONAME', 'Unknown author');
     define('LANG_CP_PACKAGE_UPDATE_NOINSTALL', 'Unable to install the update package because the extension that is being updated is not installed');
-
     define('LANG_CP_COMPONENT_IS_DELETED',      'Component "%s" has been successfully removed');
     define('LANG_CP_DELETE_COMPONENT_CONFIRM',  'Delete component "{title}"?');
-
     define('LANG_CP_FTP_ACCOUNT',               'FTP account');
     define('LANG_CP_FTP_HOST',                  'Server');
     define('LANG_CP_FTP_PORT',                  'Port');
     define('LANG_CP_FTP_USER',                  'Username');
     define('LANG_CP_FTP_PASS',                  'Password');
     define('LANG_CP_FTP_PATH',                  'Site root path');
-	define('LANG_CP_FTP_PATH_HINT',             '<a href="https://docs.instantcms.ru/en/manual/addons/ftppath" target="_blank">How to specify correct path?</a>');
+    define('LANG_CP_FTP_PATH_HINT',             '<a href="https://docs.instantcms.ru/en/manual/addons/ftppath" target="_blank">How to specify correct path?</a>');
     define('LANG_CP_CHECK',                     'Check');
     define('LANG_CP_FTP_IS_PASV',               'Passive transfer mode');
     define('LANG_CP_FTP_CONNECT_FAILED',        'Connection failed. Verify that the host and port are correct');
     define('LANG_CP_FTP_AUTH_FAILED',           'Connection failed. Verify the username and password are correct');
     define('LANG_CP_FTP_UPLOAD_FAILED',         'File copy error. Make sure the path and permissions are correct');
     define('LANG_CP_FTP_MKDIR_FAILED',          'Failed to create the folder. Make sure the path and permissions are correct');
-	define('LANG_CP_FTP_NO_ROOT',				'Error: the %s folder not found on the server');
-	define('LANG_CP_FTP_BAD_ROOT',				'Bad root path: InstantCMS 2 not found in <strong>%s</strong>');
+    define('LANG_CP_FTP_NO_ROOT',				'Error: the %s folder not found on the server');
+    define('LANG_CP_FTP_BAD_ROOT',				'Bad root path: InstantCMS 2 not found in <strong>%s</strong>');
     define('LANG_CP_FTP_CHECK',				    'Checking the FTP connection');
     define('LANG_CP_FTP_CONNECTION_INFO',       'Connection to %s');
     define('LANG_CP_FTP_NO_ERRORS',             'The connection is established and configured correctly.');
     define('LANG_CP_FTP_ROOT_LIST_TITLE',       'List of connection files and directories');
-
     define('LANG_CP_FTP_SAVE_TO_SESSION',   'Remember FTP details for the current session');
     define('LANG_CP_FTP_SAVE_TO_SESSION_HINT', 'Not safe if the extension is not from a trusted author');
     define('LANG_CP_FTP_SKIP',				'Skip this step');
     define('LANG_CP_FTP_SKIP_HINT',			'Skip this step if automatic FTP upload is impossible and you follow the manual installation method described in the <a href="https://docs.instantcms.ru/en/manual/addons">Manual</a>');
-
     define('ERR_VALIDATE_UNIQUE_FIELD',         'Field already exists');
     define('LANG_CP_BACK_TO_SITE',              'Back to Site');
     define('LANG_CP_3RDPARTY_CREDITS',          'Third-party credits');
-
     define('LANG_MODERATOR_ADD',             'Add moderator');
     define('LANG_MODERATOR_ADD_HINT',        'Enter the email of a user whom you want to assign as a moderator');
     define('LANG_MODERATOR_APPROVED_COUNT',  'Approved');
@@ -717,7 +679,6 @@
     define('LANG_MODERATION_IN_TRASH',        'In the trash');
     define('LANG_MODERATION_IN_TRASH_TIME',   'Is in the trash, will be deleted through %s');
     define('LANG_MODERATION_LOGS',            'Moderation logs');
-
     define('LANG_CP_CHECK_NESTED',                  'Checking ns trees');
     define('LANG_CP_NS_NO_TABLES',                  'There are no tables available to check');
     define('LANG_CP_NS_SUCCESSFUL',                 'Successful checks');
@@ -740,7 +701,6 @@
     define('LANG_CP_SCHEDULER_TASK_RUN',            'Run now');
     define('LANG_CP_SCHEDULER_TASK_RAN',            'Task &laquo;%s&raquo; was executed %s');
     define('LANG_CP_SCHEDULER_TASK_RUN_FAIL',       'Failed to execute task &laquo;%s&raquo;');
-
     define('LANG_CP_UPDATE_CHECK',                  'Check for InstantCMS updates');
     define('LANG_CP_UPDATE_DATE',                   'Release date');
     define('LANG_CP_UPDATE_DOWNLOAD',               'Download package');
@@ -751,7 +711,6 @@
     define('LANG_CP_UPDATE_CHECK_FAIL',             'Unable to check for updates');
     define('LANG_CP_UPDATE_MANUAL_1',               'Automatic download failed because CURL is not available on the server.');
     define('LANG_CP_UPDATE_MANUAL_2',               'Download the update archive manually and <a href="'.href_to('admin', 'install').'">Install</a> it');
-
     define('LANG_HELP_URL_CONTENT',                 'https://docs.instantcms.ru/en/manual/content');
     define('LANG_HELP_URL_CONTENT_CATS',            'https://docs.instantcms.ru/en/manual/content/cats');
     define('LANG_HELP_URL_CTYPES',                  'https://docs.instantcms.ru/en/manual/ctypes');
@@ -779,8 +738,8 @@
     define('LANG_HELP_URL_COM_GROUPS',              'https://docs.instantcms.ru/en/manual/components/groups');
     define('LANG_HELP_URL_COM_RECAPTCHA',           'https://docs.instantcms.ru/en/manual/components/recaptcha');
     define('LANG_HELP_URL_COM_COMMENTS',            'https://docs.instantcms.ru/en/manual/components/comments');
-	define('LANG_HELP_URL_COM_IMAGES',				'https://docs.instantcms.ru/en/manual/components/images');
-	define('LANG_HELP_URL_COM_SUBSCRIPTIONS',		'https://docs.instantcms.ru/en/manual/components/subscriptions');
+    define('LANG_HELP_URL_COM_IMAGES',				'https://docs.instantcms.ru/en/manual/components/images');
+    define('LANG_HELP_URL_COM_SUBSCRIPTIONS',		'https://docs.instantcms.ru/en/manual/components/subscriptions');
     define('LANG_HELP_URL_COM_USERS',               'https://docs.instantcms.ru/en/manual/components/users');
     define('LANG_HELP_URL_COM_MODERATION',          'https://docs.instantcms.ru/en/manual/components/moderation');
     define('LANG_HELP_URL_COM_USERS_MIGRATON',      'https://docs.instantcms.ru/en/manual/components/users/migrations');
@@ -790,7 +749,7 @@
     define('LANG_HELP_URL_COM_TAGS',                'https://docs.instantcms.ru/en/manual/components/tags');
     define('LANG_HELP_URL_COM_RSS',                 'https://docs.instantcms.ru/en/manual/components/rss');
     define('LANG_HELP_URL_COM_SITEMAP',             'https://docs.instantcms.ru/en/manual/components/sitemap');
-	define('LANG_HELP_URL_COM_PHOTOS',				'https://docs.instantcms.ru/en/manual/components/photos');
+    define('LANG_HELP_URL_COM_PHOTOS',				'https://docs.instantcms.ru/en/manual/components/photos');
     define('LANG_HELP_URL_USERS',                   'https://docs.instantcms.ru/en/manual/users');
     define('LANG_HELP_URL_USERS_USER',              'https://docs.instantcms.ru/en/manual/users/user');
     define('LANG_HELP_URL_USERS_GROUP',             'https://docs.instantcms.ru/en/manual/users/group');

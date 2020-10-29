@@ -33,3 +33,5 @@ INSERT INTO `{#}widgets_bind_pages` (`id`, `bind_id`, `template`, `is_enabled`, 
 (118, 112, 'modern', 1, 1, 'pos_8', 3),
 (130, 124, 'modern', 1, 0, 'pos_38', 0),
 (131, 125, 'modern', 1, 0, 'pos_39', 0);
+
+UPDATE `{#}con_posts_fields` SET `options` = '---\r\nmin_length: 3\r\nmax_length: 100\r\nshow_symbol_count: null\r\nin_fulltext_search: 1\r\nis_in_item_pos: widget\r\ncontext_list:\r\n  - 0\r\nrelation_id:\r\nlabel_in_list: none\r\nlabel_in_item: none\r\nwrap_type: auto\r\nwrap_width:\r\nis_required: 1\r\nis_digits: null\r\nis_alphanumeric: null\r\nis_email: null\r\nis_url: null\r\nis_unique: null\r\nprofile_value:\r\nauthor_access: null\r\n' WHERE `id` = 1;

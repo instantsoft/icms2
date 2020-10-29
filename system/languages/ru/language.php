@@ -354,7 +354,7 @@
     define('ERR_CLASS_NOT_FOUND', 		 	 'Класс не найден или недоступен для чтения');
     define('ERR_CLASS_NOT_DEFINED', 		 'В файле %s не определён класс <b>%s</b>');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Модуль не найден');
-    define('ERR_DATABASE_QUERY', 		 	 '<b>Ошибка в запросе БД</b>: <p>%s</p>');
+    define('ERR_DATABASE_QUERY', 		 	 '<b>Ошибка в запросе БД</b>: <div>%s</div>');
     define('ERR_PAGE_NOT_FOUND', 		 	 'Страница не найдена');
     define('ERR_FORBIDDEN', 		 	     'Доступ запрещён');
     define('ERR_SITE_OFFLINE',               'Сайт отключен');
@@ -362,6 +362,8 @@
     define('ERR_SEARCH_TITLE',               'Поиск');
     define('ERR_SEARCH_QUERY_INPUT',         'Что ищем?');
     define('ERR_USER_NOT_FOUND',             'Такого пользователя не существует');
+    define('LANG_ERROR_503',                 'Сервис недоступен');
+    define('LANG_ERROR_503_HINT',            'Для показа подробностей включите режим отладки в настройках сайта');
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'Файл успешно загружен');

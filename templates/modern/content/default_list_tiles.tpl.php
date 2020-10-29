@@ -88,7 +88,7 @@ if($ctype['options']['list_show_filter']) {
             <?php } ?>
 
             <?php if (!empty($item['show_tags'])){ ?>
-                <div class="tags_bar mt-3">
+                <div class="tags_bar mb-2">
                     <?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name'], 'btn btn-outline-secondary btn-sm mr-1 icms-btn-tag', ''); ?>
                 </div>
             <?php } ?>

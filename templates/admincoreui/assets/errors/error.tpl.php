@@ -22,36 +22,39 @@
                                 <p class="text-muted"><?php echo nl2br($details); ?></p>
                         <?php } ?>
                     </div>
-                    <?php $stack = debug_backtrace(); ?>
+                    <?php if($is_debug){ ?>
 
-                    <?php if(isset($stack[4])){ ?>
+                        <?php $stack = debug_backtrace(); ?>
 
-                        <p><b><?php echo LANG_TRACE_STACK; ?>:</b></p>
+                        <?php if(isset($stack[4])){ ?>
 
-                        <ul id="trace_stack">
+                            <p><b><?php echo LANG_TRACE_STACK; ?>:</b></p>
 
-                            <?php for($i=4; $i<=14; $i++){ ?>
+                            <ul id="trace_stack">
 
-                                <?php if (!isset($stack[$i])){ break; } ?>
+                                <?php for($i=4; $i<=14; $i++){ ?>
 
-                                <?php $row = $stack[$i]; ?>
-                                <li>
-                                    <b>
-                                        <?php if (isset($row['class'])) { ?>
-                                            <?php echo $row['class'] . $row['type'] . $row['function'] . '()'; ?>
-                                        <?php } else { ?>
-                                            <?php echo $row['function'] . '()'; ?>
+                                    <?php if (!isset($stack[$i])){ break; } ?>
+
+                                    <?php $row = $stack[$i]; ?>
+                                    <li>
+                                        <b>
+                                            <?php if (isset($row['class'])) { ?>
+                                                <?php echo $row['class'] . $row['type'] . $row['function'] . '()'; ?>
+                                            <?php } else { ?>
+                                                <?php echo $row['function'] . '()'; ?>
+                                            <?php } ?>
+                                        </b>
+                                        <?php if (isset($row['file'])) { ?>
+                                            <span>@ <?php echo str_replace(cmsConfig::get('root_path'), '/', $row['file']); ?></span> : <span><?php echo $row['line']; ?></span>
                                         <?php } ?>
-                                    </b>
-                                    <?php if (isset($row['file'])) { ?>
-                                        <span>@ <?php echo str_replace(cmsConfig::get('root_path'), '/', $row['file']); ?></span> : <span><?php echo $row['line']; ?></span>
-                                    <?php } ?>
-                                </li>
+                                    </li>
 
-                            <?php } ?>
+                                <?php } ?>
 
-                        </ul>
+                            </ul>
 
+                        <?php } ?>
                     <?php } ?>
                 </div>
             </div>

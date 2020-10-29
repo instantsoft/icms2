@@ -25,37 +25,38 @@
         <div id="errormsg"><?php echo $message; ?></div>
 
         <?php if ($details){ ?>
-                <div class="pre"><?php echo nl2br($details); ?></div>
+            <div class="pre"><?php echo nl2br($details); ?></div>
         <?php } ?>
 
-        <?php $stack = debug_backtrace(); ?>
-        <?php if(!isset($stack[4])){ return; } ?>
+        <?php if($is_debug){ ?>
+            <?php $stack = debug_backtrace(); ?>
+            <?php if(isset($stack[4])){ ?>
+                <p><b><?php echo LANG_TRACE_STACK; ?>:</b></p>
 
-        <p><b><?php echo LANG_TRACE_STACK; ?>:</b></p>
+                <ul id="trace_stack">
 
-        <ul id="trace_stack">
+                    <?php for($i=4; $i<=14; $i++){ ?>
 
-            <?php for($i=4; $i<=14; $i++){ ?>
+                        <?php if (!isset($stack[$i])){ break; } ?>
 
-                <?php if (!isset($stack[$i])){ break; } ?>
+                        <?php $row = $stack[$i]; ?>
+                        <li>
+                            <b>
+                                <?php if (isset($row['class'])) { ?>
+                                    <?php echo $row['class'] . $row['type'] . $row['function'] . '()'; ?>
+                                <?php } else { ?>
+                                    <?php echo $row['function'] . '()'; ?>
+                                <?php } ?>
+                            </b>
+                            <?php if (isset($row['file'])) { ?>
+                                <span>@ <?php echo str_replace(cmsConfig::get('root_path'), '/', $row['file']); ?></span> : <span><?php echo $row['line']; ?></span>
+                            <?php } ?>
+                        </li>
 
-                <?php $row = $stack[$i]; ?>
-                <li>
-                    <b>
-                        <?php if (isset($row['class'])) { ?>
-                            <?php echo $row['class'] . $row['type'] . $row['function'] . '()'; ?>
-                        <?php } else { ?>
-                            <?php echo $row['function'] . '()'; ?>
-                        <?php } ?>
-                    </b>
-                    <?php if (isset($row['file'])) { ?>
-                        <span>@ <?php echo str_replace(cmsConfig::get('root_path'), '/', $row['file']); ?></span> : <span><?php echo $row['line']; ?></span>
                     <?php } ?>
-                </li>
 
+                </ul>
             <?php } ?>
-
-        </ul>
-
+        <?php } ?>
     </div>
 </body>

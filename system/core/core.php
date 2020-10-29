@@ -1016,25 +1016,28 @@ class cmsCore {
     /**
      * Показывает сообщение об ошибке и завершает работу
      * @param string $message
+     * @param string $details
      */
-    public static function error($message, $details=''){
+    public static function error($message, $details = '') {
 
         if(ob_get_length()) { ob_end_clean(); }
 
         http_response_code(503);
 
-        if (cmsConfig::get('debug')){
-            cmsTemplate::getInstance()->renderAsset('errors/error', array(
-                'message'=>$message,
-                'details'=>$details
-            ));
-        } else {
-            echo '<h1>503 Service Unavailable</h1>';
-            echo '<h2>Please, enable debug mode in the site settings</h2>';
+        $is_debug = cmsConfig::get('debug');
+
+        if(!$is_debug){
+            $message = LANG_ERROR_503;
+            $details = LANG_ERROR_503_HINT;
         }
 
-        die();
+        cmsTemplate::getInstance()->renderAsset('errors/error', array(
+            'is_debug' => $is_debug,
+            'message'  => $message,
+            'details'  => $details
+        ));
 
+        die();
     }
 
     /**

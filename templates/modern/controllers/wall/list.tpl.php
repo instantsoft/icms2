@@ -1,7 +1,7 @@
 <?php $this->addTplJSName('jquery-scroll'); ?>
 <?php $this->addTplJSName('wall'); ?>
 <a name="wall"></a>
-<div id="wall_widget" class="border-top pt-3">
+<div id="wall_widget" class="border-top mt-3 pt-3">
 
     <div class="title_bar d-flex justify-content-between">
         <h3 class="m-0"><?php echo $title; ?></h3>
