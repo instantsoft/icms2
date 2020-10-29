@@ -63,7 +63,7 @@ function check_db(){
     }
 
     if(!empty($mysqli->server_info)){
-        if(strpos($mysqli->server_info, '5.7') === 0){
+        if(version_compare($mysqli->server_info, '5.7') >= 0){
             $db['clear_sql_mode'] = 1;
         }
     }
