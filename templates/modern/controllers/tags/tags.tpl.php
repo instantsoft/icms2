@@ -25,7 +25,7 @@
                         $fs = $min_fs + $step;
                     ?>
                     <li class="d-inline-block mr-2 mb-2">
-                        <a class="btn btn-outline-secondary icms-btn-tag <?php if($color){ echo 'colored'; } ?>" style="font-size: <?php echo round($fs/12, 3); ?>rem;<?php if($color){ echo ' color: '.$color; } ?>" href="<?php echo href_to('tags').'/'.urlencode($tag['tag']); ?>">
+                        <a class="btn btn-outline-light icms-btn-tag <?php if($color){ echo 'colored'; } ?>" style="font-size: <?php echo round($fs/12, 3); ?>rem;<?php if($color){ echo ' color: '.$color; } ?>" href="<?php echo href_to('tags').'/'.urlencode($tag['tag']); ?>">
                             <?php html($tag['tag']); ?>
                         </a>
                     </li>

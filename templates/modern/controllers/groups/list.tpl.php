@@ -42,7 +42,7 @@
                     </a>
                 <?php } ?>
 
-                <div class="media-body text-truncate">
+                <div class="media-body">
                     <?php if (!empty($fields['title']) && $fields['title']['is_in_list']){ ?>
                         <h5 class="my-0">
                             <a href="<?php echo href_to('groups', $group['slug']); ?>"><?php html($group['title']); ?></a>
@@ -71,7 +71,7 @@
                     <?php } ?>
                 </div>
 
-                <div class="actions text-muted">
+                <div class="ml-3 actions text-muted">
 
                     <?php if (!$dataset_name || $dataset_name == 'popular') { ?>
 

@@ -7,6 +7,10 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
         list($do, $row, $col) = $data;
 
         return [
+            new fieldCheckbox('options:cut_before', array(
+                'title' => LANG_CP_WIDGETS_COL_CUT_BEFORE,
+                'visible_depend' => array('type' => array('hide' => array('custom')))
+            )),
             new fieldList('options:default_col_class', array(
                 'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥576px').' ('.LANG_CP_WIDGETS_COL_WIDTH_D.')',
                 'default' => 'col-sm',

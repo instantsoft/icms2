@@ -22,7 +22,7 @@
                         $fs = $min_fs + $step;
                     ?>
                     <li class="d-inline-block">
-                        <a class="btn btn-light mr-1 my-1 icms-btn-tag" style="font-size: <?php echo round($fs/14, 3); ?>rem;<?php if($color){ echo ' color: '.$color; } ?>" href="<?php echo href_to('tags').'/'.urlencode($tag['tag']); ?>">
+                        <a class="btn btn-outline-light mr-1 my-1 icms-btn-tag" style="font-size: <?php echo round($fs/14, 3); ?>rem;<?php if($color){ echo ' color: '.$color; } ?>" href="<?php echo href_to('tags').'/'.urlencode($tag['tag']); ?>">
                             <?php html($tag['tag']); ?>
                         </a>
                     </li>

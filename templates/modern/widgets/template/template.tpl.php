@@ -41,18 +41,22 @@
         <?php } } ?>
     <?php } ?>
 <?php } elseif($widget->options['type'] === 'copyright') { ?>
-    <a href="<?php echo $this->options['owner_url'] ? $this->options['owner_url'] : href_to_home(); ?>">
-        <?php html($this->options['owner_name'] ? $this->options['owner_name'] : cmsConfig::get('sitename')); ?></a>
-    &copy;
-    <?php echo $this->options['owner_year'] ? $this->options['owner_year'] : date('Y'); ?>
-    <span class="item d-none d-sm-inline-block">
-        <?php echo LANG_POWERED_BY_INSTANTCMS; ?>
-    </span>
-    <?php if ($config->debug && cmsUser::isAdmin()){ ?>
-        <span class="item">
-            <a href="#debug_block" data-style="xl" title="<?php echo LANG_DEBUG; ?>" class="ajax-modal"><?php echo LANG_DEBUG; ?></a>
+    <div class="d-flex align-items-center text-muted icms-links-inherit-color">
+        <a href="<?php echo $this->options['owner_url'] ? $this->options['owner_url'] : href_to_home(); ?>">
+            <?php html($this->options['owner_name'] ? $this->options['owner_name'] : cmsConfig::get('sitename')); ?>
+        </a>
+        <span class="mx-2">
+            &copy; <?php echo $this->options['owner_year'] ? $this->options['owner_year'] : date('Y'); ?>
         </span>
-    <?php } ?>
+        <span class="d-none d-sm-block mr-2">
+            <?php echo LANG_POWERED_BY_INSTANTCMS; ?>
+        </span>
+        <?php if ($config->debug && cmsUser::isAdmin()){ ?>
+            <a href="#debug_block" data-style="xl" title="<?php echo LANG_DEBUG; ?>" class="ajax-modal">
+                <?php echo LANG_DEBUG; ?>
+            </a>
+        <?php } ?>
+    </div>
 <?php } elseif($widget->options['type'] === 'site_closed') { ?>
     <div id="site_off_notice" class="py-2 icms-links-inherit-color">
         <?php echo html_svg_icon('solid', 'exclamation-triangle'); ?>

@@ -160,6 +160,7 @@ blockquote {
     border-left:5px solid $teal;
     quotes: "\201C""\201D""\2018""\2019";
     position: relative;
+    display: flex;
     &:before {
         content: open-quote;
         font-size: $font-size-base*3;
@@ -291,7 +292,7 @@ form fieldset {
         height: 2em;
     }
 }
-.icms-links-inherit-color > a {
+.icms-links-inherit-color a {
     color: inherit;
     text-decoration: underline;
 }
@@ -334,6 +335,11 @@ form fieldset {
         width: ($input-btn-padding-x-sm * 2);
         height: ($input-btn-padding-x-sm * 2);
         margin: -$input-btn-padding-x-sm;
+    }
+}
+.icms-footer__middle {
+    > .container {
+        border-color: $gray-800 !important;
     }
 }
 // Спиннеры

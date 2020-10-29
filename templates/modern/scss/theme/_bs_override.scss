@@ -35,7 +35,7 @@
         margin: 0;
     }
 }
-.navbar-nav.icms-navbar-expanded {
+.navbar-nav.icms-navbar-expanded:not(.flex-column) {
     .nav-item {
         &:not(:first-child) {
             .nav-link {
@@ -172,6 +172,13 @@ form {
 .list-group-item.active {
     .text-muted {
         color: lighten($text-muted, 30) !important;
+    }
+}
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1108514
+// slick slider
+.row {
+    > [class*="col-"] {
+        min-width: 0;
     }
 }
 .navbar-expand {

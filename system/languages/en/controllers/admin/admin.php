@@ -382,6 +382,7 @@
     define('LANG_CP_WIDGETS_ROW_CLASS',         'Extra CSS Row Class');
     define('LANG_CP_WIDGETS_COL_ORDER',         'Visual order column for %s resolutions');
     define('LANG_CP_WIDGETS_COL_D_ORDER',       'Default visual column order');
+    define('LANG_CP_WIDGETS_COL_CUT_BEFORE',    'Insert line separator before this column');
     define('LANG_CP_WIDGETS_COL_WIDTH_D',       'Default width');
     define('LANG_CP_WIDGETS_COL_WIDTH',         'Width for %s resolutions');
     define('LANG_CP_WIDGETS_COL_WIDTH_ALL',     'Width for all resolutions');

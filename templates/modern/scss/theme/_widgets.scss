@@ -5,7 +5,7 @@
         bottom: 0;
         right: 0;
         opacity: 0;
-        z-index: 1;
+        z-index: 10;
     }
     &:hover .edit_wlinks {
         opacity: 1;
@@ -40,5 +40,28 @@
         padding-bottom: 0;
         padding-left: 0;
         padding-right: 0;
+    }
+}
+.icms-widget__compact {
+    &.card {
+        border: none;
+        background-color: transparent;
+    }
+    > .card-header {
+        background-color: transparent;
+        padding: 0;
+        font-weight: bold;
+        margin: 0 0 $spacer;
+        border: none;
+    }
+    > .card-body, > .icms-widgets > .card-body {
+        padding: 0;
+    }
+}
+.bg-dark, .bg-secondary {
+    .icms-widget__compact {
+        > .card-header {
+            color: $white;
+        }
     }
 }

@@ -20,9 +20,9 @@
                     }
                 ?>
 
-                <h3>
+                <h4 class="icms-activity__list-day">
                     <?php echo $date; ?>
-                </h3>
+                </h4>
                 <?php $last_date = $item_date; ?>
 
             <?php } ?>
@@ -30,7 +30,7 @@
 
         <?php $url = href_to_profile($item['user']); ?>
 
-        <div class="item media mb-3">
+        <div class="icms-activity__list-item media mb-3">
             <?php if ($show_avatars){ ?>
                 <a href="<?php echo $url; ?>" class="icms-user-avatar mr-2 mr-md-3 small <?php if (!empty($item['user']['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
                     <?php if($item['user']['avatar']){ ?>

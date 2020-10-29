@@ -28,6 +28,9 @@
         <<?php echo $row['tag']; ?> class="<?php echo implode(' ', $row_class); ?>">
     <?php } ?>
     <?php foreach ($row['cols'] as $col) { ?>
+        <?php if(!empty($col['options']['cut_before'])){ ?>
+            <div class="w-100"></div>
+        <?php } ?>
         <?php if($col['type'] === 'custom'){ ?>
             <?php if(!empty($col['rows']['before'])){ ?>
                 <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['before']]); ?>

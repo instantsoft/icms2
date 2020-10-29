@@ -48,7 +48,12 @@ class groups extends cmsFrontend {
             }
 
             $group = $this->model->getGroupBySlug($action_name);
-            if (!$group) { cmsCore::error404(); }
+            if (!$group) {
+
+                array_unshift($this->current_params, $action_name);
+
+                return 'index';
+            }
 
         }
 
@@ -547,15 +552,15 @@ class groups extends cmsFrontend {
                 );
             }
         }
-	
-	if ($this->isControllerEnabled('activity')){
-		$menu[] = array(
-		    'title'      => LANG_GROUPS_PROFILE_ACTIVITY,
-		    'controller' => $this->name,
-		    'action'     => $group['slug'],
-		    'params'     => 'activity',
-		);
-	}
+
+        if ($this->isControllerEnabled('activity')) {
+            $menu[] = array(
+                'title'      => LANG_GROUPS_PROFILE_ACTIVITY,
+                'controller' => $this->name,
+                'action'     => $group['slug'],
+                'params'     => 'activity',
+            );
+        }
 
         $menu[] = array(
             'title'      => LANG_GROUPS_PROFILE_MEMBERS,
@@ -568,7 +573,6 @@ class groups extends cmsFrontend {
         list($menu, $group) = cmsEventsManager::hook('group_tabs', array($menu, $group));
 
         return $menu;
-
     }
 
     public function getDatasets(){
@@ -630,7 +634,6 @@ class groups extends cmsFrontend {
         }
 
         return cmsEventsManager::hook('group_datasets', $datasets);
-
     }
 
     public function getGroupEditMenu($group){

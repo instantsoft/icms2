@@ -383,6 +383,7 @@
     define('LANG_CP_WIDGETS_ROW_CLASS',         'Дополнительный CSS класс ряда');
     define('LANG_CP_WIDGETS_COL_ORDER',         'Визуальный порядок колонки для разрешений %s');
     define('LANG_CP_WIDGETS_COL_D_ORDER',       'Визуальный порядок колонки по умолчанию');
+    define('LANG_CP_WIDGETS_COL_CUT_BEFORE',    'Вставить разделитель строк перед этой колонкой');
     define('LANG_CP_WIDGETS_COL_WIDTH_D',       'Ширина по умолчанию');
     define('LANG_CP_WIDGETS_COL_WIDTH',         'Ширина для разрешений %s');
     define('LANG_CP_WIDGETS_COL_WIDTH_ALL',     'Ширина для всех разрешений');

@@ -24,7 +24,7 @@
                 $this->menu(
                     $widget->options['menu'],
                     $widget->options['is_detect'],
-                    'navbar-nav'.(!empty($widget->options['class']) ? ' '.$widget->options['class'] : '').(!$widget->options['navbar_expand'] ? ' flex-row icms-navbar-expanded' : ''),
+                    $widget->options['menu_navbar_style'].(!empty($widget->options['class']) ? ' '.$widget->options['class'] : '').(!$widget->options['navbar_expand'] ? ' flex-row icms-navbar-expanded' : ''),
                     $widget->options['max_items'], true,
                     (!empty($widget->options['template']) ? $widget->options['template'] : 'menu'),
                     $widget->title

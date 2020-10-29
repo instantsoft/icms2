@@ -54,3 +54,4 @@ define('LANG_MODERN_C_DANGER', 'Отрицательный цвет');
 define('LANG_MODERN_C_LIGHT', 'Светлый цвет');
 define('LANG_MODERN_C_DARK', 'Тёмный цвет');
 define('LANG_MODERN_WIDGETS_TRANSPARENT', 'Прозрачный');
+define('LANG_MODERN_WIDGETS_COMPACT', 'Компактный');

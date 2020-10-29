@@ -1,7 +1,7 @@
 <?php
 $this->addTplCSSFromContext('controllers/groups/styles');
 ?>
-<div class="groups-list striped-list list-64">
+<div class="groups-list content_list striped-list list-64">
     <?php foreach($groups as $group){ ?>
         <div class="item media mb-3 align-items-center">
             <?php if (in_array($fields['logo']['id'], $fields_is_in_list) && $group['logo']){ ?>

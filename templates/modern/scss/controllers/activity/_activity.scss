@@ -11,7 +11,7 @@
         content: "";
         background-color: $gray-300;
     }
-    h3 {
+    &-day {
         margin-left: -6px;
         .octicon {
             margin-right: $spacer*0.75;
@@ -20,7 +20,7 @@
             fill: currentColor;
         }
     }
-    .item {
+    &-item {
         margin-left: calc(#{$spacer*0.75} + 8px);
     }
 }

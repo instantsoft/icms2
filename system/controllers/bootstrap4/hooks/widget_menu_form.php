@@ -44,6 +44,25 @@ class onBootstrap4WidgetMenuForm extends cmsAction {
             'visible_depend' => ['options:menu_type' => ['show' => ['navbar']]]
         )));
 
+        $form->addField('menu_options', new fieldList('options:menu_navbar_style', array(
+            'title' => LANG_BS4_MENU_NAV_STYLE,
+            'items' => [
+                'navbar-nav' => LANG_BS4_MENU_NAV_STYLE_HL,
+                'navbar-nav justify-content-center'    => LANG_BS4_MENU_NAV_STYLE_HC,
+                'navbar-nav justify-content-sm-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥576px',
+                'navbar-nav justify-content-md-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥768px',
+                'navbar-nav justify-content-lg-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥992px',
+                'navbar-nav justify-content-xl-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥1200px',
+                'navbar-nav justify-content-end'       => LANG_BS4_MENU_NAV_STYLE_HR,
+                'navbar-nav justify-content-sm-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥576px',
+                'navbar-nav justify-content-md-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥768px',
+                'navbar-nav justify-content-lg-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥992px',
+                'navbar-nav justify-content-xl-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥1200px',
+                'navbar-nav flex-column'               => LANG_BS4_MENU_NAV_STYLE_V
+            ],
+            'visible_depend' => ['options:menu_type' => ['show' => ['navbar']]]
+        )));
+
         $form->addField('menu_options', new fieldList('options:show_search_form', array(
             'title' => LANG_BS4_SHOW_SEARCH_FORM,
             'items' => [

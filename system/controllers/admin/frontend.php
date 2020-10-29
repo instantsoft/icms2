@@ -392,6 +392,7 @@ class admin extends cmsFrontend {
                 "{$ctype['name']}/*/view-*",
                 "{$ctype['name']}/*.html",
                 "{$ctype['name']}/add",
+                "{$ctype['name']}/add?*",
                 "{$ctype['name']}/add/%",
                 "{$ctype['name']}/addcat",
                 "{$ctype['name']}/addcat/%",

@@ -25,17 +25,17 @@
                 }
             ?>
 
-            <h3 class="d-flex my-3 align-items-center">
+            <h4 class="icms-activity__list-day d-flex my-3 align-items-center">
                 <svg class="octicon" height="18" version="1.1" viewBox="0 0 14 16" width="14"><path fill-rule="evenodd" d="M10.86 7c-.45-1.72-2-3-3.86-3-1.86 0-3.41 1.28-3.86 3H0v2h3.14c.45 1.72 2 3 3.86 3 1.86 0 3.41-1.28 3.86-3H14V7h-3.14zM7 10.2c-1.22 0-2.2-.98-2.2-2.2 0-1.22.98-2.2 2.2-2.2 1.22 0 2.2.98 2.2 2.2 0 1.22-.98 2.2-2.2 2.2z"></path></svg>
                 <span><?php echo $date; ?></span>
-            </h3>
+            </h4>
             <?php $last_date = $item_date; ?>
 
         <?php } ?>
 
         <?php $url = href_to_profile($item['user']); ?>
 
-        <div class="item media mb-3">
+        <div class="icms-activity__list-item media mb-3">
             <a href="<?php echo $url; ?>" class="icms-user-avatar mr-2 mr-md-3 small <?php if (!empty($item['user']['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
                 <?php if($item['user']['avatar']){ ?>
                     <?php echo html_avatar_image($item['user']['avatar'], 'micro', $item['user']['nickname']); ?>

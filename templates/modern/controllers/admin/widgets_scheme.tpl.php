@@ -23,6 +23,9 @@
     <div class="col-sm-12 layout-row-body <?php if(!$row['parent_id'] ){ ?>layout-row-parent<?php } ?> <?php if(!$row['parent_id'] && $rows_titles_pos == 'left'){ ?>col-lg-10<?php } ?> bg-white">
         <div class="row no-gutters widgets-layout-scheme-col-wrap <?php echo $row['options']['vertical_align']; ?> <?php echo $row['options']['horizontal_align']; ?>">
         <?php foreach ($row['cols'] as $col) { ?>
+            <?php if(!empty($col['options']['cut_before'])){ ?>
+                <div class="w-100"></div>
+            <?php } ?>
             <?php
             $width_hint = LANG_AUTO; $col_class = 'col-sm'; $col_width_list = [];
             foreach ($col['options'] as $key => $value) {
