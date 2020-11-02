@@ -203,7 +203,7 @@ thead.list_thead {
     }
     #fixed_toolbar_spacer {
         margin: 0.5rem 0 !important;
-        height: 45px;
+        height: 39px;
     }
     .fixed_toolbar .scroll_top {
         display: inline-block;
@@ -565,7 +565,7 @@ form .child_field{margin-left: 20px}
 .is_collapse > legend {
     position: absolute;
     top: 0;
-    width: 100%;
+    width: 100% !important;
     box-sizing: border-box;
     display: block;
     left: 0;

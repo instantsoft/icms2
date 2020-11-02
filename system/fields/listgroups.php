@@ -46,8 +46,13 @@ class fieldListGroups extends cmsFormField {
             $value = cmsModel::yamlToArray($value);
         }
 
-        return parent::getInput($value ? $value : array(0));
+        if($value){
+            foreach ($value as $k => $v) {
+                if(is_numeric($v)){ $value[$k] = (int)$v; }
+            }
+        }
 
+        return parent::getInput($value ? $value : array(0));
     }
 
     public function store($value, $is_submitted, $old_value=null){

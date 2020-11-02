@@ -150,7 +150,7 @@
                 <?php if ($entry['parent_id']){ ?>
                     <a href="#up" class="btn btn-sm border-0 scroll-up ml-2" onclick="return icms.comments.up(<?php echo $entry['parent_id']; ?>, <?php echo $entry['id']; ?>)" title="<?php html( LANG_COMMENT_SHOW_PARENT ); ?>">&uarr;</a>
                 <?php } ?>
-                <a href="#down" class="btn btn-sm border-0 scroll-down" onclick="return icms.comments.down(this)" title="<?php echo html( LANG_COMMENT_SHOW_CHILD ); ?>">&darr;</a>
+                <a href="#down" class="btn btn-sm border-0 d-none scroll-down" onclick="return icms.comments.down(this)" title="<?php echo html( LANG_COMMENT_SHOW_CHILD ); ?>">&darr;</a>
             </div>
         <?php } ?>
 

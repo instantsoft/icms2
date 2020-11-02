@@ -1,7 +1,7 @@
 <?php
     $this->addTplJSNameFromContext('fields/list_dynamic');
  ?>
-    <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
+<?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 <div id="list_wrap_<?php echo $field->id; ?>" class="dynamic_list_wrap pt-1">
 
     <div class="list_wrap"></div>
@@ -9,19 +9,19 @@
     <div class="add_list form-inline" style="display:none">
         <label class="my-1 mr-2"><?php echo $field->select_title; ?></label>
         <select class="custom-select mr-sm-2"></select>
-        <a class="ajaxlink add_value mr-sm-2" href="#"><?php echo LANG_APPLY; ?></a>
-        <a class="ajaxlink cancel mr-sm-2" href="#"><?php echo LANG_CANCEL; ?></a>
+        <a class="btn btn-success add_value mr-sm-2 d-flex" href="#" title="<?php echo LANG_APPLY; ?>"><?php echo html_svg_icon('solid', 'check-square'); ?></a>
+        <a class="btn btn-danger cancel mr-sm-2 d-flex" href="#" title="<?php echo LANG_CANCEL; ?>"><?php echo html_svg_icon('solid', 'minus-square'); ?></a>
     </div>
 
-    <a class="ajaxlink add_link" href="#">
-        <i class="icon-plus icons"></i> <?php echo isset($field->add_title) ? $field->add_title : LANG_ADD; ?>
+    <a class="btn btn-outline-primary add_link" href="#">
+        <?php echo html_svg_icon('solid', 'plus-circle'); ?> <?php echo isset($field->add_title) ? $field->add_title : LANG_ADD; ?>
     </a>
 
     <div class="list_template form-inline" style="display:none">
         <span class="title"><input type="hidden" name="" value=""></span>
         <span class="to"><select class="custom-select mx-2" name=""></select></span>
         <span class="value"><input style="display:none" class="input form-control mx-2" type="text" name="" value=""></span>
-        <span class="delete"><a class="ajaxlink unset_value" href="#"><?php echo LANG_CANCEL; ?></a></span>
+        <span class="delete"><a class="btn btn-outline-danger unset_value" title="<?php echo LANG_CANCEL; ?>" href="#"><?php echo html_svg_icon('solid', 'minus-circle'); ?></a></span>
     </div>
     <?php if (!$field->data['is_ns_value_items']) { ?>
         <select class="form-control value_items_list" style="display:none">

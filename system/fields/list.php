@@ -160,6 +160,12 @@ class fieldList extends cmsFormField {
             $value = cmsModel::yamlToArray($value);
         }
 
+        if(is_array($value) && $value){
+            foreach ($value as $k => $v) {
+                if(!is_array($v) && is_numeric($v)){ $value[$k] = (int)$v; }
+            }
+        }
+
         $this->data['items']       = $this->getListItems();
         $this->data['is_multiple'] = $this->getProperty('is_multiple');
         $this->data['multiple_select_deselect'] = $this->getProperty('multiple_select_deselect');
@@ -179,7 +185,6 @@ class fieldList extends cmsFormField {
         }
 
         return parent::getInput($value);
-
     }
 
     public function validate_array_key_dynamic($value){

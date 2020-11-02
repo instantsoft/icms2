@@ -45,6 +45,21 @@ class onBootstrap4AdminRowSchemeOptionsModern extends cmsAction {
                     ''                => LANG_CP_WIDGETS_ROW_CONT_NO
                 )
             )),
+            new fieldList('options:container_tag', array(
+                'title' => LANG_CP_WIDGETS_ROW_CONT_TAG,
+                'default' => 'div',
+                'items' => array(
+                    'article' => '<article>',
+                    'aside'   => '<aside>',
+                    'main'    => '<main>',
+                    'div'     => '<div>',
+                    'footer'  => '<footer>',
+                    'header'  => '<header>',
+                    'nav'     => '<nav>',
+                    'section' => '<section>'
+                ),
+                'visible_depend' => array('options:container' => array('hide' => array('')))
+            )),
             new fieldString('options:container_tag_class', array(
                 'title' => LANG_CP_WIDGETS_ROW_CONT_CSS,
                 'rules' => array(
@@ -58,6 +73,7 @@ class onBootstrap4AdminRowSchemeOptionsModern extends cmsAction {
                     ''        => LANG_NO,
                     'article' => '<article>',
                     'aside'   => '<aside>',
+                    'main'    => '<main>',
                     'div'     => '<div>',
                     'footer'  => '<footer>',
                     'header'  => '<header>',

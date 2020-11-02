@@ -2,6 +2,10 @@ toastr.options = {progressBar: true, preventDuplicates: true, timeOut: 3000, new
 var icms = icms || {};
 icms.admin = (function ($) {
 
+    var self = this;
+
+    this.last_time_delimiter = ':';
+
     this.onDocumentReady = function(){
 
         toolbarScroll.init();
@@ -88,6 +92,22 @@ icms.admin = (function ($) {
 
         }
 
+        this.startTime();
+
+    };
+
+    this.startTime = function (){
+        var checkTime = function (i) {
+          if (i < 10) { i = '0' + i; };
+          return i;
+        };
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        m = checkTime(m);
+        $('#clock').text(h + self.last_time_delimiter + m);
+        self.last_time_delimiter = self.last_time_delimiter === ':' ? ' ' : ':';
+        setTimeout(self.startTime, 600);
     };
 
     this.dbCardSpinner = function (el){

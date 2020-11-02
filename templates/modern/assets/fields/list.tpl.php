@@ -1,23 +1,32 @@
 <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 <?php
 
-    if($field->data['is_multiple']){
+    if($field->data['is_multiple']){ ?>
 
-        echo html_select_multiple($field->element_name, $field->data['items'], $value, $field->data['dom_attr'], $field->data['is_tree']); ?>
+        <div class="input_checkbox_list" id="<?php echo $field->id; ?>">
+            <?php foreach ($field->data['items'] as $v => $title){ ?>
+                <?php $checked = in_array($v, $value, true); $ch_id = $field->id.$v; $level = substr_count($title, '-')-1; $level = $level<0 ? 0 : $level; ?>
+                <div class="custom-control custom-checkbox mb-1">
+                    <input name="<?php echo $field->element_name; ?>[]" value="<?php html($v); ?>" type="checkbox" class="custom-control-input" id="<?php echo $ch_id; ?>"<?php if($checked) { ?>checked<?php } ?>>
+                    <label class="custom-control-label" for="<?php echo $ch_id; ?>">
+                        <span style="margin-left: <?php echo $level*0.75; ?>rem"><?php html(ltrim($title, '- ')); ?></span>
+                    </label>
+                </div>
+            <?php } ?>
+        </div>
 
         <?php if($field->data['multiple_select_deselect']){ ?>
-            <div class="select_deselect">
-                <a href="#" onclick="$('#<?php echo $field->element_name; ?> input:checkbox').prop('checked', true); return false;">
+            <div class="select_deselect mt-2">
+                <a href="#" onclick="$('#<?php echo $field->id; ?> input:checkbox').prop('checked', true); return false;">
                     <?php echo LANG_SELECT_ALL; ?>
                 </a>
-                <a class="text-muted" href="#" onclick="$('#<?php echo $field->element_name; ?> input:checkbox').prop('checked', false); return false;">
+                <a class="text-muted" href="#" onclick="$('#<?php echo $field->id; ?> input:checkbox').prop('checked', false); return false;">
                     <?php echo LANG_DESELECT_ALL; ?>
                 </a>
             </div>
         <?php } ?>
 
-    <?php
-    } elseif($field->data['is_chosen_multiple'] && !$field->native_tag) {
+    <?php } elseif($field->data['is_chosen_multiple'] && !$field->native_tag) {
 
         $this->addTplJSNameFromContext('jquery-chosen');
         $this->addTplCSSNameFromContext('jquery-chosen');

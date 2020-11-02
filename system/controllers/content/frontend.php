@@ -1150,6 +1150,8 @@ class content extends cmsFrontend {
         }
 
         $item_props = $this->model->getContentProps($ctype['name'], $item_cats);
+        if(!$item_props){ return $form; }
+
         $item_props_fields = $this->getPropsFields($item_props);
 
         $props = [];

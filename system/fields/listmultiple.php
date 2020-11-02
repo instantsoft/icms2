@@ -14,13 +14,19 @@ class fieldListMultiple extends cmsFormField {
             new fieldCheckbox('show_all', array(
                 'title'   => LANG_PARSER_LIST_MULTIPLE_SHOW_ALL,
                 'default' => 1
-            )),
+            ))
         );
     }
 
     public function getInput($value) {
 
-        $this->data['items'] = ( $this->getProperty('show_all') ? array(0 => LANG_ALL) : array() ) + $this->getListItems();
+        $this->data['items'] = ($this->getProperty('show_all') ? array(0 => LANG_ALL) : []) + $this->getListItems();
+
+        if(is_array($value) && $value){
+            foreach ($value as $k => $v) {
+                if(!is_array($v) && is_numeric($v)){ $value[$k] = (int)$v; }
+            }
+        }
 
         return parent::getInput($value ? $value : array(0));
     }

@@ -39,6 +39,21 @@ class formAdminWidgetsCols extends cmsForm {
                         ),
                         'visible_depend' => array('type' => array('hide' => array('typical')))
                     )),
+                    new fieldList('tag', array(
+                        'title' => LANG_CP_WIDGETS_COL_TAG,
+                        'default' => 'div',
+                        'items' => array(
+                            'div'     => '<div>',
+                            'article' => '<article>',
+                            'aside'   => '<aside>',
+                            'main'    => '<main>',
+                            'footer'  => '<footer>',
+                            'header'  => '<header>',
+                            'nav'     => '<nav>',
+                            'section' => '<section>'
+                        ),
+                        'visible_depend' => array('type' => array('hide' => array('custom')))
+                    )),
                     new fieldString('class', array(
                         'title' => LANG_CP_WIDGETS_COL_CLASS,
                         'rules' => array(

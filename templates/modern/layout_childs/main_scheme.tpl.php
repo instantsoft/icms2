@@ -6,7 +6,7 @@
         <<?php echo $row['options']['parrent_tag']; ?><?php if ($row['options']['parrent_tag_class']) { ?> class="<?php echo $row['options']['parrent_tag_class']; ?>"<?php } ?>>
     <?php } ?>
     <?php if (!empty($row['options']['container'])) { ?>
-        <div class="<?php echo $row['options']['container']; ?> <?php echo $row['options']['container_tag_class']; ?>">
+        <<?php echo $row['options']['container_tag']; ?> class="<?php echo $row['options']['container']; ?> <?php echo $row['options']['container_tag_class']; ?>">
     <?php } ?>
     <?php
         // Собираем класс ряда
@@ -81,7 +81,7 @@
             }
         ?>
         <?php if($this->hasWidgetsOn($col['name'])){ ?>
-            <div class="<?php echo implode(' ', $col_class); ?>">
+            <<?php echo $col['tag']; ?> class="<?php echo implode(' ', $col_class); ?>">
                 <?php if(!empty($col['rows']['before'])){ ?>
                     <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['before']]); ?>
                 <?php } ?>
@@ -89,14 +89,14 @@
                 <?php if(!empty($col['rows']['after'])){ ?>
                     <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['after']]); ?>
                 <?php } ?>
-            </div>
+            </<?php echo $col['tag']; ?>>
         <?php } ?>
     <?php } ?>
     <?php if ($row['tag'] && $row_class) { ?>
         </<?php echo $row['tag']; ?>>
     <?php } ?>
     <?php if (!empty($row['options']['container'])) { ?>
-        </div>
+        </<?php echo $row['options']['container_tag']; ?>>
     <?php } ?>
     <?php if (!empty($row['options']['parrent_tag'])) { ?>
         </<?php echo $row['options']['parrent_tag']; ?>>

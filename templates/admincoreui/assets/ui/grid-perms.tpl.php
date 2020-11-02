@@ -15,8 +15,16 @@
                 </tr>
             </thead>
             <tbody>
+                <tr class="filter table-align-middle">
+                    <td class="p-2">
+                        <?php echo html_input('search', 'filter_perm_rule', '', ['id'=>'filter_perm_rule', 'class' => 'form-control-sm']); ?>
+                    </td>
+                    <?php foreach($groups as $group){ ?>
+                        <td class="p-2"></td>
+                    <?php } ?>
+                </tr>
                 <?php foreach($rules as $rule){ ?>
-                    <tr>
+                    <tr class="icms-perms-rule__list">
                         <td class="align-middle">
                             <?php echo $rule['title']; ?>
                             <?php if(!empty($rule['title_hint'])){ ?>
@@ -69,6 +77,13 @@
     <?php echo $this->getLangJS('LANG_SUBMIT_NOT_SAVE'); ?>
     $(function (){
         icms.forms.initUnsaveNotice();
+        $('#filter_perm_rule').on('input', function () {
+            var rex = new RegExp($(this).val(), 'i');
+            $('.icms-perms-rule__list').hide();
+            $('.icms-perms-rule__list').filter(function () {
+                return rex.test($(this).text());
+            }).show();
+        });
     });
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

@@ -62,5 +62,7 @@
         </div>
 
 <?php } ?>
-
+<div class="alert alert-warning" role="alert">
+    <?php echo LANG_EVENTS_MANAGEMENT_HINT; ?>
+</div>
 <?php $this->renderGrid($this->href_to('controllers', array('events_ajax')), $grid);

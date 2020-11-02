@@ -74,7 +74,7 @@
                         <?php echo html_input('text', '', '', array('placeholder'=>LANG_PHOTOS_PHOTO_TITLE)); ?>
                     </div>
                     <div class="form-group photo_content">
-                        <textarea id="" class="textarea" name=""></textarea>
+                        <textarea id="" class="textarea form-control" name=""></textarea>
                     </div>
                     <div class="form-group photo_privacy">
                         <?php echo html_select('', array(LANG_PRIVACY_PUBLIC, LANG_PRIVACY_PRIVATE, LANG_PHOTOS_ACCESS_BY_LINK), (isset($album['is_private']) ? $album['is_private'] : 0)); ?>

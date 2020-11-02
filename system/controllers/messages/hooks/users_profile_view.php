@@ -10,7 +10,7 @@ class onMessagesUsersProfileView extends cmsAction {
 
             $this->cms_template->addToolButton(array(
                 'title' => LANG_PM_SEND_TO_USER,
-                'class' => 'messages ajax-modal',
+                'class' => 'messages ajax-modal', 'icon' => 'envelope-open-text',
                 'href'  => href_to($this->name, 'write', $profile['id'])
             ));
 

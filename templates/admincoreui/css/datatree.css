@@ -44,7 +44,7 @@ span.dynatree-radio,
 span.dynatree-drag-helper-img,
 #dynatree-drop-marker{
     width: 16px;
-    height: 16px;
+    height: 15px;
     display: inline-block; /* Required to make a span sizeable */
     vertical-align: top;
     background-repeat: no-repeat;
@@ -127,13 +127,13 @@ span.dynatree-radio:hover{
 }
 span.dynatree-icon{
     margin-left: 3px;
-    background-position: 0px 0px;
+    background-position: 0px -2px;
 }
 .dynatree-ico-cf span.dynatree-icon{
-    background-position: 0px -14px;
+    background-position: 0px -17px;
 }
 .dynatree-ico-ef span.dynatree-icon {
-    background-position: -64px -14px;
+    background-position: -65px -17px;
 }
 .dynatree-statusnode-wait span.dynatree-icon{
     background-image: url("../images/datatree/loading.svg");
@@ -142,8 +142,8 @@ span.dynatree-icon{
     background-position: 0px -112px;
 }
 span.dynatree-node{
-    display: inline-block;
-    vertical-align: top;
+    display: flex;
+    align-items: center;
 }
 ul.dynatree-container a{
     color: #23282c;
@@ -175,6 +175,7 @@ span.dynatree-folder a{
 ul.dynatree-container a:focus,
 span.dynatree-focused a:link {
     background-color: #c8ced3;
+    outline-color: #136684;
 }
 span.dynatree-selected a{
     color: 	#4dbd74;

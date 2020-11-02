@@ -2,7 +2,7 @@
 
     define('LANG_MESSAGES_CONTROLLER',      'Личные сообщения');
     define('LANG_PM_MY_MESSAGES',           'Мои сообщения');
-    define('LANG_PM_NO_MESSAGES',           'У вас нет личных сообщений');
+    define('LANG_PM_NO_MESSAGES',           'У вас нет личных сообщений. Чтобы написать сообщение, зайдите в профиль нужного пользователя и выберите в меню "Написать сообщение".');
     define('LANG_PM_NO_NOTICES',            'Нет уведомлений');
     define('LANG_PM_NO_ACCESS',             'Личные сообщения не доступны для вашей группы');
     define('LANG_PM_SHOW_OLDER_MESSAGES',   'Показать предыдущие сообщения &uarr;');

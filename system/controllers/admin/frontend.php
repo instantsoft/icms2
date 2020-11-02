@@ -205,7 +205,7 @@ class admin extends cmsFrontend {
         $menu[] = [
             'title' => LANG_CP_SECTION_CONTENT,
             'url' => href_to($this->name, 'content'),
-            'counter' => ($ctypes && $show_submenu) ? $ctype_new_count : null,
+            'counter' => ($ctypes && $show_submenu && $ctype_new_count) ? '+'.$ctype_new_count : null,
             'options' => array(
                 'class' => 'item-content',
                 'icon'  => 'nav-icon icon-docs'

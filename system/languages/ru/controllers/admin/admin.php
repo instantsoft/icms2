@@ -397,8 +397,10 @@
     define('LANG_CP_WIDGETS_ROW_NESTED_POSITION1', 'В начале');
     define('LANG_CP_WIDGETS_ROW_NESTED_POSITION2', 'В конце');
     define('LANG_CP_WIDGETS_ROW_CONT',          'Контейнер ряда');
+    define('LANG_CP_WIDGETS_ROW_CONT_TAG',      'Тег контейнера ряда');
     define('LANG_CP_WIDGETS_ROW_CONT_CSS',      'CSS класс контейнера ряда');
     define('LANG_CP_WIDGETS_ROW_TAG',           'Тег ряда');
+    define('LANG_CP_WIDGETS_COL_TAG',           'Тег колонки');
     define('LANG_CP_WIDGETS_ROW_PARRENT_TAG',   'Родительский тег ряда');
     define('LANG_CP_WIDGETS_ROW_PARRENT_TAG_C', 'CSS класс родительского тег ряда');
     define('LANG_CP_WIDGETS_ROW_CONT_NO',       'Без контейнера');
@@ -446,6 +448,7 @@
     define('LANG_CP_WIDGETS_FA_ADD',            'Добавить');
     define('LANG_CP_WIDGETS_DSCH_ERROR',        'Текущий шаблон админпанели не поддерживает динамические схемы виджетов. <a target="_blank" href="https://docs.instantcms.ru/manual/widgets">Подробнее...</a>');
     define('LANG_CP_WIDGETS_STYLE',             'Стиль');
+    define('LANG_CP_NOT_SET_ALL',               'Если ничего не выбрано, показывается для всех');
 
     define('LANG_CP_USER_PMAILING',             'Создать рассылку');
     define('LANG_CP_USER_ADD',                  'Создать пользователя');
@@ -600,7 +603,7 @@
 
     define('LANG_CP_ADDONS_DATA_ERROR',         'Ошибка получения данных, попробуйте повторить позже.');
     define('LANG_CP_ADDONS_CURL_ERROR',         'Просмотр каталога невозможен, поскольку на сервере отсутствует CURL. Вы можете выбрать дополнения из <a target="_blank" href="https://addons.instantcms.ru/">официального каталога</a>.');
-    define('LANG_CP_INSTALL_PACKAGE_LINK_HINT', 'Например, скопировав ссылку на скачивание с <a target="_blank" href="https://addons.instantcms.ru/">официального каталога дополнений</a>');
+    define('LANG_CP_INSTALL_PACKAGE_LINK_HINT', 'Например, скопировав ссылку на скачивание из <a target="_blank" href="https://addons.instantcms.ru/">официального каталога дополнений</a>');
     define('LANG_CP_INSTALL_BY_LINK',           'Установите с URL-адреса');
     define('LANG_CP_OFICIAL_ADDONS',            'Каталог дополнений');
     define('LANG_CP_INSTALL_PACKAGE',           'Установить пакет дополнения');
@@ -776,6 +779,7 @@
     define('LANG_HELP_URL_WIDGETS_PAGES',           'https://docs.instantcms.ru/manual/widgets/pages');
     define('LANG_HELP_URL_COMPONENTS',              'https://docs.instantcms.ru/manual/components');
     define('LANG_HELP_URL_INSTALL',                 'https://docs.instantcms.ru/manual/addons');
+    define('LANG_HELP_URL_COM_FORMS',               'https://docs.instantcms.ru/manual/components/forms');
     define('LANG_HELP_URL_COM_REDIRECT',            'https://docs.instantcms.ru/manual/components/redirect');
     define('LANG_HELP_URL_COM_AUTH',                'https://docs.instantcms.ru/manual/components/auth');
     define('LANG_HELP_URL_COM_MODERATION',          'https://docs.instantcms.ru/manual/components/moderation');
@@ -824,6 +828,7 @@
     define('LANG_MAILCHECK_SUBJECT', 'Тема');
     define('LANG_MAILCHECK_BODY', 'Сообщение');
     define('LANG_EVENTS_MANAGEMENT', 'Управление событиями');
+    define('LANG_EVENTS_MANAGEMENT_HINT', 'Внимание! Это раздел для опытных пользователей. Используйте, только если точно знаете, что делаете.');
     define('LANG_EVENTS_REFRESH',    'Обновить события в базе данных');
     define('LANG_EVENTS_DELETED',    'Эти события уже недоступны');
     define('LANG_EVENTS_LISTENER',   'Компонент');

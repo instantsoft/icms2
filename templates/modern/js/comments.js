@@ -529,16 +529,18 @@ icms.comments = (function ($) {
 
     this.up = function(to_id, from_id){
         var c = $('#comment_'+to_id);
-        $('#comments_widget .scroll-down').hide();
-        $('.scroll-down', c).show().data('child-id', from_id);
+        $('#comments_widget .scroll-down').addClass('d-none');
+        $('.scroll-down', c).addClass('d-inline-block').removeClass('d-none').data('child-id', from_id);
         this.show(to_id);
         return false;
     };
 
     this.down = function (link){
         var to_id = $(link).data('child-id');
-        $(link).hide();
-        this.show(to_id);
+        $(link).addClass('d-none');
+        if(to_id){
+            this.show(to_id);
+        }
         return false;
     };
 

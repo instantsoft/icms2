@@ -81,7 +81,7 @@ class actionUsersProfileEdit extends cmsAction {
                     'min_length'=> 2,
                     'max_length'=> 100
                 ),
-                'rules' => array(['unique_exclude', '{users}', 'slug', $profile['id']])
+                'rules' => array(['slug_segment'], ['unique_exclude', '{users}', 'slug', $profile['id']])
             )));
         }
 

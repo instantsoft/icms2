@@ -10,9 +10,9 @@
 <?php
     $latest_version = reset($item['versions']);
 ?>
-    <div class="col-xl-6 mb-4 addon-card-<?php echo $item['slug']; ?>">
+    <div class="col-xl-6 col-xxl-4 mb-4 addon-card-<?php echo $item['slug']; ?>">
         <div class="card h-100 mb-0">
-            <div class="card-header py-2 row align-items-center mx-0">
+            <div class="card-header py-2 px-3 row align-items-center mx-0">
                 <div class="col-sm-8 p-0">
                     <?php echo $item['type']; ?> <?php echo LANG_FROM; ?>
                     <a target="_blank" href="<?php echo $item['user']['page_url']; ?>">
@@ -37,24 +37,26 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body">
-                <img class="float-left mr-3" src="<?php echo $item['photo']['cover80']; ?>">
-                <h5 class="card-title">
-                    <a target="_blank" href="<?php echo $item['page_url']; ?>" class="open-package-details">
-                        <?php echo $item['title']; ?>
-                    </a>
-                </h5>
-                <p class="card-text clearfix">
-                    <a href="#content_<?php echo $item['slug']; ?>" class="ajax-modal full_content_link text-muted" title="<?php html($item['title']); ?>">
-                        <?php echo string_short($item['content'], 140, ' ...', 'w'); ?>
-                    </a>
-                </p>
-                <div class="d-none">
-                    <div class="full_content" id="content_<?php echo $item['slug']; ?>">
-                        <?php echo $item['content']; ?>
+            <div class="card-body p-3 d-flex flex-column h-100">
+                <div>
+                    <img class="float-left mr-3" src="<?php echo $item['photo']['cover80']; ?>">
+                    <h5 class="card-title">
+                        <a target="_blank" href="<?php echo $item['page_url']; ?>" class="open-package-details">
+                            <?php echo $item['title']; ?>
+                        </a>
+                    </h5>
+                    <p class="card-text clearfix">
+                        <a href="#content_<?php echo $item['slug']; ?>" class="ajax-modal full_content_link text-muted" title="<?php html($item['title']); ?>">
+                            <?php echo string_short($item['content'], 140, ' ...', 'w'); ?>
+                        </a>
+                    </p>
+                    <div class="d-none">
+                        <div class="full_content" id="content_<?php echo $item['slug']; ?>">
+                            <?php echo $item['content']; ?>
+                        </div>
                     </div>
                 </div>
-                <p class="card-text card-summary text-muted small">
+                <p class="card-text card-summary text-muted small mt-auto">
                     <span>
                         <?php if($item['price']){ ?>
                             <?php echo html_spellcount($item['followers_count'], LANG_SUBSCRIBERS_SPELL); ?>

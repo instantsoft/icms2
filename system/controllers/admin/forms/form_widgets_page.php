@@ -101,10 +101,11 @@ class formAdminWidgetsPage extends cmsForm {
                         'show_all' => false,
                         'show_guests' => true
                     )),
-                    new fieldListMultiple('countries:view', array(
-                        'title'     => LANG_SHOW_TO_COUNTRIES,
-                        'default'   => 0,
-                        'show_all'  => true,
+                    new fieldList('countries:view', array(
+                        'title' => LANG_SHOW_TO_COUNTRIES,
+                        'hint'  => LANG_CP_NOT_SET_ALL,
+                        'is_chosen_multiple' => true,
+                        'default'   => [],
                         'generator' => function ($page){
                             $model = new cmsModel();
                             return array_collection_to_list(
@@ -115,9 +116,10 @@ class formAdminWidgetsPage extends cmsForm {
                             );
                         }
                     )),
-                    new fieldListMultiple('countries:hide', array(
+                    new fieldList('countries:hide', array(
                         'title'     => LANG_HIDE_TO_COUNTRIES,
-                        'default'   => 0,
+                        'default'   => [],
+                        'is_chosen_multiple' => true,
                         'generator' => function ($page){
                             $model = new cmsModel();
                             return array_collection_to_list(

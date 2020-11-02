@@ -392,6 +392,7 @@
     define('ERR_VALIDATE_ALPHANUMERIC',      'Only letters and numbers');
     define('ERR_VALIDATE_SYSNAME',           'Only letters (lowercase), numbers and break characters');
     define('ERR_VALIDATE_SLUG',              'Only letters (lowercase), numbers, hyphen and vertical bar');
+    define('ERR_VALIDATE_SLUGS',             'At least one latin letter, lowercase, numbers and a hyphen');
     define('ERR_VALIDATE_DIGITS',            'Only numbers');
     define('ERR_VALIDATE_NUMBER',            'Enter a number');
     define('ERR_VALIDATE_UNIQUE',            'This value is already used');

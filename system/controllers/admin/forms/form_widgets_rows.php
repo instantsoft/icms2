@@ -42,6 +42,7 @@ class formAdminWidgetsRows extends cmsForm {
                             ''        => LANG_NO,
                             'article' => '<article>',
                             'aside'   => '<aside>',
+                            'main'    => '<main>',
                             'div'     => '<div>',
                             'footer'  => '<footer>',
                             'header'  => '<header>',

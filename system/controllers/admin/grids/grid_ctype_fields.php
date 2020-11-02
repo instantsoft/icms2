@@ -22,6 +22,11 @@ function grid_ctype_fields($controller, $ctype_name){
             'title' => LANG_CP_FIELD_TITLE,
             'href' => href_to($controller->name, 'ctypes', array('fields_edit', '{ctype_id}', '{id}')),
         ),
+        'handler_title' => array(
+            'title' => LANG_CP_FIELD_TYPE,
+            'class' => 'd-none d-lg-table-cell',
+            'width' => 150,
+        ),
         'fieldset' => array(
             'title' => LANG_CP_FIELD_FIELDSET,
             'class' => 'd-none d-lg-table-cell',
@@ -59,12 +64,7 @@ function grid_ctype_fields($controller, $ctype_name){
             'title' => LANG_SYSTEM_NAME,
             'class' => 'd-none d-lg-table-cell',
             'width' => 120,
-        ),
-        'handler_title' => array(
-            'title' => LANG_CP_FIELD_TYPE,
-            'class' => 'd-none d-lg-table-cell',
-            'width' => 150,
-        ),
+        )
     );
 
     $actions = array(

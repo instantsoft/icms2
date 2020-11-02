@@ -51,7 +51,7 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
 
         $fields_list = $this->buildDatasetFieldsList($controller_name, $fields);
 
-        $form = $this->getForm('ctypes_dataset', array('edit', $ctype, $cats_list, $fields_list));
+        $form = $this->getForm('ctypes_dataset', array('edit', $ctype, $cats_list, $fields_list, $dataset));
 
         if ($this->request->has('submit')){
 

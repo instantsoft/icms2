@@ -1337,6 +1337,12 @@ class cmsController {
         return true;
     }
 
+    public function validate_slug_segment($value){
+        if (empty($value)) { return true; }
+        if (!is_string($value) || !preg_match("/^([a-z0-9\-]*[a-z]+[a-z0-9\-]*)$/", $value)){ return ERR_VALIDATE_SLUGS; }
+        return true;
+    }
+
     public function validate_slug($value){
         if (empty($value)) { return true; }
         if (!is_string($value) || !preg_match("/^([a-z0-9\-\/]*)$/", $value)){ return ERR_VALIDATE_SLUG; }
@@ -1402,7 +1408,7 @@ class cmsController {
         return true;
     }
 
-    public function validate_unique_ctype_dataset($ctype_id, $value){
+    public function validate_unique_ctype_dataset($ctype_id, $exclude_row_id = null, $value = null){
         if (empty($value)) { return true; }
         if (!in_array(gettype($value), array('integer','string'))) { return ERR_VALIDATE_INVALID; }
         $value = $this->cms_core->db->escape($value);
@@ -1411,6 +1417,7 @@ class cmsController {
         } else {
             $where = "target_controller='{$ctype_id}' AND name='{$value}'";
         }
+        if ($exclude_row_id) { $where .= " AND (id <> '{$exclude_row_id}')"; }
         $result = !$this->cms_core->db->getRow('content_datasets', $where);
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
         return true;

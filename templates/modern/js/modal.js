@@ -85,10 +85,11 @@ icms.modal = (function ($) {
 
                     if(url.charAt(0) === '#'){
                         $(modal_el).modal('show');
+                        var parent = $(url).parent();
                         var content = $(url).detach();
                         self.showContent(title, $(content).html(), style);
                         $(modal_el).on('hidden.bs.modal', function (e) {
-                            content.appendTo('body');
+                            content.appendTo(parent);
                         });
                     } else {
                         self.openAjax(url, params, false, title);

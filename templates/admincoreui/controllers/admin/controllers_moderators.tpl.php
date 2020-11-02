@@ -51,7 +51,7 @@
         <div class="hint text-muted"><?php echo LANG_MODERATOR_ADD_HINT; ?></div>
         <div class="field form-inline mt-3">
             <?php echo html_input('text', 'user_email', '', array('id'=>'user_email', 'autocomplete'=>'off', 'class' => 'mr-4')); ?>
-            <?php echo html_submit(LANG_ADD, 'add', array('id'=>'submit', 'onclick' => 'return icms.adminModerators.add()')); ?>
+            <?php echo html_button(LANG_ADD, 'add', 'return icms.adminModerators.add()', ['id'=>'submit', 'class' => 'button-submit btn-primary']); ?>
             <div class="loading-icon ml-4" style="display:none">
                 <div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>
             </div>

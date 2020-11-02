@@ -2,7 +2,7 @@
 
 class formAdminCtypesDataset extends cmsForm {
 
-    public function init($do, $ctype, $cats_list, $fields_list) {
+    public function init($do, $ctype, $cats_list, $fields_list, $dataset = []) {
 
         $ctype_id = (!empty($ctype['id']) ? $ctype['id'] : $ctype['name']);
 
@@ -16,7 +16,18 @@ class formAdminCtypesDataset extends cmsForm {
             }
         }
 
+        $name_rules = array(['required'], ['sysname']);
+        if($do == 'add'){
+            $name_rules[] = ['unique_ctype_dataset', $ctype_id, false];
+        } else {
+            $name_rules[] = ['unique_ctype_dataset', $ctype_id, $dataset['id']];
+        }
+
+        // Значит не тип контента
         if(!is_numeric($ctype_id)){
+
+            $name_rules[] = ['unique', $ctype_id, 'slug'];
+
             $meta_item_fields = [];
         } else {
 
@@ -32,7 +43,6 @@ class formAdminCtypesDataset extends cmsForm {
                 'ctype_label10'     => LANG_CP_NUMERALS_10_LABEL,
                 'filter_string'     => LANG_FILTERS
             ];
-
         }
 
         $form = array(
@@ -41,11 +51,7 @@ class formAdminCtypesDataset extends cmsForm {
                 'childs' => array(
                     new fieldString('name', array(
                         'title' => LANG_SYSTEM_NAME,
-                        'rules' => array(
-                            array('required'),
-                            array('sysname'),
-                            $do == 'add' ? array('unique_ctype_dataset', $ctype_id) : false
-                        )
+                        'rules' => $name_rules
                     )),
                     new fieldString('title', array(
                         'title' => LANG_CP_DATASET_TITLE,

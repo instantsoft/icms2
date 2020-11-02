@@ -43,6 +43,10 @@ class groups extends cmsFrontend {
 
         } else {
 
+            if($action_name === 'index' && $this->current_params){
+                return $this->redirect(href_to('groups', $this->current_params[0]), 301);
+            }
+
             if ($this->isActionExists($action_name)){
                 return $action_name;
             }
@@ -351,10 +355,12 @@ class groups extends cmsFrontend {
         }
 
         // ручной ввод SLUG, добавляем поле для этого
-        $slug_field_rules = array( array('slug') );
+        $slug_field_rules = array( array('slug_segment') );
 
         if (!$group_id){ $slug_field_rules[] = array('unique', 'groups', 'slug'); }
         if ($group_id){ $slug_field_rules[] = array('unique_exclude', 'groups', 'slug', $group_id); }
+        // Чтобы не накладывались наборы
+        $slug_field_rules[] = array('unique_ctype_dataset', 'groups', false);
 
         $form->addField($fieldset_id, new fieldString('slug', array(
             'title'  => LANG_SLUG,

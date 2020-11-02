@@ -372,8 +372,10 @@
     define('LANG_CP_WIDGETS_ADD_ROW_P',         'Add nested row');
     define('LANG_CP_WIDGETS_ROW_NO_GUTTERS',    'No gutters');
     define('LANG_CP_WIDGETS_ROW_CONT',          'Row container');
+    define('LANG_CP_WIDGETS_ROW_CONT_TAG',      'Row container tag');
     define('LANG_CP_WIDGETS_ROW_CONT_CSS',      'Row container CSS class');
     define('LANG_CP_WIDGETS_ROW_TAG',           'Row Tag');
+    define('LANG_CP_WIDGETS_COL_TAG',           'Column Tag');
     define('LANG_CP_WIDGETS_ROW_PARRENT_TAG',   'Parent row Tag');
     define('LANG_CP_WIDGETS_ROW_PARRENT_TAG_C', 'Parent row Tag CSS class');
     define('LANG_CP_WIDGETS_ROW_CONT_NO',       'Without container');
@@ -421,6 +423,7 @@
     define('LANG_CP_WIDGETS_FA_ADD',            'Add');
     define('LANG_CP_WIDGETS_DSCH_ERROR',        'The current admin panel template does not support dynamic widget scheme. <a target="_blank" href="https://docs.instantcms.ru/en/manual/widgets">More details...</a>');
     define('LANG_CP_WIDGETS_STYLE',             'Style');
+    define('LANG_CP_NOT_SET_ALL',               'If nothing is selected, shown to everyone');
     define('LANG_CP_USER_PMAILING',             'Create pm messages');
     define('LANG_CP_USER_ADD',                  'Add user');
     define('LANG_CP_USER_CREATED',              'User &laquo;%s&raquo; is created');
@@ -732,6 +735,7 @@
     define('LANG_HELP_URL_WIDGETS_PAGES',           'https://docs.instantcms.ru/en/manual/widgets/pages');
     define('LANG_HELP_URL_COMPONENTS',              'https://docs.instantcms.ru/en/manual/components');
     define('LANG_HELP_URL_INSTALL',                 'https://docs.instantcms.ru/en/manual/addons');
+    define('LANG_HELP_URL_COM_FORMS',               'https://docs.instantcms.ru/en/manual/components/forms');
     define('LANG_HELP_URL_COM_REDIRECT',            'https://docs.instantcms.ru/en/manual/components/redirect');
     define('LANG_HELP_URL_COM_AUTH',                'https://docs.instantcms.ru/en/manual/components/auth');
     define('LANG_HELP_URL_COM_ACTIVITY',            'https://docs.instantcms.ru/en/manual/components/activity');
@@ -780,6 +784,7 @@
     define('LANG_MAILCHECK_SUBJECT', 'Message subject');
     define('LANG_MAILCHECK_BODY', 'Message contents');
     define('LANG_EVENTS_MANAGEMENT', 'Events management');
+    define('LANG_EVENTS_MANAGEMENT_HINT', 'Attention! This section is for advanced users. Use only if you know exactly what you are doing.');
     define('LANG_EVENTS_REFRESH',    'Update events in the database');
     define('LANG_EVENTS_DELETED',    'These events are no longer available');
     define('LANG_EVENTS_LISTENER',   'Component');

@@ -69,6 +69,9 @@
                     </span>
                 </li>
             <?php } ?>
+            <li class="nav-item px-3 text-light" title="<?php echo LANG_TODAY; ?>" data-toggle="tooltip" data-placement="bottom">
+                <i class="fa fa-calendar"></i> <span><?php echo lang_date(date('d F')); ?></span> <span id="clock"></span>
+            </li>
         </ul>
         <ul class="nav navbar-nav ml-auto">
             <?php if ($config->is_user_change_lang && count($langs) > 1){ ?>
@@ -136,9 +139,9 @@
             <nav class="sidebar-nav">
                 <?php $this->menu('cp_main', true, '', 0, true); ?>
                 <div class="nav-title">
-                    <?php echo LANG_CP_SU; ?>
-                    <a class="ml-2 ajax-modal" href="<?php echo href_to('admin', 'settings', ['sys_info']); ?>" title="<?php echo LANG_CP_DASHBOARD_SYSINFO; ?>">
-                        <i class="icon-info icons"></i>
+                    <a class="ajax-modal text-white" href="<?php echo href_to('admin', 'settings', ['sys_info']); ?>" title="<?php echo LANG_CP_DASHBOARD_SYSINFO; ?>">
+                        <?php echo LANG_CP_SU; ?>
+                        <i class="ml-2 icon-info icons"></i>
                     </a>
                 </div>
                 <?php foreach ($su as $sukey => $su_item) { ?>
