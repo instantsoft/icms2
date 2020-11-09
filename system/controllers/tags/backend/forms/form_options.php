@@ -64,7 +64,36 @@ class formTagsOptions extends cmsForm {
                     ))
 
                 )
-            )
+            ),
+			
+			'seo-tags' => array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_SEOMETA_DEFAULT,
+                'childs' => array(
+					new fieldString('common_title', array(
+                        'title'   => LANG_CP_SEOMETA_ITEM_TITLE,
+                        'hint'    => LANG_TAGS_SEO_HINT,
+                        'options' => array(
+                            'max_length' => 300
+                        )
+                    )),
+                    new fieldString('common_desc', array(
+                        'title'   => LANG_CP_SEOMETA_ITEM_DESC,
+                        'hint'    => LANG_TAGS_SEO_HINT,
+                        'options' => array(
+                            'max_length' => 300
+                        )
+                    )),
+                    new fieldString('common_h1', array(
+                        'title'   => LANG_CP_SEOMETA_ITEM_H1,
+                        'hint'    => LANG_TAGS_SEO_HINT,
+                        'options' => array(
+                            'max_length' => 300
+                        )
+                    ))                   
+                    
+                )
+            )	
 
         );
 
