@@ -83,24 +83,22 @@ class actionTagsIndex extends cmsAction {
             'ctype_title' => $menu_items[$target_controller][$target]['title']
         );
 
-        if($tag['tag_title']){
-            $seo_title = string_replace_keys_values_extended($tag['tag_title'], $seo_data);
-        }else{
-			$seo_title = string_replace_keys_values_extended($this->options['common_title'], $seo_data);
-		}
+        $title = $tag['tag_title'] ? $tag['tag_title'] : $this->options['common_title'];		
+        $desc  = $tag['tag_desc']  ? $tag['tag_desc']  : $this->options['common_desc'];		
+        $h1    = $tag['tag_h1']    ? $tag['tag_h1']    : $this->options['common_h1'];		
 
-        if($tag['tag_desc']){
-            $seo_desc = string_replace_keys_values_extended($tag['tag_desc'], $seo_data);
-        }else{
-			$seo_desc = string_replace_keys_values_extended($this->options['common_desc'], $seo_data);
-		}
+        if($title){
+            $seo_title = string_replace_keys_values_extended($title, $seo_data);
+        }
 
-        if($tag['tag_h1']){
-            $seo_h1 = string_replace_keys_values_extended($tag['tag_h1'], $seo_data);
-        }else{
-			$seo_h1 = string_replace_keys_values_extended($this->options['common_h1'], $seo_data);
-		}
+        if($desc){
+            $seo_desc = string_replace_keys_values_extended($desc, $seo_data);
+        }
 
+        if($h1){
+            $seo_h1 = string_replace_keys_values_extended($h1, $seo_data);
+        }
+	    
         if ($this->cms_user->is_admin){
             $this->cms_template->addToolButton(array(
                 'class' => 'page_gear',
