@@ -84,16 +84,22 @@ class actionTagsIndex extends cmsAction {
         );
 
         if($tag['tag_title']){
-            $seo_title = string_replace_keys_values($tag['tag_title'], $seo_data);
-        }
+            $seo_title = string_replace_keys_values_extended($tag['tag_title'], $seo_data);
+        }else{
+			$seo_title = string_replace_keys_values_extended($this->options['common_title'], $seo_data);
+		}
 
         if($tag['tag_desc']){
-            $seo_desc = string_replace_keys_values($tag['tag_desc'], $seo_data);
-        }
+            $seo_desc = string_replace_keys_values_extended($tag['tag_desc'], $seo_data);
+        }else{
+			$seo_desc = string_replace_keys_values_extended($this->options['common_desc'], $seo_data);
+		}
 
         if($tag['tag_h1']){
-            $seo_h1 = string_replace_keys_values($tag['tag_h1'], $seo_data);
-        }
+            $seo_h1 = string_replace_keys_values_extended($tag['tag_h1'], $seo_data);
+        }else{
+			$seo_h1 = string_replace_keys_values_extended($this->options['common_h1'], $seo_data);
+		}
 
         if ($this->cms_user->is_admin){
             $this->cms_template->addToolButton(array(
