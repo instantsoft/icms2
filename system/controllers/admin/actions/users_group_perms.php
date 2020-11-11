@@ -17,11 +17,15 @@ class actionAdminUsersGroupPerms extends cmsAction {
 
         foreach ($controllers as $controller_name) {
 
+            if (!cmsCore::isControllerExists($controller_name)) {
+                continue;
+            }
+
             $controller = cmsCore::getController($controller_name);
 
             $subjects = $controller->getPermissionsSubjects();
-            $rules = cmsPermissions::getRulesList($controller_name);
-            $values = array();
+            $rules    = cmsPermissions::getRulesList($controller_name);
+            $values   = array();
 
             foreach ($subjects as $subject) {
                 $values[$subject['name']] = cmsPermissions::getPermissions($subject['name']);
@@ -29,10 +33,9 @@ class actionAdminUsersGroupPerms extends cmsAction {
 
             $owners[$controller_name] = array(
                 'subjects' => $subjects,
-                'rules' => $rules,
-                'values' => $values
+                'rules'    => $rules,
+                'values'   => $values
             );
-
         }
 
         $owners = cmsEventsManager::hook('users_group_perms', $owners);
@@ -42,7 +45,6 @@ class actionAdminUsersGroupPerms extends cmsAction {
             'menu'   => $this->getUserGroupsMenu('view', $group['id']),
             'owners' => $owners
         ));
-
     }
 
 }

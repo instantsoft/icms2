@@ -820,6 +820,7 @@ th[rel="dg_actions"] {
 }
 .datagrid tr td {
     transition:all .5s ease;
+    vertical-align: middle;
 }
 .datagrid tr.selected td,
 .datagrid tr.current-edit-line td,

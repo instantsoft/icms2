@@ -2,15 +2,19 @@
 
 class fieldCaptcha extends cmsFormField {
 
-    public $title = LANG_CAPTCHA_CODE;
-    public $is_public = false;
+    public $title     = LANG_CAPTCHA_CODE;
+    public $is_public = true;
+    public $excluded_controllers = ['content', 'users', 'groups'];
 
     public function getRules() {
 
         $this->rules[] = array('captcha');
 
         return $this->rules;
+    }
 
+    public function parse($value) {
+        return null;
     }
 
     public function getInput($value) {
@@ -18,7 +22,6 @@ class fieldCaptcha extends cmsFormField {
         $this->data['captcha_html'] = cmsEventsManager::hook('captcha_html');
 
         return parent::getInput($value);
-
     }
 
     public function validate_captcha($value) {
@@ -26,7 +29,6 @@ class fieldCaptcha extends cmsFormField {
         $is_captcha_valid = cmsEventsManager::hook('captcha_validate', $this->request);
 
         return $is_captcha_valid ? true : LANG_CAPTCHA_ERROR;
-
     }
 
 }

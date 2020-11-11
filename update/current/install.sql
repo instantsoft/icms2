@@ -2,6 +2,41 @@ ALTER TABLE `{users}` CHANGE `pass_token` `pass_token` VARCHAR(64) NULL DEFAULT 
 ALTER TABLE `{users}_auth_tokens` CHANGE `auth_token` `auth_token` VARCHAR(128) NULL DEFAULT NULL;
 UPDATE `{#}widgets_bind` SET `tpl_wrap`= 'wrapper' WHERE `tpl_wrap` IS NULL;
 
+DELETE FROM `{#}controllers` WHERE `name` = 'forms';
+INSERT INTO `{#}controllers` (`title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES
+('Конструктор форм', 'forms', 1, '---\nsend_text: >\n  Спасибо! Форма\n  успешно отправлена.\nallow_embed: null\nallow_embed_domain:\ndenied_embed_domain:\nletter: |\n  [subject:Форма: {form_title} - {site}]\r\n  \r\n  Здравствуйте.\r\n  \r\n  С сайта {site} отправлена форма <b>{form_title}</b>.\r\n  \r\n  Данные формы:\r\n  \r\n  {form_data}\r\n  \r\n  --\r\n   C уважением, {site}\r\n   <small>Письмо отправлено автоматически, пожалуйста, не отвечайте на него.</small>\nnotify_text: \'<p>Здравствуйте.</p><p>Отправлена форма <strong>{form_title}</strong>.</p><p><strong>Данные формы:</strong></p><p>{form_data}</p>\'\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
+
+DROP TABLE IF EXISTS `{#}forms`;
+CREATE TABLE `{#}forms` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `description` text,
+  `options` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `tpl_form` varchar(100) DEFAULT NULL,
+  `hash` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `hash` (`hash`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Формы конструктора форм';
+
+DROP TABLE IF EXISTS `{#}forms_fields`;
+CREATE TABLE `{#}forms_fields` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `form_id` int DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `hint` varchar(200) DEFAULT NULL,
+  `ordering` int DEFAULT NULL,
+  `is_enabled` tinyint UNSIGNED DEFAULT '1',
+  `fieldset` varchar(32) DEFAULT NULL,
+  `type` varchar(16) DEFAULT NULL,
+  `values` text,
+  `options` text,
+  PRIMARY KEY (`id`),
+  KEY `form_id` (`form_id`,`is_enabled`,`ordering`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Поля конструктора форм';
+
 DROP TABLE IF EXISTS `{#}layout_cols`;
 CREATE TABLE `{#}layout_cols` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -35,7 +70,7 @@ CREATE TABLE `{#}layout_rows` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ряды схемы позиций виджетов';
 
 INSERT INTO `{#}layout_rows` (`id`, `parent_id`, `title`, `tag`, `template`, `ordering`, `nested_position`, `class`, `options`) VALUES
-(4, NULL, 'Контент', 'main', 'modern', 7, NULL, NULL, '{\"no_gutters\":null,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"container\",\"container_tag\":\"div\",\"container_tag_class\":\"\",\"parrent_tag\":\"section\",\"parrent_tag_class\":\"\"}'),
+(4, NULL, 'Контент', 'main', 'modern', 7, NULL, NULL, '{\"no_gutters\":null,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"container\",\"container_tag\":\"section\",\"container_tag_class\":\"\",\"parrent_tag\":\"\",\"parrent_tag_class\":\"\"}'),
 (5, NULL, 'Перед контентом', 'div', 'modern', 6, NULL, NULL, '{\"no_gutters\":1,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"container\",\"container_tag\":\"div\",\"container_tag_class\":\"\",\"parrent_tag\":\"\",\"parrent_tag_class\":\"\"}'),
 (6, NULL, 'Футер', 'div', 'modern', 10, NULL, 'align-items-center flex-wrap', '{\"no_gutters\":1,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"container\",\"container_tag\":\"div\",\"container_tag_class\":\"py-4\",\"parrent_tag\":\"footer\",\"parrent_tag_class\":\"icms-footer__bottom bg-dark text-white\"}'),
 (8, 8, 'Вложенный после контента', 'div', 'modern', 8, 'after', NULL, '{\"no_gutters\":null,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"\",\"container_tag\":\"div\",\"container_tag_class\":\"\",\"parrent_tag\":\"\",\"parrent_tag_class\":\"\"}'),

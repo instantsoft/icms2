@@ -491,6 +491,17 @@ class cmsFormField {
     public function applyFilter($model, $value) { return false; }
 
     /**
+     * Если поле работает с файлами
+     * Возвращает массив путей файлов от корня CMS
+     *
+     * @param mixed $value
+     * @return boolean | array
+     */
+    public function getFiles($value){
+        return false;
+    }
+
+    /**
      * Метод, который подготавливает входную переменную
      * из поля для записи в базу данных
      *

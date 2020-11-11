@@ -5,7 +5,7 @@
     margin-top: $spacer*1.5;
 }
 .content_item, .content_list {
-    .field {
+    .field:not(.form-group) {
         margin-bottom: $spacer*0.5;
         @include media-breakpoint-up(sm) {
             margin-bottom: $spacer*0.75;
@@ -190,4 +190,28 @@
 .icms-btn-tag:before {
     content: '#';
     margin-right: $spacer*0.1;
+}
+.multiple_tags_list {
+    li {
+        color: $info;
+        border: $btn-border-width solid $info;
+        text-align: center;
+        white-space: $btn-white-space;
+        vertical-align: middle;
+        @include border-radius($btn-border-radius-sm, 0);
+        @include transition($btn-transition);
+        @include hover() {
+            color: color-yiq($info);
+            background-color: $info;
+            border-color: $info;
+        }
+        > * {
+            padding: $btn-padding-y-sm $btn-padding-x-sm;
+            @include font-size($btn-font-size-sm);
+            line-height: $btn-line-height-sm;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+    }
 }

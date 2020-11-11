@@ -94,10 +94,6 @@ class cmsController {
 
         $this->title = defined($title_constant) ? constant($title_constant) : $this->name;
 
-        if($this->outer_controller_model){
-            cmsCore::includeModel($this->outer_controller_model);
-        }
-
         if (cmsCore::isModelExists($this->name)){
             $this->model = cmsCore::getModel($this->name);
         } elseif($this->outer_controller_model) {

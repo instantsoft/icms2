@@ -111,10 +111,34 @@ class widgetContentList extends cmsWidget {
             $model->applyDatasetFilters($dataset);
         }
 
-        // Применяем категорию
-		if ($category){
-			$model->filterCategory($ctype['name'], $category, true);
-		}
+        // Включен показ категорий?
+        if (in_array('category', $shown_fields)) {
+
+            $table_name      = $model->getContentCategoryTableName($ctype['name']);
+            $bind_table_name = $table_name . '_bind';
+
+            $model->select('c.title', 'cat_title');
+            $model->select('c.slug', 'cat_slug');
+
+            if ($category){
+
+                $model->joinInner($bind_table_name, 'b FORCE INDEX (item_id)', 'b.item_id = i.id');
+                $model->joinInner($table_name, 'c', 'c.id = b.category_id');
+
+                $model->filterGtEqual('c.ns_left', $category['ns_left']);
+                $model->filterLtEqual('c.ns_right', $category['ns_right']);
+
+                if(!empty($ctype['options']['is_cats_multi'])){
+                    $model->distinctSelect();
+                }
+            } else {
+                $model->joinInner($table_name, 'c', 'c.id = i.category_id');
+            }
+        } else {
+            if ($category){
+                $model->filterCategory($ctype['name'], $category, true);
+            }
+        }
 
         // применяем приватность
         // флаг показа только названий
@@ -276,6 +300,15 @@ class widgetContentList extends cmsWidget {
                 'avatar' => isset($item['user']['avatar']) ? $item['user']['avatar'] : [],
                 'href' => href_to_profile($item['user']),
                 'html' => $item['user']['nickname']
+            ];
+        }
+
+        if (in_array('category', $shown_fields)){
+            $bar['category'] = [
+                'css'  => 'bi_category',
+                'icon' => 'folder',
+                'href' => href_to($ctype['name'], $item['cat_slug']),
+                'html' => $item['cat_title']
             ];
         }
 

@@ -97,13 +97,13 @@ class fieldListBitmask extends cmsFormField {
 		if ($items) {
             $is_autolink = $this->getOption('is_autolink');
 			$pos = 0;
-			$html .= '<ul class="'.$this->getOption('list_class').'">';
+			$html .= '<ul class="'.$this->getOption('list_class').' list-unstyled">';
 			foreach($items as $key => $item){
 				if (substr($value, $pos, 1) == 1){
                     if($is_autolink){
-                        $html .= '<li><a class="listbitmask_autolink '.$this->item['ctype_name'].'_listbitmask_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($pos+1).'">'.htmlspecialchars($item).'</a></li>';
+                        $html .= '<li class="list-inline-item"><a class="listbitmask_autolink '.$this->item['ctype_name'].'_listbitmask_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($pos+1).'">'.htmlspecialchars($item).'</a></li>';
                     } else {
-                        $html .= '<li>' . htmlspecialchars($item) . '</li>';
+                        $html .= '<li class="list-inline-item"><span>' . htmlspecialchars($item) . '</span></li>';
                     }
 				}
 				$pos++;

@@ -28,3 +28,4 @@ define('LANG_WD_TAGS_MIN_LEN_UNITS', 'char.');
 define('LANG_WD_TAGS_COLORS', 'Available tag colors');
 define('LANG_WD_TAGS_COLORS_HINT', 'Enter the color codes (without spaces) separated by commas in the #RRGGBB format. If not specified, the tags will be of one color.');
 define('LANG_WD_TAGS_SHUFFLE', 'Shuffle tags');
+define('LANG_TAGS_TAG_EDIT', 'Edit tag');

@@ -30,6 +30,8 @@ class actionAdminWidgetsDelete extends cmsAction {
 
             }
 
+            list($bp, $widgets_model, $del_all) = cmsEventsManager::hook('widget_after_delete', [$bp, $widgets_model, $del_all]);
+
         }
 
         return $this->cms_template->renderJSON(array(

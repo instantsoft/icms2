@@ -91,9 +91,9 @@
                                 <?php if(!empty($field->hint)) { echo $field->hint; } ?>
                                 <?php if(!empty($field->patterns_hint['patterns'])){ ?>
                                     <span class="pattern_fields_panel_hint">
-                                        <?php echo !empty($field->patterns_hint['text_panel']) ? $field->patterns_hint['text_panel'] : LANG_CP_SEOMETA_HINT_PANEL; ?>
+                                        <?php echo isset($field->patterns_hint['text_panel']) ? $field->patterns_hint['text_panel'] : LANG_CP_SEOMETA_HINT_PANEL; ?>
                                     </span>
-                                    <span class="pattern_fields_panel">
+                                    <span<?php if(empty($field->patterns_hint['always_show'])){ ?> class="pattern_fields_panel"<?php } ?>>
                                         <?php echo sprintf((!empty($field->patterns_hint['text_pattern']) ? $field->patterns_hint['text_pattern'] : LANG_CP_SEOMETA_HINT_PATTERN.LANG_CP_SEOMETA_HINT_PATTERN_DOC), implode(' ', $field->patterns_hint['pattern_fields'])); ?>
                                         <?php echo !empty($field->patterns_hint['text_help']) ? $field->patterns_hint['text_help'] : ''; ?>
                                     </span>

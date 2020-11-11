@@ -28,3 +28,4 @@ define('LANG_WD_TAGS_MIN_LEN_UNITS', 'симв.');
 define('LANG_WD_TAGS_COLORS', 'Возможные цвета для тегов');
 define('LANG_WD_TAGS_COLORS_HINT', 'Введите через запятую (без пробелов) коды цветов в формате #RRGGBB. Если не указано, теги будут одного цвета.');
 define('LANG_WD_TAGS_SHUFFLE', 'Перемешивать теги');
+define('LANG_TAGS_TAG_EDIT', 'Редактировать тег');

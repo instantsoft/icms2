@@ -16,8 +16,6 @@ class widgetUsersAvatar extends cmsWidget {
 
         if (!$template->hasMenu($menu_name)) {
 
-            cmsCore::includeModel('menu');
-
             $menu_items = modelMenu::getMenuItemsByName($menu_name);
             if(!$menu_items){ return false; }
 

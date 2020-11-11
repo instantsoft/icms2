@@ -6,12 +6,14 @@ if (version_compare(PHP_VERSION, '5.6') < 0) {
 
 if (!class_exists('ScssPhp\ScssPhp\Version', false)) {
     include_once __DIR__ . '/Base/Range.php';
+    include_once __DIR__ . '/OutputStyle.php';
     include_once __DIR__ . '/Block.php';
     include_once __DIR__ . '/Cache.php';
     include_once __DIR__ . '/Colors.php';
     include_once __DIR__ . '/Compiler.php';
     include_once __DIR__ . '/Compiler/Environment.php';
     include_once __DIR__ . '/Exception/SassException.php';
+    include_once __DIR__ . '/Exception/SassScriptException.php';
     include_once __DIR__ . '/Exception/CompilerException.php';
     include_once __DIR__ . '/Exception/ParserException.php';
     include_once __DIR__ . '/Exception/RangeException.php';

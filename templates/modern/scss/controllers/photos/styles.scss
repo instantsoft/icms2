@@ -94,6 +94,14 @@
         right: 0;
         z-index: 2;
     }
+    &.unpublished {
+        .icms-photo-album__photo-img {
+            -webkit-filter: blur(5px) grayscale(100%);
+            -moz-filter: blur(5px) grayscale(100%);
+            -ms-filter: blur(5px) grayscale(100%);
+            filter: blur(5px) grayscale(100%);
+        }
+    }
 }
 #photo_container {
     h1 {

@@ -26,7 +26,9 @@ class actionAuthRestore extends cmsAction {
 
             $data = $form->parse($this->request, true);
 
-            $errors = $form->validate($this,  $data);
+            $errors = $form->validate($this, $data);
+
+            list($errors, $data) = cmsEventsManager::hook('auth_restore_validation', array($errors, $data));
 
             if ($errors){
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');

@@ -2667,9 +2667,10 @@ class cmsTemplate {
      * @param string $path Путь относительно директории шаблона
      * @param string $pattern Паттерн поиска файлов
      * @param string $template_name Название шаблона
+     * @param array $excluded Исключения
      * @return array
      */
-    public function getAvailableTemplatesFiles($path, $pattern='*.*', $template_name = false) {
+    public function getAvailableTemplatesFiles($path, $pattern='*.*', $template_name = false, $excluded = []) {
 
         if(!$template_name){
             $template_name = $this->site_config->template;
@@ -2702,6 +2703,8 @@ class cmsTemplate {
             foreach ($files as $file) {
 
                 $file_name = $file_title = str_replace('.tpl', '', $file);
+
+                if(in_array($file_name, $excluded)){ continue; }
 
                 // Ищем название шаблона внутри файла
                 $file_header = [];
@@ -2943,6 +2946,11 @@ class cmsTemplate {
 
         if (empty($widget->is_tab_prev)){
             $this->widgets_group_index++;
+        }
+
+        if($widget->controller && $widget->insert_controller_css){
+            $css_file = $this->getStylesFileName($widget->controller);
+            if ($css_file){ $this->addCSSFromContext($css_file); }
         }
 
         $this->widgets[$widget->position][$this->widgets_group_index][] = array(

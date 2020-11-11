@@ -35,6 +35,10 @@ function install_package(){
         $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`, `files`) VALUES ('content', 'fields', 'Поля контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL, NULL);");
     }
 
+    if(!$core->db->getRowsCount('widgets', "`controller` = 'forms' AND `name` = 'form'")){
+        $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`, `files`) VALUES ('forms', 'form', 'Форма', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL, NULL);");
+    }
+
     $admin->model->filterEqual('w.controller', 'content');
     $admin->model->filterEqual('w.name', 'list');
     $admin->model->joinInner('widgets', 'w', 'w.id = i.widget_id');

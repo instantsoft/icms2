@@ -78,6 +78,10 @@ $(function(){
     $('.form-tabs').on('click', '.pattern_fields > ', function (){
         var spacer = $(this).closest('.hint').data('spacer') || false;
         var spacer_stop = $(this).closest('.hint').data('spacer_stop') || false;
-        return addTextToPosition($(this).closest('.field').find('input, textarea'), $(this).text(), spacer, spacer_stop);
+        var id = $(this).closest('.field').attr('id').replace(/f_/, '');
+        if (typeof(icms.forms.wysiwygs_insert_pool.add[id]) === 'function') {
+            icms.forms.wysiwygs_insert_pool.add[id](id, $(this).text()); return false;
+        }
+        return addTextToPosition($('#'+id), $(this).text(), spacer, spacer_stop);
     });
 });

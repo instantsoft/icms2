@@ -14,10 +14,14 @@ class onContentTagsSearchSubjects extends cmsAction {
 
         $ctype_names = array_unique($targets[$this->name]);
 
-        foreach($ctype_names as $ctype_name){
+        // Согласно сортировки типов контента
+        $ctypes = $this->model->getContentTypes();
 
-            $ctype = $this->model->getContentTypeByName($ctype_name);
-            if(!$ctype){ continue; }
+        foreach($ctypes as $ctype){
+
+            if(!in_array($ctype['name'], $ctype_names)){
+                continue;
+            }
 
             $key = $this->name.'-'.$ctype['name'];
 
@@ -25,11 +29,9 @@ class onContentTagsSearchSubjects extends cmsAction {
                 'title' => $ctype['title'],
                 'url'   => href_to('tags', $key, array(urlencode($tag['tag'])))
             );
-
         }
 
         return $menu_items;
-
     }
 
 }

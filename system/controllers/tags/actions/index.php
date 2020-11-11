@@ -80,22 +80,28 @@ class actionTagsIndex extends cmsAction {
 
         $seo_data = array(
             'tag'         => $tag['tag'],
-            'ctype_title' => $menu_items[$target_controller][$target]['title']
+            'ctype_title' => isset($menu_items[$target_controller][$target]['title']) ? $menu_items[$target_controller][$target]['title'] : null
         );
 
         if($tag['tag_title']){
-            $seo_title = string_replace_keys_values($tag['tag_title'], $seo_data);
+            $seo_title = string_replace_keys_values_extended($tag['tag_title'], $seo_data);
         }
 
         if($tag['tag_desc']){
-            $seo_desc = string_replace_keys_values($tag['tag_desc'], $seo_data);
+            $seo_desc = string_replace_keys_values_extended($tag['tag_desc'], $seo_data);
         }
 
         if($tag['tag_h1']){
-            $seo_h1 = string_replace_keys_values($tag['tag_h1'], $seo_data);
+            $seo_h1 = string_replace_keys_values_extended($tag['tag_h1'], $seo_data);
         }
 
         if ($this->cms_user->is_admin){
+            $this->cms_template->addToolButton(array(
+                'class' => 'edit',
+                'icon'  => 'edit',
+                'title' => LANG_TAGS_TAG_EDIT,
+                'href'  => href_to('admin', 'controllers', array('edit', 'tags', 'edit', $tag['id']))
+            ));
             $this->cms_template->addToolButton(array(
                 'class' => 'page_gear',
                 'icon'  => 'wrench',

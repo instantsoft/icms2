@@ -22,6 +22,21 @@ function is_config_exists() {
     return is_readable(dirname(PATH).DS.'system/config/config.php');
 }
 
+function get_site_config_env() {
+    return [
+        'db_host'        => getenv('ICMS_MYSQL_DB_HOST', true) ?: getenv('ICMS_MYSQL_DB_HOST'),
+        'db_base'        => getenv('ICMS_MYSQL_DB_BASE', true) ?: getenv('ICMS_MYSQL_DB_BASE'),
+        'db_user'        => getenv('ICMS_MYSQL_DB_USER', true) ?: getenv('ICMS_MYSQL_DB_USER'),
+        'db_pass'        => getenv('ICMS_MYSQL_DB_PASS', true) ?: getenv('ICMS_MYSQL_DB_PASS'),
+        'db_prefix'      => getenv('ICMS_MYSQL_DB_PREFIX', true) ?: getenv('ICMS_MYSQL_DB_PREFIX'),
+        'db_engine'      => getenv('ICMS_MYSQL_DB_ENGINE', true) ?: getenv('ICMS_MYSQL_DB_ENGINE'),
+        'db_charset'     => getenv('ICMS_MYSQL_DB_CHARSET', true) ?: getenv('ICMS_MYSQL_DB_CHARSET'),
+        'clear_sql_mode' => getenv('ICMS_MYSQL_CLEAR_SQL_MODE', true) ?: getenv('ICMS_MYSQL_CLEAR_SQL_MODE'),
+        'db_users_table' => getenv('ICMS_MYSQL_DB_USERS_TABLE', true) ?: getenv('ICMS_MYSQL_DB_USERS_TABLE'),
+        'language'       => getenv('ICMS_LANGUAGE', true) ?: getenv('ICMS_LANGUAGE'),
+    ];
+}
+
 function get_site_config() {
 
     static $cfg = null;
@@ -31,13 +46,10 @@ function get_site_config() {
     $cfg_file = dirname(PATH).DS.'system/config/config.php';
 
     if(!is_readable($cfg_file)){
-        return false;
+        return get_site_config_env();
     }
 
-    $cfg = include $cfg_file;
-
-    return $cfg;
-
+    return include $cfg_file;
 }
 
 function is_db_connected() {

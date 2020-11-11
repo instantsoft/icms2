@@ -1208,6 +1208,7 @@ ul.errors li .hint strong { color:#666666; }
 
 .datagrid .actions a.view { background-image: url("../../images/icons/eye.png"); }
 .datagrid .actions a.edit { background-image: url("../../images/icons/edit.png"); }
+.datagrid .actions a.copy { background-image: url("../../images/icons/copy.png"); }
 .datagrid .actions a.config { background-image: url("../../images/icons/config.png"); }
 .datagrid .actions a.labels { background-image: url("../../images/icons/labels.png"); }
 .datagrid .actions a.fields { background-image: url("../../images/icons/form.png"); }

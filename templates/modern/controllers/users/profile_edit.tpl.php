@@ -11,12 +11,14 @@
 
     $this->addToolButton(array(
         'class' => 'save',
+        'icon'  => 'save',
         'title' => LANG_SAVE,
         'href'  => "javascript:icms.forms.submit()"
     ));
 
     $this->addToolButton(array(
         'class' => 'cancel',
+        'icon'  => 'window-close',
         'title' => LANG_CANCEL,
         'href'  => $cancel_url
     ));

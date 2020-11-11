@@ -31,7 +31,7 @@ CREATE TABLE `{#}layout_rows` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ряды схемы позиций виджетов';
 
 INSERT INTO `{#}layout_rows` (`id`, `parent_id`, `title`, `tag`, `template`, `ordering`, `nested_position`, `class`, `options`) VALUES
-(4, NULL, 'Контент', 'main', 'modern', 7, NULL, NULL, '{\"no_gutters\":null,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"container\",\"container_tag\":\"div\",\"container_tag_class\":\"\",\"parrent_tag\":\"section\",\"parrent_tag_class\":\"\"}'),
+(4, NULL, 'Контент', 'main', 'modern', 7, NULL, NULL, '{\"no_gutters\":null,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"container\",\"container_tag\":\"section\",\"container_tag_class\":\"\",\"parrent_tag\":\"\",\"parrent_tag_class\":\"\"}'),
 (5, NULL, 'Перед контентом', 'div', 'modern', 6, NULL, NULL, '{\"no_gutters\":1,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"container\",\"container_tag\":\"div\",\"container_tag_class\":\"\",\"parrent_tag\":\"\",\"parrent_tag_class\":\"\"}'),
 (6, NULL, 'Футер', 'div', 'modern', 10, NULL, 'align-items-center flex-wrap', '{\"no_gutters\":1,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"container\",\"container_tag\":\"div\",\"container_tag_class\":\"py-4\",\"parrent_tag\":\"footer\",\"parrent_tag_class\":\"icms-footer__bottom bg-dark text-white\"}'),
 (8, 8, 'Вложенный после контента', 'div', 'modern', 8, 'after', NULL, '{\"no_gutters\":null,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"\",\"container_tag\":\"div\",\"container_tag_class\":\"\",\"parrent_tag\":\"\",\"parrent_tag_class\":\"\"}'),
@@ -61,6 +61,37 @@ INSERT INTO `{#}layout_cols` (`id`, `row_id`, `title`, `name`, `type`, `ordering
 (38, 17, 'Левый', 'pos_38', 'typical', 1, 'div', 'mb-3', NULL, '{\"cut_before\":null,\"default_col_class\":\"\",\"md_col_class\":\"col-md-3\",\"lg_col_class\":\"\",\"xl_col_class\":\"\",\"col_class\":\"\",\"default_order\":0,\"sm_order\":0,\"md_order\":0,\"lg_order\":0,\"xl_order\":0}'),
 (39, 17, 'Средний', 'pos_39', 'typical', 2, 'div', 'mb-3', NULL, '{\"cut_before\":null,\"default_col_class\":\"\",\"md_col_class\":\"col-md\",\"lg_col_class\":\"\",\"xl_col_class\":\"\",\"col_class\":\"\",\"default_order\":0,\"sm_order\":0,\"md_order\":0,\"lg_order\":0,\"xl_order\":0}'),
 (40, 17, 'Правый', 'pos_40', 'typical', 3, 'div', 'mb-3', NULL, '{\"cut_before\":null,\"default_col_class\":\"\",\"md_col_class\":\"col-md\",\"lg_col_class\":\"\",\"xl_col_class\":\"\",\"col_class\":\"\",\"default_order\":0,\"sm_order\":0,\"md_order\":0,\"lg_order\":0,\"xl_order\":0}');
+
+DROP TABLE IF EXISTS `{#}forms`;
+CREATE TABLE `{#}forms` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `description` text,
+  `options` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `tpl_form` varchar(100) DEFAULT NULL,
+  `hash` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `hash` (`hash`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Формы конструктора форм';
+
+DROP TABLE IF EXISTS `{#}forms_fields`;
+CREATE TABLE `{#}forms_fields` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `form_id` int DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `hint` varchar(200) DEFAULT NULL,
+  `ordering` int DEFAULT NULL,
+  `is_enabled` tinyint UNSIGNED DEFAULT '1',
+  `fieldset` varchar(32) DEFAULT NULL,
+  `type` varchar(16) DEFAULT NULL,
+  `values` text,
+  `options` text,
+  PRIMARY KEY (`id`),
+  KEY `form_id` (`form_id`,`is_enabled`,`ordering`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Поля конструктора форм';
 
 DROP TABLE IF EXISTS `{#}jobs`;
 CREATE TABLE `{#}jobs` (
@@ -373,7 +404,8 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (20, 'Редиректы', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\nis_check_refer: null\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (21, 'География', 'geo', 1, '---\nauto_detect: 1\nauto_detect_provider: ipgeobase\ndefault_country_id: null\ndefault_country_id_cache: null\ndefault_region_id: null\ndefault_region_id_cache: null\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (22, 'Подписки', 'subscriptions', 1, '---\nguest_email_confirmation: 1\nneed_auth: null\nverify_exp: 24\nupdate_user_rating: 1\nrating_value: 1\nadmin_email:\nlimit: 20\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(23, 'Wysiwyg редакторы', 'wysiwygs', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
+(23, 'Wysiwyg редакторы', 'wysiwygs', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(24, 'Конструктор форм', 'forms', 1, '---\nsend_text: >\n  Спасибо! Форма\n  успешно отправлена.\nallow_embed: null\nallow_embed_domain:\ndenied_embed_domain:\nletter: |\n  [subject:Форма: {form_title} - {site}]\r\n  \r\n  Здравствуйте.\r\n  \r\n  С сайта {site} отправлена форма <b>{form_title}</b>.\r\n  \r\n  Данные формы:\r\n  \r\n  {form_data}\r\n  \r\n  --\r\n   C уважением, {site}\r\n   <small>Письмо отправлено автоматически, пожалуйста, не отвечайте на него.</small>\nnotify_text: \'<p>Здравствуйте.</p><p>Отправлена форма <strong>{form_title}</strong>.</p><p><strong>Данные формы:</strong></p><p>{form_data}</p>\'\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (
@@ -899,7 +931,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (188, 'users_add_friendship_mutual', 'activity', 188, 1),
 (189, 'user_registered', 'activity', 189, 1),
 (190, 'db_nested_tables', 'content', 190, 1),
-(191, 'widget_content_list_form', 'content', 191, 1);
+(191, 'widget_content_list_form', 'content', 191, 1),
+(192, 'content_before_item', 'forms', 192, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -1808,7 +1841,8 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (18, 'subscriptions', 'button', 'Кнопки подписки', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (19, 'auth', 'register', 'Форма регистрации', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (20, NULL, 'template', 'Элементы шаблона', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(21, 'content', 'fields', 'Поля контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
+(21, 'content', 'fields', 'Поля контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(22, 'forms', 'form', 'Форма', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (

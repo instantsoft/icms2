@@ -800,26 +800,26 @@ class modelUsers extends cmsModel {
 
     }
 
-    public function deleteGroup($id){
+    public function deleteGroup($id) {
 
         $this->join('{users}_groups_members', 'm', "m.user_id = i.id AND m.group_id = '{$id}'");
 
         $members = $this->disableDeleteFilter()->getUsers();
 
         $first_group = $this->orderBy('id', 'asc')->filterNotEqual('id', GUEST_GROUP_ID)->getItem('{users}_groups');
-        if(!$first_group){ return false; }
+        if (!$first_group) { return false; }
 
-        if ($members){
+        if ($members) {
 
-            foreach($members as $user){
+            foreach ($members as $user) {
 
                 $groups = $user['groups'];
 
                 // удаляем ID из массива групп пользователя
                 // и переиндексируем ключи массива
-                $groups = array_values( array_diff($groups, array($id)) );
+                $groups = array_values(array_diff($groups, array($id)));
 
-                if(!$groups){
+                if (!$groups) {
                     $groups = array($first_group['id']);
                 }
 
@@ -827,20 +827,17 @@ class modelUsers extends cmsModel {
                     'groups' => $groups
                 ), true);
 
-                cmsCache::getInstance()->clean('users.user.'.$id);
-
+                cmsCache::getInstance()->clean('users.user.' . $id);
             }
 
             cmsCache::getInstance()->clean('users.list');
 
             $this->delete('{users}_groups_members', $id, 'group_id');
-
         }
 
-        $this->delete('{users}_groups', $id);
+        $this->filterEqual('group_id', $id)->deleteFiltered('perms_users');
 
-        return true;
-
+        return $this->delete('{users}_groups', $id);
     }
 
 //============================================================================//

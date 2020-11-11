@@ -68,6 +68,11 @@ class formContentWidgetContentList extends cmsForm {
             ));
         }
 
+        $childs[] = new fieldCheckbox("options:show_fields:{$ctype['id']}:category", array(
+                'title' => LANG_CATEGORY
+            )
+        );
+
         $childs[] = new fieldCheckbox("options:show_fields:{$ctype['id']}:date_pub", array(
                 'title' => LANG_DATE
             )

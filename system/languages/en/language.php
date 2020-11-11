@@ -214,6 +214,7 @@
     define('LANG_PARSER_ENTER_IMAGE_LINK', 'Enter image link');
     define('LANG_OR', 'or');
     define('LANG_BEGIN_TYPING', 'Start typing or select from the list');
+    define('LANG_PARSER_FORMS',              'Forms');
 
     //USERS
     define('LANG_USER',                      'User');

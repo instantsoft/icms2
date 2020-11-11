@@ -31,7 +31,7 @@ CREATE TABLE `{#}layout_rows` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Scheme position rows';
 
 INSERT INTO `{#}layout_rows` (`id`, `parent_id`, `title`, `tag`, `template`, `ordering`, `nested_position`, `class`, `options`) VALUES
-(4, NULL, 'Content', 'main', 'modern', 7, NULL, NULL, '{\"no_gutters\":null,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"container\",\"container_tag\":\"div\",\"container_tag_class\":\"\",\"parrent_tag\":\"section\",\"parrent_tag_class\":\"\"}'),
+(4, NULL, 'Content', 'main', 'modern', 7, NULL, NULL, '{\"no_gutters\":null,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"container\",\"container_tag\":\"section\",\"container_tag_class\":\"\",\"parrent_tag\":\"\",\"parrent_tag_class\":\"\"}'),
 (5, NULL, 'Before content', 'div', 'modern', 6, NULL, NULL, '{\"no_gutters\":1,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"container\",\"container_tag\":\"div\",\"container_tag_class\":\"\",\"parrent_tag\":\"\",\"parrent_tag_class\":\"\"}'),
 (6, NULL, 'Footer', 'div', 'modern', 10, NULL, 'align-items-center flex-wrap', '{\"no_gutters\":1,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"container\",\"container_tag\":\"div\",\"container_tag_class\":\"py-4\",\"parrent_tag\":\"footer\",\"parrent_tag_class\":\"icms-footer__bottom bg-dark text-white\"}'),
 (8, 8, 'Nested after content', 'div', 'modern', 8, 'after', NULL, '{\"no_gutters\":null,\"vertical_align\":\"\",\"horizontal_align\":\"\",\"container\":\"\",\"container_tag\":\"div\",\"container_tag_class\":\"\",\"parrent_tag\":\"\",\"parrent_tag_class\":\"\"}'),
@@ -61,6 +61,37 @@ INSERT INTO `{#}layout_cols` (`id`, `row_id`, `title`, `name`, `type`, `ordering
 (38, 17, 'Left', 'pos_38', 'typical', 1, 'div', 'mb-3', NULL, '{\"cut_before\":null,\"default_col_class\":\"\",\"md_col_class\":\"col-md-3\",\"lg_col_class\":\"\",\"xl_col_class\":\"\",\"col_class\":\"\",\"default_order\":0,\"sm_order\":0,\"md_order\":0,\"lg_order\":0,\"xl_order\":0}'),
 (39, 17, 'Middle', 'pos_39', 'typical', 2, 'div', 'mb-3', NULL, '{\"cut_before\":null,\"default_col_class\":\"\",\"md_col_class\":\"col-md\",\"lg_col_class\":\"\",\"xl_col_class\":\"\",\"col_class\":\"\",\"default_order\":0,\"sm_order\":0,\"md_order\":0,\"lg_order\":0,\"xl_order\":0}'),
 (40, 17, 'Right', 'pos_40', 'typical', 3, 'div', 'mb-3', NULL, '{\"cut_before\":null,\"default_col_class\":\"\",\"md_col_class\":\"col-md\",\"lg_col_class\":\"\",\"xl_col_class\":\"\",\"col_class\":\"\",\"default_order\":0,\"sm_order\":0,\"md_order\":0,\"lg_order\":0,\"xl_order\":0}');
+
+DROP TABLE IF EXISTS `{#}forms`;
+CREATE TABLE `{#}forms` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `description` text,
+  `options` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `tpl_form` varchar(100) DEFAULT NULL,
+  `hash` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `hash` (`hash`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Form designer forms';
+
+DROP TABLE IF EXISTS `{#}forms_fields`;
+CREATE TABLE `{#}forms_fields` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `form_id` int DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `hint` varchar(200) DEFAULT NULL,
+  `ordering` int DEFAULT NULL,
+  `is_enabled` tinyint UNSIGNED DEFAULT '1',
+  `fieldset` varchar(32) DEFAULT NULL,
+  `type` varchar(16) DEFAULT NULL,
+  `values` text,
+  `options` text,
+  PRIMARY KEY (`id`),
+  KEY `form_id` (`form_id`,`is_enabled`,`ordering`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Form designer fields';
 
 DROP TABLE IF EXISTS `{#}jobs`;
 CREATE TABLE `{#}jobs` (
@@ -373,7 +404,8 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (20, 'Redirects', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\nis_check_refer: null\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (21, 'Geobase', 'geo', 1, '---\nauto_detect: 1\nauto_detect_provider: ipgeobase\ndefault_country_id: null\ndefault_country_id_cache: null\ndefault_region_id: null\ndefault_region_id_cache: null\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (22, 'Subscriptions', 'subscriptions', 1, '---\nguest_email_confirmation: 1\nneed_auth: null\nverify_exp: 24\nupdate_user_rating: 1\nrating_value: 1\nadmin_email:\nlimit: 20\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(23, 'Wysiwyg editors', 'wysiwygs', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
+(23, 'Wysiwyg editors', 'wysiwygs', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(24, 'Form constructor', 'forms', 1, '---\nsend_text: >\n  Thanks! Form\n sent successfully.\nallow_embed: null\nallow_embed_domain:\ndenied_embed_domain:\nletter: |\n  [subject:Form: {form_title} - {site}]\r\n  \r\n  Hello.\r\n  \r\n  The form <b>{form_title}</b> has been sent from the site {site}.\r\n  \r\n  Form data:\r\n  \r\n  {form_data}\r\n  \r\n  --\r\n   Best regards, {site}\r\n   <small>This letter is sent automatically, please do not reply.</small>\nnotify_text: \'<p>Hello.</p><p>Form <strong>{form_title}</strong> submitted.</p><p><strong>Form data:</strong></p><p>{form_data}</p>\'\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (
@@ -899,7 +931,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (188, 'users_add_friendship_mutual', 'activity', 188, 1),
 (189, 'user_registered', 'activity', 189, 1),
 (190, 'db_nested_tables', 'content', 190, 1),
-(191, 'widget_content_list_form', 'content', 191, 1);
+(191, 'widget_content_list_form', 'content', 191, 1),
+(192, 'content_before_item', 'forms', 192, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -1808,7 +1841,8 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (18, 'subscriptions', 'button', 'Subscription buttons', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (19, 'auth', 'register', 'Registration form', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (20, NULL, 'template', 'Template Elements', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(21, 'content', 'fields', 'Content Fields', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
+(21, 'content', 'fields', 'Content Fields', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(22, 'forms', 'form', 'Form', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (

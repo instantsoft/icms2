@@ -179,6 +179,23 @@ class fieldImages extends cmsFormField {
 
     }
 
+    public function getFiles($value){
+
+        if (empty($value)) { return false; }
+
+        if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
+
+        $files = [];
+
+        foreach($value as $images){
+            foreach($images as $image_rel_path){
+                $files[] = $image_rel_path;
+            }
+        }
+
+        return $files;
+    }
+
     public function delete($value){
 
         if (empty($value)) { return true; }

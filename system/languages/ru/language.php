@@ -213,6 +213,7 @@
     define('LANG_PARSER_ENTER_IMAGE_LINK', 'Введите ссылку на изображение');
     define('LANG_OR', 'или');
     define('LANG_BEGIN_TYPING', 'Начните вводить или выберите из списка');
+    define('LANG_PARSER_FORMS',              'Формы');
 
     //USERS
     define('LANG_USER',                      'Пользователь');

@@ -55,10 +55,10 @@ $form_url_sep = strpos($form_url, '?') === false ? '?' : '&';
             </div>
 
             <?php if ($fields_count) { ?>
-                <div class="buttons d-flex">
+                <div class="buttons d-flex flex-column flex-md-row">
                     <?php echo html_submit(LANG_FILTER_APPLY); ?>
                     <?php if (sizeof($filters)){ ?>
-                        <a class="btn btn-secondary cancel_filter_link mx-2" href="<?php echo ((is_array($page_url) && !empty($page_url['cancel'])) ? $page_url['cancel'] : $form_url); ?>">
+                        <a class="btn btn-secondary cancel_filter_link my-2 my-md-0 mx-md-2" href="<?php echo ((is_array($page_url) && !empty($page_url['cancel'])) ? $page_url['cancel'] : $form_url); ?>">
                             <?php echo LANG_CANCEL; ?>
                         </a>
                         <?php
@@ -74,7 +74,7 @@ $form_url_sep = strpos($form_url, '?') === false ? '?' : '&';
                         <?php
                             $hooks_html = cmsEventsManager::hookAll('content_filter_buttons_html', array($css_prefix, $form_url, $filters));
                             if ($hooks_html) { ?>
-                                <div class="ml-auto">
+                                <div class="mt-2 mt-md-0 ml-md-auto">
                                     <?php echo html_each($hooks_html); ?>
                                 </div>
                         <?php } ?>

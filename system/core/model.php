@@ -2171,8 +2171,18 @@ class cmsModel {
 
         cmsCache::getInstance()->clean('events');
 
-        return $this->filterEqual('name', $name)->deleteFiltered('controllers');
+        $rule_ids = $this->selectOnly('id')->filterEqual('controller', $name)->get('perms_rules', function($item, $model){
+            return $item['id'];
+        }, false);
 
+        if($rule_ids){
+            $this->filterIn('rule_id', $rule_ids)->deleteFiltered('perms_users');
+            $this->filterEqual('controller', $name)->deleteFiltered('perms_rules');
+        }
+
+        $this->filterEqual('controller', $name)->deleteFiltered('scheduler_tasks');
+
+        return $this->filterEqual('name', $name)->deleteFiltered('controllers');
     }
 
     public function fieldsAfterStore($item, $fields, $action = 'add') {

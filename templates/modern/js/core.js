@@ -512,6 +512,29 @@ icms.forms = (function ($) {
         name = name.split(':');
         return (typeof name !== 'string' && name.length > 1) ? name.shift()+'['+name.join('][')+']' :  name;
     };
+    this.VDisDisplay = function(field_value, type){
+        var display;
+        if (Array.isArray(field_value) && field_value.length > 0) {
+            for (var show_key in type) {
+                if ($.inArray(type[show_key], field_value) !== -1) {
+                    display = true;
+                } else {
+                    display = false;
+                    break;
+                }
+            }
+        } else {
+            if (Array.isArray(field_value)) {
+                field_value = '';
+            }
+            if ($.inArray(field_value, type) !== -1) {
+                return true;
+            } else {
+                display = false;
+            }
+        }
+        return display;
+    };
     this.VDListeners = {};
     this.VDListenersInitialized = [];
     this.VDRules = {from:{},depends:{}};
@@ -536,12 +559,8 @@ icms.forms = (function ($) {
 
                         for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){ /* перебор тех, от кого зависит поле field */
                             if(typeof _this.VDRules.depends[form_id+'-'+field][_from]['show'] !== 'undefined'){
-                                if($.inArray(_this.getInputVal('#'+form_id+' [name="'+_this.inputNameToElName(_from)+'"]'), _this.VDRules.depends[form_id+'-'+field][_from]['show']) !== -1){
-                                    display = true;
-                                    break;
-                                }else{
-                                    display = false;
-                                }
+                                display = _this.VDisDisplay(_this.getInputVal('#'+form_id+' [name="'+_this.inputNameToElName(_from)+'"]'), _this.VDRules.depends[form_id+'-'+field][_from]['show']);
+                                if(display === true){ break; }
                             }
                         }}
 
@@ -550,12 +569,8 @@ icms.forms = (function ($) {
                         if(display){ /* скрытие сильнее показа */
                             for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){ /* перебор тех, от кого зависит поле field */
                                 if(typeof _this.VDRules.depends[form_id+'-'+field][_from]['hide'] !== 'undefined'){
-                                    if($.inArray(_this.getInputVal('#'+form_id+' [name="'+_this.inputNameToElName(_from)+'"]'), _this.VDRules.depends[form_id+'-'+field][_from]['hide']) !== -1){
-                                        display = false;
-                                        break;
-                                    }else{
-                                        display = true;
-                                    }
+                                    display = !_this.VDisDisplay(_this.getInputVal('#'+form_id+' [name="'+_this.inputNameToElName(_from)+'"]'), _this.VDRules.depends[form_id+'-'+field][_from]['hide']);
+                                    if(display === false){ break; }
                                 }
                             }}
                         }

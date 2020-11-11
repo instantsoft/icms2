@@ -65,14 +65,7 @@ class fieldFile extends cmsFormField {
 
     }
 
-    public function getStringValue($value){
-
-        $file = is_array($value) ? $value : cmsModel::yamlToArray($value);
-        if (!$file){ return ''; }
-
-        return $this->getOption('show_name') ? $file['name'] : LANG_PARSER_FILE_LABEL_GET;
-
-    }
+    public function getStringValue($value){ return null; }
 
     public function getDownloadURL($file){
 
@@ -141,6 +134,15 @@ class fieldFile extends cmsFormField {
             'path' => $result['url']
         );
 
+    }
+
+    public function getFiles($value){
+
+        if (empty($value)) { return false; }
+
+        if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
+
+        return [$value['path']];
     }
 
     public function delete($value){

@@ -217,11 +217,12 @@ class messages extends cmsFrontend {
 
         $data = array_merge(array(
             'site' => $this->cms_config->sitename,
+            'ip'   => cmsUser::getIp(),
             'date' => html_date(),
             'time' => html_time()
         ), $data);
 
-        $letter['text'] = string_replace_keys_values($letter['text'], $data);
+        $letter['text'] = string_replace_keys_values_extended($letter['text'], $data);
 
         $before_send = cmsEventsManager::hook('before_send_email', array(
             'send_email' => true,
@@ -266,8 +267,8 @@ class messages extends cmsFrontend {
         }
 
         if (!empty($to['attachments'])){
-            foreach ($to['attachments'] as $attach) {
-                $mailer->addAttachment($attach);
+            foreach ($to['attachments'] as $attach_name => $attach) {
+                $mailer->addAttachment($attach, (is_numeric($attach_name) ? '' : $attach_name));
             }
         }
 

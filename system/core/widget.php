@@ -10,6 +10,11 @@ class cmsWidget {
     public $groups_hide;
     public $options;
     public $css_class;
+    /**
+     * Подключать css контроллера
+     * @var boolean
+     */
+    public $insert_controller_css = false;
 
     public $is_cacheable = null;
 
