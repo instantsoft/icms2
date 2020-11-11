@@ -23,18 +23,27 @@ function is_config_exists() {
 }
 
 function get_site_config_env() {
-    return [
-        'db_host'        => getenv('ICMS_MYSQL_DB_HOST', true) ?: getenv('ICMS_MYSQL_DB_HOST'),
-        'db_base'        => getenv('ICMS_MYSQL_DB_BASE', true) ?: getenv('ICMS_MYSQL_DB_BASE'),
-        'db_user'        => getenv('ICMS_MYSQL_DB_USER', true) ?: getenv('ICMS_MYSQL_DB_USER'),
-        'db_pass'        => getenv('ICMS_MYSQL_DB_PASS', true) ?: getenv('ICMS_MYSQL_DB_PASS'),
-        'db_prefix'      => getenv('ICMS_MYSQL_DB_PREFIX', true) ?: getenv('ICMS_MYSQL_DB_PREFIX'),
-        'db_engine'      => getenv('ICMS_MYSQL_DB_ENGINE', true) ?: getenv('ICMS_MYSQL_DB_ENGINE'),
-        'db_charset'     => getenv('ICMS_MYSQL_DB_CHARSET', true) ?: getenv('ICMS_MYSQL_DB_CHARSET'),
-        'clear_sql_mode' => getenv('ICMS_MYSQL_CLEAR_SQL_MODE', true) ?: getenv('ICMS_MYSQL_CLEAR_SQL_MODE'),
-        'db_users_table' => getenv('ICMS_MYSQL_DB_USERS_TABLE', true) ?: getenv('ICMS_MYSQL_DB_USERS_TABLE'),
-        'language'       => getenv('ICMS_LANGUAGE', true) ?: getenv('ICMS_LANGUAGE'),
+
+    $env_mapping = [
+        'db_host'        => 'ICMS_MYSQL_DB_HOST',
+        'db_base'        => 'ICMS_MYSQL_DB_BASE',
+        'db_user'        => 'ICMS_MYSQL_DB_USER',
+        'db_pass'        => 'ICMS_MYSQL_DB_PASS',
+        'db_prefix'      => 'ICMS_MYSQL_DB_PREFIX',
+        'db_engine'      => 'ICMS_MYSQL_DB_ENGINE',
+        'db_charset'     => 'ICMS_MYSQL_DB_CHARSET',
+        'clear_sql_mode' => 'ICMS_MYSQL_CLEAR_SQL_MODE',
+        'db_users_table' => 'ICMS_MYSQL_DB_USERS_TABLE',
+        'language'       => 'ICMS_LANGUAGE'
     ];
+
+    $config = [];
+
+    foreach ($env_mapping as $config_key => $env_key) {
+        $config[$config_key] = getenv($env_key, true) ?: getenv($env_key);
+    }
+
+    return $config;
 }
 
 function get_site_config() {

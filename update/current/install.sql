@@ -12,7 +12,7 @@ CREATE TABLE `{#}forms` (
   `name` varchar(32) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `description` text,
-  `options` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `options` text,
   `tpl_form` varchar(100) DEFAULT NULL,
   `hash` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
