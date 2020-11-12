@@ -1,4 +1,4 @@
-<div id="content_bind_form" data-filter-url="<?php echo href_to($ctype['name'], 'bind_list', array($child_ctype['name'], $item['id'])); ?>?selected=<?php echo $selected_ids; ?>" data-mode="<?php echo $mode; ?>">
+<div id="content_bind_form" data-filter-url="<?php html($filter_url); ?>" data-mode="<?php html($mode); ?>">
     <div class="input-group find">
         <?php echo html_select('item-find-field', $filter_fields, '', array('id'=>'item-find-field')); ?>
         <?php echo html_input('text', 'item-find-input', '', array('id'=>'item-find-input', 'placeholder' => LANG_CONTENT_BIND_ITEM_FIND_HINT)); ?>

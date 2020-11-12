@@ -174,12 +174,20 @@ class fieldImage extends cmsFormField {
 
         if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
 
+        $files_model = cmsCore::getModel('files');
+
         foreach($value as $image_url){
-            files_delete_file($image_url, 2);
+
+            $file = $files_model->getFileByPath($image_url);
+            if (!$file) {
+                files_delete_file($image_url, 2);
+                continue;
+            }
+
+            $files_model->deleteFile($file['id']);
         }
 
         return true;
-
     }
 
     public function parseDefaultPaths(){
@@ -217,10 +225,9 @@ class fieldImage extends cmsFormField {
         $this->data['sizes'] = $this->getOption('sizes');
         $this->data['allow_import_link'] = $this->getOption('allow_import_link');
 
-        $this->data['images_controller'] = cmsCore::getController('images');
+        $this->data['images_controller'] = cmsCore::getController('images', new cmsRequest($this->context_params, cmsRequest::CTX_INTERNAL));
 
         return parent::getInput($value);
-
     }
 
 }

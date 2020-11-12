@@ -196,26 +196,33 @@ class fieldImages extends cmsFormField {
         return $files;
     }
 
-    public function delete($value){
+    public function delete($value) {
 
         if (empty($value)) { return true; }
 
-        if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
+        if (!is_array($value)) {
+            $value = cmsModel::yamlToArray($value);
+        }
 
-        foreach($value as $images){
-            foreach($images as $image_rel_path){
-                files_delete_file($image_rel_path, 2);
+        $files_model = cmsCore::getModel('files');
+
+        foreach ($value as $images) {
+            foreach ($images as $image_rel_path) {
+                $file = $files_model->getFileByPath($image_rel_path);
+                if (!$file) {
+                    files_delete_file($image_rel_path, 2);
+                    continue;
+                }
+
+                $files_model->deleteFile($file['id']);
             }
         }
 
         return true;
-
     }
 
-    public function getFilterInput($value=false) {
-
-        return html_checkbox($this->name, (bool)$value);
-
+    public function getFilterInput($value = false) {
+        return html_checkbox($this->name, (bool) $value);
     }
 
     public function applyFilter($model, $value) {
@@ -234,10 +241,9 @@ class fieldImages extends cmsFormField {
         $this->data['allow_import_link'] = $this->getOption('allow_import_link');
         $this->data['max_photos'] = $this->getOption('max_photos');
 
-        $this->data['images_controller'] = cmsCore::getController('images');
+        $this->data['images_controller'] = cmsCore::getController('images', new cmsRequest($this->context_params, cmsRequest::CTX_INTERNAL));
 
         return parent::getInput($value);
-
     }
 
 }

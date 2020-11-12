@@ -5,7 +5,7 @@
     ]);
     $this->addTplCSSFromContext('controllers/images/styles');
 ?>
-<div id="widget_image_<?php echo $dom_id; ?>" class="widget_image_single">
+<div id="widget_image_<?php echo $dom_id; ?>" class="widget_image_single" data-delete_url="<?php echo $delete_url; ?>">
     <div class="data" style="display:none">
         <?php if ($is_image_exists) { ?>
             <?php foreach($paths as $type=>$path){ ?>
@@ -14,7 +14,7 @@
         <?php } ?>
     </div>
 
-    <div class="preview block" <?php if (!$is_image_exists) { ?>style="display:none"<?php } ?>>
+    <div class="preview block" <?php if (!$is_image_exists) { ?>style="display:none"<?php } ?><?php if ($is_image_exists) { ?> data-paths="<?php html(json_encode($paths)); ?>"<?php } ?>>
         <div><img src="<?php if ($is_image_exists) { echo cmsConfig::get('upload_host') . '/' . reset($paths); } ?>" /></div>
         <a class="btn btn-danger btn-sm py-0 px-1" href="javascript:" onclick="icms.images.remove('<?php echo $dom_id; ?>')" title="<?php echo LANG_DELETE; ?>">
             <?php html_svg_icon('solid', 'minus-circle'); ?>

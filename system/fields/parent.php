@@ -112,9 +112,6 @@ class fieldParent extends cmsFormField {
 								($perm == 'other_to_all' && $author_id != $auth_user_id)
 							)) || cmsUser::isAdmin();
 
-        $perm = cmsUser::getPermissionValue($this->item['ctype_name'], 'add_to_parent');
-        $is_allowed_to_add = ($perm && (($perm == 'to_all') || ($perm == 'to_own'))) || cmsUser::isAdmin();
-
         $allowed_to_unbind_perm = cmsUser::getPermissionValue($this->item['ctype_name'], 'bind_off_parent');
         if(cmsUser::isAdmin()){
             $allowed_to_unbind_perm = 'all';
@@ -131,19 +128,41 @@ class fieldParent extends cmsFormField {
             'field'              => $this,
             'input_action'       => $this->input_action,
             'value'              => $value,
+            'field_item'         => $this->item,
             'items'              => $parent_items,
             'auth_user_id'       => $auth_user_id,
             'allowed_to_unbind_perm' => $allowed_to_unbind_perm,
-            'is_allowed_to_bind' => $is_allowed_to_bind,
-            'is_allowed_to_add'  => $is_allowed_to_add
+            'is_allowed_to_bind' => $is_allowed_to_bind
         ));
     }
 
     public function getFilterInput($value) {
 
+        if(!$this->show_filter_input_title){
+            $this->title = false;
+        }
+
         $this->input_action = 'select';
 
-        return parent::getFilterInput($value);
+        if ($value){
+            $parent_items = $this->getParentItemsByIds($value);
+        } else {
+            $parent_items = [];
+        }
+
+        return cmsTemplate::getInstance()->renderFormField($this->class, array(
+			'ctype_name'         => $this->parent_ctype_name,
+            'child_ctype_name'   => $this->item ? $this->item['ctype_name'] : false,
+            'parent_ctype'       => $this->parent_ctype_name ? cmsCore::getModel('content')->getContentTypeByName($this->parent_ctype_name) : [],
+            'field'              => $this,
+            'input_action'       => $this->input_action,
+            'value'              => $value,
+            'field_item'         => [],
+            'items'              => $parent_items,
+            'auth_user_id'       => cmsUser::get('id'),
+            'allowed_to_unbind_perm' => true,
+            'is_allowed_to_bind' => true
+        ));
     }
 
     public function applyFilter($model, $values) {

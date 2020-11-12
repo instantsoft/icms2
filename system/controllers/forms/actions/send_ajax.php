@@ -111,7 +111,7 @@ class actionFormsSendAjax extends cmsAction {
                 filterIsNull('is_deleted')->
                 limit(false)->getUsersIds();
 
-        if ($recipients) {
+        if (!$recipients) {
             return false;
         }
 

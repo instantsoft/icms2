@@ -1,4 +1,4 @@
-<div id="content_bind_form" data-filter-url="<?php echo href_to($ctype['name'], 'bind_list', array($child_ctype['name'], $item['id'])); ?>?selected=<?php echo $selected_ids; ?>" data-mode="<?php echo $mode; ?>">
+<div id="content_bind_form" data-filter-url="<?php html($filter_url); ?>" data-mode="<?php html($mode); ?>">
 
     <div class="find gui-panel">
         <div class="field">

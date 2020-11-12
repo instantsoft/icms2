@@ -927,6 +927,8 @@ class cmsController {
                 $_item[$field['name']] = strip_tags($field['handler']->setItem($item)->getStringValue($item[$field['name']]));
             }
 
+            // Убираем шорткоды
+            $_item[$field['name']] = preg_replace('#{[a-z]{1}[a-z0-9_]*\:[a-z0-9\:_]+}#i', '', $_item[$field['name']]);
         }
 
         if(!empty($item['tags']) && is_array($item['tags'])){

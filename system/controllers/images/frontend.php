@@ -42,44 +42,58 @@ class images extends cmsFrontend {
 
         $is_image_exists = !empty($paths);
 
-        $dom_id = str_replace(array('[',']'), array('_l_', '_r_'), $name);
+        $dom_id = str_replace(['[',']'], ['_l_', '_r_'], $name);
 
         $upload_url = href_to('images', 'upload', $dom_id);
+
+        $upload_params = $this->getContextParams();
+
         if (is_array($sizes)) {
-            $upload_url .= '?sizes=' . implode(',', $sizes);
+            $upload_params['sizes'] = implode(',', $sizes);
         }
 
-        return $this->cms_template->renderInternal($this, 'upload_single', array(
+        if($upload_params){
+            $upload_url .= '?'.http_build_query($upload_params);
+        }
+
+        return $this->cms_template->renderInternal($this, 'upload_single', [
 			'name'              => $name,
             'paths'             => $paths,
             'sizes'             => $sizes,
             'upload_url'        => $upload_url,
+            'delete_url'        => href_to('images', 'delete'),
             'dom_id'            => $dom_id,
             'is_image_exists'   => $is_image_exists,
             'allow_import_link' => $allow_import_link
-        ));
-
+        ]);
     }
 
     public function getMultiUploadWidget($name, $images = false, $sizes = false, $allow_import_link = false, $max_photos = 0){
 
-        $dom_id = str_replace(array('[',']'), array('_l_', '_r_'), $name);
+        $dom_id = str_replace(['[',']'], ['_l_', '_r_'], $name);
 
         $upload_url = href_to('images', 'upload', $dom_id);
+
+        $upload_params = $this->getContextParams();
+
         if (is_array($sizes)) {
-            $upload_url .= '?sizes=' . implode(',', $sizes);
+            $upload_params['sizes'] = implode(',', $sizes);
         }
 
-        return $this->cms_template->renderInternal($this, 'upload_multi', array(
+        if($upload_params){
+            $upload_url .= '?'.http_build_query($upload_params);
+        }
+
+        return $this->cms_template->renderInternal($this, 'upload_multi', [
             'name'              => $name,
             'images'            => $images,
             'sizes'             => $sizes,
             'upload_url'        => $upload_url,
+            'delete_url'        => href_to('images', 'delete'),
             'dom_id'            => $dom_id,
             'max_photos'        => (int)$max_photos,
             'allow_import_link' => $allow_import_link
-        ));
-
+        ]);
     }
 
 //============================================================================//
@@ -143,11 +157,11 @@ class images extends cmsFrontend {
 		files_delete_file($result['path'], 2);
         unset($result['path']);
 
-        $file_context = array(
-            'target_controller' => $this->request->get('target_controller'),
-            'target_subject' => $this->request->get('target_subject'),
-            'target_id' => $this->request->get('target_id')
-        );
+        $file_context = [
+            'target_controller' => $this->request->get('target_controller', ''),
+            'target_subject'    => $this->request->get('target_subject', ''),
+            'target_id'         => $this->request->get('target_id', 0)
+        ];
 
         if($file_context['target_controller']){
             $this->registerUploadFile($file_context);
@@ -158,7 +172,6 @@ class images extends cmsFrontend {
         unset($result['error']);
 
         return $result;
-
 	}
 
 	public function getAllowedExtensions(){
@@ -178,22 +191,51 @@ class images extends cmsFrontend {
         $this->file_context = $file_context; return $this;
 	}
 
-	private function registerFile($image){
+	public function registerFile($image){
 
         if($this->file_context === null){ return false; }
 
-        $file_id = cmsCore::getModel('files')->registerFile(array_merge($this->file_context, array(
+        $file_id = $this->model_files->registerFile(array_merge($this->file_context, array(
             'path'    => $image['path'],
             'type'    => 'image',
             'name'    => pathinfo($image['path'], PATHINFO_BASENAME),
-            'user_id' => cmsUser::get('id')
+            'user_id' => $this->cms_user->id
         )));
 
         $this->file_context = null;
 
         return $file_id;
-
 	}
+
+    private function getContextParams() {
+
+        $internal_context = [
+            'target_controller' => $this->request->get('target_controller', ''),
+            'target_subject'    => $this->request->get('target_subject', ''),
+            'target_id'         => $this->request->get('target_id', 0)
+        ];
+
+        if($internal_context['target_controller']){
+            return $internal_context;
+        }
+
+        $context = $this->cms_core->getUriData();
+        $upload_params = [];
+
+        if($context['controller']){
+            $upload_params['target_controller'] = $context['controller'];
+        }
+
+        if($context['action']){
+            $upload_params['target_subject'] = mb_substr($context['action'], 0, 32);
+        }
+
+        if(strpos($this->cms_core->uri, '/add/') === false && !empty($context['params'][1]) && is_numeric($context['params'][1])){
+            $upload_params['target_id'] = $context['params'][1];
+        }
+
+        return $upload_params;
+    }
 
     /**
      * Этот метод устаревший, используйте класс cmsImages

@@ -71,6 +71,12 @@ class actionImagesUpload extends cmsAction {
 
         list($result, $presets, $sizes) = cmsEventsManager::hook('images_after_upload', array($result, $presets, $sizes), null, $this->request);
 
+        $file_context = [
+            'target_controller' => $this->request->get('target_controller', ''),
+            'target_subject'    => $this->request->get('target_subject', ''),
+            'target_id'         => $this->request->get('target_id', 0)
+        ];
+
         // Создаём изображения по пресетам
 		foreach($presets as $p){
 
@@ -87,6 +93,11 @@ class actionImagesUpload extends cmsAction {
                 'url'  => $this->cms_config->upload_host . '/' . $resized_path
             ];
 
+            if($file_context['target_controller']){
+                $this->registerUploadFile($file_context);
+            }
+
+            $this->registerFile(['path' => $resized_path]);
 		}
 
         list($result, $presets, $sizes) = cmsEventsManager::hook('images_after_resize', array($result, $presets, $sizes), null, $this->request);
@@ -102,7 +113,6 @@ class actionImagesUpload extends cmsAction {
         unset($result['path']);
 
         return $this->cms_template->renderJSON($result);
-
     }
 
 }

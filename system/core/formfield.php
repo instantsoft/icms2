@@ -128,6 +128,7 @@ class cmsFormField {
     public $excluded_controllers = array();
 
     public $context = null;
+    public $context_params = [];
 
     /**
      * Метод для вывода поля в форме

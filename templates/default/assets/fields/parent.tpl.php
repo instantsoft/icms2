@@ -19,7 +19,7 @@
 </ul>
 
 <?php if ($is_allowed_to_bind) { ?>
-	<?php $url = href_to($ctype_name, 'bind_form', array($child_ctype_name, isset($field->item['id']) ? $field->item['id'] : 0, 'parents')); ?>
+	<?php $url = href_to($ctype_name, 'bind_form', array($child_ctype_name, isset($field_item['id']) ? $field_item['id'] : 0, 'parents')); ?>
 	<a class="add" href="<?php echo $url; ?>?input_action=<?php echo $input_action; ?>"><?php echo ($input_action === 'bind' ? LANG_ADD : LANG_SELECT); ?></a>
 <?php } ?>
 

@@ -6,7 +6,6 @@ class modelFiles extends cmsModel {
         $file['size'] = filesize(cmsConfig::get('upload_path').$file['path']);
 
         return $this->insert('uploaded_files', $file);
-
     }
 
     public function deleteFile($id){
@@ -14,12 +13,11 @@ class modelFiles extends cmsModel {
         $file = $this->getFile($id);
         if(!$file){ return false; }
 
-        $is_unlink = @unlink(cmsConfig::get('upload_path').$file['path']);
+        $is_unlink = files_delete_file($file['path'], 2);
 
         $is_delete = $this->delete('uploaded_files', $file['id']);
 
         return $is_unlink && $is_delete;
-
     }
 
     public function getFile($id){
