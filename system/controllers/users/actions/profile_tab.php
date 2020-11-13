@@ -30,11 +30,30 @@ class actionUsersProfileTab extends cmsAction {
 
         $this->request->set('dataset', $dataset);
 
+        $this->cms_template->setPageTitle($tab['title'], $profile['nickname']);
+
+        if($this->listIsAllowed()){
+            $this->cms_template->addBreadcrumb(LANG_USERS, href_to('users'));
+        }
+        $this->cms_template->addBreadcrumb($profile['nickname'], href_to_profile($profile));
+
         $html = $controller->runHook('user_tab_show', array($profile, $tab_name, $tab));
         if (!$html) { cmsCore::error404(); }
 
+        // Получаем поля
+        $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
+
+        // Парсим значения полей
+        foreach($fields as $name => $field){
+            $fields[$name]['string_value'] = $field['handler']->setItem($profile)->getStringValue($profile[$name]);
+        }
+
+        $meta_profile = $this->prepareItemSeo($profile, $fields, ['name' => 'users']);
+
         $this->cms_template->render('profile_tab', array(
             'tabs'    => $tabs_menu,
+            'meta_profile' => $meta_profile,
+            'fields'  => $fields,
             'tab'     => $tab,
             'profile' => $profile,
             'user'    => $this->cms_user,

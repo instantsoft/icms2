@@ -6,7 +6,6 @@ class modelFiles extends cmsModel {
         $file['size'] = filesize(cmsConfig::get('upload_path').$file['path']);
 
         return $this->insert('uploaded_files', $file);
-
     }
 
     public function deleteFile($id){
@@ -14,12 +13,11 @@ class modelFiles extends cmsModel {
         $file = $this->getFile($id);
         if(!$file){ return false; }
 
-        $is_unlink = @unlink(cmsConfig::get('upload_path').$file['path']);
+        $is_unlink = files_delete_file($file['path'], 2);
 
         $is_delete = $this->delete('uploaded_files', $file['id']);
 
         return $is_unlink && $is_delete;
-
     }
 
     public function getFile($id){
@@ -42,11 +40,13 @@ class modelFiles extends cmsModel {
 
         $this->selectOnly('id');
         $this->select('path');
+        $this->select('name', 'title');
 
         return $this->get('uploaded_files', function($item, $model){
 
             $item['image'] = cmsConfig::get('upload_host') . '/' . $item['path'];
             $item['thumb'] = $item['image'];
+            $item['value'] = $item['image'];
 
             return $item;
 

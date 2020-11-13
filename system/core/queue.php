@@ -51,6 +51,10 @@ class cmsQueue {
         return static::$table;
     }
 
+    public static function setTableName($name) {
+        static::$table = $name;
+    }
+
     protected static function pushToDatabase($data) {
 
         $model = new cmsModel();

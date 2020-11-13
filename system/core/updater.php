@@ -2,7 +2,7 @@
 
 class cmsUpdater {
 
-    private $update_info_url = 'http://upd.instantcms.ru/info/%s';
+    private $update_info_url = 'https://upd.instantcms.ru/info/%s';
     private $cache_file = 'cache/update.dat';
 
     const UPDATE_CHECK_ERROR = 0;
@@ -40,12 +40,6 @@ class cmsUpdater {
     }
 
     public function getUpdateFileContents($current_version, $only_cached){
-
-        if(function_exists('gethostbyname')){
-            if(gethostbyname(parse_url($this->update_info_url, PHP_URL_HOST)) !== '217.25.226.96'){
-                return false;
-            }
-        }
 
         if (file_exists($this->cache_file)){
             return file_get_contents($this->cache_file);

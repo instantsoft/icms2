@@ -1,0 +1,59 @@
+---
+owner_name:
+owner_url:
+owner_year:
+scss:
+  enable-rounded: 1
+  border-radius: .25rem
+  border-radius-lg: .3rem
+  border-radius-sm: .2rem
+  enable-shadows: null
+  enable-gradients: null
+  enable-responsive-font-sizes: 1
+  enable-modal-blur: 1
+  grid-gutter-width: 30px
+  font-size-base: 0.9375rem
+  avatar-inlist-size: 64px
+  body-bg: $white
+  body-color: $gray-800
+  primary: $blue
+  secondary: $gray-600
+  success: $green
+  info: $cyan
+  warning: $yellow
+  danger: $red
+  light: $gray-100
+  dark: $gray-900
+  white: '#ffffff'
+  gray-100: '#f8f9fa'
+  gray-200: '#eeeeee'
+  gray-300: '#dee2e6'
+  gray-400: '#cccccc'
+  gray-500: '#adb5bd'
+  gray-600: '#888888'
+  gray-700: '#495057'
+  gray-800: '#333333'
+  gray-900: '#222222'
+  black: '#000000'
+  blue: '#008cba'
+  indigo: '#6610f2'
+  purple: '#6f42c1'
+  pink: '#e83e8c'
+  red: '#f04124'
+  orange: '#fd7e14'
+  yellow: '#e99002'
+  green: '#43ac6a'
+  teal: '#20c997'
+  cyan: '#5bc0de'
+pagination_template: pagination
+custom_scss:
+  body-bg:
+  body-color:
+  primary:
+  secondary:
+  success:
+  info:
+  warning:
+  danger:
+  light:
+  dark:

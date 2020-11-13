@@ -18,7 +18,7 @@
 	define('LANG_PHOTOS_PRESET',                'Пресет для показа фотографии на странице просмотра');
 	define('LANG_PHOTOS_PRESET_SMALL',          'Пресет для фотографий в списке');
 	define('LANG_PHOTOS_PRESET_RELATED',        'Пресет для похожих фотографий на странице просмотра фото');
-	define('LANG_PHOTOS_PRESET_DEF',            'По-умолчанию');
+	define('LANG_PHOTOS_PRESET_DEF',            'По умолчанию');
 	define('LANG_PHOTOS_EDIT_PHOTO',            'Редактировать фото');
 	define('LANG_PHOTOS_SET_COVER',             'Сделать обложкой альбома');
 	define('LANG_PHOTOS_DELETE_PHOTO',          'Удалить фото');
@@ -27,6 +27,7 @@
 	define('LANG_PHOTOS_TYPES_HINT',            'Каждый тип с новой строки, можно задавать порядковые номера в формате: 1 | Название типа');
 	define('LANG_PHOTOS_DATE',                  'Дата съёмки');
 	define('LANG_PHOTOS_SIZES',                 'Пресеты для конвертации изображений');
+	define('LANG_PHOTOS_ALLOW_ADD_PUBLIC_ALBUMS', 'Разрешено добавление фото в общие альбомы');
 	define('LANG_PHOTOS_DOWNLOAD_VIEW',         'Разрешено скачивание пресета <b>«%s»</b> группам');
 	define('LANG_PHOTOS_DOWNLOAD_HIDE',         'Запрещено скачивание пресета <b>«%s»</b> группам');
 	define('LANG_PHOTOS_ACCESS_BY_LINK',        'Доступ по ссылке');
@@ -53,8 +54,6 @@
     define('LANG_PHOTOS_ALBUM',                 'Альбом');
     define('LANG_PHOTOS_WP_ITEM',               'Страница фотографии');
     define('LANG_PHOTOS_WP_UPLOAD',             'Загрузка фотографий');
-    define('LANG_PHOTOS_O_AUTO_GROUP',          'Автоматически определять группу');
-    define('LANG_PHOTOS_O_AUTO_GROUP_HINT',     'На страницах групп виджет выведет фотографии альбомов группы');
     define('LANG_PHOTOS_O_AUTO_USER',           'Автоматически определять профиль пользователя');
     define('LANG_PHOTOS_O_AUTO_USER_HINT',      'На страницах профилей виджет выведет фотографии просматриваемого пользователя');
     define('LANG_PHOTOS_O_AUTO_CTYPE_ITEM',     'Автоматически определять запись типа контента');

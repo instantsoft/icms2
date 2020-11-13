@@ -6,7 +6,7 @@ class formGroupsOptions extends cmsForm {
 
         return array(
 
-            array(
+            'list' => array(
                 'type' => 'fieldset',
                 'title' => LANG_GROUPS_LIST,
                 'childs' => array(
@@ -18,14 +18,10 @@ class formGroupsOptions extends cmsForm {
                 )
             ),
 
-            array(
+            'view' => array(
                 'type' => 'fieldset',
                 'title' => LANG_GROUPS_VIEW,
                 'childs' => array(
-
-                    new fieldCheckbox('is_wall', array(
-                        'title' => LANG_GROUPS_OPT_WALL_ENABLED,
-                    )),
 
                     new fieldString('change_owner_email', array(
                         'title' => LANG_GROUPS_OPT_CHANGE_OWNER_EMAIL,
@@ -37,7 +33,7 @@ class formGroupsOptions extends cmsForm {
                 )
             ),
 
-            array(
+            'limit' => array(
                 'type' => 'fieldset',
                 'title' => LANG_LIST_LIMIT,
                 'childs' => array(

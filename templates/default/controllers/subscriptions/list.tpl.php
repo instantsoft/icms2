@@ -6,7 +6,7 @@
             <div class="item">
                 <div class="icon">
                     <a href="<?php echo href_to_profile($item['user']); ?>" <?php if (!empty($item['user']['is_online'])){ ?>class="peer_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="peer_no_online"<?php } ?>>
-                        <?php echo html_avatar_image($item['user']['avatar'], 'micro', $item['user']['nickname'], $item['user']['is_deleted']); ?>
+                        <?php echo html_avatar_image($item['user']['avatar'], $fields['avatar']['options']['size_teaser'], $item['user']['nickname'], $item['user']['is_deleted']); ?>
                     </a>
                 </div>
                 <div class="title">
@@ -36,7 +36,7 @@
         </div>
     <?php } ?>
     <?php if(!$is_ajax){ ?>
-        <?php $this->addJS( $this->getJavascriptFileName('subscriptions') ); ?>
+        <?php $this->addTplJSName('subscriptions'); ?>
         <?php $this->renderAsset('ui/pagebar', array('has_next' => $has_next, 'page' => $page, 'base_url' => $base_url)); ?>
     <?php } ?>
 <?php }

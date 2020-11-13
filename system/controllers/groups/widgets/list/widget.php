@@ -79,7 +79,10 @@ class widgetGroupsList extends cmsWidget {
             }
         }
 
+        cmsCore::loadControllerLanguage('groups');
+
         return array(
+            'show_members_count' => $this->getOption('show_members_count', true),
             'fields'            => $fields,
             'fields_is_in_list' => $fields_is_in_list,
             'groups'            => $groups

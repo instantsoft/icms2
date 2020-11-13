@@ -1,5 +1,5 @@
 <?php if($has_next || (!$has_next && $page > 1)){ ?>
-    <?php $this->addJS($this->getJavascriptFileName('jquery-scroll')); ?>
+    <?php $this->addTplJSName('jquery-scroll'); ?>
     <?php $elemet_id = md5(microtime(true)); ?>
     <a class="show-more" id="<?php echo $elemet_id; ?>" href="<?php echo $base_url.((strpos($base_url, '?') !== false) ? '&' : '?').'page='.($has_next ? ($page+1) : 1); ?>" data-url="<?php echo isset($more_url) ? $more_url : $base_url; ?>" data-url-params="<?php html(isset($url_params) ? json_encode($url_params) : '{}'); ?>" data-first-page-url="<?php echo $base_url; ?>">
         <span data-to-first="<?php echo LANG_RETURN_TO_FIRST; ?>">

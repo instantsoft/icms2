@@ -124,21 +124,22 @@ function files_tree_to_array($path){
  */
 function files_normalize_path($path) {
 
-  $parts = explode('/', $path);
-  $safe = array();
-  foreach ($parts as $idx => $part) {
-    if (empty($part) || ('.' == $part)) {
-      continue;
-    } elseif ('..' == $part) {
-      array_pop($safe);
-      continue;
-    } else {
-      $safe[] = $part;
-    }
-  }
+    $parts = explode('/', $path);
+    $safe  = array();
 
-  $path = implode('/', $safe);
-  return $path;
+    foreach ($parts as $idx => $part) {
+        if (empty($part) || ('.' == $part)) {
+            continue;
+        } elseif ('..' == $part) {
+            array_pop($safe);
+            continue;
+        } else {
+            $safe[] = $part;
+        }
+    }
+
+    $path = implode('/', $safe);
+    return $path;
 
 }
 
@@ -214,22 +215,54 @@ function files_user_file_hash($file_path = ''){
 /**
  * Очищает имя файла от специальных символов
  *
- * @param string $filename
+ * @param string $filename Имя файла
+ * @param boolean $convert_slug Транслитировать?
  * @return string
  */
-function files_sanitize_name($filename){
+function files_sanitize_name($filename, $convert_slug = true){
 
 	$path_parts = pathinfo($filename);
-    $filename = lang_slug($path_parts['filename']) . '.' . (isset($path_parts['extension']) ? $path_parts['extension'] : '');
+    if($convert_slug){
+        $filename = lang_slug($path_parts['filename']) . ((isset($path_parts['extension']) ?  '.' . $path_parts['extension'] : ''));
+    } else {
+        $filename = trim(strip_tags($path_parts['filename']) . ((isset($path_parts['extension']) ?  '.' . $path_parts['extension'] : '')));
+    }
     $filename = mb_strtolower($filename);
     $filename = preg_replace(array('/[\&]/', '/[\@]/', '/[\#]/'), array('-and-', '-at-', '-number-'), $filename);
-    $filename = preg_replace('/[^(\x20-\x7F)]*/','', $filename);
     $filename = str_replace(' ', '-', $filename);
     $filename = str_replace('\'', '', $filename);
-    $filename = preg_replace('/[^\w\-\.]+/', '', $filename);
+    $filename = preg_replace('/[^\w\-\.]+/u', '', $filename);
     $filename = preg_replace('/[\-]+/', '-', $filename);
 
 	return $filename;
+}
+
+/**
+ * Возвращает/создаёт путь к директории хранения
+ *
+ * @param integer $user_id
+ * @return string
+ */
+function files_get_upload_dir($user_id = 0) {
+
+    $dir_num_user = sprintf('%03d', intval($user_id/100));
+
+    $file_name   = md5(microtime(true));
+    $first_dir   = substr($file_name, 0, 1);
+    $second_dir  = substr($file_name, 1, 1);
+    $upload_path = cmsConfig::get('upload_path');
+
+    $dest_dir = $upload_path."{$dir_num_user}/u{$user_id}/{$first_dir}/{$second_dir}/";
+
+    if(!is_dir($dest_dir)){
+        @mkdir($dest_dir, 0777, true);
+        @chmod($dest_dir, 0777);
+        @chmod(pathinfo($dest_dir, PATHINFO_DIRNAME), 0777);
+        @chmod($upload_path . "{$dir_num_user}/u{$user_id}", 0777);
+        @chmod($upload_path . "{$dir_num_user}", 0777);
+    }
+
+    return $dest_dir;
 
 }
 
@@ -299,6 +332,9 @@ function file_save_from_url($url, $destination){
 }
 /**
  * Накладывает ваттермарк на изображение
+ *
+ * УСТАРЕВШАЯ ФУНКЦИЯ
+ *
  * @param string $src_file Путь (относительно папки upload) к файлу, на который нужно наложить ватермарк
  * @param string $wm_file Путь (относительно папки upload) к файлу ватермарка
  * @param string $wm_origin Позиция ватермарка: top-left|top|top-right|left|center|right|bottom-left|bottom|bottom-right
@@ -360,7 +396,7 @@ function img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality
             $x = $wm_margin;
             $y = $wm_margin;
             break;
-        case 'top':
+        case 'top-center':
             $x = ($img_width/2) - ($wm_width/2);
             $y = $wm_margin;
             break;
@@ -417,6 +453,9 @@ function img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality
 }
 /**
  * Изменяет размер изображения $src, сохраняя измененное в $dest
+ *
+ * УСТАРЕВШАЯ ФУНКЦИЯ
+ *
  * @param string $src Полный путь к исходному изображению
  * @param string $dest Полный путь куда сохранять измененное изображение
  * @param int $maxwidth Максимальная ширина в px
@@ -425,7 +464,7 @@ function img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality
  * @param int $quality Качество результирующего изображения от 1 до 100
  * @return boolean
  */
-function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $quality=95){
+function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false, $quality = 95) {
 
     if (!file_exists($src)) { return false; }
 
@@ -441,163 +480,33 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $q
 
     }
 
-    $image_params = img_get_params($src);
-    if ($image_params === false) { return false; }
-
-    $new_width  = $image_params['width'];
-    $new_height = $image_params['height'];
-
-    // Определяем исходный формат по MIME-информации, предоставленной
-    // функцией getimagesize, и выбираем соответствующую формату
-    // imagecreatefrom-функцию.
-    $format = strtolower(substr($image_params['mime'], strpos($image_params['mime'], '/') + 1));
-    $icfunc = 'imagecreatefrom'.$format;
-    $igfunc = 'image'.$format;
-
-    if (!function_exists($icfunc)) { return false; }
-    if (!function_exists($igfunc)) { return false; }
-
-    if (($new_height <= $maxheight) && ($new_width <= $maxwidth)) {
-        return copy($src, $dest);
+    try {
+        $image = new cmsImages($src);
+    } catch (Exception $exc) {
+        return false;
     }
 
-    $isrc = $icfunc($src);
+    if($is_square){
 
-    // автоповорот изображений
-    if(isset($image_params['exif']['orientation'])) {
-        $actions = array();
-        switch ($image_params['exif']['orientation']) {
-            case 1: break;
-            case 2: $actions = array('img_flip' => 'x'); break;
-            case 3: $actions = array('img_rotate' => -180); break;
-            case 4: $actions = array('img_flip' => 'y'); break;
-            case 5: $actions = array('img_flip' => 'y', 'img_rotate' => 90); break;
-            case 6: $actions = array('img_rotate' => 90); break;
-            case 7: $actions = array('img_flip' => 'x', 'img_rotate' => 90); break;
-            case 8: $actions = array('img_rotate' => -90); break;
-        }
-        if($actions){
-            foreach ($actions as $orient_func => $func_param) {
-
-                $orient_result = $orient_func($func_param, $isrc, $new_width, $new_height);
-
-                $isrc       = $orient_result['image_res'];
-                $new_width  = $image_params['width'] = $orient_result['width'];
-                $new_height = $image_params['height'] = $orient_result['height'];
-
-            }
-        }
-    }
-
-    if ($is_square) {
-
-        $idest = imagecreatetruecolor($maxwidth, $maxwidth);
-
-        if ($format == 'jpeg') {
-
-            imagefill($idest, 0, 0, 0xFFFFFF);
-
-        } else if ($format == 'png' || $format == 'gif') {
-
-            $trans = imagecolorallocatealpha($idest, 255, 255, 255, 127);
-            imagefill($idest, 0, 0, $trans);
-            imagealphablending($idest, true);
-            imagesavealpha($idest, true);
-
-        }
-
-        // вырезаем квадратную серединку по x, если фото горизонтальное
-        if ($new_width > $new_height) {
-
-            imagecopyresampled($idest, $isrc, 0, 0, round(( max($new_width, $new_height) - min($new_width, $new_height) ) / 2), 0, $maxwidth, $maxwidth, min($new_width, $new_height), min($new_width, $new_height));
-
-        }
-
-        // вырезаем квадратную верхушку по y,
-        if ($new_width < $new_height) {
-            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, min($new_width, $new_height), min($new_width, $new_height));
-        }
-
-        // квадратная картинка масштабируется без вырезок
-        if ($new_width == $new_height) {
-            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, $new_width, $new_width);
-        }
+        $image->crop($maxwidth, $maxheight, false, cmsImages::CROPCENTER);
 
     } else {
 
         if(!$maxwidth || !$maxheight){
 
-            $ratio = $new_height / $new_width;
-
             if(!$maxwidth){
-
-                $new_height = min($maxheight, $new_height);
-                $new_width  = $new_height / $ratio;
-
+                $image->resizeToHeight($maxheight);
             } else {
-
-                $new_width  = min($maxwidth, $new_width);
-                $new_height = $new_width * $ratio;
-
+                $image->resizeToWidth($maxwidth);
             }
 
         } else {
-
-            if ($new_width > $maxwidth) {
-
-                $wscale = $maxwidth / $new_width;
-
-                $new_width  *= $wscale;
-                $new_height *= $wscale;
-
-            }
-
-            if ($new_height > $maxheight) {
-
-                $hscale = $maxheight / $new_height;
-
-                $new_width  *= $hscale;
-                $new_height *= $hscale;
-
-            }
-
+            $image->resizeToBestFit($maxwidth, $maxheight);
         }
 
-        $idest = imagecreatetruecolor($new_width, $new_height);
-
-        if ($format == 'jpeg') {
-
-            imagefill($idest, 0, 0, 0xFFFFFF);
-
-        } else if ($format == 'png' || $format == 'gif') {
-
-            $trans = imagecolorallocatealpha($idest, 255, 255, 255, 127);
-            imagefill($idest, 0, 0, $trans);
-            imagealphablending($idest, true);
-            imagesavealpha($idest, true);
-
-        }
-
-        imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $new_width, $new_height, $image_params['width'], $image_params['height']);
-
     }
 
-    if ($format == 'jpeg') {
-        imageinterlace($idest, 1);
-    }
-
-    if ($format == 'png') {
-        $quality = (10 - ceil($quality / 10));
-    }
-    if ($format == 'gif') {
-        $quality = NULL;
-    }
-
-    // вывод картинки и очистка памяти
-    $igfunc($idest, $dest, $quality);
-
-    imagedestroy($isrc);
-    imagedestroy($idest);
+    $image->save($dest, null, $quality);
 
     return true;
 
@@ -607,57 +516,72 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $q
  * @param string $path Полный путь к файлу
  * @return boolean|array
  */
-function img_get_params($path){
+function img_get_params($path) {
 
     $s = getimagesize($path);
     if ($s === false) { return false; }
 
     $exif_data = array();
+
     $exif = (function_exists('exif_read_data') && $s['mime'] === 'image/jpeg' ? (@exif_read_data($path, null, true)) : null);
-    if($exif){
-        if(isset($exif['COMPUTED']['ApertureFNumber'])){
+
+    if ($exif) {
+        if (isset($exif['COMPUTED']['ApertureFNumber'])) {
             $exif_data['aperturefnumber'] = $exif['COMPUTED']['ApertureFNumber'];
-        } elseif(isset($exif['EXIF']['FNumber'])){
+        } elseif (isset($exif['EXIF']['FNumber'])) {
             $num = explode('/', $exif['EXIF']['FNumber']);
-            $exif_data['aperturefnumber'] = 'f/'.($num[0]/$num[1]);
+            $exif_data['aperturefnumber'] = 'f/' . ($num[0] / $num[1]);
         }
-        if(isset($exif['EXIF']['ExposureTime'])){
-            $exif_data['exposuretime'] = $exif['EXIF']['ExposureTime'];
-        } elseif(isset($exif['IFD0']['ExposureTime'])){
+        if (isset($exif['EXIF']['ExposureTime'])) {
+            $num = explode('/', $exif['EXIF']['ExposureTime']);
+            $exif_data['exposuretime'] = ($num[0] == 1) ? $exif['EXIF']['ExposureTime'] : '1/' . round($num[1] / $num[0]) . 's';
+        } elseif (isset($exif['IFD0']['ExposureTime'])) {
             $exif_data['exposuretime'] = $exif['IFD0']['ExposureTime'];
         }
-        if(isset($exif['IFD0']['Make'])){
-            $exif_data['camera'] = $exif['IFD0']['Make'];
+        $make = false;
+        if (isset($exif['IFD0']['Make'])) {
+            $exif['IFD0']['Make'] = trim($exif['IFD0']['Make']);
+            if ($exif['IFD0']['Make'] != 'NIKON CORPORATION' && $exif['IFD0']['Make'] != 'Canon' && $exif['IFD0']['Make'] != 'Lenovo ') {
+                $exif_data['camera'] = $exif['IFD0']['Make'];
+                $make = true;
+            }
         }
-        if(isset($exif['IFD0']['Model'])){
-            $exif_data['camera'] = $exif['IFD0']['Model'];
+        if (isset($exif['IFD0']['Model'])) {
+            $exif_data['camera'] = $make ? $exif['IFD0']['Make'] . ' ' . $exif['IFD0']['Model'] : $exif['IFD0']['Model'];
         }
-        if(isset($exif['IFD0']['DateTime'])){
-            $exif_data['date'] = $exif['IFD0']['DateTime'];
-        } elseif(isset($exif['EXIF']['DateTimeOriginal'])){
+
+        if (isset($exif['EXIF']['DateTimeOriginal'])) {
             $exif_data['date'] = $exif['EXIF']['DateTimeOriginal'];
-        } elseif(isset($exif['EXIF']['DateTimeDigitized'])){
+        } elseif (isset($exif['EXIF']['DateTimeDigitized'])) {
             $exif_data['date'] = $exif['EXIF']['DateTimeDigitized'];
         }
-        if(isset($exif['EXIF']['ISOSpeedRatings'])){
+
+        if (isset($exif['EXIF']['ISOSpeedRatings'])) {
             $exif_data['isospeedratings'] = $exif['EXIF']['ISOSpeedRatings'];
-            if(is_array($exif_data['isospeedratings'])){
+            if (is_array($exif_data['isospeedratings'])) {
                 $exif_data['isospeedratings'] = current($exif_data['isospeedratings']);
             }
         }
-        if(isset($exif['EXIF']['FocalLength'])){
-            $exif_data['focallength'] = $exif['EXIF']['FocalLength'];
+
+        if (isset($exif['EXIF']['FocalLength'])) {
+            $num = explode('/', $exif['EXIF']['FocalLength']);
+            $exif_data['focallength'] = floor($num[0] / $num[1]) . 'mm';
         }
-        if(isset($exif['IFD0']['Orientation'])){
+
+        if (isset($exif['EXIF']['FocalLengthIn35mmFilm'])) {
+            $exif_data['focallengthin35mmfilm'] = $exif['EXIF']['FocalLengthIn35mmFilm'] . 'mm';
+        }
+
+        if (isset($exif['IFD0']['Orientation'])) {
             $exif_data['orientation'] = $exif['IFD0']['Orientation'];
         }
     }
 
     $orientation = 'square';
-    if($s[0] > $s[1]){
+    if ($s[0] > $s[1]) {
         $orientation = 'landscape';
     }
-    if($s[0] < $s[1]){
+    if ($s[0] < $s[1]) {
         $orientation = 'portrait';
     }
 
@@ -668,50 +592,6 @@ function img_get_params($path){
         'mime'        => $s['mime'],
         'exif'        => $exif_data,
         'filesize'    => round(filesize($path))
-    );
-
-}
-function img_flip($direction, $image_res, $width, $height) {
-
-    $new_image_res = imagecreatetruecolor($width, $height);
-
-    imagealphablending($new_image_res, false);
-    imagesavealpha($new_image_res, true);
-
-    switch (strtolower($direction)) {
-        case 'y':
-            for ($y = 0; $y < $height; $y++) {
-                imagecopy($new_image_res, $image_res, 0, $y, 0, $height - $y - 1, $width, 1);
-            }
-            break;
-        default:
-            for ($x = 0; $x < $width; $x++) {
-                imagecopy($new_image_res, $image_res, $x, 0, $width - $x - 1, 0, 1, $height);
-            }
-            break;
-    }
-
-    return array(
-        'width'     => $width,
-        'height'    => $height,
-        'image_res' => $new_image_res
-    );
-
-}
-function img_rotate($angle, $image_res) {
-
-    if ($angle < -360) {
-        $angle = -360;
-    } else if ($angle > 360) {
-        $angle = 360;
-    }
-
-    $new_image_res = imagerotate($image_res, -$angle, 0);
-
-    return array(
-        'width'     => imagesx($new_image_res),
-        'height'    => imagesy($new_image_res),
-        'image_res' => $new_image_res
     );
 
 }

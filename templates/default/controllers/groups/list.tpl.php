@@ -33,7 +33,7 @@
                     </div>
                 <?php } ?>
 
-                <?php if ($fields['logo']['is_in_list'] && $group['logo']){ ?>
+                <?php if (!empty($fields['logo']) && $fields['logo']['is_in_list'] && $group['logo']){ ?>
                     <div class="icon">
                         <a href="<?php echo href_to('groups', $group['slug']); ?>">
                             <?php echo html_image($group['logo'], $fields['logo']['handler']->getOption('size_teaser'), $group['title']); ?>
@@ -42,7 +42,7 @@
                 <?php } ?>
 
                 <div class="title <?php if (!empty($group['fields'])) { ?>fields_available<?php } ?>">
-                    <?php if ($fields['title']['is_in_list']){ ?>
+                    <?php if (!empty($fields['title']) && $fields['title']['is_in_list']){ ?>
                         <a href="<?php echo href_to('groups', $group['slug']); ?>"><?php html($group['title']); ?></a>
                         <?php if ($group['is_closed']) { ?>
                             <span class="is_closed" title="<?php html(LANG_GROUP_IS_CLOSED_ICON); ?>"></span>
@@ -68,7 +68,7 @@
 
                 <div class="actions">
 
-                    <?php if ($dataset_name == 'popular') { ?>
+                    <?php if (!$dataset_name || $dataset_name == 'popular') { ?>
 
                         <?php echo $group['members_count'] ? html_spellcount($group['members_count'], LANG_GROUPS_MEMBERS_SPELLCOUNT) : '&mdash;'; ?>
 
@@ -96,4 +96,4 @@
         <?php echo html_pagebar($page, $perpage, $total, $page_url, $filters); ?>
     <?php } ?>
 
-<?php } ?>
+<?php }

@@ -1,11 +1,13 @@
 <?php
 
-    $this->addJS('templates/default/js/jquery-ui.js');
-    $this->addCSS('templates/default/css/jquery-ui.css');
+    $this->addTplJSName('jquery-ui');
+    $this->addTplCSSName('jquery-ui');
 
     $this->setPageTitle($profile['nickname']);
 
-    $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    if($this->controller->listIsAllowed()){
+        $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    }
     $this->addBreadcrumb($profile['nickname']);
 
     if (is_array($tool_buttons)){
@@ -17,7 +19,7 @@
 ?>
 
 <div id="user_profile_header">
-    <?php $this->renderChild('profile_header', array('profile'=>$profile, 'tabs'=>false, 'is_can_view'=>false)); ?>
+    <?php $this->renderChild('profile_header', ['profile'=>$profile, 'meta_profile' => $meta_profile, 'tabs'=>false, 'is_can_view'=>false]); ?>
 </div>
 
 <div id="user_profile">

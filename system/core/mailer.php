@@ -222,10 +222,11 @@ class cmsMailer {
     /**
      * Добавляет файл во вложение к письму
      * @param string $file Абсолютный путь к файлу
+     * @param string $name Имя файла
      * @return \cmsMailer
      */
-    public function addAttachment($file){
-        $this->mailer->AddAttachment($file);
+    public function addAttachment($file, $name = ''){
+        $this->mailer->AddAttachment($file, $name);
         return $this;
     }
 

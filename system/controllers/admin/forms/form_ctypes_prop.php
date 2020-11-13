@@ -1,13 +1,14 @@
 <?php
+
 class formAdminCtypesProp extends cmsForm {
 
-    public function init($do) {
+    public function init($do, $ctype) {
 
         $model = cmsCore::getModel('content');
 
         return array(
             'basic' => array(
-                'type' => 'fieldset',
+                'type'   => 'fieldset',
                 'childs' => array(
                     new fieldString('title', array(
                         'title' => LANG_CP_PROP_TITLE,
@@ -22,16 +23,18 @@ class formAdminCtypesProp extends cmsForm {
                 )
             ),
             'group' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_FIELD_FIELDSET,
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_FIELDSET,
                 'childs' => array(
                     new fieldList('fieldset', array(
-                        'title' => LANG_CP_FIELD_FIELDSET_SELECT,
-                        'generator' => function($prop) use($model){
-                            $fieldsets = $model->getContentPropsFieldsets($prop['ctype_id']);
-                            $items = array('');
-                            if (is_array($fieldsets)){
-                                foreach($fieldsets as $fieldset) { $items[$fieldset] = $fieldset; }
+                        'title'     => LANG_CP_FIELD_FIELDSET_SELECT,
+                        'generator' => function($prop) use($model, $ctype) {
+                            $fieldsets = $model->getContentPropsFieldsets($ctype['name']);
+                            $items     = array('');
+                            if (is_array($fieldsets)) {
+                                foreach ($fieldsets as $fieldset) {
+                                    $items[$fieldset] = $fieldset;
+                                }
                             }
                             return $items;
                         }
@@ -39,18 +42,18 @@ class formAdminCtypesProp extends cmsForm {
                     new fieldString('new_fieldset', array(
                         'title' => LANG_CP_FIELD_FIELDSET_ADD,
                         'rules' => array(
-                            array('max_length', 100)
+                            array('max_length', 32)
                         )
                     )),
                 )
             ),
-            'type' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_FIELD_TYPE,
+            'type'   => array(
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_TYPE,
                 'childs' => array(
                     new fieldList('type', array(
                         'default' => 'list',
-                        'items' => array(
+                        'items'   => array(
                             'list'          => LANG_PARSER_LIST,
                             'list_multiple' => LANG_PARSER_LIST_MULTIPLE,
                             'string'        => LANG_PARSER_STRING,
@@ -58,15 +61,15 @@ class formAdminCtypesProp extends cmsForm {
                             'number'        => LANG_PARSER_NUMBER,
                             'checkbox'      => LANG_PARSER_CHECKBOX
                         )
-                    )),
+                            )),
                     new fieldCheckbox('options:is_required', array(
                         'title' => LANG_VALIDATE_REQUIRED
                     ))
                 )
             ),
             'number' => array(
-                'type' => 'fieldset',
-                'title' => LANG_PARSER_NUMBER,
+                'type'   => 'fieldset',
+                'title'  => LANG_PARSER_NUMBER,
                 'childs' => array(
                     new fieldString('options:units', array(
                         'title' => LANG_CP_PROP_UNITS,
@@ -77,37 +80,37 @@ class formAdminCtypesProp extends cmsForm {
                 )
             ),
             'values' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_PROP_VALUES,
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_PROP_VALUES,
                 'childs' => array(
                     new fieldText('values', array(
-                        'size' => 8,
-                        'hint' => LANG_CP_PROP_VALUES_HINT
+                        'size'          => 8,
+                        'is_strip_tags' => true,
+                        'hint'          => LANG_CP_PROP_VALUES_HINT
                     )),
                     new fieldCheckbox('options:is_filter_multi', array(
                         'title' => LANG_PARSER_LIST_FILTER_MULTI
                     ))
                 )
             ),
-            'cats' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_PROP_CATS,
+            'cats'   => array(
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_PROP_CATS,
                 'childs' => array(
                     new fieldList('cats', array(
-                            'is_multiple' => true,
-                            'is_tree' => true,
-                            'generator' => function($prop) use($model){
-                                $ctype = $model->getContentType($prop['ctype_id']);
-                                $tree = $model->limit(0)->getCategoriesTree($ctype['name'], false);
-                                foreach($tree as $c){
-                                    $items[$c['id']] = str_repeat('- ', $c['ns_level']).' '.$c['title'];
-                                }
-                                return $items;
+                        'is_multiple'              => true,
+                        'multiple_select_deselect' => true,
+                        'is_tree'                  => true,
+                        'generator'                => function($prop) use($model, $ctype) {
+                            $tree = $model->limit(0)->getCategoriesTree($ctype['name'], false);
+                            foreach ($tree as $c) {
+                                $items[$c['id']] = str_repeat('- ', $c['ns_level']) . ' ' . $c['title'];
                             }
-                        )
-                    )
+                            return $items;
+                        }
+                    ))
                 )
-            ),
+            )
         );
 
     }

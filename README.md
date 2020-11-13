@@ -1,6 +1,12 @@
-# InstantCMS
+<p>
+  <a href="https://instantcms.ru">
+    <img alt="InstantCMS" src="https://instantcms.ru/templates/ic4/images/InstantCMS-logo-gray.svg" />
+  </a>
+</p>
 
-Is a free open source CMS (content management system) that allows you to build websites for any purpose
+#### Is a free open source CMS (content management system) that allows you to build websites for any purpose
+
+[![LICENSE](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](./LICENSE)
 
 ## Key features
 
@@ -18,7 +24,7 @@ Is a free open source CMS (content management system) that allows you to build w
 
 ## Live Demo ##
 
-Try it out for yourself in our [online demo](http://demo.instantcms.ru/)
+Try it out for yourself in our [online demo](https://demo.instantcms.ru/)
 
 ## Requirements ##
 * PHP 5.5+ (PHP 7 supported too)
@@ -31,7 +37,7 @@ Try it out for yourself in our [online demo](http://demo.instantcms.ru/)
 ## Install InstantCMS ##
 
 * Check the requirements.
-* How do you [install InstantCMS](http://docs.instantcms.ru/en/manual/install)?
+* How do you [install InstantCMS](https://docs.instantcms.ru/en/manual/install)?
 
 ## Licensing ##
 
@@ -39,8 +45,8 @@ This software is distributed under the GPL-2.0 license. Please read license.en.t
 
 ## Resources
 
-* [Official site](http://www.instantcms.ru/)
-* [Add-ons for CMS](http://addons.instantcms.ru/)
-* [Documentation](http://docs.instantcms.ru/en)
-* [Russian documentation](http://docs.instantcms.ru/)
+* [Official site](https://instantcms.ru/)
+* [Add-ons for CMS](https://addons.instantcms.ru/)
+* [Documentation](https://docs.instantcms.ru/en)
+* [Russian documentation](https://docs.instantcms.ru/)
 * [Russian README](https://github.com/instantsoft/icms2/blob/master/README.RU.md)

@@ -22,7 +22,7 @@ class wall extends cmsFrontend {
                     $show_reply_id = $entry['id'];
                 }
 
-                $page = $this->model->getEntryPageNumber($show_id, $target, $this->options['limit']);
+                $page = $this->model->orderBy($this->options['order_by'], 'desc')->getEntryPageNumber($show_id, $target, $this->options['limit']);
 
             }
 
@@ -41,8 +41,14 @@ class wall extends cmsFrontend {
 
         $entries = cmsEventsManager::hook('wall_before_list', $entries);
 
+        $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->options['editor'],
+            'presets' => $this->options['editor_presets']
+        ]);
+
         return $this->cms_template->renderInternal($this, 'list', array(
             'title'           => $title,
+            'editor_params'   => $editor_params,
             'controller'      => $target['controller'],
             'profile_type'    => $target['profile_type'],
             'profile_id'      => $target['profile_id'],

@@ -39,7 +39,6 @@ function create_config($path, $file){
         'upload_root'			=> $_SESSION['install']['paths']['upload'],
         'upload_host'			=> $_SESSION['install']['hosts']['upload'],
         'cache_root'			=> $_SESSION['install']['paths']['cache'],
-        'is_site_only_auth_users' => 0,
         'is_site_on'            => 1,
         'off_reason'            => LANG_CFG_OFF_REASON,
         'sitename'				=> $_SESSION['install']['site']['sitename'],
@@ -47,8 +46,9 @@ function create_config($path, $file){
         'date_format'			=> LANG_CFG_DATE_FORMAT,
         'date_format_js'		=> LANG_CFG_DATE_FORMAT_JS,
         'time_zone'				=> LANG_CFG_TIME_ZONE,
-        'template'				=> 'default',
-        'template_admin'		=> 'default',
+        'allow_users_time_zone' => 1,
+        'template'				=> $_SESSION['install']['site']['template'],
+        'template_admin'		=> $_SESSION['install']['site']['template_admin'],
         'template_mobile'		=> '',
         'template_tablet'		=> '',
         'db_host'				=> $_SESSION['install']['db']['host'],
@@ -57,6 +57,7 @@ function create_config($path, $file){
         'db_pass'				=> $_SESSION['install']['db']['pass'],
         'db_prefix'				=> $_SESSION['install']['db']['prefix'],
         'db_engine'				=> $_SESSION['install']['db']['engine'],
+        'db_charset'		    => $_SESSION['install']['db']['db_charset'],
         'clear_sql_mode'	    => $_SESSION['install']['db']['clear_sql_mode'],
         'db_users_table'		=> "{$_SESSION['install']['db']['users_table']}",
         'language'				=> LANG,
@@ -91,10 +92,18 @@ function create_config($path, $file){
         'show_breadcrumbs'		=> 1,
         'check_spoofing_type'   => 0,
         'production_time'       => time(),
-        'controllers_without_widgets' => array('admin')
+        'native_yaml'           => function_exists('yaml_emit') ? 0 : 0, // отключим пока что для всех, не везде совместимо работает
+        'session_save_handler'  => 'files',
+        'session_name'          => strtoupper(uniqid('icms')),
+        'session_save_path'     => $_SESSION['install']['paths']['session_save_path'],
+        'session_maxlifetime'   => ini_get('session.gc_maxlifetime')/60,
+        'controllers_without_widgets' => array('admin'),
+        'ctype_default' => []
     );
 
     write_config($file, $config);
+
+    if (function_exists('opcache_invalidate')) { @opcache_invalidate($file, true); }
 
     return array(
         'error' => false,

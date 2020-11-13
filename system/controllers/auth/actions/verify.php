@@ -3,6 +3,10 @@ class actionAuthVerify extends cmsAction {
 
     public function run($pass_token = null){
 
+        if (!$this->options['is_reg_enabled']){
+            cmsCore::error404();
+        }
+
         if (empty($this->options['verify_email'])){
             cmsCore::error404();
         }
@@ -13,17 +17,26 @@ class actionAuthVerify extends cmsAction {
 
         $reg_email = cmsUser::getCookie('reg_email');
 
+        $reg_user = [];
+
         if($reg_email && $this->validate_email($reg_email) === true){
 
-            $reg_user = $users_model->getUserByEmail($reg_email);
+            $reg_user = $users_model->filterNotNull('pass_token')->
+                    filterEqual('is_locked', 1)->
+                    getUserByEmail($reg_email);
 
-            $reg_user['resubmit_extime'] = modelAuth::RESUBMIT_TIME - (time() - strtotime($reg_user['date_token']));
-            if($reg_user['resubmit_extime'] < 0){
-                $reg_user['resubmit_extime'] = 0;
+            if($reg_user){
+
+                $reg_user['resubmit_extime'] = modelAuth::RESUBMIT_TIME - (time() - strtotime($reg_user['date_token']));
+                if($reg_user['resubmit_extime'] < 0){
+                    $reg_user['resubmit_extime'] = 0;
+                }
+
             }
 
         } else {
-            $reg_user = array();
+            cmsUser::unsetCookie('reg_email');
+            $reg_email = false;
         }
 
         $form = $this->getForm('verify', array($reg_user));
@@ -48,9 +61,11 @@ class actionAuthVerify extends cmsAction {
 
             if (!$errors){
 
+                cmsUser::unsetCookie('reg_email');
+
                 $users_model->unlockUser($user['id'])->clearUserPassToken($user['id']);
 
-                cmsEventsManager::hook('user_registered', $user);
+                $user = cmsEventsManager::hook('user_registered', $user);
 
                 cmsUser::addSessionMessage($this->options['reg_auto_auth'] ? LANG_REG_SUCCESS_VERIFIED_AND_AUTH : LANG_REG_SUCCESS_VERIFIED, 'success');
 
@@ -77,11 +92,12 @@ class actionAuthVerify extends cmsAction {
 
         }
 
-        return $this->cms_template->render('verify', array(
+        return $this->cms_template->render([
+            'reg_email' => $reg_email,
             'data'   => $data,
             'form'   => $form,
             'errors' => isset($errors) ? $errors : false
-        ));
+        ]);
 
     }
 

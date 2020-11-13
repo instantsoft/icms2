@@ -15,6 +15,8 @@
     font-size: 12px;
     display: inline-block;
     margin: -5px 0 0 0px;
+    background: none;
+    padding: 0;
 }
 #user_profile_title .name.name_with_status h1 {
     font-size: 24px;

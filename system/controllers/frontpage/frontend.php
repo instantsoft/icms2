@@ -15,6 +15,8 @@ class frontpage extends cmsFrontend {
 			$this->cms_template->setPageDescription($this->cms_config->metadesc);
 		}
 
+        cmsEventsManager::hook('frontpage_action_index', false, null, $this->request);
+
         //
         // Только виджеты
         //

@@ -1,7 +1,7 @@
 <?php
 /**
  * Класс управления событиями
- * @doc http://docs.instantcms.ru/dev/controllers/hooks
+ * @doc https://docs.instantcms.ru/dev/controllers/hooks
  */
 class cmsEventsManager {
 
@@ -16,19 +16,39 @@ class cmsEventsManager {
      * Входящие данные $data передаются каждому слушателю по очереди,
      * на выходе возвращается измененный слушателями параметр $data
      *
-     * @param string $event_name Название события
+     * @param mixed $event_name Название события/массив событий
      * @param mixed $data Параметр события
-     * @param mixed $default_return Значение, возвращаемое по-умолчанию если у события нет слушателей
+     * @param mixed $default_return Значение, возвращаемое по умолчанию если у события нет слушателей
      * @param object $_request Объект запроса
      * @return array Обработанный массив данных
      */
     public static function hook($event_name, $data = false, $default_return = null, $_request = false){
 
+        // Используйте массив событий, если они с разным названиями,
+        // но с одинаковыми параметрами
+        if(is_array($event_name)){
+
+            foreach ($event_name as $_event_name) {
+                $data = self::hook($_event_name, $data, $default_return, $_request);
+            }
+
+            return $data;
+
+        }
+
         //получаем все активные контроллеры, привязанные к указанному событию
         $listeners = self::getEventListeners($event_name);
 
         //если активных контроллеров нет, возвращаем данные без изменений
-        if (!$listeners) { return is_null($default_return) ? $data : $default_return; }
+        if (!$listeners) {
+
+            cmsDebugging::pointProcess('events_empty', array(
+                'data' => 'hook => '.$event_name
+            ), 1);
+
+            return is_null($default_return) ? $data : $default_return;
+
+        }
 
         //перебираем контроллеры и вызываем каждый из них, передавая $data
         foreach($listeners as $listener){
@@ -62,7 +82,7 @@ class cmsEventsManager {
      *
      * @param string $event_name Название события
      * @param mixed $data Параметр события
-     * @param mixed $default_return Значение, возвращаемое по-умолчанию если у события нет слушателей
+     * @param mixed $default_return Значение, возвращаемое по умолчанию если у события нет слушателей
      * @param object $_request Объект запроса
      * @return array Обработанный массив данных
      */
@@ -72,7 +92,15 @@ class cmsEventsManager {
         $listeners = self::getEventListeners($event_name);
 
         //если активных контроллеров нет, возвращаем данные без изменений
-        if (!$listeners) { return is_null($default_return) ? false : $default_return; }
+        if (!$listeners) {
+
+            cmsDebugging::pointProcess('events_empty', array(
+                'data' => 'hookAll => '.$event_name
+            ), 1);
+
+            return is_null($default_return) ? false : $default_return;
+
+        }
 
         $results = array();
 
@@ -94,7 +122,7 @@ class cmsEventsManager {
                 $result = $controller->runHook($event_name, array($data));
 
                 if ($result !== false){
-                    $results[] = $result;
+                    $results[$listener] = $result;
                 }
 
             cmsDebugging::pointProcess('events', array(
@@ -150,12 +178,14 @@ class cmsEventsManager {
 
             if (!cmsController::enabled($controller_name)) { continue; }
 
-            foreach($hooks as $event_name){
-
-                $structure[ $event_name ][] = $controller_name;
-
+            foreach($hooks as $ordering => $event_name){
+                $structure[ $event_name ][$ordering] = $controller_name;
             }
 
+        }
+
+        foreach($structure as $event_name => $controllers){
+            ksort($structure[$event_name]);
         }
 
         $cache->set($cache_key, $structure, 86400);

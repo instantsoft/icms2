@@ -40,8 +40,8 @@ $steps = array(
     array('id' => 'license', 'title' => LANG_STEP_LICENSE),
     array('id' => 'php', 'title' => LANG_STEP_PHP_CHECK),
     array('id' => 'paths', 'title' => LANG_STEP_PATHS),
-    array('id' => 'database', 'title' => LANG_STEP_DATABASE),
     array('id' => 'site', 'title' => LANG_STEP_SITE),
+    array('id' => 'database', 'title' => LANG_STEP_DATABASE),
     array('id' => 'admin', 'title' => LANG_STEP_ADMIN),
     array('id' => 'config', 'title' => LANG_STEP_CONFIG),
     array('id' => 'cron', 'title' => LANG_STEP_CRON),
@@ -64,5 +64,6 @@ echo render('main', array(
     'is_lang_selected' => $is_lang_selected,
     'lang'             => LANG,
     'current_step'     => $current_step,
-    'step_html'        => $step_result['html']
+    'step_html'        => $step_result['html'],
+    'langs'            => get_langs()
 ));

@@ -10,19 +10,22 @@ class widgetUsersList extends cmsWidget {
 
         $user = cmsUser::getInstance();
         $model = cmsCore::getModel('users');
+        $content_model = cmsCore::getModel('content');
 
-        $fields = array();
+        $show_fields = [];
 
-        if($list_fields){
-
-            $content_model = cmsCore::getModel('content');
-            $content_model->setTablePrefix('')->orderBy('ordering');
-            $content_model->filterIn('id', $list_fields);
-            $fields = $content_model->getContentFields('{users}');
-
-        }
+        $content_model->setTablePrefix('')->orderBy('ordering');
+        $fields = $content_model->getContentFields('{users}');
 
         list($fields, $model) = cmsEventsManager::hook('profiles_list_filter', array($fields, $model));
+
+        if($list_fields){
+            foreach ($fields as $name => $field) {
+                if(in_array($field['id'], $list_fields)){
+                    $show_fields[$name] = $field;
+                }
+            }
+        }
 
         switch ($show){
 
@@ -59,37 +62,13 @@ class widgetUsersList extends cmsWidget {
         $profiles = $model->limit($this->getOption('limit', 10))->getUsers();
         if (!$profiles) { return false; }
 
-        if($fields){
-            foreach ($profiles as $key => $profile) {
-                foreach($fields as $field){
+        $model->makeProfileFields($show_fields, $profiles, $user);
 
-                    if (!isset($profile[$field['name']])) { continue; }
-                    if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; }
-                    if (!$profile[$field['name']] && $profile[$field['name']] !== '0') { continue; }
-
-                    if (!isset($field['options']['label_in_list'])) {
-                        $label_pos = 'none';
-                    } else {
-                        $label_pos = $field['options']['label_in_list'];
-                    }
-
-                    $field_html = $field['handler']->setItem($profile)->parseTeaser($profile[$field['name']]);
-                    if (!$field_html) { continue; }
-
-                    $profiles[$key]['fields'][$field['name']] = array(
-                        'label_pos' => $label_pos,
-                        'type'      => $field['type'],
-                        'name'      => $field['name'],
-                        'title'     => $field['title'],
-                        'html'      => $field_html
-                    );
-
-                }
-            }
-        }
+        list($profiles, $show_fields) = cmsEventsManager::hook('profiles_before_list', [$profiles, $show_fields]);
 
         return array(
             'profiles'   => $profiles,
+            'fields'     => $fields,
             'style'      => $this->getOption('style', 'list'),
             'is_avatars' => $this->getOption('is_avatars')
         );

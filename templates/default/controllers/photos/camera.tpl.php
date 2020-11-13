@@ -1,6 +1,9 @@
 <?php
-$this->addJS( $this->getJavascriptFileName('photos') );
-$this->addJS( $this->getJavascriptFileName('jquery-flex-images') );
+
+    $this->addTplJSName([
+        'photos',
+        'jquery-flex-images'
+    ]);
 
 $this->setPageTitle($page_title);
 $this->setPageDescription($page_title);

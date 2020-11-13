@@ -1,9 +1,56 @@
 <?php
 
-class modelRating extends cmsModel{
+class modelRating extends cmsModel {
 
-//============================================================================//
-//============================================================================//
+    public function getTargetAverageRating($params) {
+
+        $this->filterEqual('target_controller', $params['target_controller']);
+        $this->filterEqual('target_subject', $params['target_subject']);
+        $this->filterEqual('target_id', $params['target_id']);
+
+        $this->selectList([
+            'AVG(i.score)' => 'rating'
+        ], true);
+
+        $rating = $this->getItem('rating_log', function($item, $model) {
+            return $item['rating'];
+        });
+
+        return $rating ? $rating : 0;
+
+    }
+
+    public function getUserVotesTargets($data, $user, $allow_guest_vote = false) {
+
+        if(!$user->is_logged && !$allow_guest_vote){
+            return [];
+        }
+
+        list($target_controller, $target_subject, $target_ids) = $data;
+
+        $this->useCache('rating.votes');
+
+        $this->selectOnly('target_id');
+
+        if($user->is_logged){
+            $this->filterEqual('user_id', $user->id);
+        } else {
+            $this->filterEqual('ip', $user->ip);
+        }
+
+        $this->filterEqual('target_controller', $target_controller);
+        $this->filterEqual('target_subject', $target_subject);
+        $this->filterIn('target_id', $target_ids);
+
+        $user_voted = $this->get('rating_log', function($item, $model){
+
+            return $item['target_id'];
+
+        }, false);
+
+        return $user_voted ? $user_voted : [];
+
+    }
 
     public function isUserVoted($vote, $is_logged = true){
 
@@ -35,18 +82,15 @@ class modelRating extends cmsModel{
 
     }
 
-//============================================================================//
-//============================================================================//
-
-    public function getVotesCount(){
-        return $this->getCount('rating_log');
+    public function getVotesCount($reset = false){
+        return $this->getCount('rating_log', 'id', $reset);
     }
 
     public function getVotes(){
 
         $this->useCache('rating.votes');
 
-        $this->joinUser('user_id', array(), 'left');
+        $this->joinUserLeft();
 
         return $this->get('rating_log', function($item, $model){
 
@@ -57,6 +101,7 @@ class modelRating extends cmsModel{
 
             $item['user'] = array(
                 'id'       => $item['user_id'],
+                'slug'     => $item['user_slug'],
                 'nickname' => (!empty($item['user_nickname']) ? $item['user_nickname'] : LANG_GUEST.' №'.array_sum($_okets)),
                 'avatar'   => $item['user_avatar']
             );
@@ -67,9 +112,6 @@ class modelRating extends cmsModel{
 
     }
 
-//============================================================================//
-//============================================================================//
-
     public function addVote($vote){
 
         cmsCache::getInstance()->clean('rating.votes');
@@ -77,9 +119,6 @@ class modelRating extends cmsModel{
         return $this->insert('rating_log', $vote);
 
     }
-
-//============================================================================//
-//============================================================================//
 
     public function deleteVotes($controller, $subject, $id){
 
@@ -98,8 +137,5 @@ class modelRating extends cmsModel{
         return $this->delete('rating_log', $user_id, 'user_id');
 
     }
-
-//============================================================================//
-//============================================================================//
 
 }

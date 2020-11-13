@@ -15,7 +15,7 @@ class formSearchOptions extends cmsForm {
                         'is_multiple' => true,
                         'generator' => function(){
 
-                            $search_controllers = cmsEventsManager::hookAll('fulltext_search');
+                            $search_controllers = cmsEventsManager::hookAll('fulltext_search', cmsCore::getController('search'), []);
 
                             $items = array();
 

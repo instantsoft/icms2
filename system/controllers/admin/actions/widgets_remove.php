@@ -2,17 +2,36 @@
 
 class actionAdminWidgetsRemove extends cmsAction {
 
-    public function run($id=false){
+    public function run($id = false) {
 
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
+        if (!$this->request->isAjax()) { cmsCore::error404(); }
 
-        if (!$id){ cmsCore::error404(); }
+        if (!$id) { cmsCore::error404(); }
 
-        $widgets_model = cmsCore::getModel('widgets');
+        $widget = $this->model_widgets->getWidget($id);
+        if (!$widget) {
+            return cmsCore::error404();
+        }
 
-        $widgets_model->deleteWidget($id);
+        if ($widget['image_hint_path']) {
+            @unlink($this->cms_config->upload_path . $widget['image_hint_path']);
+        }
 
-        $this->halt();
+        $widget_before_event_name = 'widget_' . ($widget['controller'] ? $widget['controller'] . '_' : '') . $widget['name'] . '_before_remove';
+        $widget_after_event_name  = 'widget_' . ($widget['controller'] ? $widget['controller'] . '_' : '') . $widget['name'] . '_after_remove';
+
+        $widget = cmsEventsManager::hook(['widget_before_remove', $widget_before_event_name], $widget);
+
+        $this->model_widgets->deleteWidget($id);
+
+        $success_text = LANG_CP_WIDGET_REMOVE_SUCCESS;
+
+        list($widget, $success_text) = cmsEventsManager::hook(['widget_after_remove', $widget_after_event_name], [$widget, $success_text]);
+
+        return $this->cms_template->renderJSON(array(
+            'error'        => false,
+            'success_text' => $success_text
+        ));
 
     }
 

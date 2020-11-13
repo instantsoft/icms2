@@ -1,12 +1,12 @@
-<?php $this->addJS( $this->getJavascriptFileName('fileuploader') ); ?>
-<?php $this->addJS( $this->getJavascriptFileName('photos') ); ?>
+<?php $this->addTplJSName('fileuploader'); ?>
+<?php $this->addTplJSName('photos'); ?>
 <?php $id = !empty($album['id']) ? $album['id'] : ''; ?>
 
 <fieldset>
 
     <legend><?php echo LANG_PHOTOS; ?></legend>
 
-    <div id="album-photos-widget" data-delete-url="<?php echo $this->href_to('delete'); ?>">
+    <div id="album-photos-widget" data-delete-url="<?php echo $this->href_to('delete'); ?>" data-wysiwyg_name="<?php echo $editor_params['editor']; ?>">
 
         <div class="previews_list">
             <?php if ($photos){ ?>
@@ -35,7 +35,7 @@
                                 <?php echo html_input('text', 'photos['.$photo['id'].']', $photo['title']); ?>
                             </div>
                             <div class="photo_content">
-                                <?php echo html_editor('content['.$photo['id'].']', $photo['content_source'], array('set_name' => 'photos')); ?>
+                                <?php echo html_wysiwyg('content['.$photo['id'].']', $photo['content_source'], $editor_params['editor'], $editor_params['options']); ?>
                             </div>
                             <div class="photo_additional">
                                 <div class="photo_privacy">
@@ -71,7 +71,7 @@
                         <?php echo html_input('text', '', '', array('placeholder'=>LANG_PHOTOS_PHOTO_TITLE)); ?>
                     </div>
                     <div class="photo_content">
-                        <textarea id="" class="textarea" name="" data-upload-url="<?php echo href_to('markitup', 'upload'); ?>"></textarea>
+                        <textarea id="" class="textarea" name=""></textarea>
                     </div>
                     <div class="photo_additional">
                         <div class="photo_privacy">
@@ -86,7 +86,12 @@
                 </div>
             </div>
 
-            <div style="display:none"><?php echo html_editor('', '', array('set_name' => 'photos')); ?></div> <!-- чтобы редактор был подключен -->
+            <?php
+            if($editor_params['editor']){
+                // подключаем редактор, но не инициализируем
+                echo html_wysiwyg('', '', $editor_params['editor'], $editor_params['options']);
+            }
+            ?>
 
             <div id="album-photos-uploader"></div>
 

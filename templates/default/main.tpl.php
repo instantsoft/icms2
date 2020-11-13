@@ -1,29 +1,28 @@
-<?php $core = cmsCore::getInstance(); ?>
 <!DOCTYPE html>
 <html>
 <head>
     <title><?php $this->title(); ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php $this->addMainCSS("templates/{$this->name}/css/theme-text.css"); ?>
-    <?php $this->addMainCSS("templates/{$this->name}/css/theme-layout.css"); ?>
-    <?php $this->addMainCSS("templates/{$this->name}/css/theme-gui.css"); ?>
-    <?php $this->addMainCSS("templates/{$this->name}/css/theme-widgets.css"); ?>
-    <?php $this->addMainCSS("templates/{$this->name}/css/theme-content.css"); ?>
-    <?php $this->addMainCSS("templates/{$this->name}/css/theme-modal.css"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/jquery.js"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/jquery-modal.js"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/core.js"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/modal.js"); ?>
-    <?php if (cmsUser::isLogged()){ ?>
-        <?php $this->addMainJS("templates/{$this->name}/js/messages.js"); ?>
+    <?php $this->addMainTplCSSName('theme-text'); ?>
+    <?php $this->addMainTplCSSName('theme-layout'); ?>
+    <?php $this->addMainTplCSSName('theme-gui'); ?>
+    <?php $this->addMainTplCSSName('theme-widgets'); ?>
+    <?php $this->addMainTplCSSName('theme-content'); ?>
+    <?php $this->addMainTplCSSName('theme-modal'); ?>
+    <?php $this->addMainTplJSName('jquery', true); ?>
+    <?php $this->addMainTplJSName('jquery-modal'); ?>
+    <?php $this->addMainTplJSName('core'); ?>
+    <?php $this->addMainTplJSName('modal'); ?>
+    <?php if ($config->debug && cmsUser::isAdmin()){ ?>
+        <?php $this->addTplCSSName('debug'); ?>
     <?php } ?>
-    <!--[if lt IE 9]>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/livingston-css3-mediaqueries-js/1.0.0/css3-mediaqueries.min.js"></script>
-    <![endif]-->
+    <?php if(cmsUser::isAdmin()){ ?>
+        <?php $this->addTplJSName('widgets'); ?>
+    <?php } ?>
     <?php $this->head(); ?>
     <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
+    <meta name="generator" content="InstantCMS" />
     <style><?php include('options.css.php'); ?></style>
 </head>
 <body id="<?php echo $device_type; ?>_device_type">
@@ -69,7 +68,7 @@
             if ($messages){ ?>
                 <div class="sess_messages">
                     <?php foreach($messages as $message){ ?>
-                        <div class="<?php echo $message['class']; ?>"><?php echo $message['text']; ?></div>
+                        <div class="message_<?php echo $message['class']; ?>"><?php echo $message['text']; ?></div>
                      <?php } ?>
                 </div>
             <?php } ?>
@@ -124,9 +123,6 @@
                     <span class="item">
                         <?php echo LANG_POWERED_BY_INSTANTCMS; ?>
                     </span>
-                    <span class="item">
-                        <?php echo LANG_ICONS_BY_FATCOW; ?>
-                    </span>
                     <?php if ($config->debug && cmsUser::isAdmin()){ ?>
                         <span class="item">
                             <a href="#debug_block" title="<?php echo LANG_DEBUG; ?>" class="ajax-modal"><?php echo LANG_DEBUG; ?></a>
@@ -146,6 +142,6 @@
         </footer>
 
     </div>
-
+    <?php $this->bottom(); ?>
 </body>
 </html>

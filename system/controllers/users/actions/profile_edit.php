@@ -4,13 +4,13 @@ class actionUsersProfileEdit extends cmsAction {
 
     public $lock_explicit_call = true;
 
-    public function run($profile, $do=false, $param=false){
+    public function run($profile, $do = false, $param = false) {
 
-		if (!cmsUser::isLogged()) { cmsCore::error404(); }
+        if (!$this->cms_user->is_logged) { cmsCore::error404(); }
 
         // если нужно, передаем управление другому экшену
         if ($do){
-            $this->runAction('profile_edit_'.$do, array($profile) + array_slice($this->params, 2, null, true));
+            $this->runExternalAction('profile_edit_'.$do, array($profile) + array_slice($this->params, 2, null, true));
             return;
         }
 
@@ -29,11 +29,18 @@ class actionUsersProfileEdit extends cmsAction {
         $form = new cmsForm();
 
         // Разбиваем поля по группам
-        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user){
+        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($profile){
 
             // проверяем что группа пользователя имеет доступ к редактированию этого поля
-            if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) { return false; }
-
+            if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) {
+                // если группа пользователя не имеет доступ к редактированию этого поля,
+                // проверяем на доступ к нему для авторов
+                if (!empty($profile['id']) && !empty($field['options']['author_access'])){
+                    if (!in_array('is_edit', $field['options']['author_access'])){ return false; }
+                    if ($profile['id'] == $user->id){ return true; }
+                }
+                return false;
+            }
             return true;
 
         });
@@ -55,13 +62,28 @@ class actionUsersProfileEdit extends cmsAction {
         }
 
         // Добавляем поле выбора часового пояса
-        $fieldset_id = $form->addFieldset( LANG_TIME_ZONE );
-        $form->addField($fieldset_id, new fieldList('time_zone', array(
-            'default' => $this->cms_config->time_zone,
-            'generator' => function($item){
-                return cmsCore::getTimeZones();
-            }
-        )));
+        if($this->cms_config->allow_users_time_zone){
+            $fieldset_id = $form->addFieldset( LANG_TIME_ZONE );
+            $form->addField($fieldset_id, new fieldList('time_zone', array(
+                'default' => $this->cms_config->time_zone,
+                'generator' => function($item){
+                    return cmsCore::getTimeZones();
+                }
+            )));
+        }
+
+        // Добавляем поле SLUG
+        if (cmsUser::isAllowed('users', 'change_slug')) {
+            $fieldset_id = $form->addFieldset(LANG_SLUG);
+            $form->addField($fieldset_id, new fieldString('slug', array(
+                'prefix' => href_to('users').'/',
+                'options'=>array(
+                    'min_length'=> 2,
+                    'max_length'=> 100
+                ),
+                'rules' => array(['slug_segment'], ['unique_exclude', '{users}', 'slug', $profile['id']])
+            )));
+        }
 
         // Форма отправлена?
         $is_submitted = $this->request->has('submit');
@@ -90,8 +112,12 @@ class actionUsersProfileEdit extends cmsAction {
 
             if (!$errors){
 
+                list($profile, $old) = cmsEventsManager::hook('users_before_update', [$profile, $old]);
+
                 // Обновляем профиль и редиректим на его просмотр
                 $this->model->updateUser($profile['id'], $profile);
+
+                list($profile, $old) = cmsEventsManager::hook('users_after_update', [$profile, $old]);
 
                 // Отдельно обновляем часовой пояс в сессии
                 cmsUser::sessionSet('user:time_zone', $profile['time_zone']);

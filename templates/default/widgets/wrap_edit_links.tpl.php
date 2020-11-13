@@ -1,7 +1,7 @@
 <div class="edit_wlinks">
     <a class="edit"
        href="#"
-       onclick="return widgetEdit(<?php echo $widget['id']; ?>, '<?php echo href_to('admin', 'widgets', 'edit'); ?>');">
+       onclick="return widgetEdit(<?php echo $widget['bind_id']; ?>, '<?php echo href_to('admin', 'widgets', 'edit'); ?>', '<?php echo $this->getName(); ?>');">
         <?php echo LANG_EDIT; ?>
     </a>
     <a class="delete"

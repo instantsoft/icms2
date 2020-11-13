@@ -1,4 +1,4 @@
-<?php $this->addJS($this->getJavascriptFileName('groups')); ?>
+<?php $this->addTplJSName('groups'); ?>
 <h1 id="group_profile_title">
     <?php html($group['title']); ?>
     <span>/ <?php echo LANG_GROUPS_INVITE; ?></span>

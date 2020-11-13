@@ -52,6 +52,11 @@ class formWidgetGroupsListOptions extends cmsForm {
                         )
                     )),
 
+                    new fieldCheckbox('options:show_members_count', array(
+                        'title' => LANG_WD_GROUPS_SHOW_MEMBERS_COUNT,
+                        'default' => 1
+                    )),
+
                     new fieldNumber('options:limit', array(
                         'title' => LANG_LIST_LIMIT,
                         'default' => 10,

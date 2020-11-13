@@ -1,15 +1,36 @@
 <?php
 class images extends cmsFrontend {
 
+    public $request_params = array(
+        'target_controller' => array(
+            'default' => '',
+            'rules'   => array(
+                array('sysname'),
+                array('max_length', 32)
+            )
+        ),
+        'target_subject' => array(
+            'default' => '',
+            'rules'   => array(
+                array('regexp', "/^([a-z0-9\-_\/\.]*)$/"),
+                array('max_length', 32)
+            )
+        ),
+        'target_id' => array(
+            'default' => 0,
+            'rules'   => array(
+                array('digits')
+            )
+        )
+    );
+
 	private $allowed_extensions = 'jpg,jpeg,png,gif,bmp,webp';
 
     public $allowed_mime = array(
         'image/jpeg',
         'image/png',
-        'image/pjpeg',
         'image/gif',
-        'image/webp',
-        'image/vnd.wap.wbmp'
+        'image/webp'
     );
 
 	private $file_context = null;
@@ -21,166 +42,64 @@ class images extends cmsFrontend {
 
         $is_image_exists = !empty($paths);
 
-        $dom_id = str_replace(array('[',']'), array('_l_', '_r_'), $name);
+        $dom_id = str_replace(['[',']'], ['_l_', '_r_'], $name);
 
         $upload_url = href_to('images', 'upload', $dom_id);
+
+        $upload_params = $this->getContextParams();
+
         if (is_array($sizes)) {
-            $upload_url .= '?sizes=' . implode(',', $sizes);
+            $upload_params['sizes'] = implode(',', $sizes);
         }
 
-        return $this->cms_template->renderInternal($this, 'upload_single', array(
+        if($upload_params){
+            $upload_url .= '?'.http_build_query($upload_params);
+        }
+
+        return $this->cms_template->renderInternal($this, 'upload_single', [
 			'name'              => $name,
             'paths'             => $paths,
             'sizes'             => $sizes,
             'upload_url'        => $upload_url,
+            'delete_url'        => href_to('images', 'delete'),
             'dom_id'            => $dom_id,
             'is_image_exists'   => $is_image_exists,
             'allow_import_link' => $allow_import_link
-        ));
-
+        ]);
     }
 
     public function getMultiUploadWidget($name, $images = false, $sizes = false, $allow_import_link = false, $max_photos = 0){
 
-        $dom_id = str_replace(array('[',']'), array('_l_', '_r_'), $name);
+        $dom_id = str_replace(['[',']'], ['_l_', '_r_'], $name);
 
         $upload_url = href_to('images', 'upload', $dom_id);
+
+        $upload_params = $this->getContextParams();
+
         if (is_array($sizes)) {
-            $upload_url .= '?sizes=' . implode(',', $sizes);
+            $upload_params['sizes'] = implode(',', $sizes);
         }
 
-        return $this->cms_template->renderInternal($this, 'upload_multi', array(
+        if($upload_params){
+            $upload_url .= '?'.http_build_query($upload_params);
+        }
+
+        return $this->cms_template->renderInternal($this, 'upload_multi', [
             'name'              => $name,
             'images'            => $images,
             'sizes'             => $sizes,
             'upload_url'        => $upload_url,
+            'delete_url'        => href_to('images', 'delete'),
             'dom_id'            => $dom_id,
             'max_photos'        => (int)$max_photos,
             'allow_import_link' => $allow_import_link
-        ));
-
-    }
-
-//============================================================================//
-//============================================================================//
-
-    public function actionUpload($name){
-
-        if (!cmsUser::isLogged()) {
-
-            return $this->cms_template->renderJSON(array(
-                'success' => false,
-                'error'   => 'auth error'
-            ));
-
-        }
-
-        $result = $this->cms_uploader->enableRemoteUpload()->setAllowedMime($this->allowed_mime)->upload($name, $this->allowed_extensions);
-
-        if ($result['success']){
-            if (!$this->cms_uploader->isImage($result['path'])){
-                $result['success'] = false;
-                $result['error']   = LANG_UPLOAD_ERR_MIME;
-            }
-        }
-
-        if (!$result['success']){
-            if(!empty($result['path'])){
-                files_delete_file($result['path'], 2);
-            }
-            return $this->cms_template->renderJSON($result);
-        }
-
-		$sizes = $this->request->get('sizes', '');
-		$file_name = $this->request->get('file_name', '');
-
-		if (!empty($sizes) && preg_match('/([a-z0-9_,]+)$/i', $sizes)){
-			$sizes = explode(',', $sizes);
-		} else {
-            $sizes = array_keys((array)$this->model->getPresetsList());
-            $sizes[] = 'original';
-        }
-
-        $result['paths'] = array();
-
-		if (in_array('original', $sizes, true)){
-			$result['paths']['original'] = array(
-				'path' => $result['url'],
-                'url'  => $this->cms_config->upload_host . '/' . $result['url']
-            );
-		}
-
-		$presets = $this->model->orderByList(array(
-            array('by' => 'is_square', 'to' => 'asc'),
-            array('by' => 'width', 'to' => 'desc')
-        ))->getPresets();
-
-		foreach($presets as $p){
-
-			if (!in_array($p['name'], $sizes, true)){
-				continue;
-			}
-
-            if($file_name){
-                $this->cms_uploader->setFileName($file_name.' '.$p['name']);
-            }
-
-			$path = $this->cms_uploader->resizeImage($result['path'], array(
-				'width'     => $p['width'],
-                'height'    => $p['height'],
-                'is_square' => $p['is_square'],
-                'quality'   => (($p['is_watermark'] && $p['wm_image']) ? 100 : $p['quality']) // потом уже при наложении ватермарка будет правильное качество
-            ));
-
-			if (!$path) { continue; }
-
-			$image = array(
-				'path' => $path,
-                'url'  => $this->cms_config->upload_host . '/' . $path
-            );
-
-			if ($p['is_watermark'] && $p['wm_image']){
-				img_add_watermark($image['path'], $p['wm_image']['original'], $p['wm_origin'], $p['wm_margin'], $p['quality']);
-			}
-
-			$result['paths'][$p['name']] = $image;
-
-		}
-
-		if (!in_array('original', $sizes, true)){
-			files_delete_file($result['path'], 2);
-		}
-
-        if ($this->request->isInternal()){
-            return $result;
-        }
-
-        unset($result['path']);
-
-        return $this->cms_template->renderJSON($result);
-
+        ]);
     }
 
 //============================================================================//
 //============================================================================//
 
 	public function uploadWithPreset($name, $preset_name){
-
-        $result = $this->cms_uploader->enableRemoteUpload()->setAllowedMime($this->allowed_mime)->upload($name, $this->allowed_extensions);
-
-        if ($result['success']){
-            if (!$this->cms_uploader->isImage($result['path'])){
-                $result['success'] = false;
-                $result['error']   = LANG_UPLOAD_ERR_MIME;
-            }
-        }
-
-        if (!$result['success']){
-            if(!empty($result['path'])){
-                files_delete_file($result['path'], 2);
-            }
-            return $result;
-        }
 
 		$preset = $this->model->getPresetByName($preset_name);
 
@@ -191,38 +110,68 @@ class images extends cmsFrontend {
             );
 		}
 
-		$path = $this->cms_uploader->resizeImage($result['path'], array(
-			'width'     => $preset['width'],
-            'height'    => $preset['height'],
-            'is_square' => $preset['is_square'],
-            'quality'   => (($preset['is_watermark'] && $preset['wm_image']) ? 100 : $preset['quality'])
-        ));
+        $this->cms_uploader->enableRemoteUpload()->setAllowedMime($this->allowed_mime);
 
-		$image = array(
-			'path' => $path,
-            'url'  => $this->cms_config->upload_host . '/' . $path
-        );
+        cmsEventsManager::hook('images_before_upload_by_preset', array($name, $this->cms_uploader, $preset), null, $this->request);
 
-		if ($preset['is_watermark'] && $preset['wm_image']){
-			img_add_watermark($image['path'], $preset['wm_image']['original'], $preset['wm_origin'], $preset['wm_margin'], $preset['quality']);
-		}
+        $result = $this->cms_uploader->upload($name);
 
-		$result['image'] = $image;
+        if ($result['success']){
+
+            try {
+                $image = new cmsImages($result['path']);
+            } catch (Exception $exc) {
+                $result['success'] = false;
+                $result['error']   = LANG_UPLOAD_ERR_MIME;
+            }
+
+        }
+
+        if (!$result['success']){
+            if(!empty($result['path'])){
+                files_delete_file($result['path'], 2);
+            }
+            return $result;
+        }
+
+        list($result, $preset) = cmsEventsManager::hook('images_after_upload_by_preset', array($result, $preset), null, $this->request);
+
+        $resized_path = $image->resizeByPreset($preset);
+
+        if (!$resized_path) {
+			return array(
+				'success' => false,
+                'error'   => ''
+            );
+        }
+
+        $result['image'] = [
+			'path' => $resized_path,
+            'url'  => $this->cms_config->upload_host . '/' . $resized_path
+        ];
+
+		$result['location'] = $result['image']['url'];
+
+        list($result, $preset) = cmsEventsManager::hook('images_after_resize_by_preset', array($result, $preset), null, $this->request);
 
 		files_delete_file($result['path'], 2);
         unset($result['path']);
 
-        $this->registerFile($image);
+        $file_context = [
+            'target_controller' => $this->request->get('target_controller', ''),
+            'target_subject'    => $this->request->get('target_subject', ''),
+            'target_id'         => $this->request->get('target_id', 0)
+        ];
+
+        if($file_context['target_controller']){
+            $this->registerUploadFile($file_context);
+        }
+
+        $this->registerFile($result['image']);
+
+        unset($result['error']);
 
         return $result;
-
-	}
-
-    /**
-     * Этот метод устаревший, используйте функцию img_add_watermark
-     */
-	public function addWatermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality=90){
-		return img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality);
 	}
 
 	public function getAllowedExtensions(){
@@ -242,21 +191,58 @@ class images extends cmsFrontend {
         $this->file_context = $file_context; return $this;
 	}
 
-	private function registerFile($image){
+	public function registerFile($image){
 
         if($this->file_context === null){ return false; }
 
-        $file_id = cmsCore::getModel('files')->registerFile(array_merge($this->file_context, array(
+        $file_id = $this->model_files->registerFile(array_merge($this->file_context, array(
             'path'    => $image['path'],
             'type'    => 'image',
             'name'    => pathinfo($image['path'], PATHINFO_BASENAME),
-            'user_id' => cmsUser::get('id')
+            'user_id' => $this->cms_user->id
         )));
 
         $this->file_context = null;
 
         return $file_id;
+	}
 
+    private function getContextParams() {
+
+        $internal_context = [
+            'target_controller' => $this->request->get('target_controller', ''),
+            'target_subject'    => $this->request->get('target_subject', ''),
+            'target_id'         => $this->request->get('target_id', 0)
+        ];
+
+        if($internal_context['target_controller']){
+            return $internal_context;
+        }
+
+        $context = $this->cms_core->getUriData();
+        $upload_params = [];
+
+        if($context['controller']){
+            $upload_params['target_controller'] = $context['controller'];
+        }
+
+        if($context['action']){
+            $upload_params['target_subject'] = mb_substr($context['action'], 0, 32);
+        }
+
+        if(strpos($this->cms_core->uri, '/add/') === false && !empty($context['params'][1]) && is_numeric($context['params'][1])){
+            $upload_params['target_id'] = $context['params'][1];
+        }
+
+        return $upload_params;
+    }
+
+    /**
+     * Этот метод устаревший, используйте класс cmsImages
+     */
+	public function addWatermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality=90){
+        // функция img_add_watermark также устаревшая
+		return img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality);
 	}
 
 }

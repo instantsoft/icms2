@@ -17,10 +17,7 @@ class actionActivityIndex extends cmsAction{
         }
 
         // Формируем базовые URL для страниц
-        $page_url = array(
-            'base'  => href_to($this->name, $dataset_name),
-            'first' => href_to($this->name, $dataset_name)
-        );
+        $page_url = $dataset_name === 'all' ? href_to($this->name) : href_to($this->name, $dataset_name);
 
         $this->model->enableHiddenParentsFilter();
 

@@ -1,35 +1,44 @@
 <?php
 
-function grid_cities($controller){
+function grid_cities($controller) {
 
     $options = array(
         'is_sortable'   => true,
         'is_filter'     => true,
         'is_pagination' => true,
         'is_draggable'  => true,
+        'drag_save_url' => $controller->cms_template->href_to('cities_reorder'),
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => true
     );
 
     $columns = array(
-		'id' => array(
+        'id' => array(
             'title'  => 'ID',
+            'class'  => 'd-none d-lg-table-cell',
             'width'  => 20,
             'filter' => 'exact'
         ),
         'name' => array(
-            'title'  => LANG_TITLE,
-            'href'   => href_to($controller->root_url, 'city', array('{id}')),
-            'filter' => 'like',
+            'title'    => LANG_TITLE,
+            'href'     => href_to($controller->root_url, 'city', array('{id}')),
+            'filter'   => 'like',
             'editable' => array(
                 'table' => 'geo_cities'
             )
         ),
-		'ordering' => array(
-			'title' => LANG_GEO_POSITION,
-			'width' => 60
-		)
+        'ordering' => array(
+            'title' => LANG_GEO_POSITION,
+            'class' => 'd-none d-lg-table-cell',
+            'width' => 60
+        ),
+        'is_enabled' => array(
+            'title'       => LANG_IS_ENABLED,
+            'flag'        => true,
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'geo_cities', 'is_enabled')),
+            'width'       => 80
+        )
     );
 
     $actions = array(

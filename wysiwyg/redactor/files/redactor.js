@@ -30,6 +30,7 @@
 	var reUrlYoutube = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube\.com\S*[^\w\-\s])([\w\-]{11})(?=[^\w\-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig;
 	var reUrlVimeo = /https?:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/;
     var reUrlFacebook = /^(?:(?:https|http)?:\/\/)?(?:www\.)?(?:facebook\.com(?:\/[^\/]+\/videos\/|\/video\.php\?v=))([0-9]+)(?:.+)?$/;
+	var reUrlRutube = /^(?:(?:https|http)?:\/\/)?(?:www\.)?(?:rutube\.ru\/video\/)([a-z0-9]+)(?:.+)?$/;
 
 	$.fn.redactor = function(options)
 	{
@@ -277,6 +278,7 @@
 					upload: 'Upload',
 					download: 'Download',
 					choose: 'Choose',
+					empty_img_list: 'You have no images',
 					or_choose: 'Or choose',
 					drop_file_here: 'Drop file here',
 					align_left: 'Align text to the left',
@@ -1158,7 +1160,7 @@
 			});
 			this.$editor.on('blur.redactor', $.proxy(function(e)
 			{
-				if (!$(clickedElement).hasClass('redactor_toolbar') && $(clickedElement).parents('.redactor_toolbar').size() == 0)
+				if (!$(clickedElement).hasClass('redactor_toolbar') && $(clickedElement).parents('.redactor_toolbar').length == 0)
 				{
 					this.selectall = false;
 					if ($.isFunction(this.opts.blurCallback)) this.callback('blur', e);
@@ -1440,8 +1442,8 @@
 								var listCurrentText = $.trim($(listCurrent).text());
 								if (listText == ''
 									&& listCurrentText == ''
-									&& $(listCurrent).next('li').size() == 0
-									&& $(listCurrent).parents('li').size() == 0)
+									&& $(listCurrent).next('li').length == 0
+									&& $(listCurrent).parents('li').length == 0)
 								{
 									this.bufferSet();
 
@@ -1583,7 +1585,7 @@
 		{
 
 			if (parent && current && parent.parentNode.tagName == 'TD'
-				&& parent.tagName == 'UL' && current.tagName == 'LI' && $(parent).children('li').size() == 1)
+				&& parent.tagName == 'UL' && current.tagName == 'LI' && $(parent).children('li').length == 1)
 			{
 				var text = $(current).text().replace(/[\u200B-\u200D\uFEFF]/g, '');
 				if (text == '')
@@ -2655,7 +2657,7 @@
 			var btn = this.buttonBuild(key, { title: title, callback: callback, dropdown: dropdown }, true);
 			var $btn = this.buttonGet(afterkey);
 
-			if ($btn.size() !== 0) $btn.parent().after($('<li>').append(btn));
+			if ($btn.length !== 0) $btn.parent().after($('<li>').append(btn));
 			else this.$toolbar.append($('<li>').append(btn));
 
 			return btn;
@@ -2666,7 +2668,7 @@
 			var btn = this.buttonBuild(key, { title: title, callback: callback, dropdown: dropdown }, true);
 			var $btn = this.buttonGet(beforekey);
 
-			if ($btn.size() !== 0) $btn.parent().before($('<li>').append(btn));
+			if ($btn.length !== 0) $btn.parent().before($('<li>').append(btn));
 			else this.$toolbar.append($('<li>').append(btn));
 
 			return btn;
@@ -2826,7 +2828,7 @@
 			var parent = this.getParent();
 			var $list = $(parent).closest('ol, ul');
 
-			if (!this.isParentRedactor($list) && $list.size() != 0)
+			if (!this.isParentRedactor($list) && $list.length != 0)
 			{
 				$list = false;
 			}
@@ -2938,7 +2940,7 @@
 					}
 				}
 
-				if (firstParent.size() != 0)
+				if (firstParent.length != 0)
 				{
 					$list.wrapAll('<td>');
 				}
@@ -2998,10 +3000,10 @@
 						if (s.tagName == 'LI')
 						{
 							var $prev = $(s).prev();
-							if ($prev.size() != 0 && $prev[0].tagName == 'LI')
+							if ($prev.length != 0 && $prev[0].tagName == 'LI')
 							{
 								var $childList = $prev.children('ul, ol');
-								if ($childList.size() == 0)
+								if ($childList.length == 0)
 								{
 									$prev.append($('<' + listTag + '>').append(s));
 								}
@@ -3113,7 +3115,7 @@
 			if (li && li.tagName == 'LI')
 			{
 				var $parent = $(li).parent().parent();
-				if ($parent.size() != 0 && $parent[0].tagName == 'LI')
+				if ($parent.length != 0 && $parent[0].tagName == 'LI')
 				{
 					$parent.after(li);
 				}
@@ -3764,7 +3766,7 @@
 					if (tag === 'p')
 					{
 						if ((node.tagName === 'P'
-						&& parent.size() != 0
+						&& parent.length != 0
 						&& parent[0].tagName === 'BLOCKQUOTE')
 						||
 						node.tagName === 'BLOCKQUOTE')
@@ -3890,7 +3892,7 @@
 
 							if (blockquote[0].tagName == 'BLOCKQUOTE')
 							{
-								var count = $(blockquote).children('p').size();
+								var count = $(blockquote).children('p').length;
 								if (count == 1)
 								{
 									$(blockquote).replaceWith(s);
@@ -4022,7 +4024,7 @@
 					$(wrapper).html(html);
 					this.selectionElement(wrapper);
 					var next = $(wrapper).next();
-					if (next.size() != 0 && next[0].tagName === 'BR')
+					if (next.length != 0 && next[0].tagName === 'BR')
 					{
 						next.remove();
 					}
@@ -4624,7 +4626,7 @@
 					html = html.replace(/^<a(.*?)>(.*?)<\/a>$/i, "$2");
 				}
 			}
-
+            html = html.replace(/on([a-z]+)=|javascript\:/gi, '');
 			if (this.opts.pastePlainText)
 			{
 				var tmp = this.document.createElement('div');
@@ -4779,7 +4781,7 @@
 					if (matches !== null)
 					{
 						this.pasteClipboardMozilla = matches;
-						for (k in matches)
+						for (var k in matches)
 						{
 							var img = matches[k].replace('<img', '<img data-mozilla-paste-image="' + k + '" ');
 							html = html.replace(matches[k], img);
@@ -4843,7 +4845,7 @@
 				this.rtePaste = false;
 				if (this.browser('mozilla'))
 				{
-					this.$editor.find('p:empty').remove()
+					this.$editor.find('p:empty').remove();
 				}
 				if (this.pasteClipboardMozilla !== false)
 				{
@@ -4893,7 +4895,7 @@
 				$.proxy(function(data)
 				{
 					var json = (typeof data === 'string' ? $.parseJSON(data) : data);
-		        	$s.attr('src', json.filelink);
+		        	$s.attr('src', json.image.url);
 		        	$s.removeAttr('data-mozilla-paste-image');
 
 		        	this.sync();
@@ -4921,7 +4923,7 @@
 				{
 					var json = (typeof data === 'string' ? $.parseJSON(data) : data);
 
-					var html = '<img src="' + json.filelink + '" id="clipboard-image-marker" />';
+					var html = '<img src="' + json.image.url + '" id="clipboard-image-marker" />';
 					this.execCommand('inserthtml', html, false);
 
 					var image = $(this.$editor.find('img#clipboard-image-marker'));
@@ -5037,7 +5039,7 @@
 				return;
 			}
 
-			if ($link.size() == 0 || $link[0].tagName !== 'A') return;
+			if ($link.length == 0 || $link[0].tagName !== 'A') return;
 
 			var pos = $link.offset();
 			if (this.opts.iframe)
@@ -5347,7 +5349,7 @@
 
 			$.each(nodes, $.proxy(function(i,node)
 			{
-				if (this.opts.iframe === false && $(node).parents('div.redactor_editor').size() == 0) return false;
+				if (this.opts.iframe === false && $(node).parents('div.redactor_editor').length == 0) return false;
 				if (this.nodeTestBlocks(node)) newnodes.push(node);
 
 			}, this));
@@ -5394,7 +5396,7 @@
 
 			$.each(nodes, $.proxy(function(i,node)
 			{
-				if (this.opts.iframe === false && $(node).parents('div.redactor_editor').size() == 0) return false;
+				if (this.opts.iframe === false && $(node).parents('div.redactor_editor').length == 0) return false;
 
 				if (typeof tag === 'undefined')
 				{
@@ -5635,7 +5637,7 @@
 
 			this.modalInit(this.opts.curLang.table, this.opts.modal_table, 300, $.proxy(function()
 			{
-				$('#redactor_insert_table_btn').click($.proxy(this.tableInsert, this));
+				$('#redactor_insert_table_btn').on('click', $.proxy(this.tableInsert, this));
 
 				setTimeout(function()
 				{
@@ -5716,7 +5718,7 @@
 		{
 			var $table = $(this.getParent()).closest('table');
 			if (!this.isParentRedactor($table)) return false;
-			if ($table.size() == 0) return false;
+			if ($table.length == 0) return false;
 
 			this.bufferSet();
 
@@ -5728,7 +5730,7 @@
 			var parent = this.getParent();
 			var $table = $(parent).closest('table');
 			if (!this.isParentRedactor($table)) return false;
-			if ($table.size() == 0) return false;
+			if ($table.length == 0) return false;
 
 			this.bufferSet();
 
@@ -5754,7 +5756,7 @@
 			var $table = $(parent).closest('table');
 
 			if (!this.isParentRedactor($table)) return false;
-			if ($table.size() == 0) return false;
+			if ($table.length == 0) return false;
 
 			this.bufferSet();
 
@@ -5785,11 +5787,11 @@
 		{
 			var $table = $(this.getParent()).closest('table');
 			if (!this.isParentRedactor($table)) return false;
-			if ($table.size() == 0) return false;
+			if ($table.length == 0) return false;
 
 			this.bufferSet();
 
-			if ($table.find('thead').size() !== 0) this.tableDeleteHead();
+			if ($table.find('thead').length !== 0) this.tableDeleteHead();
 			else
 			{
 				var tr = $table.find('tr').first().clone();
@@ -5807,7 +5809,7 @@
 			if (!this.isParentRedactor($table)) return false;
 			var $thead = $table.find('thead');
 
-			if ($thead.size() == 0) return false;
+			if ($thead.length == 0) return false;
 
 			this.bufferSet();
 
@@ -5834,7 +5836,7 @@
 		{
 			var $table = $(this.getParent()).closest('table');
 			if (!this.isParentRedactor($table)) return false;
-			if ($table.size() == 0) return false;
+			if ($table.length == 0) return false;
 
 			this.bufferSet();
 
@@ -5853,7 +5855,7 @@
 			var $table = $(parent).closest('table');
 
 			if (!this.isParentRedactor($table)) return false;
-			if ($table.size() == 0) return false;
+			if ($table.length == 0) return false;
 
 			this.bufferSet();
 
@@ -5888,7 +5890,7 @@
 
 			this.modalInit(this.opts.curLang.video, this.opts.modal_video, 600, $.proxy(function()
 			{
-				$('#redactor_insert_video_btn').click($.proxy(this.videoInsert, this));
+				$('#redactor_insert_video_btn').on('click', $.proxy(this.videoInsert, this));
 
 				setTimeout(function()
 				{
@@ -5916,6 +5918,10 @@
             else if (data.match(reUrlFacebook))
             {
                 data = data.replace(reUrlFacebook, iframeStart + 'https://www.facebook.com/video/embed?video_id=$1' + iframeEnd);
+            }
+			else if (data.match(reUrlRutube))
+            {
+                data = data.replace(reUrlRutube, iframeStart + '//rutube.ru/play/embed/$1' + iframeEnd);
             }
 
 			this.selectionRestore();
@@ -6180,7 +6186,7 @@
 				this.execCommand('inserthtml', link, false);
 
 				var linkmarker = $(this.$editor.find('a#filelink-marker'));
-				if (linkmarker.size() != 0) linkmarker.removeAttr('id');
+				if (linkmarker.length != 0) linkmarker.removeAttr('id');
 				else linkmarker = false;
 
 				this.sync();
@@ -6202,6 +6208,9 @@
 
 					$.getJSON(this.opts.imageGetJson, $.proxy(function(data)
 					{
+                        if(data.error){
+                            alert(data.message); return;
+                        }
 						var folders = {}, count = 0;
 						$.each(data, $.proxy(function(key, val)
 						{
@@ -6213,6 +6222,7 @@
 
 						}, this));
 
+                        $('#redactor_image_box .empty_list').show();
 						var folderclass = false;
 						$.each(data, $.proxy(function(key, val)
 						{
@@ -6229,8 +6239,8 @@
 
 							var img = $('<img src="' + val.thumb + '" class="redactorfolder redactorfolder' + folderkey + '" rel="' + val.image + '" title="' + thumbtitle + '" />');
 							$('#redactor_image_box').append(img);
-							$(img).click($.proxy(this.imageThumbClick, this));
-
+							$(img).on('click', $.proxy(this.imageThumbClick, this));
+                            $('#redactor_image_box .empty_list').hide();
 						}, this));
 						if (!$.isEmptyObject(folders))
 						{
@@ -6323,7 +6333,7 @@
 					$('#redactor-tab-control-3').hide();
 				}
 
-				$('#redactor_upload_btn').click($.proxy(this.imageCallbackLink, this));
+				$('#redactor_upload_btn').on('click', $.proxy(this.imageCallbackLink, this));
 
 				if (!this.opts.imageUpload && !this.opts.imageGetJson)
 				{
@@ -6368,13 +6378,13 @@
 					}
 				}
 
-				$('#redactor_image_delete_btn').click($.proxy(function()
+				$('#redactor_image_delete_btn').on('click', $.proxy(function()
 				{
 					this.imageRemove($el);
 
 				}, this));
 
-				$('#redactorSaveBtn').click($.proxy(function()
+				$('#redactorSaveBtn').on('click', $.proxy(function()
 				{
 					this.imageSave($el);
 
@@ -6495,13 +6505,13 @@
 		},
 		imageResizeHide: function(e)
 		{
-			if (e !== false && $(e.target).parent().size() != 0 && $(e.target).parent()[0].id === 'redactor-image-box')
+			if (e !== false && $(e.target).parent().length != 0 && $(e.target).parent()[0].id === 'redactor-image-box')
 			{
 				return false;
 			}
 
 			var imageBox = this.$editor.find('#redactor-image-box');
-			if (imageBox.size() == 0)
+			if (imageBox.length == 0)
 			{
 				return false;
 			}
@@ -6555,7 +6565,7 @@
 
 			$image.on('click', $.proxy(function(e)
 			{
-				if (this.$editor.find('#redactor-image-box').size() != 0)
+				if (this.$editor.find('#redactor-image-box').length != 0)
 				{
 					return false;
 				}
@@ -6730,7 +6740,7 @@
 			var img = '<img id="image-marker" src="' + $(e.target).attr('rel') + '" alt="' + $(e.target).attr('title') + '" />';
 
 			var parent = this.getParent();
-			if (this.opts.paragraphy && $(parent).closest('li').size() == 0) img = '<p>' + img + '</p>';
+			if (this.opts.paragraphy && $(parent).closest('li').length == 0) img = '<p>' + img + '</p>';
 
 			this.imageInsert(img, true);
 		},
@@ -6761,10 +6771,10 @@
 				var html = '';
 				if (link !== true)
 				{
-					html = '<img id="image-marker" src="' + json.filelink + '" />';
+					html = '<img id="image-marker" src="' + json.image.url + '" />';
 
 					var parent = this.getParent();
-					if (this.opts.paragraphy && $(parent).closest('li').size() == 0)
+					if (this.opts.paragraphy && $(parent).closest('li').length == 0)
 					{
 						html = '<p>' + html + '</p>';
 					}
@@ -6790,7 +6800,7 @@
 		},
 		buildProgressBar: function()
 		{
-			if ($('#redactor-progress').size() != 0) return;
+			if ($('#redactor-progress').length != 0) return;
 
 			this.$progressBar = $('<div id="redactor-progress"><span></span></div>');
 			$(document.body).append(this.$progressBar);
@@ -6852,7 +6862,7 @@
 							+ '<input type="file" id="redactor_file" name="' + this.opts.imageUploadParam + '" />'
 						+ '</div>'
 						+ '<div id="redactor_tab2" class="redactor_tab" style="display: none;">'
-							+ '<div id="redactor_image_box"></div>'
+							+ '<div id="redactor_image_box"><span class="empty_list">' + this.opts.curLang.empty_img_list + '</span></div>'
 						+ '</div>'
 					+ '</form>'
 					+ '<div id="redactor_tab3" class="redactor_tab" style="display: none;">'
@@ -6954,7 +6964,7 @@
 			{
 				if (e.which === 13)
 				{
-					this.$redactorModal.find('.redactor_modal_action_btn').click();
+					this.$redactorModal.find('.redactor_modal_action_btn').trigger('click');
 					e.preventDefault();
 				}
 			}, this));
@@ -7017,15 +7027,7 @@
 		{
 			this.$redactorModal.find('#redactor_modal_header').html(title);
 		},
-		modalSetButtonsWidth: function()
-		{
-			var buttons = this.$redactorModal.find('footer button').not('.redactor_modal_btn_hidden');
-			var buttonsSize = buttons.size();
-			if (buttonsSize > 0)
-			{
-				$(buttons).css('width', (this.$redactorModalWidth/buttonsSize) + 'px')
-			}
-		},
+		modalSetButtonsWidth: function(){},
 		modalOnCloseButton: function()
 		{
 			this.$redactorModal.find('.redactor_btn_modal_close').on('click', $.proxy(this.modalClose, this));
@@ -7308,7 +7310,7 @@
 			}
 			else if (this.uploadOptions.trigger)
 			{
-				$('#' + this.uploadOptions.trigger).click($.proxy(this.uploadSubmit, this));
+				$('#' + this.uploadOptions.trigger).on('click', $.proxy(this.uploadSubmit, this));
 			}
 		},
 		uploadSubmit: function(e)
@@ -7327,7 +7329,7 @@
 			$(d).appendTo("body");
 			if (this.uploadOptions.start) this.uploadOptions.start();
 
-			$( '#' + this.id ).load($.proxy(this.uploadLoaded, this));
+			$( '#' + this.id ).one('load', $.proxy(this.uploadLoaded, this));
 
 			return this.id;
 		},
@@ -7401,9 +7403,10 @@
 
 					var json = $.parseJSON(jsonString);
 
-					if (typeof json.error == 'undefined') this.uploadOptions.success(json);
+					if (typeof json.error == 'undefined') { this.uploadOptions.success(json); }
 					else
 					{
+                        console.log(json);
 						this.uploadOptions.error(this, json);
 						this.modalClose();
 					}
@@ -7520,7 +7523,7 @@
 					if (directupload)
 					{
 					    var $img = $('<img>');
-						$img.attr('src', json.filelink).attr('id', 'drag-image-marker');
+						$img.attr('src', json.image.url).attr('id', 'drag-image-marker');
 
 						this.insertNodeToCaretPositionFromPoint(e, $img[0]);
 

@@ -1,0 +1,3 @@
+<?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
+<?php echo LANG_FROM; ?> <?php echo html_input('text', $field->element_name.'[from]', $from, array('class'=>'input-small')); ?> <?php echo LANG_TO; ?> <?php echo html_input('text', $field->element_name.'[to]', $to, array('class'=>'input-small')); ?>
+<?php if($field->data['units']){ ?><span class="input-number-units"><?php echo $field->data['units']; ?></span><?php } ?>

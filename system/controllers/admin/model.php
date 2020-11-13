@@ -123,8 +123,11 @@ class modelAdmin extends cmsModel{
 
     public function getPendingSchedulerTasks(){
 
-        $tasks = $this->filterEqual('is_active', 1)->getSchedulerTasks();
-        $pending = array();
+        $tasks = $this->filterEqual('is_active', 1)->
+                orderBy('ordering', 'asc')->
+                getSchedulerTasks();
+
+        $pending = [];
 
         if($tasks){
 	        foreach($tasks as $task){
@@ -189,6 +192,14 @@ class modelAdmin extends cmsModel{
      	return $this->update('scheduler_tasks', $id, array(
 			'is_active' => $is_active
 		));
+
+    }
+
+    public function getTableItemsCount24($table_name, $date_pub_field = 'date_pub'){
+
+        $this->filterDateYounger($date_pub_field, 1);
+
+        return $this->getCount($table_name, 'id', true);
 
     }
 

@@ -22,6 +22,9 @@ class fieldCaption extends cmsFormField {
                 'title' => LANG_PARSER_TEXT_MAX_LEN,
                 'default' => 255
             )),
+            new fieldCheckbox('show_symbol_count', array(
+                'title' => LANG_PARSER_SHOW_SYMBOL_COUNT
+            )),
             new fieldCheckbox('in_fulltext_search', array(
                 'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
                 'default' => true

@@ -3,6 +3,9 @@
     return array(
 
         'hooks' => array(
+            'engine_start',
+            'user_notify_types',
+            'tags_search_subjects',
             'fulltext_search',
             'admin_dashboard_chart',
             'menu_content',
@@ -14,11 +17,14 @@
             'rss_content_controller_after_update',
             'frontpage',
             'frontpage_types',
+            'comments_targets',
             'ctype_relation_childs',
             'admin_content_dataset_fields_list',
             'moderation_list',
             'admin_subscriptions_list',
-            'ctype_lists_context'
+            'ctype_lists_context',
+            'db_nested_tables',
+            'widget_content_list_form'
         )
 
     );

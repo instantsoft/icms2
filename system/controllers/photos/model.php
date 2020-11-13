@@ -95,6 +95,7 @@ class modelPhotos extends cmsModel{
 
             if(isset($item['user_nickname'])){
                 $item['user'] = array(
+                    'slug'     => $item['user_slug'],
                     'id'       => $item['user_id'],
                     'nickname' => $item['user_nickname'],
                     'avatar'   => $item['user_avatar']
@@ -160,11 +161,15 @@ class modelPhotos extends cmsModel{
             $this->filterEqual('slug', $id);
         }
 
-        return $this->joinUser()->getItem('photos', function($item, $model){
+        $this->joinUser()->joinSessionsOnline();
+
+        return $this->getItem('photos', function($item, $model){
 
             $item['user'] = array(
                 'id'       => $item['user_id'],
+                'slug'     => $item['user_slug'],
                 'nickname' => $item['user_nickname'],
+                'is_online' => $item['is_online'],
                 'avatar'   => $item['user_avatar']
             );
 

@@ -19,16 +19,16 @@
     <?php
     } elseif($field->data['is_chosen_multiple'] && !$field->native_tag) {
 
-        $this->addJSFromContext($this->getJavascriptFileName('jquery-chosen'));
-        $this->addCSSFromContext($this->getTemplateStylesFileName('jquery-chosen'));
+        $this->addTplJSNameFromContext('jquery-chosen');
+        $this->addTplCSSNameFromContext('jquery-chosen');
 
         echo html_select($field->element_name, $field->data['items'], $value, ($field->data['dom_attr'] + array('multiple' => true)));
 
     } else {
 
         if (!$field->native_tag) {
-            $this->addJSFromContext($this->getJavascriptFileName('jquery-chosen'));
-            $this->addCSSFromContext($this->getTemplateStylesFileName('jquery-chosen'));
+            $this->addTplJSNameFromContext('jquery-chosen');
+            $this->addTplCSSNameFromContext('jquery-chosen');
         }
 
         echo html_select($field->element_name, $field->data['items'], $value, $field->data['dom_attr']);
@@ -39,7 +39,7 @@
 <script type="text/javascript">
     <?php if ($field->data['parent']) { ?>
         $('#<?php echo str_replace(':', '_', $field->data['parent']['list']); ?>').on('change', function(){
-            icms.forms.updateChildList('<?php echo $field->id; ?>', '<?php echo $field->data['parent']['url']; ?>', $(this).val(), "<?php html($value); ?>");
+            icms.forms.updateChildList('<?php echo $field->id; ?>', '<?php echo $field->data['parent']['url']; ?>', $(this).val(), <?php if (!is_array($value)) { ?>"<?php html($value); ?>"<?php } else { ?><?php echo json_encode($value); ?><?php } ?>);
         });
     <?php } ?>
     <?php if (!$field->native_tag && ($field->data['is_chosen_multiple'] || !$field->data['is_multiple'])) { ?>

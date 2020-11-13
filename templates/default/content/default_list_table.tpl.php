@@ -1,4 +1,8 @@
 <?php
+/**
+ * Template Name: LANG_CP_LISTVIEW_STYLE_TABLE
+ * Template Type: content
+ */
     if( $ctype['options']['list_show_filter'] ) {
         $this->renderAsset('ui/filter-panel', array(
             'css_prefix'   => $ctype['name'],

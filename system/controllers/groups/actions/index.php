@@ -27,8 +27,8 @@ class actionGroupsIndex extends cmsAction {
 
         // Формируем базовые URL для страниц
         $page_url = array(
-            'base'  => href_to($this->name, $dataset_name ? 'index/'.$dataset_name : ''),
-            'first' => href_to($this->name, $dataset_name ? 'index/'.$dataset_name : '')
+            'base'  => href_to($this->name, $dataset_name ? $dataset_name : ''),
+            'first' => href_to($this->name, $dataset_name ? $dataset_name : '')
         );
 
         $this->cms_template->setPageTitle(LANG_GROUPS);
@@ -54,6 +54,7 @@ class actionGroupsIndex extends cmsAction {
             $this->cms_template->addToolButton(array(
                 'class' => 'add',
                 'title' => LANG_GROUPS_ADD,
+                'icon'  => 'plus-circle',
                 'href'  => href_to('groups', 'add'),
             ));
         }
@@ -61,6 +62,7 @@ class actionGroupsIndex extends cmsAction {
         if (cmsUser::isAdmin()){
             $this->cms_template->addToolButton(array(
                 'class' => 'page_gear',
+                'icon'  => 'wrench',
                 'title' => LANG_GROUPS_SETTINGS,
                 'href'  => href_to('admin', 'controllers', array('edit', 'groups'))
             ));
@@ -68,7 +70,7 @@ class actionGroupsIndex extends cmsAction {
 
         return $this->cms_template->render('index', array(
             'datasets'         => $datasets,
-            'base_ds_url'      => href_to_rel('groups') . '/index%s',
+            'base_ds_url'      => href_to_rel('groups') . '%s',
             'dataset_name'     => $dataset_name,
             'dataset'          => $current_dataset,
             'h1_title'         => $h1_title,

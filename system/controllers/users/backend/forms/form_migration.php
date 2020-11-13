@@ -118,14 +118,11 @@ class formUsersMigration extends cmsForm {
                     )),
 
                     new fieldHtml('notify_text', array(
-                        'title' => LANG_USERS_MIG_NOTIFY_TEXT,
-                        'options' => array(
-                            'editor' => cmsConfig::get('default_editor')
-                        )
-                    )),
+                        'title' => LANG_USERS_MIG_NOTIFY_TEXT
+                    ))
 
                 )
-            ),
+            )
 
         );
 

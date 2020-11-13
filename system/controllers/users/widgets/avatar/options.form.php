@@ -15,7 +15,7 @@ class formWidgetUsersAvatarOptions extends cmsForm {
 
                     new fieldList('options:menu', array(
                         'title' => LANG_MENU,
-                        'generator' => function($item) {
+                        'generator' => function() {
 
                             $menu_model = cmsCore::getModel('menu');
                             $tree = $menu_model->getMenus();

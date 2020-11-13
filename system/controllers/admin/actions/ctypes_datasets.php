@@ -2,22 +2,20 @@
 
 class actionAdminCtypesDatasets extends cmsAction {
 
-    public function run($ctype_id){
+    public function run($ctype_id = null){
 
         if (!$ctype_id) { cmsCore::error404(); }
 
-        $content_model = cmsCore::getModel('content');
-
-        $ctype = $content_model->getContentType($ctype_id);
+        $ctype = $this->model_content->getContentType($ctype_id);
         if (!$ctype) { cmsCore::error404(); }
 
-        $grid = $this->loadDataGrid('ctype_datasets');
+    $grid = $this->loadDataGrid('ctype_datasets', [href_to('admin', 'ctypes', ['datasets_reorder', $ctype['id']]), href_to($this->name, 'ctypes', array('datasets_edit', '{id}'))]);
 
         if ($this->request->isAjax()) {
 
-            $content_model->orderBy('ordering', 'asc');
+            $this->model_content->orderBy('ordering', 'asc');
 
-            $datasets = $content_model->getContentDatasets($ctype_id);
+            $datasets = $this->model_content->getContentDatasets($ctype_id);
 
             $this->cms_template->renderGridRowsJSON($grid, $datasets);
 

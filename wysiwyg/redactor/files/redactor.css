@@ -47,7 +47,7 @@
 #redactor_modal_overlay,
 #redactor_modal,
 .redactor_dropdown {
-  z-index: 200 !important;
+  z-index: 1051 !important;
 }
 /*
 	AIR
@@ -708,6 +708,9 @@ body .redactor_air .redactor_toolbar {
 .redactor_modal_btn_hidden {
   display: none;
 }
+#redactor_modal footer {
+    display: flex;
+}
 #redactor_modal footer button {
   position: relative;
   width: 100%;
@@ -765,7 +768,7 @@ body .redactor_air .redactor_toolbar {
   text-align: center;
 }
 .redactor_droparea .redactor_dropareabox,
-.redactor_dropalternative {
+.redactor_dropalternative, .empty_list {
   color: #555;
   font-size: 12px;
 }
@@ -789,6 +792,16 @@ body .redactor_air .redactor_toolbar {
 }
 .redactor_dropdown_box_smiles img {
     cursor: pointer;
+}
+#wall_add_form .redactor_box, #wall_add_form  .redactor_toolbar, #comments_add_form .redactor_box, #comments_add_form  .redactor_toolbar {
+    background: transparent;
+    box-shadow: none;
+}
+#wall_add_form .redactor_box, #comments_add_form .redactor_box, #comments_edit_form .redactor_box {
+    margin: 0 0 15px 0;
+}
+#wall_add_form .button-preview, #comments_add_form .button-preview {
+    display: none;
 }
 /* =ProgressBar
 -----------------------------------------------------------------------------*/

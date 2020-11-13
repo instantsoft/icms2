@@ -2,6 +2,37 @@
 
 class modelMenu extends cmsModel {
 
+    private static $all_menus = null;
+    private static $rendered_menus = [];
+
+    private static function loadAllMenus() {
+        if(self::$all_menus === null){
+
+            $model = new self();
+
+            self::$all_menus = $model->filterEqual('is_enabled', 1)->getAllMenuItemsTree();
+        }
+    }
+
+    public static function getMenuItemsByName($menu_name) {
+
+        self::loadAllMenus();
+
+        if(!empty(self::$all_menus[$menu_name])){
+
+            if(!in_array($menu_name, self::$rendered_menus)){
+
+                self::$rendered_menus[] = $menu_name;
+
+                self::$all_menus[$menu_name] = self::buildMenu(self::$all_menus[$menu_name]);
+            }
+
+            return self::$all_menus[$menu_name];
+        }
+
+        return [];
+    }
+
     public function addMenu($item){
 
         $id = $this->insert('menu', $item);
@@ -77,7 +108,7 @@ class modelMenu extends cmsModel {
 
         $this->select('COUNT(childs.id)', 'childs_count');
 
-        $this->joinLeft('menu_items', 'childs', 'childs.parent_id = i.id');
+        $this->joinLeft('menu_items', 'childs', 'childs.parent_id = i.id AND childs.is_enabled = 1');
 
         if($menu_id !== false){
             $this->filterEqual('menu_id', $menu_id);
@@ -180,7 +211,7 @@ class modelMenu extends cmsModel {
                         'menu_item_id'  => $item['id'],
                         'menu_item_url' => $item['url'],
                         'menu_item'     => $item
-                    ));
+                    ), false);
 
                     // если хук вернул результат
                     if ($hook_result){
@@ -221,6 +252,8 @@ class modelMenu extends cmsModel {
             if (isset($hook_result['items']) && is_array($hook_result['items'])) {
                 foreach($hook_result['items'] as $i) {
                     $i['menu_id'] = $item['menu_id'];
+                    $i['options'] = isset($i['options']) ? $i['options'] : [];
+                    $i['options'] = array_merge($item['options'], $i['options']);
                     $items[$i['id']] = $i;
                 }
             }

@@ -15,8 +15,9 @@
     }
 
     if (isset($item['category']['path'])){
+        $base_url = ($this->site_config->ctype_default && in_array($ctype['name'], $this->site_config->ctype_default)) ? '' : $ctype['name'];
         foreach($item['category']['path'] as $c){
-            $this->addBreadcrumb($c['title'], href_to($ctype['name'], $c['slug']));
+            $this->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
         }
     }
 
@@ -40,7 +41,7 @@
     if (!empty($childs['tabs']) && $relation['layout'] == 'tab'){
 
         $this->addMenuItem('item-menu', array(
-            'title' => string_ucfirst($ctype['labels']['one']),
+            'title' => !empty($ctype['labels']['relations_tab_title']) ? $ctype['labels']['relations_tab_title'] : string_ucfirst($ctype['labels']['one']),
             'url'   => href_to($ctype['name'], $item['slug'] . '.html')
         ));
 
@@ -78,7 +79,7 @@
     </div>
 </div>
 <?php
-    if ($toolbar_html) {
+    if (!empty($toolbar_html)) {
         echo html_each($toolbar_html);
     }
 ?>

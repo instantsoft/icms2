@@ -1,0 +1,27 @@
+$stars-levels: 1,2,3,4,5;
+
+.icms-stars {
+    &.is_enabled {
+        cursor: pointer;
+        &:hover {
+            .star {
+                color: $yellow !important;
+            }
+        }
+        .star {
+            &:hover ~ .star {
+                color: inherit !important;
+            }
+        }
+    }
+    &[data-stars] {
+        .star {
+            color: $yellow !important;
+        }
+    }
+    @each $level in $ns-levels{
+        &[data-stars="#{$level}"] .star:nth-child(#{$level}) ~ .star {
+            color: inherit !important;
+        }
+    }
+}

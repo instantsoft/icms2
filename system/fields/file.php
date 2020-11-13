@@ -14,7 +14,8 @@ class fieldFile extends cmsFormField {
                 'items' => array(
                     0 => LANG_PARSER_FILE_LABEL_GET,
                     1 => LANG_PARSER_FILE_LABEL_NAME
-                )
+                ),
+				'extended_option' => true
             )),
             new fieldString('extensions', array(
                 'title' => LANG_PARSER_FILE_EXTS,
@@ -25,10 +26,12 @@ class fieldFile extends cmsFormField {
                 'hint'  => sprintf(LANG_PARSER_FILE_MAX_SIZE_PHP, $max_size)
             )),
             new fieldCheckbox('show_size', array(
-                'title' => LANG_PARSER_FILE_SHOW_SIZE
+                'title' => LANG_PARSER_FILE_SHOW_SIZE,
+				'extended_option' => true
             )),
             new fieldCheckbox('show_counter', array(
-                'title' => LANG_PARSER_FILE_SHOW_COUNTER
+                'title' => LANG_PARSER_FILE_SHOW_COUNTER,
+				'extended_option' => true
             ))
         );
     }
@@ -62,14 +65,7 @@ class fieldFile extends cmsFormField {
 
     }
 
-    public function getStringValue($value){
-
-        $file = is_array($value) ? $value : cmsModel::yamlToArray($value);
-        if (!$file){ return ''; }
-
-        return $this->getOption('show_name') ? $file['name'] : LANG_PARSER_FILE_LABEL_GET;
-
-    }
+    public function getStringValue($value){ return null; }
 
     public function getDownloadURL($file){
 
@@ -140,6 +136,15 @@ class fieldFile extends cmsFormField {
 
     }
 
+    public function getFiles($value){
+
+        if (empty($value)) { return false; }
+
+        if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
+
+        return [$value['path']];
+    }
+
     public function delete($value){
 
         if (empty($value)) { return true; }
@@ -154,7 +159,8 @@ class fieldFile extends cmsFormField {
 
     public function getFilterInput($value=false) {
 
-        return html_checkbox($this->name, (bool)$value);
+        return ($this->show_filter_input_title ? '<label for="'.$this->id.'">'.$this->title.'</label>' : '') .
+               html_checkbox($this->name, (bool)$value);
 
     }
 
@@ -164,12 +170,18 @@ class fieldFile extends cmsFormField {
 
     public function getInput($value){
 
-        $this->data['allowed_extensions']   = $this->getOption('extensions');
-        $this->data['max_size_mb']          = $this->getOption('max_size_mb');
+        $this->data['attributes'] = $this->getProperty('attributes')?:array();
 
-        if($this->data['max_size_mb']){
+        $this->data['attributes']['class'] = 'custom-file-input';
+        $this->data['attributes']['id'] = $this->id;
+        $this->data['attributes']['required'] = (array_search(array('required'), $this->getRules()) !== false);
+
+        $this->data['allowed_extensions'] = $this->getOption('extensions');
+        $this->data['max_size_mb']        = $this->getOption('max_size_mb');
+
+        if ($this->data['max_size_mb']) {
             $this->data['max_size_mb'] *= 1048576;
-        }else{
+        } else {
             $this->data['max_size_mb'] = files_convert_bytes(ini_get('post_max_size'));
         }
 

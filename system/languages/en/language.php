@@ -25,7 +25,7 @@
     define('LANG_CONTENT_NOT_APPROVED',      'Pending approval');
     define('LANG_CONTENT_EDITED',            'Edited');
     define('LANG_CONTENT_NOT_IS_PUB',		 'Not published');
-
+    define('LANG_CONTENT_OWN_ITEMS',		 'Only my');
     define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Type part of the field value');
 
     define('LANG_SHOW_FILTER',               'Show filter');
@@ -74,16 +74,19 @@
     define('LANG_WIDGET_TITLE_LINKS',        'Links in the widget header');
     define('LANG_WIDGET_TITLE_LINKS_HINT',   'In the <b><em>Title | URL</em></b> format, for example, <b><em>Google | http://www.google.com</em></b><br>If a link is wrapped in curly brackets <b>{ }</b>, it will be shown to authorized users only<br>One link in a line');
     define('LANG_WIDGET_WRAPPER_TPL',		 'Container template');
-    define('LANG_WIDGET_WRAPPER_TPL_HINT',	 'File title is taken from the <b>widgets</b> folder of your theme, without the <b>.tpl.php</b> extension');
+    define('LANG_WIDGET_WRAPPER_TPL_NO',     'Without container template');
+    define('LANG_WIDGET_WRAPPER_TPL_HINT',	 'File from the <b>widgets</b> directory of your template');
     define('LANG_WIDGET_BODY_TPL',			 'Widget template');
-    define('LANG_WIDGET_BODY_TPL_HINT',	     'File title is taken from the <b>%s</b> folder of your theme, without the <b>.tpl.php</b> extension');
+    define('LANG_WIDGET_BODY_TPL_HINT',	     'File from the <b>%s</b> directory of your template');
     define('LANG_WIDGET_DEVICE',			 'Which devices show the widget');
+    define('LANG_WIDGET_LANG_SELECT',		 'For which languages will the widget be displayed?');
     define('LANG_WIDGET_TEMPLATE_LAYOUT',	 'Display on layouts');
     define('LANG_DESKTOP_DEVICES',  'Desktop PCs');
     define('LANG_TABLET_DEVICES',  'Tablets');
     define('LANG_MOBILE_DEVICES',  'Phones');
 
     //PARSERS
+    define('LANG_PARSER_PREFIX',             'Prefix');
     define('LANG_PARSER_LIST_IS_AUTOLINK',     'AutoLink');
     define('LANG_PARSER_LIST_IS_AUTOLINK_HINT', 'Enabling this option breaks (by comma) the field value into separate words and each makes a reference. ');
     define('LANG_PARSER_LIST_IS_AUTOLINK_FILTER', 'Option "Show in filter" should be enabled.');
@@ -93,16 +96,29 @@
     define('LANG_PARSER_BITMASK_MAX_HINT',   'in the preset values');
     define('LANG_PARSER_CAPTION',            'Caption');
     define('LANG_PARSER_STRING',             'String');
+    define('LANG_PARSER_STRING_DISPLAY_VARIANT','How display in filter');
+    define('LANG_PARSER_STRING_ENTER_DEFAULT',  'Enter default values from exist data');
+    define('LANG_PARSER_STRING_SELECT',      'Select with default values');
+    define('LANG_PARSER_STRING_CHECKBOX',    'Not empty field checkbox');
     define('LANG_PARSER_HIDDEN',             'Hidden field');
     define('LANG_PARSER_NUMBER',             'Number');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Filter by range');
+    define('LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE','Range as slider');
+    define('LANG_PARSER_NUMBER_FILTER_STEP', 'Slider step');
+    define('LANG_PARSER_NUMBER_FILTER_RANGE_SI', 'Show input fields with slider');
     define('LANG_PARSER_NUMBER_UNITS',       'Units');
     define('LANG_PARSER_NUMBER_DECIMAL_INT', 'The number of digits of the whole part');
     define('LANG_PARSER_NUMBER_DECIMAL_S',   'Number of digits after the decimal point');
+    define('LANG_PARSER_NUMBER_TRIM_ZERO',   'Trim decimal zero');
+    define('LANG_PARSER_NUMBER_DEC_POINT',   'Decimal point');
+    define('LANG_PARSER_NUMBER_IS_CEIL',     'Only ceil numbers');
     define('LANG_PARSER_NUMBER_THOUSANDS_SEP', 'Thousands separator');
+    define('LANG_PARSER_NUMBER_UNITS_SEP',   'Units spacer');
     define('LANG_PARSER_NUMBER_IS_ABS',      'Only positive numbers');
+    define('LANG_PARSER_NUMBER_SAVE_ZERO',   'Save zero value');
     define('LANG_PARSER_CITY',               'Location');
     define('LANG_PARSER_CITY_LOCATION_TYPE', 'Location type');
+    define('LANG_PARSER_CITY_AUTO_DETECT',   'Automatically identify the country');
     define('LANG_PARSER_CITY_LOCATION_GROUP', 'Name for group');
     define('LANG_PARSER_CITY_LOCATION_GROUP_HINT', 'If you want to combine locations country-region-city, enter a name for unification of all fields. At a minimum, it should be established fields such as "Country" and "Region"');
     define('LANG_PARSER_CITY_OUTPUT_STRING', 'Field value output string');
@@ -114,14 +130,19 @@
     define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Show characters count');
     define('LANG_PARSER_HTML',               'HTML text');
     define('LANG_PARSER_HTML_EDITOR',        'WYSIWYG editor');
+    define('LANG_PARSER_HTML_EDITOR_GR',     'WYSIWYG editors for groups');
     define('LANG_PARSER_HTML_FILTERING',     'Sanitize input');
+    define('LANG_PARSER_PARSE_PATTERNS',     'Process special templates');
+    define('LANG_PARSER_PARSE_PATTERNS_HINT', 'Use the entry fields by inserting their names in curly braces. For example, for content types: <strong>{title}</strong>, <strong>{category}</strong> etc. You can use the processing of values, more in <a target="_blank" href="https://docs.instantcms.ru/en/manual/settings/seo-patterns">documentation</a>');
     define('LANG_PARSER_BUILD_REDIRECT_LINK', 'External links via a redirect if sanitize input');
     define('LANG_PARSER_HTML_TEASER_LEN',    'Truncate text length in list view');
     define('LANG_PARSER_HTML_TEASER_LEN_HINT','The text will be truncated to a specified length, the formatting will be removed');
+    define('LANG_PARSER_SHOW_SHOW_MORE',     'Show "More" button');
     define('LANG_PARSER_BBCODE',             'Textarea with BB-code');
     define('LANG_PARSER_LIST',               'List');
     define('LANG_PARSER_LIST_FILTER_HINT',   'Item index');
     define('LANG_PARSER_LIST_FILTER_MULTI',  'Allow multiple selection in filter');
+    define('LANG_PARSER_LIST_FILTER_MULTICH',  'Multiple checkboxes');
     define('LANG_PARSER_LIST_GROUPS',        'User groups list');
     define('LANG_PARSER_LIST_GROUPS_SHOW_GUESTS',     'Show "Guests" item');
     define('LANG_PARSER_LIST_IS_MULTIPLE',   'Allow multiple selection');
@@ -166,6 +187,7 @@
     define('LANG_PARSER_IMAGE_SIZE_ORIGINAL','Original');
     define('LANG_PARSER_COLOR',              'Colorpicker');
     define('LANG_PARSER_COLOR_CT',           'Color selection block type');
+    define('LANG_PARSER_COLOR_OPACITY',      'Enable color transparency');
     define('LANG_PARSER_COLOR_CT_HUE',       'Hue');
     define('LANG_PARSER_COLOR_CT_SATURATION', 'Saturation');
     define('LANG_PARSER_COLOR_CT_BRIGHTNESS', 'Brightness');
@@ -192,6 +214,7 @@
     define('LANG_PARSER_ENTER_IMAGE_LINK', 'Enter image link');
     define('LANG_OR', 'or');
     define('LANG_BEGIN_TYPING', 'Start typing or select from the list');
+    define('LANG_PARSER_FORMS',              'Forms');
 
     //USERS
     define('LANG_USER',                      'User');
@@ -208,6 +231,11 @@
     define('LANG_REG_FIRST_TIME',            'Is it your first visit?');
     define('LANG_REG_ALREADY',               'Already registered?');
     define('LANG_EMAIL',                     'E-mail');
+    define('LANG_EMAIL_NEW',                 'New e-mail address');
+    define('LANG_EMAIL_NEW_HASH',            'Confirmation code for the new e-mail address');
+    define('LANG_EMAIL_NEW_HINT',            'A confirmation link will be sent to your new address.');
+    define('LANG_CONFIRM_CODE_ERROR',        'Invalid verification code entered');
+    define('LANG_SECURITY',                  'Security');
     define('LANG_PASSWORD',                  'Password');
     define('LANG_RETYPE_PASSWORD',           'Repeat password');
     define('LANG_USER_GROUP',                'Group');
@@ -274,12 +302,14 @@
     define('LANG_PM_MODERATION_REFUSED',     'Moderator refused  the<b>%1$s</b> publication.%2$s Reason for rejection: %3$s');
     define('LANG_PM_MODERATION_COMMENT_REFUSED', 'A moderator has rejected your comment on the page <b>%1$s</b>.%2$s Reason for rejection: %3$s');
     define('LANG_PM_MODERATION_REWORK',      'The moderator returned the <b><a href="%2$s">%1$s</a></b> page for revision and pointed remarks:<br />%3$s');
+    define('LANG_PM_MODERATION_REWORK_DRAFT', 'Please correct the notes in the text.');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Permissions');
     define('LANG_PERM_RULE',                 'Permission rule');
     define('LANG_PERM_OPTION_NULL',          'No');
     define('LANG_PERM_OPTION_YES',           'Yes');
+    define('LANG_PERM_OPTION_ALLOW',         'Allow');
     define('LANG_PERM_OPTION_PREMOD',        'With premoderation');
     define('LANG_PERM_OPTION_PREMOD_OWN',    'Only own with premoderation');
     define('LANG_PERM_OPTION_PREMOD_ALL',    'All with premoderation');
@@ -326,14 +356,16 @@
     define('ERR_CLASS_NOT_FOUND', 		 	 'Class not found or cannot be read');
     define('ERR_CLASS_NOT_DEFINED', 		 'In the %s file class <b>%s</b> not defined');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Module not found');
-    define('ERR_DATABASE_QUERY', 		 	 '<b>DB query error</b>: <p>%s</p>');
+    define('ERR_DATABASE_QUERY', 		 	 '<b>DB query error</b>: <div>%s</div>');
     define('ERR_PAGE_NOT_FOUND', 		 	 'Page not found');
     define('ERR_FORBIDDEN', 		 	     'Forbidden');
     define('ERR_SITE_OFFLINE',               'Site is offline');
-    define('ERR_SITE_OFFLINE_FULL',          'Site is offline. <a href="%s">Enable</a>');
+    define('ERR_SITE_OFFLINE_FULL',          'Site is offline. <a class="stretched-link" href="%s">Enable</a>');
     define('ERR_SEARCH_TITLE',               'Search');
     define('ERR_SEARCH_QUERY_INPUT',         'What?');
     define('ERR_USER_NOT_FOUND',             'User does not exist');
+    define('LANG_ERROR_503',                 'Service Unavailable');
+    define('LANG_ERROR_503_HINT',            'Please, enable debug mode in the site settings');
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'File was successfully uploaded');
@@ -356,10 +388,12 @@
     define('ERR_VALIDATE_MIN_LENGTH',        'Too short value (min. length: %s)');
     define('ERR_VALIDATE_MAX_LENGTH',        'Too long value (max. length: %s)');
     define('ERR_VALIDATE_EMAIL',             'Wrong e-mail format');
+    define('ERR_VALIDATE_URL',               'Wrong URL format');
     define('ERR_VALIDATE_REGEXP',            'Wrong format');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Only letters and numbers');
     define('ERR_VALIDATE_SYSNAME',           'Only letters (lowercase), numbers and break characters');
     define('ERR_VALIDATE_SLUG',              'Only letters (lowercase), numbers, hyphen and vertical bar');
+    define('ERR_VALIDATE_SLUGS',             'At least one latin letter, lowercase, numbers and a hyphen');
     define('ERR_VALIDATE_DIGITS',            'Only numbers');
     define('ERR_VALIDATE_NUMBER',            'Enter a number');
     define('ERR_VALIDATE_UNIQUE',            'This value is already used');
@@ -370,6 +404,7 @@
     define('LANG_VALIDATE_NUMBER',           'Only numbers');
     define('LANG_VALIDATE_ALPHANUMERIC',     'Only Latin letters and numbers');
     define('LANG_VALIDATE_EMAIL',            'E-mail address');
+    define('LANG_VALIDATE_URL',              'URL');
     define('LANG_VALIDATE_UNIQUE',           'Unique value');
 
     define('ERR_REQ_EMAIL', 		 	 	 'E-mail is required!');
@@ -432,6 +467,7 @@
     define('LANG_ADMIN_SELECTED', 			 'Assign selected as administrators');
     define('LANG_UNADMIN_SELECTED',			 'Deprive selected administrator rights');
     define('LANG_HIDE', 					 'Hide');
+    define('LANG_COPY', 					 'Copy');
     define('LANG_HIDE_SELECTED',			 'Hide selected');
     define('LANG_CONFIG', 					 'Settings');
     define('LANG_RESTORE', 					 'Restore');
@@ -500,9 +536,15 @@
     //FORMS
     define('LANG_SUBMIT', 					 'Submit');
     define('LANG_SUBMIT_NOT_SAVE',			 'Do you want to leave this page? Changes have not been saved.');
+    define('LANG_DOT',                       'Dot');
+    define('LANG_COMMA',                     'Comma');
+    define('LANG_SPACE',                     'Space');
+    define('LANG_APOSTROPHE',                'Apostrophe');
+    define('LANG_ANOTHER',                   'Another');
 
     //LAYOUT
     define('LANG_PAGE_BODY',                 'Page body');
+    define('LANG_PAGE_BREADCRUMB',           'Breadcrumb');
     define('LANG_PAGE_MENU',                 'Page menu');
     define('LANG_PAGE_HEADER',               'Page header');
     define('LANG_PAGE_FOOTER',               'Page footer');
@@ -516,8 +558,11 @@
     define('LANG_INFORMATION',               'Information');
     define('LANG_CONTENT', 					 'Contents');
     define('LANG_CATEGORY',                  'Category');
+    define('LANG_CATEGORIES',                'Categories');
     define('LANG_CATEGORY_TITLE',            'Category title');
     define('LANG_CATEGORY_DESCRIPTION',      'Category description');
+    define('LANG_CATEGORY_IS_HIDDEN',        'Hidden category');
+    define('LANG_CATEGORY_COVER',            'Category cover');
     define('LANG_FOLDER',                    'Folder');
     define('LANG_ROOT_NODE',                 'Root node');
     define('LANG_ROOT_CATEGORY',             'Root category');
@@ -545,10 +590,11 @@
     //SEO
     define('LANG_SEO',                       'SEO');
     define('LANG_ROOT_SEO',                  'Component main page SEO');
+    define('LANG_SEO_H1',                    'Page H1 tag');
     define('LANG_SEO_TITLE',                 'Page title');
-    define('LANG_SEO_KEYS',                  'Keywords');
+    define('LANG_SEO_KEYS',                  'Keywords (meta keywords)');
     define('LANG_SEO_KEYS_HINT',             'Page keywords separated by commas');
-    define('LANG_SEO_DESC',                  'Description');
+    define('LANG_SEO_DESC',                  'Description (meta description)');
     define('LANG_SEO_DESC_HINT',             'Short page description for search engines');
     define('LANG_TAGS',                      'Tags');
     define('LANG_TAGS_HINT',                 'Keywords separated by commas');
@@ -625,14 +671,17 @@
     //MAIL
     define('LANG_MAIL_DEFAULT_ALT',          'Please view this e-mail with a client that supports HTML');
 
-    define('LANG_POWERED_BY_INSTANTCMS',     'Powered by <a href="http://instantcms.ru/">InstantCMS</a>');
+    define('LANG_POWERED_BY_INSTANTCMS',     'Powered by <a href="https://instantcms.ru/">InstantCMS</a>');
     define('LANG_ICONS_BY_FATCOW',           'Icons by <a href="https://icons8.com/">Icons8</a>');
     define('LANG_SUCCESS_MSG',               'Successfully saved');
 
+    define('LANG_DEBUG_MEM',                 'memory');
+    define('LANG_DEBUG_GEN_TIME',            'Page Generation Time');
     define('LANG_DEBUG_QUERY_TIME',          'Runtime');
     define('LANG_DEBUG',                     'Debugging');
     define('LANG_DEBUG_TAB_DB',              'SQL');
     define('LANG_DEBUG_TAB_CACHE',           'Cache');
-    define('LANG_DEBUG_TAB_EVENTS',          'Events');
+    define('LANG_DEBUG_TAB_EVENTS_EMPTY',    'Inactive events');
+    define('LANG_DEBUG_TAB_EVENTS',          'Spent events');
     define('LANG_DEBUG_TAB_WIDGETS',         'Widgets');
     define('LANG_DEBUG_TAB_INCLUDES',        'Included files');

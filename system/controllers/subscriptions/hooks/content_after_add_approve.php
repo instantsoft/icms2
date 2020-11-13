@@ -14,6 +14,21 @@ class onSubscriptionsContentAfterAddApprove extends cmsAction {
             return $data;
         }
 
+        // здесь только типы контента
+        $ctype = cmsCore::getModel('content')->getContentTypeByName($data['ctype_name']);
+        if(!$ctype){
+            return $data;
+        }
+
+        $subscriptions_list = $this->model->filterEqual('controller', 'content')->
+                filterEqual('subject', $data['ctype_name'])->
+                filterGt('subscribers_count', 0)->
+                getSubscriptionsList();
+
+        if(!$subscriptions_list){
+            return $data;
+        }
+
         cmsQueue::pushOn('subscriptions', array(
             'controller' => $this->name,
             'hook'       => 'send_letters',

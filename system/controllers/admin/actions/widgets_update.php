@@ -2,45 +2,69 @@
 
 class actionAdminWidgetsUpdate extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
-        if (!$this->request->has('id')){ cmsCore::error404(); }
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
+
+        $template  = $this->request->get('template', '');
+        $widget_id = $this->request->get('id', 0);
+
+        if (!$template || !$widget_id) {
+            return cmsCore::error404();
+        }
+
+        $tpls = cmsCore::getTemplates();
+        if (!in_array($template, $tpls)) {
+            $template = cmsConfig::get('template');
+        }
 
         $widgets_model = cmsCore::getModel('widgets');
 
-        $widget_id = $this->request->get('id', 0);
-
         $widget = $widgets_model->getWidgetBinding($widget_id);
-        if (!$widget){ cmsCore::error404(); }
+        if (!$widget) {
+            return cmsCore::error404();
+        }
 
-        cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
+        $widget_object = cmsCore::getWidgetObject($widget);
 
-        $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], false, $widget['template']);
+        $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], $widget['options'], $template, $widget_object->isAllowCacheableOption());
+
+        $widget_event_name = 'widget_'.($widget['controller'] ? $widget['controller'].'_' : '').$widget['name'].'_form';
+
+        list($form, $widget, $widget_object, $template) = cmsEventsManager::hook(['widget_form', $widget_event_name], [$form, $widget, $widget_object, $template], null, $this->request);
 
         $widget = $form->parse($this->request, true);
 
-        $errors = $form->validate($this,  $widget);
+        $errors = $form->validate($this, $widget);
 
-        if (!$errors){
+        if (!$errors) {
 
             $widgets_model->updateWidgetBinding($widget_id, $widget);
 
             $widget = $widgets_model->getWidgetBinding($widget_id);
 
-            if($widget['device_types'] && $widget['device_types'] !== array(0) && count($widget['device_types']) < 3){
+            if ($widget['device_types'] && $widget['device_types'] !== array(0) && count($widget['device_types']) < 3) {
+
                 foreach ($widget['device_types'] as $dt) {
-                    $device_types[] = string_lang('LANG_'.$dt.'_DEVICES');
+                    $device_types[] = string_lang('LANG_' . $dt . '_DEVICES');
                 }
+
             } else {
+
                 $device_types = false;
+
             }
+
+            $widget['device_type_names'] = $widget['device_types'];
             $widget['device_types'] = $device_types;
 
             return $this->cms_template->renderJSON(array(
                 'errors'   => false,
                 'callback' => 'widgetUpdated',
-                'widget'   => $widget
+                'widget'   => $widget,
+                'success_text' => LANG_CP_SAVE_SUCCESS
             ));
 
         }

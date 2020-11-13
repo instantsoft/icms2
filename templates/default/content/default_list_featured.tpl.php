@@ -1,4 +1,8 @@
 <?php
+/**
+ * Template Name: LANG_CP_LISTVIEW_STYLE_FEATURED
+ * Template Type: content
+ */
     if( $ctype['options']['list_show_filter'] ) {
         $this->renderAsset('ui/filter-panel', array(
             'css_prefix'   => $ctype['name'],
@@ -103,68 +107,21 @@
 
                 </div>
 
-                <?php if ($ctype['is_tags'] && !empty($ctype['options']['is_tags_in_list']) &&  $item['tags']){ ?>
+                <?php if (!empty($item['show_tags'])){ ?>
                     <div class="tags_bar">
-                        <?php echo html_tags_bar($item['tags']); ?>
+                        <?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name']); ?>
                     </div>
                 <?php } ?>
 
-                <?php
-					$show_bar = !empty($item['rating_widget']) ||
-								$fields['date_pub']['is_in_list'] ||
-								$fields['user']['is_in_list'] ||
-								!empty($ctype['options']['hits_on']) ||
-								($ctype['is_comments'] && $item['is_comments_on']) ||
-								!$item['is_pub'] ||
-								!$item['is_approved'];
-                ?>
-
-                <?php if ($show_bar){ ?>
+                <?php if (!empty($item['info_bar'])){ ?>
                     <div class="info_bar">
-                        <?php if (!empty($item['rating_widget'])){ ?>
-                            <div class="bar_item bi_rating">
-                                <?php echo $item['rating_widget']; ?>
-                            </div>
-                        <?php } ?>
-                        <?php if ($fields['date_pub']['is_in_list']){ ?>
-                            <div class="bar_item bi_date_pub<?php if(!empty($item['is_new'])){ ?> highlight_new<?php } ?>" title="<?php echo $fields['date_pub']['title']; ?>">
-                                <?php echo $fields['date_pub']['handler']->parse( $item['date_pub'] ); ?>
-                            </div>
-                        <?php } ?>
-                        <?php if (!$item['is_pub']){ ?>
-                            <div class="bar_item bi_not_pub">
-                                <?php echo LANG_CONTENT_NOT_IS_PUB; ?>
-                            </div>
-                        <?php } ?>
-                        <?php if ($fields['user']['is_in_list']){ ?>
-                            <div class="bar_item bi_user" title="<?php echo $fields['user']['title']; ?>">
-                                <?php echo $fields['user']['handler']->parse( $item['user'] ); ?>
-                            </div>
-                            <?php if (!empty($item['folder_title'])){ ?>
-                                <div class="bar_item bi_folder">
-                                    <a href="<?php echo href_to('users', $item['user']['id'], array('content', $ctype['name'], $item['folder_id'])); ?>"><?php echo $item['folder_title']; ?></a>
-                                </div>
-                            <?php } ?>
-                        <?php } ?>
-                        <?php if (!empty($ctype['options']['hits_on'])){ ?>
-                            <div class="bar_item bi_hits" title="<?php echo LANG_HITS; ?>">
-                                <?php echo $item['hits_count']; ?>
-                            </div>
-                        <?php } ?>
-                        <?php if ($ctype['is_comments'] && $item['is_comments_on']){ ?>
-                            <div class="bar_item bi_comments">
-                                <?php if (!empty($item['is_private_item'])) { ?>
-                                    <?php echo intval($item['comments']); ?>
+                        <?php foreach($item['info_bar'] as $bar){ ?>
+                            <div class="bar_item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
+                                <?php if (!empty($bar['href'])){ ?>
+                                    <a href="<?php echo $bar['href']; ?>"><?php echo $bar['html']; ?></a>
                                 <?php } else { ?>
-                                    <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>#comments" title="<?php echo LANG_COMMENTS; ?>">
-                                        <?php echo intval($item['comments']); ?>
-                                    </a>
+                                    <?php echo $bar['html']; ?>
                                 <?php } ?>
-                            </div>
-                        <?php } ?>
-                        <?php if (!$item['is_approved']){ ?>
-                            <div class="bar_item bi_not_approved <?php if (empty($item['is_new_item'])){ ?>is_edit_item<?php } ?>">
-                                <?php echo !empty($item['is_draft']) ? LANG_CONTENT_DRAFT_NOTICE : (empty($item['is_new_item']) ? LANG_CONTENT_EDITED.'. ' : '').LANG_CONTENT_NOT_APPROVED; ?>
                             </div>
                         <?php } ?>
                     </div>

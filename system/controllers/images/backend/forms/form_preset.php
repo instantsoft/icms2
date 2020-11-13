@@ -42,8 +42,27 @@ class formImagesPreset extends cmsForm {
 						'hint'  => LANG_IMAGES_PRESET_SIZE_H_HINT,
                         'units' => 'px'
 					)),
+					new fieldCheckbox('allow_enlarge', array(
+						'title' => LANG_IMAGES_PRESET_ALLOW_ENLARGE
+					)),
+					new fieldCheckbox('gamma_correct', array(
+						'title' => LANG_IMAGES_PRESET_GAMMA_CORRECT,
+					)),
 					new fieldCheckbox('is_square', array(
 						'title' => LANG_IMAGES_PRESET_SQUARE,
+					)),
+					new fieldList('crop_position', array(
+						'title' => LANG_IMAGES_PRESET_CROP_POSITION,
+                        'default' => cmsImages::CROPCENTER,
+						'items' => array(
+                            cmsImages::CROPTOP       => LANG_CP_FIELD_LABEL_TOP,
+                            cmsImages::CROPCENTER    => LANG_IMAGES_PRESET_CCENTER,
+                            cmsImages::CROPTOPCENTER => LANG_IMAGES_PRESET_TOP_CENTER,
+                            cmsImages::CROPBOTTOM    => LANG_IMAGES_PRESET_CBOTTOM,
+                            cmsImages::CROPLEFT      => LANG_CP_FIELD_LABEL_LEFT,
+                            cmsImages::CROPRIGHT     => LANG_IMAGES_PRESET_CRIGHT
+                        ),
+                        'visible_depend' => array('is_square' => array('show' => array('1')))
 					)),
 					new fieldNumber('quality', array(
 						'title' => LANG_IMAGES_PRESET_QUALITY,
@@ -69,7 +88,8 @@ class formImagesPreset extends cmsForm {
 						'title' => LANG_IMAGES_PRESET_WM_IMG,
 						'options' => array(
 							'sizes' => array('small', 'original')
-						)
+						),
+                        'visible_depend' => array('is_watermark' => array('show' => array('1')))
 					)),
 					new fieldList('wm_origin', array(
 						'title' => LANG_IMAGES_PRESET_WM_ORIGIN,
@@ -83,14 +103,16 @@ class formImagesPreset extends cmsForm {
                             'bottom-left'  => LANG_IMAGES_PRESET_WM_ORIGIN_BL,
                             'bottom'       => LANG_IMAGES_PRESET_WM_ORIGIN_B,
                             'bottom-right' => LANG_IMAGES_PRESET_WM_ORIGIN_BR
-                        )
+                        ),
+                        'visible_depend' => array('is_watermark' => array('show' => array('1')))
 					)),
 					new fieldNumber('wm_margin', array(
 						'title' => LANG_IMAGES_PRESET_WM_MARGIN,
 						'units' => 'px',
 						'rules' => array(
 							array('digits')
-						)
+						),
+                        'visible_depend' => array('is_watermark' => array('show' => array('1')))
 					))
                 )
             )

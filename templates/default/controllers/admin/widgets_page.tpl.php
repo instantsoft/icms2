@@ -40,8 +40,8 @@
         'method' => 'post'
     ), $errors);
 
-    $this->addJSFromContext('templates/default/js/jquery-ui.js');
-    $this->addCSSFromContext('templates/default/css/jquery-ui.css');
+    $this->addTplJSNameFromContext('jquery-ui');
+    $this->addTplCSSNameFromContext('jquery-ui');
 ?>
 <script>
     $(document).ready(function(){
@@ -57,7 +57,7 @@
             var add = now ? now+"\n" : '';
             add += value;
             $('#url_mask'+into).val(add);
-        }
+        };
         $('#fast_add_submit').click(function(){
             var type = $('#fast_add_type').val();
             if(type === 'items'){
@@ -81,13 +81,13 @@
                     response(cache[term]);
                     return;
                 }
-                $.getJSON('/admin/widgets/page_autocomplete', request, function(data, status, xhr){
+                $.getJSON('<?php echo href_to('admin', 'widgets', 'page_autocomplete'); ?>', request, function(data, status, xhr){
                     cache[term] = data;
                     response(data);
                 });
             },
             select: function(event, ui){
-                icms.events.run('autocomplete_select', this);
+                icms.events.run('autocomplete_select', ui);
             }
         });
 

@@ -3,6 +3,7 @@
     define('LANG_CONTENT_CONTROLLER',       'Content');
     define('LANG_CONTENT_IS_IN_GROUPS_ONLY', 'You must be a member of any group');
     define('LANG_CONTENT_COUNT_LIMIT',       'You have already added the maximum number of %s allowed');
+    define('LANG_CONTENT_COUNT_LIMIT24',     'You have already added the maximum number of %s allowed per day. You can add %s tomorrow.');
     define('LANG_CONTENT_KARMA_LIMIT',       'Not enough reputation points. Required: %s');
 	define('LANG_CONTENT_PUB',				 'Publication settings');
 	define('LANG_CONTENT_DATE_PUB',			 'Publication start date');
@@ -14,6 +15,7 @@
 	define('LANG_CONTENT_IS_PUB',			 'Publish %s on site');
 	define('LANG_CONTENT_IS_PUB_OFF',		 'Publication by date was disabled');
     define('LANG_CONTENT_WRONG_PARENT',		 'Wrong parent selected');
+    define('LANG_CONTENT_TEMPLATE',		     'Item view template');
     define('LANG_RULE_CONTENT_VIEW_LIST',    'View a item list');
     define('LANG_RULE_CONTENT_VIEW_LIST_HINT', 'If this rule is set for at least one of the groups, the items list is not displayed to the guests');
     define('LANG_RULE_CONTENT_ADD',          'Adding entries');
@@ -29,12 +31,12 @@
     define('LANG_RULE_CONTENT_ADD_CAT',      'Adding categories');
     define('LANG_RULE_CONTENT_EDIT_CAT',     'Editing categories');
     define('LANG_RULE_CONTENT_DELETE_CAT',   'Deleting categories');
-    define('LANG_RULE_CONTENT_COMMENT',      'Posting comments');
     define('LANG_RULE_CONTENT_DISABLE_COMMENTS', 'Disabling comments ');
     define('LANG_RULE_CONTENT_RATE',        'Rating');
     define('LANG_RULE_CONTENT_PRIVACY',      'Configuring privacy settings');
     define('LANG_RULE_CONTENT_VIEW_ALL',     'Viewing private entries');
     define('LANG_RULE_CONTENT_LIMIT',       'Maximum number of entries');
+    define('LANG_RULE_CONTENT_LIMIT24',     'Maximum number of entries per day');
     define('LANG_RULE_CONTENT_KARMA',       'Reputation limit');
     define('LANG_RULE_CONTENT_PUB_LATE',     'Selecting publication start date');
     define('LANG_RULE_CONTENT_PUB_LONG',     'Selecting publication end date');
@@ -65,3 +67,5 @@
     define('LANG_CONTENT_CONTEXT_LT_TRASH', 'In the trash');
     define('LANG_CONTENT_CONTEXT_LT_MODERATION_LIST', 'In the moderation list');
     define('LANG_CONTENT_CONTEXT_LT_PROFILE_CONTENT', 'In profile');
+    define('LANG_CONTENT_NOTIFY_END_DATE',  'Notify the imminent publication end date of your %s');
+    define('LANG_CONTENT_SHOW_FILTER_COUNT',  'offer|offers|offers');

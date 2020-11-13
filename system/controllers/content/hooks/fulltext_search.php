@@ -2,7 +2,9 @@
 
 class onContentFulltextSearch extends cmsAction {
 
-    public function run(){
+    public function run($search_controller){
+
+        $allowed_types = $search_controller->getOption('types');
 
         $ctypes = $this->model->getContentTypes();
 
@@ -20,8 +22,17 @@ class onContentFulltextSearch extends cmsAction {
         $table_names = array();
         // какие поля точно нужны
         $default_fields = array('id', 'slug', 'date_pub');
+        // Фильтрация
+        $filters = array();
+        $_ctypes = array();
 
         foreach($ctypes as $ctype){
+
+            // выключено?
+            if ($allowed_types &&
+                    !in_array($ctype['name'], $allowed_types)) {
+                continue;
+            }
 
             $fields = $this->model->getContentFields($ctype['name']);
 

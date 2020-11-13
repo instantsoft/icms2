@@ -109,8 +109,27 @@ class cmsConfig {
             $this->data['detect_ip_key'] = 'REMOTE_ADDR';
         }
 
-        if(!isset($this->data['controllers_without_widgets'])){
-            $this->data['controllers_without_widgets'] = array('admin');
+        if(empty($this->data['session_save_path'])){
+
+            $this->data['session_save_path'] = session_save_path();
+
+            if(empty($this->data['session_save_path'])){
+                $this->data['session_save_path'] = rtrim(sys_get_temp_dir(), '/');
+            }
+
+            if(!is_writable($this->data['session_save_path'])){
+                $this->data['session_save_path'] = '';
+            }
+
+        }
+
+        // Переходное для 2.14.0
+        if(!array_key_exists('allow_users_time_zone', $this->data)){
+            $this->data['allow_users_time_zone'] = 1;
+        }
+
+        if(empty($this->data['native_yaml']) || !function_exists('yaml_emit')){
+            $this->data['native_yaml'] = 0;
         }
 
 		$this->upload_host_abs = $this->upload_host;
@@ -183,7 +202,7 @@ class cmsConfig {
             $tabs = 10 - ceil((mb_strlen($key)+3)/4);
 
             $dump .= "\t'{$key}'";
-            $dump .= str_repeat("\t", $tabs);
+            $dump .= str_repeat("\t", $tabs > 0 ? $tabs : 0);
             $dump .= "=> $value,\n";
 
         }

@@ -7,15 +7,13 @@ class modelGeo extends cmsModel {
 
         $this->useCache('geo.countries');
 
-        return $this->orderByList(array(
+        return $this->filterEqual('is_enabled', true)->
+            orderByList(array(
                 array('by' => 'ordering', 'to' => 'asc'),
                 array('by' => 'name', 'to' => 'asc')
             ))->get('geo_countries', function($item){
-
                 return $item['name'];
-
         });
-
     }
 
     public function getRegions($country_id=false){
@@ -26,15 +24,13 @@ class modelGeo extends cmsModel {
             $this->filterEqual('country_id', $country_id);
         }
 
-        return $this->orderByList(array(
+        return $this->filterEqual('is_enabled', true)->
+            orderByList(array(
                 array('by' => 'ordering', 'to' => 'asc'),
                 array('by' => 'name', 'to' => 'asc')
             ))->get('geo_regions', function($item){
-
                 return $item['name'];
-
         });
-
     }
 
     public function getCities($region_id=false){
@@ -45,15 +41,13 @@ class modelGeo extends cmsModel {
             $this->filterEqual('region_id', $region_id);
         }
 
-        return $this->orderByList(array(
+        return $this->filterEqual('is_enabled', true)->
+            orderByList(array(
                 array('by' => 'ordering', 'to' => 'asc'),
                 array('by' => 'name', 'to' => 'asc')
             ))->get('geo_cities', function($item){
-
                 return $item['name'];
-
         });
-
     }
 
     public function getCityParents($city_id){

@@ -1,6 +1,8 @@
 <?php
 
-    $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    if($this->controller->listIsAllowed()){
+        $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    }
     $this->addBreadcrumb($profile['nickname'], href_to_profile($profile));
     $this->addBreadcrumb($list_header, href_to_profile($profile, array('content', $ctype['name'])));
 

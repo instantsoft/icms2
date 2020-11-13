@@ -6,11 +6,11 @@ class widgetContentList extends cmsWidget {
         $ctype_id        = $this->getOption('ctype_id');
         $dataset_id      = $this->getOption('dataset');
         $relation_id     = $this->getOption('relation_id');
+        $filter_id       = $this->getOption('filter_id');
         $cat_id          = $this->getOption('category_id');
         $image_field     = $this->getOption('image_field');
         $teaser_field    = $this->getOption('teaser_field');
         $is_show_details = $this->getOption('show_details');
-        $style           = $this->getOption('style', 'basic');
         $limit           = $this->getOption('limit', 10);
         $teaser_len      = $this->getOption('teaser_len', 100);
 
@@ -19,27 +19,55 @@ class widgetContentList extends cmsWidget {
 
         $model = cmsCore::getModel('content');
 
-        $ctype = $model->getContentType($ctype_id);
+        if($ctype_id){
+            $ctype = $model->getContentType($ctype_id);
+        } else {
+            $ctype = $current_ctype;
+        }
+
         if (!$ctype) { return false; }
 
+        // Получаем поля
+        $fields = $model->getContentFields($ctype['name']);
+
+        // Включенные поля для показа
+        $show_fields = $this->getOption('show_fields', []);
+        $shown_fields = [];
+        if(isset($show_fields[$ctype['id']])){
+            foreach ($show_fields[$ctype['id']] as $field_name => $is_enabled) {
+                if($is_enabled){
+                    $shown_fields[] = $field_name;
+                }
+            }
+        }
+        if(!$shown_fields) {
+            $shown_fields = ['title', 'content'];
+        }
+        // Опции полей
+        $show_fields_options = $this->getOption('show_fields_options', []);
+        $shown_fields_options = [];
+        if(isset($show_fields_options[$ctype['id']])){
+            $shown_fields_options = $show_fields_options[$ctype['id']];
+        }
+
+        // Получаем категорию, если задана
 		if ($cat_id){
 			$category = $model->getCategory($ctype['name'], $cat_id);
 		} else {
 			$category = false;
 		}
 
+        // Набор
         if ($dataset_id){
-
             $dataset = $model->getContentDataset($dataset_id);
-
-            if ($dataset){
-                $model->applyDatasetFilters($dataset);
-            } else {
-                $dataset_id = false;
-            }
-
         }
 
+        // Фильтр
+        if($filter_id){
+            $filter = $model->getContentFilter($ctype, $filter_id);
+        }
+
+        // Связь
         if ($relation_id && $current_ctype_item && $current_ctype){
 
             $parents = $model->getContentTypeParents($ctype_id);
@@ -69,9 +97,48 @@ class widgetContentList extends cmsWidget {
 
         }
 
-		if ($category){
-			$model->filterCategory($ctype['name'], $category, true);
-		}
+        // Применяем фильтры, если есть
+        if (!empty($filter['filters'])) {
+            foreach ($filter['filters'] as $fname => $fvalue) {
+                if(isset($fields[$fname])){
+                    $fields[$fname]['handler']->applyFilter($model, $fvalue);
+                }
+            }
+        }
+
+        // Применяем набор
+        if (!empty($dataset)){
+            $model->applyDatasetFilters($dataset);
+        }
+
+        // Включен показ категорий?
+        if (in_array('category', $shown_fields)) {
+
+            $table_name      = $model->getContentCategoryTableName($ctype['name']);
+            $bind_table_name = $table_name . '_bind';
+
+            $model->select('c.title', 'cat_title');
+            $model->select('c.slug', 'cat_slug');
+
+            if ($category){
+
+                $model->joinInner($bind_table_name, 'b FORCE INDEX (item_id)', 'b.item_id = i.id');
+                $model->joinInner($table_name, 'c', 'c.id = b.category_id');
+
+                $model->filterGtEqual('c.ns_left', $category['ns_left']);
+                $model->filterLtEqual('c.ns_right', $category['ns_right']);
+
+                if(!empty($ctype['options']['is_cats_multi'])){
+                    $model->distinctSelect();
+                }
+            } else {
+                $model->joinInner($table_name, 'c', 'c.id = i.category_id');
+            }
+        } else {
+            if ($category){
+                $model->filterCategory($ctype['name'], $category, true);
+            }
+        }
 
         // применяем приватность
         // флаг показа только названий
@@ -97,6 +164,20 @@ class widgetContentList extends cmsWidget {
             }
         }
 
+        // мы на странице группы?
+        $current_group = cmsModel::getCachedResult('current_group');
+        if($this->getOption('auto_group') && $current_group){
+
+            $this->disableCache();
+
+            $model->filterEqual('parent_id', $current_group['id'])->
+                filterEqual('parent_type', 'group');
+
+        }
+
+        // выключаем формирование рейтинга в хуках
+        $ctype['is_rating'] = 0;
+
 		list($ctype, $model) = cmsEventsManager::hook("content_list_filter", array($ctype, $model));
 		list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $model));
 
@@ -105,26 +186,133 @@ class widgetContentList extends cmsWidget {
                     getContentItems($ctype['name']);
         if (!$items) { return false; }
 
-        list($ctype, $items) = cmsEventsManager::hook("content_before_list", array($ctype, $items));
-        list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));
+        $user = cmsUser::getInstance();
 
-        if($style){
-            $this->setTemplate('list_'.$style);
-        } else {
-            $this->setTemplate($this->tpl_body);
+        if($items){
+            foreach ($items as $key => $item) {
+
+                $item['ctype'] = $ctype;
+                $item['ctype_name'] = $ctype['name'];
+                $item['is_private_item'] = $item['is_private'] && $hide_except_title;
+                $item['private_item_hint'] = LANG_PRIVACY_HINT;
+                $item['fields'] = [];
+
+                // для приватности друзей
+                // другие проверки приватности (например для групп) в хуках content_before_list
+                if($item['is_private'] == 1){
+                    $item['is_private_item'] = $item['is_private_item'] && !$item['user']['is_friend'];
+                    $item['private_item_hint'] = LANG_PRIVACY_PRIVATE_HINT;
+                }
+
+                // строим поля списка
+                foreach($fields as $field){
+
+                    if ($field['is_system']) { continue; }
+                    // Только включенные поля
+                    if (!in_array($field['name'], $shown_fields)) { continue; }
+
+                    // проверяем что группа пользователя имеет доступ к чтению этого поля
+                    if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
+                        // если группа пользователя не имеет доступ к чтению этого поля,
+                        // проверяем на доступ к нему для авторов
+                        if (empty($item['user_id']) || empty($field['options']['author_access'])){ continue; }
+                        if (!in_array('is_read', $field['options']['author_access'])){ continue; }
+                        if ($item['user_id'] != $user->id){ continue; }
+                    }
+
+                    if (!isset($shown_fields_options[$field['name']]['label_in_list'])) {
+                        $label_pos = 'none';
+                    } else {
+                        $label_pos = $shown_fields_options[$field['name']]['label_in_list'];
+                    }
+
+                    $current_field_data = [
+                        'label_pos' => $label_pos,
+                        'type'      => $field['type'],
+                        'name'      => $field['name'],
+                        'title'     => $field['title']
+                    ];
+
+                    if (!isset($item[$field['name']]) && !$item[$field['name']] && $item[$field['name']] !== '0') {
+                        continue;
+                    }
+
+                    // Меняем опции поля, если есть
+                    if(!empty($shown_fields_options[$field['name']])){
+                        foreach ($shown_fields_options[$field['name']] as $opt_name => $opt_value) {
+                            $field['handler']->setOption($opt_name, $opt_value);
+                            $field['options'][$opt_name] = $opt_value;
+                        }
+                    }
+
+                    $field_html = $field['handler']->setItem($item)->parseTeaser($item[$field['name']]);
+                    if (!$field_html) { continue; }
+
+                    $current_field_data['html'] = $field_html;
+                    $current_field_data['options'] = $field['options'];
+
+                    $item['fields'][$field['name']] = $current_field_data;
+                }
+
+                $item['info_bar'] = $this->getItemInfoBar($ctype, $item, $fields, $shown_fields);
+
+                $items[$key] = $item;
+            }
         }
 
+        if (!in_array('comments', $shown_fields)) {
+            $ctype['is_comments'] = 0;
+        }
+
+        list($ctype, $items) = cmsEventsManager::hook('content_before_list', array($ctype, $items));
+        list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));
+
         return array(
+            'fields'            => $fields,
             'ctype'             => $ctype,
             'hide_except_title' => $hide_except_title,
             'teaser_len'        => $teaser_len,
             'image_field'       => $image_field,
             'teaser_field'      => $teaser_field,
             'is_show_details'   => $is_show_details,
-            'style'             => $style,
             'items'             => $items
         );
 
+    }
+
+    private function getItemInfoBar($ctype, $item, $fields, $shown_fields) {
+
+        $bar = []; $user = cmsUser::getInstance();
+
+        if (in_array('date_pub', $shown_fields) && $user->isInGroups($fields['date_pub']['groups_read'])){
+            $bar['date_pub'] = [
+                'css'   => 'bi_date_pub',
+                'icon'  => 'calendar-alt',
+                'html'  => isset($fields['date_pub']['html']) ? $fields['date_pub']['html'] : $fields['date_pub']['handler']->parse($item['date_pub']),
+                'title' => $fields['date_pub']['title']
+            ];
+        }
+
+        if (in_array('user', $shown_fields) && $user->isInGroups($fields['user']['groups_read'])){
+            $bar['user'] = [
+                'css'  => 'bi_user',
+                'icon' => 'user',
+                'avatar' => isset($item['user']['avatar']) ? $item['user']['avatar'] : [],
+                'href' => href_to_profile($item['user']),
+                'html' => $item['user']['nickname']
+            ];
+        }
+
+        if (in_array('category', $shown_fields)){
+            $bar['category'] = [
+                'css'  => 'bi_category',
+                'icon' => 'folder',
+                'href' => href_to($ctype['name'], $item['cat_slug']),
+                'html' => $item['cat_title']
+            ];
+        }
+
+        return $bar;
     }
 
 }

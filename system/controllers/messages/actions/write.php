@@ -2,7 +2,7 @@
 
 class actionMessagesWrite extends cmsAction {
 
-    public function run($contact_id=null){
+    public function run($contact_id = null) {
 
         if(empty($contact_id)){ cmsCore::error404(); }
 
@@ -16,7 +16,7 @@ class actionMessagesWrite extends cmsAction {
             $this->model->addContact($this->cms_user->id, $contact_id);
         }
 
-        $this->runAction('index');
+        $this->executeAction('index');
 
     }
 

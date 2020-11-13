@@ -28,7 +28,7 @@
 
     <?php } ?>
 
-    <?php if (empty($group['fields']['cover']['is_in_item']) || !$group['cover']){ ?>
+    <?php if (!empty($group['fields']['cover']) && (empty($group['fields']['cover']['is_in_item']) || !$group['cover'])){ ?>
         <div class="info_bar">
             <div class="bar_item bi_rating">
                 <strong><?php echo LANG_RATING; ?>:</strong> <?php echo $group['rating']; ?>
@@ -57,8 +57,4 @@
 
 </div>
 
-<?php if ($wall_html){ ?>
-    <div id="wall_profile_wall">
-        <?php echo $wall_html; ?>
-    </div>
-<?php }
+<?php $this->block('groups_group_view_bottom'); ?>

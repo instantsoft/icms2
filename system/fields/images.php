@@ -17,7 +17,8 @@ class fieldImages extends cmsFormField {
                     $presets = cmsCore::getModel('images')->getPresetsList(true);
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return $presets;
-                }
+                },
+				'extended_option' => true
             )),
             new fieldList('size_full', array(
                 'title' => LANG_PARSER_IMAGE_SIZE_FULL,
@@ -35,7 +36,8 @@ class fieldImages extends cmsFormField {
                     $presets = cmsCore::getModel('images')->getPresetsList(true);
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return $presets;
-                }
+                },
+				'extended_option' => true
             )),
             new fieldListMultiple('sizes', array(
                 'title' => LANG_PARSER_IMAGE_SIZE_UPLOAD,
@@ -44,7 +46,8 @@ class fieldImages extends cmsFormField {
                     $presets = cmsCore::getModel('images')->getPresetsList();
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return $presets;
-                }
+                },
+                'rules' => [['required']]
             )),
             new fieldCheckbox('allow_import_link', array(
                 'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK
@@ -84,18 +87,20 @@ class fieldImages extends cmsFormField {
             if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){
                 $html .= html_gif_image($paths, 'small', $title.' '.$key, array('class'=>'img-'.$this->getName()));
             } else {
-                $html .= '<a title="'.html($title, false).'" class="img-'.$this->getName().' '.$a_class.'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, $small_preset, $title.' '.$key).'</a>';
+                $html .= '<a title="'.html($title, false).'" class="img-'.$this->getName().' '.$a_class.'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, $small_preset, $title.' '.$key, ['class' => 'img-thumbnail']).'</a>';
             }
 
         }
 
         if($html){
-            $html .= '<script>$(function() { icms.modal.bindGallery(".img-'.$this->getName().'"); });</script>';
+            cmsTemplate::getInstance()->addBottom('<script>$(function() { icms.modal.bindGallery(".img-'.$this->getName().'"); });</script>');
         }
 
         return $html;
 
     }
+
+    public function getStringValue($value){ return null; }
 
     public function store($value, $is_submitted, $old_value=null){
 
@@ -174,26 +179,50 @@ class fieldImages extends cmsFormField {
 
     }
 
-    public function delete($value){
+    public function getFiles($value){
 
-        if (empty($value)) { return true; }
+        if (empty($value)) { return false; }
 
         if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
 
+        $files = [];
+
         foreach($value as $images){
             foreach($images as $image_rel_path){
-                files_delete_file($image_rel_path, 2);
+                $files[] = $image_rel_path;
+            }
+        }
+
+        return $files;
+    }
+
+    public function delete($value) {
+
+        if (empty($value)) { return true; }
+
+        if (!is_array($value)) {
+            $value = cmsModel::yamlToArray($value);
+        }
+
+        $files_model = cmsCore::getModel('files');
+
+        foreach ($value as $images) {
+            foreach ($images as $image_rel_path) {
+                $file = $files_model->getFileByPath($image_rel_path);
+                if (!$file) {
+                    files_delete_file($image_rel_path, 2);
+                    continue;
+                }
+
+                $files_model->deleteFile($file['id']);
             }
         }
 
         return true;
-
     }
 
-    public function getFilterInput($value=false) {
-
-        return html_checkbox($this->name, (bool)$value);
-
+    public function getFilterInput($value = false) {
+        return html_checkbox($this->name, (bool) $value);
     }
 
     public function applyFilter($model, $value) {
@@ -212,10 +241,9 @@ class fieldImages extends cmsFormField {
         $this->data['allow_import_link'] = $this->getOption('allow_import_link');
         $this->data['max_photos'] = $this->getOption('max_photos');
 
-        $this->data['images_controller'] = cmsCore::getController('images');
+        $this->data['images_controller'] = cmsCore::getController('images', new cmsRequest($this->context_params, cmsRequest::CTX_INTERNAL));
 
         return parent::getInput($value);
-
     }
 
 }

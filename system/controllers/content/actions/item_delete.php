@@ -28,10 +28,7 @@ class actionContentItemDelete extends cmsAction {
 
         }
 
-        // сабмит с формы отклонения
-        if ($this->request->has('submit')){
-            if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))){ cmsCore::error404(); }
-        }
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))){ cmsCore::error404(); }
 
         $back_action = '';
 

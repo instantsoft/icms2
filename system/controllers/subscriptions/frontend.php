@@ -96,8 +96,13 @@ class subscriptions extends cmsFrontend {
 
         $items = cmsEventsManager::hook('subscriptions_list', $items);
 
+        $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
+
+        list($fields, $this->model_users) = cmsEventsManager::hook('profiles_list_filter', array($fields, $this->model_users));
+
         $html = $this->cms_template->renderInternal($this, 'list', array(
             'user'     => $this->cms_user,
+            'fields'   => $fields,
             'is_ajax'  => $this->request->isAjax(),
             'items'    => $items,
             'base_url' => $base_url,

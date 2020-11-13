@@ -1,4 +1,5 @@
 <?php if(!isset($ds_prefix)){ $ds_prefix = '/'; } ?>
+<?php $active_filters_query = $this->controller->getActiveFiltersQuery(); ?>
 <div class="content_datasets">
     <ul class="pills-menu">
         <?php $ds_counter = 0; ?>
@@ -11,7 +12,9 @@
                 <?php if ($ds_selected){ ?>
                     <div><?php echo $set['title']; ?></div>
                 <?php } else { ?>
-                    <a href="<?php echo $ds_url; ?>"><?php echo $set['title']; ?></a>
+                    <a href="<?php echo $ds_url.($active_filters_query ? '?'.$active_filters_query : ''); ?>">
+                        <?php echo $set['title']; ?>
+                    </a>
                 <?php } ?>
 
             </li>

@@ -4,10 +4,31 @@ class auth extends cmsFrontend {
     protected $useOptions = true;
     public $useSeoOptions = true;
 
+    public function getOptions(){
+
+        $options = parent::getOptions();
+
+        if(!empty($options['2fa'])){
+
+            foreach ($options['2fa'] as $o2fa) {
+
+                $params = explode(':', $o2fa);
+
+                $options['2fa_params'][$o2fa] = [
+                    'controller' => $params[0],
+                    'action' => !empty($params[1]) ? $params[1] : 'login_2fa'
+                ];
+
+            }
+
+        }
+
+        return $options;
+
+    }
+
 	public function actionIndex(){
-
-        $this->runAction('login');
-
+        $this->executeAction('login');
   	}
 
     public function actionLogout(){
@@ -133,7 +154,6 @@ class auth extends cmsFrontend {
                     )
                 )
             );
-
         }
 
         //
@@ -150,14 +170,18 @@ class auth extends cmsFrontend {
             $fieldset_id = $form->addFieldset($fieldset['title']);
 
             foreach($fieldset['fields'] as $field){
-
-                if ($field['name'] == 'nickname') {
-                    $form->addFieldToBeginning('basic', $field['handler']); continue;
-                }
-
                 $form->addField($fieldset_id, $field['handler']);
-
             }
+        }
+
+        // Капча
+        if ($this->options['reg_captcha']){
+
+            $fieldset_id = $form->addFieldset(LANG_CAPTCHA_CODE, 'regcaptcha');
+
+            $form->addField($fieldset_id,
+                new fieldCaptcha('capcha')
+            );
 
         }
 

@@ -1,6 +1,8 @@
 <?php
-$this->addJS($this->getJavascriptFileName('jquery-scroll'));
-$this->addJS($this->getJavascriptFileName('comments'));
+$this->addTplJSName([
+    'jquery-scroll',
+    'comments']
+    );
 ?>
 <?php if ($items){ ?>
     <div id="comments_list" class="striped-list">
@@ -17,6 +19,8 @@ $this->addJS($this->getJavascriptFileName('comments'));
             ));
         ?>
     </div>
+<?php // #comments_urls deprecated
+?>
     <div id="comments_urls" style="display: none"
             data-get-url="<?php echo $this->href_to('get'); ?>"
             data-approve-url="<?php echo $this->href_to('approve'); ?>"
@@ -31,5 +35,13 @@ $this->addJS($this->getJavascriptFileName('comments'));
 <script type="text/javascript">
     <?php echo $this->getLangJS('LANG_SEND', 'LANG_SAVE', 'LANG_COMMENT_DELETED', 'LANG_COMMENT_DELETE_CONFIRM', 'LANG_MODERATION_REFUSE_REASON'); ?>
     icms.comments.is_moderation_list = true;
+    icms.comments.init({
+        get:'<?php echo $this->href_to('get'); ?>',
+        approve:'<?php echo $this->href_to('approve'); ?>',
+        delete:'<?php echo $this->href_to('delete'); ?>',
+        refresh:'<?php echo $this->href_to('refresh'); ?>',
+        track:'<?php echo $this->href_to('track'); ?>',
+        rate:'<?php echo $this->href_to('rate'); ?>'
+        });
 </script>
-<?php } else { echo LANG_LIST_EMPTY; } ?>
+<?php } else { echo LANG_LIST_EMPTY; }

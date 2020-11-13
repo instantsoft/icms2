@@ -19,7 +19,7 @@ $this->addToolButton(array(
     'class' => 'help',
     'title' => LANG_HELP,
     'target' => '_blank',
-    'href'  => LANG_HELP_URL_GEO,
+    'href'  => LANG_HELP_URL_COM_GEO,
 ));
 
 $this->renderGrid($this->href_to('regions', $country['id']), $grid);

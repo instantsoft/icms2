@@ -12,7 +12,7 @@ class actionAdminCtypesPropsAdd extends cmsAction {
         $ctype = $content_model->getContentType($ctype_id);
         if (!$ctype) { cmsCore::error404(); }
 
-        $form = $this->getForm('ctypes_prop', array('add'));
+        $form = $this->getForm('ctypes_prop', ['add', $ctype]);
 
         $is_submitted = $this->request->has('submit');
 
@@ -46,23 +46,23 @@ class actionAdminCtypesPropsAdd extends cmsAction {
                 // сохраняем поле
                 $prop_id = $content_model->addContentProp($ctype['name'], $prop);
 
+                if ($prop_id){ cmsUser::addSessionMessage(sprintf(LANG_CP_FIELD_CREATED, $prop['title']), 'success'); }
+
                 $this->redirectToAction('ctypes', array('props', $ctype['id']));
 
             }
 
             if ($errors){
-
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('ctypes_prop', array(
-            'do' => 'add',
-            'ctype' => $ctype,
-            'prop' => $prop,
-            'form' => $form,
+        return $this->cms_template->render('ctypes_prop', array(
+            'do'     => 'add',
+            'ctype'  => $ctype,
+            'prop'   => $prop,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

@@ -18,7 +18,8 @@ class fieldImage extends cmsFormField {
                     $presets = cmsCore::getModel('images')->getPresetsList(true);
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return $presets;
-                }
+                },
+				'extended_option' => true
             )),
             new fieldList('size_full', array(
                 'title'     => LANG_PARSER_IMAGE_SIZE_FULL,
@@ -45,7 +46,8 @@ class fieldImage extends cmsFormField {
                     $presets = cmsCore::getModel('images')->getPresetsList();
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return $presets;
-                }
+                },
+                'rules' => [['required']]
             )),
             new fieldCheckbox('allow_import_link', array(
                 'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK
@@ -63,15 +65,23 @@ class fieldImage extends cmsFormField {
 
         $paths = is_array($value) ? $value : cmsModel::yamlToArray($value);
 
+        $size_teaser = $this->getOption('size_teaser');
+
         if (!$paths && $this->hasDefaultValue()){ $paths = $this->parseDefaultPaths(); }
 
-        if (!$paths || !isset($paths[ $this->getOption('size_teaser') ])){ return ''; }
+        if (!$paths || !isset($paths[$size_teaser])){ return ''; }
 
         $url = $this->teaser_url ?
                 $this->teaser_url :
-                href_to($this->item['ctype']['name'], $this->item['slug'] . ".html");
+                href_to($this->item['ctype']['name'], $this->item['slug'] . '.html');
 
-        return '<a href="'.$url.'">'.html_image($paths, $this->getOption('size_teaser'), (empty($this->item['title']) ? $this->name : $this->item['title'])).'</a>';
+        if (!empty($this->item['is_private_item'])) {
+            $paths = default_images('private', $size_teaser);
+        }
+
+        $img_html = html_image($paths, $size_teaser, (empty($this->item['title']) ? $this->name : $this->item['title']));
+
+        return !empty($this->item['is_private_item']) ? $img_html : '<a href="'.$url.'">'.$img_html.'</a>';
 
     }
 
@@ -98,6 +108,8 @@ class fieldImage extends cmsFormField {
         return $img_func($paths, $presets, (empty($this->item['title']) ? $this->name : $this->item['title']));
 
     }
+
+    public function getStringValue($value){ return null; }
 
     public function store($value, $is_submitted, $old_value=null){
 
@@ -141,18 +153,41 @@ class fieldImage extends cmsFormField {
 
     }
 
+    public function getFiles($value){
+
+        if (empty($value)) { return false; }
+
+        if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
+
+        $files = [];
+
+        foreach($value as $image_url){
+            $files[] = $image_url;
+        }
+
+        return $files;
+    }
+
     public function delete($value){
 
         if (empty($value)) { return true; }
 
         if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
 
+        $files_model = cmsCore::getModel('files');
+
         foreach($value as $image_url){
-            files_delete_file($image_url, 2);
+
+            $file = $files_model->getFileByPath($image_url);
+            if (!$file) {
+                files_delete_file($image_url, 2);
+                continue;
+            }
+
+            $files_model->deleteFile($file['id']);
         }
 
         return true;
-
     }
 
     public function parseDefaultPaths(){
@@ -190,10 +225,9 @@ class fieldImage extends cmsFormField {
         $this->data['sizes'] = $this->getOption('sizes');
         $this->data['allow_import_link'] = $this->getOption('allow_import_link');
 
-        $this->data['images_controller'] = cmsCore::getController('images');
+        $this->data['images_controller'] = cmsCore::getController('images', new cmsRequest($this->context_params, cmsRequest::CTX_INTERNAL));
 
         return parent::getInput($value);
-
     }
 
 }

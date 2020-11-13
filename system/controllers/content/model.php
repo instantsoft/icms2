@@ -194,6 +194,7 @@ class modelContent extends cmsModel {
         $this->db->dropTable("{$table_name}");
         $this->db->dropTable("{$table_name}_fields");
         $this->db->dropTable("{$table_name}_cats");
+        $this->db->dropTable("{$table_name}_filters");
         $this->db->dropTable("{$table_name}_cats_bind");
         $this->db->dropTable("{$table_name}_props");
         $this->db->dropTable("{$table_name}_props_bind");
@@ -264,17 +265,16 @@ class modelContent extends cmsModel {
 
     public function loadAllCtypes() {
 
-        if(isset(self::$all_ctypes)) {
-            return $this;
-        }
-
-        self::$all_ctypes = $this->getContentTypesFiltered();
-
-        return $this;
+        return !isset(self::$all_ctypes) ? $this->reloadAllCtypes() : $this;
 
     }
 
-    public function reloadAllCtypes() {
+    public function reloadAllCtypes($enabled = true) {
+
+        if($enabled){
+            $this->filterEqual('is_enabled', 1);
+        }
+
         self::$all_ctypes = $this->getContentTypesFiltered();
         return $this;
     }
@@ -303,6 +303,15 @@ class modelContent extends cmsModel {
                         $list_styles[$key] = is_array($value) ? '' : $value;
                     }
                     $item['options']['list_style'] = $list_styles;
+                }
+            }
+            if(!empty($item['options']['context_list_cover_sizes'])){
+                if(is_array($item['options']['context_list_cover_sizes'])){
+                    $list_styles = array();
+                    foreach ($item['options']['context_list_cover_sizes'] as $key => $value) {
+                        $list_styles[$key?$key:''] = $value;
+                    }
+                    $item['options']['context_list_cover_sizes'] = $list_styles;
                 }
             }
 
@@ -455,6 +464,9 @@ class modelContent extends cmsModel {
             'is_alphanumeric' => 0,
             'is_email'        => 0,
             'is_unique'       => 0,
+            'is_url'          => 0,
+            'disable_drafts'  => 0,
+            'is_date_range_process' => 'hide',
             'label_in_list'   => 'none',
             'label_in_item'   => 'none',
             'wrap_type'       => 'auto',
@@ -547,19 +559,24 @@ class modelContent extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getContentFields($ctype_name, $item_id = false){
+    public function getContentFields($ctype_name, $item_id = false, $enabled = true){
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
         $this->useCache('content.fields.'.$ctype_name);
 
+        if($enabled){
+            $this->filterEqual('is_enabled', 1);
+        }
+
         $this->orderBy('ordering');
 
-        return $this->get($table_name, function($item, $model) use ($ctype_name, $item_id){
+        $fields = $this->get($table_name, function($item, $model) use ($ctype_name, $item_id){
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
             $item['options'] = array_merge($model->getDefaultContentFieldOptions(), $item['options']);
             $item['groups_read'] = cmsModel::yamlToArray($item['groups_read']);
+            $item['groups_add']  = cmsModel::yamlToArray($item['groups_add']);
             $item['groups_edit'] = cmsModel::yamlToArray($item['groups_edit']);
             $item['filter_view'] = cmsModel::yamlToArray($item['filter_view']);
             $item['default'] = $item['values'];
@@ -570,6 +587,7 @@ class modelContent extends cmsModel {
             if ($item['options']['is_number']) {  $rules[] = array('number'); }
             if ($item['options']['is_alphanumeric']) {  $rules[] = array('alphanumeric'); }
             if ($item['options']['is_email']) {  $rules[] = array('email'); }
+            if (!empty($item['options']['is_url'])) {  $rules[] = array('url'); }
 
             if ($item['options']['is_unique']) {
                 if (!$item_id){
@@ -581,19 +599,29 @@ class modelContent extends cmsModel {
 
             $item['rules'] = $rules;
 
-            $field_class = 'field' . string_to_camel('_', $item['type']);
-
-            $handler = new $field_class($item['name']);
-
-            $item['handler_title'] = $handler->getTitle();
-
-            $handler->setOptions($item);
-
-            $item['handler'] = $handler;
-
             return $item;
 
         }, 'name');
+
+        // чтобы сработала мультиязычность, если необходима
+        // поэтому перебираем тут, а не выше
+        if($fields){
+            foreach ($fields as $name => $field) {
+
+                $field_class = 'field' . string_to_camel('_', $field['type']);
+
+                $field['handler'] = new $field_class($field['name']);
+
+                $field['handler_title'] = $field['handler']->getTitle();
+
+                $field['handler']->setOptions($field);
+
+                $fields[$name] = $field;
+
+            }
+        }
+
+        return $fields;
 
     }
 
@@ -631,6 +659,7 @@ class modelContent extends cmsModel {
             }
 
             $item['groups_read'] = cmsModel::yamlToArray($item['groups_read']);
+            $item['groups_add']  = cmsModel::yamlToArray($item['groups_add']);
             $item['groups_edit'] = cmsModel::yamlToArray($item['groups_edit']);
             $item['filter_view'] = cmsModel::yamlToArray($item['filter_view']);
 
@@ -806,9 +835,12 @@ class modelContent extends cmsModel {
         if ($result){
             $field['id'] = $id;
             cmsEventsManager::hook('ctype_field_after_update', array($field, $ctype_name, $this));
+            cmsEventsManager::hook('ctype_field_'.str_replace(['{','}'], '', $ctype_name).'_after_update', array($field, $this));
         }
 
-        cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
+        cmsCache::getInstance()->clean('content.fields.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
 
         return $result;
 
@@ -939,7 +971,7 @@ class modelContent extends cmsModel {
 
     }
 
-    public function getContentPropsBinds($ctype_name, $category_id=false){
+    public function getContentPropsBinds($ctype_name, $category_id = false) {
 
         $props_table_name = $this->table_prefix . $ctype_name . '_props';
         $bind_table_name = $this->table_prefix . $ctype_name . '_props_bind';
@@ -952,24 +984,32 @@ class modelContent extends cmsModel {
         $this->join($props_table_name, 'p', 'p.id = i.prop_id');
 
         if ($category_id){
-            $this->filterEqual('cat_id', $category_id);
+            $this->filterEqual('i.cat_id', $category_id);
         }
 
-        $this->orderBy('ordering');
+        $this->orderBy('i.ordering');
+        $this->groupBy('p.id');
 
         return $this->get($bind_table_name);
 
     }
 
-    public function getContentProps($ctype_name, $category_id=false){
+    public function getContentProps($ctype_name, $category_id = false) {
 
         $props_table_name = $this->table_prefix . $ctype_name . '_props';
         $bind_table_name = $this->table_prefix . $ctype_name . '_props_bind';
 
         if ($category_id){
             $this->selectOnly('p.*');
+            $this->select('c.title', 'cat_title');
+            $this->select('i.cat_id');
             $this->join($props_table_name, 'p', 'p.id = i.prop_id');
-            $this->filterEqual('cat_id', $category_id);
+            $this->join($this->table_prefix . $ctype_name . '_cats', 'c', 'c.id = i.cat_id');
+            if(is_array($category_id)){
+                $this->filterIn('cat_id', $category_id);
+            } else {
+                $this->filterEqual('cat_id', $category_id);
+            }
             $this->orderBy('ordering');
             $table_name = $bind_table_name;
         } else {
@@ -1463,6 +1503,107 @@ class modelContent extends cmsModel {
     }
 
 //============================================================================//
+//=============================   Фильтры   ==================================//
+//============================================================================//
+
+    public function getContentFilters($ctype_name){
+
+        $this->useCache('content.filters.'.$ctype_name);
+
+        $table_name = $this->getContentTypeTableName($ctype_name).'_filters';
+
+        return $this->get($table_name, function($item, $model){
+
+            $item['filters'] = cmsModel::stringToArray($item['filters']);
+
+            return $item;
+        });
+
+    }
+
+    public function addContentFilter($filter, $ctype){
+
+        $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
+
+        $filter['filters'] = array_filter_recursive($filter['filters']);
+        array_multisort($filter['filters']);
+        $filter['hash'] = md5(json_encode($filter['filters']));
+
+        $filter['id'] = $this->insert($table_name, $filter, true);
+
+        cmsEventsManager::hook('ctype_filter_add', array($filter, $ctype, $this));
+        cmsEventsManager::hook('ctype_filter_'.$ctype['name'].'_add', array($filter, $ctype, $this));
+
+        cmsCache::getInstance()->clean('content.filters.'.$ctype['name']);
+
+        return $filter['id'];
+
+    }
+
+    public function updateContentFilter($filter, $ctype){
+
+        list($filter, $ctype) = cmsEventsManager::hook('ctype_filter_update', array($filter, $ctype));
+        list($filter, $ctype) = cmsEventsManager::hook('ctype_filter_'.$ctype['name'].'_update', array($filter, $ctype));
+
+        $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
+
+        $filter['filters'] = array_filter_recursive($filter['filters']);
+        array_multisort($filter['filters']);
+        $filter['hash'] = md5(json_encode($filter['filters']));
+
+        $this->update($table_name, $filter['id'], $filter, false, true);
+
+        cmsCache::getInstance()->clean('content.filters.'.$ctype['name']);
+
+        return true;
+
+    }
+
+    public function getContentFilter($ctype, $id, $by_hash = false){
+
+        if(!$this->isFiltersTableExists($ctype['name'])){
+            return false;
+        }
+
+        $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
+
+        $this->useCache('content.filters.'.$ctype['name']);
+
+        $field_name = 'id';
+        if(!is_numeric($id)){
+            if($by_hash){
+                $field_name = 'hash';
+            } else {
+                $field_name = 'slug';
+            }
+        }
+
+        $this->filterEqual($field_name, $id);
+
+        return $this->getItem($table_name, function($item, $model) use($ctype){
+
+            $item['filters'] = cmsModel::stringToArray($item['filters']);
+            $item['ctype_name'] = $ctype['name'];
+
+            return $item;
+
+        });
+
+    }
+
+    public function deleteContentFilter($ctype, $id){
+
+        $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
+
+        $this->delete($table_name, $id);
+
+        cmsCache::getInstance()->clean('content.filters.'.$ctype['name']);
+
+        return true;
+
+    }
+
+//============================================================================//
 //==============================   НАБОРЫ   ==================================//
 //============================================================================//
 
@@ -1753,6 +1894,13 @@ class modelContent extends cmsModel {
 
 	}
 
+    public function isFiltersTableExists($ctype_name) {
+
+		$table_name = $this->getContentTypeTableName($ctype_name).'_filters';
+
+        return $this->db->isTableExists($table_name);
+
+    }
 //============================================================================//
 
     public function filterPropValue($ctype_name, $prop, $value){
@@ -1815,10 +1963,15 @@ class modelContent extends cmsModel {
 
         unset($item['new_folder']);
 
-		$add_cats = array();
+		$add_cats = [];
 
 		if (isset($item['add_cats'])){
-			$add_cats = $item['add_cats'];
+            foreach($item['add_cats'] as $cat_id){
+                if(!$cat_id){
+                    continue;
+                }
+                $add_cats[] = $cat_id;
+            }
 			unset($item['add_cats']);
 		}
 
@@ -1831,7 +1984,7 @@ class modelContent extends cmsModel {
         }
 
         if (empty($item['slug'])){
-            $item = $this->getContentItem($ctype['name'], $item['id']);
+            $item = array_merge($item, $this->getContentItem($ctype['name'], $item['id']));
             $item['slug'] = $this->getItemSlug($ctype, $item, $fields);
         }
 
@@ -1866,11 +2019,13 @@ class modelContent extends cmsModel {
 
             if ($ctype['is_auto_url']){
                 $item['slug'] = $this->getItemSlug($ctype, $item, $fields);
-            } else {
-                $item['slug'] = lang_slug( $item['slug'] );
+            } elseif(!empty($item['slug'])) {
+                $item['slug'] = lang_slug($item['slug']);
             }
 
-            $this->update($table_name, $id, array( 'slug' => $item['slug'] ));
+            if(!empty($item['slug'])) {
+                $this->update($table_name, $id, array( 'slug' => $item['slug'] ));
+            }
 
         }
 
@@ -1908,10 +2063,15 @@ class modelContent extends cmsModel {
         unset($update_item['user']);
         unset($update_item['user_nickname']);
 
-		$add_cats = array();
+		$add_cats = [];
 
 		if (isset($update_item['add_cats'])){
-			$add_cats = $update_item['add_cats'];
+            foreach($update_item['add_cats'] as $cat_id){
+                if(!$cat_id){
+                    continue;
+                }
+                $add_cats[] = $cat_id;
+            }
 			unset($update_item['add_cats']);
 		}
 
@@ -1979,7 +2139,7 @@ class modelContent extends cmsModel {
 
         preg_match_all('/{([a-z0-9\_]+)}/i', $pattern, $matches);
 
-        if (!$matches) { return lang_slug($item['id']); }
+        if (!$matches) { return lang_slug($item['id'], false); }
 
         list($tags, $names) = $matches;
 
@@ -1997,8 +2157,11 @@ class modelContent extends cmsModel {
                 $value = str_replace('/', '', $item[$field_name]);
 
                 if (isset($fields[$field_name])){
+
                     $value = $fields[$field_name]['handler']->getStringValue($value);
-                    $value = trim($value, '/');
+
+                    $value = lang_slug(trim($value, '/'), false);
+
                 }
 
                 $pattern = str_replace($tags[$idx], $value, $pattern);
@@ -2006,7 +2169,7 @@ class modelContent extends cmsModel {
             }
         }
 
-        $slug = lang_slug($pattern);
+        $slug = $pattern;
 
         $slug = mb_substr($slug, 0, $slug_len);
 
@@ -2014,22 +2177,9 @@ class modelContent extends cmsModel {
             return $slug;
         }
 
-        $scount = $this->filterNotEqual('id', $item['id'])->
-                filterLike('slug', "{$slug}%")->
-                getCount($this->table_prefix.$ctype['name'], 'id', true);
-
-        if($scount){
-
-            $scount += 1;
-
-            $slug = mb_substr($slug, 0, ($slug_len - strlen($scount)));
-
-            $slug .= $scount;
-
-        }
+        $slug = $this->checkCorrectEqualSlug($this->getContentTypeTableName($ctype['name']), $slug, $item['id'], $slug_len);
 
         return $slug;
-
     }
 
 //============================================================================//
@@ -2335,6 +2485,7 @@ class modelContent extends cmsModel {
 
         $this->selectOnly('slug');
         $this->select('date_last_modified');
+        $this->select('title');
         if($fields){
             foreach ($fields as $field) {
                 $this->select($field);
@@ -2358,9 +2509,11 @@ class modelContent extends cmsModel {
         $table_name = $this->table_prefix . $ctype_name;
 
         $this->select('u.nickname', 'user_nickname');
+        $this->select('u.slug', 'user_slug');
         $this->select('u.avatar', 'user_avatar');
+        $this->select('u.groups', 'user_groups');
         $this->select('f.title', 'folder_title');
-        $this->join('{users}', 'u FORCE INDEX (PRIMARY)', 'u.id = i.user_id');
+        $this->join('{users}', 'u', 'u.id = i.user_id');
         $this->joinLeft('content_folders', 'f', 'f.id = i.folder_id');
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
@@ -2378,8 +2531,10 @@ class modelContent extends cmsModel {
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
+                'slug'      => $item['user_slug'],
                 'nickname'  => $item['user_nickname'],
                 'avatar'    => $item['user_avatar'],
+                'groups'    => $item['user_groups'],
                 'is_friend' => $user->isFriend($item['user_id'])
             );
 
@@ -2421,8 +2576,9 @@ class modelContent extends cmsModel {
 
             $item['user'] = array(
                 'id'       => $item['user_id'],
+                'groups'   => $item['user_groups'],
+                'slug'     => $item['user_slug'],
                 'nickname' => $item['user_nickname'],
-                'avatar'   => $item['user_avatar'],
                 'avatar'   => $item['user_avatar']
             );
 
@@ -2458,6 +2614,14 @@ class modelContent extends cmsModel {
         $this->resetFilters();
 
         return $count;
+
+    }
+
+    public function getUserContentItemsCount24($ctype_name, $user_id){
+
+        $this->filter("DATE(DATE_FORMAT(i.date_pub, '%Y-%m-%d')) = CURDATE()");
+
+        return $this->getUserContentItemsCount($ctype_name, $user_id, false);
 
     }
 
@@ -2574,7 +2738,9 @@ class modelContent extends cmsModel {
 
 	public function incrementHitsCounter($ctype_name, $id){
 
-		$this->filterEqual('id', $id)->increment($this->table_prefix.$ctype_name, 'hits_count');
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
+
+		return $this->filterEqual('id', $id)->increment($this->table_prefix.$ctype_name, 'hits_count');
 
 	}
 
@@ -2656,6 +2822,19 @@ class modelContent extends cmsModel {
         cmsCache::getInstance()->clean('content.item.'.$ctype_name);
 
         return true;
+
+    }
+
+    public function getCommentsOptions($ctype_name) {
+
+        $ctype = $this->getContentTypeByName($ctype_name);
+
+        return [
+            'enable' => $ctype['is_comments'],
+            'title_pattern' => (!empty($ctype['options']['comments_title_pattern']) ? $ctype['options']['comments_title_pattern'] : ''),
+            'labels' => (!empty($ctype['options']['comments_labels']) ? $ctype['options']['comments_labels'] : []),
+            'template' => (!empty($ctype['options']['comments_template']) ? $ctype['options']['comments_template'] : '')
+        ];
 
     }
 
@@ -2778,7 +2957,7 @@ class modelContent extends cmsModel {
     /**
      * @deprecated
      *
-     * Метод для своместимости
+     * Метод для совместимости
      * @param string $ctype_name
      * @param integer $user_id
      * @return boolean

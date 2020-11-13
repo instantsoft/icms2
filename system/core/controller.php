@@ -9,6 +9,7 @@ class cmsController {
 	public $model = null;
     public $request;
     public $current_action;
+    public $current_template_name;
     public $current_params;
     public $options;
     public $root_url;
@@ -18,7 +19,7 @@ class cmsController {
      * Контекст списка записей
      * @var string
      */
-    private $list_type = 'category_view';
+    protected $list_type = 'category_view';
     /**
      * Если для контроллера задан ремап
      * и это свойство установлено в true
@@ -49,7 +50,7 @@ class cmsController {
      * Флаг блокировки прямого вызова экшена
      * полезно если название экшена переопределяется
      * а вызов экшена напрямую нужно запретить
-     * @var bool || null
+     * @var boolean || null
      */
     public $lock_explicit_call = null;
 
@@ -66,7 +67,16 @@ class cmsController {
     protected $callbacks = array();
     protected $useOptions = false;
 
-    function __construct( cmsRequest $request){
+    protected $active_filters = array();
+
+    /**
+     * Неизвестные экшены определять
+     * как первый параметр экшена index
+     * @var boolean
+     */
+    protected $unknown_action_as_index_param = false;
+
+    public function __construct( cmsRequest $request){
 
         self::loadControllers();
 
@@ -83,10 +93,6 @@ class cmsController {
         $title_constant = 'LANG_'.strtoupper($this->name).'_CONTROLLER';
 
         $this->title = defined($title_constant) ? constant($title_constant) : $this->name;
-
-        if($this->outer_controller_model){
-            cmsCore::includeModel($this->outer_controller_model);
-        }
 
         if (cmsCore::isModelExists($this->name)){
             $this->model = cmsCore::getModel($this->name);
@@ -111,7 +117,7 @@ class cmsController {
      * Этот метод переопределяется в дочерних классах
      * где задается начальный набор функций, которые будут применены в коллбэках
      */
-    public function loadCallback() { $this->callbacks = array(); }
+    public function loadCallback() {}
     /**
      * Устанавливает один или множество коллбэков
      * @param string $name Назначение - обычно название метода, где будет применяться
@@ -206,6 +212,10 @@ class cmsController {
     public function setOption($key, $val){
         $this->options[$key] = $val; return $this;
     }
+    public function getOption($key){
+        if(!$this->useOptions){ return null; }
+        return isset($this->options[$key]) ? $this->options[$key] : null;
+    }
 
     /**
      * Проверяет включен ли текущий контроллер
@@ -250,14 +260,15 @@ class cmsController {
 
         self::loadControllers();
 
-        foreach (self::$controllers as $controller) {
-            if(!empty($controller['slug'])){
-                self::$mapping[$controller['name']] = $controller['slug'];
+        if(self::$controllers){
+            foreach (self::$controllers as $controller) {
+                if(!empty($controller['slug'])){
+                    self::$mapping[$controller['name']] = $controller['slug'];
+                }
             }
         }
 
         return self::$mapping;
-
     }
 
     private static function loadControllers() {
@@ -391,7 +402,7 @@ class cmsController {
             return true;
         }
 
-        $action_file = $this->root_path . 'actions/' . $action_name.'.php';
+        $action_file = $this->getExternalActionPath($action_name);
 
         if (is_readable($action_file)){
             return true;
@@ -402,9 +413,10 @@ class cmsController {
     }
 
     /**
-     * Находит и запускает требуемый экшен
+     * Запускает требуемый экшен
      * @param string $action_name
      * @param array $params
+     * @return mixed
      */
     public function runAction($action_name, $params = array()){
 
@@ -414,30 +426,44 @@ class cmsController {
 
         $action_name = $this->routeAction($action_name);
 
+        $result = $this->executeAction($action_name, $this->current_params);
+
+        $this->after($action_name);
+
+        return $result;
+
+    }
+
+    /**
+     * Находит и выполняет требуемый экшен
+     * @param string $action_name
+     * @param array $params
+     * @return mixed
+     */
+    public function executeAction($action_name, $params = array()) {
+
         $method_name = 'action' . string_to_camel('_', $action_name);
 
         // проверяем наличие экшена его в отдельном файле
-        $action_file = $this->root_path . 'actions/' . $action_name.'.php';
+        $action_file = $this->getExternalActionPath($action_name);
 
         if(is_readable($action_file)){
 
             // вызываем экшен из отдельного файла
-            $result = $this->runExternalAction($action_name, $this->current_params);
+            $result = $this->runExternalAction($action_name, $params);
 
         } else {
 
             // Если файла нет, ищем метод класса
             if (method_exists($this, $method_name)){
 
-                // проверяем максимальное число аргументов экшена
-                if ($this->name != 'admin'){
-                    $rf = new ReflectionMethod($this, $method_name);
-                    $max_params = $rf->getNumberOfParameters();
-                    if ($max_params < count($this->current_params)) { cmsCore::error404(); }
-                }
+                if (!$this->validateParamsCount($this, $method_name, $params)) { cmsCore::error404(); }
+
+                // сохраняем название текущего экшена
+                $this->setCurrentAction($action_name);
 
                 // если есть нужный экшен, то вызываем его
-                $result = call_user_func_array(array($this, $method_name), $this->current_params);
+                $result = call_user_func_array(array($this, $method_name), $params);
 
             } else {
 
@@ -446,7 +472,7 @@ class cmsController {
                 if(method_exists($this, 'route')){
 
                     $route_uri = $action_name;
-                    if ($this->current_params) { $route_uri .= '/' . implode('/', $this->current_params); }
+                    if ($params) { $route_uri .= '/' . implode('/', $params); }
                     $result = call_user_func(array($this, 'route'), $route_uri);
 
                 } else {
@@ -461,19 +487,63 @@ class cmsController {
 
         }
 
-        $this->after($action_name);
-
         return $result;
 
     }
 
     /**
-     * Выполняет экшен, находящийся в отдельном файле ./actions/$action_name.php
-     * @param str $action_name
+     * Проверяем максимальное число аргументов экшена
+     * Возвращает false если переданных количество параметров не соответствует кол-ву аргументов экшена
+     * Для отключения проверки, можно переопределить этот метод (например см. в контроллере admin)
+     * @param string|object $class Имя класса или текущий объект контроллера $this
+     * @param string $method_name Имя метода
+     * @param array $params Массив параметров
+     * @return bool Результат проверки
+     */
+    protected function validateParamsCount($class, $method_name, $params) {
+        $rf = new ReflectionMethod($class, $method_name);
+        // кол-во переданных параметров
+        $current_params = count($params);
+        // передано больше чем нужно параметров
+        if ($rf->getNumberOfParameters() < $current_params) { return false; }
+        // передано меньше чем нужно параметров
+        if ($rf->getNumberOfRequiredParameters() > $current_params) { return false; }
+        return true;
+    }
+
+    /**
+     * Возвращает путь к файлу экшена (./actions/$action_name.php по умолчанию)
+     * @param string $action_name
+     * @return string
+     */
+    public function getExternalActionPath($action_name) {
+        return $this->root_path . 'actions/'.$action_name.'.php';
+    }
+
+    /**
+     * Устанавливает имя текущего экшена
+     * и шаблона экшена (если он не будет передан в cmsTemplate->render)
+     *
+     * @param string $action_name
+     * @return $this
+     */
+    public function setCurrentAction($action_name) {
+
+        $this->current_action = $action_name;
+        $this->current_template_name = $action_name;
+
+        return $this;
+    }
+
+    /**
+     * Выполняет экшен, находящийся в отдельном файле
+     * @param string $action_name Название экшена
+     * @param array $params Параметры
+     * @return mixed
      */
     public function runExternalAction($action_name, $params = array()){
 
-        $action_file = $this->root_path . 'actions/'.$action_name.'.php';
+        $action_file = $this->getExternalActionPath($action_name);
 
         $class_name = 'action' . string_to_camel('_', $this->name) . string_to_camel('_', $action_name);
 
@@ -487,12 +557,10 @@ class cmsController {
             cmsCore::error(sprintf(ERR_CLASS_NOT_DEFINED, str_replace(PATH, '', $action_file), $class_name));
         }
 
-        // проверяем максимальное число аргументов экшена
-        if ($this->name != 'admin'){
-            $rf = new ReflectionMethod($class_name, 'run');
-            $max_params = $rf->getNumberOfParameters();
-            if ($max_params < count($params)) { cmsCore::error404(); }
-        }
+        if (!$this->validateParamsCount($class_name, 'run', $params)) { cmsCore::error404(); }
+
+        // сохраняем название текущего экшена
+        $this->setCurrentAction($action_name);
 
         $action_object = new $class_name($this, $params);
 
@@ -654,6 +722,24 @@ class cmsController {
 //============================================================================//
 //============================================================================//
 
+    public function getActiveFiltersQuery() {
+        return $this->active_filters ? http_build_query($this->active_filters) : '';
+    }
+
+    public function getActiveFilters() {
+        return $this->active_filters;
+    }
+
+    public function setActiveFilter($key, $value) {
+
+        $this->active_filters[$key] = $value;
+
+        return $this;
+    }
+
+//============================================================================//
+//============================================================================//
+
     /**
      * Загружает и возвращает описание структуры формы
      * в контексте текущего контроллера и, в свою очередь,
@@ -669,7 +755,15 @@ class cmsController {
         $form_file = $this->root_path . $path_prefix . 'forms/form_' . $form_name . '.php';
         $_form_name = $this->name . $form_name;
 
-        $form = cmsForm::getForm($form_file, $_form_name, $params);
+        $form = cmsForm::getForm($form_file, $_form_name, $params, $this);
+
+        if($form === false){
+            return cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $form_file));
+        }
+
+        if(is_string($form)){
+            return cmsCore::error($form);
+        }
 
         list($form, $params) = cmsEventsManager::hook('form_'.$this->name.'_'.$form_name, array($form, $params));
 
@@ -682,7 +776,11 @@ class cmsController {
         $form_file = $this->cms_config->root_path.'system/controllers/'.$controller.'/forms/form_'.$form_name.'.php';
         $_form_name = $controller . $form_name;
 
-        $form = cmsForm::getForm($form_file, $_form_name, $params);
+        $form = cmsForm::getForm($form_file, $_form_name, $params, $this);
+
+        if($form === false){
+            cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $form_file));
+        }
 
         list($form, $params) = cmsEventsManager::hook('form_'.$controller.'_'.$form_name, array($form, $params));
 
@@ -711,22 +809,30 @@ class cmsController {
             'is_filter'     => true,
             'is_actions'    => true,
             'is_pagination' => true,
+            'perpage'       => 30,
             'is_toolbar'    => true,
             'is_draggable'  => false,
+            'drag_save_url' => '',
             'is_selectable' => false,
             'load_columns'  => false
         );
 
         $grid_file = $this->root_path . 'grids/grid_' . $grid_name . '.php';
 
-        if (!is_readable($grid_file)){ return false; }
+        if (!is_readable($grid_file)){
+            cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $grid_file));
+        }
 
         include($grid_file);
 
         $args = array($this);
         if ($params) {
-            if (is_array($params)){ $args = array($this) + $params; }
-            else { $args[] = $params; }
+            if (!is_array($params)){
+                $params = [$params];
+            }
+            foreach ($params as $p) {
+                $args[] = $p;
+            }
         }
 
         $grid = call_user_func_array('grid_'.$grid_name, $args);
@@ -738,6 +844,7 @@ class cmsController {
         }
 
 		$grid = cmsEventsManager::hook('grid_'.$this->name.'_'.$grid_name, $grid);
+        list($grid, $args) = cmsEventsManager::hook('grid_'.$this->name.'_'.$grid_name.'_args', array($grid, $args));
 
         if ($this->request->isAjax() && $this->request->has('heads')) {
 
@@ -800,6 +907,47 @@ class cmsController {
         return implode('.', $params);
     }
 
+    public function prepareItemSeo($item, $fields, $ctype) {
+
+        list($ctype, $fields, $item) = cmsEventsManager::hook(['prepare_item_seo', 'prepare_item_'.$ctype['name'].'_seo'], [$ctype, $fields, $item]);
+
+        $_item = $item;
+
+        foreach ($fields as $field) {
+
+            if (!isset($item[$field['name']])) { $_item[$field['name']] = null;  continue; }
+
+            if (empty($item[$field['name']]) && $item[$field['name']] !== '0') {
+                $_item[$field['name']] = null; continue;
+            }
+
+            if(isset($field['string_value'])){
+                $_item[$field['name']] = strip_tags($field['string_value']);
+            } else {
+                $_item[$field['name']] = strip_tags($field['handler']->setItem($item)->getStringValue($item[$field['name']]));
+            }
+
+            // Убираем шорткоды
+            $_item[$field['name']] = preg_replace('#{[a-z]{1}[a-z0-9_]*\:[a-z0-9\:_]+}#i', '', $_item[$field['name']]);
+        }
+
+        if(!empty($item['tags']) && is_array($item['tags'])){
+            $_item['tags'] = implode(', ', $item['tags']);
+        }
+
+        if(!isset($item['category']) && !empty($item['category_id'])){
+            $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
+        }
+
+        if(!empty($item['category']['title'])){
+            $_item['category'] = $item['category']['title'];
+        } else {
+            $_item['category'] = null;
+        }
+
+        return $_item;
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -809,6 +957,19 @@ class cmsController {
      * @return string
      */
     public function routeAction($action_name){
+
+        // Избавляемся от index в url
+        if($this->unknown_action_as_index_param){
+
+            if($this->isActionExists($action_name)){
+                return $action_name;
+            }
+
+            array_unshift($this->current_params, $action_name);
+
+            return 'index';
+
+        }
 
         return $action_name;
 
@@ -1060,6 +1221,22 @@ class cmsController {
 
     }
 
+    public function validate_minfloat($min, $value){
+        if (empty($value)) { return true; }
+        if(bccomp(sprintf('%.8f', $min), sprintf('%.8f', $value), 8) === 1){
+            return sprintf(ERR_VALIDATE_MIN, $min);
+        }
+        return true;
+    }
+
+    public function validate_maxfloat($min, $value){
+        if (empty($value)) { return true; }
+        if(bccomp(sprintf('%.8f', $min), sprintf('%.8f', $value), 8) === -1){
+            return sprintf(ERR_VALIDATE_MAX, $min);
+        }
+        return true;
+    }
+
     public function validate_min_length($length, $value){
 
         if (empty($value)) { return true; }
@@ -1089,6 +1266,7 @@ class cmsController {
     }
 
     public function validate_array_key($array, $value){
+        if ($value === null || $value === false) { return true; }
         if (is_array($value)) {
             $result = true;
             foreach ($value as $val) {
@@ -1123,6 +1301,12 @@ class cmsController {
         return true;
     }
 
+    public function validate_url($value){
+        if (empty($value)) { return true; }
+        if (!is_string($value) || !preg_match('_^(?:(?:https?)://)(?:(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?:/[^\s]*)?$_iuS', $value)){ return ERR_VALIDATE_URL; }
+        return true;
+    }
+
     public function validate_alphanumeric($value){
         if (empty($value)) { return true; }
         if (!is_string($value) || !preg_match("/^([a-z0-9]*)$/i", $value)){ return ERR_VALIDATE_ALPHANUMERIC; }
@@ -1131,7 +1315,7 @@ class cmsController {
 
     public function validate_localealphanumeric($value){
         if (empty($value)) { return true; }
-        $regexp = "/^([a-z0-9 \.\?\@\,\-]*)$/ui";
+        $regexp = "/^([\w \.\?\@\,\-]*)$/ui";
         if(defined('LC_LANGUAGE_VALIDATE_REGEXP')){
             $regexp = LC_LANGUAGE_VALIDATE_REGEXP;
         }
@@ -1148,6 +1332,12 @@ class cmsController {
     public function validate_phone($value){
         if (empty($value)) { return true; }
         if (!is_string($value) || !preg_match("/^([0-9\-\+\(\)\s]*)$/", $value)){ return ERR_VALIDATE_INVALID; }
+        return true;
+    }
+
+    public function validate_slug_segment($value){
+        if (empty($value)) { return true; }
+        if (!is_string($value) || !preg_match("/^([a-z0-9\-]*[a-z]+[a-z0-9\-]*)$/", $value)){ return ERR_VALIDATE_SLUGS; }
         return true;
     }
 
@@ -1169,12 +1359,18 @@ class cmsController {
         return true;
     }
 
-    public function validate_color($value){
+    public function validate_color($value) {
         if (empty($value)) { return true; }
         if (!is_string($value)) { return ERR_VALIDATE_INVALID; }
-        $value = ltrim($value, '#');
-        if (ctype_xdigit($value) && (strlen($value) == 6 || strlen($value) == 3)){
-            return true;
+        if (strlen($value) <= 7) {
+            $value = ltrim($value, '#');
+            if (ctype_xdigit($value) && (strlen($value) == 6 || strlen($value) == 3)) {
+                return true;
+            }
+        } else {
+            if (preg_match("/^rgba\((\s*\d+\s*,){3} [\d\.]+\)$/i", $value)) {
+                return true;
+            }
         }
         return ERR_VALIDATE_INVALID;
     }
@@ -1210,7 +1406,7 @@ class cmsController {
         return true;
     }
 
-    public function validate_unique_ctype_dataset($ctype_id, $value){
+    public function validate_unique_ctype_dataset($ctype_id, $exclude_row_id = null, $value = null){
         if (empty($value)) { return true; }
         if (!in_array(gettype($value), array('integer','string'))) { return ERR_VALIDATE_INVALID; }
         $value = $this->cms_core->db->escape($value);
@@ -1219,9 +1415,73 @@ class cmsController {
         } else {
             $where = "target_controller='{$ctype_id}' AND name='{$value}'";
         }
+        if ($exclude_row_id) { $where .= " AND (id <> '{$exclude_row_id}')"; }
         $result = !$this->cms_core->db->getRow('content_datasets', $where);
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
         return true;
+    }
+
+    public function validate_date($value){
+
+        if (empty($value)) { return true; }
+
+        if (!is_array($value)){
+
+            $time = strtotime($value);
+
+            if ($time !== false){
+                return true;
+            }
+
+        }
+
+        return ERR_VALIDATE_INVALID;
+
+    }
+
+    public function validate_date_range($value){
+
+        if (empty($value)) { return true; }
+
+        if (!empty($value['date']) && !is_array($value['date'])){
+
+            if(isset($value['hours']) && isset($value['mins']) &&
+                    !is_array($value['hours']) && !is_array($value['mins'])){
+                return $this->validate_date(sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']));
+            }
+
+        } elseif(!empty($value['from']) || !empty($value['to'])) {
+
+            if (!empty($value['from'])){
+
+                if(is_array($value['from'])){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+                if($this->validate_date($value['from']) !== true){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+            }
+
+            if (!empty($value['to'])){
+
+                if(is_array($value['to'])){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+                if($this->validate_date($value['to']) !== true){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+            }
+
+            return true;
+
+        }
+
+        return ERR_VALIDATE_INVALID;
+
     }
 
 }

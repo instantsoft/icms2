@@ -1,0 +1,58 @@
+.icms-messages {
+    .contact_nickname {
+        line-height: 1.4;
+    }
+    .icms-messages-chat {
+        min-height: 400px;
+    }
+    .markItUp .markItUpEditor {
+        height: auto;
+    }
+    .content {
+        &:before {
+            position: absolute;
+            top: 8px;
+            left: -8px;
+            display: inline-block;
+            background: inherit;
+            width: 16px;
+            height: 16px;
+            border-color: inherit;
+            content: '';
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+            -o-transform: rotate(-45deg);
+        }
+    }
+    .message-my {
+        .content {
+            &:before {
+                right: -8px;
+                left: auto;
+            }
+        }
+        .selected {
+            background-color: lighten($primary, 30) !important;
+        }
+    }
+    .pannel-toolbar {
+        height: 54px;
+    }
+}
+.bg-gray {
+    background-color: $gray-200;
+}
+.bg-success_light {
+    background-color: lighten($success, 40);
+}
+#pm_contact .smilepanel {
+    position: absolute;
+    top: -51px;
+    padding: 0 $spacer*0.25;
+    background-color: $white;
+    right: 0px;
+    border: 1px solid $gray-400;
+    box-shadow: $box-shadow;
+}

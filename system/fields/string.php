@@ -24,10 +24,25 @@ class fieldString extends cmsFormField {
             new fieldCheckbox('show_symbol_count', array(
                 'title' => LANG_PARSER_SHOW_SYMBOL_COUNT
             )),
+            new fieldList('in_filter_as', array(
+                'title' => LANG_PARSER_STRING_DISPLAY_VARIANT,
+                'hint'  => '<a href="#" onclick="return fieldStringLoadDefault(\''.cmsTemplate::getInstance()->href_to('ctypes', array('field_string_ajax', $this->name)).'\')" class="ajaxlink">'.LANG_PARSER_STRING_ENTER_DEFAULT.'</a>',
+                'items' => array(
+                    'input'     => LANG_PARSER_STRING,
+                    'select'    => LANG_PARSER_STRING_SELECT,
+                    'checkbox'  => LANG_PARSER_STRING_CHECKBOX
+                )
+            )),
+            new fieldNumber('teaser_len', array(
+                'title' => LANG_PARSER_HTML_TEASER_LEN,
+                'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
+				'extended_option' => true
+            )),
             new fieldCheckbox('is_autolink', array(
                 'title' => LANG_PARSER_LIST_IS_AUTOLINK,
                 'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_HINT.LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
-                'default' => false
+                'default' => false,
+				'extended_option' => true
             ))
         );
     }
@@ -46,6 +61,22 @@ class fieldString extends cmsFormField {
 
     }
 
+    public function parseTeaser($value) {
+
+        if (!empty($this->item['is_private_item'])) {
+            return '<p class="private_field_hint text-muted">'.$this->item['private_item_hint'].'</p>';
+        }
+
+        $max_len = $this->getOption('teaser_len');
+
+        if ($max_len){
+            $value = string_short($value, $max_len);
+            return $value;
+        }
+
+        return parent::parseTeaser($value);
+    }
+
     public function parse($value){
 
         if ($this->getOption('is_autolink')){
@@ -55,11 +86,31 @@ class fieldString extends cmsFormField {
         }
 
         return html($value, false);
-
     }
 
     public function applyFilter($model, $value) {
-        return $model->filterLike($this->name, "%{$value}%");
+        switch($this->getOption('in_filter_as')){
+            case 'select':
+                return $model->filterEqual($this->name, $value);
+            case 'checkbox':
+                if($value){ // работает и без этого
+                    return $model->filterNotNull($this->name);
+                }
+                return $model;
+            case 'input':
+            default:
+                return $model->filterLike($this->name, '%'.$value.'%');
+        }
+    }
+
+    public function getFilterInput($value){
+        if($this->getOption('in_filter_as') === 'select'){
+            $this->data['items'] = array('' => '');
+            if($this->hasDefaultValue()){
+                $this->data['items'] = $this->data['items'] + string_explode_list($this->getDefaultValue(), true);
+            }
+        }
+        return parent::getFilterInput($value);
     }
 
     public function store($value, $is_submitted, $old_value=null){
@@ -67,6 +118,10 @@ class fieldString extends cmsFormField {
             return trim($value);
         }
         return strip_tags(trim($value));
+    }
+
+    public function storeFilter($value){
+        return $this->store($value, false);
     }
 
     public function getStringValue($value){
@@ -77,7 +132,19 @@ class fieldString extends cmsFormField {
 
         $this->data['type']         = $this->getProperty('is_password') ? 'password' : $this->getProperty('type');
         $this->data['autocomplete'] = $this->getProperty('autocomplete');
-        $this->data['attributes']   = $this->getProperty('attributes')?:array();
+        $this->data['attributes']   = $this->getProperty('attributes')?:array('autocomplete' => 'off');
+
+        if($this->data['autocomplete']){
+            if(empty($this->data['autocomplete']['data'])){
+                $this->data['autocomplete']['data'] = false;
+            }
+            if(empty($this->data['autocomplete']['url'])){
+                $this->data['autocomplete']['url'] = false;
+            }
+            if(empty($this->data['autocomplete']['multiple_separator'])){
+                $this->data['autocomplete']['multiple_separator'] = ', ';
+            }
+        }
 
         $this->data['attributes']['id'] = $this->id;
         $this->data['attributes']['required'] = (array_search(array('required'), $this->getRules()) !== false);

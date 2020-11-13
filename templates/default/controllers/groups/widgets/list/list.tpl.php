@@ -1,5 +1,5 @@
 <?php
-$this->addCSS($this->getStylesFileName('groups'));
+$this->addTplCSSFromContext('controllers/groups/styles');
 ?>
 <div class="groups-list striped-list list-64">
     <?php foreach($groups as $group){ ?>
@@ -35,9 +35,11 @@ $this->addCSS($this->getStylesFileName('groups'));
                     </div>
                 <?php } ?>
             </div>
-            <div class="actions">
-                <?php echo $group['members_count'] ? html_spellcount($group['members_count'], LANG_GROUPS_MEMBERS_SPELLCOUNT) : '&mdash;'; ?>
-            </div>
+            <?php if ($show_members_count) { ?>
+                <div class="actions">
+                    <?php echo $group['members_count'] ? html_spellcount($group['members_count'], LANG_GROUPS_MEMBERS_SPELLCOUNT) : '&mdash;'; ?>
+                </div>
+            <?php } ?>
         </div>
     <?php } ?>
 </div>

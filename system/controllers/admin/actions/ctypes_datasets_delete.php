@@ -10,7 +10,9 @@ class actionAdminCtypesDatasetsDelete extends cmsAction {
             cmsCore::error404();
         }
 
-        cmsCore::getModel('content')->deleteContentDataset($dataset_id);
+        $this->model_content->deleteContentDataset($dataset_id);
+
+        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
         $this->redirectBack();
 

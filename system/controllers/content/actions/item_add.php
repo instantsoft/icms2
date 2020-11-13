@@ -40,6 +40,14 @@ class actionContentItemAdd extends cmsAction {
             $this->redirectBack();
         }
 
+        // проверяем что не превышен лимит на число записей в сутки
+        $user_items_24count = $this->model->getUserContentItemsCount24($ctype['name'], $this->cms_user->id, false);
+
+        if (cmsUser::isPermittedLimitReached($ctype['name'], 'limit24', $user_items_24count)){
+            cmsUser::addSessionMessage(sprintf(LANG_CONTENT_COUNT_LIMIT24, $ctype['labels']['many'], $ctype['labels']['two']), 'error');
+            $this->redirectBack();
+        }
+
         // Проверяем ограничение по карме
         if (cmsUser::isPermittedLimitHigher($ctype['name'], 'karma', $this->cms_user->karma)){
             cmsUser::addSessionMessage(sprintf(LANG_CONTENT_KARMA_LIMIT, cmsUser::getPermissionValue($ctype['name'], 'karma')), 'error');
@@ -136,7 +144,7 @@ class actionContentItemAdd extends cmsAction {
             cmsCore::error404();
         }
 
-        // Заполняем поля значениями по-умолчанию, взятыми из профиля пользователя
+        // Заполняем поля значениями по умолчанию, взятыми из профиля пользователя
         // (для тех полей, в которых это включено)
         foreach($fields as $field){
             if (!empty($field['options']['profile_value'])){
@@ -173,15 +181,9 @@ class actionContentItemAdd extends cmsAction {
 
         if ($is_submitted){
 
+            // Добавляем поля свойств для валидации
             if ($ctype['props']){
-                $props_cat_id = $this->request->get('category_id', 0);
-                if ($props_cat_id){
-                    $item_props = $this->model->getContentProps($ctype['name'], $props_cat_id);
-                    $item_props_fields = $this->getPropsFields($item_props);
-                    foreach($item_props_fields as $field){
-                        $form->addField('props', $field);
-                    }
-                }
+                $form = $this->addFormPropsFields($form, $ctype, [], $is_submitted);
             }
 
             // Парсим форму и получаем поля записи
@@ -216,24 +218,8 @@ class actionContentItemAdd extends cmsAction {
 
             }
 
-			if (!$errors){
-				list($item, $errors) = cmsEventsManager::hook('content_validate', array($item, $errors));
-			}
-
-            // несколько категорий
-            if (!empty($ctype['options']['is_cats_multi'])){
-                $add_cats = $this->request->get('add_cats', array());
-                if (is_array($add_cats)){
-                    foreach($add_cats as $index=>$cat_id){
-                        if (!is_numeric($cat_id) || !$cat_id){
-                            unset($add_cats[$index]);
-                        }
-                    }
-                    if ($add_cats){
-                        $item['add_cats'] = $add_cats;
-                    }
-                }
-            }
+			list($item, $errors) = cmsEventsManager::hook('content_validate', array($item, $errors), null, $this->request);
+            list($item, $errors, $ctype, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_validate", array($item, $errors, $ctype, $fields), null, $this->request);
 
             if (!$errors){
 
@@ -279,38 +265,16 @@ class actionContentItemAdd extends cmsAction {
                 $item = cmsEventsManager::hook('content_before_add', $item);
                 $item = cmsEventsManager::hook("content_{$ctype['name']}_before_add", $item);
 
-                // SEO параметры
-                $item_seo = $this->prepareItemSeo($item, $fields, $ctype);
-                if(empty($ctype['options']['is_manual_title']) && !empty($ctype['options']['seo_title_pattern'])){
-                    $item['seo_title'] = string_replace_keys_values_extended($ctype['options']['seo_title_pattern'], $item_seo);
-                }
-                if ($ctype['is_auto_keys']){
-                    if(!empty($ctype['options']['seo_keys_pattern'])){
-                        $item['seo_keys'] = string_replace_keys_values_extended($ctype['options']['seo_keys_pattern'], $item_seo);
-                    } else {
-                        $item['seo_keys'] = string_get_meta_keywords($item['content']);
-                    }
-                }
-                if ($ctype['is_auto_desc']){
-                    if(!empty($ctype['options']['seo_desc_pattern'])){
-                        $item['seo_desc'] = string_get_meta_description(string_replace_keys_values_extended($ctype['options']['seo_desc_pattern'], $item_seo));
-                    } else {
-                        $item['seo_desc'] = string_get_meta_description($item['content']);
-                    }
-                }
-
                 $item = $this->model->addContentItem($ctype, $item, $fields);
+
+                $item['ctype_name'] = $ctype['name'];
+                $item['ctype_id']   = $ctype['id'];
+                $item['ctype_data'] = $ctype;
 
                 $this->bindItemToParents($ctype, $item, $parents);
 
-                if ($ctype['is_tags']){
-                    $tags_model = cmsCore::getModel('tags');
-                    $item['tags'] = $tags_model->addTags($item['tags'], $this->name, $ctype['name'], $item['id']);
-                    $this->model->updateContentItemTags($ctype['name'], $item['id'], $item['tags']);
-                }
-
-                cmsEventsManager::hook('content_after_add', $item);
-                cmsEventsManager::hook("content_{$ctype['name']}_after_add", $item);
+                $item = cmsEventsManager::hook('content_after_add', $item);
+                $item = cmsEventsManager::hook("content_{$ctype['name']}_after_add", $item);
 
                 if(!$is_draf_submitted){
 
@@ -358,7 +322,7 @@ class actionContentItemAdd extends cmsAction {
         return $this->cms_template->render('item_form', array(
             'do'               => 'add',
             'page_title'       => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
-            'cancel_url'       => ($back_url ? $back_url : ($ctype['options']['list_on'] ? href_to($ctype['name']) : false)),
+            'cancel_url'       => ($back_url ? $back_url : ($ctype['options']['list_on'] ? href_to($ctype['name']) : $this->getBackURL())),
             'parent'           => isset($parent) ? $parent : false,
             'ctype'            => $ctype,
             'item'             => $item,
@@ -369,9 +333,8 @@ class actionContentItemAdd extends cmsAction {
             'is_premoderation' => $is_premoderation,
             'button_save_text' => (($is_premoderation && !$is_moderator) ? LANG_MODERATION_SEND : LANG_SAVE),
             'button_draft_text' => LANG_CONTENT_SAVE_DRAFT,
-            'is_multi_cats'    => !empty($ctype['options']['is_cats_multi']),
+            'hide_draft_btn'   => !empty($ctype['options']['disable_drafts']),
             'is_load_props'    => !isset($errors),
-            'add_cats'         => isset($add_cats) ? $add_cats : array(),
             'errors'           => isset($errors) ? $errors : false
         ));
 

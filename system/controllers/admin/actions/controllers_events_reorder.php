@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @deprecated Используется в шаблоне старой админки
+ * по новому сохранение тут href_to('admin', 'reorder', ['events'])
+ */
 class actionAdminControllersEventsReorder extends cmsAction {
 
     public function run(){

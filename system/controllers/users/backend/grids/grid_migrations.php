@@ -9,6 +9,7 @@ function grid_migrations($controller){
     $columns = array(
         'id' => array(
             'title' => 'id',
+            'class' => 'd-none d-lg-table-cell',
             'width' => 30
         ),
         'title' => array(
@@ -27,6 +28,7 @@ function grid_migrations($controller){
         ),
         'rating' => array(
             'title'   => LANG_RATING,
+            'class'   => 'd-none d-lg-table-cell',
             'handler' => function($val) {
                 return $val ? $val : '&mdash;';
             },
@@ -34,6 +36,7 @@ function grid_migrations($controller){
         ),
         'karma' => array(
             'title'   => LANG_KARMA,
+            'class'   => 'd-none d-lg-table-cell',
             'handler' => function($val) {
                 return $val ? $val : '&mdash;';
             },

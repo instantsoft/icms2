@@ -23,7 +23,6 @@
                     <a href="#<?php echo $p; ?>" data-page="<?php echo $p; ?>"<?php if ($p==$page) { ?> class="active"<?php } ?>><?php echo $p; ?></a>
                 <?php } ?>
             </div>
-            <script>icms.rating.bingInfoPages()</script>
         <?php } ?>
 
     <?php } ?>

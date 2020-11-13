@@ -6,14 +6,12 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
 
         if (!$dataset_id) { cmsCore::error404(); }
 
-        $content_model = cmsCore::getModel('content');
-
-        $dataset = $old_dataset = $content_model->getContentDataset($dataset_id);
+        $dataset = $old_dataset = $this->model_content->getContentDataset($dataset_id);
         if (!$dataset) { cmsCore::error404(); }
 
         if($dataset['ctype_id']){
 
-            $ctype = $content_model->getContentType($dataset['ctype_id']);
+            $ctype = $this->model_content->getContentType($dataset['ctype_id']);
             if (!$ctype) { cmsCore::error404(); }
 
             $controller_name = 'content';
@@ -28,20 +26,20 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
                 'id'    => null
             );
 
-            $content_model->setTablePrefix('');
+            $this->model_content->setTablePrefix('');
 
             $controller_name = $dataset['target_controller'];
 
         }
 
-        $fields  = $content_model->getContentFields($ctype['name']);
+        $fields  = $this->model_content->getContentFields($ctype['name']);
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
         $cats_list = array();
 
         if($ctype['id']){
 
-            $cats = $content_model->getCategoriesTree($ctype['name'], false);
+            $cats = $this->model_content->getCategoriesTree($ctype['name'], false);
 
             if ($cats){
                 foreach($cats as $c){
@@ -53,7 +51,7 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
 
         $fields_list = $this->buildDatasetFieldsList($controller_name, $fields);
 
-        $form = $this->getForm('ctypes_dataset', array('edit', $ctype, $cats_list, $fields_list));
+        $form = $this->getForm('ctypes_dataset', array('edit', $ctype, $cats_list, $fields_list, $dataset));
 
         if ($this->request->has('submit')){
 
@@ -63,7 +61,7 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
 
             if (!$errors){
 
-                $content_model->updateContentDataset($dataset_id, $dataset, $ctype, $old_dataset);
+                $this->model_content->updateContentDataset($dataset_id, $dataset, $ctype, $old_dataset);
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 

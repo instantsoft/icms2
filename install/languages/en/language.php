@@ -3,6 +3,7 @@
     define('LANG_PAGE_TITLE',               'InstantCMS Installation');
     define('LANG_INSTALLATION_WIZARD',      'Installation wizard');
     define('LANG_NEXT',                     'Next &rarr;');
+    define('LANG_ERROR',                    'Error');
 
     define('LANG_MANUAL',                   '<a href="http://docs.instantcms.ru/en/manual/install" target="_blank" rel="noopener noreferrer">Installation Manual</a>');
 
@@ -23,7 +24,6 @@
 
     define('LANG_STEP_START_1',             'The InstantCMS installation wizard will check whether your server meets the system requirements.');
     define('LANG_STEP_START_2',             'The wizard will ask you a series of questions that are required for the correct installation and configuration.');
-    define('LANG_STEP_START_3',             'Before you start, you have to create a empty MySQL database encoded in <b>utf8_general_ci</b>');
 
     define('LANG_LICENSE_AGREE',            'I agree to the license terms');
     define('LANG_LICENSE_ERROR',            'You need to agree to the license terms');
@@ -62,16 +62,19 @@
     define('LANG_PATHS_UPLOAD_HOST',        'Upload URL');
     define('LANG_PATHS_CACHE',              'Cache');
     define('LANG_PATHS_CACHE_PATH',         'Cache path');
+    define('LANG_PATHS_SESSION',            'Sessions');
+    define('LANG_PATHS_SESSION_PATH',       'Session save path');
+    define('LANG_PATHS_SESSIONS_BASEDIR',    'The full path to the file system, which must be in one of the paths ');
 
     define('LANG_DATABASE_INFO',            'Provide your MySQL database connection details');
-    define('LANG_DATABASE_CHARSET_INFO',    'The database encoding should be <b>utf8_general_ci</b>');
     define('LANG_DATABASE_HOST',            'MySQL Server');
     define('LANG_DATABASE_USER',            'Username');
     define('LANG_DATABASE_PASS',            'Password');
     define('LANG_DATABASE_BASE',            'Database');
     define('LANG_DATABASE_BASE_HINT',       'Create if not exists');
     define('LANG_DATABASE_ENGINE',          'Database engine');
-    define('LANG_DATABASE_ENGINE_HINT',     'If you don\'t know what to choose, select MyISAM.');
+    define('LANG_DATABASE_ENGINE_HINT',     'If you don\'t know what to choose, select InnoDB.');
+    define('LANG_DATABASE_CHARSET',         'Database collation');
     define('LANG_DATABASE_PREFIX',          'Table prefix');
     define('LANG_DATABASE_USERS_TABLE',     'User table');
     define('LANG_DATABASE_USERS_TABLE_NEW', 'Create new');
@@ -85,12 +88,15 @@
     define('LANG_DATABASE_ENGINE_NO',       'Database engine is not supported');
     define('LANG_DATABASE_ENGINE_DISABLED', 'Database engine is supported but has been disabled in MySQL settings');
     define('LANG_DATABASE_ENGINE_ERROR',    'Database engine is not supported by the server');
+    define('LANG_DATABASE_CH_ERROR',        'Table collation is not supported by the server');
 
     define('LANG_SITE_SITENAME',            "Site name");
     define('LANG_SITE_HOMETITLE',           "Main page title");
     define('LANG_SITE_METAKEYS',            "Keywords");
     define('LANG_SITE_METADESC',            "Description");
     define('LANG_SITE_CHECK_UPDATE',        "Automatically check for InstantCMS updates");
+    define('LANG_SITE_TEMPLATE',            'Site template');
+    define('LANG_SITE_TEMPLATE_ADMIN',      'Admin panel template');
 
     define('LANG_SITE_SITENAME_ERROR',      "Site name is required");
     define('LANG_SITE_HOMETITLE_ERROR',     "Home title is required");
@@ -105,6 +111,9 @@
     define('LANG_ADMIN_ERROR',              'All fields are required');
     define('LANG_ADMIN_EMAIL_ERROR',        'Incorrect e-mail address');
     define('LANG_ADMIN_PASS_ERROR',         'Passwords do not match');
+    define('LANG_ADMIN_PASS_HASH_ERROR',    'Error creating password hash, try again');
+    define('LANG_VALIDATE_MIN_LENGTH',      'Too short %s field value (min. length: %s)');
+    define('LANG_VALIDATE_MAX_LENGTH',      'Too long %s field value (max. length: %s)');
 
     define('LANG_CONFIG_INFO',              'The configuration file will be created now.');
     define('LANG_CONFIG_PATH',              'File location:');

@@ -11,6 +11,29 @@ class formWidgetCommentsListOptions extends cmsForm {
                 'title' => LANG_OPTIONS,
                 'childs' => array(
 
+                    new fieldListMultiple('options:show_list', array(
+                        'title' => LANG_WD_COMMENTS_SHOW_LIST,
+                        'default' => 0,
+                        'show_all'=> true,
+                        'generator' => function($item) {
+
+                            $items = [];
+
+                            $comments_targets = cmsEventsManager::hookAll('comments_targets');
+
+                            if (is_array($comments_targets)){
+                                foreach($comments_targets as $comments_target){
+                                    foreach($comments_target['types'] as $name => $title){
+                                        $items[$name] = $title;
+                                    }
+                                }
+                            }
+
+                            return $items;
+
+                        }
+                    )),
+
                     new fieldCheckbox('options:show_avatars', array(
                         'title' => LANG_WD_COMMENTS_LIST_SHOW_AVATARS,
                         'default' => true,
@@ -27,10 +50,10 @@ class formWidgetCommentsListOptions extends cmsForm {
                         'rules' => array(
                             array('required')
                         )
-                    )),
+                    ))
 
                 )
-            ),
+            )
 
         );
 

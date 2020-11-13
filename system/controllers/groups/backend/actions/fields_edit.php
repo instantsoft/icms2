@@ -18,17 +18,20 @@ class actionGroupsFieldsEdit extends cmsAction {
         // скроем поле "Системное имя" для фиксированных полей
         if ($field['is_fixed']) { $form->hideField('basic', 'name'); }
 
+        // Скроем для системных и фиксированных полей тип поля
+        if ($field['is_system'] || $field['is_fixed_type']) {
+            // Для валидации списка меняем на все доступные поля
+            $form->setFieldProperty('type', 'type', 'generator', function() {
+                return cmsForm::getAvailableFormFields(false, 'content');
+            });
+            $form->hideField('type', 'type');
+        }
+
         // скроем лишние опции для системных полей
         if ($field['is_system']) {
-            $form->hideField('type', 'type');
             $form->removeFieldset('format');
             $form->removeFieldset('labels');
             $form->removeFieldset('values');
-        }
-
-        // удалим выбор типа для полей с фиксированным типом
-        if ($field['is_fixed_type']) {
-            $form->hideField('type', 'type');
         }
 
         if ($this->request->has('submit')){
@@ -40,9 +43,10 @@ class actionGroupsFieldsEdit extends cmsAction {
             $field_class = 'field' . string_to_camel('_', $field_type);
             $field_object = new $field_class(null, null);
             $field_options = $field_object->getOptions();
+            $form->addFieldsetAfter('type', LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
             foreach($field_options as $option_field){
                 $option_field->setName("options:{$option_field->name}");
-                $form->addField('type', $option_field);
+                $form->addField('field_settings', $option_field);
             }
 
             $defaults = $field['is_fixed_type'] ? array('type'=>$field['type']) : array();

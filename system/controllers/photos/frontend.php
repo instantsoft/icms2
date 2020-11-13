@@ -62,6 +62,11 @@ class photos extends cmsFrontend {
             $this->model->limit($perpage);
         }
 
+        // если альбом не общий, фильтруем для всех и для друзей
+        if(empty($item['is_public']) && $this->cms_user->isFriend($item['user_id'])){
+            $this->model->disablePrivacyFilterForFriends();
+        }
+
         $photos = $this->getPhotosList($item['id'], $item_type);
         if(!$photos && $page > 1){ cmsCore::error404(); }
 
@@ -96,6 +101,10 @@ class photos extends cmsFrontend {
 
     public function getDownloadHash() {
         return md5(cmsUser::getIp().$this->cms_config->host);
+    }
+
+    public function validate_rating_score($score) {
+        return $score >= 1 && $score <= 5;
     }
 
 }

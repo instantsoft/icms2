@@ -12,6 +12,30 @@ function contentFilter(){
     return false;
 }
 
+function contentGridColumnsSettings(){
+    var form_data = icms.forms.toJSON($('.datagrid_grid_columns_settings form'));
+    form_data.submit = true;
+    $.post($('.datagrid_grid_columns_settings form').attr('action'), form_data, function(data){
+        if(data.error === false){
+            icms.datagrid.setPage(1);
+            icms.datagrid.loadRows();
+            icms.modal.close();
+        }
+    }, 'json');
+    return false;
+}
+
+function contentGridColumnsResetSettings(){
+    $.post($('.datagrid_grid_columns_settings form').attr('action'), {reset: true}, function(data){
+        if(data.error === false){
+            icms.datagrid.setPage(1);
+            icms.datagrid.loadRows();
+            icms.modal.close();
+        }
+    }, 'json');
+    return false;
+}
+
 function contentCancelFilter(ctype_changed){
     $('#datagrid_filter #advanced_filter').val('');
     $('.cp_toolbar .filter a').show();
@@ -33,4 +57,10 @@ function contentCatsReorder(button){
 function contentItemsMoved(form_data){
     icms.datagrid.loadRows();
     icms.modal.close();
+}
+function contentItemsEditSelected(form_data, result){
+    $('#popup-manager .nyroModalLink').html(result.html);
+}
+function contentItemsEditSelectedSaved(form_data, result){
+    window.location.href = result.location;
 }

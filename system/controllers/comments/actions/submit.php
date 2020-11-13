@@ -97,8 +97,17 @@ class actionCommentsSubmit extends cmsAction {
             return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR));
         }
 
+        $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->options['editor'],
+            'presets' => $this->options['editor_presets']
+        ]);
+
         // Типографируем текст
-        $this->content_html = cmsEventsManager::hook('html_filter', $this->content);
+        $this->content_html = cmsEventsManager::hook('html_filter', [
+            'text'         => $this->content,
+            'is_auto_br'   => (!$editor_params['editor'] || $editor_params['editor'] == 'markitup'),
+            'build_smiles' => $editor_params['editor'] == 'markitup'
+        ]);
 
 		if (!$this->content_html){
 			return $this->cms_template->renderJSON(array(
@@ -154,7 +163,7 @@ class actionCommentsSubmit extends cmsAction {
                 cmsCore::error404();
             }
 
-            if (!$this->author_email){
+            if (!empty($this->options['show_author_email']) && !$this->author_email){
 				return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR_EMAIL, 'html' => false));
 			}
 
@@ -170,7 +179,7 @@ class actionCommentsSubmit extends cmsAction {
             }
 
             // запрещенные email
-            if (!empty($this->options['restricted_emails'])){
+            if (!empty($this->options['show_author_email']) && !empty($this->options['restricted_emails'])){
                 if (string_in_mask_list($this->author_email, $this->options['restricted_emails'])){
                     return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR_EMAIL, 'html' => false));
                 }
@@ -242,7 +251,7 @@ class actionCommentsSubmit extends cmsAction {
         }
 
         // Сохраняем комментарий
-        $comment_id = $this->model->addComment(cmsEventsManager::hook('comment_before_add', $comment));
+        $comment_id = $this->model->addComment(cmsEventsManager::hook('comment_before_add', $comment, null, $this->request));
 
         // успешно добавился?
         if(!$comment_id){
@@ -284,9 +293,17 @@ class actionCommentsSubmit extends cmsAction {
             // Уведомляем об ответе на комментарий
             if ($parent_comment){ $this->notifyParent($comment, $parent_comment); }
 
-            $comment = cmsEventsManager::hook('comment_after_add', $comment);
+            $comment = cmsEventsManager::hook('comment_after_add', $comment, null, $this->request);
 
         }
+
+        // получаем опции, если есть
+        $target_options = [];
+        if(method_exists($target_model, 'getCommentsOptions')){
+            $target_options = $target_model->getCommentsOptions($this->target_subject);
+        }
+
+        $template_name = !empty($target_options['template']) ? $target_options['template'] : $this->comment_template;
 
         // Формируем и возвращаем результат
         return $this->cms_template->renderJSON(array(
@@ -295,10 +312,13 @@ class actionCommentsSubmit extends cmsAction {
             'id'        => $comment_id,
             'parent_id' => isset($comment['parent_id']) ? $comment['parent_id'] : 0,
             'level'     => isset($comment['level']) ? $comment['level'] : 0,
-            'html'      => $this->cms_template->render('comment', array(
+            'html'      => $this->cms_template->render($template_name, array(
                 'comments'       => array($comment),
                 'target_user_id' => $this->target_user_id,
-                'user'           => $this->cms_user
+                'user'           => $this->cms_user,
+                'is_levels'        => true,
+                'is_controls'      => true,
+                'is_show_target'   => false
             ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL))
         ));
 
@@ -323,15 +343,20 @@ class actionCommentsSubmit extends cmsAction {
             }
         }
 
-        list($this->comment_id, $this->content, $this->content_html) = cmsEventsManager::hook('comment_before_update', array(
+        list($this->comment_id, $this->content, $this->content_html, $data) = cmsEventsManager::hook('comment_before_update', array(
             $this->comment_id,
             $this->content,
-            $this->content_html
-        ));
+            $this->content_html,
+            array()
+        ), null, $this->request);
 
-        $this->model->updateCommentContent($this->comment_id, $this->content, $this->content_html);
+        $this->model->updateCommentContent($this->comment_id, $this->content, $this->content_html, $data);
 
-        $this->content_html = cmsEventsManager::hook('parse_text', $this->content_html);
+        $comment = $this->model->getComment($this->comment_id);
+
+        $comment = cmsEventsManager::hook('comment_after_update', $comment, null, $this->request);
+
+        $comment['content_html'] = cmsEventsManager::hook('parse_text', $comment['content_html']);
 
         return $this->cms_template->renderJSON(array(
             'error'     => false,
@@ -339,7 +364,7 @@ class actionCommentsSubmit extends cmsAction {
             'id'        => $this->comment_id,
             'parent_id' => isset($comment['parent_id']) ? $comment['parent_id'] : 0,
             'level'     => isset($comment['level']) ? $comment['level'] : 0,
-            'html'      => $this->content_html
+            'html'      => $comment['content_html']
         ));
 
     }

@@ -2,46 +2,60 @@
 
 class actionContentItemPropsFields extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        if (!$this->request->isAjax()) { cmsCore::error404(); }
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
 
         $ctype_name  = $this->request->get('ctype_name', '');
         $category_id = $this->request->get('category_id', 0);
         $item_id     = $this->request->get('item_id', 0);
-
-        if (!$ctype_name || !$category_id) { cmsCore::error404(); }
-
-        $ctype = $this->model->getContentTypeByName($ctype_name);
-        if (!$ctype) { cmsCore::error404(); }
-
-        $template = cmsTemplate::getInstance();
-
-        $props = $this->model->getContentProps($ctype['name'], $category_id);
-
-        if (!$props){
-            $template->renderJSON(array(
-                'success' => false,
-                'html' => ''
-            ));
+        $add_cats    = $this->request->get('add_cats', []);
+        if ($add_cats){
+            foreach($add_cats as $index=>$cat_id){
+                if (!is_numeric($cat_id) || !$cat_id){
+                    unset($add_cats[$index]);
+                }
+            }
         }
 
+        if (!$ctype_name || (!$category_id && !$add_cats)) {
+            return cmsCore::error404();
+        }
 
-        $values = $item_id ? $this->model->getPropsValues($ctype['name'], $item_id) : array();
+        $ctype = $this->model->getContentTypeByName($ctype_name);
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
 
-        $fields = $this->getPropsFields($props);
+        $add_cats[] = $category_id;
 
-        $props_html = $template->render('item_props_fields', array(
-            'props' => $props,
-            'fields' => $fields,
-            'values' => $values,
-        ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
+        $values = $item_id ? ['props' => $this->model->getPropsValues($ctype['name'], $item_id)] : [];
 
-        $template->renderJSON(array(
-            'success' => true,
-            'html' => $props_html
+        $form = new cmsForm();
+
+        // Добавляется после набора props
+        $form->addFieldset('', 'props', array(
+            'is_empty' => true,
+            'is_hidden' => true
         ));
 
+        $form = $this->addFormPropsFields($form, $ctype, $add_cats);
+
+        // Набор props уже есть в форме, удаляем его тут
+        $form->removeFieldset('props');
+
+        ob_start();
+
+        $this->cms_template->renderForm($form, $values, [
+            'form_tpl_file' => 'form_fields'
+        ]);
+
+        return $this->cms_template->renderJSON(array(
+            'success' => true,
+            'html'    => ob_get_clean()
+        ));
     }
 
 }

@@ -40,6 +40,20 @@ class fieldUrl extends cmsFormField {
         );
     }
 
+    public function getStringValue($value){
+
+        if ($this->getOption('title') && strpos( $value, '|') !== false){
+
+            $result = explode('|', $value);
+
+            if(!empty($result[1])){
+                $value = trim($result[1]);
+            }
+        }
+
+        return $value;
+    }
+
     public function parse($value){
 
         if (!$this->getOption('title') && strpos( $value, '|') === false){
@@ -86,6 +100,10 @@ class fieldUrl extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value=null){
         return strip_tags($value);
+    }
+
+    public function storeFilter($value){
+        return $this->store($value, false);
     }
 
 }

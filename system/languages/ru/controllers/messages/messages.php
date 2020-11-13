@@ -2,7 +2,7 @@
 
     define('LANG_MESSAGES_CONTROLLER',      'Личные сообщения');
     define('LANG_PM_MY_MESSAGES',           'Мои сообщения');
-    define('LANG_PM_NO_MESSAGES',           'У вас нет личных сообщений');
+    define('LANG_PM_NO_MESSAGES',           'У вас нет личных сообщений. Чтобы написать сообщение, зайдите в профиль нужного пользователя и выберите в меню "Написать сообщение".');
     define('LANG_PM_NO_NOTICES',            'Нет уведомлений');
     define('LANG_PM_NO_ACCESS',             'Личные сообщения не доступны для вашей группы');
     define('LANG_PM_SHOW_OLDER_MESSAGES',   'Показать предыдущие сообщения &uarr;');
@@ -32,6 +32,10 @@
     define('LANG_PM_PMAILING',              'Массовая рассылка');
     define('LANG_PM_PMAILING_GROUPS',       'Группы пользователей для рассылки');
     define('LANG_PM_PMAILING_TYPE',         'Как отправлять сообщение');
+    define('LANG_PM_REALTIME_MODE',         'Режим реального времени');
+    define('LANG_PM_REALTIME_MODE_SOCKET',  'Сокет сервер [недоступно]');
+    define('LANG_PM_REALTIME_SOCKET_HOST',  'Хост сокет сервера');
+    define('LANG_PM_REALTIME_SOCKET_PORT',  'Порт сокет сервера');
     define('LANG_PM_PMAILING_TYPE_NOTIFY',  'Как уведомление');
     define('LANG_PM_PMAILING_TYPE_MESSAGE', 'Как личное сообщение');
     define('LANG_PM_PMAILING_SENDED',       'Отправлено %s');

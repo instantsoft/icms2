@@ -1,0 +1,51 @@
+.ui-datepicker {
+	width: 17rem;
+	display: none;
+    .ui-datepicker-header {
+        padding: ($spacer*0.5) 0;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+    .ui-datepicker-next {
+        order: 3;
+    }
+    .ui-datepicker-prev {
+        padding: $spacer*0.25;
+        margin-left: $spacer*0.25;
+    }
+    .ui-datepicker-next {
+        padding: $spacer*0.25;
+        margin-right: $spacer*0.25;
+    }
+    .ui-datepicker-title {
+        text-align: center;
+    }
+    select.ui-datepicker-month, select.ui-datepicker-year {
+        width: auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: $spacer*0.15;
+        th {
+            padding: $spacer*0.5;
+            text-align: center;
+            font-weight: bold;
+        }
+        td {
+            padding: $spacer*0.15;
+            &:first-child {
+                padding-left: $spacer*0.3;
+            }
+            &:last-child {
+                padding-right:  $spacer*0.3;
+            }
+            span, a {
+                display: block;
+                padding: $spacer*0.25;
+                text-align: right;
+                text-decoration: none;
+            }
+        }
+    }
+}

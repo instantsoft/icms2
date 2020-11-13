@@ -26,6 +26,19 @@ class actionCommentsIndex extends cmsAction{
             'first' => href_to($this->name, $dataset_name)
         );
 
+        // фильтруем
+        if(!empty($this->options['show_list']) && array_filter($this->options['show_list'])){
+
+            $show_controllers = $show_targets = [];
+
+            foreach ($this->options['show_list'] as $show_target) {
+                list($show_controllers[], $show_targets[]) = explode(':', $show_target);
+            }
+
+            $this->model->filterIn('target_controller', $show_controllers);
+            $this->model->filterIn('target_subject', $show_targets);
+        }
+
         // Получаем HTML списка комментариев
         $items_list_html = $this->renderCommentsList($page_url, $dataset_name);
 

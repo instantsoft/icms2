@@ -5,6 +5,20 @@ class actionAuthRegister extends cmsAction {
 
         if ($this->cms_user->is_logged && !$this->cms_user->is_admin) { $this->redirectToHome(); }
 
+        // если аккаунт не подтверждён и время не вышло
+        // редиректим на верификацию
+        $reg_email = cmsUser::getCookie('reg_email');
+        if($reg_email && $this->validate_email($reg_email) === true && !$this->request->get('clean_reg_email')){
+
+            cmsUser::addSessionMessage(sprintf(LANG_REG_SUCCESS_NEED_VERIFY, $reg_email), 'info');
+
+            $this->redirectToAction('verify');
+
+        } else {
+            cmsUser::unsetCookie('reg_email');
+            $reg_email = false;
+        }
+
         list($form, $fieldsets) = $this->getRegistrationForm();
 
         $user = array();
@@ -18,8 +32,6 @@ class actionAuthRegister extends cmsAction {
             if (!$this->options['is_reg_enabled']){
                 cmsCore::error404();
             }
-
-            $is_captcha_valid = true;
 
             //
             // Парсим и валидируем форму
@@ -44,10 +56,10 @@ class actionAuthRegister extends cmsAction {
             foreach($fieldsets as $fieldset){
                 foreach($fieldset['fields'] as $field){
 
-                    if (empty($field['groups_edit'])) { continue; }
-                    if (in_array(0, $field['groups_edit'])) { continue; }
+                    if (empty($field['groups_add'])) { continue; }
+                    if (in_array(0, $field['groups_add'])) { continue; }
 
-                    if (!in_array($user['group_id'], $field['groups_edit'])){
+                    if (!cmsUser::isUserInGroups($field['groups_add'], $user['groups'])){
                         $form->disableField($field['name']);
                         unset($user[$field['name']]);
                     }
@@ -99,23 +111,7 @@ class actionAuthRegister extends cmsAction {
 
             }
 
-            if (!$errors){
-                list($errors, $user) = cmsEventsManager::hook('registration_validation', array(false, $user));
-            }
-
-            //
-            // Проверяем капчу
-            //
-            if (!$errors && $this->options['reg_captcha']){
-
-                $is_captcha_valid = cmsEventsManager::hook('captcha_validate', $this->request);
-
-                if (!$is_captcha_valid){
-                    $errors = true;
-                    cmsUser::addSessionMessage(LANG_CAPTCHA_ERROR, 'error');
-                }
-
-            }
+            list($errors, $user) = cmsEventsManager::hook('registration_validation', array($errors, $user));
 
             if (!$errors){
 
@@ -126,7 +122,7 @@ class actionAuthRegister extends cmsAction {
                     $user = array_merge($user, array(
                         'is_locked' => true,
                         'lock_reason' => LANG_REG_CFG_VERIFY_LOCK_REASON,
-                        'pass_token' => string_random(32, $user['email']),
+                        'pass_token' => hash('sha256', string_random(32, $user['email'])),
                         'date_token' => ''
                     ));
                 }
@@ -183,7 +179,7 @@ class actionAuthRegister extends cmsAction {
 
                     } else {
 
-						cmsEventsManager::hook('user_registered', $user);
+						$user = cmsEventsManager::hook('user_registered', $user);
 
                         // авторизуем пользователя автоматически
                         if ($this->options['reg_auto_auth']){
@@ -218,26 +214,21 @@ class actionAuthRegister extends cmsAction {
 
             }
 
-            if ($errors && $is_captcha_valid){
+            if ($errors){
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
 
         }
 
-        // Капча
-        if ($this->options['reg_captcha']){
-            $captcha_html = cmsEventsManager::hook('captcha_html');
-        }
-
         // запоминаем откуда пришли на регистрацию
-        if(empty($errors) && $this->options['first_auth_redirect'] == 'none'){
-            cmsUser::sessionSet('auth_back_url', $this->getBackURL());
+        $back_url = $this->request->get('back', '');
+        if(empty($errors) && ($back_url || $this->options['first_auth_redirect'] == 'none')){
+            cmsUser::sessionSet('auth_back_url', ($back_url ? $back_url :$this->getBackURL()));
         }
 
         return $this->cms_template->render('registration', array(
             'user'         => $user,
             'form'         => $form,
-            'captcha_html' => isset($captcha_html) ? $captcha_html : false,
             'errors'       => isset($errors) ? $errors : false
         ));
 

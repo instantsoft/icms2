@@ -27,17 +27,15 @@ class onAdminAdminConfirmLogin extends cmsAction {
 
                 if (!$data['errors']){
 
-                    $model = cmsCore::getModel('users');
-
-                    $model->filterEqual('email', $this->cms_user->email);
-                    $model->filterFunc('password', "MD5(CONCAT(MD5('".$model->db->escape($form_data['password'])."'), i.password_salt))");
-
-                    $user = $model->getUser();
+                    $user = $this->model_users->getUserByAuth($this->cms_user->email, $form_data['password']);
 
                     if($user){
 
                         cmsUser::sessionUnset('user_ip');
-                        cmsUser::sessionUnset('user_net');
+
+                        cmsUser::restrictSessionToIp();
+
+                        $this->model_users->updateUserIp($user['id']);
 
                         $data['allow'] = true;
 
@@ -55,7 +53,7 @@ class onAdminAdminConfirmLogin extends cmsAction {
 
             }
 
-            // если хотим испоьзовать свой шаблон, то строку ниже раскомментировать
+            // если хотим использовать свой шаблон, то строку ниже раскомментировать
             // $this->cms_template->setContext($this);
 
         }

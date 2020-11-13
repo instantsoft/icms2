@@ -6,7 +6,7 @@ class actionAdminUsers extends cmsAction {
 
         // если нужно, передаем управление другому экшену
         if ($do && !is_numeric($do)){
-            $this->runAction('users_'.$do, array_slice($this->params, 1));
+            $this->runExternalAction('users_'.$do, array_slice($this->params, 1));
             return;
         }
 

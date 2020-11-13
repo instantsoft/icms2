@@ -24,10 +24,26 @@ class fieldText extends cmsFormField {
             )),
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
+				'extended_option' => true
+            )),
+            new fieldCheckbox('parse_patterns', array(
+                'title' => LANG_PARSER_PARSE_PATTERNS,
+                'hint' => LANG_PARSER_PARSE_PATTERNS_HINT
             )),
             new fieldCheckbox('build_redirect_link', array(
                 'title' => LANG_PARSER_BUILD_REDIRECT_LINK,
                 'is_visible' => cmsController::enabled('redirect')
+            )),
+            new fieldNumber('teaser_len', array(
+                'title' => LANG_PARSER_HTML_TEASER_LEN,
+                'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
+				'extended_option' => true
+            )),
+            new fieldCheckbox('show_show_more', array(
+                'title' => LANG_PARSER_SHOW_SHOW_MORE,
+                'default' => false,
+                'visible_depend' => array('options:teaser_len' => array('hide' => array(''))),
+				'extended_option' => true
             )),
             new fieldCheckbox('in_fulltext_search', array(
                 'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
@@ -55,6 +71,28 @@ class fieldText extends cmsFormField {
 
     }
 
+    public function parseTeaser($value) {
+
+        if (!empty($this->item['is_private_item'])) {
+            return '<p class="private_field_hint text-muted">'.$this->item['private_item_hint'].'</p>';
+        }
+
+        $max_len = $this->getOption('teaser_len');
+
+        if ($max_len){
+
+            $value = string_short($value, $max_len);
+
+            if($this->getOption('show_show_more') && !empty($this->item['ctype']['name']) && !empty($this->item['slug'])){
+                $value .= '<span class="d-block mt-2"><a class="read-more btn btn-outline-info btn-sm" href="'.href_to($this->item['ctype']['name'], $this->item['slug'].'.html').'">'.LANG_MORE.'</a></span>';
+            }
+
+            return $value;
+        }
+
+        return parent::parseTeaser($value);
+    }
+
     public function parse($value){
 
         if ($this->getOption('is_html_filter')){
@@ -69,8 +107,48 @@ class fieldText extends cmsFormField {
 
     }
 
+    public function afterParse($value, $item){
+
+        if ($this->getOption('parse_patterns')){
+            $value = string_replace_keys_values_extended($value, $item);
+        }
+
+        return $value;
+    }
+
+    public function getStringValue($value){
+
+        if ($this->getOption('parse_patterns') && !empty($this->item)){
+            $value = string_replace_keys_values_extended($value, $this->item);
+        }
+
+        return trim(strip_tags($value));
+    }
+
+    public function store($value, $is_submitted, $old_value=null){
+        if($this->getProperty('is_strip_tags') === true){
+            return trim(strip_tags($value));
+        }
+        return parent::store($value, $is_submitted, $old_value);
+    }
+
+    public function storeFilter($value){
+        return $this->store($value, false);
+    }
+
     public function applyFilter($model, $value) {
         return $model->filterLike($this->name, "%{$value}%");
+    }
+
+    public function getInput($value){
+
+        $this->data['attributes']               = $this->getProperty('attributes')?:[];
+        $this->data['attributes']['rows']       = $this->getOption('size')?:$this->getProperty('size');
+        $this->data['attributes']['id']         = $this->id;
+        $this->data['attributes']['required']   = (array_search(array('required'), $this->getRules()) !== false);
+
+        return parent::getInput($value);
+
     }
 
 }

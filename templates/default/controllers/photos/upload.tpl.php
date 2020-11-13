@@ -1,12 +1,10 @@
 <?php
 
-    $this->addJS( $this->getJavascriptFileName('photos') );
-    $this->addJS($this->getJavascriptFileName('jquery-chosen'));
-    $this->addCSS('templates/default/css/jquery-chosen.css');
+    $this->addTplJSName('photos');
+    $this->addTplJSName('jquery-chosen');
+    $this->addTplCSSName('jquery-chosen');
 
     $this->setPageTitle($title);
-
-    $user = cmsUser::getInstance();
 
     if ($ctype['options']['list_on']){
         $this->addBreadcrumb($ctype['title'], href_to($ctype['name']));
@@ -31,9 +29,11 @@
             <div class="field ft_list f_album_id">
                 <?php echo html_select('album_id', $albums_select, $album_id, array('id'=>'album_id')); ?>
             </div>
+            <?php if(!empty($allow_add)){ ?>
             <div class="field">
                 <?php printf(LANG_PHOTOS_NEW_ALBUM, href_to('albums', 'add'), $ctype['labels']['one']); ?>
             </div>
+            <?php } ?>
         </fieldset>
         <script type="text/javascript">
             $(function(){
@@ -44,6 +44,7 @@
 
     <?php $this->renderChild('widget', array(
         'photos'     => $photos,
+        'editor_params' => $editor_params,
         'album'      => $album,
         'is_edit'    => $is_edit,
         'ctype'      => $ctype,

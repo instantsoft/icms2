@@ -5,7 +5,7 @@
 
         <?php foreach($profiles as $profile) { ?>
 
-            <?php $url = href_to('users', $profile['id']); ?>
+            <?php $url = href_to_profile($profile); ?>
 
             <div class="item">
                 <div class="image">

@@ -1,6 +1,6 @@
 <?php
 /**
- * Назвавние city оставлено для совместимости
+ * Название city оставлено для совместимости
  */
 class fieldCity extends cmsFormField {
 
@@ -24,6 +24,10 @@ class fieldCity extends cmsFormField {
                     'cities'    => LANG_CITY
                 )
             )),
+            new fieldCheckbox('auto_detect', array(
+                'title'   => LANG_PARSER_CITY_AUTO_DETECT,
+                'visible_depend' => array('options:location_type' => array('show' => array('countries')))
+            )),
             new fieldString('location_group', array(
                 'title' => LANG_PARSER_CITY_LOCATION_GROUP,
                 'hint'  => LANG_PARSER_CITY_LOCATION_GROUP_HINT,
@@ -34,23 +38,39 @@ class fieldCity extends cmsFormField {
             )),
             new fieldString('output_string', array(
                 'title' => LANG_PARSER_CITY_OUTPUT_STRING,
-                'hint'  => LANG_PARSER_CITY_OUTPUT_STRING_HINT
+                'hint'  => LANG_PARSER_CITY_OUTPUT_STRING_HINT,
+				'extended_option' => true
+            )),
+            new fieldCheckbox('is_autolink', array(
+                'title' => LANG_PARSER_LIST_IS_AUTOLINK,
+                'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
+                'default' => false,
+				'extended_option' => true
             ))
         );
 
     }
 
     public function parse($value){
+
         $output_string = $this->getOption('output_string');
+
         if($output_string){
             $output_string = str_replace('}', cmsFormField::FIELD_CACHE_POSTFIX.'}', $output_string);
-            return htmlspecialchars(string_replace_keys_values($output_string, $this->item));
+            $result_string = string_replace_keys_values($output_string, $this->item);
+        } else {
+            $result_string = $this->item[$this->getDenormalName()];
         }
-        return htmlspecialchars($this->item[$this->getDenormalName()]);
+
+        if ($this->getOption('is_autolink')){
+            return '<a class="list_autolink '.$this->item['ctype_name'].'_list_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($value).'">'.html($result_string, false).'</a>';
+        }
+
+        return html($result_string, false);
     }
 
     public function getStringValue($value){
-        return htmlspecialchars($this->item[$this->getDenormalName()]);
+        return !empty($this->item[$this->getDenormalName()]) ? htmlspecialchars($this->item[$this->getDenormalName()]) : '';
     }
 
     public function store($value, $is_submitted, $old_value=null){
@@ -65,6 +85,10 @@ class fieldCity extends cmsFormField {
     }
 
     private function getLocationTypeValue($id, $location_type){
+
+        if(!$id){
+            return null;
+        }
 
         $model = new cmsModel();
 
@@ -108,7 +132,21 @@ class fieldCity extends cmsFormField {
 
         $this->data['items'] = $this->getListItems();
 
-        // если поля не объеденены и это поле выбора города
+        // автоопределение
+        if($this->getOption('auto_detect') && $value === null && $location_type == 'countries'){
+
+            $geo = cmsCore::getController('geo')->getGeoByIp();
+
+            if(!empty($geo['city']['country_id'])){
+                $value = $geo['city']['country_id'];
+            }
+            if(!empty($geo['country']['id']) && !$value){
+                $value = $geo['country']['id'];
+            }
+
+        }
+
+        // если поля не объединены и это поле выбора города
         if(!$location_group && $location_type == 'cities'){
 
             $city_name = $this->getLocationTypeValue($value, $location_type);

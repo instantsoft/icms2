@@ -24,6 +24,7 @@
             'admin_groups_dataset_fields_list',
             'content_validate',
             'moderation_list',
+            'ctype_basic_form',
             'content_before_item',
             'ctype_lists_context'
         )

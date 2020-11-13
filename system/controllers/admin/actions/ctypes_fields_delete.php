@@ -10,9 +10,9 @@ class actionAdminCtypesFieldsDelete extends cmsAction {
             cmsCore::error404();
         }
 
-        $content_model = cmsCore::getModel('content');
+        $this->model_content->deleteContentField($ctype_id, $field_id);
 
-        $content_model->deleteContentField($ctype_id, $field_id);
+        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
         $this->redirectToAction('ctypes', array('fields', $ctype_id));
 

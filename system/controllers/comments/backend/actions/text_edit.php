@@ -10,9 +10,15 @@ class actionCommentsTextEdit extends cmsAction {
 
         $comment = $this->model->getComment($comment_id);
 
+        $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->options['editor'],
+            'presets' => $this->options['editor_presets']
+        ]);
+
         if(!$is_submit){
 
             return $this->cms_template->render('backend/text_edit', array(
+                'editor_params' => $editor_params,
                 'comment' => $comment,
                 'action'  => href_to($this->root_url, 'text_edit', array($comment['id']))
             ));
@@ -30,7 +36,11 @@ class actionCommentsTextEdit extends cmsAction {
         $content = $this->request->get('content', '');
 
         // Типографируем текст
-        $content_html = cmsEventsManager::hook('html_filter', $content);
+        $content_html = cmsEventsManager::hook('html_filter', [
+            'text'         => $content,
+            'is_auto_br'   => (!$editor_params['editor'] || $editor_params['editor'] == 'markitup'),
+            'build_smiles' => $editor_params['editor'] == 'markitup'
+        ]);
 
 		if (!$content_html){
 			$this->cms_template->renderJSON(array(

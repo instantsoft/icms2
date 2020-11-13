@@ -17,7 +17,7 @@ class messages extends cmsFrontend {
 
         if(!$this->request->isInternal()){
 
-            if (!$this->request->isAjax()){ cmsCore::error404(); }
+            if (!$this->request->isAjax() && $action_name !== 'index'){ cmsCore::error404(); }
 
             if (!cmsUser::isLogged()){ cmsCore::error404(); }
 
@@ -160,6 +160,8 @@ class messages extends cmsFrontend {
 
         $letter_text = string_replace_keys_values($letter_text, $notice);
 
+        list($recipients, $letter_name, $notice, $notice_type, $letter_text) = cmsEventsManager::hook('messages_send_notice_email', [$recipients, $letter_name, $notice, $notice_type, $letter_text]);
+
         $success = true;
 
         foreach($recipients as $recipient){
@@ -215,11 +217,12 @@ class messages extends cmsFrontend {
 
         $data = array_merge(array(
             'site' => $this->cms_config->sitename,
+            'ip'   => cmsUser::getIp(),
             'date' => html_date(),
             'time' => html_time()
         ), $data);
 
-        $letter['text'] = string_replace_keys_values($letter['text'], $data);
+        $letter['text'] = string_replace_keys_values_extended($letter['text'], $data);
 
         $before_send = cmsEventsManager::hook('before_send_email', array(
             'send_email' => true,
@@ -264,8 +267,8 @@ class messages extends cmsFrontend {
         }
 
         if (!empty($to['attachments'])){
-            foreach ($to['attachments'] as $attach) {
-                $mailer->addAttachment($attach);
+            foreach ($to['attachments'] as $attach_name => $attach) {
+                $mailer->addAttachment($attach, (is_numeric($attach_name) ? '' : $attach_name));
             }
         }
 

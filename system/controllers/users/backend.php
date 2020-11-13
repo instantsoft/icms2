@@ -34,16 +34,42 @@ class backendUsers extends cmsBackend {
             array(
                 'title' => LANG_USERS_CFG_MIGRATION,
                 'url' => href_to($this->root_url, 'migrations')
-            ),
-            array(
-                'title' => LANG_USERS,
-                'url' => href_to('admin', 'users')
             )
         );
     }
 
+    public function getBackendSubMenu(){
+
+        $this->backend_sub_menu[] = [
+            'title' => LANG_USERS,
+            'url'   => href_to('admin', 'users'),
+            'options' => [
+                'icon' => 'icon-people'
+            ]
+        ];
+
+        return $this->backend_sub_menu;
+
+    }
+
     public function validate_unique_field($value){
         return !$this->cms_core->db->isFieldExists('{users}', $value);
+    }
+
+    public function getMetaItemFields() {
+
+        $item_fields = [];
+
+        $_item_fields = cmsCore::getModel('content')->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
+
+        foreach ($_item_fields as $field) {
+
+            $item_fields[] = $field['name'];
+
+        }
+
+        return $item_fields;
+
     }
 
 }

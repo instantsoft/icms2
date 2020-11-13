@@ -14,6 +14,16 @@ class onUsersWallAfterDelete extends cmsAction {
 
         }
 
+        if($entry['parent_id']){
+
+            $parent_entry = $this->model->getItemById('wall_entries', $entry['parent_id']);
+
+            if($parent_entry && $parent_entry['status_id']){
+                $this->model->increaseUserStatusRepliesCount($parent_entry['status_id'], false);
+            }
+
+        }
+
     }
 
 }

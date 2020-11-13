@@ -6,47 +6,14 @@ class actionContentItemView extends cmsAction {
 
     public function run(){
 
+        list($ctype, $item) = $this->getItemAndCtype();
+
         $props = $props_values = false;
+        $props_fieldsets = $props_fields = false;
 
-        // Получаем название типа контента и сам тип
-        $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name', ''));
-
-		// Получаем SLUG записи
-        $slug = $this->request->get('slug', '');
-
-		if (!$ctype) {
-			if ($this->cms_config->ctype_default){
-				$ctype = $this->model->getContentTypeByName($this->cms_config->ctype_default);
-				if (!$ctype) { return cmsCore::error404(); }
-                $slug = str_replace('.html', '', $this->cms_core->uri);
-			} else {
-				return cmsCore::error404();
-			}
-		} else {
-			if ($this->cms_config->ctype_default && $this->cms_config->ctype_default == $this->cms_core->uri_action){
-				$this->redirect(href_to($slug . '.html'), 301);
-			}
-            // если название переопределено, то редиректим со старого на новый
-            $mapping = cmsConfig::getControllersMapping();
-            if($mapping){
-                foreach($mapping as $name=>$alias){
-                    if ($name == $ctype['name'] && !$this->cms_core->uri_controller_before_remap) {
-                        $this->redirect(href_to($alias.'/'. $slug.'.html'), 301);
-                    }
-                }
-            }
-		}
-
-		if (!$ctype['options']['item_on']) { return cmsCore::error404(); }
-
-        list($ctype, $this->model) = cmsEventsManager::hook('content_item_filter', array($ctype, $this->model));
-
-        // Получаем запись
-        $item = $this->model->getContentItemBySLUG($ctype['name'], $slug);
-        if (!$item) { return cmsCore::error404(); }
-
-        if ($slug !== $item['slug']){
-            $this->redirect(href_to($ctype['name'], $item['slug'] . '.html'), 301);
+        // добавляем Last-Modified
+        if(!$this->cms_user->is_logged){
+            cmsCore::respondIfModifiedSince($item['date_last_modified']);
         }
 
         // Проверяем прохождение модерации
@@ -176,9 +143,18 @@ class actionContentItemView extends cmsAction {
         // Получаем поля для данного типа контента
         $fields = $this->model->getContentFields($ctype['name']);
 
+        // Запоминаем копию записи для заполнения отпарсенных полей
+        $item_parsed = $item;
+
         // Парсим значения полей
-        foreach($fields as $name=>$field){
-            $fields[ $name ]['html'] = $field['handler']->setItem($item)->parse( $item[$name] );
+        foreach ($fields as $name => $field) {
+            $fields[$name]['html'] = $field['handler']->setItem($item)->parse($item[$name]);
+            $item_parsed[$name] = $fields[$name]['html'];
+        }
+        // Для каких необходимо, обрабатываем дополнительно
+        foreach ($fields as $name => $field) {
+            $fields[$name]['string_value'] = $field['handler']->setItem($item_parsed)->getStringValue($item[$name]);
+            $fields[$name]['html'] = $field['handler']->afterParse($fields[$name]['html'], $item_parsed);
         }
 
         // формируем связи (дочерние списки)
@@ -322,7 +298,7 @@ class actionContentItemView extends cmsAction {
 
             }
 
-            return $this->runAction('item_childs_view', array(
+            return $this->runExternalAction('item_childs_view', array(
                 'ctype'            => $ctype,
                 'item'             => $item,
                 'child_ctype_name' => $child_ctype_name,
@@ -334,41 +310,41 @@ class actionContentItemView extends cmsAction {
 
         // Получаем поля-свойства
         if ($ctype['is_cats'] && $item['category_id'] > 1){
-            $props = $this->model->getContentProps($ctype['name'], $item['category_id']);
-            $props_values = $this->model->getPropsValues($ctype['name'], $item['id']);
-        }
 
-        // Рейтинг
-        if ($ctype['is_rating'] &&  $this->isControllerEnabled('rating')){
+            $prop_cats = [$item['category_id']];
+            if(!empty($item['categories'])){
+                $prop_cats = array_keys($item['categories']);
+            }
 
-            $rating_controller = cmsCore::getController('rating', new cmsRequest(array(
-                'target_controller' => $this->name,
-                'target_subject' => $ctype['name']
-            ), cmsRequest::CTX_INTERNAL));
+            $props = $this->model->getContentProps($ctype['name'], $prop_cats);
 
-            $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate') && ($item['user_id'] != $this->cms_user->id);
+            $props_values = array_filter((array)$this->model->getPropsValues($ctype['name'], $item['id']));
 
-            $item['rating_widget'] = $rating_controller->getWidget($item['id'], $item['rating'], $is_rating_allowed);
+            if ($props && $props_values) {
 
-        }
+                $props_fields = $this->getPropsFields($props);
 
-        // Комментарии
-        if ($ctype['is_comments'] && $item['is_approved'] && $item['is_comments_on'] &&  $this->isControllerEnabled('comments')){
+                foreach ($props as $key => $prop) {
 
-            $comments_controller = cmsCore::getController('comments', new cmsRequest(array(
-                'target_controller' => $this->name,
-                'target_subject' => $ctype['name'],
-                'target_user_id' => $item['user_id'],
-                'target_id' => $item['id']
-            ), cmsRequest::CTX_INTERNAL));
+                    if (!isset($props_values[$prop['id']])) {
+                        continue;
+                    }
 
-            $item['comments_widget'] = $comments_controller->getWidget();
+                    $prop_field = $props_fields[$prop['id']];
 
-        }
+                    $props[$key]['html'] = $prop_field->setItem($item)->parse($props_values[$prop['id']]);
 
-        // Теги
-        if ($ctype['is_tags'] && $item['tags']){
-            $item['tags'] = explode(',', $item['tags']);
+                }
+
+                $props_fieldsets = cmsForm::mapFieldsToFieldsets($props, function($field, $user) use($props_values) {
+                    if (!isset($props_values[$field['id']])) {
+                        return false;
+                    }
+                    return true;
+                });
+
+            }
+
         }
 
         // Информация о модераторе для админа и владельца записи
@@ -376,46 +352,139 @@ class actionContentItemView extends cmsAction {
             $item['approved_by'] = cmsCore::getModel('users')->getUser($item['approved_by']);
         }
 
+        // формируем инфобар
+        $item['info_bar'] = $this->getItemInfoBar($ctype, $item, $fields);
+
         list($ctype, $item, $fields) = cmsEventsManager::hook('content_before_item', array($ctype, $item, $fields));
         list($ctype, $item, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_before_item", array($ctype, $item, $fields));
 
-		if (!empty($ctype['options']['hits_on']) && $this->cms_user->id != $item['user_id'] && !$this->cms_user->is_admin){
+        // счетчик просмотров увеличивается, если включен в настройках,
+        // не запрещён в записи (флаг disable_increment_hits, который может быть определён ранее в хуках)
+        // и если смотрит не автор
+		if (!empty($ctype['options']['hits_on']) && empty($item['disable_increment_hits']) && $this->cms_user->id != $item['user_id']){
 			$this->model->incrementHitsCounter($ctype['name'], $item['id']);
 		}
+
+        $fields_fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($item) {
+
+            if (!$field['is_in_item'] || $field['is_system'] || $field['name'] == 'title') { return false; }
+
+            // Позиция поля "На позиции в специальном виджете"
+            if (!empty($field['options']['is_in_item_pos'])) { return false; }
+
+            if ((empty($item[$field['name']]) || empty($field['html'])) && $item[$field['name']] !== '0') { return false; }
+
+            // проверяем что группа пользователя имеет доступ к чтению этого поля
+            if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
+                // если группа пользователя не имеет доступ к чтению этого поля,
+                // проверяем на доступ к нему для авторов
+                if (!empty($item['user_id']) && !empty($field['options']['author_access'])){
+                    if (!in_array('is_read', $field['options']['author_access'])){ return false; }
+                    if ($item['user_id'] == $user->id){ return true; }
+                }
+                return false;
+            }
+            return true;
+        });
 
         // кешируем запись для получения ее в виджетах
         cmsModel::cacheResult('current_ctype', $ctype);
         cmsModel::cacheResult('current_ctype_item', $item);
         cmsModel::cacheResult('current_ctype_fields', $fields);
+        cmsModel::cacheResult('current_ctype_fields_fieldsets', $fields_fieldsets);
         cmsModel::cacheResult('current_ctype_props', $props);
+        cmsModel::cacheResult('current_ctype_props_fields', $props_fields);
+        cmsModel::cacheResult('current_ctype_props_props_fieldsets', $props_fieldsets);
+
+        // SEO параметры
+        $item_seo = $this->applyItemSeo($ctype, $item, $fields);
+
+        // глубиномер
+        if (empty($ctype['options']['item_off_breadcrumb']) && empty($item['off_breadcrumb'])){
+
+            if ($item['parent_id'] && !empty($ctype['is_in_groups'])){
+
+                $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+                $this->cms_template->addBreadcrumb($item['parent_title'], rel_to_href(str_replace('/content/'.$ctype['name'], '', $item['parent_url'])));
+                if ($ctype['options']['list_on']){
+                    $this->cms_template->addBreadcrumb((empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile']), rel_to_href($item['parent_url']));
+                }
+
+            } else {
+
+                if ($ctype['options']['list_on']){
+
+                    $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
+
+                    $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
+
+                    if(!empty($base_url)){
+                        $this->cms_template->addBreadcrumb($list_header, href_to($ctype['name']));
+                    }
+
+                    if (isset($item['category'])){
+
+                        if(!empty($item['category']['path'])){
+                            foreach($item['category']['path'] as $c){
+                                $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+            $this->cms_template->addBreadcrumb($item['title']);
+
+        }
+
+        $tool_buttons = $this->getToolButtons($ctype, $item, $is_moderator, $childs);
+
+        if($tool_buttons){
+            $this->cms_template->addMenuItems('toolbar', $tool_buttons);
+        }
+
+        if (!empty($childs['tabs'])){
+
+            $this->cms_template->addMenuItem('item-menu', array(
+                'title' => !empty($ctype['labels']['relations_tab_title']) ? $ctype['labels']['relations_tab_title'] : string_ucfirst($ctype['labels']['one']),
+                'url'   => href_to($ctype['name'], $item['slug'] . '.html')
+            ));
+
+            $this->cms_template->addMenuItems('item-menu', $childs['tabs']);
+        }
 
         return $this->cms_template->render('item_view', array(
-            'tool_buttons' => $this->getToolButtons($ctype, $item, $is_moderator, $childs),
-            'ctype'        => $ctype,
-            'fields'       => $fields,
-            'props'        => $props,
-            'props_values' => $props_values,
-            'item'         => $item,
-            'is_moderator' => $is_moderator,
-            'user'         => $this->cms_user,
-            'childs'       => $childs,
+            'item_seo'         => $item_seo,
+            'ctype'            => $ctype,
+            'fields'           => $fields,
+            'fields_fieldsets' => $fields_fieldsets,
+            'props'            => $props,
+            'props_values'     => $props_values,
+            'props_fields'     => $props_fields,
+            'props_fieldsets'  => $props_fieldsets,
+            'item'             => $item,
+            'is_moderator'     => $is_moderator,
+            'user'             => $this->cms_user,
+            'childs'           => $childs
         ));
 
     }
 
     private function getToolButtons($ctype, $item, $is_moderator, $childs) {
 
-        $tool_buttons = array();
+        $tool_buttons = [];
 
         if (!$item['is_approved'] && !$item['is_draft'] && $is_moderator){
             $tool_buttons['accept'] = array(
                 'title'   => LANG_MODERATION_APPROVE,
-                'options' => array('class' => 'accept'),
+                'options' => ['class' => 'accept', 'icon' => 'check-double'],
                 'url'     => href_to($ctype['name'], 'approve', $item['id'])
             );
             $tool_buttons['return_for_revision'] = array(
                 'title'   => LANG_MODERATION_RETURN_FOR_REVISION,
-                'options' => array('class' => 'return_for_revision ajax-modal'),
+                'options' => ['class' => 'return_for_revision ajax-modal', 'icon' => 'retweet'],
                 'url'     => href_to($ctype['name'], 'return_for_revision', $item['id'])
             );
         }
@@ -423,7 +492,7 @@ class actionContentItemView extends cmsAction {
         if (!$item['is_approved'] && !$item['is_draft'] && !$this->viewed_moderators && $item['user_id'] == $this->cms_user->id){
             $tool_buttons['return'] = array(
                 'title'   => LANG_MODERATION_RETURN,
-                'options' => array('class' => 'return', 'confirm' => LANG_CONTENT_RETURN_CONFIRM),
+                'options' => ['class' => 'return', 'confirm' => LANG_CONTENT_RETURN_CONFIRM, 'icon' => 'undo'],
                 'url'     => href_to($ctype['name'], 'return', $item['id'])
             );
         }
@@ -435,7 +504,7 @@ class actionContentItemView extends cmsAction {
 
                     $tool_buttons['add_'.$relation['child_ctype_name']] = array(
                         'title'   => sprintf(LANG_CONTENT_ADD_ITEM, $relation['child_labels']['create']),
-                        'options' => array('class' => 'add'),
+                        'options' => ['class' => 'add', 'icon' => 'plus-circle'],
                         'url'     => href_to($relation['child_ctype_name'], 'add') . "?parent_{$ctype['name']}_id={$item['id']}".($item['parent_type']=='group' ? '&group_id='.$item['parent_id'] : '')
                     );
 
@@ -447,7 +516,7 @@ class actionContentItemView extends cmsAction {
 
                     $tool_buttons['bind_'.$relation['child_ctype_name']] = array(
                         'title'   => sprintf(LANG_CONTENT_BIND_ITEM, $relation['child_labels']['create']),
-                        'options' => array('class' => 'newspaper_add ajax-modal'),
+                        'options' => ['class' => 'newspaper_add ajax-modal', 'icon' => 'link'],
                         'url'     => href_to($ctype['name'], 'bind_form', array($relation['child_ctype_name'], $item['id']))
                     );
 
@@ -459,7 +528,7 @@ class actionContentItemView extends cmsAction {
 
                     $tool_buttons['unbind_'.$relation['child_ctype_name']] = array(
                         'title'   => sprintf(LANG_CONTENT_UNBIND_ITEM, $relation['child_labels']['create']),
-                        'options' => array('class' => 'newspaper_delete ajax-modal'),
+                        'options' => ['class' => 'newspaper_delete ajax-modal', 'icon' => 'unlink'],
                         'url'     => href_to($ctype['name'], 'bind_form', array($relation['child_ctype_name'], $item['id'], 'unbind'))
                     );
 
@@ -475,7 +544,7 @@ class actionContentItemView extends cmsAction {
 
                 $tool_buttons['edit'] = array(
                     'title'   => sprintf(LANG_CONTENT_EDIT_ITEM, $ctype['labels']['create']),
-                    'options' => array('class' => 'edit'),
+                    'options' => ['class' => 'edit', 'icon' => 'pencil-alt'],
                     'url'     => href_to($ctype['name'], 'edit', $item['id'])
                 );
 
@@ -489,16 +558,16 @@ class actionContentItemView extends cmsAction {
 
                     $tool_buttons['delete'] = array(
                         'title'   => sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create']),
-                        'options' => array('class' => 'delete', 'confirm' => sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])),
-                        'url'     => href_to($ctype['name'], 'delete', $item['id'])
+                        'options' => ['class' => 'delete', 'icon' => 'minus-circle', 'confirm' => sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])],
+                        'url'     => href_to($ctype['name'], 'delete', $item['id']).'?csrf_token='.cmsForm::getCSRFToken()
                     );
 
                 } else {
 
                     $tool_buttons['refuse'] = array(
                         'title'   => sprintf(LANG_MODERATION_REFUSE, $ctype['labels']['create']),
-                        'options' => array('class' => 'delete ajax-modal'),
-                        'url'     => href_to($ctype['name'], 'delete', $item['id'])
+                        'options' => ['class' => 'delete ajax-modal', 'icon' => 'minus-square'],
+                        'url'     => href_to($ctype['name'], 'delete', $item['id']).'?csrf_token='.cmsForm::getCSRFToken()
                     );
 
                 }
@@ -514,7 +583,7 @@ class actionContentItemView extends cmsAction {
 
                 $tool_buttons['basket_put'] = array(
                     'title'   => ($allow_delete ? LANG_BASKET_DELETE : sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create'])),
-                    'options' => array('class' => 'basket_put', 'confirm' => sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])),
+                    'options' => ['class' => 'basket_put', 'icon' => 'trash-alt', 'confirm' => sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])],
                     'url'     => href_to($ctype['name'], 'trash_put', $item['id'])
                 );
 
@@ -529,7 +598,7 @@ class actionContentItemView extends cmsAction {
 
                 $tool_buttons['basket_remove'] = array(
                     'title'   => LANG_RESTORE,
-                    'options' => array('class' => 'basket_remove'),
+                    'options' => ['class' => 'basket_remove', 'icon' => 'trash-restore'],
                     'url'     => href_to($ctype['name'], 'trash_remove', $item['id'])
                 );
 
@@ -548,6 +617,142 @@ class actionContentItemView extends cmsAction {
         ));
 
         return $buttons_hook['buttons'];
+
+    }
+
+    private function getItemAndCtype() {
+
+        $slug = $this->request->get('slug', '');
+
+        $_ctype_name = $this->request->get('ctype_name');
+
+        if(!$_ctype_name){ return cmsCore::error404(); }
+
+        $ctype_names = is_array($_ctype_name) ? $_ctype_name : [$_ctype_name];
+
+        // есть типы контента по умолчанию
+        if ($this->cms_config->ctype_default){
+            foreach ($this->cms_config->ctype_default as $ctype_default) {
+                if(!in_array($ctype_default, $ctype_names)){
+                    $ctype_names[] = $ctype_default;
+                }
+            }
+        }
+
+        // переопределение названий типов контента
+        $mapping = cmsConfig::getControllersMapping();
+
+        foreach ($ctype_names as $ctype_name) {
+
+            $ctype = $this->model->getContentTypeByName($ctype_name);
+            // типы контента тут должны быть известные
+            if (!$ctype) { return cmsCore::error404(); }
+
+            $this->model->joinModerationsTasks($ctype['name']);
+
+            list($ctype, $this->model) = cmsEventsManager::hook(['content_item_filter', "content_{$ctype['name']}_item_filter"], array($ctype, $this->model));
+
+            // Получаем запись
+            $item = $this->model->getContentItemBySLUG($ctype['name'], $slug);
+            if (!$item) {
+
+                // если тип контента не входит в список умолчаний, сразу 404
+                if(!$this->cms_config->ctype_default || !in_array($ctype['name'], $this->cms_config->ctype_default)){
+                    return cmsCore::error404();
+                }
+
+                continue;
+
+            }
+
+            // редиректы на новые урлы
+			if ($this->cms_config->ctype_default && in_array($this->cms_core->uri_action, $this->cms_config->ctype_default)){
+
+				$this->redirect(href_to($item['slug'] . '.html'), 301);
+
+			} elseif(!$this->cms_config->ctype_default || !in_array($ctype['name'], $this->cms_config->ctype_default)) {
+
+                // если название переопределено, то редиректим со оригинального на переопределенный
+                if($mapping){
+                    foreach($mapping as $name => $alias){
+                        if ($name == $ctype['name'] && !$this->cms_core->uri_controller_before_remap) {
+                            $this->redirect(href_to($alias.'/'. $item['slug'].'.html'), 301);
+                        }
+                    }
+                }
+
+            }
+
+            // должно быть точное совпадение
+            if ($slug !== $item['slug']){
+                $this->redirect(href_to($ctype['name'], $item['slug'] . '.html'), 301);
+            }
+
+            if (!$ctype['options']['item_on']) { return cmsCore::error404(); }
+
+            // если тип контента сменился
+            if($ctype['name'] !== $_ctype_name){
+
+                // новый uri
+                $this->cms_core->uri = preg_replace("#^{$_ctype_name}/#", $ctype['name'].'/', $this->cms_core->uri);
+                $this->cms_core->uri_before_remap = preg_replace("#^{$_ctype_name}/#", $ctype['name'].'/', $this->cms_core->uri_before_remap);
+
+                // обновляем страницы и маски
+                $this->cms_core->setMatchedPages(null)->loadMatchedPages();
+
+            }
+
+            return [$ctype, $item];
+
+        }
+
+        // ничего не нашли
+        return cmsCore::error404();
+
+    }
+
+    public function applyItemSeo($ctype, $item, $fields) {
+
+        $seo_desc = $seo_keys = ''; $seo_title = $item['title'];
+
+        $meta_item = $this->prepareItemSeo($item, $fields, $ctype);
+
+        if(!empty($ctype['options']['seo_title_pattern'])){
+
+            $seo_title = $ctype['options']['seo_title_pattern'];
+
+            $this->cms_template->setPageTitleItem($meta_item);
+        }
+
+        if(!empty($ctype['options']['seo_keys_pattern'])){
+
+            $seo_keys = $ctype['options']['seo_keys_pattern'];
+
+            $this->cms_template->setPageKeywordsItem($meta_item);
+        }
+
+        if(!empty($ctype['options']['seo_desc_pattern'])){
+
+            $seo_desc = $ctype['options']['seo_desc_pattern'];
+
+            $this->cms_template->setPageDescriptionItem($meta_item);
+        }
+
+        // приоритет за заданными в записи
+        if (!empty($item['seo_title'])){ $seo_title = $item['seo_title']; }
+        if (!empty($item['seo_keys'])){ $seo_keys = $item['seo_keys']; }
+        if (!empty($item['seo_desc'])){ $seo_desc = $item['seo_desc']; }
+
+        $this->cms_template->setPageTitle($seo_title);
+        $this->cms_template->setPageKeywords($seo_keys);
+        $this->cms_template->setPageDescription($seo_desc);
+
+        return array(
+            'meta_item' => $meta_item,
+            'title_str' => $seo_title,
+            'keys_str'  => $seo_keys,
+            'desc_str'  => $seo_desc
+        );
 
     }
 

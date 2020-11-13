@@ -1,6 +1,6 @@
 <?php
 
-class actionRatingVote extends cmsAction{
+class actionRatingVote extends cmsAction {
 
     public function run(){
 
@@ -19,11 +19,15 @@ class actionRatingVote extends cmsAction{
         $target_controller = $this->request->get('controller', '');
         $target_subject    = $this->request->get('subject', '');
         $target_id         = $this->request->get('id', 0);
+        $score             = $this->request->get('score', 0);
 
         $is_valid = ($this->validate_sysname($target_controller)===true) &&
                     ($this->validate_sysname($target_subject)===true) &&
                     is_numeric($target_id) &&
-                    in_array($direction, array('up', 'down'));
+                    (
+                        ($direction && in_array($direction, array('up', 'down'))) ||
+                        ($score && is_numeric($score))
+                    );
 
         if (!$is_valid){
             return $this->cms_template->renderJSON(array(
@@ -32,19 +36,50 @@ class actionRatingVote extends cmsAction{
             ));
         }
 
+        // Проверяем наличие контроллера и модели
+        if (!(cmsCore::isControllerExists($target_controller) &&
+                    cmsCore::isModelExists($target_controller) &&
+                    cmsController::enabled($target_controller))){
+            return $this->cms_template->renderJSON(array(
+                'success' => false,
+                'message' => LANG_ERROR
+            ));
+        }
+
+        // получаем контроллер цели
+        $controller = cmsCore::getController($target_controller, $this->request);
+
+        // флаг, что рейтинг считать как среднее арифметическое
+        $average_rating = true;
+
+        // приоритет за $score
+        if(!$score){
+
+            $score = ($direction == 'up' ? 1 : -1);
+
+            $average_rating = false;
+
+        } else {
+            // валидация оценки
+            if(method_exists($controller, 'validate_rating_score') && !$controller->validate_rating_score($score)){
+                return $this->cms_template->renderJSON(array(
+                    'success' => false,
+                    'message' => LANG_ERROR
+                ));
+            }
+        }
+
         // Объединяем всю информацию о голосе
         $vote = array(
             'user_id'           => ($this->cms_user->id ? $this->cms_user->id : null),
             'target_controller' => $target_controller,
             'target_subject'    => $target_subject,
             'target_id'         => $target_id,
-            'score'             => ($direction == 'up' ? 1 : -1),
+            'score'             => $score,
             'ip'                => sprintf('%u', ip2long(cmsUser::getIp()))
         );
 
-        $target_model = cmsCore::getModel( $target_controller );
-
-        $target = $target_model->getRatingTarget($target_subject, $target_id);
+        $target = $controller->model->getRatingTarget($target_subject, $target_id);
 
         if (!$target){
             return $this->cms_template->renderJSON(array(
@@ -84,9 +119,15 @@ class actionRatingVote extends cmsAction{
         // Добавляем голос в лог
         $this->model->addVote($vote);
 
+        // как считать суммарный рейтинг
+        if($average_rating){
+            $rating = round($this->model->getTargetAverageRating($vote), 0, PHP_ROUND_HALF_DOWN);
+        } else {
+            $rating = (int)$target['rating'] + $vote['score'];
+        }
+
         // Обновляем суммарный рейтинг цели
-        $rating = (int)$target['rating'] + $vote['score'];
-        $target_model->updateRating($target_subject, $target_id, $rating);
+        $controller->model->updateRating($target_subject, $target_id, $rating);
 
         // Оповещаем всех об изменении рейтинга
         cmsEventsManager::hook('rating_vote', array(
@@ -110,11 +151,13 @@ class actionRatingVote extends cmsAction{
                     string_lang('LANG_RATING_'.$direction),
                     $target['page_url'],
                     $target['title'])
-        ));
+        ), 'rating_user_vote');
 
         // Собираем результат
         $result = array(
             'success'   => true,
+            'rating_value' => $rating,
+            'show_info' => !empty($this->options['is_show']),
             'rating'    => html_signed_num($rating),
             'css_class' => html_signed_class($rating) . ($this->options['is_show'] ? ' clickable' : ''),
             'message'   => LANG_RATING_VOTED

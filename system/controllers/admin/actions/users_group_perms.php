@@ -2,11 +2,12 @@
 
 class actionAdminUsersGroupPerms extends cmsAction {
 
-    public function run($id){
+    public function run($id = false) {
 
         if (!$id) { cmsCore::error404(); }
 
         $users_model = cmsCore::getModel('users');
+
         $group = $users_model->getGroup($id);
         if (!$group) { cmsCore::error404(); }
 
@@ -14,44 +15,36 @@ class actionAdminUsersGroupPerms extends cmsAction {
 
         $owners = array();
 
-        foreach($controllers as $controller_name){
+        foreach ($controllers as $controller_name) {
+
+            if (!cmsCore::isControllerExists($controller_name)) {
+                continue;
+            }
 
             $controller = cmsCore::getController($controller_name);
 
             $subjects = $controller->getPermissionsSubjects();
-            $rules = cmsPermissions::getRulesList($controller_name);
-            $values = array();
+            $rules    = cmsPermissions::getRulesList($controller_name);
+            $values   = array();
 
-            foreach($subjects as $subject){
-                $values[ $subject['name'] ] = cmsPermissions::getPermissions($subject['name']);
+            foreach ($subjects as $subject) {
+                $values[$subject['name']] = cmsPermissions::getPermissions($subject['name']);
             }
 
             $owners[$controller_name] = array(
                 'subjects' => $subjects,
-                'rules' => $rules,
-                'values' => $values
+                'rules'    => $rules,
+                'values'   => $values
             );
-
         }
 
-        $template = cmsTemplate::getInstance();
+        $owners = cmsEventsManager::hook('users_group_perms', $owners);
 
-        $template->setMenuItems('users_group', array(
-            array(
-                'title' => LANG_CONFIG,
-                'url' => href_to($this->name, 'users', array('group_edit', $id))
-            ),
-            array(
-                'title' => LANG_PERMISSIONS,
-                'url' => href_to($this->name, 'users', array('group_perms', $id))
-            )
-        ));
-
-        return $template->render('users_group_perms', array(
-            'group' => $group,
+        return $this->cms_template->render('users_group_perms', array(
+            'group'  => $group,
+            'menu'   => $this->getUserGroupsMenu('view', $group['id']),
             'owners' => $owners
         ));
-
     }
 
 }

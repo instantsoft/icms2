@@ -23,6 +23,8 @@ class actionUsersProfileEditNotices extends cmsAction {
 
         $options = $this->model->getUserNotifyOptions($profile['id']);
 
+        list($form, $profile, $options) = cmsEventsManager::hook('users_profile_notices_form', [$form, $profile, $options]);
+
         if ($this->request->has('submit')){
 
             // Парсим форму и получаем поля записи

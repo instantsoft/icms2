@@ -4,7 +4,7 @@ class actionAdminCacheDelete extends cmsAction {
 
     public function run($method){
 
-		if (!in_array($method, array('files', 'memory'))) { cmsCore::error404(); }
+		if (!in_array($method, array('files', 'memory', 'memcached'))) { cmsCore::error404(); }
 
 		if ($this->cms_cache->clean()){
 

@@ -159,7 +159,7 @@ class actionUsersFriendAdd extends cmsAction {
             'content' => sprintf(LANG_USERS_FRIENDS_DONE, $sender_link),
         );
 
-        $messenger->sendNoticePM($notice, 'users_friend_aссept');
+        $messenger->sendNoticePM($notice, 'users_friend_accept');
 
     }
 

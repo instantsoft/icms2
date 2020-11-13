@@ -5,6 +5,9 @@ class cmsModel {
 
     public $db;
 
+    /**
+     * Типы MySQL JOIN
+     */
 	const LEFT_JOIN = 'LEFT JOIN';
 	const RIGHT_JOIN = 'RIGHT JOIN';
 	const INNER_JOIN = 'INNER JOIN';
@@ -17,15 +20,28 @@ class cmsModel {
 	const NATURAL_RIGHT_OUTER_JOIN = 'NATURAL RIGHT OUTER JOIN';
 
     /**
+     * Уровни изоляций транзакций
+     */
+    const READ_UNCOMMITTED = 'READ UNCOMMITTED';
+    const READ_COMMITTED = 'READ COMMITTED';
+    const REPEATABLE_READ = 'REPEATABLE READ';
+    const SERIALIZABLE = 'SERIALIZABLE';
+
+    /**
      * Префикс по умолчанию таблиц контента
      */
     const DEFAULT_TABLE_PREFIX = 'con_';
+    /**
+     * Постфикс по умолчанию таблиц категорий контента
+     */
+    const DEFAULT_TABLE_CATEGORY_POSTFIX = '_cats';
 
     /**
      * Префикс таблиц контента
      * @var string
      */
     public $table_prefix = cmsModel::DEFAULT_TABLE_PREFIX;
+    public $table_category_postfix = cmsModel::DEFAULT_TABLE_CATEGORY_POSTFIX;
 
     //условия для выборок
     public $table      = '';
@@ -37,15 +53,22 @@ class cmsModel {
     public $where_separator  = 'AND';
     public $group_by   = '';
     public $order_by   = '';
+    public $read_type  = '';
     public $index_action = '';
     public $limit      = 1000;
     public $perpage    = 50;
 
+    public $is_transaction_started = false;
+
     public $keep_filters = false;
     public $filter_on  = false;
 
+    protected static $global_localized = false;
+
+    protected $localized = false;
     protected $privacy_filter_disabled = false;
     protected $privacy_filtered = false;
+    protected $privacy_filter_value = 0;
     protected $approved_filter_disabled = false;
     protected $hidden_parents_filter_disabled = true;
     protected $delete_filter_disabled = false;
@@ -58,11 +81,19 @@ class cmsModel {
 
     private $cache_key = false;
 
+    protected $lang;
+    protected $default_lang;
+
     public function __construct(){
 
         $this->name = strtolower(str_replace('model', '', get_called_class()));
 
         $this->db = cmsCore::getInstance()->db;
+
+        $this->lang = cmsCore::getLanguageName();
+        $this->default_lang = cmsConfig::get('language');
+
+        $this->localized = self::$global_localized;
 
 	}
 
@@ -89,6 +120,18 @@ class cmsModel {
         return $this;
     }
 
+    public function setTableCategoryPostfix($postfix){
+        $this->table_category_postfix = $postfix;
+        return $this;
+    }
+
+    public function getContentCategoryTableName($name){
+        return $this->getContentTypeTableName($name).$this->table_category_postfix;
+    }
+
+    /**
+     * @todo вынести все структуры таблиц из кода в отдельные файлы-конфиги
+     */
     public function getContentTableStruct(){
 
         return array(
@@ -101,6 +144,7 @@ class cmsModel {
             'seo_desc'           => array('type' => 'varchar', 'size' => 256),
             'seo_title'          => array('type' => 'varchar', 'size' => 256),
             'tags'               => array('type' => 'varchar', 'size' => 1000),
+            'template'           => array('type' => 'varchar', 'size' => 150),
             'date_pub'           => array('type' => 'timestamp', 'index' => array('date_pub','parent_id', 'user_id'), 'composite_index' => array(4,3,2,1), 'default_current' => true),
             'date_last_modified' => array('type' => 'timestamp'),
             'date_pub_end'       => array('type' => 'timestamp', 'index' => true),
@@ -125,7 +169,9 @@ class cmsModel {
         );
 
     }
-
+    /**
+     * @todo вынести все структуры таблиц из кода в отдельные файлы-конфиги
+     */
     public function getFieldsTableStruct(){
 
         return array(
@@ -135,6 +181,7 @@ class cmsModel {
             'title'         => array('type' => 'varchar', 'size' => 100),
             'hint'          => array('type' => 'varchar', 'size' => 200),
             'ordering'      => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'is_enabled'    => array('type' => 'bool', 'default' => 1),
             'fieldset'      => array('type' => 'varchar', 'size' => 32),
             'type'          => array('type' => 'varchar', 'size' => 16),
             'is_in_list'    => array('type' => 'bool'),
@@ -147,12 +194,15 @@ class cmsModel {
             'values'        => array('type' => 'text'),
             'options'       => array('type' => 'text'),
             'groups_read'   => array('type' => 'text'),
+            'groups_add'    => array('type' => 'text'),
             'groups_edit'   => array('type' => 'text'),
             'filter_view'   => array('type' => 'text')
         );
 
     }
-
+    /**
+     * @todo вынести все структуры таблиц из кода в отдельные файлы-конфиги
+     */
     public function getPropsTableStruct(){
 
         return array(
@@ -167,7 +217,9 @@ class cmsModel {
         );
 
     }
-
+    /**
+     * @todo вынести все структуры таблиц из кода в отдельные файлы-конфиги
+     */
     public function getPropsBindTableStruct(){
 
         return array(
@@ -178,7 +230,9 @@ class cmsModel {
         );
 
     }
-
+    /**
+     * @todo вынести все структуры таблиц из кода в отдельные файлы-конфиги
+     */
     public function getPropsValuesTableStruct(){
 
         return array(
@@ -189,24 +243,45 @@ class cmsModel {
 
     }
 
+    public function checkCorrectEqualSlug($table_name, $slug, $item_id, $max_len = 255) {
+
+        $get_scount = function($slug) use($item_id, $table_name){
+            return $this->filterNotEqual('id', $item_id)->
+                filterLike('slug', $slug)->
+                getCount($table_name, 'id', true);
+        };
+
+        if($get_scount($slug)){
+            if(mb_strlen($slug) >= $max_len){
+                $slug = mb_substr($slug, 0, ($max_len - 1));
+            }
+            $i = 2;
+            while($get_scount($slug.$i)){
+                $i++;
+                if(mb_strlen($slug.$i) > $max_len){
+                    $slug = mb_substr($slug, 0, ($max_len - strlen($i)));
+                }
+            }
+            $slug .= $i;
+        }
+
+        return $slug;
+    }
+
 //============================================================================//
 //============================================================================//
 
     public function getRootCategory($ctype_name){
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
-
-        return $this->db->getFields($table_name, 'parent_id=0');
+        return $this->db->getFields($this->getContentCategoryTableName($ctype_name), 'parent_id=0');
 
     }
 
     public function getCategory($ctype_name, $id, $by_field='id'){
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
-
         $this->useCache('content.categories');
 
-        $category = $this->getItemByField($table_name, $by_field, $id);
+        $category = $this->getItemByField($this->getContentCategoryTableName($ctype_name), $by_field, $id);
 
         if (!$category) { return false; }
 
@@ -226,7 +301,7 @@ class cmsModel {
 
     }
 
-    public function getCategorySLUG($category){
+    public function getCategorySLUG($category, $ctype_name){
 
         $slug = '';
 
@@ -236,16 +311,17 @@ class cmsModel {
             $slug .= lang_slug( empty($c['slug_key']) ? str_replace('/', '', $c['title']) : $c['slug_key'] );
         }
 
-        return $slug;
+        $slug = mb_substr($slug, 0, 255);
 
+        $slug = $this->checkCorrectEqualSlug($this->getContentCategoryTableName($ctype_name), $slug, $category['id'], 255);
+
+        return $slug;
     }
 
 //============================================================================//
 //============================================================================//
 
     public function getCategoriesTree($ctype_name, $is_show_root=true) {
-
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
 
         if (!$is_show_root){
             $this->filterGt('parent_id', 0);
@@ -255,7 +331,7 @@ class cmsModel {
 
         $this->useCache('content.categories');
 
-        return $this->get($table_name, function($node, $model){
+        return $this->get($this->getContentCategoryTableName($ctype_name), function($node, $model){
             if ($node['ns_level']==0) { $node['title'] = LANG_ROOT_CATEGORY; }
             if(!empty($node['allow_add'])){
                 $node['allow_add'] = cmsModel::yamlToArray($node['allow_add']);
@@ -268,22 +344,17 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getSubCategories($ctype_name, $parent_id=1) {
-
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
+    public function getSubCategories($ctype_name, $parent_id = 1, $item_callback = false) {
 
         $this->filterEqual('parent_id', $parent_id);
         $this->orderBy('ns_left');
 
         $this->useCache('content.categories');
 
-        return $this->get($table_name);
-
+        return $this->get($this->getContentCategoryTableName($ctype_name), $item_callback);
     }
 
     public function getSubCategoriesTree($ctype_name, $parent_id=1, $level=1) {
-
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
 
         $parent = $this->getCategory($ctype_name, $parent_id);
 
@@ -299,7 +370,7 @@ class cmsModel {
 
         $this->useCache('content.categories');
 
-        return $this->get($table_name);
+        return $this->get($this->getContentCategoryTableName($ctype_name));
 
     }
 
@@ -307,8 +378,6 @@ class cmsModel {
 //============================================================================//
 
     public function getCategoryPath($ctype_name, $category) {
-
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
 
         if (!isset($category['ns_left'])){
             $category = $this->getCategory($ctype_name, $category['id']);
@@ -323,7 +392,7 @@ class cmsModel {
 
         $this->useCache('content.categories');
 
-        return $this->get($table_name);
+        return $this->get($this->getContentCategoryTableName($ctype_name));
 
     }
 
@@ -332,7 +401,7 @@ class cmsModel {
 
     public function addCategory($ctype_name, $category){
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
+        $table_name = $this->getContentCategoryTableName($ctype_name);
 
         $this->db->nestedSets->setTable($table_name);
 
@@ -340,13 +409,11 @@ class cmsModel {
 
         if (!$category['id']){ return false; }
 
-        $category['title'] = $this->db->escape($category['title']);
-
         $this->update($table_name, $category['id'], $category);
 
         $category['path'] = $this->getCategoryPath($ctype_name, $category);
 
-        $category['slug'] = $this->getCategorySLUG($category);
+        $category['slug'] = $this->getCategorySLUG($category, $ctype_name);
 
         $this->update($table_name, $category['id'], array(
             'slug' => $category['slug']
@@ -355,7 +422,6 @@ class cmsModel {
         cmsCache::getInstance()->clean('content.categories');
 
         return $category;
-
     }
 
 //============================================================================//
@@ -365,7 +431,7 @@ class cmsModel {
 
         cmsCache::getInstance()->clean('content.categories');
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
+        $table_name = $this->getContentCategoryTableName($ctype_name);
 
         $category_old = $this->getCategory($ctype_name, $id);
 
@@ -378,7 +444,7 @@ class cmsModel {
 
         $category['id'] = $id;
         $category['path'] = $this->getCategoryPath($ctype_name, array('id' => $id));
-        $category['slug'] = $this->getCategorySLUG($category);
+        $category['slug'] = $this->getCategorySLUG($category, $ctype_name);
 
         $this->update($table_name, $id, array(
             'slug' => $category['slug']
@@ -389,7 +455,7 @@ class cmsModel {
         if ($subcats){
             foreach($subcats as $subcat){
                 $subcat['path'] = $this->getCategoryPath($ctype_name, array('id' => $subcat['id']));
-                $subcat['slug'] = $this->getCategorySLUG($subcat);
+                $subcat['slug'] = $this->getCategorySLUG($subcat, $ctype_name);
                 $this->update($table_name, $subcat['id'], array('slug' => $subcat['slug']));
             }
         }
@@ -405,8 +471,6 @@ class cmsModel {
 
         cmsCache::getInstance()->clean('content.categories');
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
-
         $this->updateCategoryTreeNode($ctype_name, $tree);
         $this->updateCategoryTreeNodeSlugs($ctype_name, $tree);
 
@@ -415,7 +479,7 @@ class cmsModel {
             'ns_right' => 1 + ($categories_count*2) + 1
         );
 
-        $this->update($table_name, 1, $root_keys);
+        $this->update($this->getContentCategoryTableName($ctype_name), 1, $root_keys);
 
         return true;
 
@@ -423,7 +487,7 @@ class cmsModel {
 
     public function updateCategoryTreeNode($ctype_name, $tree){
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
+        $table_name = $this->getContentCategoryTableName($ctype_name);
 
         foreach($tree as $node){
 
@@ -446,7 +510,7 @@ class cmsModel {
 
     public function updateCategoryTreeNodeSlugs($ctype_name, $tree){
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
+        $table_name = $this->getContentCategoryTableName($ctype_name);
 
         foreach($tree as $node){
 
@@ -461,7 +525,7 @@ class cmsModel {
             $slug = $this->getCategorySLUG(array(
                 'path' => $path,
                 'title' => $node['title']
-            ));
+            ), $ctype_name);
 
             $this->update($table_name, $node['key'], array(
                 'slug' => $slug
@@ -488,7 +552,7 @@ class cmsModel {
         // из категории
         //
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
+        $table_name = $this->getContentCategoryTableName($ctype_name);
 
         $this->db->nestedSets->setTable($table_name);
         $this->db->nestedSets->deleteNode($id);
@@ -530,12 +594,24 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function insert($table_name, $data, $array_as_json = false){
-        return $this->db->insert($table_name, $data, false, $array_as_json);
+    public function insert($table_name, $data, $array_as_json = false, $ignore = false){
+        return $this->db->insert($table_name, $data, false, $array_as_json, $ignore);
     }
 
     public function insertOrUpdate($table_name, $insert_data, $update_data = false){
         return $this->db->insertOrUpdate($table_name, $insert_data, $update_data);
+    }
+
+//============================================================================//
+//============================================================================//
+
+    public function replaceFieldString($table_name, $search, $replace, $field){
+
+        $search = $this->db->escape($search);
+        $replace = $this->db->escape($replace);
+
+        return $this->db->query("UPDATE `{#}{$table_name}` SET `{$field}` = REPLACE(`{$field}`, '{$search}', '$replace') WHERE `{$field}` LIKE '%{$search}%'");
+
     }
 
 //============================================================================//
@@ -558,6 +634,7 @@ class cmsModel {
         $this->order_by     = '';
         $this->index_action = '';
         $this->limit        = '';
+        $this->read_type    = '';
         $this->join         = '';
         $this->distinct     = '';
         $this->straight_join = '';
@@ -568,11 +645,66 @@ class cmsModel {
 		$this->filter_on          = false;
         $this->where              = '';
         $this->privacy_filtered   = false;
+        $this->privacy_filter_value = 0;
         $this->approved_filtered  = false;
         $this->available_filtered = false;
         $this->hp_filtered        = false;
 
         return $this;
+
+    }
+
+    public function localizedOn() {
+        $this->localized = true; return $this;
+    }
+
+    public function localizedOff() {
+        $this->localized = false; return $this;
+    }
+
+    public function localizedRestore() {
+        $this->localized = self::$global_localized; return $this;
+    }
+
+    public static function globalLocalizedOn() {
+        self::$global_localized = true;
+    }
+
+    public static function globalLocalizedOff() {
+        self::$global_localized = false;
+    }
+
+    public function replaceTranslatedField($item, $table_name = false) {
+
+        // предполагается, что язык в настройках -
+        // основной язык и основные тексты хранятся
+        // в ячейках без постфикса
+        if ($this->lang == $this->default_lang) {
+            return $item;
+        }
+
+        if(!is_array($item)){ return $item; }
+
+        $postfix = '_' . $this->lang;
+
+        foreach ($item as $key => $value) {
+
+            $lang_key = $key . $postfix;
+
+            if (!isset($item[$lang_key])) {
+
+                if(is_array($value) && $value){
+                    $item[$key] = $this->replaceTranslatedField($value, $table_name);
+                }
+
+                continue;
+            }
+
+            $item[$key] = $item[$lang_key];
+
+        }
+
+        return $item;
 
     }
 
@@ -720,7 +852,7 @@ class cmsModel {
 
     public function filterTimestampYounger($field, $value, $interval='DAY'){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        $value = intval($value);
+        $value = (int)$value;
         $interval = $this->db->escape($interval);
         $this->filter("TIMESTAMPDIFF({$interval}, {$field}, NOW()) <= {$value}");
         return $this;
@@ -754,7 +886,7 @@ class cmsModel {
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_array($value)){
             foreach($value as $k=>$v){
-                $v = $this->db->escape($v);
+                $v = $this->db->escape(strval($v));
                 $value[$k] = "'{$v}'";
             }
             $value = implode(',', $value);
@@ -841,7 +973,7 @@ class cmsModel {
 
     public function filterCategory($ctype_name, $category, $is_recursive=false){
 
-		$table_name      = $this->table_prefix . $ctype_name . '_cats';
+        $table_name      = $this->getContentCategoryTableName($ctype_name);
         $bind_table_name = $table_name . '_bind';
 
         if (!$is_recursive){
@@ -899,11 +1031,18 @@ class cmsModel {
 
     public function disablePrivacyFilter(){
         $this->privacy_filter_disabled = true;
+        $this->privacy_filter_value = 0;
+        return $this;
+    }
+
+    public function disablePrivacyFilterForFriends(){
+        $this->privacy_filter_value = array(0, 1);
         return $this;
     }
 
     public function enablePrivacyFilter(){
         $this->privacy_filter_disabled = false;
+        $this->privacy_filter_value = 0;
         return $this;
     }
 
@@ -920,7 +1059,11 @@ class cmsModel {
         // используем флаг чтобы фильтр не применился дважды
         $this->privacy_filtered = true;
 
-        return $this->filterEqual('i.is_private', 0);
+        if(is_array($this->privacy_filter_value)){
+            return $this->filterIn('i.is_private', $this->privacy_filter_value);
+        }
+
+        return $this->filterEqual('i.is_private', $this->privacy_filter_value);
 
     }
 
@@ -1031,7 +1174,7 @@ class cmsModel {
 
         $this->joinInner('{users}_friends', 'fr', 'fr.friend_id = i.user_id');
 
-        $this->filterEqual('fr.user_id', intval($user_id));
+        $this->filterEqual('fr.user_id', (int)$user_id);
 
         if($is_mutual !== null){
             $this->filterEqual('fr.is_mutual', $is_mutual);
@@ -1061,11 +1204,17 @@ class cmsModel {
         return $this->filterNotNull('online.user_id')->filterTimestampYounger('online.date_created', cmsUser::USER_ONLINE_INTERVAL, 'SECOND');
     }
 
-    public function applyDatasetFilters($dataset, $ignore_sorting = false){
+    public function applyDatasetFilters($dataset, $ignore_sorting = false, $allowed_fields = []){
 
         if (!empty($dataset['filters'])){
 
             foreach($dataset['filters'] as $filter){
+
+                // Если заданы разрешенные поля, проверяем
+                // валидация
+                if($allowed_fields && !in_array($filter['field'], $allowed_fields, true)){
+                    continue;
+                }
 
                 if (isset($filter['callback']) && is_callable($filter['callback'])){
                     $filter['callback']($this, $dataset); continue;
@@ -1122,10 +1271,14 @@ class cmsModel {
 
     }
 
-    public function selectList($fields, $is_this_only = false){
+    public function selectList($fields, $is_this_only = false, $translated_table = false){
         if($is_this_only){ $this->select = array(); }
         foreach($fields as $field => $alias){
-            $this->select($field, $alias);
+            if($translated_table){
+                $this->selectTranslatedField($field, $translated_table, $alias);
+            } else {
+                $this->select($field, $alias);
+            }
         }
         return $this;
     }
@@ -1133,6 +1286,24 @@ class cmsModel {
     public function select($field, $as=false){
         $this->select[] = $as ? $field.' as `'.$as.'`' : $field;
         return $this;
+    }
+
+    public function selectTranslatedField($field, $table, $as = false){
+
+        if ($this->lang == $this->default_lang) {
+            return $this->select($field, $as);
+        }
+
+        $field_name = $field.'_'.$this->lang;
+
+        $select_name = (strpos($field, '.') === false ? $field : ltrim(strrchr($field, '.'), '.'));
+
+        if(!$this->db->isFieldExists($table, $select_name)){
+            $field_name = $field;
+        }
+
+        return $this->select($field_name, $select_name);
+
     }
 
     public function selectOnly($field, $as=false){
@@ -1187,7 +1358,9 @@ class cmsModel {
         if (!$user_fields){
             $user_fields = array(
                 $as . '.nickname'   => 'user_nickname',
+                $as . '.slug'       => 'user_slug',
                 $as . '.is_deleted' => 'user_is_deleted',
+                $as . '.groups'     => 'user_groups',
                 $as . '.avatar'     => 'user_avatar'
             );
         }
@@ -1348,6 +1521,98 @@ class cmsModel {
         return $this;
     }
 
+    public function setReadType($type){
+        $this->read_type = $type;
+        return $this;
+    }
+
+//============================================================================//
+//============================== Транзакции ==================================//
+
+    public function processTransaction($payload_callback, $after_autocommit_on = false) {
+
+        // нам не нужно, чтобы внутри транзакции при ошибке запроса
+        // всё умирало
+        $this->db->query_quiet = true;
+
+        // флаг результата выполнения
+        $success = true;
+
+        // мы внутри транзакции?
+        $is_autocommit_on = $this->db->isAutocommitOn();
+
+        // выключаем автокоммит, чтобы все запросы были в транзакции
+        // если автокоммит выключен, то мы уже в транзакции
+        if ($is_autocommit_on) {
+            $this->db->autocommitOff();
+        }
+
+        try {
+
+            $success = call_user_func_array($payload_callback, array($this));
+
+        } catch (Exception $e) {
+
+            error_log($e->getMessage());
+
+            $success = false;
+
+        }
+
+        $this->db->query_quiet = null;
+
+        if ($is_autocommit_on || $after_autocommit_on) {
+
+            $this->endTransaction($success);
+
+        }
+
+        return $success;
+
+    }
+
+    public function startTransaction() {
+
+        $this->is_transaction_started = true;
+
+        $this->db->autocommitOff();
+
+        return $this;
+
+    }
+
+    public function endTransaction($success) {
+
+        if ($success) {
+
+            $this->db->commit();
+
+        } else {
+
+            $this->db->rollback();
+
+        }
+
+        $this->db->autocommitOn();
+
+        $this->is_transaction_started = false;
+
+        return $this;
+
+    }
+
+    public function forUpdate() {
+        return $this->setReadType('FOR UPDATE');
+    }
+
+    public function lockInShareMode() {
+        return $this->setReadType('LOCK IN SHARE MODE');
+    }
+
+    public function setTransactionIsolationLevel($level) {
+        $this->db->query("SET TRANSACTION ISOLATION LEVEL {$level};"); return $this;
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -1376,6 +1641,10 @@ class cmsModel {
 
         $item = $this->db->fetchAssoc($result);
 
+        if($this->localized){
+            $item = $this->replaceTranslatedField($item, $table_name);
+        }
+
         $this->db->freeResult($result);
 
         return $item[ $field_name ];
@@ -1385,7 +1654,7 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getItem($table_name, $item_callback=false){
+    public function getItem($table_name, $item_callback = false){
 
         $select = implode(', ', $this->select);
 
@@ -1401,6 +1670,10 @@ class cmsModel {
 
         $sql .= 'LIMIT 1';
 
+        if ($this->read_type){
+            $sql .= PHP_EOL.$this->read_type;
+        }
+
         $this->resetFilters();
 
         // если указан ключ кеша для этого запроса
@@ -1410,8 +1683,20 @@ class cmsModel {
             $cache_key = $this->cache_key . '.' . md5($sql);
             $cache = cmsCache::getInstance();
 
-            if (false !== ($item = $cache->get($cache_key))){
+            $item = $cache->get($cache_key);
+
+            if ($item){
+
+                if(is_callable($item_callback)){
+                    $item = call_user_func_array($item_callback, array($item, $this));
+                }
+
+                if($this->localized){
+                    $item = $this->replaceTranslatedField($item, $table_name);
+                }
+
                 $this->stopCache();
+
                 return $item;
             }
 
@@ -1423,14 +1708,23 @@ class cmsModel {
 
         $item = $this->db->fetchAssoc($result);
 
+        // для кеша формируем массив без обработки коллбэком
+        if ($this->cache_key){
+            $_item = $item;
+        }
+
         if(is_callable($item_callback)){
             $item = call_user_func_array($item_callback, array($item, $this));
+        }
+
+        if($this->localized){
+            $item = $this->replaceTranslatedField($item, $table_name);
         }
 
         // если указан ключ кеша для этого запроса
         // то сохраняем результаты в кеше
         if ($this->cache_key){
-            $cache->set($cache_key, $item);
+            $cache->set($cache_key, $_item);
             $this->stopCache();
         }
 
@@ -1545,6 +1839,10 @@ class cmsModel {
                         $item = call_user_func_array($item_callback, array($item, $this));
                         if ($item === false){ continue; }
 
+                        if($this->localized){
+                            $item = $this->replaceTranslatedField($item, $table_name);
+                        }
+
                         $items[$key] = $item;
 
                     }
@@ -1583,6 +1881,10 @@ class cmsModel {
             if (is_callable($item_callback)){
                 $item = call_user_func_array($item_callback, array($item, $this));
                 if ($item === false){ continue; }
+            }
+
+            if($this->localized){
+                $item = $this->replaceTranslatedField($item, $table_name);
             }
 
             // добавляем обработанную строку в результирующий массив
@@ -1630,6 +1932,8 @@ class cmsModel {
 
         if ($this->limit){ $sql .= 'LIMIT '.$this->limit.PHP_EOL; }
 
+        if ($this->read_type){ $sql .= $this->read_type.PHP_EOL; }
+
         return $sql;
 
     }
@@ -1637,16 +1941,15 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getMax($table, $field, $default=0){
+    public function getMax($table, $field, $default = 0, $dir = 'MAX'){
 
-        $sql = "SELECT i.{$field} as {$field}
+        $sql = "SELECT {$dir}(i.{$field}) as {$field}
                 FROM {#}{$table} i
                 ";
 
         if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
 
-        $sql .= "ORDER BY i.{$field} DESC
-                 LIMIT 1";
+        $sql .= "LIMIT 1";
 
         $result = $this->db->query($sql);
 
@@ -1660,6 +1963,10 @@ class cmsModel {
 
         return $max[$field];
 
+    }
+
+    public function getMin($table, $field, $default = 0){
+        return $this->getMax($table, $field, $default, 'MIN');
     }
 
     /**
@@ -1792,8 +2099,8 @@ class cmsModel {
 
         // устанавливаем страницу
         if (!empty($filter['page'])){
-            $perpage = !empty($filter['perpage']) ? intval($filter['perpage']) : $this->perpage;
-            $this->limitPage(intval($filter['page']), $perpage);
+            $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $this->perpage;
+            $this->limitPage((int)$filter['page'], $perpage);
         }
 
         //
@@ -1812,6 +2119,7 @@ class cmsModel {
                     }
 
                     switch ($column['filter']){
+                        case 'in': $this->filterIn($filter_field, explode(',', $filter[$field])); break;
                         case 'exact': $this->filterEqual($filter_field, $filter[$field]); break;
                         case 'like': $this->filterLike($filter_field, "%{$filter[$field]}%"); break;
                         case 'date':
@@ -1844,7 +2152,7 @@ class cmsModel {
 
         $this->resetFilters();
 
-        return $this->db->query($sql);
+        return $this->db->query($sql, false, true);
 
     }
 
@@ -1863,8 +2171,18 @@ class cmsModel {
 
         cmsCache::getInstance()->clean('events');
 
-        return $this->filterEqual('name', $name)->deleteFiltered('controllers');
+        $rule_ids = $this->selectOnly('id')->filterEqual('controller', $name)->get('perms_rules', function($item, $model){
+            return $item['id'];
+        }, false);
 
+        if($rule_ids){
+            $this->filterIn('rule_id', $rule_ids)->deleteFiltered('perms_users');
+            $this->filterEqual('controller', $name)->deleteFiltered('perms_rules');
+        }
+
+        $this->filterEqual('controller', $name)->deleteFiltered('scheduler_tasks');
+
+        return $this->filterEqual('name', $name)->deleteFiltered('controllers');
     }
 
     public function fieldsAfterStore($item, $fields, $action = 'add') {
@@ -1925,6 +2243,17 @@ class cmsModel {
      */
     public static function arrayToYaml($input_array, $indent = 2, $word_wrap = 40) {
 
+        $array = [];
+
+        if(cmsConfig::get('native_yaml')){
+
+            if(!empty($input_array)){
+                $array = $input_array;
+            }
+
+            return yaml_emit($array, YAML_UTF8_ENCODING);
+        }
+
         if(!empty($input_array)){
 
             foreach ($input_array as $key => $value) {
@@ -1932,8 +2261,6 @@ class cmsModel {
                 $array[$_k] = $value;
             }
 
-        } else {
-            $array = array();
         }
 
         return Spyc::YAMLDump($array, $indent, $word_wrap);
@@ -1949,7 +2276,14 @@ class cmsModel {
 
         if(!$yaml){ return array(); }
 
+        if(is_array($yaml)){ return $yaml; }
+
         if($yaml === "---\n- 0\n"){ return array(); }
+        if($yaml === "---\n- \"0\"\n...\n"){ return array(); }
+
+        if(cmsConfig::get('native_yaml')){
+            return yaml_parse($yaml);
+        }
 
         return Spyc::YAMLLoadString($yaml);
 

@@ -68,6 +68,12 @@ class cmsFormField {
      */
     public $item = null;
     /**
+     * Контекст запроса
+     * Устанавливается в методе parse объекта класса cmsForm
+     * @var object
+     */
+    public $request = null;
+    /**
      * ID поля, если запись о нём есть в таблице
      * @var integer
      */
@@ -121,6 +127,37 @@ class cmsFormField {
      */
     public $excluded_controllers = array();
 
+    public $context = null;
+    public $context_params = [];
+
+    /**
+     * Метод для вывода поля в форме
+     * @var string
+     */
+    public $display_input = 'getInput';
+
+    /**
+     * Показывать заголовок поля
+     * при выводе поля для фильтра
+     *
+     * @var boolean
+     */
+    public $show_filter_input_title = false;
+
+    /**
+     * Формировать поле формы на нескольких языках
+     * @var boolean
+     */
+    public $multilanguage = false;
+
+    /**
+     * Тип поля
+     * по факту имя файла
+     *
+     * @var string
+     */
+    public $field_type;
+
     /**
      * @param string $name Имя поля
      * @param array $options Массив опций
@@ -129,13 +166,12 @@ class cmsFormField {
 
         $this->setName($name);
 
-        $this->class = substr(mb_strtolower(get_called_class()), 5);
+        $this->field_type = substr(mb_strtolower(get_called_class()), 5);
+        $this->class = $this->field_type;
 
         if ($options){
             $this->setOptions($options);
         }
-
-        $this->id = str_replace(':', '_', $name);
 
     }
 
@@ -177,12 +213,30 @@ class cmsFormField {
      */
     public function getOptions() { return array(); }
 
+    public function getOptionsExtended() {
+
+        $ext_options = [];
+
+        $options = $this->getOptions();
+
+        if($options){
+            foreach ($options as $option_field) {
+                if(!empty($option_field->extended_option)){
+                    $ext_options[] = $option_field;
+                }
+            }
+        }
+
+        return $ext_options;
+    }
+
     /**
      * Возвращает значение опции поля
      * @param string $key Имя опции
+     * @param mixed $default Значение по умолчанию
      * @return mixed
      */
-    public function getOption($key) {
+    public function getOption($key, $default = null) {
 
         if(array_key_exists($key, $this->options)){
             return $this->options[$key];
@@ -208,7 +262,7 @@ class cmsFormField {
             return $this->options[$key];
         }
 
-        return null;
+        return $default;
 
     }
 
@@ -241,6 +295,7 @@ class cmsFormField {
      */
     public function setOption($key, $value) { $this->options[$key] = $value; return $this; }
 
+    public function setContext($value){$this->context = $value; return $this;}
     /**
      * Возвращает название поля
      * @return string
@@ -270,6 +325,8 @@ class cmsFormField {
 
         $keys = explode(':', $name);
         $this->element_name = count($keys) > 1 ? array_shift($keys) . '[' . implode('][', $keys) . ']' : $name;
+
+        $this->id = str_replace(array(':', '|'), '_', $name);
 
         return $this;
 
@@ -372,7 +429,11 @@ class cmsFormField {
      * @return string
      */
     public function getFilterInput($value){
-        $this->element_title = false;
+
+        if(!$this->show_filter_input_title){
+            $this->element_title = false;
+        }
+
         // при фильтрации все поля необязательны
         $required_key = array_search(array('required'), $this->getRules());
         if($required_key !== false){
@@ -394,6 +455,15 @@ class cmsFormField {
      * @return string
      */
     public function parseTeaser($value){ return $this->parse($value); }
+
+    /**
+     * Выполняет некие действия после отработки метода parse
+     * для всех полей одной записи
+     * @param mixed $value Значение уже отформатированного поля
+     * @param array $item Массив полей записи, с уже обработанными данными
+     * @return mixed
+     */
+    public function afterParse($value, $item){ return $value; }
 
     /**
      * Если значение вашего поля предполагает тип, отличный от типа «string» или же
@@ -422,6 +492,17 @@ class cmsFormField {
     public function applyFilter($model, $value) { return false; }
 
     /**
+     * Если поле работает с файлами
+     * Возвращает массив путей файлов от корня CMS
+     *
+     * @param mixed $value
+     * @return boolean | array
+     */
+    public function getFiles($value){
+        return false;
+    }
+
+    /**
      * Метод, который подготавливает входную переменную
      * из поля для записи в базу данных
      *
@@ -434,6 +515,17 @@ class cmsFormField {
         if($this->store_array_as_json && is_array($value)){
             return cmsModel::arrayToString($value);
         }
+        return $value;
+    }
+
+    /**
+     * Подготавливает входную переменную
+     * из поля фильтра
+     *
+     * @param mixed $value Значение поля из формы фильтра
+     * @return mixed
+     */
+    public function storeFilter($value){
         return $value;
     }
 
@@ -508,6 +600,33 @@ class cmsFormField {
      */
     public function hookAfterRemove($content_table_name, $field, $model){
         return $this;
+    }
+
+    /*
+     * Метод для получения списка в полях
+     */
+    public function getListItems(){
+
+        $items = [];
+
+        if (isset($this->items)){
+
+            $items = $this->items;
+
+        } else if (isset($this->generator)) {
+
+            $generator = $this->generator;
+            $items = $this->items = $generator($this->item, $this->request);
+
+        } else if ($this->hasDefaultValue()) {
+
+            $items = $this->items = (!empty($this->show_empty_value) ? ['' => ''] : [])  + string_explode_list($this->getDefaultValue());
+
+            ksort($items);
+
+        }
+
+        return $items;
     }
 
 }

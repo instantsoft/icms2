@@ -7,6 +7,7 @@ class formGroupsField extends cmsForm {
         return array(
             'basic' => array(
                 'type' => 'fieldset',
+                'title' => LANG_CP_BASIC,
                 'childs' => array(
                     new fieldString('name', array(
                         'title' => LANG_SYSTEM_NAME,
@@ -107,6 +108,27 @@ class formGroupsField extends cmsForm {
                     ))
                 )
             ),
+            'wrap' => array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_FIELD_WRAP,
+                'childs' => array(
+                    new fieldList('options:wrap_type', array(
+                        'title' => LANG_CP_FIELD_WRAP_TYPE,
+                        'default' => 'auto',
+                        'items' => array(
+                            'left'  => LANG_CP_FIELD_WRAP_LTYPE,
+                            'right' => LANG_CP_FIELD_WRAP_RTYPE,
+                            'none'  => LANG_CP_FIELD_WRAP_NTYPE,
+                            'auto'  => LANG_CP_FIELD_WRAP_ATYPE
+                        )
+                    )),
+                    new fieldString('options:wrap_width', array(
+                        'title'   => LANG_CP_FIELD_WRAP_WIDTH,
+                        'hint'    => LANG_CP_FIELD_WRAP_WIDTH_HINT,
+                        'default' => ''
+                    ))
+                )
+            ),
             'format' => array(
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_FORMAT,
@@ -122,6 +144,9 @@ class formGroupsField extends cmsForm {
                     )),
                     new fieldCheckbox('options:is_email', array(
                         'title' => LANG_VALIDATE_EMAIL,
+                    )),
+                    new fieldCheckbox('options:is_url', array(
+                        'title' => LANG_VALIDATE_URL,
                     )),
                     new fieldCheckbox('options:is_unique', array(
                         'title' => LANG_VALIDATE_UNIQUE,
@@ -162,6 +187,15 @@ class formGroupsField extends cmsForm {
                     ))
                 )
             ),
+            'add_access' => array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_FIELD_GROUPS_ADD,
+                'childs' => array(
+                    new fieldListGroups('groups_add', array(
+                        'show_all' => true
+                    ))
+                )
+            ),
             'edit_access' => array(
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_GROUPS_EDIT,
@@ -177,6 +211,18 @@ class formGroupsField extends cmsForm {
                 'childs' => array(
                     new fieldListGroups('filter_view', array(
                         'show_all' => true
+                    ))
+                )
+            ),
+            'author_access' => array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_FIELD_AUTHOR_ACCESS,
+                'childs' => array(
+                    new fieldListMultiple('options:author_access', array(
+                        'items' => array(
+                            'is_read' => LANG_CP_FIELD_READING,
+                            'is_edit' => LANG_CP_FIELD_EDITING,
+                        )
                     ))
                 )
             )

@@ -6,17 +6,18 @@ class actionUsersProfileContent extends cmsAction {
 
     public function run($profile, $ctype_name = false, $folder_id = false, $dataset = false){
 
-        if (!$ctype_name) { cmsCore::error404(); }
+        if (!$ctype_name) { return cmsCore::error404(); }
 
         $ctype = $this->controller_content->model->getContentTypeByName($ctype_name);
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype) { return cmsCore::error404(); }
 
         if (!$ctype['options']['profile_on']) { return cmsCore::error404(); }
 
         if (!$this->cms_user->isPrivacyAllowed($profile, 'view_user_'.$ctype['name'])){
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
+        $original_folder_id = $folder_id;
         if($folder_id && !$dataset && !is_numeric($folder_id)){
             $dataset   = $folder_id;
             $folder_id = false;
@@ -43,35 +44,49 @@ class actionUsersProfileContent extends cmsAction {
 
         }
 
+        $this->controller_content->model->filterEqual('user_id', $profile['id']);
+
+        list($folders, $this->controller_content->model, $profile, $original_folder_id) = cmsEventsManager::hook("user_content_{$ctype['name']}_folders", array(
+            $folders,
+            $this->controller_content->model,
+            $profile,
+            $original_folder_id
+        ));
+
         // Если есть наборы, применяем фильтры текущего
         $current_dataset = array();
         if ($datasets){
 
-            if($dataset && empty($datasets[$dataset])){ cmsCore::error404(); }
-
             $keys = array_keys($datasets);
-            $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
-            $this->controller_content->model->applyDatasetFilters($current_dataset);
-            // устанавливаем максимальное количество записей для набора, если задано
-            if(!empty($current_dataset['max_count'])){
-                $this->controller_content->max_items_count = $current_dataset['max_count'];
+
+            if(!$dataset){
+                $dataset = $keys[0];
             }
-            // если набор всего один, например для изменения сортировки по умолчанию,
-            // не показываем его на сайте
-            if(count($datasets) == 1){
-                $current_dataset = array(); $datasets = false;
+
+            if($dataset && !empty($datasets[$dataset])){
+
+
+                $current_dataset = $datasets[$dataset];
+                $this->controller_content->model->applyDatasetFilters($current_dataset);
+                // устанавливаем максимальное количество записей для набора, если задано
+                if(!empty($current_dataset['max_count'])){
+                    $this->controller_content->max_items_count = $current_dataset['max_count'];
+                }
+                // если набор всего один, например для изменения сортировки по умолчанию,
+                // не показываем его на сайте
+                if(count($datasets) == 1){
+                    $current_dataset = array(); $datasets = false;
+                }
+
+            } else {
+
+                if($dataset && $folder_id === false && $original_folder_id === false){
+                    return cmsCore::error404();
+                }
+
             }
 
         }
-
-        $this->controller_content->model->filterEqual('user_id', $profile['id']);
-
-        list($folders, $this->controller_content->model, $profile, $folder_id) = cmsEventsManager::hook("user_content_{$ctype['name']}_folders", array(
-            $folders,
-            $this->controller_content->model,
-            $profile,
-            $folder_id
-        ));
 
         if ($folders){
             $folders = array('0' => array('id' => '0', 'title' => LANG_ALL)) + $folders;
@@ -87,9 +102,6 @@ class actionUsersProfileContent extends cmsAction {
 			$this->controller_content->model->disablePrivacyFilter();
         }
 
-        // указываем тут сортировку, чтобы тут же указать индекс для использования
-        $this->controller_content->model->orderBy('date_pub', 'desc')->forceIndex('user_id');
-
         list($ctype, $profile) = cmsEventsManager::hook('content_before_profile', array($ctype, $profile));
 
         if ($folder_id){
@@ -102,12 +114,12 @@ class actionUsersProfileContent extends cmsAction {
         cmsModel::cacheResult('current_ctype', $ctype);
         cmsModel::cacheResult('current_ctype_dataset', $current_dataset);
 
-        $list_html = $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''));
+        $list_html = $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''), false, 0, [], $dataset);
 
-        $list_header = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
+        $list_header = $list_header_h1 = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
 
         if($current_dataset && $dataset){
-            $list_header .= ' / '.$current_dataset['title'];
+            $list_header .= ' · '.$current_dataset['title'];
         }
 
         $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], array(), $current_dataset, array(
@@ -123,19 +135,23 @@ class actionUsersProfileContent extends cmsAction {
             )
         )));
 
+        $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
+
         return $this->cms_template->render('profile_content', array(
             'filter_titles'   => $this->controller_content->getFilterTitles(),
+            'fields'          => $fields,
             'user'            => $this->cms_user,
             'toolbar_html'    => $toolbar_html,
             'id'              => $profile['id'],
             'profile'         => $profile,
             'ctype'           => $ctype,
             'folders'         => $folders,
-            'folder_id'       => $folder_id,
+            'folder_id'       => $original_folder_id,
             'datasets'        => $datasets,
             'dataset'         => $dataset,
             'current_dataset' => $current_dataset,
             'base_ds_url'     => $page_url . '%s',
+            'list_header_h1'  => $list_header_h1,
             'list_header'     => $list_header,
             'html'            => $list_html
         ));

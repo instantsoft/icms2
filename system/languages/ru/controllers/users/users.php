@@ -8,6 +8,7 @@
     define('LANG_USERS_EDIT_PROFILE',       'Редактировать профиль');
     define('LANG_USERS_EDIT_USER',          'Редактировать пользователя');
 
+    define('LANG_RULE_USERS_CHANGE_SLUG',   'Изменять URL страницы профиля');
     define('LANG_USERS_RESTORE_PROFILE',    'Восстановить профиль');
     define('LANG_USERS_DELETE_PROFILE',     'Удалить профиль');
     define('LANG_RULE_USERS_DELETE',        'Удалять профиль');
@@ -37,6 +38,10 @@
     define('LANG_USERS_OPT_MAX_TABS',       'Максимальное число вкладок');
     define('LANG_USERS_OPT_MAX_TABS_HINT',  'Остальные вкладки будут помещены в пункт «Еще...»<br>0 — бесконечное количество');
     define('LANG_USERS_OPT_AUTH_ONLY',      'Разрешить просмотр профилей только авторизованным пользователям');
+    define('LANG_RULE_USERS_CHANGE_EMAIL',   'Разрешить смену email');
+    define('LANG_RULE_USERS_CHANGE_EMAIL_PERIOD', 'Период возможной смены email, в днях');
+    define('LANG_RULE_USERS_CHANGE_EMAIL_PERIOD_HINT', 'Не указано, можно менять всегда');
+    define('LANG_USERS_EMAIL_VERIFY', 'На адрес <b>%s</b> отправлено письмо. Перейдите по ссылке из письма чтобы активировать смену почты');
     define('LANG_USERS_OPT_WALL_ENABLED',   'Включить стену профиля');
     define('LANG_USERS_OPT_STATUSES_ENABLED',   'Включить статус профиля');
     define('LANG_USERS_OPT_KARMA_COMMENTS', 'Спрашивать пояснение при оценке репутации');
@@ -74,6 +79,7 @@
     define('LANG_USERS_DS_ONLINE',          'Онлайн');
     define('LANG_USERS_DS_RATED',           'Рейтинг');
     define('LANG_USERS_DS_DATE_LOG',        'Дата последнего визита');
+    define('LANG_USERS_OPT_LIST_ALLOWED',   'Список доступен для');
 
     define('LANG_USERS_OPT_FILTER_SHOW',    'Показывать фильтр');
 

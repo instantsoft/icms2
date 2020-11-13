@@ -22,15 +22,15 @@ class modelComments extends cmsModel {
 
     }
 
-    public function updateCommentContent($id, $content, $content_html){
+    public function updateCommentContent($id, $content, $content_html, $data = []){
 
         cmsCache::getInstance()->clean('comments.list');
 
-        return $this->update('comments', $id, array(
+        return $this->update('comments', $id, array_merge([
             'date_last_modified' => null,
-            'content'      => $content,
-            'content_html' => $content_html
-        ));
+            'content'            => $content,
+            'content_html'       => $content_html
+        ], $data));
 
     }
 
@@ -283,6 +283,7 @@ class modelComments extends cmsModel {
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
+                'slug'      => $item['user_slug'],
                 'nickname'  => $item['user_nickname'],
                 'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
@@ -488,12 +489,12 @@ class modelComments extends cmsModel {
     public function getGuestLastCommentTime($ip){
 
         $time = $this->
-                    filterEqual('user_id', 0)->
+                    filterIsNull('user_id')->
                     filterEqual('author_url', $ip)->
                     orderBy('date_pub', 'desc')->
                     getFieldFiltered('comments', 'date_pub');
 
-        return strtotime($time);
+        return $time ? strtotime($time) : 0;
 
     }
 

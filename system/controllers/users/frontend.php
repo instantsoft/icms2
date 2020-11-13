@@ -34,14 +34,28 @@ class users extends cmsFrontend {
 
     public function routeAction($action_name){
 
-        if (!is_numeric($action_name)){ return $action_name; }
+        if (is_numeric($action_name)) {
+
+            // $action_name это id пользователя
+            $profile = $this->model->getUser($action_name);
+            if (!$profile) { cmsCore::error404(); }
+
+            if($profile['slug'] != $action_name){
+                return $this->redirect(href_to('users', $profile['slug'], $this->current_params), 301);
+            }
+
+        } else {
+
+            if ($this->isActionExists($action_name)){
+                return $action_name;
+            }
+
+            $profile = $this->model->getUserBySlug($action_name);
+            if (!$profile) { cmsCore::error404(); }
+        }
 
         // разблокируем вызов экшенов, которым запрещено вызываться напрямую
         $this->lock_explicit_call = false;
-
-        // $action_name это id пользователя
-        $profile = $this->model->getUser($action_name);
-        if (!$profile) { cmsCore::error404(); }
 
         $this->setCurrentProfile($profile);
 
@@ -108,8 +122,8 @@ class users extends cmsFrontend {
         $menu = array(
             array(
                 'title'    => LANG_USERS_PROFILE_INDEX,
-                'url'      => href_to($this->name, $profile['id']),
-                'url_mask' => href_to($this->name, $profile['id'])
+                'url'      => href_to_profile($profile),
+                'url_mask' => href_to_profile($profile)
             )
         );
 
@@ -124,6 +138,9 @@ class users extends cmsFrontend {
 		if ($this->tabs){
 			foreach($this->tabs as $tab){
 
+                // включен ли контроллер
+                if(!$this->isControllerEnabled($tab['controller'])){ continue; }
+
                 // права доступа
                 if (($tab['groups_view'] && !$this->cms_user->isInGroups($tab['groups_view'])) ||
                         ($tab['groups_hide'] && $this->cms_user->isInGroups($tab['groups_hide']))) {
@@ -135,12 +152,9 @@ class users extends cmsFrontend {
                     continue;
                 }
 
-                // включен ли контроллер
-                if(!$this->isControllerEnabled($tab['controller'])){ continue; }
-
 				$default_tab_info = array(
 					'title' => $tab['title'],
-                    'url'   => href_to($this->name, $profile['id'], $tab['name'])
+                    'url'   => href_to_profile($profile, [$tab['name']])
                 );
 
 				if (empty($this->tabs_controllers[$tab['controller']])){
@@ -173,55 +187,47 @@ class users extends cmsFrontend {
 
     public function getProfileEditMenu($profile){
 
-        $menu = array();
+        $menu = [];
 
         $menu[] = array(
             'title' => LANG_USERS_EDIT_PROFILE_MAIN,
-            'controller' => $this->name,
-            'action' => $profile['id'],
-            'params' => 'edit',
+            'url'   => href_to_profile($profile, ['edit'])
         );
 
         if ($this->cms_template->hasProfileThemesOptions() && $this->options['is_themes_on']){
             $menu[] = array(
                 'title' => LANG_USERS_EDIT_PROFILE_THEME,
-                'controller' => $this->name,
-                'action' => $profile['id'],
-                'params' => array('edit', 'theme'),
+                'url'   => href_to_profile($profile, ['edit', 'theme'])
             );
         }
 
-        $menu[] = array(
-            'title' => LANG_USERS_EDIT_PROFILE_NOTICES,
-            'controller' => $this->name,
-            'action' => $profile['id'],
-            'params' => array('edit', 'notices'),
-        );
+        if(cmsEventsManager::getEventListeners('user_notify_types')){
+            $menu[] = array(
+                'title' => LANG_USERS_EDIT_PROFILE_NOTICES,
+                'url'   => href_to_profile($profile, ['edit', 'notices'])
+            );
+        }
 
         if (!empty($this->options['is_friends_on'])){
             $menu[] = array(
                 'title' => LANG_USERS_EDIT_PROFILE_PRIVACY,
-                'controller' => $this->name,
-                'action' => $profile['id'],
-                'params' => array('edit', 'privacy'),
+                'url'   => href_to_profile($profile, ['edit', 'privacy'])
             );
         }
 
         $menu[] = array(
-            'title' => LANG_PASSWORD,
-            'controller' => $this->name,
-            'action' => $profile['id'],
-            'params' => array('edit', 'password'),
+            'title' => LANG_SECURITY,
+            'url'   => href_to_profile($profile, ['edit', 'password'])
         );
 
         $menu[] = array(
-            'title'      => LANG_USERS_SESSIONS,
-            'controller' => $this->name,
-            'action'     => $profile['id'],
-            'params'     => array('edit', 'sessions')
+            'title' => LANG_USERS_SESSIONS,
+            'url'   => href_to_profile($profile, ['edit', 'sessions'])
         );
 
-        return cmsEventsManager::hook('profile_edit_menu', $menu);
+        list($menu, $profile) = cmsEventsManager::hook('profile_edit_menu', array($menu, $profile));
+
+        return $menu;
 
     }
 
@@ -248,10 +254,17 @@ class users extends cmsFrontend {
 
             if (!$field['is_in_filter']) { continue; }
 
+            $field['handler']->setItem(['ctype_name' => 'users', 'id' => null])->setContext('filter');
+
+            $fields[$name] = $field;
+
             if (!$this->request->has($name)){ continue; }
 
             $value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
             if (!$value) { continue; }
+
+            $value = $field['handler']->storeFilter($value);
+			if (!$value) { continue; }
 
             if($field['handler']->applyFilter($this->model, $value) !== false){
                 $filters[$name] = $value;
@@ -260,12 +273,29 @@ class users extends cmsFrontend {
         }
 
         // Получаем количество и список записей
-        $total    = $this->model->getUsersCount();
+        $total = $this->model->getUsersCount();
+
+        if($this->request->has('show_count')){
+
+            $hint = LANG_SHOW.' '.html_spellcount($total, LANG_USERS_SPELL, false, false, 0);
+
+            return $this->cms_template->renderJSON([
+                'count'       => $total,
+                'filter_link' => false,
+                'hint'        => $hint
+            ]);
+
+        }
+
         $profiles = $this->model->getUsers($actions);
 
         if($this->request->isStandard()){
             if(!$profiles && $page > 1){ cmsCore::error404(); }
         }
+
+        $this->model->makeProfileFields($fields, $profiles, $this->cms_user);
+
+        list($profiles, $fields) = cmsEventsManager::hook('profiles_before_list', [$profiles, $fields]);
 
         return $this->cms_template->renderInternal($this, 'list', array(
             'page_url'     => $page_url,
@@ -373,6 +403,16 @@ class users extends cmsFrontend {
         cmsUser::logout();
 
         return;
+
+    }
+
+    public function listIsAllowed() {
+
+        if(empty($this->options['list_allowed'])){
+            return true;
+        }
+
+        return $this->cms_user->isInGroups($this->options['list_allowed']);
 
     }
 

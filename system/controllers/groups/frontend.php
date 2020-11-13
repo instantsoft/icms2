@@ -43,12 +43,21 @@ class groups extends cmsFrontend {
 
         } else {
 
+            if($action_name === 'index' && $this->current_params){
+                return $this->redirect(href_to('groups', $this->current_params[0]), 301);
+            }
+
             if ($this->isActionExists($action_name)){
                 return $action_name;
             }
 
             $group = $this->model->getGroupBySlug($action_name);
-            if (!$group) { cmsCore::error404(); }
+            if (!$group) {
+
+                array_unshift($this->current_params, $action_name);
+
+                return 'index';
+            }
 
         }
 
@@ -185,7 +194,7 @@ class groups extends cmsFrontend {
         return $this;
     }
 
-    public function getGroupForm($group = false){
+    public function getGroupForm($group = false, $action = 'add'){
 
         if($group === false){
 
@@ -212,10 +221,26 @@ class groups extends cmsFrontend {
         $form = new cmsForm();
 
         // Разбиваем поля по группам
-        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user){
+        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($group, $action){
 
-            // проверяем что группа пользователя имеет доступ к редактированию этого поля
-            if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) { return false; }
+            if($action === 'add'){
+                // проверяем что группа пользователя имеет доступ к созданию этого поля
+                // на автора не надо проверять, ибо это и есть автор
+                if ($field['groups_add'] && !$user->isInGroups($field['groups_add'])) {
+                    return false;
+                }
+            } else {
+                // проверяем что группа пользователя имеет доступ к редактированию этого поля
+                if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) {
+                    // если группа пользователя не имеет доступ к редактированию этого поля,
+                    // проверяем на доступ к нему для авторов
+                    if (!empty($group['owner_id']) && !empty($field['options']['author_access'])){
+                        if (!in_array('is_edit', $field['options']['author_access'])){ return false; }
+                        if ($group['owner_id'] == $user->id){ return true; }
+                    }
+                    return false;
+                }
+            }
 
             return true;
 
@@ -268,7 +293,7 @@ class groups extends cmsFrontend {
                 groups::EDIT_POLICY_STAFF => LANG_GROUPS_GROUP_EDIT_STAFF,
             )
         )));
-        if ($this->options['is_wall']){
+        if ($this->options['is_wall'] && cmsController::enabled('wall')){
             $form->addField($fieldset_id, new fieldList('wall_policy', array(
                 'title' => LANG_GROUPS_GROUP_WALL_POLICY,
                 'items' => array(
@@ -330,10 +355,12 @@ class groups extends cmsFrontend {
         }
 
         // ручной ввод SLUG, добавляем поле для этого
-        $slug_field_rules = array( array('slug') );
+        $slug_field_rules = array( array('slug_segment') );
 
         if (!$group_id){ $slug_field_rules[] = array('unique', 'groups', 'slug'); }
         if ($group_id){ $slug_field_rules[] = array('unique_exclude', 'groups', 'slug', $group_id); }
+        // Чтобы не накладывались наборы
+        $slug_field_rules[] = array('unique_ctype_dataset', 'groups', false);
 
         $form->addField($fieldset_id, new fieldString('slug', array(
             'title'  => LANG_SLUG,
@@ -368,10 +395,17 @@ class groups extends cmsFrontend {
 
             if (!$field['is_in_filter']) { continue; }
 
+            $field['handler']->setItem(['ctype_name' => 'groups', 'id' => null])->setContext('filter');
+
+            $fields[$name] = $field;
+
             if (!$this->request->has($name)){ continue; }
 
             $value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
             if (!$value) { continue; }
+
+            $value = $field['handler']->storeFilter($value);
+			if (!$value) { continue; }
 
             if($field['handler']->applyFilter($this->model, $value) !== false){
                 $filters[$name] = $value;
@@ -381,6 +415,19 @@ class groups extends cmsFrontend {
 
         // Получаем количество и список записей
         $total  = $this->model->getGroupsCount();
+
+        if($this->request->has('show_count')){
+
+            $hint = LANG_SHOW.' '.html_spellcount($total, LANG_GROUPS_GROUP_SPELLCOUNT, false, false, 0);
+
+            return $this->cms_template->renderJSON([
+                'count'       => $total,
+                'filter_link' => false,
+                'hint'        => $hint
+            ]);
+
+        }
+
         $groups = $this->model->getGroups();
 
         // если задано максимальное кол-во, ограничиваем им
@@ -512,12 +559,14 @@ class groups extends cmsFrontend {
             }
         }
 
-        $menu[] = array(
-            'title'      => LANG_GROUPS_PROFILE_ACTIVITY,
-            'controller' => $this->name,
-            'action'     => $group['slug'],
-            'params'     => 'activity',
-        );
+        if ($this->isControllerEnabled('activity')) {
+            $menu[] = array(
+                'title'      => LANG_GROUPS_PROFILE_ACTIVITY,
+                'controller' => $this->name,
+                'action'     => $group['slug'],
+                'params'     => 'activity',
+            );
+        }
 
         $menu[] = array(
             'title'      => LANG_GROUPS_PROFILE_MEMBERS,
@@ -530,7 +579,6 @@ class groups extends cmsFrontend {
         list($menu, $group) = cmsEventsManager::hook('group_tabs', array($menu, $group));
 
         return $menu;
-
     }
 
     public function getDatasets(){
@@ -592,7 +640,6 @@ class groups extends cmsFrontend {
         }
 
         return cmsEventsManager::hook('group_datasets', $datasets);
-
     }
 
     public function getGroupEditMenu($group){
@@ -656,7 +703,7 @@ class groups extends cmsFrontend {
         if (!$group['is_approved'] && $group['access']['is_moderator']){
             $tool_buttons['groups_accept'] = array(
                 'title'   => LANG_MODERATION_APPROVE,
-                'options' => array('class' => 'accept'),
+                'options' => ['class' => 'accept', 'icon' => 'check-double'],
                 'url'     => href_to('groups', $group['slug'], array('approve'))
             );
         }
@@ -664,7 +711,7 @@ class groups extends cmsFrontend {
         if ($group['access']['is_can_edit']){
             $tool_buttons['groups_edit'] = array(
                 'title'   => LANG_GROUPS_EDIT,
-                'options' => array('class' => 'settings'),
+                'options' => ['class' => 'settings', 'icon' => 'cogs'],
                 'url'     => href_to('groups', $group['slug'], array('edit'))
             );
         }
@@ -672,7 +719,7 @@ class groups extends cmsFrontend {
         if ($group['access']['is_owner'] || $group['access']['is_moderator']){
             $tool_buttons['change_owner'] = array(
                 'title'   => LANG_GROUPS_CHANGE_OWNER,
-                'options' => array('class' => 'transfer ajax-modal'),
+                'options' => ['class' => 'transfer ajax-modal', 'icon' => 'people-arrows'],
                 'url'     => href_to('groups', $group['slug'], 'change_owner'),
             );
         }
@@ -680,7 +727,7 @@ class groups extends cmsFrontend {
         if ($group['access']['is_can_invite'] && !empty($users_options['is_friends_on'])){
             $tool_buttons['groups_invite'] = array(
                 'title'   => LANG_GROUPS_INVITE_FR,
-                'options' => array('class' => 'group_add ajax-modal'),
+                'options' => ['class' => 'group_add ajax-modal', 'icon' => 'user-friends'],
                 'url'     => href_to('groups', 'invite_friends', $group['id'])
             );
         }
@@ -688,7 +735,7 @@ class groups extends cmsFrontend {
         if ($group['access']['is_can_invite_users']){
             $tool_buttons['groups_invite_users'] = array(
                 'title'   => LANG_GROUPS_INVITE,
-                'options' => array('class' => 'group_add'),
+                'options' => array('class' => 'group_add', 'icon' => 'user-plus'),
                 'url'     => href_to('groups', 'invite_users', $group['id'])
             );
         }
@@ -696,13 +743,13 @@ class groups extends cmsFrontend {
         if ($group['access']['is_can_join']){
             $tool_buttons['groups_join'] = array(
                 'title'   => LANG_GROUPS_JOIN,
-                'options' => array('class' => 'user_add', 'confirm' => LANG_GROUPS_JOIN . '?'),
+                'options' => ['class' => 'user_add', 'confirm' => LANG_GROUPS_JOIN . '?', 'icon' => 'sign-in-alt'],
                 'url'     => href_to('groups', $group['slug'], 'join'),
             );
         } elseif($this->cms_user->is_logged && !$group['access']['is_member'] && $group['join_policy'] != groups::JOIN_POLICY_FREE){
             $tool_buttons['groups_enter'] = array(
                 'title'   => LANG_GROUPS_ENTER,
-                'options' => array('class' => 'invites', 'confirm' => LANG_GROUPS_ENTER_CONFIRM),
+                'options' => ['class' => 'invites', 'confirm' => LANG_GROUPS_ENTER_CONFIRM, 'icon' => 'sign-in-alt'],
                 'url'     => href_to('groups', $group['slug'], 'enter'),
             );
         }
@@ -710,7 +757,7 @@ class groups extends cmsFrontend {
         if ($group['access']['is_member'] && !$group['access']['is_owner']){
             $tool_buttons['groups_leave'] = array(
                 'title'   => LANG_GROUPS_LEAVE,
-                'options' => array('class' => 'user_delete', 'confirm' => LANG_GROUPS_LEAVE . '?'),
+                'options' => ['class' => 'user_delete', 'confirm' => LANG_GROUPS_LEAVE . '?', 'icon' => 'sign-out-alt'],
                 'url'     => href_to('groups', $group['slug'], 'leave'),
             );
         }
@@ -719,13 +766,13 @@ class groups extends cmsFrontend {
             if ($group['is_approved']){
                 $tool_buttons['groups_delete'] = array(
                     'title'   => LANG_GROUPS_DELETE,
-                    'options' => array('class' => 'delete ajax-modal'),
+                    'options' => ['class' => 'delete ajax-modal', 'icon' => 'minus-circle'],
                     'url'     => href_to('groups', $group['slug'], 'delete')
                 );
             } else {
                 $tool_buttons['groups_delete'] = array(
                     'title'   => LANG_GROUPS_REFUSE,
-                    'options' => array('class' => 'delete ajax-modal'),
+                    'options' => ['class' => 'delete ajax-modal', 'icon' => 'minus-square'],
                     'url'     => href_to('groups', $group['slug'], 'delete')
                 );
             }
@@ -736,7 +783,7 @@ class groups extends cmsFrontend {
                 if (!$count['is_in_list']) { continue; }
                 if (!$this->isContentAddAllowed($ctype_name, $group)) { continue; }
                 $tool_buttons['groups_add_'.$ctype_name] = array(
-                    'options' => array('class' => 'add'),
+                    'options' => ['class' => 'add', 'icon' => 'plus-circle'],
                     'title'   => sprintf(LANG_CONTENT_ADD_ITEM, $count['title_add']),
                     'url'     => href_to($ctype_name, 'add') . "?group_id={$group['id']}"
                 );

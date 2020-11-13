@@ -14,17 +14,21 @@
 .chosen-container .chosen-drop {
   position: absolute;
   top: 100%;
-  z-index: 1010;
+  z-index: 10006;
   width: 100%;
   border: 1px solid #aaa;
   border-top: 0;
   background: #fff;
   -webkit-box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
           box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
-  display: none;
+  clip: rect(0, 0, 0, 0);
+  -webkit-clip-path: inset(100% 100%);
+          clip-path: inset(100% 100%);
 }
 .chosen-container.chosen-with-drop .chosen-drop {
-  display: block;
+  clip: auto;
+  -webkit-clip-path: none;
+          clip-path: none;
 }
 .chosen-container a {
   cursor: pointer;
@@ -56,12 +60,7 @@
   white-space: nowrap;
   line-height: 27px;
 }
-.chosen-container-single .chosen-single input[type="text"] {
-  cursor: pointer;
-  opacity: 0;
-  position: absolute;
-  width: 0;
-}
+
 .chosen-container-single .chosen-default {
   color: #999;
 }
@@ -128,28 +127,28 @@
 }
 .chosen-container-single .chosen-drop {
   margin-top: -1px;
-  border-radius: 0 0 4px 4px;
   background-clip: padding-box;
 }
 .chosen-container-single.chosen-container-single-nosearch .chosen-search {
   position: absolute;
-  opacity: 0;
-  pointer-events: none;
+  clip: rect(0, 0, 0, 0);
+  -webkit-clip-path: inset(100% 100%);
+          clip-path: inset(100% 100%);
 }
 .chosen-container .chosen-results {
   color: #444;
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
-  margin: 0 4px 4px 0;
-  padding: 0 0 0 4px;
+  margin: 0;
+  padding: 0;
   max-height: 240px;
   -webkit-overflow-scrolling: touch;
 }
 .chosen-container .chosen-results li {
   display: none;
   margin: 0;
-  padding: 5px 6px;
+  padding: 5px 10px;
   list-style: none;
   line-height: 15px;
   word-wrap: break-word;

@@ -2,16 +2,24 @@
 
 class onContentSitemapSources extends cmsAction {
 
-    public function run(){
+    public function run() {
 
         $ctypes = $this->model->getContentTypes();
 
-        $sources = array_collection_to_list($ctypes, 'name', 'title');
+        $sources = array();
 
-        foreach($sources as $name=>$title){ $sources[$name] = LANG_CONTENT_CONTROLLER . ': ' . $title; }
+        foreach ($ctypes as $ctype) {
+
+            if(!empty($ctype['labels']['many']) && !empty($ctype['is_cats'])){
+                $sources[$ctype['name'].'|cats'] = LANG_CONTENT_CONTROLLER . ': ' . LANG_CATEGORIES . ' ' . $ctype['labels']['many'];
+            }
+
+            $sources[$ctype['name']] = LANG_CONTENT_CONTROLLER . ': ' . $ctype['title'];
+
+        }
 
         return array(
-            'name' => $this->name,
+            'name'    => $this->name,
             'sources' => $sources
         );
 

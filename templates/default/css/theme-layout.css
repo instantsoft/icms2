@@ -37,9 +37,12 @@ body {
 #layout header #logo a, #layout header #logo > span{
     display: block;
     float: left;
-    width: 180px;
+    width: 170px;
+    background-size: contain;
     height: 50px;
-    background: url("../images/logo.png") no-repeat left center;
+    background-image: url(../images/logo.svg);
+    background-repeat: no-repeat;
+    background-position: left center;
 }
 
 /* Header Navigation ======================================================== */
@@ -187,7 +190,7 @@ nav .menu ul {
 }
 
 nav .menu {
-    position: relative; z-index: 5; float: left;
+    z-index: 5; float: left;
     height: 50px;
     line-height: 50px;
 }
@@ -526,62 +529,6 @@ aside .menu .item, section .menu .item {
 
 #layout footer span.item { padding:0 10px; border-left: solid 1px #7f8c8d; }
 
-/* Footer SQL Debug ======================================================== */
-
-#debug_block{
-    display:none;
-}
-
-.queries_wrap .query{
-    padding:10px;
-    margin:10px;
-    background:#FFF;
-    border:solid 1px #DDD;
-}
-
-.queries_wrap .query .src{
-    font-size:12px;
-    color:#999;
-}
-.queries_wrap .query .debug_data{
-    margin-top:4px;
-}
-.queries_wrap .query_time {
-    color: #999;
-    font-size: 12px;
-    margin: 4px 0 0;
-}
-.queries_wrap .red_query {
-    color: #c0392b;
-}
-.queries_wrap .green_query {
-    color: #27ae60;
-}
-#debug_widget.tabs-menu > ul {
-    border-bottom: none;
-    height: 32px;
-    background: #B3C2C9;
-    min-width: 600px;
-}
-#debug_widget.tabs-menu .tabbed li {
-    background: none;
-}
-#debug_widget.tabs-menu .tabbed li a {
-    border: none;
-}
-#debug_widget.tabs-menu .tabbed li a:not(:hover) {
-    color: #EFEFEF;
-}
-#debug_widget.tabs-menu .tabbed li.active a, #debug_widget.tabs-menu .tabbed li.active a:hover {
-    border: none;
-    margin: 0;
-    color: #495358;
-}
-#debug_widget ol {
-    padding: 0;
-    margin: 0;
-}
-
 /* Footer Navigation ======================================================== */
 
 #layout footer #nav {
@@ -612,6 +559,11 @@ aside .menu .item, section .menu .item {
 
 .width_480 {
     width: 480px;
+}
+hr {
+    border-color: #ccc;
+    border-style: solid;
+    border-width: 1px 0 0 0;
 }
 /* Media Queries ============================================================ */
 
@@ -671,7 +623,7 @@ aside .menu .item, section .menu .item {
     }
     #layout header #logo { width:200px; }
     .tabs-menu > ul { display:none; }
-    .tabs-menu select { display:block !important; }
+    .tabs-menu > select { display:block !important; }
     .widget > .title { font-size:14px !important; }
     .widget > .title .links { display:none; }
     .content_item .ft_image { float:none !important; }
@@ -684,7 +636,7 @@ aside .menu .item, section .menu .item {
 
 @media screen and (max-width: 480px) {
     #layout footer #nav { display: none !important; }
-    #breadcrumbs ul li:last-child {
+    #breadcrumbs > ul li:last-child {
         display: none;
     }
     h1 {

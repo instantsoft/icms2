@@ -6,11 +6,9 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
 
         if (!$ctype_id) { cmsCore::error404(); }
 
-        $content_model = cmsCore::getModel('content');
-
         if(is_numeric($ctype_id)){
 
-            $ctype = $content_model->getContentType($ctype_id);
+            $ctype = $this->model_content->getContentType($ctype_id);
             if (!$ctype) { cmsCore::error404(); }
 
             $controller_name = 'content';
@@ -29,20 +27,20 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
                 'id'    => null
             );
 
-            $content_model->setTablePrefix('');
+            $this->model_content->setTablePrefix('');
 
             $controller_name = $ctype_id;
 
         }
 
-        $fields  = $content_model->getContentFields($ctype['name']);
+        $fields  = $this->model_content->getContentFields($ctype['name']);
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
         $cats_list = array();
 
         if($ctype['id']){
 
-            $cats = $content_model->getCategoriesTree($ctype['name'], false);
+            $cats = $this->model_content->getCategoriesTree($ctype['name'], false);
 
             if ($cats){
                 foreach($cats as $c){
@@ -68,7 +66,7 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
                     $dataset['target_controller'] = $controller_name;
                 }
 
-                $dataset_id = $content_model->addContentDataset($dataset, $ctype);
+                $dataset_id = $this->model_content->addContentDataset($dataset, $ctype);
 
                 if ($dataset_id){ cmsUser::addSessionMessage(sprintf(LANG_CP_DATASET_CREATED, $dataset['title']), 'success'); }
 

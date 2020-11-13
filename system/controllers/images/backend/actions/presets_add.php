@@ -34,8 +34,12 @@ class actionImagesPresetsAdd extends cmsAction {
 
                 $id = $this->model->addPreset($preset);
 
+                $preset = cmsEventsManager::hook('images_preset_after_add', $preset);
+
                 // создаем дефолтные миниатюры
                 $this->createDefaultImages($preset);
+
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
                 $this->redirectToAction('presets');
 

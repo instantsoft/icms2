@@ -12,7 +12,7 @@ class actionUsersProfileInvites extends cmsAction {
         }
 
         if (!$profile['invites_count']) {
-            cmsCore::error404();
+            $this->redirectToAction($profile['id']);
         }
 
         // Форма отправлена?
@@ -27,6 +27,7 @@ class actionUsersProfileInvites extends cmsAction {
             $form->addField($fieldset_id, new fieldText('emails', array(
                 'title' => LANG_USERS_INVITES_EMAILS,
                 'hint'  => LANG_USERS_INVITES_EMAILS_HINT,
+                'is_strip_tags' => true,
                 'rules' => array(
                     array('required')
                 )
@@ -77,9 +78,9 @@ class actionUsersProfileInvites extends cmsAction {
                 $results = $this->sendInvites($profile, $input['emails']);
 
                 return $this->cms_template->render('profile_invites_results', array(
-                            'id'      => $profile['id'],
-                            'profile' => $profile,
-                            'results' => $results
+                    'id'      => $profile['id'],
+                    'profile' => $profile,
+                    'results' => $results
                 ));
 
             }
@@ -91,12 +92,12 @@ class actionUsersProfileInvites extends cmsAction {
         }
 
         return $this->cms_template->render('profile_invites', array(
-                    'id'      => $profile['id'],
-                    'profile' => $profile,
-                    'invites' => $invites,
-                    'form'    => $form,
-                    'input'   => $input,
-                    'errors'  => isset($errors) ? $errors : false
+            'id'      => $profile['id'],
+            'profile' => $profile,
+            'invites' => $invites,
+            'form'    => $form,
+            'input'   => $input,
+            'errors'  => isset($errors) ? $errors : false
         ));
 
     }

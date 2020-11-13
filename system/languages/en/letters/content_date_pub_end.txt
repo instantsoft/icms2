@@ -1,0 +1,10 @@
+[subject:Soon the end of publication time - {site}]
+
+Hello, {nickname}.
+
+The publication of your material "<a href="{page_url}">{page_title}</a>" will be discontinued after {date_pub_end}.
+
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

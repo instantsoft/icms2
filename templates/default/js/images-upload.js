@@ -14,14 +14,14 @@ icms.images = (function ($) {
     };
 
     this._showButton = function(field_name){
-        widget = $('#widget_image_'+field_name);
+        var widget = $('#widget_image_'+field_name);
         $('.upload', widget).show();
         $('.loading', widget).hide();
     };
 
     this._onComplete = function(field_name, result){
 
-        widget = $('#widget_image_'+field_name);
+        var widget = $('#widget_image_'+field_name);
 
         if(!result.success) {
             icms.modal.alert(result.error);
@@ -30,6 +30,7 @@ icms.images = (function ($) {
         }
 
         var preview_img_src = null;
+        var image_data = {};
 
         $('.data', widget).html('');
 
@@ -39,16 +40,16 @@ icms.images = (function ($) {
         for(var path in result.paths){
             preview_img_src = preview_img_src || result.paths[path].url;
             $('.data', widget).append('<input type="hidden" name="'+_input_name+'['+path+']" value="'+result.paths[path].path+'" />');
+            image_data[path] = result.paths[path].path;
         }
 
         $('.preview img', widget).attr('src', preview_img_src);
-        $('.preview', widget).show();
+        $('.preview', widget).show().data('paths', image_data);
         $('.loading', widget).hide();
 
-        if (typeof(icms.images.uploadCallback) == 'function'){
+        if (typeof(icms.images.uploadCallback) === 'function'){
             icms.images.uploadCallback(field_name, result);
         }
-
     };
 
     this._onMultiComplete = function (field_name, result){
@@ -229,21 +230,31 @@ icms.images = (function ($) {
     this.remove = function(field_name){
 
         var widget = $('#widget_image_'+field_name);
-        $('.preview', widget).hide();
-        $('.preview img', widget).attr('src', '');
-        $('.upload', widget).show();
-        $('.loading', widget).hide();
-        $('.data', widget).html('');
 
-        if (typeof(icms.images.removeCallback) == 'function'){
-            icms.images.removeCallback(field_name);
-        }
+        var delete_url = $(widget).data('delete_url');
+        var paths = $('.preview', widget).data('paths');
+
+        $.post(delete_url, {paths: paths, csrf_token: icms.forms.getCsrfToken()}, function(result){
+
+            if (result.error){
+                alert(result.message);
+                return false;
+            }
+
+            $('.preview', widget).hide().data('paths', {});
+            $('.preview img', widget).attr('src', '');
+            $('.upload', widget).show();
+            $('.loading', widget).hide();
+            $('.data', widget).html('');
+
+            if (typeof(icms.images.removeCallback) === 'function'){
+                icms.images.removeCallback(field_name);
+            }
+        }, 'json');
 
         return false;
 
     };
-
-    //====================================================================//
 
     this.removeOne = function(field_name, link){
 
@@ -251,20 +262,28 @@ icms.images = (function ($) {
 
         var widget = $('#widget_image_'+field_name);
 
-        $('.data input[rel='+idx+']', widget).remove();
-        $('.preview[rel='+idx+']', widget).remove();
+        var delete_url = $(widget).data('delete_url');
+        var paths = $('.preview[rel='+idx+']', widget).data('paths');
 
-        icms.images.decrementUploadedCount(field_name);
+        $.post(delete_url, {paths: paths, csrf_token: icms.forms.getCsrfToken()}, function(result){
 
-        if (typeof(icms.images.removeCallback) == 'function'){
-            icms.images.removeCallback(field_name, idx);
-        }
+            if (result.error){
+                alert(result.message);
+                return false;
+            }
+
+            $('.data input[rel='+idx+']', widget).remove();
+            $('.preview[rel='+idx+']', widget).remove();
+
+            icms.images.decrementUploadedCount(field_name);
+
+            if (typeof(icms.images.removeCallback) === 'function'){
+                icms.images.removeCallback(field_name, idx);
+            }
+        }, 'json');
 
         return false;
-
     };
-
-    //====================================================================//
 
 	return this;
 

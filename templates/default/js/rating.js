@@ -36,6 +36,8 @@ icms.rating = (function ($) {
                controller: controller,
                subject: subject,
                id: id
+            }, function(){
+                icms.rating.bingInfoPages();
             });
         });
 

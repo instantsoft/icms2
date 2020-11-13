@@ -67,7 +67,7 @@ icms.users = (function ($) {
 
         $('.name', block).removeClass('name_with_status').addClass('name_with_status');
         $('.status .text', block).html(result.content);
-        $('.status .reply a', block).html(LANG_REPLY).attr('href', '?wid='+result.wall_entry_id+'&reply=1');
+        $('.status .reply a', block).html(LANG_REPLY).attr('href', result.status_link);
         $('.status', block).hide().fadeIn(800);
 
     };

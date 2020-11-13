@@ -2,29 +2,33 @@
 
 class actionContentWidgetRelationsAjax extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-		if (!$this->request->isAjax()){ cmsCore::error404(); }
-		if (!cmsUser::isAdmin()) { cmsCore::error404(); }
+        if (!$this->request->isAjax() || !cmsUser::isAdmin()) {
+            return cmsCore::error404();
+        }
 
-		$ctype_id = $this->request->get('value', 0);
-		if (!$ctype_id) { cmsCore::error404(); }
+        $list = ['0' => ''];
+
+        $ctype_id = $this->request->get('value', 0);
+        if (!$ctype_id) {
+            return $this->cms_template->renderJSON($list);
+        }
 
         $ctype = $this->model->getContentType($ctype_id);
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype) {
+            return $this->cms_template->renderJSON($list);
+        }
 
         $parents = $this->model->getContentTypeParents($ctype_id);
 
-		$list = array('0'=>'');
-
         if ($parents) {
-            foreach($parents as $parent){
-                $list[$parent['id']] = "{$ctype['title']} > {$parent['ctype_title']}";
-            };
+            foreach ($parents as $parent) {
+                $list[] = ['title' => $ctype['title'] . ' > ' . $parent['ctype_title'], 'value' => $parent['id']];
+            }
         }
 
-		return $this->cms_template->renderJSON($list);
-
+        return $this->cms_template->renderJSON($list);
     }
 
 }

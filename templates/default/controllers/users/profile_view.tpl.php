@@ -1,12 +1,14 @@
 <?php
 
-    $this->addJS('templates/default/js/jquery-ui.js');
-    $this->addCSS('templates/default/css/jquery-ui.css');
+    $this->addTplJSName('jquery-ui');
+    $this->addTplCSSName('jquery-ui');
 
     $this->setPagePatternTitle($profile, 'nickname');
     $this->setPagePatternDescription($profile, 'nickname');
 
-    $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    if($this->controller->listIsAllowed()){
+        $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    }
     $this->addBreadcrumb($profile['nickname']);
 
     $this->addToolButtons($tool_buttons);
@@ -14,16 +16,17 @@
 ?>
 
 <div id="user_profile_header">
-    <?php $this->renderChild('profile_header', array('profile'=>$profile, 'tabs'=>$tabs)); ?>
+    <?php $this->renderChild('profile_header', ['profile'=>$profile, 'meta_profile' => $meta_profile, 'tabs'=>$tabs]); ?>
 </div>
 
 <div id="user_profile">
 
     <div id="left_column" class="column">
 
-        <?php if ($fields['avatar']['is_in_item']){ ?>
+        <?php if (!empty($fields['avatar']) && $fields['avatar']['is_in_item']){ ?>
             <div id="avatar" class="block">
                 <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname'], $profile['is_deleted']); ?>
+                <?php $this->block('after_profile_avatar'); ?>
             </div>
         <?php } ?>
         <div class="block">
@@ -81,18 +84,13 @@
             </div>
         <?php } ?>
 
+        <?php $this->block('users_profile_view_blocks'); ?>
+
     </div>
 
     <div id="right_column" class="column">
 
             <div id="information" class="content_item block">
-
-                <?php
-                    $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user){
-                        if (in_array($field['name'], array('nickname', 'avatar'))){ return false; }
-                        return true;
-                    }, $profile);
-                ?>
 
                 <?php foreach($fieldsets as $fieldset){ ?>
 
@@ -107,9 +105,6 @@
                     <?php } ?>
 
                     <?php foreach($fieldset['fields'] as $field){ ?>
-
-                        <?php if (empty($profile[$field['name']]) || !$field['is_in_item']) { continue; } ?>
-                        <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
 
                         <?php
                             if (!isset($field['options']['label_in_item'])) {
@@ -126,9 +121,7 @@
                             <?php } ?>
 
                             <div class="value">
-                                <?php
-                                    echo $field['handler']->setItem($profile)->parse( $profile[$field['name']] );
-                                ?>
+                                <?php echo $field['html']; ?>
                             </div>
 
                         </div>
@@ -145,11 +138,7 @@
 
 </div>
 
-<?php if ($wall_html){ ?>
-    <div id="user_profile_wall">
-        <?php echo $wall_html; ?>
-    </div>
-<?php } ?>
+<?php $this->block('users_profile_view_bottom'); ?>
 
 <script>
     $(function() {

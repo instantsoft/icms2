@@ -1,8 +1,6 @@
 <?php
 
-    $this->addJS($this->getJavascriptFileName('content'));
-    $this->addJS($this->getJavascriptFileName('jquery-chosen'));
-    $this->addCSS($this->getTemplateStylesFileName('jquery-chosen'));
+    $this->addTplJSName('content');
 
     $this->setPageTitle($page_title);
 
@@ -24,17 +22,21 @@
 
     $this->addBreadcrumb($page_title);
 
-    $this->addToolButton(array(
-        'class' => 'save',
-        'title' => $button_save_text,
-        'href'  => "javascript:icms.forms.submit()"
-    ));
+    if(!empty($show_save_button) || !isset($show_save_button)){
+        $this->addToolButton(array(
+            'class' => 'save',
+            'title' => $button_save_text,
+            'href'  => "javascript:icms.forms.submit()"
+        ));
+    }
 
-    $this->addToolButton(array(
-        'class' => 'save_draft',
-        'title' => $button_draft_text,
-        'href'  => "javascript:icms.forms.submit('.button.to_draft')"
-    ));
+    if(!$hide_draft_btn){
+        $this->addToolButton(array(
+            'class' => 'save_draft',
+            'title' => $button_draft_text,
+            'href'  => "javascript:icms.forms.submit('.button.to_draft')"
+        ));
+    }
 
     if ($cancel_url){
         $this->addToolButton(array(
@@ -56,6 +58,7 @@
         'buttons' => array(
             array(
                 'title' => $button_draft_text,
+                'hide' => $hide_draft_btn,
                 'name' => 'to_draft',
                 'attributes' => array(
                     'type' => 'submit',
@@ -81,31 +84,17 @@
     </div>
 <?php } ?>
 
-<?php if ($is_multi_cats) { ?>
-	<div class="content_multi_cats_data">
-        <?php echo html_select('add_cats', array(), '', array('multiple'=>true)); ?>
-	</div>
-<?php } ?>
-
-<?php if ($props || $is_multi_cats){ ?>
-    <script>
-		<?php if ($is_multi_cats){ ?>
-			<?php echo $this->getLangJS('LANG_LIST_EMPTY','LANG_SELECT', 'LANG_CONTENT_SELECT_CATEGORIES'); ?>
-			var add_cats = []; /** оставлено для совместимости **/
-            var add_cats_data = [];
-			<?php if (!empty($add_cats)) { ?>
-				<?php foreach($add_cats as $cat_id){ ?>
-					add_cats_data.push(<?php echo $cat_id; ?>);
-				<?php } ?>
-			<?php } ?>
-            icms.content.initMultiCats(add_cats_data);
-		<?php } ?>
-		<?php if ($props){ ?>
-			<?php echo $this->getLangJS('LANG_LOADING'); ?>
-			icms.content.initProps('<?php echo href_to($ctype['name'], 'props'); ?>'<?php if($do=='edit'){ ?>, <?php echo $item['id']; ?><?php } ?>);
-			<?php if ($is_load_props){ ?>
-				icms.content.loadProps();
-			<?php } ?>
-		<?php } ?>
-    </script>
-<?php } ?>
+<?php ob_start(); ?>
+<script>
+    <?php echo $this->getLangJS('LANG_LOADING'); ?>
+    $(function(){
+        icms.content.initMultiCats();
+        <?php if ($props){ ?>
+            icms.content.initProps('<?php echo href_to($ctype['name'], 'props'); ?>'<?php if($do=='edit'){ ?>, <?php echo $item['id']; ?><?php } ?>);
+            <?php if ($is_load_props){ ?>
+                icms.content.loadProps();
+            <?php } ?>
+        <?php } ?>
+    });
+</script>
+<?php $this->addBottom(ob_get_clean()); ?>

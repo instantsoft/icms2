@@ -12,7 +12,7 @@ class formWidgetContentFilterOptions extends cmsForm {
                 'childs' => array(
 
                     new fieldList('options:ctype_name', array(
-                        'generator' => function($item) {
+                        'generator' => function($ctype) {
 
                             $model = cmsCore::getModel('content');
                             $tree = $model->getContentTypes();

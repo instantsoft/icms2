@@ -24,7 +24,7 @@ class actionAdminSettingsSchedulerRun extends cmsAction {
 
         cmsUser::addSessionMessage(sprintf(LANG_CP_SCHEDULER_TASK_RAN, $task['title'], html_date_time()));
 
-        $this->redirectBack();
+        $this->redirectToAction('settings', array('scheduler'));
 
     }
 

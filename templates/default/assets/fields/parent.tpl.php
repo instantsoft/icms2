@@ -1,5 +1,5 @@
 <?php
-    $this->addJS('templates/default/js/content-bind.js');
+    $this->addTplJSNameFromContext('content-bind');
     $ids = array();
 ?>
 
@@ -19,7 +19,7 @@
 </ul>
 
 <?php if ($is_allowed_to_bind) { ?>
-	<?php $url = href_to($ctype_name, 'bind_form', array($child_ctype_name, isset($field->item['id']) ? $field->item['id'] : 0, 'parents')); ?>
+	<?php $url = href_to($ctype_name, 'bind_form', array($child_ctype_name, isset($field_item['id']) ? $field_item['id'] : 0, 'parents')); ?>
 	<a class="add" href="<?php echo $url; ?>?input_action=<?php echo $input_action; ?>"><?php echo ($input_action === 'bind' ? LANG_ADD : LANG_SELECT); ?></a>
 <?php } ?>
 
@@ -34,7 +34,7 @@
             var modal_title = '<?php html(sprintf(LANG_CONTENT_SELECT_ITEM, $parent_ctype['labels']['create'])); ?>';
         <?php } ?>
 
-        var $container = $('#<?php echo $field->element_name; ?>').closest('div.field');
+        var $container = $('#<?php echo $field->id; ?>').closest('div.field');
 
         $container.find('a.add').click(function(e){
 

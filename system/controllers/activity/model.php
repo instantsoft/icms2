@@ -1,6 +1,8 @@
 <?php
 class modelActivity extends cmsModel{
 
+    private $is_joined_user = false;
+
     public function addType($type){
 
         return $this->insert('activity_types', $type);
@@ -112,9 +114,26 @@ class modelActivity extends cmsModel{
 //============================================================================//
 //============================================================================//
 
+    private function joinUserNotDeleted(){
+
+        if ($this->is_joined_user) { return $this; }
+
+        $this->select('u.nickname', 'user_nickname');
+        $this->select('u.avatar', 'user_avatar');
+        $this->select('u.slug', 'user_slug');
+        $this->join('{users}', 'u', 'u.id = i.user_id AND u.is_deleted IS NULL');
+
+        $this->is_joined_user = true;
+
+        return $this;
+
+    }
+
     public function getEntriesCount(){
 
         if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
+
+        $this->joinUserNotDeleted();
 
         $this->useCache('activity.entries');
 
@@ -124,9 +143,7 @@ class modelActivity extends cmsModel{
 
     public function getEntries(){
 
-        $this->select('u.nickname', 'user_nickname');
-        $this->select('u.avatar', 'user_avatar');
-        $this->join('{users}', 'u', 'u.id = i.user_id AND u.is_deleted IS NULL');
+        $this->joinUserNotDeleted();
 
         $this->select('t.description', 'description');
         $this->join('activity_types', 't', 't.id = i.type_id');
@@ -148,6 +165,7 @@ class modelActivity extends cmsModel{
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
+                'slug'      => $item['user_slug'],
                 'nickname'  => $item['user_nickname'],
                 'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
@@ -174,7 +192,7 @@ class modelActivity extends cmsModel{
 
 				foreach($item['images'] as $key => $image){
 					if (strpos($image['src'], 'http') !== 0) {
-						if (!file_exists($config->upload_path . '/' . $image['src'])){
+						if (!file_exists($config->upload_path . $image['src'])){
 							continue;
 						}
 						$image['src'] = $config->upload_host . '/' . $image['src'];

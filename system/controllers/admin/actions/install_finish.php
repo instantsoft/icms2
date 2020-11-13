@@ -96,10 +96,35 @@ class actionAdminInstallFinish extends cmsAction {
 
         }
 
+        // Очищаем нужный кэш
         $cache = cmsCache::getInstance();
 
         $cache->clean('controllers');
         $cache->clean('events');
+        $cache->clean('widgets.bind');
+        $cache->clean('widgets.bind_pages');
+
+        // Очищаем css и js кэш
+        foreach (['css', 'js'] as $type) {
+
+            $cache_folder_path = $this->cms_config->root_path . "cache/static/{$type}";
+
+            files_clear_directory($cache_folder_path);
+
+        }
+
+        // Если задан абстрактный счётчик, увеличиваем на единицу
+        // Если он не задан, то вероятно администратор сайта это сделал
+        // осознано для самостоятельной отладки
+        if($this->cms_config->production_time > 0){
+
+            $values = $this->cms_config->getAll();
+            $values['time_zone'] = $values['cfg_time_zone'];
+            $values['production_time'] += 1;
+
+            $this->cms_config->save($values);
+
+        }
 
         return $success;
 
@@ -136,7 +161,7 @@ class actionAdminInstallFinish extends cmsAction {
             'author'      => (isset($manifest['author']['name']) ? $manifest['author']['name'] : LANG_CP_PACKAGE_NONAME),
             'url'         => (isset($manifest['author']['url']) ? $manifest['author']['url'] : null),
             'version'     => $manifest['version']['major'] . '.' . $manifest['version']['minor'] . '.' . $manifest['version']['build'],
-            'is_backend'  => file_exists($controller_root_path.'backend.php'),
+            'is_backend'  => (file_exists($controller_root_path.'backend.php') || $form),
             'files'       => (!empty($manifest['contents']) ? $manifest['contents'] : null),
             'addon_id'    => (!empty($manifest['info']['addon_id']) ? (int)$manifest['info']['addon_id'] : null),
             'is_external' => 1
@@ -202,6 +227,21 @@ class actionAdminInstallFinish extends cmsAction {
 
     }
 
+    private function copyWidgetImageHint($manifest) {
+
+        if (empty($manifest['info']['image_hint'])){
+            return null;
+        }
+
+        $file_path = 'package-images/widgets/'.($manifest['package']['controller'] ? $manifest['package']['controller'].'_' : '').$manifest['package']['name'].'.'.strtolower(pathinfo($manifest['info']['image_hint'], PATHINFO_EXTENSION));
+
+        if(copy($manifest['info']['image_hint'], $this->cms_config->upload_path.$file_path)){
+            return $file_path;
+        }
+
+        return null;
+    }
+
     private function widgetInstall($manifest) {
 
         $model = new cmsModel();
@@ -215,6 +255,7 @@ class actionAdminInstallFinish extends cmsAction {
             'version'     => $manifest['version']['major'] . '.' . $manifest['version']['minor'] . '.' . $manifest['version']['build'],
             'files'       => (!empty($manifest['contents']) ? $manifest['contents'] : null),
             'addon_id'    => (!empty($manifest['info']['addon_id']) ? (int)$manifest['info']['addon_id'] : null),
+            'image_hint_path' => $this->copyWidgetImageHint($manifest),
             'is_external' => 1
         ));
 
@@ -230,6 +271,7 @@ class actionAdminInstallFinish extends cmsAction {
             'title'      => $manifest['info']['title'],
             'author'     => (isset($manifest['author']['name']) ? $manifest['author']['name'] : LANG_CP_PACKAGE_NONAME),
             'url'        => (isset($manifest['author']['url']) ? $manifest['author']['url'] : null),
+            'image_hint_path' => $this->copyWidgetImageHint($manifest),
             'version'    => $manifest['version']['major'] . '.' . $manifest['version']['minor'] . '.' . $manifest['version']['build']
         );
 

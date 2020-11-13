@@ -2,7 +2,7 @@
 
 class actionAdminUsersGroupDelete extends cmsAction {
 
-    public function run($id){
+    public function run($id = false){
 
         if (!$id) { cmsCore::error404(); }
 

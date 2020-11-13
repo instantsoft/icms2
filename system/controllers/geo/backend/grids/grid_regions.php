@@ -1,12 +1,13 @@
 <?php
 
-function grid_regions($controller){
+function grid_regions($controller) {
 
     $options = array(
         'is_sortable'   => true,
         'is_filter'     => true,
         'is_pagination' => true,
         'is_draggable'  => true,
+        'drag_save_url' => $controller->cms_template->href_to('regions_reorder'),
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => true
@@ -15,20 +16,28 @@ function grid_regions($controller){
     $columns = array(
         'id' => array(
             'title'  => 'ID',
+            'class'  => 'd-none d-lg-table-cell',
             'width'  => 20,
             'filter' => 'exact'
         ),
         'name' => array(
-            'title'  => LANG_TITLE,
-            'href'   => href_to($controller->root_url, 'cities', array('{id}', '{country_id}')),
-            'filter' => 'like',
+            'title'    => LANG_TITLE,
+            'href'     => href_to($controller->root_url, 'cities', array('{id}', '{country_id}')),
+            'filter'   => 'like',
             'editable' => array(
                 'table' => 'geo_regions'
             )
         ),
         'ordering' => array(
             'title' => LANG_GEO_POSITION,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 60
+        ),
+        'is_enabled' => array(
+            'title'       => LANG_IS_ENABLED,
+            'flag'        => true,
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'geo_regions', 'is_enabled')),
+            'width'       => 80
         )
     );
 

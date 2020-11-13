@@ -3,122 +3,151 @@ class cmsWysiwygRedactor {
 
     private static $redactor_loaded = false;
 
-	public function displayEditor($field_id, $content = '', $config = array()){
+    private $options = [
+        'minHeight' => 200,
+        'toolbarFixedBox' => false,
+        'plugins' => []
+    ];
 
-        $this->loadRedactor($config);
+    private $lang = 'en';
 
-        $dom_id = str_replace(array('[',']'), array('_', ''), $field_id);
+    public function __construct($config = []) {
 
-        echo html_textarea($field_id, $content, array('id' => $dom_id, 'class' => 'imperavi_redactor'));
-
-	}
-
-    private function loadRedactor($config = array()) {
-
-        if(self::$redactor_loaded){ return false; }
-
-        $lang = cmsCore::getLanguageName();
-
-        $template = cmsTemplate::getInstance();
         $user = cmsUser::getInstance();
         $core = cmsCore::getInstance();
+        $this->lang = cmsCore::getLanguageName();
 
-        $template->addJSFromContext('wysiwyg/redactor/files/redactor.js');
-        $template->addCSSFromContext('wysiwyg/redactor/files/redactor.css');
-        $template->addJSFromContext('templates/default/js/files.js');
-
-        $options = array();
-
-        $options['plugins'] = array(
-            'fontsize',
-            'fullscreen',
-            'smiles',
-            'spoiler',
-            'fontcolor'
-        );
-
-        if($lang !== 'en'){
-
-            $template->addJSFromContext('wysiwyg/redactor/files/lang/'.$lang.'.js');
-
-            $options['lang'] = $lang;
-
+        if($this->lang !== 'en'){
+            $this->options['lang'] = $this->lang;
         }
 
-        $options['smilesUrl'] = href_to('typograph', 'get_smiles');
-
-        //конвертирование ссылок vimeo и youtube
-        $options['convertVideoLinks'] = true;
-
-        //авторесайз поля ввода
-        $options['autoresize'] = true;
-
-        //отмена конвертирования дивов в параграфы
-        $options['convertDivs'] = false;
-
-        // прилипание тулбара
-        $options['toolbarFixed'] = true;
-        $options['toolbarFixedBox'] = true;
+        $this->options['smilesUrl'] = href_to('typograph', 'get_smiles');
 
         if (!$user->is_admin) {
-            $options['buttonSource'] = false;
+            $this->options['buttonSource'] = false;
         }
 
         if ($user->is_logged) {
 
             $context = $core->getUriData();
-            $upload_params = array();
+            $upload_params = [];
 
             if($context['controller']){
                 $upload_params['target_controller'] = $context['controller'];
             }
 
             if($context['action']){
-                $upload_params['target_subject'] = $context['action'];
+                $upload_params['target_subject'] = mb_substr($context['action'], 0, 32);
             }
 
             if(strpos($core->uri, '/add/') === false && !empty($context['params'][1]) && is_numeric($context['params'][1])){
                 $upload_params['target_id'] = $context['params'][1];
             }
 
-            $options['imageUpload'] = href_to('redactor/upload').($upload_params ? '?'.http_build_query($upload_params) : '');
+            $upload_params_string = ($upload_params ? '?'.http_build_query($upload_params) : '');
 
-            $options['imageGetJson'] = href_to('redactor/images_list').($upload_params ? '?'.http_build_query($upload_params) : '');
+            $this->options['imageUpload'] = href_to('images', 'upload_with_preset', ['file', 'wysiwyg_redactor']).$upload_params_string;
+
+            $this->options['imageGetJson'] = href_to('files', 'files_list', ['image']).$upload_params_string;
 
             if($context['controller'] && $context['action']){
-                $options['predefinedLinks'] = href_to('redactor/links_list').($upload_params ? '?'.http_build_query($upload_params) : '');
+                $this->options['predefinedLinks'] = href_to('wysiwygs', 'links_list').$upload_params_string;
             }
 
         }
 
-        $options['minHeight'] = 200;
+        $this->options = array_replace_recursive($this->options, $config);
 
-        $options = array_merge($options, $config);
+    }
 
-        foreach($options['plugins'] as $plugin){
+	public function displayEditor($field_id, $content = '', $config = []){
 
-            $template->addJSFromContext('wysiwyg/redactor/files/plugins/'.$plugin.'/'.$plugin.'.js');
+        $this->loadRedactor();
 
+        $dom_id = str_replace(array('[',']'), array('_', ''), $field_id);
+
+        if($dom_id){
+            if(!empty($this->options['wysiwyg_toolbar'])){
+                echo '<div data-field_id="'.$dom_id.'" id="wysiwyg_toolbar_'.$dom_id.'" class="wysiwyg_toolbar_wrap">'.$this->options['wysiwyg_toolbar'].'</div>';
+                unset($this->options['wysiwyg_toolbar']);
+            }
+            echo html_textarea($field_id, $content, array('id' => $dom_id, 'class' => 'imperavi_redactor'));
         }
 
-        ?>
+        ob_start(); ?>
 
         <script type="text/javascript">
-            $(function(){
-                var imperavi_options = <?php echo json_encode($options); ?>;
+            <?php if($dom_id){ ?>
+                redactor_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options); ?>;
+                $(function(){
+                    init_redactor('<?php echo $dom_id; ?>');
+                });
+            <?php } else { ?>
+                redactor_global_options['default'] = <?php echo json_encode($this->options); ?>;
+            <?php } ?>
+        </script>
+
+        <?php cmsTemplate::getInstance()->addBottom(ob_get_clean());
+
+	}
+
+    private function loadRedactor() {
+
+        if(self::$redactor_loaded){ return false; }
+
+        $template = cmsTemplate::getInstance();
+
+        $template->addJSFromContext('wysiwyg/redactor/files/redactor.js');
+        $template->addTplJSNameFromContext('files');
+
+        $css_file = 'wysiwyg/redactor/files/redactor.css';
+        $tpl_css_file = cmsTemplate::TEMPLATE_BASE_PATH. $template->name .'/css/wysiwyg/redactor/styles.css';
+        if(is_readable(cmsConfig::get('root_path').$tpl_css_file)){
+            $css_file = $tpl_css_file;
+        }
+        $template->addCSSFromContext($css_file);
+
+        if(!empty($this->options['plugins'])){
+            foreach($this->options['plugins'] as $plugin){
+                $template->addJSFromContext('wysiwyg/redactor/files/plugins/'.$plugin.'/'.$plugin.'.js');
+            }
+        }
+
+        if($this->lang !== 'en'){
+            $template->addJSFromContext('wysiwyg/redactor/files/lang/'.$this->lang.'.js');
+        }
+
+        ob_start(); ?>
+
+        <script type="text/javascript">
+            var redactor_global_options = {};
+            function init_redactor (dom_id){
+                var imperavi_options = {};
+                if(redactor_global_options.hasOwnProperty('field_'+dom_id)){
+                    imperavi_options = redactor_global_options['field_'+dom_id];
+                } else if(redactor_global_options.hasOwnProperty('default')) {
+                    imperavi_options = redactor_global_options.default;
+                }
                 icms.files.url_delete = '<?php echo href_to('files', 'delete'); ?>';
                 imperavi_options.imageDeleteCallback = function (element){
                     if(confirm('<?php echo LANG_PARSER_IMAGE_DELETE; ?>')){
                         icms.files.deleteByPath($(element).attr('src'));
                     }
                 };
-                $('.imperavi_redactor').redactor(imperavi_options);
-            });
+                $('#'+dom_id).redactor(imperavi_options);
+                icms.forms.addWysiwygsInsertPool(dom_id, function(field_element, text){
+                    $('#'+field_element).redactor('set', text);
+                    $('#'+field_element).redactor('focus');
+                });
+                icms.forms.addWysiwygsAddPool(dom_id, function(field_element, text){
+                    $('#'+field_element).redactor('insertText', text);
+                });
+            }
         </script>
 
-       <?php
+        <?php $template->addBottom(ob_get_clean());
 
-       self::$redactor_loaded = true;
+        self::$redactor_loaded = true;
 
     }
 

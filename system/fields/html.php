@@ -14,14 +14,63 @@ class fieldHtml extends cmsFormField {
                 'title' => LANG_PARSER_HTML_EDITOR,
                 'default' => cmsConfig::get('default_editor'),
                 'generator' => function($item){
-                    $items = array();
+                    $items = [];
                     $editors = cmsCore::getWysiwygs();
-                    foreach($editors as $editor){ $items[$editor] = $editor; }
+                    foreach($editors as $editor){
+                        $items[$editor] = ucfirst($editor);
+                    }
+                    $ps = cmsCore::getModel('wysiwygs')->getPresetsList();
+                    if($ps){
+                        foreach ($ps as $key => $value) {
+                            $items[$key] = $value;
+                        }
+                    }
+                    return $items;
+                }
+            )),
+            new fieldList('editor_presets', array(
+                'title'        => LANG_PARSER_HTML_EDITOR_GR,
+                'is_multiple'  => true,
+                'dynamic_list' => true,
+                'select_title' => LANG_SELECT,
+                'multiple_keys' => array(
+                    'group_id' => 'field', 'preset_id' => 'field_select'
+                ),
+                'generator' => function($item){
+                    $users_model = cmsCore::getModel('users');
+
+                    $items = [];
+
+                    $groups = $users_model->getGroups(false);
+
+                    foreach($groups as $group){
+                        $items[$group['id']] = $group['title'];
+                    }
+
+                    return $items;
+                },
+                'values_generator' => function() {
+                    $items = [];
+                    $editors = cmsCore::getWysiwygs();
+                    foreach($editors as $editor){
+                        $items[$editor] = ucfirst($editor);
+                    }
+                    $ps = cmsCore::getModel('wysiwygs')->getPresetsList();
+                    if($ps){
+                        foreach ($ps as $key => $value) {
+                            $items[$key] = $value;
+                        }
+                    }
                     return $items;
                 }
             )),
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
+				'extended_option' => true
+            )),
+            new fieldCheckbox('parse_patterns', array(
+                'title' => LANG_PARSER_PARSE_PATTERNS,
+                'hint' => LANG_PARSER_PARSE_PATTERNS_HINT
             )),
             new fieldCheckbox('build_redirect_link', array(
                 'title' => LANG_PARSER_BUILD_REDIRECT_LINK,
@@ -30,6 +79,13 @@ class fieldHtml extends cmsFormField {
             new fieldNumber('teaser_len', array(
                 'title' => LANG_PARSER_HTML_TEASER_LEN,
                 'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
+				'extended_option' => true
+            )),
+            new fieldCheckbox('show_show_more', array(
+                'title' => LANG_PARSER_SHOW_SHOW_MORE,
+                'default' => false,
+                'visible_depend' => array('options:teaser_len' => array('hide' => array(''))),
+				'extended_option' => true
             )),
             new fieldCheckbox('in_fulltext_search', array(
                 'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
@@ -40,7 +96,25 @@ class fieldHtml extends cmsFormField {
     }
 
     public function getFilterInput($value) {
-        return html_input('text', $this->name, $value);
+        return ($this->show_filter_input_title ? '<label for="'.$this->id.'">'.$this->title.'</label>' : '') . html_input('text', $this->name, $value);
+    }
+
+    public function getStringValue($value){
+
+        if ($this->getOption('parse_patterns') && !empty($this->item)){
+            $value = string_replace_keys_values_extended($value, $this->item);
+        }
+
+        return trim(strip_tags($value));
+    }
+
+    public function afterParse($value, $item){
+
+        if ($this->getOption('parse_patterns')){
+            $value = string_replace_keys_values_extended($value, $item);
+        }
+
+        return $value;
     }
 
     public function parse($value){
@@ -48,17 +122,20 @@ class fieldHtml extends cmsFormField {
         if ($this->getOption('is_html_filter')){
             $value = cmsEventsManager::hook('html_filter', array(
                 'text'                => $value,
-                'is_auto_br'          => false,
+                'is_auto_br'          => $this->getOption('editor') == 'markitup',
                 'build_smiles'        => $this->getOption('editor') == 'markitup', // пока что только так
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ));
         }
 
         return $value;
-
     }
 
     public function parseTeaser($value) {
+
+        if (!empty($this->item['is_private_item'])) {
+            return '<p class="private_field_hint text-muted">'.$this->item['private_item_hint'].'</p>';
+        }
 
         $max_len = $this->getOption('teaser_len');
 
@@ -66,8 +143,8 @@ class fieldHtml extends cmsFormField {
 
             $value = string_short($value, $max_len);
 
-            if(!empty($this->item['ctype']['name']) && !empty($this->item['slug'])){
-                $value .= '<a class="read-more" href="'.href_to($this->item['ctype']['name'], $this->item['slug'].'.html').'">'.LANG_MORE.'</a>';
+            if($this->getOption('show_show_more') && !empty($this->item['ctype']['name']) && !empty($this->item['slug'])){
+                $value .= '<span class="d-block mt-2"><a class="read-more btn btn-outline-info btn-sm" href="'.href_to($this->item['ctype']['name'], $this->item['slug'].'.html').'">'.LANG_MORE.'</a></span>';
             }
 
         } else if ($this->getOption('is_html_filter')){
@@ -77,6 +154,8 @@ class fieldHtml extends cmsFormField {
                 'build_smiles'        => $this->getOption('editor') == 'markitup', // пока что только так
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ));
+        } else if ($this->getOption('parse_patterns') && !empty($this->item)){
+            $value = string_replace_keys_values_extended($value, $this->item);
         }
 
         return $value;
@@ -161,6 +240,18 @@ class fieldHtml extends cmsFormField {
         }
 
         return $paths;
+
+    }
+
+    public function getInput($value){
+
+        $this->data = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->getOption('editor'),
+            'options' => $this->getOption('editor_options', []),
+            'presets' => $this->getOption('editor_presets', [])
+        ]);
+
+        return parent::getInput($value);
 
     }
 

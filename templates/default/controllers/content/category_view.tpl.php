@@ -1,47 +1,5 @@
 <?php
 
-    $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
-    $page_header = isset($category['title']) ? $category['title'] : $list_header;
-    $rss_query = !empty($category['id']) ? "?category={$category['id']}" : '';
-
-    $base_url = $ctype['name'];
-    $base_ds_url = href_to_rel($ctype['name']) . '%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
-
-    if (!$is_frontpage){
-
-		$seo_title = false;
-		if (!empty($ctype['seo_title'])){ $seo_title = $ctype['seo_title']; }
-		if (!empty($category['seo_title'])){ $seo_title = $category['seo_title']; }
-		if (!$seo_title) { $seo_title = $page_header; }
-        if (!empty($current_dataset['title'])){ $seo_title .= ' · '.$current_dataset['title']; }
-        if (!empty($current_dataset['seo_title'])){ $seo_title = $current_dataset['seo_title']; }
-        if (!empty($filter_titles)){ $seo_title .= ', '.implode(', ', $filter_titles); }
-
-        $this->setPageTitle($seo_title);
-
-        if (!empty($ctype['seo_keys'])){ $this->setPageKeywords($ctype['seo_keys']); }
-        if (!empty($ctype['seo_desc'])){ $this->setPageDescription($ctype['seo_desc']); }
-        if (!empty($category['seo_keys'])){ $this->setPageKeywords($category['seo_keys']); }
-        if (!empty($category['seo_desc'])){ $this->setPageDescription($category['seo_desc']); }
-        if (!empty($current_dataset['seo_keys'])){ $this->setPageKeywords($current_dataset['seo_keys']); }
-        if (!empty($current_dataset['seo_desc'])){ $this->setPageDescription($current_dataset['seo_desc']); }
-
-        $meta_item = !empty($category['id']) ? $category : (!empty($current_dataset['id']) ? $current_dataset : array());
-
-        $this->setPageKeywordsItem($meta_item)->setPageDescriptionItem($meta_item)->setPageTitleItem($meta_item);
-
-    }
-
-    if ($ctype['options']['list_on'] && !$request->isInternal() && !$is_frontpage){
-        $this->addBreadcrumb($list_header, href_to($base_url));
-    }
-
-    if (isset($category['path']) && $category['path']){
-        foreach($category['path'] as $c){
-            $this->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
-        }
-    }
-
     if (cmsUser::isAllowed($ctype['name'], 'add')) {
 
         if (!$category['id'] || $user->isInGroups($category['allow_add'])){
@@ -97,7 +55,7 @@
     }
 
 ?>
-<?php if ($page_header && !$request->isInternal() && !$is_frontpage){  ?>
+<?php if ($this->hasPageH1() && !$request->isInternal() && !$is_frontpage){  ?>
     <?php if (!empty($list_styles)){ ?>
         <div class="content_list_styles">
             <?php foreach ($list_styles as $list_style) { ?>
@@ -108,10 +66,7 @@
         </div>
     <?php } ?>
     <h1>
-        <?php echo $page_header; ?>
-        <?php if ($dataset && !empty($current_dataset['title'])){ ?>
-            <span> / <?php echo $current_dataset['title']; ?></span>
-        <?php } ?>
+        <?php $this->pageH1(); ?>
         <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
             <a class="inline_rss_icon" title="RSS" href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>"></a>
         <?php } ?>
@@ -133,22 +88,27 @@
 <?php } ?>
 
 <?php if ($subcats && $ctype['is_cats'] && !empty($ctype['options']['is_show_cats'])){ ?>
-    <div class="gui-panel content_categories<?php if (count($subcats)>8){ ?> categories_small<?php } ?>">
-        <ul class="<?php echo $ctype['name'];?>_icon">
+    <div class="gui-panel content_categories<?php if (count($subcats)>8 && !$ctype['options']['cover_preset']){ ?> categories_small<?php } ?>">
+        <ul class="<?php echo $ctype['name'];?>_icon <?php if($ctype['options']['cover_preset']){ ?>has_cover_preset cover_preset_<?php echo $ctype['options']['cover_preset'];?><?php } ?>">
             <?php foreach($subcats as $c){ ?>
 
             <?php
                 $is_ds_view = empty($current_dataset['cats_view']) || in_array($c['id'], $current_dataset['cats_view']);
                 $is_ds_hide = !empty($current_dataset['cats_hide']) && in_array($c['id'], $current_dataset['cats_hide']);
+                $img_src  = html_image_src($c['cover'], $ctype['options']['cover_preset'], true);
             ?>
 
-                <li class="<?php echo str_replace('/', '-', $c['slug']);?>">
-                    <a href="<?php echo href_to($base_url . (($dataset && $is_ds_view && !$is_ds_hide) ? '-'.$dataset : ''), $c['slug']); ?>"><?php echo $c['title']; ?></a>
+                <li <?php if($img_src){ ?>style="background-image: url(<?php echo $img_src; ?>);"<?php } ?> class="<?php echo str_replace('/', '-', $c['slug']);?> <?php if($img_src){ ?>set_cover_preset<?php } ?>">
+                    <a href="<?php echo href_to((($dataset && $is_ds_view && !$is_ds_hide) ? $ctype['name'].'-'.$dataset : $base_url), $c['slug']); ?>">
+                        <span><?php echo $c['title']; ?></span>
+                    </a>
                 </li>
             <?php } ?>
         </ul>
     </div>
 <?php } ?>
+
+    <?php $this->block('before_content_items_list_html'); ?>
 
 <?php echo $items_list_html; ?>
 

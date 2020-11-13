@@ -4,9 +4,16 @@ class comments extends cmsFrontend {
 
     public $target_controller;
     public $target_subject;
+    public $target_id;
+    public $target_user_id;
+    public $labels;
+    public $comments_title;
+    public $comment_template = 'comment';
 
 	protected $useOptions = true;
     public $useSeoOptions = true;
+
+    protected $unknown_action_as_index_param = true;
 
 	public function __construct($request){
 
@@ -17,17 +24,25 @@ class comments extends cmsFrontend {
         $this->target_id         = $this->request->get('target_id', 0);
         $this->target_user_id    = $this->request->get('target_user_id', 0);
 
+        $this->setLabels($this->request->get('labels', []));
+
     }
 
-    public function routeAction($action_name){
+    public function setLabels($labels) {
 
-        if($this->isActionExists($action_name)){
-            return $action_name;
-        }
+        $this->labels = (object) array_merge([
+            'comments'   => LANG_COMMENTS,
+            'spellcount' => LANG_COMMENT1 . '|' . LANG_COMMENT2 . '|' . LANG_COMMENT10,
+            'add'        => LANG_COMMENT_ADD,
+            'none'       => LANG_COMMENTS_NONE,
+            'low_karma'  => LANG_COMMENTS_LOW_KARMA,
+            'login'      => LANG_COMMENTS_LOGIN,
+            'track'      => LANG_COMMENTS_TRACK,
+            'refresh'    => LANG_COMMENTS_REFRESH,
+            'commenting' => LANG_RULE_CONTENT_COMMENT
+        ], array_filter($labels));
 
-        array_unshift($this->current_params, $action_name);
-
-        return 'index';
+        return $this;
 
     }
 
@@ -41,13 +56,15 @@ class comments extends cmsFrontend {
 
         cmsEventsManager::hook('comments_list_filter', $this->model);
 
-        $comments = $this->model->filterCommentTarget(
+        $comments_count = $this->model->filterCommentTarget(
                 $this->target_controller,
                 $this->target_subject,
                 $this->target_id
-            )->getComments();
+            )->getCommentsCount();
+        $comments = $this->model->getComments();
 
         $comments = cmsEventsManager::hook('comments_before_list', $comments);
+        list($comments, $comments_count) = cmsEventsManager::hook('comments_before_list_this', [$comments, $comments_count, $this]);
 
         $is_tracking = $this->model->filterCommentTarget(
                 $this->target_controller,
@@ -70,15 +87,28 @@ class comments extends cmsFrontend {
             ));
         }
 
+        if(!$this->comments_title){
+            $this->comments_title = ($comments_count ? html_spellcount($comments_count, $this->labels->spellcount) : $this->labels->comments);
+        }
+
+        $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->options['editor'],
+            'presets' => $this->options['editor_presets']
+        ]);
+
         return array(
             'name'  => 'icms',
-            'title' => ($comments ? html_spellcount(sizeof($comments), LANG_COMMENT1, LANG_COMMENT2, LANG_COMMENT10) : LANG_COMMENTS),
+            'title' => $this->comments_title,
             'html'  => $this->cms_template->renderInternal($this, 'list', array(
                 'user'              => $this->cms_user,
+                'editor_params'     => $editor_params,
                 'target_controller' => $this->target_controller,
                 'target_subject'    => $this->target_subject,
                 'target_id'         => $this->target_id,
                 'target_user_id'    => $this->target_user_id,
+                'is_karma_allowed'  => $this->cms_user->is_logged && !cmsUser::isPermittedLimitHigher('comments', 'karma', $this->cms_user->karma),
+                'is_guests_allowed' => !empty($this->options['is_guests']),
+                'can_add'           => cmsUser::isAllowed('comments', 'add') || (!$this->cms_user->is_logged && !empty($this->options['is_guests'])),
                 'is_tracking'       => $is_tracking,
                 'is_highlight_new'  => $is_highlight_new,
                 'comments'          => $comments,
@@ -101,7 +131,11 @@ class comments extends cmsFrontend {
         }
 
         return $this->cms_template->renderInternal($this, 'tab_list', array(
-            'comment_systems' => $comment_systems
+            'comment_systems' => $comment_systems,
+            'target_controller' => $this->target_controller,
+            'target_subject'    => $this->target_subject,
+            'target_id'         => $this->target_id,
+            'target_user_id'    => $this->target_user_id
         ));
 
     }
@@ -133,51 +167,72 @@ class comments extends cmsFrontend {
         // проверяем что кто-либо остался в списке
         if (!$subscribers) { return; }
 
-        $messenger = cmsCore::getController('messages');
-
-        $messenger->addRecipients($subscribers);
-
-        $messenger->sendNoticeEmail('comments_new', array(
+        $notice_data = [
             'page_url'        => href_to_abs($comment['target_url']) . "#comment_{$comment['id']}",
             'page_title'      => $comment['target_title'],
             'author_url'      => href_to_abs('users', $comment['user_id']),
             'author_nickname' => $comment['user_nickname'],
             'comment'         => $comment['content']
-        ));
+        ];
+
+        $messenger = cmsCore::getController('messages');
+
+        $messenger->addRecipients($subscribers);
+
+        $messenger->sendNoticePM(array(
+            'content' => sprintf(LANG_COMMENTS_NEW_NOTIFY, $notice_data['author_url'], $notice_data['author_nickname'], $notice_data['page_title']),
+            'actions' => array(
+                'view' => array(
+                    'title' => LANG_COMMENTS_VIEW,
+                    'href'  => $notice_data['page_url']
+                )
+            )
+        ), 'comments_new');
+
+        $messenger->sendNoticeEmail('comments_new', $notice_data);
 
     }
 
     public function notifyParent($comment, $parent_comment){
 
-        if ($comment['user_id'] && ($comment['user_id'] == $parent_comment['user_id'])) { return; }
+        $success = false;
+
+        if ($comment['user_id'] && ($comment['user_id'] == $parent_comment['user_id'])) { return $success; }
 
         $messenger = cmsCore::getController('messages');
 
-		$is_guest_parent = !$parent_comment['user_id'] && $parent_comment['author_email'];
+		$is_guest_parent  = !$parent_comment['user_id'];
 		$is_guest_comment = !$comment['user_id'];
 
 		$page_url = href_to_abs($comment['target_url']) . "#comment_{$comment['id']}";
 
 		$letter_data = array(
-            'page_url' => $page_url,
-            'page_title' => $comment['target_title'],
-            'author_url' => $is_guest_comment ? $page_url : href_to_abs('users', $comment['user_id']),
+            'page_url'        => $page_url,
+            'page_title'      => $comment['target_title'],
+            'author_url'      => $is_guest_comment ? $page_url : href_to_abs('users', $comment['user_id']),
             'author_nickname' => $is_guest_comment ? $comment['author_name'] : $comment['user_nickname'],
-            'comment' => $comment['content'],
-            'original' => $parent_comment['content'],
+            'comment'         => $comment['content'],
+            'original'        => $parent_comment['content']
         );
 
 		if (!$is_guest_parent){
-			$messenger->addRecipient($parent_comment['user_id']);
-			$messenger->sendNoticeEmail('comments_reply', $letter_data);
+
+			$success = $messenger->addRecipient($parent_comment['user_id'])->
+                    sendNoticeEmail('comments_reply', $letter_data);
+
 		}
 
-		if ($is_guest_parent){
+		if ($is_guest_parent && $parent_comment['author_email']){
+
 			$letter_data['nickname'] = $parent_comment['author_name'];
 			$to = array('name' => $parent_comment['author_name'], 'email' => $parent_comment['author_email']);
 			$letter = array('name' => 'comments_reply');
-			$messenger->sendEmail($to, $letter, $letter_data);
+
+			$success = $messenger->sendEmail($to, $letter, $letter_data);
+
 		}
+
+        return $success;
 
     }
 
@@ -208,6 +263,9 @@ class comments extends cmsFrontend {
 
         // Получаем количество и список записей
         $total = !empty($this->count) ? $this->count : $this->model->getCommentsCount();
+
+        cmsEventsManager::hook('comments_list_filter_after_count', $this->model);
+
         $items = $this->model->getComments();
 
         // если запрос через URL

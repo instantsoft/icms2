@@ -55,16 +55,22 @@ class formWidgetUsersListOptions extends cmsForm {
 
                             if ($fields) {
                                 foreach ($fields as $field) {
+
                                     if(in_array($field['name'], array('nickname', 'avatar'))){
                                         continue;
                                     }
+
+                                    if ($field['is_system'] || !$field['is_in_list']) { continue; }
+
                                     $items[$field['id']] = $field['title'];
+
                                 }
                             }
 
                             return $items;
 
                         },
+                        'visible_depend' => array('options:style' => array('show' => array('list')))
                     )),
 
                     new fieldListGroups('options:groups', array(

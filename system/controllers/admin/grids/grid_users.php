@@ -16,6 +16,7 @@ function grid_users($controller){
     $columns = array(
         'id' => array(
             'title' => 'id',
+            'class' => 'd-none d-lg-table-cell',
             'width' => 30,
             'filter' => 'exact'
         ),
@@ -25,7 +26,7 @@ function grid_users($controller){
             'filter'  => 'like',
             'handler' => function($nickname, $user) {
                 if ($user['is_admin']) {
-                    $nickname = '<b class="tooltip" title="' . LANG_USER_IS_ADMIN . '">' . $nickname . '</b>';
+                    $nickname = '<b data-toggle="tooltip" data-placement="top" title="' . LANG_USER_IS_ADMIN . '">' . $nickname . '</b>';
                 }
                 return $nickname;
             }
@@ -38,6 +39,7 @@ function grid_users($controller){
         'ip' => array(
             'title' => LANG_USERS_PROFILE_LAST_IP,
             'width' => 130,
+            'class' => 'd-none d-xxl-table-cell',
             'filter' => 'like',
             'handler' => function($value){
                 if(!$value){
@@ -45,20 +47,22 @@ function grid_users($controller){
                 } elseif(strpos($value, '127.') === 0){
                     return $value;
                 }
-                return '<a href="#" class="ajaxlink filter_ip tooltip" title="'.LANG_CP_USER_FIND_BYIP.'">'.$value.'</a> <a class="view_target tooltip" href="https://apps.db.ripe.net/search/query.html?searchtext='.$value.'#resultsAnchor" target="_blank" rel="noopener noreferrer" title="'.LANG_CP_USER_RIPE_SEARCH.'"></a>';
+                return '<a href="#" class="ajaxlink filter_ip" data-toggle="tooltip" data-placement="top" title="'.LANG_CP_USER_FIND_BYIP.'">'.$value.'</a> <a class="view_target" data-toggle="tooltip" data-placement="top" href="https://apps.db.ripe.net/db-web-ui/query?searchtext='.$value.'" target="_blank" rel="noopener noreferrer" title="'.LANG_CP_USER_RIPE_SEARCH.'"><i class="icon-globe icons"></i></a>';
             }
         ),
         'date_reg' => array(
             'title' => LANG_REGISTRATION,
+            'class' => 'd-none d-md-table-cell',
             'width' => 80,
             'filter' => 'date',
             'handler' => function($date, $user){
                 $ld = $user['is_online'] ? LANG_ONLINE : LANG_USERS_PROFILE_LOGDATE.' '.string_date_age_max($user['date_log'], true);
-                return '<span class="tooltip" title="'.$ld.'">'.html_date($date).'</span>';
+                return '<span data-toggle="tooltip" data-placement="top" title="'.$ld.'">'.html_date($date).'</span>';
             }
         ),
         'karma' => array(
             'title' => LANG_KARMA,
+            'class' => 'd-none d-xxl-table-cell',
             'width' => 60,
             'filter' => 'exact',
             'handler' => function($value){
@@ -67,23 +71,26 @@ function grid_users($controller){
         ),
         'rating' => array(
             'title' => LANG_RATING,
+            'class' => 'd-none d-xxl-table-cell',
             'width' => 60,
             'filter' => 'exact'
         ),
         'is_locked' => array(
             'title' => LANG_CP_USER_LOCKED,
+            'class' => 'd-none d-sm-table-cell',
             'flag' => 'flag_lock',
             'width' => 24,
             'handler' => function($value, $user){
                 $title = $user['is_locked'] ? ($user['lock_reason'] ? $user['lock_reason'] : LANG_TO.' '.strip_tags(html_date($user['lock_until']))) : '';
-                return '<div class="tooltip" title="'.$title.'">'.$value.'</div>';
+                return '<div data-toggle="tooltip" data-placement="top" title="'.$title.'">'.$value.'</div>';
             }
         ),
         'is_deleted' => array(
             'title' => LANG_ADMIN_IS_DELETED,
+            'class' => 'd-none d-sm-table-cell',
             'width' => 24,
             'handler' => function($value, $user){
-                return '<div class="'.($value ? 'negative' : 'positive').'">'.($value ? LANG_YES : LANG_NO).'</div>';
+                return html_bool_span(($value ? LANG_YES : LANG_NO), !$value);
             }
         )
     );
@@ -91,17 +98,17 @@ function grid_users($controller){
     $actions = array(
         array(
             'title' => LANG_PROFILE,
-            'class' => 'view tooltip',
+            'class' => 'view',
             'href' => href_to('users', '{id}')
         ),
         array(
             'title' => LANG_EDIT,
-            'class' => 'edit tooltip',
+            'class' => 'edit',
             'href'  => href_to('users', '{id}', array('edit')) . '?back=' . href_to($controller->name, 'users')
         ),
         array(
             'title' => LANG_DELETE,
-            'class' => 'delete tooltip',
+            'class' => 'delete',
             'href' => href_to($controller->name, 'users', array('delete', '{id}')),
             'confirm' => LANG_CP_USER_DELETE_CONFIRM
         ),

@@ -1,0 +1,40 @@
+.ui-slider {
+	position: relative;
+	text-align: left;
+    .ui-slider-handle {
+        position: absolute;
+        z-index: 2;
+        width: 1rem;
+        height: 1rem;
+        cursor: pointer;
+        -ms-touch-action: none;
+        touch-action: none;
+        border-radius: 50%;
+    }
+    .ui-slider-range {
+        position: absolute;
+        z-index: 1;
+        display: block;
+        border: 0;
+    }
+}
+.ui-slider-horizontal {
+    height: 0.2rem;
+    border-radius: 0 !important;
+    border: 0 !important;
+    margin: 0 0.5rem;
+}
+.ui-slider-horizontal .ui-slider-handle {
+	top: -0.4rem;
+    margin-left: -0.5rem;
+}
+.ui-slider-horizontal .ui-slider-range {
+	top: 0;
+	height: 100%;
+}
+.ui-slider-horizontal .ui-slider-range-min {
+	left: 0;
+}
+.ui-slider-horizontal .ui-slider-range-max {
+	right: 0;
+}

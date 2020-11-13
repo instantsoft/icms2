@@ -4,17 +4,16 @@ class actionContentFolderEdit extends cmsAction {
 
     public function run(){
 
-        $user = cmsUser::getInstance();
-
         $id = $this->request->get('id', 0);
-        if (!$id) { cmsCore::error404(); }
+        if (!$id) { return cmsCore::error404(); }
 
-        $folder = $this->model->getContentFolder($id);
+        $folder = $this->model->localizedOff()->getContentFolder($id);
+        if (!$folder) { return cmsCore::error404(); }
 
-        if (!$folder) { cmsCore::error404(); }
+        $this->model->localizedRestore();
 
-        if (($folder['user_id'] != $user->id) && !$user->is_admin){
-            cmsCore::error404();
+        if (($folder['user_id'] != $this->cms_user->id) && !$this->cms_user->is_admin){
+            return cmsCore::error404();
         }
 
         $ctype = $this->model->getContentType($folder['ctype_id']);
@@ -22,12 +21,10 @@ class actionContentFolderEdit extends cmsAction {
         $form = $this->getForm('folder');
 
         // Форма отправлена?
-        $is_submitted = $this->request->has('submit');
-
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
             // Парсим форму и получаем поля записи
-            $updated_folder = $form->parse($this->request, $is_submitted);
+            $updated_folder = $form->parse($this->request, true);
 
             // Проверям правильность заполнения
             $errors = $form->validate($this,  $updated_folder);
@@ -47,10 +44,10 @@ class actionContentFolderEdit extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('folder_form', array(
-            'ctype' => $ctype,
+        return $this->cms_template->render('folder_form', array(
+            'ctype'  => $ctype,
             'folder' => $folder,
-            'form' => $form,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

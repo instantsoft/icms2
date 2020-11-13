@@ -84,7 +84,24 @@ class actionMessagesSend extends cmsAction {
         //
         // Отправляем сообщение
         //
-        $content_html = cmsEventsManager::hook('html_filter', $content);
+        $is_textarea_editor = !$this->options['editor'];
+
+        if(!$is_textarea_editor){
+
+            $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+                'editor'  => $this->options['editor'],
+                'presets' => $this->options['editor_presets']
+            ]);
+
+            $is_textarea_editor = $editor_params['editor'] === 'markitup';
+
+        }
+
+        $content_html = cmsEventsManager::hook('html_filter', [
+            'text' => $content,
+            'is_auto_br' => $is_textarea_editor,
+            'build_smiles' => $is_textarea_editor
+        ]);
 
 		if (!$content_html) {
 			$this->cms_template->renderJSON(array(

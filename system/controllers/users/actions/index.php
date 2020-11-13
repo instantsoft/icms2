@@ -4,6 +4,10 @@ class actionUsersIndex extends cmsAction {
 
     public function run($dataset_name = 'all'){
 
+        if(!$this->listIsAllowed()){
+            cmsCore::error404();
+        }
+
         $datasets = $this->getDatasets();
 
         if(!$dataset_name || !isset($datasets[$dataset_name])){

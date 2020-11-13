@@ -1,0 +1,219 @@
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea {
+  display: inline-block;
+  width: 100%;
+  height: $custom-select-height-sm;
+  @include font-size($custom-select-font-size-sm);
+  padding: $custom-select-padding-y-sm ($custom-select-padding-x + $custom-select-indicator-padding) $custom-select-padding-y-sm $custom-select-padding-x-sm;
+  font-family: $custom-select-font-family;
+  font-weight: $custom-select-font-weight;
+  line-height: $custom-select-line-height;
+  color: $input-color;
+  background-color: $input-bg;
+  background-clip: padding-box;
+  border: $input-border-width solid $input-border-color;
+  @include border-radius($input-border-radius, 0);
+  @include box-shadow($input-box-shadow);
+  @include transition($input-transition);
+  &::-ms-expand {
+    background-color: transparent;
+    border: 0;
+  }
+  &:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 $input-color;
+  }
+  @include form-control-focus($ignore-warning: true);
+}
+.ui-widget textarea {
+  height: auto;
+}
+.ui-widget button {
+  display: inline-block;
+  font-family: $btn-font-family;
+  font-weight: $btn-font-weight;
+  color: $body-color;
+  text-align: center;
+  text-decoration: if($link-decoration == none, null, none);
+  white-space: $btn-white-space;
+  vertical-align: middle;
+  user-select: none;
+  background-color: transparent;
+  border: $btn-border-width solid transparent;
+  @include button-size($btn-padding-y, $btn-padding-x, $btn-font-size, $btn-line-height, $btn-border-radius);
+  @include transition($btn-transition);
+  @include hover() {
+    color: $body-color;
+    text-decoration: none;
+  }
+  &:focus,
+  &.focus {
+    outline: 0;
+    box-shadow: $btn-focus-box-shadow;
+  }
+}
+
+.ui-widget-content {
+	border: $input-border-width solid $input-border-color;
+	background: $white;
+    a {
+        color: inherit;
+    }
+}
+
+.ui-widget-header {
+	background: $card-cap-bg;
+	font-weight: bold;
+    align-items: center!important;
+    justify-content: space-between!important;
+    display: flex;
+    a {
+        color: inherit;
+    }
+}
+
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default,
+.ui-button,
+html .ui-button.ui-state-disabled:hover,
+html .ui-button.ui-state-disabled:active {
+	border: 1px solid $gray-300;
+	background: $gray-200;
+	font-weight: normal;
+}
+.ui-state-hover,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-state-focus,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus,
+.ui-button:hover,
+.ui-button:focus {
+	background: $gray-300;
+	color: $white;
+    cursor: pointer;
+}
+.ui-state-hover a,
+.ui-state-hover a:hover,
+.ui-state-hover a:link,
+.ui-state-hover a:visited,
+.ui-state-focus a,
+.ui-state-focus a:hover,
+.ui-state-focus a:link,
+.ui-state-focus a:visited,
+a.ui-button:hover,
+a.ui-button:focus {
+	color: $white;
+	text-decoration: none;
+}
+
+.ui-visual-focus {
+	@include box-shadow($box-shadow);
+}
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active,
+a.ui-button:active,
+.ui-button:active,
+.ui-button.ui-state-active:hover {
+	@include button-variant($primary, $primary);
+}
+
+/* Interaction Cues
+----------------------------------*/
+.ui-state-highlight,
+.ui-widget-content .ui-state-highlight,
+.ui-widget-header .ui-state-highlight {
+    @include button-variant($warning, $warning);
+}
+.ui-state-highlight a,
+.ui-widget-content .ui-state-highlight a,
+.ui-widget-header .ui-state-highlight a, .ui-state-active a,
+.ui-state-active a:link,
+.ui-state-active a:visited,
+.ui-state-error a,
+.ui-widget-content .ui-state-error a,
+.ui-widget-header .ui-state-error a {
+	color: inherit;
+}
+.ui-state-error,
+.ui-widget-content .ui-state-error,
+.ui-widget-header .ui-state-error {
+	@include button-variant($danger, $danger);
+}
+
+.ui-priority-primary,
+.ui-widget-content .ui-priority-primary,
+.ui-widget-header .ui-priority-primary {
+	font-weight: bold;
+}
+.ui-priority-secondary,
+.ui-widget-content .ui-priority-secondary,
+.ui-widget-header .ui-priority-secondary {
+	opacity: .7;
+	font-weight: normal;
+}
+.ui-state-disabled,
+.ui-widget-content .ui-state-disabled,
+.ui-widget-header .ui-state-disabled {
+	opacity: .35;
+	background-image: none;
+}
+
+/* Icons
+----------------------------------*/
+.ui-icon {
+	width: 1rem;
+	height: 1rem;
+}
+.ui-icon-circle-triangle-e {
+    background-image: url(data:image/svg+xml;utf8;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDQwNy40MzYgNDA3LjQzNiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDA3LjQzNiA0MDcuNDM2OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8cG9seWdvbiBwb2ludHM9IjExMi44MTQsMCA5MS41NjYsMjEuMTc4IDI3My41MTIsMjAzLjcxOCA5MS41NjYsMzg2LjI1OCAxMTIuODE0LDQwNy40MzYgMzE1Ljg2OSwyMDMuNzE4ICIvPg0KPC9zdmc+DQo=);
+}
+.ui-icon-circle-triangle-w {
+    background-image: url(data:image/svg+xml;utf8;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDQwNy40MzYgNDA3LjQzNiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDA3LjQzNiA0MDcuNDM2OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8cG9seWdvbiBwb2ludHM9IjMxNS44NjksMjEuMTc4IDI5NC42MjEsMCA5MS41NjYsMjAzLjcxOCAyOTQuNjIxLDQwNy40MzYgMzE1Ljg2OSwzODYuMjU4IDEzMy45MjQsMjAzLjcxOCAiLz4NCjwvc3ZnPg0K);
+}
+
+/* Corner radius */
+@if $enable-rounded {
+    .ui-corner-all,
+    .ui-corner-top,
+    .ui-corner-left,
+    .ui-corner-tl {
+        border-top-left-radius: $border-radius;
+    }
+    .ui-corner-all,
+    .ui-corner-top,
+    .ui-corner-right,
+    .ui-corner-tr {
+        border-top-right-radius: $border-radius;
+    }
+    .ui-corner-all,
+    .ui-corner-bottom,
+    .ui-corner-left,
+    .ui-corner-bl {
+        border-bottom-left-radius: $border-radius;
+    }
+    .ui-corner-all,
+    .ui-corner-bottom,
+    .ui-corner-right,
+    .ui-corner-br {
+        border-bottom-right-radius: $border-radius;
+    }
+}
+.ui-widget-overlay {
+	background: $gray-800;
+	opacity: .3;
+}
+.ui-widget-shadow {
+    @include box-shadow($box-shadow);
+}
+.ui-slider {
+    .ui-slider-range {
+        background-color: $primary;
+    }
+}
+.ui-slider-horizontal {
+    background: $gray-200 !important;
+}

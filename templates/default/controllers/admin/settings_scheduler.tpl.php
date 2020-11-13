@@ -24,7 +24,7 @@
 ?>
 
 <div class="pills-menu">
-    <?php $this->menu('settings'); ?>
+    <?php $this->menu('settings', true, 'nav-pills'); ?>
 </div>
 
 <?php

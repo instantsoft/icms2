@@ -11,6 +11,10 @@ class onContentMenuContent extends cmsAction {
 
             return $this->getMenuAddItems($menu_item_id);
 
+        } elseif ($action == 'add_full'){
+
+            return $this->getMenuAddItems($menu_item_id, true);
+
         } elseif($action == 'private_list') {
 
             if(!$this->cms_user->is_logged){
@@ -20,6 +24,10 @@ class onContentMenuContent extends cmsAction {
             return $this->getMenuPrivateItems($menu_item_id);
 
         } elseif($action == 'trash') {
+
+            if(!$this->cms_user->is_logged){
+                return false;
+            }
 
             $ctypes = $this->model->getContentTypes();
             if (!$ctypes) { return false; }

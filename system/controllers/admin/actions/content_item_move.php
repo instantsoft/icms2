@@ -11,6 +11,7 @@ class actionAdminContentItemMove extends cmsAction {
         $content_model = cmsCore::getModel('content');
 
         $ctype = $content_model->getContentType($ctype_id);
+        if (!$ctype) { return cmsCore::error404(); }
 
 		$fields = $content_model->getContentFields($ctype['name']);
 
@@ -23,9 +24,9 @@ class actionAdminContentItemMove extends cmsAction {
         $form->addField($fieldset_id,
             new fieldList('category_id', array(
                     'default' => $parent_id,
-                    'generator' => function($data){
+                    'generator' => function($data) use($ctype) {
                         $content_model = cmsCore::getModel('content');
-                        $tree = $content_model->getCategoriesTree($data['ctype_name']);
+                        $tree = $content_model->getCategoriesTree($ctype['name']);
                         foreach($tree as $c){
                             $items[$c['id']] = str_repeat('- ', $c['ns_level']).' '.$c['title'];
                         }

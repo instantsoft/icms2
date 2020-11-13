@@ -25,6 +25,7 @@ class modelWall extends cmsModel {
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
+                'slug'      => $item['user_slug'],
                 'nickname'  => $item['user_nickname'],
                 'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
@@ -50,6 +51,7 @@ class modelWall extends cmsModel {
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
+                'slug'      => $item['user_slug'],
                 'nickname'  => $item['user_nickname'],
                 'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
@@ -71,6 +73,7 @@ class modelWall extends cmsModel {
 
                         $item['user'] = array(
                             'id'        => $item['user_id'],
+                            'slug'      => $item['user_slug'],
                             'nickname'  => $item['user_nickname'],
                             'is_online' => $item['is_online'],
                             'avatar'    => $item['user_avatar']
@@ -86,13 +89,20 @@ class modelWall extends cmsModel {
 
     public function getEntryPageNumber($id, $target, $perpage){
 
-        $entries = $this->getEntries($target['profile_type'], $target['profile_id']);
+        $this->selectOnly('id')->limit(false)->
+                filterEqual('profile_id', $target['profile_id'])->
+                filterEqual('parent_id', 0)->
+                filterEqual('profile_type', $target['profile_type']);
+
+        $entries = $this->get('wall_entries');
 
         $index = 0;
 
-        foreach ($entries as $e){
-            $index++;
-            if ($e['id'] == $id){ break; }
+        if($entries){
+            foreach ($entries as $e){
+                $index++;
+                if ($e['id'] == $id){ break; }
+            }
         }
 
         if (!$index) { return 1; }

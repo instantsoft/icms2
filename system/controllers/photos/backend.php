@@ -11,14 +11,18 @@ class backendPhotos extends cmsBackend {
     }
 
     public function getOptionsToolbar(){
+
         cmsCore::loadControllerLanguage('images');
-        return array(
-            array(
-                'class'  => 'settings',
-                'title'  => LANG_IMAGES_CONTROLLER,
-                'href'   => href_to('admin', 'controllers', array('edit', 'images'))
+
+        $this->cms_template->addMenuItem('breadcrumb-menu', [
+            'title' => LANG_IMAGES_CONTROLLER,
+            'url'   => href_to('admin', 'controllers', array('edit', 'images')),
+            'options' => array(
+                'icon'  => 'icon-settings'
             )
-        );
+        ]);
+
+        return [];
     }
 
 }

@@ -22,6 +22,30 @@ function is_config_exists() {
     return is_readable(dirname(PATH).DS.'system/config/config.php');
 }
 
+function get_site_config_env() {
+
+    $env_mapping = [
+        'db_host'        => 'ICMS_MYSQL_DB_HOST',
+        'db_base'        => 'ICMS_MYSQL_DB_BASE',
+        'db_user'        => 'ICMS_MYSQL_DB_USER',
+        'db_pass'        => 'ICMS_MYSQL_DB_PASS',
+        'db_prefix'      => 'ICMS_MYSQL_DB_PREFIX',
+        'db_engine'      => 'ICMS_MYSQL_DB_ENGINE',
+        'db_charset'     => 'ICMS_MYSQL_DB_CHARSET',
+        'clear_sql_mode' => 'ICMS_MYSQL_CLEAR_SQL_MODE',
+        'db_users_table' => 'ICMS_MYSQL_DB_USERS_TABLE',
+        'language'       => 'ICMS_LANGUAGE'
+    ];
+
+    $config = [];
+
+    foreach ($env_mapping as $config_key => $env_key) {
+        $config[$config_key] = getenv($env_key, true) ?: getenv($env_key);
+    }
+
+    return $config;
+}
+
 function get_site_config() {
 
     static $cfg = null;
@@ -31,13 +55,10 @@ function get_site_config() {
     $cfg_file = dirname(PATH).DS.'system/config/config.php';
 
     if(!is_readable($cfg_file)){
-        return false;
+        return get_site_config_env();
     }
 
-    $cfg = include $cfg_file;
-
-    return $cfg;
-
+    return include $cfg_file;
 }
 
 function is_db_connected() {
@@ -74,7 +95,7 @@ function get_db_list() {
             $list = array();
 
             while($data = $r->fetch_assoc()){
-                if(in_array($data['Database'], array('information_schema', 'mysql', 'performance_schema', 'phpmyadmin'))){
+                if(in_array($data['Database'], array('information_schema', 'mysql', 'performance_schema', 'phpmyadmin', 'sys'))){
                     continue;
                 }
                 $list[$data['Database']] = $data['Database'];
@@ -130,6 +151,26 @@ function get_langs(){
 
     return $list;
 
+}
+
+function get_templates(){
+
+    $dir = dirname(PATH).DS. 'templates';
+    $dir_context = opendir($dir);
+
+    $list = array();
+
+    while ($next = readdir($dir_context)){
+
+        if (in_array($next, array('.', '..'))){ continue; }
+        if (strpos($next, '.') === 0){ continue; }
+        if (!is_dir($dir.'/'.$next)) { continue; }
+
+        $list[$dir.'/'.$next] = $next;
+
+    }
+
+    return $list;
 }
 
 function copy_folder($dir_source, $dir_target) {

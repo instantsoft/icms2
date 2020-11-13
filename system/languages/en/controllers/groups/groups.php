@@ -35,7 +35,7 @@
     define('LANG_GROUPS_INVITE_GROUP_USERS', 'Who can invite you to a group');
     define('LANG_GROUPS_ENTER',             'Send a request');
     define('LANG_GROUPS_ENTER_CONFIRM',     'Send a request for membership?');
-    define('LANG_GROUPS_INVITE',            'Invite users to Group');
+    define('LANG_GROUPS_INVITE',            'Invite to Group');
     define('LANG_GROUPS_INVITE_USER',       'Invite current user to Group');
     define('LANG_GROUPS_SELECT_USERS_LIST', 'Select users');
     define('LANG_GROUPS_REQUEST_NOTICE',    '%s wants to join the &laquo;%s&raquo; group');
@@ -110,6 +110,7 @@
     define('LANG_GROUPS_PROFILE_ACTIVITY',  'Activity');
     define('LANG_GROUPS_PROFILE_MEMBERS',   'Members');
     define('LANG_GROUPS_MEMBERS_SPELLCOUNT', 'member|members|members');
+    define('LANG_GROUPS_GROUP_SPELLCOUNT',   'group|groups|groups');
     define('LANG_GROUPS_CTYPES',             'Group content types');
     define('LANG_GROUPS10',                  'groups');
     define('LANG_GROUPS_CTYPE_ACCESS',       'To view a item, you must be a member of the %s group');

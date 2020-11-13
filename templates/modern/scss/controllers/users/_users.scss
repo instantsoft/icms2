@@ -1,0 +1,15 @@
+.icms-users-profile__view {
+    .fieldset_title {
+        border-top: dotted $border-width $border-color;
+        margin-bottom: $spacer*0.75;
+        margin-top: $spacer*1.5;
+        @include clearfix;
+        h3 {
+            margin: -($h5-font-size*$headings-line-height/2) 0 0;
+            background: $white;
+            padding-right: $spacer;
+            float: left;
+            font-size: $h5-font-size;
+        }
+    }
+}

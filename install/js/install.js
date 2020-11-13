@@ -14,7 +14,7 @@ function nextStep(){
     var callback = function(result){
 
         if("html" in result){
-            $('#body').html( result.html );
+            $('#body > .page').html( result.html );
         }
 
         $('#steps li').removeClass('active');
@@ -64,14 +64,19 @@ function submitStep(){
             return;
         }
 
-        alert(result.message);
+        Swal.fire({
+          type: 'error',
+          title: LANG_ERROR,
+          text: result.message,
+          footer: LANG_MANUAL
+        });
 
     }, 'json');
 
 }
 
 function showLoadingIndicator(){
-    $('#body').prepend('<div class="loading-overlay"><div class="sk-circle"><div class="sk-circle1 sk-child"></div><div class="sk-circle2 sk-child"></div><div class="sk-circle3 sk-child"></div><div class="sk-circle4 sk-child"></div><div class="sk-circle5 sk-child"></div><div class="sk-circle6 sk-child"></div><div class="sk-circle7 sk-child"></div><div class="sk-circle8 sk-child"></div><div class="sk-circle9 sk-child"></div><div class="sk-circle10 sk-child"></div><div class="sk-circle11 sk-child"></div><div class="sk-circle12 sk-child"></div></div></div>');
+    $('#body > .page').prepend('<div class="loading-overlay"><div class="sk-circle"><div class="sk-circle1 sk-child"></div><div class="sk-circle2 sk-child"></div><div class="sk-circle3 sk-child"></div><div class="sk-circle4 sk-child"></div><div class="sk-circle5 sk-child"></div><div class="sk-circle6 sk-child"></div><div class="sk-circle7 sk-child"></div><div class="sk-circle8 sk-child"></div><div class="sk-circle9 sk-child"></div><div class="sk-circle10 sk-child"></div><div class="sk-circle11 sk-child"></div><div class="sk-circle12 sk-child"></div></div></div>');
 }
 
 function hideLoadingIndicator(){

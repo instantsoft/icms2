@@ -1,8 +1,10 @@
 <?php
 
-    $this->addJS('templates/default/js/jquery-cookie.js');
-    $this->addJS('templates/default/js/datatree.js');
-    $this->addCSS('templates/default/css/datatree.css');
+    $this->addTplJSName([
+        'jquery-cookie',
+        'datatree'
+        ]);
+    $this->addTplCSSName('datatree');
 
     $this->setPageTitle(LANG_CP_INSTALL_PACKAGE);
     $this->addBreadcrumb(LANG_CP_INSTALL_PACKAGE);

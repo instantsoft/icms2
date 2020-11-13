@@ -9,44 +9,26 @@ class fieldListMultiple extends cmsFormField {
     public $var_type    = 'array';
     public $is_vertical = false;
 
-    public function getOptions(){
+    public function getOptions() {
         return array(
             new fieldCheckbox('show_all', array(
-                'title' => LANG_PARSER_LIST_MULTIPLE_SHOW_ALL,
+                'title'   => LANG_PARSER_LIST_MULTIPLE_SHOW_ALL,
                 'default' => 1
-            )),
+            ))
         );
     }
 
-    public function getListItems(){
+    public function getInput($value) {
 
-        $items = array();
+        $this->data['items'] = ($this->getProperty('show_all') ? array(0 => LANG_ALL) : []) + $this->getListItems();
 
-        if (isset($this->items)){
-
-            $items = $this->items;
-
-        } else if (isset($this->generator)) {
-
-            $generator = $this->generator;
-            $items = $generator($this->item);
-
-        } else if ($this->hasDefaultValue()) {
-
-            $items = string_explode_list($this->getDefaultValue());
-
+        if(is_array($value) && $value){
+            foreach ($value as $k => $v) {
+                if(!is_array($v) && is_numeric($v)){ $value[$k] = (int)$v; }
+            }
         }
 
-        return $items;
-
-    }
-
-    public function getInput($value){
-
-        $this->data['items'] = ( $this->getProperty('show_all') ? array(0 => LANG_ALL) : array() ) + $this->getListItems();
-
         return parent::getInput($value ? $value : array(0));
-
     }
 
 }

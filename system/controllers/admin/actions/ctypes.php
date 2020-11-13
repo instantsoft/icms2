@@ -2,11 +2,13 @@
 
 class actionAdminCtypes extends cmsAction {
 
-    public function run($do=false){
+    public function run($do = false) {
+
+        $this->model_content->reloadAllCtypes(false);
 
         // если нужно, передаем управление другому экшену
         if ($do){
-            $this->runAction('ctypes_'.$do, array_slice($this->params, 1));
+            $this->runExternalAction('ctypes_'.$do, array_slice($this->params, 1));
             return;
         }
 

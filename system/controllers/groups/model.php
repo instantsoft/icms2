@@ -255,6 +255,7 @@ class modelGroups extends cmsModel {
     public function getGroup($id, $field_name = 'id'){
 
         $this->select('u.nickname', 'owner_nickname');
+        $this->select('u.slug', 'owner_slug');
 
         $this->join('{users}', 'u', 'u.id = i.owner_id');
 
@@ -267,6 +268,11 @@ class modelGroups extends cmsModel {
             $group['roles']          = cmsModel::yamlToArray($group['roles']);
             $group['content_roles']  = cmsModel::yamlToArray($group['content_roles']);
             $group['join_roles']     = cmsModel::yamlToArray($group['join_roles']);
+            $group['owner'] = [
+                'id'       => $group['owner_id'],
+                'slug'     => $group['owner_slug'],
+                'nickname' => $group['owner_nickname']
+            ];
             // для связи с типами контента
             $group['ctype_name'] = 'groups';
             $group['user_id'] = $group['owner_id'];
@@ -285,11 +291,17 @@ class modelGroups extends cmsModel {
         return $this->getGroup($id);
     }
 
+    public function getContentTypeTableName($name){
+        return 'groups';
+    }
+
     public function getGroupBySlug($slug){
         return $this->getGroup($slug, 'slug');
     }
 
     public function getUserGroups($user_id){
+
+        $this->useCache('groups.list');
 
         $this->select('g.id', 'id');
         $this->select('g.*');
@@ -519,6 +531,7 @@ class modelGroups extends cmsModel {
         $this->select('u.nickname', 'nickname');
         $this->select('u.email', 'email');
         $this->select('u.avatar', 'avatar');
+        $this->select('u.slug', 'slug');
 
         $this->join('{users}', 'u', 'u.id = i.user_id');
 
