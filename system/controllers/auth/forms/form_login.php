@@ -10,7 +10,7 @@ class formAuthLogin extends cmsForm {
 
             'basic' => array(
                 'type' => 'fieldset',
-                'title' => LANG_LOG_IN_ACCOUNT,
+                'title' => LANG_AUTHORIZATION,
                 'childs' => array(
                     new fieldString('login_email', array(
                         'title' => LANG_EMAIL,

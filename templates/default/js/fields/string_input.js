@@ -5,6 +5,8 @@ function initAutocomplete (field, multiple, url, data, separator){
     var cache = {};
     var min_length = data ? 1 : 2;
 
+    var term_template = "<b class='ui-autocomplete-term'>$1</b>";
+
     var loadSource = function (term, response){
         if(data){
             return loadData(term, response);
@@ -29,6 +31,15 @@ function initAutocomplete (field, multiple, url, data, separator){
 
     var getTerm = function (request_term){
         return request_term.substring(0, getCaretPosition('#'+field)).split(separator).pop().trim();
+    };
+
+    var highlightTerm = function (e,ui) {
+        var autocomplete = $(this).data('ui-autocomplete');
+        autocomplete.menu.element.find('li').each(function() {
+            var me = $(this).find('div');
+            var keywords = autocomplete.term.split(' ').join('|');
+            me.html(me.text().replace(new RegExp("(" + keywords + ")", "gi"), term_template));
+        });
     };
 
     if(multiple){
@@ -95,7 +106,8 @@ function initAutocomplete (field, multiple, url, data, separator){
                 setCaretPosition('#'+field, position);
                 icms.events.run('autocomplete_select', ui);
                 return false;
-            }
+            },
+            open: highlightTerm
         });
     } else {
         $('#'+field).autocomplete({
@@ -111,7 +123,8 @@ function initAutocomplete (field, multiple, url, data, separator){
             },
             select: function( event, ui ) {
                 icms.events.run('autocomplete_select', ui);
-            }
+            },
+            open: highlightTerm
         });
     }
 }

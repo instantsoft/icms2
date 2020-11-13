@@ -15,7 +15,7 @@
         <?php } ?>
     </div>
 
-    <div class="preview block" <?php if (!$is_image_exists) { ?>style="display:none"<?php } ?> data-paths="<?php html(json_encode($paths)); ?>"<?php if ($is_image_exists) { ?> data-paths="<?php html(json_encode($paths)); ?>"<?php } ?>>
+    <div class="preview block" <?php if (!$is_image_exists) { ?>style="display:none"<?php } ?><?php if ($is_image_exists) { ?> data-paths="<?php html(json_encode($paths)); ?>"<?php } ?>>
         <img src="<?php if ($is_image_exists) { echo cmsConfig::get('upload_host') . '/' . reset($paths); } ?>" />
         <a href="javascript:" onclick="icms.images.remove('<?php echo $dom_id; ?>')"><?php echo LANG_DELETE; ?></a>
     </div>

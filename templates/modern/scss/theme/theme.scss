@@ -31,6 +31,32 @@
         background-color: rgba(0, 0, 0, 0.25);
     }
 }
+#mobile_device_type {
+    .icms-user-menu {
+        > .dropdown-menu {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100%;
+            transform: none !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            margin: 0 !important;
+            border-radius: 0;
+            border: none;
+            .dropdown-menu {
+                position: relative;
+                top: auto;
+                right: auto;
+                float: none;
+                margin: 0;
+                border: none;
+                background-color: rgba(0, 0, 0, 0.05);
+                border-radius: 0;
+            }
+        }
+    }
+}
 .loading {
     background-image: url("../images/loading.svg");
     background-repeat: no-repeat;

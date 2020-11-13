@@ -1,4 +1,4 @@
-<html>
+<html class="h-100">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,7 +12,7 @@
         ?>
         <?php $this->printCssTags(); ?>
     </head>
-    <body class="flex-row d-flex align-items-center bg-dark">
+    <body class="flex-row d-flex align-items-center h-100 bg-dark">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-7" id="data-wrap">

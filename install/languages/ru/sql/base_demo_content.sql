@@ -202,14 +202,7 @@ CREATE TABLE `{#}con_articles_fields` (
   `groups_edit` text,
   `filter_view` text,
   PRIMARY KEY (`id`),
-  KEY `ordering` (`ordering`),
-  KEY `is_in_list` (`is_in_list`),
-  KEY `is_in_item` (`is_in_item`),
-  KEY `is_in_filter` (`is_in_filter`),
-  KEY `is_private` (`is_private`),
-  KEY `is_fixed` (`is_fixed`),
-  KEY `is_fixed_type` (`is_fixed_type`),
-  KEY `is_system` (`is_system`)
+  KEY `is_enabled` (`is_enabled`,`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_articles_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_edit`) VALUES
@@ -387,14 +380,7 @@ CREATE TABLE `{#}con_board_fields` (
   `groups_edit` text,
   `filter_view` text,
   PRIMARY KEY (`id`),
-  KEY `ordering` (`ordering`),
-  KEY `is_in_list` (`is_in_list`),
-  KEY `is_in_item` (`is_in_item`),
-  KEY `is_in_filter` (`is_in_filter`),
-  KEY `is_private` (`is_private`),
-  KEY `is_fixed` (`is_fixed`),
-  KEY `is_fixed_type` (`is_fixed_type`),
-  KEY `is_system` (`is_system`)
+  KEY `is_enabled` (`is_enabled`,`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_board_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `is_enabled`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_add`, `groups_edit`, `filter_view`) VALUES
@@ -697,14 +683,7 @@ CREATE TABLE `{#}con_news_fields` (
   `groups_edit` text,
   `filter_view` text,
   PRIMARY KEY (`id`),
-  KEY `ordering` (`ordering`),
-  KEY `is_in_list` (`is_in_list`),
-  KEY `is_in_item` (`is_in_item`),
-  KEY `is_in_filter` (`is_in_filter`),
-  KEY `is_private` (`is_private`),
-  KEY `is_fixed` (`is_fixed`),
-  KEY `is_fixed_type` (`is_fixed_type`),
-  KEY `is_system` (`is_system`)
+  KEY `is_enabled` (`is_enabled`,`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_news_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `is_enabled`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_add`, `groups_edit`, `filter_view`) VALUES
@@ -873,14 +852,7 @@ CREATE TABLE `{#}con_posts_fields` (
   `groups_edit` text,
   `filter_view` text,
   PRIMARY KEY (`id`),
-  KEY `ordering` (`ordering`),
-  KEY `is_in_list` (`is_in_list`),
-  KEY `is_in_item` (`is_in_item`),
-  KEY `is_in_filter` (`is_in_filter`),
-  KEY `is_private` (`is_private`),
-  KEY `is_fixed` (`is_fixed`),
-  KEY `is_fixed_type` (`is_fixed_type`),
-  KEY `is_system` (`is_system`)
+  KEY `is_enabled` (`is_enabled`,`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_posts_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_edit`) VALUES
