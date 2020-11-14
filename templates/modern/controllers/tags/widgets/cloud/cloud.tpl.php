@@ -13,13 +13,15 @@
                 ?>
                 <?php if ($style=='cloud'){ ?>
                     <?php
-                        $size_percent = round(($tag['frequency'] * 100) / $max_freq);
-                        $step = 0;
-                        if($size_percent){
-                            $portion = round(100 / $size_percent, 2);
-                            $step = round(($max_fs - $min_fs) / $portion);
+                        // WebMan: Более красивый подбор размеров шрифта
+                        if ($max_freq == $min_freq) {
+                            // Если мин. и макс. частоты одинаковы, то выбираем средний размер шрифта
+                            $fs = round(($min_fs + $max_fs) / 2);
+                        } else  {
+                            // В противном случае, вычисляем размер шрифта
+                            $step = (($max_fs - $min_fs) * ($tag['frequency'] - $min_freq)) / ($max_freq - $min_freq);
+                            $fs = round($min_fs + $step);
                         }
-                        $fs = $min_fs + $step;
                     ?>
                     <li class="d-inline-block">
                         <a class="btn btn-outline-light mr-1 my-1 icms-btn-tag" style="font-size: <?php echo round($fs/14, 3); ?>rem;<?php if($color){ echo ' color: '.$color; } ?>" href="<?php echo href_to('tags').'/'.urlencode($tag['tag']); ?>">
