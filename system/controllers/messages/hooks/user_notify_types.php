@@ -4,13 +4,16 @@ class onMessagesUserNotifyTypes extends cmsAction {
 
     public function run() {
 
-        return array(
-            'messages_new' => array(
-                'title' => LANG_PM_NOTIFY_NEW,
-                'options' => array('none', 'email')
-            )
-        );
+        if (empty($this->options['is_enable_pm'])) {
+            return false;
+        }
 
+        return [
+            'messages_new' => [
+                'title'   => LANG_PM_NOTIFY_NEW,
+                'options' => ['none', 'email']
+            ]
+        ];
     }
 
 }

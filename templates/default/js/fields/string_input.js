@@ -37,6 +37,7 @@ function initAutocomplete (field, multiple, url, data, separator){
         var autocomplete = $(this).data('ui-autocomplete');
         autocomplete.menu.element.find('li').each(function() {
             var me = $(this).find('div');
+            if(me.length === 0){ me = $(this); }
             var keywords = autocomplete.term.split(' ').join('|');
             me.html(me.text().replace(new RegExp("(" + keywords + ")", "gi"), term_template));
         });

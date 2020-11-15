@@ -40,14 +40,15 @@ class bootstrap4 extends cmsFrontend {
             $scss->setVariables($_vars);
         }
 
+        $result = false;
+
         try {
-            return $scss->compile($data, $scss_file_name);
+            $result = $scss->compile($data, $scss_file_name);
         } catch (Exception $exc) {
             $this->last_compile_error = $exc->getMessage();
         }
 
-        return false;
-
+        return $result;
     }
 
     public function hasCompileMessage() {

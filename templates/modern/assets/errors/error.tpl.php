@@ -17,7 +17,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-7" id="data-wrap">
                     <div class="d-flex align-items-center mb-3">
-                        <h1 class="display-3 my-0 d-flex mr-4 text-danger">
+                        <h1 class="error display-3 my-0 d-flex mr-4 text-danger">
                             <b class="text-danger mr-2"><?php echo html_svg_icon('solid', 'exclamation-triangle'); ?></b>
                             503
                         </h1>

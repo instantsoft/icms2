@@ -293,37 +293,36 @@ function html_image_src($image, $size_preset='small', $is_add_host=false, $is_re
  * @param array $config Параметры редактора
  * @return string HTML код
  */
-function html_wysiwyg($field_id, $content = '', $wysiwyg = false, $config = array()){
+function html_wysiwyg($field_id, $content = '', $wysiwyg = false, $config = []) {
 
-    if (!$wysiwyg){
+    if (!$wysiwyg) {
 
-        if($wysiwyg === null){
-            return '<textarea class="textarea form-control" id="'.$field_id.'" name="'.$field_id.'">'.html($content, false).'</textarea>';
+        if ($wysiwyg === null) {
+            return '<textarea class="textarea form-control" id="' . $field_id . '" name="' . $field_id . '">' . html($content, false) . '</textarea>';
         }
 
         $wysiwyg = cmsConfig::get('default_editor');
-
     }
 
-	$connector = 'wysiwyg/' . $wysiwyg . '/wysiwyg.class.php';
+    $connector = 'wysiwyg/' . $wysiwyg . '/wysiwyg.class.php';
 
-	if (!cmsCore::includeFile($connector)){
-		return '<textarea class="error_wysiwyg" id="'.$field_id.'" name="'.$field_id.'">'.html($content, false).'</textarea>';
-	}
+    if (!cmsCore::includeFile($connector)) {
+        return '<textarea class="error_wysiwyg" id="' . $field_id . '" name="' . $field_id . '">' . html($content, false) . '</textarea>';
+    }
 
     cmsCore::loadControllerLanguage($wysiwyg);
 
-    list($field_id, $content, $wysiwyg, $config) = cmsEventsManager::hook(['display_wysiwyg_editor', 'display_'.$wysiwyg.'_wysiwyg_editor'], array($field_id, $content, $wysiwyg, $config));
+    list($field_id, $content, $wysiwyg, $config) = cmsEventsManager::hook(['display_wysiwyg_editor', 'display_' . $wysiwyg . '_wysiwyg_editor'], array($field_id, $content, $wysiwyg, $config));
 
     $class_name = 'cmsWysiwyg' . ucfirst($wysiwyg);
 
     $editor = new $class_name($config);
 
     // $config передаём для совместимости
-    ob_start(); $editor->displayEditor($field_id, $content, $config);
+    ob_start();
+    $editor->displayEditor($field_id, $content, $config);
 
     return ob_get_clean();
-
 }
 
 /**

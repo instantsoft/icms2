@@ -7,8 +7,14 @@ class formMessagesOptions extends cmsForm {
         return array(
 
             array(
+                'title' => LANG_CP_BASIC,
                 'type' => 'fieldset',
                 'childs' => array(
+
+                    new fieldCheckbox('is_enable_pm', array(
+                        'title' => LANG_PM_IS_ENABLE_PM,
+                        'default' => true
+                    )),
 
                     new fieldList('editor', array(
                         'title' => LANG_PARSER_HTML_EDITOR,
@@ -26,7 +32,8 @@ class formMessagesOptions extends cmsForm {
                                 }
                             }
                             return $items;
-                        }
+                        },
+                        'visible_depend' => array('is_enable_pm' => array('show' => array('1')))
                     )),
 
                     new fieldList('editor_presets', array(
@@ -63,7 +70,8 @@ class formMessagesOptions extends cmsForm {
                                 }
                             }
                             return $items;
-                        }
+                        },
+                        'visible_depend' => array('is_enable_pm' => array('show' => array('1')))
                     )),
 
                     new fieldNumber('limit', array(
@@ -72,14 +80,16 @@ class formMessagesOptions extends cmsForm {
                         'rules' => array(
                             array('required'),
                             array('min', 1)
-                        )
+                        ),
+                        'visible_depend' => array('is_enable_pm' => array('show' => array('1')))
                     )),
 
                     new fieldNumber('time_delete_old', array(
                         'title'   => LANG_PM_TIME_DELETE_OLD,
                         'hint'    => LANG_PM_TIME_DELETE_OLD_HINT,
                         'default' => 0,
-                        'units'   => LANG_DAY10
+                        'units'   => LANG_DAY10,
+                        'visible_depend' => array('is_enable_pm' => array('show' => array('1')))
                     )),
 
                     new fieldList('realtime_mode', array(
@@ -87,7 +97,8 @@ class formMessagesOptions extends cmsForm {
                         'items' => array(
                             'ajax'   => 'Ajax',
                             'socket' => LANG_PM_REALTIME_MODE_SOCKET
-                        )
+                        ),
+                        'visible_depend' => array('is_enable_pm' => array('show' => array('1')))
                     )),
 
                     new fieldNumber('refresh_time', array(
@@ -98,12 +109,12 @@ class formMessagesOptions extends cmsForm {
                             array('required'),
                             array('min', 1)
                         ),
-                        'visible_depend' => array('realtime_mode' => array('show' => array('ajax')))
+                        'visible_depend' => array('realtime_mode' => array('show' => array('ajax')), 'is_enable_pm' => array('hide' => array('0')))
                     )),
 
                     new fieldString('socket_host', array(
                         'title' => LANG_PM_REALTIME_SOCKET_HOST,
-                        'visible_depend' => array('realtime_mode' => array('show' => array('socket')))
+                        'visible_depend' => array('realtime_mode' => array('show' => array('socket')), 'is_enable_pm' => array('hide' => array('0')))
                     )),
 
                     new fieldNumber('socket_port', array(
@@ -112,7 +123,7 @@ class formMessagesOptions extends cmsForm {
                         'rules' => array(
                             array('min', 1)
                         ),
-                        'visible_depend' => array('realtime_mode' => array('show' => array('socket')))
+                        'visible_depend' => array('realtime_mode' => array('show' => array('socket')), 'is_enable_pm' => array('hide' => array('0')))
                     )),
 
                     new fieldCheckbox('use_queue', array(

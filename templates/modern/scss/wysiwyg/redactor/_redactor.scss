@@ -91,7 +91,7 @@ body .redactor_box_fullscreen {
   font-size: $tooltip-font-size;
 }
 .redactor-link-tooltip a {
-  color: #ccc;
+  color: $gray-400;
   margin: 0 5px;
   text-decoration: none;
 }
@@ -122,7 +122,7 @@ body .redactor_box_fullscreen {
   outline: none;
 }
 .redactor_editor .redactor_placeholder {
-  color: $gray-500 !important;
+  color: $gray-400 !important;
   display: block !important;
 }
 .redactor_editor > *:first-child {
@@ -240,7 +240,7 @@ body .redactor_air .redactor_toolbar {
 .redactor_toolbar.redactor-toolbar-typewriter li a:active,
 .redactor_toolbar.redactor-toolbar-typewriter li a.redactor_act {
   outline: none;
-  background-color: #ccc;
+  background-color: $gray-400;
   color: #444;
 }
 .re-icon {
@@ -593,6 +593,7 @@ body .redactor_air .redactor_toolbar {
     color: $gray-600;
     font-size: $font-size-base * 3;
     cursor: pointer;
+    z-index: 1;
 }
 #redactor_modal_close:hover {
   color: $black;
@@ -633,7 +634,6 @@ body .redactor_air .redactor_toolbar {
 }
 #redactor_image_box {
   overflow: auto;
-  margin-bottom: 10px;
   height: 270px;
 }
 #redactor_image_box_select {
@@ -646,27 +646,22 @@ body .redactor_air .redactor_toolbar {
   margin-bottom: 10px;
   max-width: 100px;
   cursor: pointer;
-  border: 1px solid #CCC;
+  border: 1px solid $gray-400;
 }
 #redactor_tabs {
   margin-bottom: $spacer;
+  display: flex;
+  flex-wrap: wrap;
 }
 #redactor_tabs a {
-  display: inline-block;
-  margin-right: 2px;
-  padding: 4px 14px;
-  border: 1px solid #d2d2d2;
-  border-radius: 3px;
-  background: $white;
-  color: $black;
   text-decoration: none;
-  line-height: 1;
-}
-#redactor_tabs a:hover,
-#redactor_tabs a.redactor_tabs_act {
-  border-color: $gray-400;
-  color: $gray-600 !important;
-  text-decoration: none !important;
+  display: block;
+  @include border-radius($nav-pills-border-radius);
+  padding: (0.25*$spacer) (0.75*$spacer);
+  &.redactor_tabs_act {
+    color: $nav-pills-link-active-color;
+    background-color: $nav-pills-link-active-bg;
+  }
 }
 .redactor_modal_btn_hidden {
   display: none;
@@ -717,15 +712,15 @@ body .redactor_air .redactor_toolbar {
 .redactor_droparea {
   position: relative;
   margin: auto;
-  margin-bottom: 5px;
+  margin-bottom: $spacer;
   width: 100%;
 }
 .redactor_droparea .redactor_dropareabox {
   position: relative;
   z-index: 1;
-  padding: 60px 0;
-  width: 99%;
-  border: 1px dashed #ddd;
+  padding: ($spacer*3) 0;
+  width: 100%;
+  border: 1px dashed $gray-500;
   background: $white;
   text-align: center;
 }
@@ -733,17 +728,29 @@ body .redactor_air .redactor_toolbar {
 .redactor_dropalternative, .empty_list {
   color: $gray-800;
 }
+.empty_list {
+  position: relative;
+  padding: $alert-padding-y $alert-padding-x;
+  margin-bottom: $alert-margin-bottom;
+  border: $alert-border-width solid transparent;
+  @include border-radius($alert-border-radius);
+  @include alert-variant(theme-color-level("info", $alert-bg-level), theme-color-level("info", $alert-border-level), theme-color-level("info", $alert-color-level));
+  display: block;
+}
 .redactor_dropareabox.hover {
-  border-color: #aaa;
-  background: #efe3b8;
+  border-color: theme-color-level("warning", $alert-bg-level);
+  background: $warning;
+  color: $white;
 }
 .redactor_dropareabox.error {
-  border-color: #dcc3c3;
-  background: #f7e5e5;
+  border-color: theme-color-level("danger", $alert-bg-level);
+  background: $danger;
+  color: $white;
 }
 .redactor_dropareabox.drop {
-  border-color: #e0e5d6;
-  background: #f4f4ee;
+  border-color: theme-color-level("secondary", $alert-bg-level);
+  background: $secondary;
+  color: $white;
 }
 .redactor_dropdown_box_smiles {
     width: 360px;
