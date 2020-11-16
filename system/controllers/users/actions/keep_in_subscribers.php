@@ -72,7 +72,7 @@ class actionUsersKeepInSubscribers extends cmsAction {
 
         $messenger->addRecipient($friend['id']);
 
-        $sender_link = '<a href="'.href_to($this->name, $this->cms_user->id).'">'.$this->cms_user->nickname.'</a>';
+        $sender_link = '<a href="'.href_to_profile($this->cms_user).'">'.$this->cms_user->nickname.'</a>';
 
         $notice = array(
             'content' => sprintf(LANG_USERS_KEEP_IN_SUBSCRIBERS_NOTICE, $sender_link)

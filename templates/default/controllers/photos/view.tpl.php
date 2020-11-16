@@ -84,11 +84,11 @@
     <div class="right">
         <div class="photo_author">
             <span class="album_user" title="<?php echo LANG_AUTHOR ?>">
-                <a href="<?php echo href_to('users', $photo['user']['id']); ?>">
+                <a href="<?php echo href_to_profile($photo['user']); ?>">
                     <?php echo html_avatar_image($photo['user']['avatar'], 'micro', $photo['user']['nickname']); ?>
                 </a>
             </span>
-            <a href="<?php echo href_to('users', $photo['user']['id']); ?>" title="<?php echo LANG_AUTHOR ?>">
+            <a href="<?php echo href_to_profile($photo['user']); ?>" title="<?php echo LANG_AUTHOR ?>">
                 <?php echo $photo['user']['nickname']; ?>
             </a>
             <span class="album_date" title="<?php echo LANG_DATE_PUB; ?>">

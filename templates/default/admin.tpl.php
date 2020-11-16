@@ -51,7 +51,7 @@
                 <?php } ?>
             </ul>
             <ul id="right_links">
-                <li><a href="<?php echo href_to('users', $user->id); ?>" class="user"><?php echo html_avatar_image($user->avatar, 'micro'); ?><span><?php echo $user->nickname; ?></span></a></li>
+                <li><a href="<?php echo href_to_profile($user); ?>" class="user"><?php echo html_avatar_image($user->avatar, 'micro'); ?><span><?php echo $user->nickname; ?></span></a></li>
                 <?php if($notices_count){ ?>
                     <li class="bell ajax-modal notices-counter">
                         <a href="<?php echo href_to('messages', 'notices'); ?>" title="<?php echo LANG_ADMIN_NOTICES; ?>">

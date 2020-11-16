@@ -2,7 +2,7 @@
 
     <div class="item">
         <?php if(!empty($vote['user']['id'])){ ?>
-            <a href="<?php echo href_to('users', $vote['user']['id']); ?>"><?php html($vote['user']['nickname']); ?></a>
+            <a href="<?php echo href_to_profile($vote['user']); ?>"><?php html($vote['user']['nickname']); ?></a>
         <?php } else { ?>
             <span><?php html($vote['user']['nickname']); ?></span>
         <?php } ?>

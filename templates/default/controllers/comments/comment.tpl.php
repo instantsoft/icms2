@@ -46,7 +46,7 @@
     <div class="info">
         <div class="name">
 			<?php if ($entry['user_id']) { ?>
-				<a class="user" href="<?php echo href_to('users', $entry['user']['id']); ?>"><?php echo $entry['user']['nickname']; ?></a>
+				<a class="user" href="<?php echo href_to_profile($entry['user']); ?>"><?php echo $entry['user']['nickname']; ?></a>
 			<?php } else { ?>
 				<span class="guest_name user"><?php echo $entry['author_name']; ?></span>
 				<?php if ($user->is_admin && !empty($entry['author_url'])) { ?>
@@ -93,7 +93,7 @@
     <div class="body">
         <div class="avatar">
             <?php if ($entry['user_id']) { ?>
-                <a href="<?php echo href_to('users', $entry['user']['id']); ?>" <?php if (!empty($entry['user']['is_online'])){ ?>class="peer_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="peer_no_online"<?php } ?>>
+                <a href="<?php echo href_to_profile($entry['user']); ?>" <?php if (!empty($entry['user']['is_online'])){ ?>class="peer_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="peer_no_online"<?php } ?>>
                     <?php echo html_avatar_image($entry['user']['avatar'], 'micro', $entry['user']['nickname']); ?>
                 </a>
             <?php } else { ?>

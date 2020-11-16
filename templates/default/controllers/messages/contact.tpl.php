@@ -5,7 +5,7 @@
 
     <div class="overview">
         <div id="contact_toggle"></div>
-        <a href="<?php echo href_to('users', $contact['id']); ?>">
+        <a href="<?php echo href_to_profile($contact); ?>">
             <span class="<?php if ($contact['is_online']) { ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
                 <?php echo html_avatar_image($contact['avatar'], 'micro'); ?>
             </span>

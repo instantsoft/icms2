@@ -38,7 +38,7 @@ class onContentSubscribeItemUrl extends cmsAction {
                     $user = $this->model_users->getUser($filters['value']);
 
                     if($user){
-                        $url = href_to_rel('users', (empty($user['slug']) ? $user['id'] : $user['slug']), array('content', $ctype['name']));
+                        $url = href_to_profile($user, array('content', $ctype['name']));
                         $ds_prefix = '/';
 
                     }

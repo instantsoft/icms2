@@ -27,8 +27,9 @@ class actionMessagesPmailing extends cmsAction {
 
             if (!$errors) {
 
-                $sender_id = !empty($user['id']) ? $user['id'] : $this->cms_user->id;
-                $sender_nickname = !empty($user['id']) ? $user['nickname'] : $this->cms_user->nickname;
+                $sender = !empty($user['id']) ? $user : $this->cms_user;
+                $sender_id = $sender['id'];
+                $sender_nickname = $sender['nickname'];
 
                 if ($mailing['groups'] && $mailing['groups'] != array(0)) {
                     $this->model_users->filterGroups($mailing['groups']);
@@ -68,7 +69,7 @@ class actionMessagesPmailing extends cmsAction {
                             }
 
                             $this->controller_messages->sendNoticeEmail('messages_new', array(
-                                'user_url'      => href_to_abs('users', $sender_id),
+                                'user_url'      => href_to_profile($sender, false, true),
                                 'user_nickname' => $sender_nickname,
                                 'message'       => strip_tags($mailing['message_text'])
                             ));

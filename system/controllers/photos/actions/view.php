@@ -71,7 +71,7 @@ class actionPhotosView extends cmsAction {
                 cmsUser::addSessionMessage(sprintf(
                     LANG_CONTENT_PRIVATE_FRIEND_INFO,
                     (!empty($ctype['labels']['one']) ? $ctype['labels']['one'] : LANG_PAGE),
-                    href_to('users', $album['user_id']),
+                    href_to_profile($album['user']),
                     htmlspecialchars($album['user']['nickname'])
                 ), 'info');
                 $this->redirect(href_to($ctype['name']));
@@ -90,7 +90,7 @@ class actionPhotosView extends cmsAction {
                 cmsUser::addSessionMessage(sprintf(
                     LANG_CONTENT_PRIVATE_FRIEND_INFO,
                     LANG_PHOTOS_WP_ITEM,
-                    href_to('users', $photo['user_id']),
+                    href_to_profile($photo['user']),
                     htmlspecialchars($photo['user']['nickname'])
                 ), 'info');
                 $this->redirect(href_to($ctype['name'], $album['slug'] . '.html'));

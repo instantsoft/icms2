@@ -36,9 +36,9 @@
                     <?php if ($this->controller->options['is_wall'] && cmsController::enabled('wall')){ ?>
                         <span class="reply">
                             <?php if (empty($profile['status']['replies_count'])) { ?>
-                                <a href="<?php echo $this->href_to($profile['id']) . "?wid={$profile['status']['wall_entry_id']}&reply=1"; ?>"><?php echo LANG_REPLY; ?></a>
+                                <a href="<?php echo href_to_profile($profile) . "?wid={$profile['status']['wall_entry_id']}&reply=1"; ?>"><?php echo LANG_REPLY; ?></a>
                             <?php } else { ?>
-                                <a href="<?php echo $this->href_to($profile['id']) . "?wid={$profile['status']['wall_entry_id']}"; ?>"><?php echo html_spellcount($profile['status']['replies_count'], LANG_REPLY_SPELLCOUNT); ?></a>
+                                <a href="<?php echo href_to_profile($profile) . "?wid={$profile['status']['wall_entry_id']}"; ?>"><?php echo html_spellcount($profile['status']['replies_count'], LANG_REPLY_SPELLCOUNT); ?></a>
                             <?php } ?>
                         </span>
                     <?php } ?>

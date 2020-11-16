@@ -36,7 +36,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <span>
                             <?php if($show_all_flink){ ?>
-                                <a href="<?php echo $this->href_to($profile['id'], 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
+                                <a href="<?php echo href_to_profile($profile, 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
                             <?php } else { ?>
                                 <?php echo LANG_USERS_FRIENDS; ?>
                             <?php } ?>

@@ -124,7 +124,7 @@ class actionMessagesSend extends cmsAction {
 
             if($this->model->getNewMessagesCount($user_to['id']) == 1){
                 $this->sendNoticeEmail('messages_new', array(
-                    'user_url'      => href_to_abs('users', $this->cms_user->id),
+                    'user_url'      => href_to_profile($this->cms_user, false, true),
                     'user_nickname' => $this->cms_user->nickname,
                     'message'       => strip_tags($content_html)
                 ));

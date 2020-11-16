@@ -14,7 +14,7 @@ class actionUsersProfileFriends extends cmsAction {
 
         $this->model->filterFriends($profile['id'])->disableDeleteFilter();
 
-        $page_url = href_to($this->name, $profile['id'], 'friends');
+        $page_url = href_to_profile($profile, 'friends');
 
         $profiles_list_html = $this->renderProfilesList($page_url, false, array(
             array(

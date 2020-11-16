@@ -37,7 +37,7 @@
                 <?php echo LANG_GROUP_INFO_CREATED_DATE.' '.string_date_age_max($group['date_pub'], true); ?>
             </div>
             <div class="bar_item bi_user">
-                <?php echo LANG_GROUP_INFO_OWNER; ?> <a href="<?php echo href_to('users', $group['owner_id']); ?>"><?php html($group['owner_nickname']); ?></a>
+                <?php echo LANG_GROUP_INFO_OWNER; ?> <a href="<?php echo href_to_profile($group['owner']); ?>"><?php html($group['owner_nickname']); ?></a>
             </div>
             <?php if (!$group['is_approved']){ ?>
                 <div class="bar_item bi_not_approved">
