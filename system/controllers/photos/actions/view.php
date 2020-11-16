@@ -198,7 +198,7 @@ class actionPhotosView extends cmsAction {
             'row_height'    => $this->getRowHeight(),
             'next_photo'    => $next_photo,
             'prev_photo'    => $prev_photo,
-            'downloads'     => $downloads,
+            'downloads'     => !empty($this->options['allow_download']) ? $downloads : [],
             'is_can_set_cover' => $is_can_set_cover,
             'is_can_edit'   => $is_can_edit,
             'is_can_delete' => $is_can_delete,

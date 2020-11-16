@@ -1,7 +1,7 @@
 <?php
 class formAdminWidgetsCols extends cmsForm {
 
-    public function init($do, $col_id) {
+    public function init($do, $col_id, $row) {
 
         return array(
             'basic' => array(
@@ -20,7 +20,25 @@ class formAdminWidgetsCols extends cmsForm {
                         'hint' => LANG_CP_WIDGETS_COL_NAME_HINT,
                         'rules' => array(
                             array('max_length', 50),
-                            $do == 'add' ? ['unique', 'layout_cols', 'name'] : ['unique_exclude', 'layout_cols', 'name', $col_id]
+                            array(function($controller, $data, $value) use($do, $col_id, $row){
+
+                                if (empty($value)) { return true; }
+                                if (!in_array(gettype($value), array('integer','string','double'))) { return ERR_VALIDATE_INVALID; }
+
+                                $model = new cmsModel();
+
+                                $model->filterEqual('name', $value);
+                                $model->filterEqual('r.template', $row['template']);
+
+                                if($col_id){
+                                    $model->filterNotEqual('id', $col_id);
+                                }
+                                $model->joinInner('layout_rows', 'r', 'r.id = i.row_id');
+                                $count = $model->getCount('layout_cols');
+
+                                if ($count) { return ERR_VALIDATE_UNIQUE; }
+                                return true;
+                            })
                         )
                     )),
                     new fieldList('type', array(

@@ -1094,7 +1094,7 @@ class admin extends cmsFrontend {
 
     public function getSchemeColForm($do, $row, $col = []){
 
-        $form = $this->getForm('widgets_cols', [$do, (!empty($col['id']) ? $col['id'] : 0)]);
+        $form = $this->getForm('widgets_cols', [$do, (!empty($col['id']) ? $col['id'] : 0), $row]);
 
         $col_scheme_options = cmsEventsManager::hookAll('admin_col_scheme_options_'.$row['template'], ['add', $row, []]);
 
