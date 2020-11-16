@@ -72,18 +72,23 @@ function rel_to_href($rel_link, $is_abs = false){
  *
  * @param mixed $user Массив данных пользователя
  * @param mixed $params
+ * @param boolean $is_abs
  * @return string
  */
-function href_to_profile($user, $params = false){
+function href_to_profile($user, $params = false, $is_abs = false){
 
-    if(is_array($user)){
-        return href_to('users', (empty($user['slug']) ? $user['id'] : $user['slug']), $params);
-    } elseif(is_object($user)){
-        return href_to('users', (empty($user->slug) ? $user->id : $user->slug), $params);
+    $href_func = 'href_to';
+    if($is_abs){
+        $href_func = 'href_to_abs';
     }
 
-    return href_to('users', $user, $params);
+    if(is_array($user)){
+        return $href_func('users', (empty($user['slug']) ? $user['id'] : $user['slug']), $params);
+    } elseif(is_object($user)){
+        return $href_func('users', (empty($user->slug) ? $user->id : $user->slug), $params);
+    }
 
+    return $href_func('users', $user, $params);
 }
 
 /**

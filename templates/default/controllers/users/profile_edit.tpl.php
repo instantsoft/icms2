@@ -32,7 +32,7 @@
         ob_start(); ?>
 
         <div class="buttons_delete_profile">
-            <?php echo html_button(LANG_USERS_DELETE_PROFILE, 'delete_profile', "icms.users.delete('".href_to('users', $id, 'delete')."', '".LANG_USERS_DELETE_PROFILE."');", array('class'=>'delete_profile')); ?>
+            <?php echo html_button(LANG_USERS_DELETE_PROFILE, 'delete_profile', "icms.users.delete('".href_to_profile($profile, ['delete'])."', '".LANG_USERS_DELETE_PROFILE."');", array('class'=>'delete_profile')); ?>
         </div>
 
         <?php $append_html = ob_get_clean(); ?>

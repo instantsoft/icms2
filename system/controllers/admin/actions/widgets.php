@@ -44,9 +44,13 @@ class actionAdminWidgets extends cmsAction {
 
         $scheme_html = $this->getSchemeHTML($template_name);
 
+        // Пошаговое руководство страницы, если есть
+        $intro_lang = cmsCore::loadLanguage('templates/'.$this->cms_template->name.'/admin/intro/widgets/widgets');
+
         return $this->cms_template->render('widgets', array(
             'is_dynamic_scheme' => $this->is_dynamic_scheme,
             'rows_titles_pos' => $this->rows_titles_pos,
+            'intro_lang'    => $intro_lang,
             'controllers'   => $controllers,
             'template_name' => $template_name,
             'templates'     => $templates,
