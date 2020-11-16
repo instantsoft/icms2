@@ -136,7 +136,7 @@ class actionUsersProfileEdit extends cmsAction {
                             'group_id'      => null,
                             'images'        => array(
                                 array(
-                                    'url' => href_to_profile('users', $profile),
+                                    'url' => href_to_profile($profile),
                                     'src' => html_image_src($new['avatar'], $fields['avatar']['options']['size_full'])
                                 )
                             ),
