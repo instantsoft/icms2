@@ -155,7 +155,7 @@ icms.modal = (function ($) {
                 }
             },
             error: function(result){
-                self.showContent(title, $('#data-wrap', result.responseText).html());
+                self.showContent(title, $('#data-wrap', result.responseText).html(), false, 'bg-dark');
             },
             dataType: 'html'
         });

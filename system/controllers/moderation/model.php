@@ -260,16 +260,32 @@ class modelModeration extends cmsModel {
 
         $this->orderBy('id');
 
-        return $this->get('moderators', false, 'user_id');
-
+        return $this->get('moderators', function($item, $model){
+            $item['user'] = array(
+                'id'        => $item['user_id'],
+                'slug'      => $item['user_slug'],
+                'nickname'  => $item['user_nickname'],
+                'avatar'    => $item['user_avatar'],
+                'groups'    => $item['user_groups']
+            );
+            return $item;
+        }, 'user_id');
     }
 
     public function getContentTypeModerator($id){
 
         $this->joinUser();
 
-        return $this->getItemById('moderators', $id);
-
+        return $this->getItemById('moderators', $id, function($item, $model){
+            $item['user'] = array(
+                'id'        => $item['user_id'],
+                'slug'      => $item['user_slug'],
+                'nickname'  => $item['user_nickname'],
+                'avatar'    => $item['user_avatar'],
+                'groups'    => $item['user_groups']
+            );
+            return $item;
+        });
     }
 
     public function addContentTypeModerator($ctype_name, $user_id){

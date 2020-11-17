@@ -1,5 +1,5 @@
 <?php $config = cmsConfig::getInstance(); ?>
-<html>
+<html class="h-100">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,7 +21,7 @@
         <?php $this->printCssTags(); ?>
     </head>
     <body class="h-100 flex-row d-flex align-items-center bg-secondary">
-        <div class="container">
+        <section class="container">
             <?php $messages = cmsUser::getSessionMessages(); if ($messages){ foreach($messages as $message){ ?>
             <div class="alert alert-<?php echo str_replace(['error'], ['danger'], $message['class']); ?> alert-dismissible fade show" role="alert">
                 <?php echo $message['text']; ?>
@@ -30,7 +30,7 @@
                 </button>
             </div>
             <?php } } ?>
-            <div class="row justify-content-center">
+            <main class="row justify-content-center">
                 <div class="col-md-6 text-center text-white">
                     <div class="display-3">
                         <b class="text-warning">
@@ -42,13 +42,13 @@
                         <p><?php echo $reason; ?></p>
                     <?php } ?>
                 </div>
-            </div>
-        </div>
-        <div class="position-fixed fixed-bottom pb-2">
+            </main>
+        </section>
+        <footer class="position-fixed fixed-bottom pb-2">
             <a class="text-center text-white d-block ajaxlink ajax-modal" title="<?php echo LANG_LOGIN_ADMIN; ?>" href="<?php echo href_to('auth', 'login'); ?>">
                 <?php echo LANG_LOGIN_ADMIN; ?>
             </a>
-        </div>
+        </footer>
         <?php $this->printJavascriptTags(); ?>
         <?php $this->bottom(); ?>
     </body>

@@ -378,77 +378,70 @@ class modelContent extends cmsModel {
 //======================    ПАПКИ КОНТЕНТА   =================================//
 //============================================================================//
 
-    public function addContentFolder($ctype_id, $user_id, $title){
-
-        return $this->insert('content_folders', array(
+    public function addContentFolder($ctype_id, $user_id, $title) {
+        return $this->insert('content_folders', [
             'ctype_id' => $ctype_id,
-            'user_id' => $user_id,
-            'title' => $title
-        ));
-
+            'user_id'  => $user_id,
+            'title'    => $title
+        ]);
     }
 
-    public function getContentFolders($ctype_id, $user_id){
-
-        $this->
-            filterEqual('ctype_id', $ctype_id)->
-            filterEqual('user_id', $user_id);
-
-        return $this->get('content_folders');
-
+    public function getContentFolders($ctype_id, $user_id) {
+        return $this->filterEqual('ctype_id', $ctype_id)->
+                filterEqual('user_id', $user_id)->
+                get('content_folders');
     }
 
-    public function getContentFolder($id){
-
-        return $this->getItemById('content_folders', $id);
-
+    public function getContentFolder($id) {
+        return $this->joinUserLeft()->getItemById('content_folders', $id, function($item, $model){
+            $item['user'] = array(
+                'id'        => $item['user_id'],
+                'slug'      => $item['user_slug'],
+                'nickname'  => $item['user_nickname'],
+                'avatar'    => $item['user_avatar']
+            );
+            return $item;
+        });
     }
 
-    public function getContentFolderByTitle($title, $ctype_id, $user_id){
-
-        $this->filterEqual('ctype_id', $ctype_id)->
-            filterEqual('user_id', $user_id);
-
-        return $this->getItemByField('content_folders', 'title', $title);
-
+    public function getContentFolderByTitle($title, $ctype_id, $user_id) {
+        return $this->filterEqual('ctype_id', $ctype_id)->
+                filterEqual('user_id', $user_id)->
+                getItemByField('content_folders', 'title', $title);
     }
 
-    public function updateContentFolder($id, $folder){
-
+    public function updateContentFolder($id, $folder) {
         return $this->update('content_folders', $id, $folder);
-
     }
 
-    public function deleteContentFolder($folder, $is_delete_content=true){
+    public function deleteContentFolder($folder, $is_delete_content = true) {
 
         $ctype = $this->getContentType($folder['ctype_id']);
 
         $this->filterEqual('folder_id', $folder['id']);
 
-        if (!$is_delete_content){
+        if (!$is_delete_content) {
             $table_name = $this->table_prefix . $ctype['name'];
-            $this->updateFiltered($table_name, array(
+            $this->updateFiltered($table_name, [
                 'folder_id' => null
-            ));
+            ]);
         }
 
-        if ($is_delete_content){
+        if ($is_delete_content) {
 
             $this->disableDeleteFilter()->disableApprovedFilter()->
                     disablePubFilter()->disablePrivacyFilter();
 
             $items = $this->getContentItems($ctype['name']);
 
-            if ($items){
-                foreach($items as $item){
+            if ($items) {
+                foreach ($items as $item) {
                     $this->deleteContentItem($ctype['name'], $item['id']);
                 }
             }
-
         }
 
         return $this->delete('content_folders', $folder['id']);
-
     }
 
 //============================================================================//

@@ -12,7 +12,7 @@
 				</div>
 				<div class="details">
 					<span class="user">
-						<a href="<?php echo href_to('users', $item['user']['id']); ?>"><?php html($item['user']['nickname']); ?></a>
+						<a href="<?php echo href_to_profile($item['user']); ?>"><?php html($item['user']['nickname']); ?></a>
 					</span>
 					<span class="date"><?php echo html_date_time($item['date_pub']); ?></span>
 				</div>

@@ -28,7 +28,7 @@ class onPhotosContentAlbumsItemsHtml extends cmsAction {
         }
 
         $profile['url_params'] = array('photo_page' => 1);
-        $profile['base_url']   = href_to('users', $profile['id'], array('content', $ctype['name']));
+        $profile['base_url']   = href_to_profile($profile, array('content', $ctype['name']));
 
         $profile['user_id'] = $profile['id']; // для проверки прав доступа
 

@@ -16,16 +16,15 @@
                 ?>
                 <?php if ($style=='cloud'){ ?>
                     <?php
-                        $size_percent = round(($tag['frequency'] * 100) / $max_freq);
-                        $step = 0;
-                        if($size_percent){
-                            $portion = round(100 / $size_percent, 2);
-                            $step = round(($max_fs - $min_fs) / $portion);
+                        if ($max_freq == $min_freq) {
+                            $fs = round(($min_fs + $max_fs) / 2);
+                        } else  {
+                            $step = (($max_fs - $min_fs) * ($tag['frequency'] - $min_freq)) / ($max_freq - $min_freq);
+                            $fs = round($min_fs + $step);
                         }
-                        $fs = $min_fs + $step;
                     ?>
                     <li class="d-inline-block mr-2 mb-2">
-                        <a class="btn btn-outline-light icms-btn-tag <?php if($color){ echo 'colored'; } ?>" style="font-size: <?php echo round($fs/12, 3); ?>rem;<?php if($color){ echo ' color: '.$color; } ?>" href="<?php echo href_to('tags').'/'.urlencode($tag['tag']); ?>">
+                        <a class="btn icms-btn-tag <?php if($color){ echo 'colored btn-outline-light'; } else { echo 'btn-outline-info '; } ?>" style="font-size: <?php echo round($fs/12, 3); ?>rem;<?php if($color){ echo ' color: '.$color; } ?>" href="<?php echo href_to('tags').'/'.urlencode($tag['tag']); ?>">
                             <?php html($tag['tag']); ?>
                         </a>
                     </li>

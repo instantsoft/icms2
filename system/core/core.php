@@ -10,26 +10,26 @@ class cmsCore {
     public $uri_controller = '';
     public $uri_controller_before_remap = '';
     public $uri_action     = '';
-    public $uri_params     = array();
-    public $uri_query      = array();
+    public $uri_params     = [];
+    public $uri_query      = [];
     private $matched_pages = null;
     private $widgets_pages = null;
 
     private static $language = 'ru';
     private static $language_href_prefix = '';
     private static $core_version = null;
-    private static $controllers_instance = array();
+    private static $controllers_instance = [];
     private static $templates = null;
 
     public $controller = '';
-    private $defined_controllers = array();
+    private $defined_controllers = [];
 
 	public $link;
 	public $request;
 
     public $db;
 
-    private static $includedFiles = array();
+    private static $includedFiles = [];
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -172,53 +172,60 @@ class cmsCore {
     /**
      * Подключает файл
      * @param string $file Путь относительно корня сайта без начального слеша
-     * @return boolean
+     * @return mixed
      */
     public static function includeFile($file) {
 
         $file = cmsConfig::get('root_path') . $file;
 
-        if (isset(self::$includedFiles[$file])){
+        if (isset(self::$includedFiles[$file])) {
             return self::$includedFiles[$file];
         }
 
-        if (!is_readable($file)){
+        if (!is_readable($file)) {
             self::$includedFiles[$file] = false;
             return false;
         }
 
         $result = include_once $file;
 
-        if (is_null($result)) { $result = true; }
+        if (is_null($result)) {
+            $result = true;
+        }
 
         self::$includedFiles[$file] = $result;
 
         return $result;
-
     }
 
     public static function requireFile($file) {
 
         $file = cmsConfig::get('root_path') . $file;
 
-        if (!is_readable($file)){ return false; }
+        if (!is_readable($file)) {
+            return false;
+        }
 
         $result = require $file;
 
-        if (is_null($result)) { $result = true; }
+        if (is_null($result)) {
+            $result = true;
+        }
 
         return $result;
-
     }
 
-    public static function includeAndCall($file, $function_name, $params=array()){
+    public static function includeAndCall($file, $function_name, $params = []) {
 
-        if (!self::includeFile($file)){ return false; }
+        if (!self::includeFile($file)) {
+            return false;
+        }
 
-        if (!function_exists($function_name)){ return false; }
+        if (!function_exists($function_name)) {
+            return false;
+        }
 
         return call_user_func_array($function_name, $params);
-
     }
 
 //============================================================================//
@@ -326,9 +333,7 @@ class cmsCore {
      * @return bool
      */
     public static function isControllerExists($controller_name){
-
         return is_dir(cmsConfig::get('root_path').'system/controllers/'.$controller_name);
-
     }
 
     /**
@@ -339,7 +344,7 @@ class cmsCore {
      */
     public static function getController($controller_name, $request = null){
 
-        if (!$request) { $request = new cmsRequest(array(), cmsRequest::CTX_INTERNAL); }
+        if (!$request) { $request = new cmsRequest([], cmsRequest::CTX_INTERNAL); }
 
         $config = cmsConfig::getInstance();
 
@@ -429,7 +434,7 @@ class cmsCore {
             return self::getManifestsEvents();
         }
 
-        $events = array();
+        $events = [];
 
         $db = cmsDatabase::getInstance();
 
@@ -466,7 +471,7 @@ class cmsCore {
      */
     public static function getManifestsEvents(){
 
-        $manifests_events = array();
+        $manifests_events = [];
 
         $controllers = cmsCore::getDirsList('system/controllers', true);
 
@@ -637,7 +642,7 @@ class cmsCore {
         if ($pos_que !== false){
 
             // получаем строку запроса
-            $query_data = array();
+            $query_data = [];
             $query_str  = mb_substr($uri, $pos_que+1);
 
             // удаляем строку запроса из URL
@@ -908,7 +913,7 @@ class cmsCore {
         }
 
         if ($result === false){
-            $result = call_user_func_array(array($widget_object, 'run'), array());
+            $result = call_user_func_array(array($widget_object, 'run'), []);
             if ($result !== false){
                 // Отдельно кешируем имя шаблона виджета, заголовок и враппер, поскольку они могли быть
                 // изменены внутри виджета, а в кеш у нас попадает только тот массив
@@ -945,7 +950,7 @@ class cmsCore {
             return array(0, 1);
         }
 
-        $matched_pages = array();
+        $matched_pages = [];
 
         $_full_uri = $this->uri.($this->uri_query ? '?'.http_build_query($this->uri_query) : '');
 
@@ -1007,11 +1012,11 @@ class cmsCore {
             $details = LANG_ERROR_503_HINT;
         }
 
-        cmsTemplate::getInstance()->renderAsset('errors/error', array(
+        cmsTemplate::getInstance()->renderAsset('errors/error', [
             'is_debug' => $is_debug,
             'message'  => $message,
             'details'  => $details
-        ));
+        ], self::getInstance()->request);
 
         die();
     }
@@ -1197,7 +1202,7 @@ class cmsCore {
         $dir = cmsConfig::get('root_path') . $root_dir;
         $dir_context = opendir($dir);
 
-        $list = array();
+        $list = [];
 
         while ($next = readdir($dir_context)){
 
@@ -1232,7 +1237,7 @@ class cmsCore {
         $directory = $config->root_path . $root_dir;
         $pattern = $directory . '/' . $pattern;
 
-        $list = array();
+        $list = [];
 
         $files = @glob($pattern);
 
@@ -1274,7 +1279,7 @@ class cmsCore {
     public static function getTimeZones(){
         self::loadLib('timezones');
         $_zones = getTimeZones();
-        $zones = array();
+        $zones = [];
         foreach($_zones as $zone){
             $zones[ $zone ] = $zone;
         }

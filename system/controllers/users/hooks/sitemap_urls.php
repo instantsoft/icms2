@@ -23,7 +23,7 @@ class onUsersSitemapUrls extends cmsAction {
                 $urls[] = array(
                     'last_modified' => $user['date_log'],
                     'title'         => $user['nickname'],
-                    'url'           => href_to_abs($this->name, (!empty($user['slug']) ? $user['slug'] : $user['id']))
+                    'url'           => href_to_profile($user, false, true)
                 );
             }
         }

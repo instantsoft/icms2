@@ -83,16 +83,20 @@ class actionTagsIndex extends cmsAction {
             'ctype_title' => isset($menu_items[$target_controller][$target]['title']) ? $menu_items[$target_controller][$target]['title'] : null
         );
 
-        if($tag['tag_title']){
-            $seo_title = string_replace_keys_values_extended($tag['tag_title'], $seo_data);
+        $seo_title_pattern = $tag['tag_title'] ? $tag['tag_title'] : $this->options['seo_title_pattern'];
+        $seo_desc_pattern  = $tag['tag_desc'] ? $tag['tag_desc'] : $this->options['seo_desc_pattern'];
+        $seo_h1_pattern    = $tag['tag_h1'] ? $tag['tag_h1'] : $this->options['seo_h1_pattern'];
+
+        if($seo_title_pattern){
+            $seo_title = string_replace_keys_values_extended($seo_title_pattern, $seo_data);
         }
 
-        if($tag['tag_desc']){
-            $seo_desc = string_replace_keys_values_extended($tag['tag_desc'], $seo_data);
+        if($seo_desc_pattern){
+            $seo_desc = string_replace_keys_values_extended($seo_desc_pattern, $seo_data);
         }
 
-        if($tag['tag_h1']){
-            $seo_h1 = string_replace_keys_values_extended($tag['tag_h1'], $seo_data);
+        if($seo_h1_pattern){
+            $seo_h1 = string_replace_keys_values_extended($seo_h1_pattern, $seo_data);
         }
 
         if ($this->cms_user->is_admin){

@@ -1,5 +1,5 @@
 <?php $this->addTplJSNameFromContext('jquery-cookie'); ?>
-<?php if ((!isset($attributes['toolbar']) || $attributes['toolbar']) && $this->isToolbar()){ ?>
+<?php if ((!isset($attributes['toolbar']) || $attributes['toolbar']) && $this->isToolbar() && empty($attributes['hide_toolbar'])){ ?>
     <?php $this->toolbar('menu-toolbar'); ?>
 <?php } ?>
 

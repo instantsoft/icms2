@@ -28,7 +28,7 @@ class actionUsersSubscribe extends cmsAction {
 
         $this->controller_messages->addRecipient($friend['id']);
 
-        $sender_link = '<a href="'.href_to($this->name, $this->cms_user->id).'">'.$this->cms_user->nickname.'</a>';
+        $sender_link = '<a href="'.href_to_profile($this->cms_user).'">'.$this->cms_user->nickname.'</a>';
 
         $notice = array(
             'content' => sprintf(LANG_USERS_SUBSCRIBE_DONE, $sender_link),

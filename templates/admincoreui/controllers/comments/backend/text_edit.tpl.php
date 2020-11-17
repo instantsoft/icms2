@@ -2,7 +2,7 @@
     <form action="<?php echo $action; ?>" method="post">
         <?php echo html_csrf_token(); ?>
         <?php echo html_input('hidden', 'save', 1); ?>
-        <div class="field" id="f_content">
+        <div class="field form-group" id="f_content">
             <?php echo html_wysiwyg('content', $comment['content'], $editor_params['editor'], $editor_params['options']); ?>
         </div>
         <div class="buttons">

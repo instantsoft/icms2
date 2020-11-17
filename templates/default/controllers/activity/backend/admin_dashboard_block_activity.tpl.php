@@ -5,7 +5,7 @@
             <ul class="links adb_list">
                 <?php foreach ($items as $item) { ?>
                     <li>
-                        <a href="<?php echo href_to('users', $item['user']['id']); ?>">
+                        <a href="<?php echo href_to_profile($item['user']); ?>">
                             <?php html($item['user']['nickname']); ?>
                         </a>
                         <div>

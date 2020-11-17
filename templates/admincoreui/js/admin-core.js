@@ -131,6 +131,37 @@ icms.admin = (function ($) {
 
     };
 
+    this.loadIntroJs = function (){
+        icms.head.addCss('vendors/introjs/introjs.min');
+        icms.head.addCss('vendors/introjs/themes/introjs-modern');
+        icms.head.addJs('vendors/introjs/intro.min', 'introjs_ready');
+    };
+
+    this.introJsInit = function (options){
+        var cookie_key = 'icms[introjs_'+options.page+']';
+        if(+$.cookie(cookie_key) > 0){
+            return;
+        }
+        icms.events.on('introjs_ready', function (){
+            introJs().setOptions({
+                steps: options.steps,
+                overlayOpacity: 1,
+                showBullets: false,
+                exitOnOverlayClick: false,
+                exitOnEsc: false,
+                nextLabel: LANG_NEXT,
+                prevLabel: LANG_BACK,
+                skipLabel: LANG_SKIP,
+                doneLabel: LANG_DONE
+            }).start().oncomplete(function() {
+                $.cookie(cookie_key, 1, {expires: 365, path: '/'});
+            }).onexit(function() {
+                $.cookie(cookie_key, 1, {expires: 365, path: '/'});
+            });
+        });
+        this.loadIntroJs();
+    };
+
     return this;
 
 }).call(icms.admin || {},jQuery);

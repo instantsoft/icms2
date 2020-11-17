@@ -26,7 +26,9 @@ class onWallUserAddStatus extends cmsAction {
 
         cmsCache::getInstance()->clean('users.status');
 
-        $status_link = href_to_rel('users', $user_id) . '?wid='.$wall_entry_id.'&reply=1';
+        $user = $this->model_users->getUser($user_id);
+
+        $status_link = href_to_rel('users', (empty($user['slug']) ? $user['id'] : $user['slug'])) . '?wid='.$wall_entry_id.'&reply=1';
 
         return [
             $status_id,

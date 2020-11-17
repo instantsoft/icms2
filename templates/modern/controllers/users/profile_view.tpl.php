@@ -36,7 +36,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <span>
                             <?php if($show_all_flink){ ?>
-                                <a href="<?php echo $this->href_to($profile['id'], 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
+                                <a href="<?php echo href_to_profile($profile, 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
                             <?php } else { ?>
                                 <?php echo LANG_USERS_FRIENDS; ?>
                             <?php } ?>
@@ -80,7 +80,13 @@
                             <?php echo $field['title']; ?>:
                         </div>
                         <div class="value">
-                            <?php echo $field['text']; ?>
+                            <?php if (!empty($field['href'])){ ?>
+                                <a href="<?php echo $field['href']; ?>">
+                                    <?php echo $field['text']; ?>
+                                </a>
+                            <?php } else {?>
+                                <?php echo $field['text']; ?>
+                            <?php } ?>
                         </div>
                     </div>
                 <?php } ?>

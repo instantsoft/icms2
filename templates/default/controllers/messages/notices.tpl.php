@@ -2,7 +2,7 @@
     <div class="notice"><?php echo LANG_PM_NO_NOTICES; ?></div>
     <?php return; ?>
 <?php } ?>
-
+<?php $this->addTplJSNameFromContext('messages'); ?>
 <div id="pm_notices_window" data-action-url="<?php echo $this->href_to('notice_action'); ?>">
 
     <?php if(count($notices) > 2){ ?>

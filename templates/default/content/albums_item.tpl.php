@@ -8,7 +8,7 @@ $show_bar = !empty($item['show_tags']) || $item['parent_id'] ||
 <?php if ($fields['title']['is_in_item']){ ?>
     <h1>
         <?php if ($fields['user']['is_in_item'] && !empty($item['folder_title'])){ ?>
-            <a href="<?php echo href_to('users', $item['user']['id'], array('content', $ctype['name'], $item['folder_id'])); ?>"><?php echo $item['folder_title']; ?></a>&nbsp;&rarr;&nbsp;
+            <a href="<?php echo href_to_profile($item['user'], array('content', $ctype['name'], $item['folder_id'])); ?>"><?php echo $item['folder_title']; ?></a>&nbsp;&rarr;&nbsp;
         <?php } ?>
         <?php html($item['title']); ?>
         <?php if ($item['is_private']) { ?>
@@ -19,7 +19,7 @@ $show_bar = !empty($item['show_tags']) || $item['parent_id'] ||
         <h2 class="parent_title">
             <?php if ($fields['user']['is_in_item']){ ?>
                 <span class="album_user">
-                    <a href="<?php echo href_to('users', $item['user']['id']); ?>">
+                    <a href="<?php echo href_to_profile($item['user']); ?>">
                         <?php echo html_avatar_image($item['user']['avatar'], 'micro', $item['user']['nickname']); ?>
                     </a>
                 </span>

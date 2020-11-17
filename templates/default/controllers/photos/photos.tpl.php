@@ -30,7 +30,7 @@
                     </span>
                 </div>
                 <?php if(!empty($photo['user']['nickname'])){ ?>
-                    <a title="<?php echo LANG_AUTHOR; ?>" href="<?php echo href_to('users', $photo['user']['id']); ?>">
+                    <a title="<?php echo LANG_AUTHOR; ?>" href="<?php echo href_to_profile($photo['user']); ?>">
                         <?php html($photo['user']['nickname']); ?>
                     </a>
                 <?php } ?>

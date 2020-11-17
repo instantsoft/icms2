@@ -2,15 +2,18 @@
 
 class onMessagesUserPrivacyTypes extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        return array(
-            'messages_pm' => array(
-                'title' => LANG_PM_PRIVACY_CONTACT,
-                'options' => array('anyone', 'friends')
-            ),
-        );
+        if (empty($this->options['is_enable_pm'])) {
+            return false;
+        }
 
+        return [
+            'messages_pm' => [
+                'title'   => LANG_PM_PRIVACY_CONTACT,
+                'options' => ['anyone', 'friends']
+            ]
+        ];
     }
 
 }

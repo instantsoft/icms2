@@ -3,7 +3,7 @@
         <?php echo html_avatar_image($member['avatar'], 'micro'); ?>
     </div>
     <div class="title">
-        <a href="<?php echo href_to('users', $member['id']); ?>"><?php html($member['nickname']); ?></a>
+        <a href="<?php echo href_to_profile($member); ?>"><?php html($member['nickname']); ?></a>
     </div>
     <div class="actions">
         <?php if ($member['id'] != $group['owner_id']) { ?>

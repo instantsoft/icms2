@@ -18,7 +18,7 @@ class actionUsersProfileSubscribers extends cmsAction {
                 filterIsNull('fr.is_mutual')->
                 disableDeleteFilter();
 
-        $page_url = href_to($this->name, $profile['id'], 'subscribers');
+        $page_url = href_to_profile($profile, 'subscribers');
 
         $profiles_list_html = $this->renderProfilesList($page_url, false, array(
             array(
@@ -48,8 +48,11 @@ class actionUsersProfileSubscribers extends cmsAction {
         // Получаем поля
         $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
 
+        $meta_profile = $this->prepareItemSeo($profile, $fields, ['name' => 'users']);
+
         return $this->cms_template->render('profile_friends', array(
             'user'               => $this->cms_user,
+            'meta_profile'       => $meta_profile,
             'tabs'               => $tabs,
             'fields'             => $fields,
             'tab'                => $this->tabs['subscribers'],

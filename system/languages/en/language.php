@@ -515,6 +515,9 @@
     define('LANG_HELP',                      'Help');
     define('LANG_HELP_URL',                  'http://docs.instantcms.ru/en');
     define('LANG_IN',                        'in');
+    define('LANG_NEXT',                      'Next');
+    define('LANG_SKIP',                      'Skip');
+    define('LANG_DONE',                      'Done');
 
     //NAVIGATION
     define('LANG_HOME',                      'Home');

@@ -304,14 +304,13 @@ class modelComments extends cmsModel {
 
     public function getComment($id){
 
-        $this->select('u.nickname', 'user_nickname');
-        $this->select('u.avatar', 'user_avatar');
         $this->joinUserLeft()->joinSessionsOnline();
 
         return $this->getItemById('comments', $id, function($item, $model){
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
+                'slug'      => $item['user_slug'],
                 'nickname'  => $item['user_nickname'],
                 'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']

@@ -1,7 +1,7 @@
 <tr id="moderator-<?php echo $moderator['user_id']; ?>">
     <td>
         <?php echo html_avatar_image($moderator['user_avatar'], 'micro'); ?>
-        <a class="ml-2" href="<?php echo href_to('users', $moderator['user_id']); ?>">
+        <a class="ml-2" href="<?php echo href_to_profile($moderator['user']); ?>">
             <?php html($moderator['user_nickname']); ?>
         </a>
     </td>

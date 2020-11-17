@@ -1,7 +1,7 @@
 <?php
     $config = cmsConfig::getInstance();
 ?>
-<html>
+<html class="h-100">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,7 +15,7 @@
         ?>
         <?php $this->printCssTags(); ?>
     </head>
-    <body class="d-flex align-items-center">
+    <body class="d-flex h-100 align-items-center">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 align-self-center">

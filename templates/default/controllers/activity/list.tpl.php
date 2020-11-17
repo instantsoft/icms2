@@ -29,7 +29,7 @@
 
             <?php } ?>
 
-            <?php $url = href_to('users', $item['user']['id']); ?>
+            <?php $url = href_to_profile($item['user']); ?>
 
             <div class="item">
                 <?php if ($is_can_delete) { ?>

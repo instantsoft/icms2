@@ -11,5 +11,11 @@
             <span class="d-none d-sm-inline-block"><?php html($user->nickname); ?></span>
         </div>
     </div>
-    <?php $this->menu($widget->options['menu'], $widget->options['is_detect'], 'dropdown-menu dropdown-menu-right dropleft icms-menu-hovered', $widget->options['max_items']); ?>
+    <?php
+    $menu_classes = 'dropdown-menu';
+    if($device_type !== 'mobile'){
+        $menu_classes .= ' dropdown-menu-right dropleft icms-menu-hovered';
+    }
+    $this->menu($widget->options['menu'], $widget->options['is_detect'], $menu_classes, $widget->options['max_items']);
+    ?>
 </div>

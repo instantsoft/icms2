@@ -180,8 +180,8 @@ class cmsModel {
             'name'          => array('type' => 'varchar', 'size' => 40),
             'title'         => array('type' => 'varchar', 'size' => 100),
             'hint'          => array('type' => 'varchar', 'size' => 200),
-            'ordering'      => array('type' => 'int', 'index' => true, 'unsigned' => true),
-            'is_enabled'    => array('type' => 'bool', 'default' => 1),
+            'ordering'      => array('type' => 'int', 'index' => 'is_enabled', 'composite_index' => 1, 'unsigned' => true),
+            'is_enabled'    => array('type' => 'bool', 'index' => 'is_enabled', 'composite_index' => 0, 'default' => 1),
             'fieldset'      => array('type' => 'varchar', 'size' => 32),
             'type'          => array('type' => 'varchar', 'size' => 16),
             'is_in_list'    => array('type' => 'bool'),
@@ -1353,43 +1353,50 @@ class cmsModel {
         return $this;
     }
 
-    public function joinUser($on_field='user_id', $user_fields = array(), $join_direction = false, $as = 'u'){
+    /**
+     *  Присоединяет к выборке таблицу пользователей
+     *
+     * @param string $on_field Имя поля основной таблицы, содержащее id пользователя
+     * @param array $user_fields Поля, необходимые для выборки из таблицы пользователей
+     * @param boolean $join_direction Как присоединять таблицу: left|right|inner
+     * @param string $as Псевдоним присоединяемой таблицы
+     * @return $this
+     */
+    public function joinUser($on_field = 'user_id', $user_fields = [], $join_direction = false, $as = 'u') {
 
-        if (!$user_fields){
-            $user_fields = array(
+        if (!$user_fields) {
+            $user_fields = [
                 $as . '.nickname'   => 'user_nickname',
                 $as . '.slug'       => 'user_slug',
                 $as . '.is_deleted' => 'user_is_deleted',
                 $as . '.groups'     => 'user_groups',
                 $as . '.avatar'     => 'user_avatar'
-            );
+            ];
         }
 
-        foreach($user_fields as $field => $alias){
+        foreach ($user_fields as $field => $alias) {
             $this->select($field, $alias);
         }
 
-		switch ($join_direction){
+        switch ($join_direction) {
 
-			case 'left':
-				$this->joinLeft('{users}', $as, $as.'.id = i.'.$on_field);
-				break;
+            case 'left':
+                $this->joinLeft('{users}', $as, $as . '.id = i.' . $on_field);
+                break;
 
-			case 'right':
-				$this->joinRight('{users}', $as, $as.'.id = i.'.$on_field);
-				break;
+            case 'right':
+                $this->joinRight('{users}', $as, $as . '.id = i.' . $on_field);
+                break;
 
-			default:
-				$this->join('{users}', $as, $as.'.id = i.'.$on_field);
-				break;
-
-		}
+            default:
+                $this->join('{users}', $as, $as . '.id = i.' . $on_field);
+                break;
+        }
 
         return $this;
-
     }
 
-	public function joinUserLeft($on_field='user_id', $user_fields=array()){
+    public function joinUserLeft($on_field='user_id', $user_fields=array()){
 		return $this->joinUser($on_field, $user_fields, 'left');
 	}
 

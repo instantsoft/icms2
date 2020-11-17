@@ -71,7 +71,7 @@
                     <?php } ?>
                 </div>
 
-                <div class="ml-3 actions text-muted">
+                <div class="ml-3 actions text-muted d-none d-lg-block">
 
                     <?php if (!$dataset_name || $dataset_name == 'popular') { ?>
 

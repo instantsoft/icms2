@@ -360,6 +360,9 @@ form .field_error .invalid-feedback {
 .ft_hidden {
     display: none;
 }
+textarea.form-control {
+    min-height: 150px;
+}
 .auto_copy_value {
     cursor: pointer;
     color: #20a8d8;

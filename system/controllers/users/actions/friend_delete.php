@@ -72,7 +72,7 @@ class actionUsersFriendDelete extends cmsAction {
 
         $messenger->addRecipient($friend['id']);
 
-        $sender_link = '<a href="'.href_to($this->name, $this->cms_user->id).'">'.$this->cms_user->nickname.'</a>';
+        $sender_link = '<a href="'.href_to_profile($this->cms_user).'">'.$this->cms_user->nickname.'</a>';
 
         $content = $is_declined ?
                     sprintf(LANG_USERS_FRIENDS_DECLINED, $sender_link) :
@@ -90,7 +90,7 @@ class actionUsersFriendDelete extends cmsAction {
         if (!$is_declined){
             $messenger->sendNoticeEmail('users_friend_delete', array(
                 'friend_nickname' => $this->cms_user->nickname,
-                'friend_url'      => href_to_abs('users', $this->cms_user->id)
+                'friend_url'      => href_to_profile($this->cms_user, false, true)
             ));
         }
 

@@ -38,7 +38,7 @@
                 <?php if ($profile['inviter_id']) { ?>
                 <li>
                     <strong><?php echo LANG_USERS_PROFILE_INVITED_BY; ?>:</strong>
-                    <a href="<?php echo href_to('users', $profile['inviter_id']); ?>"><?php html($profile['inviter_nickname']); ?></a>
+                    <a href="<?php echo href_to_profile($profile['inviter']); ?>"><?php html($profile['inviter_nickname']); ?></a>
                 </li>
                 <?php } ?>
                 <?php if ($user->is_admin) { ?>
@@ -55,7 +55,7 @@
                     <?php foreach($content_counts as $ctype_name=>$count){ ?>
                         <?php if (!$count['is_in_list']) { continue; } ?>
                         <li>
-                            <a href="<?php echo href_to('users', $profile['id'], array('content', $ctype_name)); ?>">
+                            <a href="<?php echo href_to_profile($profile, array('content', $ctype_name)); ?>">
                                 <?php html($count['title']); ?>
                                 <span class="counter"><?php html($count['count']); ?></span>
                             </a>
@@ -68,7 +68,7 @@
             <div class="block">
                 <div class="block-title">
                     <?php if($show_all_flink){ ?>
-                        <a href="<?php echo $this->href_to($profile['id'], 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
+                        <a href="<?php echo href_to_profile($profile, 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
                     <?php } else { ?>
                         <?php echo LANG_USERS_FRIENDS; ?>
                     <?php } ?>
@@ -76,7 +76,7 @@
                 </div>
                 <div class="friends-list">
                     <?php foreach($friends as $friend){ ?>
-                        <a href="<?php echo $this->href_to($friend['id']); ?>" title="<?php html($friend['nickname']); ?>">
+                        <a href="<?php echo href_to_profile($friend); ?>" title="<?php html($friend['nickname']); ?>">
                             <span><?php echo html_avatar_image($friend['avatar'], 'micro', $friend['nickname'], $friend['is_deleted']); ?></span>
                         </a>
                     <?php } ?>

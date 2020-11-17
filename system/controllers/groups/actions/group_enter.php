@@ -42,7 +42,7 @@ class actionGroupsGroupEnter extends cmsAction {
             //
             // Личное сообщение
             //
-            $sender_link = '<a href="'.href_to('users', $this->cms_user->id).'">'.$this->cms_user->nickname.'</a>';
+            $sender_link = '<a href="'.href_to_profile($this->cms_user).'">'.$this->cms_user->nickname.'</a>';
             $group_link = '<a href="'.href_to('groups', $group['id']).'">'.$group['title'].'</a>';
 
             $notice = array(
@@ -73,7 +73,7 @@ class actionGroupsGroupEnter extends cmsAction {
             //
             $messenger->sendNoticeEmail('groups_request', array(
                 'user_nickname' => $this->cms_user->nickname,
-                'user_url'      => href_to_abs('users', $this->cms_user->id),
+                'user_url'      => href_to_profile($this->cms_user, false, true),
                 'group_title'   => $group['title'],
                 'group_url'     => href_to_abs('groups', $group['id']),
                 'requests_url'  => href_to_abs('groups', $group['id'], array('edit', 'requests'))

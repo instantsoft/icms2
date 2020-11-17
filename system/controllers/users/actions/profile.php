@@ -118,7 +118,7 @@ class actionUsersProfile extends cmsAction {
         if ($profile['inviter_id']) {
             $fields['inviter_id'] = [
                 'title' => LANG_USERS_PROFILE_INVITED_BY,
-                'href'  => href_to('users', $profile['inviter_id']),
+                'href'  => href_to_profile($profile['inviter']),
                 'text'  => $profile['inviter_nickname']
             ];
         }
