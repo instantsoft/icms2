@@ -151,8 +151,12 @@ class modelUsers extends cmsModel {
             $this->useCache('users.user.'.$id);
         }
 
-        $this->select('u.nickname', 'inviter_nickname');
-        $this->joinLeft('{users}', 'u', 'u.id = i.inviter_id');
+        $this->joinUser('inviter_id', [
+            'u.nickname'   => 'inviter_nickname',
+            'u.slug'       => 'inviter_slug',
+            'u.is_deleted' => 'inviter_is_deleted',
+            'u.avatar'     => 'inviter_avatar'
+        ], 'left');
 
         $this->joinSessionsOnline('i');
 
@@ -170,6 +174,15 @@ class modelUsers extends cmsModel {
         $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
         $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
         $user['ctype_name']      = 'users';
+        $user['inviter'] = [];
+        if ($user['inviter_id']) {
+            $user['inviter'] = [
+                'nickname'   => $user['inviter_nickname'],
+                'slug'       => $user['inviter_slug'],
+                'is_deleted' => $user['inviter_is_deleted'],
+                'avatar'     => $user['inviter_avatar']
+            ];
+        }
 
         return $user;
     }

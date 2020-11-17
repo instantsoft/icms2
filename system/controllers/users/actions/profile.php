@@ -29,11 +29,6 @@ class actionUsersProfile extends cmsAction {
         // Формируем метатеги
         $meta_profile = $this->prepareItemSeo($profile, $fields, ['name' => 'users']);
 
-        // Получаем профиль пригласившего
-        if ($profile['inviter_id']) {
-            $profile['inviter'] = $this->model_users->getUser($profile['inviter_id']);
-        }
-
         // Доступность профиля для данного пользователя
         if ( !$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view') ){
             return $this->cms_template->render('profile_closed', array(
@@ -123,7 +118,7 @@ class actionUsersProfile extends cmsAction {
         if ($profile['inviter_id']) {
             $fields['inviter_id'] = [
                 'title' => LANG_USERS_PROFILE_INVITED_BY,
-                'href'  => href_to('users', $profile['inviter_id']),
+                'href'  => href_to_profile($profile['inviter']),
                 'text'  => $profile['inviter_nickname']
             ];
         }

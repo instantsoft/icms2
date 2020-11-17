@@ -80,7 +80,13 @@
                             <?php echo $field['title']; ?>:
                         </div>
                         <div class="value">
-                            <?php echo $field['text']; ?>
+                            <?php if (!empty($field['href'])){ ?>
+                                <a href="<?php echo $field['href']; ?>">
+                                    <?php echo $field['text']; ?>
+                                </a>
+                            <?php } else {?>
+                                <?php echo $field['text']; ?>
+                            <?php } ?>
                         </div>
                     </div>
                 <?php } ?>
