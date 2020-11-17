@@ -25,7 +25,7 @@
             </div>
             <div>
                 <strong><?php echo LANG_GROUP_INFO_OWNER; ?>:</strong>
-                <span><a href="<?php echo href_to('users', $group['owner_id']); ?>"><?php html($group['owner_nickname']); ?></a></span>
+                <span><a href="<?php echo href_to_profile($group['owner']); ?>"><?php html($group['owner_nickname']); ?></a></span>
             </div>
         </div>
         <div class="share">

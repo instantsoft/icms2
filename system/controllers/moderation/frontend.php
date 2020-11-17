@@ -49,7 +49,7 @@ class moderation extends cmsFrontend {
                 'moderation_text' => $pm_message,
                 'moderator'       => $moderator['nickname'],
                 'author'          => $author['nickname'],
-                'author_url'      => (!empty($author['id']) ? href_to_abs('users', $author['id']) : (!empty($item['author_email']) ? 'mailto:'.$item['author_email'] : '')),
+                'author_url'      => (!empty($author['id']) ? href_to_profile($author, false, true) : (!empty($item['author_email']) ? 'mailto:'.$item['author_email'] : '')),
                 'page_title'      => $item['title'],
                 'page_url'        => $item['page_url'],
                 'date'            => html_date_time()
@@ -186,7 +186,7 @@ class moderation extends cmsFrontend {
         $this->controller_messages->sendEmail($to, 'moderation_return', array(
             'moderator'  => $moderator['nickname'],
             'author'     => $author['nickname'],
-            'author_url' => href_to_abs('users', $author['id']),
+            'author_url' => href_to_profile($author, false, true),
             'page_title' => $item['title'],
             'page_url'   => $item['page_url']
         ));

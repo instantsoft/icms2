@@ -6,7 +6,7 @@
     if($this->controller->listIsAllowed()){
         $this->addBreadcrumb(LANG_USERS, href_to('users'));
     }
-    $this->addBreadcrumb($profile['nickname'], $this->href_to($profile['id']));
+    $this->addBreadcrumb($profile['nickname'], href_to_profile($profile));
     $this->addBreadcrumb($tab['title']);
 
 ?>

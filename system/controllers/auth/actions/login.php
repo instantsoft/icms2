@@ -108,7 +108,7 @@ class actionAuthLogin extends cmsAction {
 
                     // Переходное сообщение для нового типа хранения паролей
                     if(!empty($logged_user['is_old_auth']) && !empty($this->options['notify_old_auth'])){
-                        cmsUser::addSessionMessage(sprintf(LANG_AUTH_IS_OLD_AUTH, href_to('users', $logged_user['id'], ['edit', 'password'])), 'info');
+                        cmsUser::addSessionMessage(sprintf(LANG_AUTH_IS_OLD_AUTH, href_to_profile($logged_user, ['edit', 'password'])), 'info');
                     }
 
                     cmsEventsManager::hook('auth_login', $logged_user['id']);

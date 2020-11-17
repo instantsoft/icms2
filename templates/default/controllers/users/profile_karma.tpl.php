@@ -6,7 +6,7 @@
     if($this->controller->listIsAllowed()){
         $this->addBreadcrumb(LANG_USERS, href_to('users'));
     }
-    $this->addBreadcrumb($profile['nickname'], $this->href_to($profile['id']));
+    $this->addBreadcrumb($profile['nickname'], href_to_profile($profile));
     $this->addBreadcrumb($tab['title']);
 
 ?>
@@ -37,7 +37,7 @@
 
                     <div class="title<?php if ($entry['comment']){ ?>-multiline<?php } ?>">
 
-                        <a href="<?php echo $this->href_to($entry['user']['id']); ?>"><?php html($entry['user']['nickname']); ?></a>
+                        <a href="<?php echo href_to_profile($entry['user']); ?>"><?php html($entry['user']['nickname']); ?></a>
                         <span class="date"><?php echo string_date_age_max($entry['date_pub'], true); ?></span>
 
                         <?php if ($entry['comment']){ ?>

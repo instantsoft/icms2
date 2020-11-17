@@ -47,7 +47,7 @@ if ($items){ ?>
                     <?php if ($is_first && $is_show_details) { ?>
                         <div class="details">
                             <span class="author">
-                                <a href="<?php echo href_to('users', $item['user']['id']); ?>"><?php html($item['user']['nickname']); ?></a>
+                                <a href="<?php echo href_to_profile($item['user']); ?>"><?php html($item['user']['nickname']); ?></a>
                                 <?php if ($item['parent_id']){ ?>
                                     <?php echo LANG_WROTE_IN_GROUP; ?>
                                     <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
@@ -97,7 +97,7 @@ if ($items){ ?>
                     <?php if (!$is_first && $is_show_details) { ?>
                         <div class="details">
                             <span class="author">
-                                <a href="<?php echo href_to('users', $item['user']['id']); ?>"><?php html($item['user']['nickname']); ?></a>
+                                <a href="<?php echo href_to_profile($item['user']); ?>"><?php html($item['user']['nickname']); ?></a>
                                 <?php if ($item['parent_id']){ ?>
                                     <?php echo LANG_WROTE_IN_GROUP; ?>
                                     <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>

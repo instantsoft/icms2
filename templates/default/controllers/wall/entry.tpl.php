@@ -25,14 +25,14 @@
 <div id="entry_<?php echo $entry['id']; ?>" class="entry"<?php if($is_hidden){ ?> style="display:none"<?php } ?> data-replies="<?php echo $entry['replies_count']; ?>">
     <div class="body">
         <div class="avatar">
-            <a href="<?php echo href_to('users', $entry['user']['id']); ?>" <?php if (!empty($entry['user']['is_online'])){ ?>class="peer_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="peer_no_online"<?php } ?>>
+            <a href="<?php echo href_to_profile($entry['user']); ?>" <?php if (!empty($entry['user']['is_online'])){ ?>class="peer_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="peer_no_online"<?php } ?>>
                 <?php echo html_avatar_image($entry['user']['avatar'], ($entry['parent_id'] ? 'micro' : 'micro'), $entry['user']['nickname']); ?>
             </a>
         </div>
         <div class="content">
             <div class="info">
                 <div class="name">
-                    <a class="user" href="<?php echo href_to('users', $entry['user']['id']); ?>"><?php echo $entry['user']['nickname']; ?></a>
+                    <a class="user" href="<?php echo href_to_profile($entry['user']); ?>"><?php echo $entry['user']['nickname']; ?></a>
                 </div>
                 <div class="date<?php if(!empty($entry['is_new'])){ ?> highlight_new<?php } ?>">
                     <?php echo html(string_date_age_max($entry['date_pub'], true)); ?>

@@ -29,6 +29,11 @@ class actionUsersProfile extends cmsAction {
         // Формируем метатеги
         $meta_profile = $this->prepareItemSeo($profile, $fields, ['name' => 'users']);
 
+        // Получаем профиль пригласившего
+        if ($profile['inviter_id']) {
+            $profile['inviter'] = $this->model_users->getUser($profile['inviter_id']);
+        }
+
         // Доступность профиля для данного пользователя
         if ( !$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view') ){
             return $this->cms_template->render('profile_closed', array(

@@ -17,7 +17,7 @@ class onCommentsUserTabShow extends cmsAction {
 
         }
 
-        $page_url = href_to('users', $profile['id'], 'comments');
+        $page_url = href_to_profile($profile, 'comments');
 
         $list_html = $this->renderCommentsList($page_url);
 

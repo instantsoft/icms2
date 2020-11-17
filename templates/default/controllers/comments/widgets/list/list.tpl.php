@@ -1,7 +1,7 @@
 <div class="widget_comments_list">
     <?php foreach($items as $item) { ?>
 
-        <?php $author_url = href_to('users', $item['user']['id']); ?>
+        <?php $author_url = href_to_profile($item['user']); ?>
         <?php $target_url = href_to($item['target_url']) . "#comment_{$item['id']}"; ?>
 
         <div class="item">

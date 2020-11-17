@@ -23,7 +23,7 @@ class onUsersContentViewHidden extends cmsAction {
                 $data['access_text'] = sprintf(
                     LANG_CONTENT_PRIVATE_FRIEND_INFO,
                     (!empty($ctype['labels']['one']) ? string_ucfirst($ctype['labels']['one']) : LANG_PAGE),
-                    href_to('users', $item['user_id']),
+                    href_to_profile($item['user']),
                     htmlspecialchars($item['user']['nickname'])
                 );
 

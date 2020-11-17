@@ -114,7 +114,7 @@ class actionUsersProfileEditPassword extends cmsAction {
                     // письмо на новый email
                     $this->controller_messages->sendEmail(['email' => $data['new_email'], 'name' => $profile['nickname']], ['name' => 'email_verify'], [
                         'nickname'    => $profile['nickname'],
-                        'page_url'    => href_to_abs('users', $profile['id'], ['edit', 'password']).'?new_email_confirm_hash='.$verify_data['hash'],
+                        'page_url'    => href_to_profile($profile, ['edit', 'password'], true).'?new_email_confirm_hash='.$verify_data['hash'],
                         'hash'        => $verify_data['hash'],
                         'valid_until' => html_date(date('d.m.Y H:i', time() + ($this->verify_exp * 3600)), true)
                     ]);

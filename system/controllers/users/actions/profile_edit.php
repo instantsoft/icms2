@@ -131,12 +131,12 @@ class actionUsersProfileEdit extends cmsAction {
 							'user_id'       => $profile['id'],
                             'subject_title' => $profile['nickname'],
                             'subject_id'    => $profile['id'],
-                            'subject_url'   => href_to_rel('users', $profile['id']),
+                            'subject_url'   => href_to_rel('users', (empty($profile['slug']) ? $profile['id'] : $profile['slug'])),
                             'is_private'    => 0,
                             'group_id'      => null,
                             'images'        => array(
                                 array(
-                                    'url' => href_to_rel('users', $profile['id']),
+                                    'url' => href_to_rel('users', (empty($profile['slug']) ? $profile['id'] : $profile['slug'])),
                                     'src' => html_image_src($new['avatar'], $fields['avatar']['options']['size_full'])
                                 )
                             ),
@@ -174,7 +174,7 @@ class actionUsersProfileEdit extends cmsAction {
 
         return $this->cms_template->render('profile_edit', array(
             'do'                   => 'edit',
-            'cancel_url'           => ($back_url ? $back_url : href_to('users', $profile['id'])),
+            'cancel_url'           => ($back_url ? $back_url : href_to_profile($profile)),
             'id'                   => $profile['id'],
             'profile'              => $profile,
             'form'                 => $form,

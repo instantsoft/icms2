@@ -15,7 +15,7 @@ class fieldUser extends cmsFormField {
 
     public function parse($value) {
         if (is_array($value)) {
-            return '<a href="' . href_to('users', $value['id']) . '">' . htmlspecialchars($value['nickname']) . '</a>';
+            return '<a href="' . href_to_profile($value) . '">' . htmlspecialchars($value['nickname']) . '</a>';
         }
         return htmlspecialchars($value);
     }
