@@ -131,12 +131,12 @@ class actionUsersProfileEdit extends cmsAction {
 							'user_id'       => $profile['id'],
                             'subject_title' => $profile['nickname'],
                             'subject_id'    => $profile['id'],
-                            'subject_url'   => href_to_profile($profile),
+                            'subject_url'   => href_to_rel('users', $profile['id']),
                             'is_private'    => 0,
                             'group_id'      => null,
                             'images'        => array(
                                 array(
-                                    'url' => href_to_profile($profile),
+                                    'url' => href_to_rel('users', $profile['id']),
                                     'src' => html_image_src($new['avatar'], $fields['avatar']['options']['size_full'])
                                 )
                             ),
