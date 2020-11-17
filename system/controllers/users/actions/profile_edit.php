@@ -158,7 +158,7 @@ class actionUsersProfileEdit extends cmsAction {
                 if ($back_url){
                     $this->redirect($back_url);
                 } else {
-                    $this->redirectTo('users', $profile['id']);
+                    $this->redirectTo('users', (empty($profile['slug']) ? $profile['id'] : $profile['slug']));
                 }
 
             }
@@ -174,7 +174,7 @@ class actionUsersProfileEdit extends cmsAction {
 
         return $this->cms_template->render('profile_edit', array(
             'do'                   => 'edit',
-            'cancel_url'           => ($back_url ? $back_url : href_to_profile($profile)),
+            'cancel_url'           => ($back_url ? $back_url : href_to_profile(!empty($old) ? $old : $profile)),
             'id'                   => $profile['id'],
             'profile'              => $profile,
             'form'                 => $form,
