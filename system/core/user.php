@@ -217,6 +217,7 @@ class cmsUser {
 
         self::sessionSet('user', array(
             'id'          => $user['id'],
+            'slug'        => $user['slug'],
             '2fa'         => !empty($user['2fa']),
             'is_old_auth' => !empty($user['is_old_auth']),
             'groups'      => $user['groups'],

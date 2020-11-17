@@ -50,11 +50,11 @@ class onBootstrap4TemplateModernBeforeSaveOptions extends cmsAction {
                     } else {
                         cmsUser::addSessionMessage(sprintf(LANG_CP_FILE_NOT_WRITABLE, $css_dir.$vendor_name.'.css'), 'error');
                     }
+                } elseif($this->hasCompileMessage()) {
+                    cmsUser::addSessionMessage($this->getCompileMessage(), 'error');
                 }
 
             }
-        } elseif($this->hasCompileMessage()) {
-            cmsUser::addSessionMessage($this->getCompileMessage(), 'error');
         }
 
         // Компилируем CSS компонентов
@@ -76,11 +76,11 @@ class onBootstrap4TemplateModernBeforeSaveOptions extends cmsAction {
                     } else {
                         cmsUser::addSessionMessage(sprintf(LANG_CP_FILE_NOT_WRITABLE, $css_controller_dir.'styles.css'), 'error');
                     }
+                } elseif($this->hasCompileMessage()) {
+                    cmsUser::addSessionMessage($this->getCompileMessage(), 'error');
                 }
 
             }
-        } elseif($this->hasCompileMessage()) {
-            cmsUser::addSessionMessage($this->getCompileMessage(), 'error');
         }
 
         // Компилируем стили wysiwyg
@@ -99,15 +99,13 @@ class onBootstrap4TemplateModernBeforeSaveOptions extends cmsAction {
                     } else {
                         cmsUser::addSessionMessage(sprintf(LANG_CP_FILE_NOT_WRITABLE, $css_dir.'wysiwyg/'.$wysiwyg_name.'/styles.css'), 'error');
                     }
+                } elseif($this->hasCompileMessage()) {
+                    cmsUser::addSessionMessage($this->getCompileMessage(), 'error');
                 }
-
             }
-        } elseif($this->hasCompileMessage()) {
-            cmsUser::addSessionMessage($this->getCompileMessage(), 'error');
         }
 
         return $options;
-
     }
 
 }

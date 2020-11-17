@@ -41,7 +41,7 @@ class users extends cmsFrontend {
             if (!$profile) { cmsCore::error404(); }
 
             if($profile['slug'] != $action_name){
-                return $this->redirect(href_to('users', $profile['slug'], $this->current_params), 301);
+                return $this->redirectTo($this->name, $profile['slug'], $this->current_params, $this->cms_core->uri_query, 301);
             }
 
         } else {

@@ -91,7 +91,7 @@
 <div class="row align-items-stretch mb-4">
     <div class="col-sm-auto quickview-wrapper" id="left-quickview">
         <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
-        <div class="card-body bg-white h-100 pt-3 no-overflow">
+        <div class="card-body bg-white h-100 pt-3 no-overflow" id="intro-step1">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#datatree"><?php echo LANG_CP_WIDGETS_PAGES; ?></a>
@@ -216,4 +216,7 @@
 </div>
 <script>
     <?php echo $this->getLangJS('LANG_CP_WIDGET_COPY_CONFIRM', 'LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_CP_WIDGET_REMOVE_CONFIRM', 'LANG_CP_PACKAGE_CONTENTS', 'LANG_HIDE', 'LANG_SHOW'); ?>
+    $(function(){
+        icms.admin.introJsInit({page: 'widgets', steps: <?php echo json_encode($intro_lang); ?>});
+    });
 </script>

@@ -28,6 +28,7 @@ define('LANG_PHOTOS_TYPES_HINT', 'Each type on a new line, you can specify the s
 define('LANG_PHOTOS_DATE', 'Photo date');
 define('LANG_PHOTOS_SIZES', 'Converting image presets');
 define('LANG_PHOTOS_ALLOW_ADD_PUBLIC_ALBUMS', 'Allow add to public albums');
+define('LANG_PHOTOS_DOWNLOAD_ALLOW', 'Allow download');
 define('LANG_PHOTOS_DOWNLOAD_VIEW', 'Allow download <b>«%s»</b> preset');
 define('LANG_PHOTOS_DOWNLOAD_HIDE', 'Disallow download <b>«%s»</b> preset');
 define('LANG_PHOTOS_ACCESS_BY_LINK', 'Unlisted');

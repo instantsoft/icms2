@@ -44,3 +44,4 @@
     define('LANG_PM_SENDER_USER_ID',        'From whose name should I send');
     define('LANG_PM_SENDER_USER_ID_HINT',   'Enter the user email. If not specified, the message will be sent from you.');
     define('LANG_PM_PMAILING_NOT_RECIPIENTS', 'No recipients according to specified criteria');
+    define('LANG_PM_IS_ENABLE_PM', 'Enable private messages');

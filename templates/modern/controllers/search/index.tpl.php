@@ -85,7 +85,9 @@
             <div class="item media mb-3">
                 <?php if(!empty($item['image'])){ ?>
                     <div class="mr-3">
-                        <?php echo $item['image']; ?>
+                        <a href="<?php echo $item['url']; ?>" target="_blank">
+                            <?php echo $item['image']; ?>
+                        </a>
                     </div>
                 <?php } ?>
                 <div class="media-body">

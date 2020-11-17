@@ -29,10 +29,11 @@
         'admin-core'
     ]); ?>
     <?php $this->onDemandTplJSName([
-        'vendors/photoswipe/photoswipe.min'
+        'vendors/photoswipe/photoswipe.min',
+        'vendors/introjs/intro.min',
     ]); ?>
     <?php $this->onDemandTplCSSName([
-        'photoswipe'
+        'photoswipe', 'vendors/introjs/introjs.min', 'vendors/introjs/themes/introjs-modern'
     ]); ?>
     <?php $this->head(false); ?>
 </head>
@@ -211,6 +212,7 @@
         <?php $this->renderAsset('ui/debug', array('core' => cmsCore::getInstance(), 'hide_short_info' => true)); ?>
     <?php } ?>
     <script>
+        <?php echo $this->getLangJS('LANG_BACK', 'LANG_NEXT', 'LANG_SKIP', 'LANG_DONE'); ?>
         $(function(){
         <?php if($this->controller->install_folder_exists){ ?>
             toastr.error('<?php echo LANG_CP_INSTALL_FOLDER_EXISTS; ?>');

@@ -12,27 +12,35 @@ class formPhotosOptions extends cmsForm {
             'title' => LANG_PHOTOS_ALLOW_ADD_PUBLIC_ALBUMS
         ));
 
+        $perm_childs[] = new fieldCheckbox('allow_download', array(
+            'title' => LANG_PHOTOS_DOWNLOAD_ALLOW
+        ));
+
         $presets = cmsCore::getModel('images')->getPresetsList();
 
         foreach ($presets as $name => $title) {
             $perm_childs[] = new fieldListGroups('download_view:'.$name, array(
                 'title'       => sprintf(LANG_PHOTOS_DOWNLOAD_VIEW, $title),
                 'show_all'    => true,
-                'show_guests' => true
+                'show_guests' => true,
+                'visible_depend' => array('allow_download' => array('show' => array('1')))
             ));
             $perm_childs[] = new fieldListGroups('download_hide:'.$name, array(
                 'title'       => sprintf(LANG_PHOTOS_DOWNLOAD_HIDE, $title),
-                'show_guests' => true
+                'show_guests' => true,
+                'visible_depend' => array('allow_download' => array('show' => array('1')))
             ));
         }
         $perm_childs[] = new fieldListGroups('download_view:original', array(
             'title'       => sprintf(LANG_PHOTOS_DOWNLOAD_VIEW, LANG_PARSER_IMAGE_SIZE_ORIGINAL),
             'show_all'    => true,
-            'show_guests' => true
+            'show_guests' => true,
+            'visible_depend' => array('allow_download' => array('show' => array('1')))
         ));
         $perm_childs[] = new fieldListGroups('download_hide:original', array(
             'title'       => sprintf(LANG_PHOTOS_DOWNLOAD_HIDE, LANG_PARSER_IMAGE_SIZE_ORIGINAL),
-            'show_guests' => true
+            'show_guests' => true,
+            'visible_depend' => array('allow_download' => array('show' => array('1')))
         ));
 
         return array(

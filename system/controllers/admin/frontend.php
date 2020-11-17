@@ -145,27 +145,30 @@ class admin extends cmsFrontend {
 
                 $la = sys_getloadavg();
 
-                $current_load_average = round(100*($la[2]/$cpu_count));
+                if(isset($la[2])){
 
-                // вероятно определили неверно
-                if($current_load_average > 100){
-                    $cpu_count = round($current_load_average/100);
-                    cmsUser::sessionSet('cpu_count', $cpu_count);
                     $current_load_average = round(100*($la[2]/$cpu_count));
+
+                    // вероятно определили неверно
+                    if($current_load_average > 100){
+                        $cpu_count = round($current_load_average/100);
+                        cmsUser::sessionSet('cpu_count', $cpu_count);
+                        $current_load_average = round(100*($la[2]/$cpu_count));
+                    }
+
+                    $su['cpu'] = [
+                        'title'   => LANG_CP_SU_CPU,
+                        'hint'    => $current_load_average.'%',
+                        'percent' => $current_load_average,
+                        'style'   => ($current_load_average <= 50 ? 'info' : ($current_load_average <= 75 ? 'warning' : 'danger'))
+                    ];
                 }
 
-                $su['cpu'] = [
-                    'title'   => LANG_CP_SU_CPU,
-                    'hint'    => $current_load_average.'%',
-                    'percent' => $current_load_average,
-                    'style'   => ($current_load_average <= 50 ? 'info' : ($current_load_average <= 75 ? 'warning' : 'danger'))
-                ];
             }
 
         }
 
         return cmsEventsManager::hook('admin_system_utilization', $su);
-
     }
 
     public function buildDatasetFieldsList($controller_name, $fields) {
@@ -1091,7 +1094,7 @@ class admin extends cmsFrontend {
 
     public function getSchemeColForm($do, $row, $col = []){
 
-        $form = $this->getForm('widgets_cols', [$do, (!empty($col['id']) ? $col['id'] : 0)]);
+        $form = $this->getForm('widgets_cols', [$do, (!empty($col['id']) ? $col['id'] : 0), $row]);
 
         $col_scheme_options = cmsEventsManager::hookAll('admin_col_scheme_options_'.$row['template'], ['add', $row, []]);
 

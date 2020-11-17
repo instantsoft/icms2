@@ -2,36 +2,35 @@
 
 class onMessagesMenuMessages extends cmsAction {
 
-    public function run($item){
+    public function run($item) {
 
-        $user = cmsUser::getInstance();
-
-        if (!$user->is_logged) { return false; }
+        if (!$this->cms_user->is_logged) {
+            return false;
+        }
 
         $action = $item['action'];
 
-        if ($action == 'view'){
+        if ($action == 'view' && !empty($this->options['is_enable_pm'])) {
 
-            $count = $this->model->getNewMessagesCount($user->id);
+            $count = $this->model->getNewMessagesCount($this->cms_user->id);
 
-            return array(
-                'url' => href_to($this->name),
+            return [
+                'url'     => href_to($this->name),
                 'counter' => $count
-            );
-
+            ];
         }
 
-        if ($action == 'notices'){
+        if ($action == 'notices') {
 
-            $count = $this->model->getNoticesCount($user->id);
+            $count = $this->model->getNoticesCount($this->cms_user->id);
 
-            return $count ? array(
-                'url' => href_to($this->name, 'notices'),
+            return $count ? [
+                'url'     => href_to($this->name, 'notices'),
                 'counter' => $count
-            ) : false;
-
+            ] : false;
         }
 
+        return false;
     }
 
 }

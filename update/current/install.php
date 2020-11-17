@@ -117,7 +117,7 @@ function install_package(){
         }
     }
 
-    save_controller_options(array('photos'));
+    save_controller_options(array('photos', 'messages', 'tags'));
 
     return true;
 

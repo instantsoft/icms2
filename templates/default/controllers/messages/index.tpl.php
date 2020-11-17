@@ -5,6 +5,8 @@
     <?php return; ?>
 <?php } ?>
 
+<?php $this->addTplJSNameFromContext('messages'); ?>
+
 <script><?php
     echo $this->getLangJS('LANG_PM_DELETE_CONTACT_CONFIRM', 'LANG_PM_IGNORE_CONTACT_CONFIRM', 'LANG_YES', 'LANG_NO');
 ?></script>
