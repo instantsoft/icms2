@@ -2139,21 +2139,14 @@ class cmsTemplate {
      */
     public function render($tpl_file, $data = [], $request = false) {
 
-        if(is_array($tpl_file)){
-            $data = $tpl_file; $tpl_file = $this->controller->current_template_name;
+        if (is_array($tpl_file)) {
+            $data = $tpl_file;
+            $tpl_file = $this->controller->current_template_name;
         }
 
-        if(empty($this->controller->template_disable_auto_insert_css)){
+        $tpl_file = $this->getTemplateFileName('controllers/' . $this->controller->name . '/' . $tpl_file);
 
-            $css_file = $this->getStylesFileName();
-
-            if ($css_file){ $this->addCSSFromContext($css_file, $request); }
-        }
-
-        $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
-
-        return $this->processRender($tpl_file, $data, $request);
-
+        return $this->processRender($tpl_file, $data, $request, true);
     }
 
     /**
@@ -2162,16 +2155,16 @@ class cmsTemplate {
      * @param string|array $tpl_file Название файла шаблона
      * @param array $data Массив параметров, передаваемых в шаблон
      */
-    public function renderPlain($tpl_file, $data = array()) {
+    public function renderPlain($tpl_file, $data = []) {
 
-        if(is_array($tpl_file)){
-            $data = $tpl_file; $tpl_file = $this->controller->current_template_name;
+        if (is_array($tpl_file)) {
+            $data = $tpl_file;
+            $tpl_file = $this->controller->current_template_name;
         }
 
-        $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
+        $tpl_file = $this->getTemplateFileName('controllers/' . $this->controller->name . '/' . $tpl_file);
 
         $this->processRender($tpl_file, $data, new cmsRequest($this->controller->request->getData(), cmsRequest::CTX_AJAX));
-
     }
 
     /**
@@ -2181,13 +2174,14 @@ class cmsTemplate {
      * @param string $tpl_file Полный путь к файлу шаблона
      * @param array $data Массив параметров, передаваемых в шаблон
      * @param object $request Объект запроса
+     * @param boolean $add_controller_css Нужно ли подключать CSS контроллера
      * @return mixed
      */
-    public function processRender($tpl_file, $data = array(), $request = false) {
+    public function processRender($tpl_file, $data = [], $request = false, $add_controller_css = false) {
 
         if (!$request) { $request = $this->controller->request; }
 
-        $hook_name = 'process_render_'.$this->controller->name.'_'.basename(str_replace('-', '_', $tpl_file), '.tpl.php');
+        $hook_name = 'process_render_' . $this->controller->name . '_' . basename(str_replace('-', '_', $tpl_file), '.tpl.php');
 
         list($tpl_file, $data, $request) = cmsEventsManager::hook($hook_name, [$tpl_file, $data, $request]);
 
@@ -2197,6 +2191,16 @@ class cmsTemplate {
 
         extract($data); include($tpl_file);
 
+        // Регулировать подключение CSS контроллера можно
+        // Определив в самом шаблоне переменную $disable_auto_insert_css
+        if ($add_controller_css &&
+                !isset($disable_auto_insert_css) &&
+                empty($this->controller->template_disable_auto_insert_css)) {
+
+            $css_file = $this->getStylesFileName();
+            if ($css_file) { $this->addCSSFromContext($css_file, $request); }
+        }
+
         $html = ob_get_clean();
 
         if ($request->isAjax()) {
@@ -2204,15 +2208,14 @@ class cmsTemplate {
             $this->controller->halt();
         }
 
-        if ($request->isStandard()){
-            $this->addOutput( $html );
+        if ($request->isStandard()) {
+            $this->addOutput($html);
             return $html;
         }
 
-        if ($request->isInternal()){
+        if ($request->isInternal()) {
             return $html;
         }
-
     }
 
     /**
