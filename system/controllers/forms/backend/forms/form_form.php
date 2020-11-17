@@ -73,10 +73,7 @@ class formFormsForm extends cmsForm {
                         'items' => [
                             'notice' => LANG_FORMS_CP_SEND_TYPE1,
                             'email'  => LANG_FORMS_CP_SEND_TYPE2
-                        ],
-                        'rules' => array(
-                            array('required')
-                        )
+                        ]
                     )),
                     new fieldString('options:send_type_notice', array(
                         'title' => LANG_USERS,

@@ -861,6 +861,7 @@ th[rel="dg_actions"] {
 .widgets-layout-scheme:not(.disable-sortable) > .layout-row-title > .cell > span::before {
     top: 50%;
     margin-top: -10px;
+    left: -20px;
 }
 .layout-col-title > span::before {
     top: 0.05rem;

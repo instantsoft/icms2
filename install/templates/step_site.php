@@ -6,15 +6,15 @@
 
         <div class="field">
             <label><?php echo LANG_SITE_SITENAME; ?></label>
-            <input type="text" class="input input-icon icon-text" name="sitename" value="<?php echo LANG_CFG_SITENAME; ?>" />
+            <input autocomplete="off" type="text" class="input input-icon icon-text" name="sitename" value="<?php echo LANG_CFG_SITENAME; ?>" />
         </div>
         <div class="field">
             <label><?php echo LANG_SITE_HOMETITLE; ?></label>
-            <input type="text" class="input input-icon icon-text" name="hometitle" value="<?php echo LANG_CFG_SITENAME; ?>" />
+            <input autocomplete="off" type="text" class="input input-icon icon-text" name="hometitle" value="<?php echo LANG_CFG_SITENAME; ?>" />
         </div>
         <div class="field">
             <label><?php echo LANG_SITE_METAKEYS; ?></label>
-            <input type="text" class="input input-icon icon-text" name="metakeys" value="<?php echo LANG_CFG_METAKEYS; ?>" />
+            <input autocomplete="off" type="text" class="input input-icon icon-text" name="metakeys" value="<?php echo LANG_CFG_METAKEYS; ?>" />
         </div>
         <div class="field">
             <label><?php echo LANG_SITE_METADESC; ?></label>

@@ -53,8 +53,8 @@
     define('LANG_COMMENTS',                  'Комментарии');
     define('LANG_RATING',                    'Рейтинг');
     define('LANG_KARMA',                     'Репутация');
-    define('LANG_KARMA_UP',                  'Поднять');
-    define('LANG_KARMA_DOWN',                'Опустить');
+    define('LANG_KARMA_UP',                  'Повысить');
+    define('LANG_KARMA_DOWN',                'Понизить');
     define('LANG_CSS_CLASS',                 'Класс CSS');
     define('LANG_CSS_CLASS_WRAP',            'Класс CSS для контейнера');
     define('LANG_CSS_CLASS_TITLE',           'Класс CSS для заголовка');

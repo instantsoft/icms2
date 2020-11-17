@@ -402,7 +402,7 @@
     define('LANG_CP_WIDGETS_ROW_TAG',           'Тег ряда');
     define('LANG_CP_WIDGETS_COL_TAG',           'Тег колонки');
     define('LANG_CP_WIDGETS_ROW_PARRENT_TAG',   'Родительский тег ряда');
-    define('LANG_CP_WIDGETS_ROW_PARRENT_TAG_C', 'CSS класс родительского тег ряда');
+    define('LANG_CP_WIDGETS_ROW_PARRENT_TAG_C', 'CSS класс родительского тега ряда');
     define('LANG_CP_WIDGETS_ROW_CONT_NO',       'Без контейнера');
     define('LANG_CP_WIDGETS_ROW_DEL_CONFIRM',   'Удалить ряд?\nВиджеты переместятся в неиспользуемые');
     define('LANG_CP_WIDGETS_COL_DEL_CONFIRM',   'Удалить колонку (вложенные также удалятся)?\nВиджеты переместятся в неиспользуемые');

@@ -399,6 +399,10 @@ icms.forms = (function ($) {
 
         $.post(url, form_data, function(result){
 
+            $('.field_error', form).removeClass('field_error');
+            $('.is-invalid', form).removeClass('is-invalid');
+            $('.invalid-feedback', form).remove();
+
             $(submit_btn).prop('disabled', false).removeClass('is-busy');
 
             if (result.errors == false){
@@ -415,9 +419,6 @@ icms.forms = (function ($) {
             }
 
             if (typeof(result.errors)=='object'){
-
-                $('.field_error', form).removeClass('field_error');
-                $('.invalid-feedback', form).remove();
 
                 for(var field_id in result.errors){
                     var id = field_id.replace(':', '_');

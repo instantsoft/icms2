@@ -1,11 +1,18 @@
 .introjs-tooltip {
-  background-color: rgba(47, 53, 58, 0.9);
-  color: #fff;
+  background:#ecf0f1;
+  color:#000;
+  border-radius:0.5rem;
 }
-.introjs-full-width {
-    max-width: 50vw;
-    width: 50vw;
-    padding: 2rem 2rem 1rem 2rem;
+.introjs-tooltip.introjs-full-width {
+  max-width: 50vw;
+  width: 50vw;
+  font-size:16px;
+  background:#FFF;
+  padding: 2rem 2rem 1rem 2rem;
+}
+.introjs-tooltip h3{
+  margin-bottom:20px;
+  color:#20a8d8;
 }
 .introjs-tooltiptext > p:last-child {
     margin-bottom: 0;
@@ -23,31 +30,33 @@
   outline: none;
   background-image: none;
   background-color: transparent;
-  color: #fff;
+  color:#34495e;
   border: 1px solid transparent;
   border-radius: 0.25rem;
   box-shadow: none;
   text-shadow: none;
+  transition: all 0.3s ease-out;
 }
 
 .introjs-button:hover, .introjs-button:focus, .introjs-button:active {
-  border: 1px solid #fff
+  border: 1px solid #2980b9;
+  color:#2980b9;
 }
 .introjs-disabled, .introjs-disabled:focus, .introjs-disabled:hover {
-  color: #ccc;
   border: 1px solid transparent;
+  color:#ddd;
 }
 
 .introjs-arrow {
   border: 10px solid #fff;
 }
 .introjs-arrow.top, .introjs-arrow.top-middle, .introjs-arrow.top-right {
-  border-color: transparent transparent rgba(47, 53, 58, 0.9);
+  border-color: transparent transparent #ecf0f1;
   top: -20px;
   left: 20px;
 }
 .introjs-arrow.bottom, .introjs-arrow.bottom-middle, .introjs-arrow.bottom-right {
-  border-color: rgba(47, 53, 58, 0.9) transparent transparent;
+  border-color: #ecf0f1 transparent transparent;
   bottom: -20px;
   left: 20px;
 }
@@ -60,9 +69,13 @@
 
 .introjs-arrow.left, .introjs-arrow.left-bottom {
   left: -20px;
-  border-color: transparent rgba(47, 53, 58, 0.9) transparent transparent;
+  border-color: transparent #ecf0f1 transparent transparent;
 }
 .introjs-arrow.right, .introjs-arrow.right-bottom {
   right: -20px;
-  border-color: transparent transparent transparent rgba(47, 53, 58, 0.9);
+  border-color: transparent transparent transparent #ecf0f1;
+}
+.introjs-helperNumberLayer{
+  border-radius:10px;
+  background:#3498db;
 }

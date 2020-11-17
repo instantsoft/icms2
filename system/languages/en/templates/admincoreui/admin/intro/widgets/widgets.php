@@ -2,7 +2,7 @@
 
 return [
     [
-        'intro' => '<h3>Welcome to the widget management page!</h3><p>This is where you actually control how your site will display.<br>Each page of the site is divided into "positions", within which you can display various blocks - widgets.<br>Widgets can show menus, content lists, search form, login form, and many other things.</p> <p>Here you can change the site position scheme and assign widgets to these positions.</p><p><b>Do you want to take a quick tour of widget management?</b><br><span class="text-muted">We recommend doing this if this is your first introduction to InstantCMS 2</span></p>',
+        'intro' => '<h3>Welcome to the widget management page!</h3><p>This is where you actually control how your site will display.<br>Each page of the site is divided into "positions", within which you can display various blocks - widgets.<br>Widgets can show menus, content lists, search form, login form, and many other things.</p> <p>Here you can change the site position scheme and assign widgets to these positions.</p><p><b>Click &laquo;Next&raquo; for a quick tour of widget management.</b><br><span class="text-muted">We recommend doing this if this is your first introduction to InstantCMS 2</span></p>',
         'tooltipClass' => 'introjs-full-width'
     ],
     [

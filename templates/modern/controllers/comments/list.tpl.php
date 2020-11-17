@@ -13,7 +13,7 @@ $this->addTplJSName('comments');
     <div class="d-flex">
     <?php if ($user->is_logged){ ?>
         <?php if ($is_karma_allowed){ ?>
-            <a href="#" id="is_track" data-is_tracking="<?php echo (int)!$is_tracking; ?>" data-toggle="tooltip" data-placement="top" class="btn btn-<?php if($is_tracking){ ?>secondary<?php } else { ?>primary<?php } ?> icms-comments-tracking position-relative" title="<?php html($this->controller->labels->track); ?>">
+            <a href="#" id="is_track" data-is_tracking="<?php echo (int)!$is_tracking; ?>" class="btn btn-<?php if($is_tracking){ ?>secondary<?php } else { ?>primary<?php } ?> icms-comments-tracking position-relative" data-toggle="tooltip" data-placement="top" title="<?php html(!$is_tracking ? $this->controller->labels->track : LANG_COMMENTS_TRACK_STOP); ?>" data-tracking_title="<?php html($this->controller->labels->track); ?>" data-tracking_stop_title="<?php html(LANG_COMMENTS_TRACK_STOP); ?>">
                 <b class="icms-comments-track-icon <?php if($is_tracking){ ?>d-none<?php } ?>">
                     <?php html_svg_icon('solid', 'bell'); ?>
                 </b>

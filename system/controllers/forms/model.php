@@ -79,8 +79,6 @@ class modelForms extends cmsModel {
             $fieldset_id = $form->addFieldset($fieldset['title'], $fid);
 
             foreach($fieldset['fields'] as $field){
-                // id, чтобы можно было на одной странице несколько форм выводить
-                $field['handler']->id = $field['handler']->id.'_'.$form_data['id'];
                 // Говорим, к чему это поле относится
                 $field['handler']->context_params = [
                     'target_controller' => 'forms',

@@ -16,22 +16,22 @@
 
             <div class="field">
                 <label><?php echo LANG_ADMIN_NAME; ?></label>
-                <input type="text" class="input input-icon icon-user" name="nickname" value="" />
+                <input type="text" class="input input-icon icon-user" autocomplete="off" name="nickname" value="" />
             </div>
 
             <div class="field">
                 <label><?php echo LANG_ADMIN_EMAIL; ?></label>
-                <input type="text" class="input input-icon icon-email" name="email" value="" />
+                <input type="text" class="input input-icon icon-email" autocomplete="off" name="email" value="" />
             </div>
 
             <div class="field">
                 <label><?php echo LANG_ADMIN_PASS; ?></label>
-                <input type="password" class="input input-icon icon-password" name="pass1" value="" />
+                <input type="password" class="input input-icon icon-password" autocomplete="off" name="pass1" value="" />
             </div>
 
             <div class="field">
                 <label><?php echo LANG_ADMIN_PASS2; ?></label>
-                <input type="password" class="input input-icon icon-password2" name="pass2" value="" />
+                <input type="password" class="input input-icon icon-password2" autocomplete="off" name="pass2" value="" />
             </div>
 
         </fieldset>
@@ -43,4 +43,3 @@
 <div class="buttons">
     <input type="button" name="next" id="btn-next" value="<?php echo LANG_NEXT; ?>" onclick="submitStep()" />
 </div>
-
