@@ -416,4 +416,11 @@ class users extends cmsFrontend {
 
     }
 
+    public function isSlugAllowed($value) {
+
+        $list = $this->options['restricted_slugs'];
+
+        return !string_in_mask_list($value, $list);
+    }
+
 }

@@ -99,6 +99,13 @@ class actionUsersProfileEdit extends cmsAction {
             $errors = $form->validate($this,  $profile);
 
             if (!$errors){
+                // Проверяем допустимость slug
+                if (!$this->isSlugAllowed($profile['slug'])){
+                    $errors['slug'] = sprintf(LANG_USERS_OPT_RESTRICTED_SLUG, $profile['slug']);
+                }
+            }
+
+            if (!$errors){
                 $is_allowed = cmsEventsManager::hookAll('user_profile_update', $profile, true);
                 if (is_array($is_allowed)) {
                     $errors = array();

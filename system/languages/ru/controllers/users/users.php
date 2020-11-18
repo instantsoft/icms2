@@ -4,6 +4,7 @@
 
     define('LANG_USERS_LIST',               'Список пользователей');
     define('LANG_USERS_PROFILE',            'Профиль пользователя');
+    define('LANG_USERS_RESTRICTIONS',       'Запреты');
     define('LANG_USERS_SOCIALITY',          'Социальность');
     define('LANG_USERS_EDIT_PROFILE',       'Редактировать профиль');
     define('LANG_USERS_EDIT_USER',          'Редактировать пользователя');
@@ -38,6 +39,9 @@
     define('LANG_USERS_OPT_MAX_TABS',       'Максимальное число вкладок');
     define('LANG_USERS_OPT_MAX_TABS_HINT',  'Остальные вкладки будут помещены в пункт «Еще...»<br>0 — бесконечное количество');
     define('LANG_USERS_OPT_AUTH_ONLY',      'Разрешить просмотр профилей только авторизованным пользователям');
+    define('LANG_USERS_OPT_RESTRICTED_SLUGS', 'Запрещенные адреса профилей');
+    define('LANG_USERS_OPT_RESTRICTED_SLUGS_HINT', 'Один адрес на строке, можно использовать символ * для подстановки любого значения');
+    define('LANG_USERS_OPT_RESTRICTED_SLUG', 'Использование адреса профиля <b>%s</b> запрещено');
     define('LANG_RULE_USERS_CHANGE_EMAIL',   'Разрешить смену email');
     define('LANG_RULE_USERS_CHANGE_EMAIL_PERIOD', 'Период возможной смены email, в днях');
     define('LANG_RULE_USERS_CHANGE_EMAIL_PERIOD_HINT', 'Не указано, можно менять всегда');
