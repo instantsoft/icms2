@@ -27,6 +27,10 @@ class cmsWysiwygRedactor {
             $this->options['buttonSource'] = false;
         }
 
+        if ($core->request->isTypeModal()) {
+            $this->options['toolbarFixedTarget'] = '#icms_modal';
+        }
+
         if ($user->is_logged) {
 
             $context = $core->getUriData();

@@ -1012,13 +1012,17 @@ class cmsCore {
             $details = LANG_ERROR_503_HINT;
         }
 
+        ob_start();
+
         cmsTemplate::getInstance()->renderAsset('errors/error', [
             'is_debug' => $is_debug,
             'message'  => $message,
             'details'  => $details
         ], self::getInstance()->request);
 
-        die();
+        $html = ob_get_clean();
+
+        die(cmsConfig::get('min_html') ? html_minify($html) : $html);
     }
 
     /**
@@ -1037,13 +1041,16 @@ class cmsCore {
 
         http_response_code(403);
 
-        cmsTemplate::getInstance()->renderAsset('errors/forbidden', array(
+        ob_start();
+
+        cmsTemplate::getInstance()->renderAsset('errors/forbidden', [
             'message'         => $message,
             'show_login_link' => $show_login_link
-        ));
+        ]);
 
-        die();
+        $html = ob_get_clean();
 
+        die(cmsConfig::get('min_html') ? html_minify($html) : $html);
     }
 
     /**
@@ -1059,9 +1066,13 @@ class cmsCore {
 
         http_response_code(404);
 
-        cmsTemplate::getInstance()->renderAsset('errors/notfound');
-        die();
+        ob_start();
 
+        cmsTemplate::getInstance()->renderAsset('errors/notfound');
+
+        $html = ob_get_clean();
+
+        die(cmsConfig::get('min_html') ? html_minify($html) : $html);
     }
 
     /**
@@ -1073,11 +1084,15 @@ class cmsCore {
 
         http_response_code(503);
 
-        cmsTemplate::getInstance()->renderAsset('errors/offline', array(
-            'reason' => cmsConfig::get('off_reason')
-        ));
-        die();
+        ob_start();
 
+        cmsTemplate::getInstance()->renderAsset('errors/offline', [
+            'reason' => cmsConfig::get('off_reason')
+        ]);
+
+        $html = ob_get_clean();
+
+        die(cmsConfig::get('min_html') ? html_minify($html) : $html);
     }
 
     public static function respondIfModifiedSince($lastmod) {

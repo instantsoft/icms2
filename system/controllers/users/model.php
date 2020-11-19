@@ -145,24 +145,30 @@ class modelUsers extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getUser($id = false) {
+    public function getUser($id = false, $join_inviter = false) {
 
         if($id){
             $this->useCache('users.user.'.$id);
         }
 
-        $this->joinUser('inviter_id', [
-            'u.nickname'   => 'inviter_nickname',
-            'u.slug'       => 'inviter_slug',
-            'u.is_deleted' => 'inviter_is_deleted',
-            'u.avatar'     => 'inviter_avatar'
-        ], 'left');
+        if($join_inviter){
+            $this->joinUser('inviter_id', [
+                'u.nickname'   => 'inviter_nickname',
+                'u.slug'       => 'inviter_slug',
+                'u.is_deleted' => 'inviter_is_deleted',
+                'u.avatar'     => 'inviter_avatar'
+            ], 'left');
+        }
 
         $this->joinSessionsOnline('i');
 
         if ($id){
             $user = $this->getItemById('{users}', $id);
         } else {
+            // На случай, если по ошибке запросят без предварительного фильтра
+            if (!$this->where){
+                return false;
+            }
             $user = $this->getItem('{users}');
         }
 
@@ -175,7 +181,7 @@ class modelUsers extends cmsModel {
         $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
         $user['ctype_name']      = 'users';
         $user['inviter'] = [];
-        if ($user['inviter_id']) {
+        if (!empty($user['inviter_nickname'])) {
             $user['inviter'] = [
                 'nickname'   => $user['inviter_nickname'],
                 'slug'       => $user['inviter_slug'],
@@ -191,7 +197,7 @@ class modelUsers extends cmsModel {
 
         if(!$slug){ return false; }
 
-        return $this->filterEqual('slug', $slug)->getUser();
+        return $this->filterEqual('slug', $slug)->getUser(false, true);
     }
 
     public function getUserByEmail($email){

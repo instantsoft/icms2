@@ -148,6 +148,9 @@ icms.modal = (function ($) {
         $.ajax({
             url: url,
             data: data,
+            beforeSend: function(request) {
+                request.setRequestHeader('ICMS-Request-Type', 1);
+            },
             success: function(result){
                 self.showContent(title, result);
                 if(open_callback){

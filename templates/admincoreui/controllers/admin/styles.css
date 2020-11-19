@@ -814,6 +814,9 @@ th[rel="is_enabled"] {
 th[rel="dg_actions"] {
     width: 70px;
 }
+th.sortable {
+    cursor: pointer;
+}
 .datagrid_loading{
     position: absolute;
     top: 0;

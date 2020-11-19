@@ -37,7 +37,7 @@ class users extends cmsFrontend {
         if (is_numeric($action_name)) {
 
             // $action_name это id пользователя
-            $profile = $this->model->getUser($action_name);
+            $profile = $this->model->getUser($action_name, 'join_inviter');
             if (!$profile) { cmsCore::error404(); }
 
             if($profile['slug'] != $action_name){

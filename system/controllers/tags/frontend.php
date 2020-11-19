@@ -20,7 +20,11 @@ class tags extends cmsFrontend {
             $this->model->limit($options['limit']);
         }
 
-        $this->model->orderBy('frequency', 'desc');
+        $this->model->orderByList([[
+            'by' => 'frequency',
+            'to' => 'desc',
+            'strict' => true
+        ]]);
 
         if (!empty($options['subjects'])) {
 
