@@ -80,7 +80,7 @@
             <?php } ?>
         </div>
     </div>
-
+<?php if(!$hide_info_block){ ?>
     <div class="right">
         <div class="photo_author">
             <span class="album_user" title="<?php echo LANG_AUTHOR ?>">
@@ -171,6 +171,7 @@
         </dl>
 
     </div>
+<?php } ?>
     <meta itemprop="height" content="<?php echo $photo['sizes'][$preset]['height']; ?> px">
     <meta itemprop="width" content="<?php echo $photo['sizes'][$preset]['width']; ?> px">
 </div>

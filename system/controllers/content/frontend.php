@@ -114,8 +114,8 @@ class content extends cmsFrontend {
 
         foreach($tree as $cat){
 
-            $item_id   = 'content.'.$ctype['name'].'.'.$cat['id'];
-            $parent_id = 'content.'.$ctype['name'].'.'.$cat['parent_id'];
+            $item_id   = 'content.'.$ctype['name'].'.'.$cat['id'].'.'.$menu_item_id;
+            $parent_id = 'content.'.$ctype['name'].'.'.$cat['parent_id'].'.'.$menu_item_id;
 
             if($cat['parent_id'] > 1){
                 if(!isset($childs_count[$cat['parent_id']])){

@@ -189,10 +189,10 @@ icms.modal = (function ($) {
     this.setHeight = function(height){};
 
 	this.alert = function(text, type) {
-        type = type || '';
+        type = type || 'primary';
         type = type.replace('ui_', '');
         type = type.replace('error', 'danger');
-		this.openHtml(text, '<i class="fa fa-warning fa-lg"></i>', type);
+		this.openHtml('<div class="alert alert-'+type+' border-0 rounded-0 m-n3">'+text+'</div>', '<b>ⓘ</b>', type);
 	};
 
 	return this;

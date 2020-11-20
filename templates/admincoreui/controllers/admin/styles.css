@@ -1129,6 +1129,7 @@ td > .spinner > div {
 
 .animate-shake {
   animation-name: shake;
+  z-index: 1;
 }
 .icms-svg-icon.w-16 {
     width: 1em;

@@ -128,6 +128,10 @@ class formPhotosOptions extends cmsForm {
                         'default' => 20
                     )),
 
+                    new fieldCheckbox('hide_photo_item_info', array(
+                        'title'   => LANG_PHOTOS_HIDE_PHOTO_ITEM_INFO
+                    )),
+
                     new fieldString('url_pattern', array(
                         'title'   => LANG_PHOTOS_URL_PATTERN,
                         'prefix'  => '/photos/',

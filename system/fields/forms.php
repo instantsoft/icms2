@@ -31,7 +31,7 @@ class fieldForms extends cmsFormField {
 
         $forms = cmsCore::getController('forms');
 
-        $_form_data = $forms->model->getFormData($value);
+        $_form_data = $forms->getFormData($value);
 
         if ($_form_data === false) {
             return '';
@@ -41,6 +41,16 @@ class fieldForms extends cmsFormField {
 
         $form_data['options']['show_title'] = $this->getOption('show_title');
         $form_data['options']['continue_link'] = $this->getOption('continue_link') ?: $form_data['options']['continue_link'];
+
+        $submited_data = $forms->getSavedUserFormData($form_data['id']);
+
+        if($submited_data && !empty($form_data['options']['hide_after_submit'])){
+            return '';
+        }
+
+        if(!empty($this->item['user_id'])){
+            $form = $forms->setItemAuthor($form, $this->item['user_id']);
+        }
 
         return cmsTemplate::getInstance()->renderInternal($forms, 'form_view', [
             'form_data' => $form_data,

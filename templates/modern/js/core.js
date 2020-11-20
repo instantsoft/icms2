@@ -405,7 +405,8 @@ icms.forms = (function ($) {
 
             $(submit_btn).prop('disabled', false).removeClass('is-busy');
 
-            if (result.errors == false){
+            if (result.errors === false){
+                $('input[type=text], select, textarea', form).val('');
                 if ("callback" in result){
                     window[result.callback](form_data, result); return;
                 }
@@ -418,8 +419,10 @@ icms.forms = (function ($) {
                 return;
             }
 
-            if (typeof(result.errors)=='object'){
-
+            if (typeof(result.errors) === 'object'){
+                if(result.message){
+                    icms.modal.alert(result.message, 'danger');
+                }
                 for(var field_id in result.errors){
                     var id = field_id.replace(':', '_');
                     $('#'+id, form).addClass('is-invalid');

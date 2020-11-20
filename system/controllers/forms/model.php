@@ -57,45 +57,6 @@ class modelForms extends cmsModel {
         return $form;
     }
 
-    public function getFormData($id){
-
-        $form_data = $this->getForm($id);
-        if(!$form_data){ return false;}
-
-        $fields = $this->filterEqual('form_id', $form_data['id'])->getFormFields();
-        if(!$fields){ return false; }
-
-        // Строим форму
-        $form = new cmsForm();
-
-        // Разбиваем поля по группам
-        $fieldsets = cmsForm::mapFieldsToFieldsets($fields);
-
-        // Добавляем поля в форму
-        foreach($fieldsets as $fieldset){
-
-            $fid = $fieldset['title'] ? md5($fieldset['title']) : null;
-
-            $fieldset_id = $form->addFieldset($fieldset['title'], $fid);
-
-            foreach($fieldset['fields'] as $field){
-                // Говорим, к чему это поле относится
-                $field['handler']->context_params = [
-                    'target_controller' => 'forms',
-                    'target_subject'    => null,
-                    'target_id'         => $form_data['id']
-                ];
-                $form->addField($fieldset_id, $field['handler']);
-            }
-
-        }
-
-        list($form, $form_data) = cmsEventsManager::hook('forms_get_form', [$form, $form_data]);
-
-        return [$form, $form_data];
-    }
-
-
     public function getFormFields($enabled = true){
 
         $this->useCache('forms.fields');
@@ -136,10 +97,11 @@ class modelForms extends cmsModel {
 
                 $field['handler_title'] = $field['handler']->getTitle();
 
-                $field['handler']->setOptions($field);
+                $field_property = $field; unset($field_property['type']);
+
+                $field['handler']->setOptions($field_property);
 
                 $fields[$name] = $field;
-
             }
         }
 

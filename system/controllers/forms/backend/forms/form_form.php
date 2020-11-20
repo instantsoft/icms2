@@ -7,8 +7,10 @@ class formFormsForm extends cmsForm {
 
         $meta_fields = [
             'form_title' => LANG_FORMS_CP_TITLE,
-            'form_data' => LANG_FORMS_CP_META_DATA,
-            'ip' => 'IP'
+            'form_data'  => LANG_FORMS_CP_META_DATA,
+            'page_url'   => LANG_FORMS_PAGE_URL,
+            'user_name'  => LANG_USER,
+            'ip'         => 'IP'
         ];
 
         if($fields){
@@ -67,12 +69,17 @@ class formFormsForm extends cmsForm {
                     new fieldCheckbox('options:available_by_link', array(
                         'title' => LANG_FORMS_CP_AVAILABLE_BY_LINK
                     )),
+                    new fieldCheckbox('options:hide_after_submit', array(
+                        'title' => LANG_FORMS_CP_HIDE_AFTER_SUBMIT
+                    )),
                     new fieldList('options:send_type', array(
                         'title' => LANG_FORMS_CP_SEND_TYPE,
+                        'hint' => LANG_FORMS_CP_SEND_TYPE_HINT,
                         'is_chosen_multiple' => true,
                         'items' => [
                             'notice' => LANG_FORMS_CP_SEND_TYPE1,
-                            'email'  => LANG_FORMS_CP_SEND_TYPE2
+                            'email'  => LANG_FORMS_CP_SEND_TYPE2,
+                            'author' => LANG_FORMS_CP_SEND_TYPE3
                         ]
                     )),
                     new fieldString('options:send_type_notice', array(

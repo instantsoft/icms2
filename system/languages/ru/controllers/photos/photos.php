@@ -14,6 +14,7 @@
 	define('LANG_PHOTOS_PUBLIC_ALBUMS',         'Общие альбомы');
 	define('LANG_PHOTOS_USER_ALBUMS',           'Личные альбомы');
 	define('LANG_PHOTOS_SAVE_ORIG',             'Cохранять оригиналы фотографий');
+	define('LANG_PHOTOS_HIDE_PHOTO_ITEM_INFO',  'Не показывать блок с информацией о фотографии на её странице');
 	define('LANG_PHOTOS_SAVE_ORIG_HINT',        'Файлы загружаемых фото в оригинальном размере будут сохраняться на сервере');
 	define('LANG_PHOTOS_PRESET',                'Пресет для показа фотографии на странице просмотра');
 	define('LANG_PHOTOS_PRESET_SMALL',          'Пресет для фотографий в списке');

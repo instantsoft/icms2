@@ -12,9 +12,9 @@ class widgetFormsForm extends cmsWidget {
             return false;
         }
 
-        $model = cmsCore::getModel('forms');
+        $forms = cmsCore::getController('forms');
 
-        $_form_data = $model->getFormData($form_id);
+        $_form_data = $forms->getFormData($form_id);
 
         if ($_form_data === false) {
             return false;
@@ -25,10 +25,18 @@ class widgetFormsForm extends cmsWidget {
         $form_data['options']['show_title'] = $this->getOption('show_title');
         $form_data['options']['continue_link'] = $this->getOption('continue_link') ?: $form_data['options']['continue_link'];
 
-        return array(
+        $submited_data = $forms->getSavedUserFormData($form_data['id']);
+
+        if($submited_data && !empty($form_data['options']['hide_after_submit'])){
+            // @todo
+            // сделать показ данных формы, если отправлена авторизованным
+            return false;
+        }
+
+        return [
             'form_data' => $form_data,
             'form'      => $form
-        );
+        ];
 
     }
 

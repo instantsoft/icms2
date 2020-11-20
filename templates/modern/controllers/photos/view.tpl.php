@@ -64,6 +64,7 @@
             </div>
         </div>
     </div>
+<?php if(!$hide_info_block){ ?>
     <div class="col-sm col-lg-4">
         <div class="d-flex align-items-center mb-3 mt-3 mt-lg-0">
             <a href="<?php echo href_to_profile($photo['user']); ?>" class="icms-user-avatar mr-2 small <?php if (!empty($photo['user']['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
@@ -158,6 +159,7 @@
             <?php } ?>
         </dl>
     </div>
+<?php } ?>
     <meta itemprop="height" content="<?php echo $photo['sizes'][$preset]['height']; ?> px">
     <meta itemprop="width" content="<?php echo $photo['sizes'][$preset]['width']; ?> px">
 </div>
