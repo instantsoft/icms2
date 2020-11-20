@@ -418,9 +418,9 @@ class users extends cmsFrontend {
 
     public function isSlugAllowed($value) {
 
-        $list = $this->options['restricted_slugs'];
+        if (cmsUser::isAdmin() || !isset($this->options['restricted_slugs'])) return true;
 
-        return !string_in_mask_list($value, $list);
+        return !string_in_mask_list($value, $this->options['restricted_slugs']);
     }
 
 }
