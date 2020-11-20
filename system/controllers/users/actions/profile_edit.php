@@ -81,7 +81,19 @@ class actionUsersProfileEdit extends cmsAction {
                     'min_length'=> 2,
                     'max_length'=> 100
                 ),
-                'rules' => array(['slug_segment'], ['unique_exclude', '{users}', 'slug', $profile['id']])
+                'rules' => array(
+                    ['slug_segment'],
+                    ['unique_exclude', '{users}', 'slug', $profile['id']],
+                    [function($controller, $data, $value){
+
+                        if(!$this->isSlugAllowed($value)){
+                            return sprintf(LANG_USERS_OPT_RESTRICTED_SLUG, $value);
+                        }
+
+                        return true;
+
+                    }]
+                )
             )));
         }
 
@@ -97,13 +109,6 @@ class actionUsersProfileEdit extends cmsAction {
 
             // Проверям правильность заполнения
             $errors = $form->validate($this,  $profile);
-
-            if (!$errors){
-                // Проверяем допустимость slug
-                if (!$this->isSlugAllowed($profile['slug'])){
-                    $errors['slug'] = sprintf(LANG_USERS_OPT_RESTRICTED_SLUG, $profile['slug']);
-                }
-            }
 
             if (!$errors){
                 $is_allowed = cmsEventsManager::hookAll('user_profile_update', $profile, true);
