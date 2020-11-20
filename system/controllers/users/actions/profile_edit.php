@@ -81,7 +81,18 @@ class actionUsersProfileEdit extends cmsAction {
                     'min_length'=> 2,
                     'max_length'=> 100
                 ),
-                'rules' => array(['slug_segment'], ['unique_exclude', '{users}', 'slug', $profile['id']])
+                'rules' => array(
+                    ['slug_segment'],
+                    ['unique_exclude', '{users}', 'slug', $profile['id']],
+                    [function($controller, $data, $value){
+
+                        if(!$this->isSlugAllowed($value)){
+                            return sprintf(LANG_USERS_OPT_RESTRICTED_SLUG, $value);
+                        }
+
+                        return true;
+                    }]
+                )
             )));
         }
 
