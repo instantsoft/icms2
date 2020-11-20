@@ -91,7 +91,6 @@ class actionUsersProfileEdit extends cmsAction {
                         }
 
                         return true;
-
                     }]
                 )
             )));
