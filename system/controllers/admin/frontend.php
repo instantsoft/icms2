@@ -431,41 +431,46 @@ class admin extends cmsFrontend {
 
     public function getSettingsMenu(){
 
-        return cmsEventsManager::hook('admin_settings_menu', array(
-            array(
-                'title' => LANG_BASIC_OPTIONS,
-                'url' => href_to($this->name, 'settings'),
-                'level' => 2,
-                'options' => array(
-                    'icon'  => 'nav-icon icon-globe'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SCHEDULER,
-                'url' => href_to($this->name, 'settings', array('scheduler')),
-                'level' => 2,
-                'options' => array(
-                    'icon'  => 'nav-icon icon-clock'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SETTINGS_TEMPLATE_OPTIONS,
-                'url' => href_to($this->name, 'settings', array('theme', $this->cms_config->template)),
-                'level' => 2,
-                'options' => array(
-                    'icon'  => 'nav-icon icon-settings'
-                )
-            ),
-            array(
-                'title' => LANG_CP_CHECK_NESTED,
-                'url' => href_to($this->name, 'settings', array('check_nested')),
-                'level' => 2,
-                'options' => array(
-                    'icon'  => 'nav-icon icon-organization'
-                )
-            )
-        ));
+        $template = new cmsTemplate($this->cms_config->template);
 
+        $menu = [];
+
+        $menu[] = [
+            'title'   => LANG_BASIC_OPTIONS,
+            'url'     => href_to($this->name, 'settings'),
+            'level'   => 2,
+            'options' => [
+                'icon' => 'nav-icon icon-globe'
+            ]
+        ];
+        $menu[] = [
+            'title'   => LANG_CP_SCHEDULER,
+            'url'     => href_to($this->name, 'settings', ['scheduler']),
+            'level'   => 2,
+            'options' => [
+                'icon' => 'nav-icon icon-clock'
+            ]
+        ];
+        if($template->hasOptions()){
+            $menu[] = [
+                'title'   => LANG_CP_SETTINGS_TEMPLATE_OPTIONS,
+                'url'     => href_to($this->name, 'settings', ['theme', $this->cms_config->template]),
+                'level'   => 2,
+                'options' => [
+                    'icon' => 'nav-icon icon-settings'
+                ]
+            ];
+        }
+        $menu[] = [
+            'title'   => LANG_CP_CHECK_NESTED,
+            'url'     => href_to($this->name, 'settings', ['check_nested']),
+            'level'   => 2,
+            'options' => [
+                'icon' => 'nav-icon icon-organization'
+            ]
+        ];
+
+        return cmsEventsManager::hook('admin_settings_menu', $menu);
     }
 
     public function getUserGroupsMenu($action = 'view', $id = 0) {
