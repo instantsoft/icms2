@@ -28,10 +28,10 @@
     margin-bottom: 0 !important;
 }
 #desktop_device_type {
-    .icms-menu-hovered .dropdown:hover>.dropdown-menu {
+    .icms-menu-hovered .dropdown:hover>.dropdown-menu, .icms-user-menu:not(.show):hover>.dropdown-menu {
         display: block;
-        -webkit-animation: slide-up .25s ease-in-out;
-        animation: slide-up .25s ease-in-out;
+        -webkit-animation: slide-up .3s ease-in-out;
+        animation: slide-up .3s ease-in-out;
         margin: 0;
     }
 }

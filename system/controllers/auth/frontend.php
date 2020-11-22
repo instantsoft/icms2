@@ -182,7 +182,7 @@ class auth extends cmsFrontend {
             );
         }
 
-        return [$form, $fieldsets];
+        return cmsEventsManager::hook('form_auth_registration_full', [$form, $fieldsets]);
     }
 
 }

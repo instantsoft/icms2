@@ -66,6 +66,10 @@ class fieldForms extends cmsFormField {
         return $model->filterNotNull($this->name);
     }
 
+    public function store($value, $is_submitted, $old_value = null) {
+        return $value ?: null;
+    }
+
     public function getInput($value) {
 
         $this->data['items'] = ['' => ''] + array_collection_to_list(cmsCore::getModel('forms')->get('forms'), 'id', 'title');

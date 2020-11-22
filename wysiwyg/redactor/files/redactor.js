@@ -5795,7 +5795,7 @@
 			else
 			{
 				var tr = $table.find('tr').first().clone();
-				tr.find('td').html(this.opts.invisibleSpace);
+				tr.find('td').replaceWith('<th></th>').html(this.opts.invisibleSpace);
 				$thead = $('<thead></thead>');
 				$thead.append(tr);
 				$table.prepend($thead);

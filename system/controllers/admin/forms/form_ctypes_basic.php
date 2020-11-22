@@ -351,12 +351,14 @@ class formAdminCtypesBasic extends cmsForm {
                     )),
                     new fieldString('options:seo_keys_pattern', array(
                         'title' => LANG_CP_SEOMETA_ITEM_KEYS,
+                        'default' => '{content|string_get_meta_keywords}',
                         'patterns_hint' => [
                             'patterns' =>  $item_fields
                         ]
                     )),
                     new fieldString('options:seo_desc_pattern', array(
                         'title' => LANG_CP_SEOMETA_ITEM_DESC,
+                        'default' => '{content|string_get_meta_description}',
                         'patterns_hint' => [
                             'patterns' =>  $item_fields
                         ]

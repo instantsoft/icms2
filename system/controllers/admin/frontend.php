@@ -449,6 +449,14 @@ class admin extends cmsFrontend {
                 )
             ),
             array(
+                'title' => LANG_CP_SETTINGS_TEMPLATE_OPTIONS,
+                'url' => href_to($this->name, 'settings', array('theme', $this->cms_config->template)),
+                'level' => 2,
+                'options' => array(
+                    'icon'  => 'nav-icon icon-settings'
+                )
+            ),
+            array(
                 'title' => LANG_CP_CHECK_NESTED,
                 'url' => href_to($this->name, 'settings', array('check_nested')),
                 'level' => 2,

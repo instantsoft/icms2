@@ -62,6 +62,21 @@ class formModernTemplateOptions extends cmsForm {
                         'hint' => LANG_MODERN_THEME_COPYRIGHT_YEAR_HINT
                     )),
 
+                    new fieldCheckbox('show_top_btn', array(
+                        'title' => LANG_MODERN_THEME_ENABLE_TOPBTN,
+                        'default' => 1
+                    )),
+
+                    new fieldCheckbox('show_cookiealert', array(
+                        'title' => LANG_MODERN_THEME_SHOW_COOKIEALERT
+                    )),
+
+                    new fieldString('cookiealert_text', array(
+                        'title' => LANG_MODERN_THEME_COOKIEALERT_TEXT,
+                        'is_clean_disable' => true,
+                        'visible_depend' => array('show_cookiealert' => array('show' => array('1')))
+                    )),
+
                     new fieldCheckbox('scss:enable-rounded', array(
                         'title' => LANG_MODERN_THEME_ENABLE_ROUNDED,
                         'default' => 1
@@ -108,6 +123,11 @@ class formModernTemplateOptions extends cmsForm {
                         'default' => '1rem'
                     )),
 
+                    new fieldString('scss:spacer', array(
+                        'title' => LANG_MODERN_THEME_BASE_SPACER,
+                        'default' => '1rem'
+                    )),
+
                     new fieldString('scss:avatar-inlist-size', array(
                         'title' => LANG_MODERN_THEME_AVATAR_INLIST_SIZE,
                         'hint' => LANG_MODERN_THEME_AVATAR_INLIST_SIZE_HINT,
@@ -118,6 +138,54 @@ class formModernTemplateOptions extends cmsForm {
                         'generator' => function($item) {
                             return cmsTemplate::getInstance()->getAvailableTemplatesFiles('assets/ui', 'pagination*.tpl.php', 'modern');
                         }
+                    ))
+
+                )
+            ),
+
+            'logo' => array(
+                'type' => 'fieldset',
+                'title' => LANG_PAGE_LOGO,
+                'childs' => array(
+
+                    new fieldImage('logo', array(
+                        'title' => LANG_MODERN_LOGO,
+                        'hint' => LANG_MODERN_RASTR_HINT,
+                        'context_params' => [
+                            'target_controller' => 'admin',
+                            'target_subject'    => 'theme/modern',
+                            'target_id'         => null
+                        ],
+                        'options' => array(
+                            'sizes' => array('small', 'original')
+                        )
+                    )),
+
+                    new fieldFile('logo_svg', array(
+                        'title' => LANG_MODERN_LOGO_SVG,
+                        'options' => [
+                            'extensions' => 'svg'
+                        ]
+                    )),
+
+                    new fieldImage('logo_small', array(
+                        'title' => LANG_MODERN_LOGO_SMALL,
+                        'hint' => LANG_MODERN_LOGO_SMALL_HINT.LANG_MODERN_RASTR_HINT,
+                        'context_params' => [
+                            'target_controller' => 'admin',
+                            'target_subject'    => 'theme/modern',
+                            'target_id'         => null
+                        ],
+                        'options' => array(
+                            'sizes' => array('small', 'original')
+                        )
+                    )),
+
+                    new fieldFile('logo_small_svg', array(
+                        'title' => LANG_MODERN_LOGO_SMALL_SVG,
+                        'options' => [
+                            'extensions' => 'svg'
+                        ]
                     ))
 
                 )
@@ -142,6 +210,14 @@ class formModernTemplateOptions extends cmsForm {
                     )),
                     new fieldColor('custom_scss:body-color', array(
                         'visible_depend' => array('scss:body-color' => array('show' => array('')))
+                    )),
+                    new fieldList('scss:link-color', array(
+                        'title' => LANG_MODERN_THEME_LINK_COLOR,
+                        'hint' => LANG_MODERN_THEME_GCOLOR,
+                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma
+                    )),
+                    new fieldColor('custom_scss:link-color', array(
+                        'visible_depend' => array('scss:link-color' => array('show' => array('')))
                     )),
                 ]
             ),

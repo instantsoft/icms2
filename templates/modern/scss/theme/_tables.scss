@@ -1,0 +1,30 @@
+.ft_html {
+    table {
+        width: 100%;
+        margin-bottom: $spacer;
+        color: $table-color;
+        background-color: $table-bg;
+        border: $table-border-width solid $table-border-color;
+
+        th,
+        td {
+            padding: $table-cell-padding;
+            vertical-align: top;
+            border: $table-border-width solid $table-border-color;
+        }
+
+        thead th {
+            vertical-align: bottom;
+            border-bottom: (2 * $table-border-width) solid $table-border-color;
+        }
+        tbody tr {
+            @include hover() {
+                color: $table-hover-color;
+                background-color: $table-hover-bg;
+            }
+        }
+        tbody + tbody {
+            border-top: (2 * $table-border-width) solid $table-border-color;
+        }
+    }
+}

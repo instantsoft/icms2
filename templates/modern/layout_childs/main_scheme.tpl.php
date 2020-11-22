@@ -36,7 +36,7 @@
                 <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['before']]); ?>
             <?php } ?>
             <?php if($this->hasWidgetsOn($col['name'])){ ?>
-                <?php $this->widgetsPlain($col['name'], $col['wrapper']); ?>
+                <?php $this->widgetsInHtml($col['name'], $col['wrapper']); ?>
             <?php } ?>
             <?php if(!empty($col['rows']['after'])){ ?>
                 <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['after']]); ?>

@@ -166,10 +166,23 @@ $icms-image_single-size: 80px !default;
         }
     }
 }
-.ft_image {
+.form-group.ft_image {
     padding-left: $icms-image_single-size + 10;
     position: relative;
     min-height: $icms-image_single-size;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    > label {
+        width: 100%;
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+    .icms-forms-hint {
+        width: 100%;
+        margin-bottom: auto;
+        margin-top: -20px;
+    }
     .widget_image_single + .hint {
         margin: 0 !important;
     }

@@ -1,6 +1,6 @@
 <div class="nav position-relative icms-user-menu rounded">
     <div class="d-flex align-items-center px-3 py-2" data-toggle="dropdown">
-        <div class="icms-user-avatar  d-flex align-items-center">
+        <div class="icms-user-avatar d-flex align-items-center">
             <?php if($user->avatar){ ?>
                 <?php echo html_avatar_image($user->avatar, 'micro', $user->nickname); ?>
             <?php } else { ?>

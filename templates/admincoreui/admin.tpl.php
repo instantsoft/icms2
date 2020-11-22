@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
     <?php $this->addMainTplCSSName([
-        'vendors/font-awesome/css/font-awesome.min',
         'vendors/simple-line-icons/css/simple-line-icons',
         'vendors/toastr/toastr.min',
         'jquery-ui',
@@ -59,19 +58,20 @@
                     </a>
                 <?php } else { ?>
                     <a class="nav-link" data-toggle="tooltip" data-placement="bottom" href="<?php echo href_to('admin', 'update'); ?>" title="<?php echo LANG_CP_UPDATE_CHECK; ?>">
-                        <i class="fa fa-rocket fa-lg"></i> <?php echo cmsCore::getVersion(); ?>
+                        <?php html_svg_icon('solid', 'code-branch'); ?> <?php echo cmsCore::getVersion(); ?>
                     </a>
                 <?php } ?>
             </li>
             <?php if (!$config->is_site_on){ ?>
                 <li class="nav-item px-3" id="site_off_notice">
-                    <span class="btn btn-warning text-white">
-                        <i class="fa fa-warning fa-lg"></i> <?php printf(ERR_SITE_OFFLINE_FULL, href_to('admin', 'settings', 'siteon')); ?>
+                    <span class="btn btn-danger text-white">
+                        <?php html_svg_icon('solid', 'exclamation-triangle'); ?>
+                        <?php printf(ERR_SITE_OFFLINE_FULL, href_to('admin', 'settings', 'siteon')); ?>
                     </span>
                 </li>
             <?php } ?>
             <li class="nav-item px-3 text-light" title="<?php echo LANG_TODAY; ?>" data-toggle="tooltip" data-placement="bottom">
-                <i class="fa fa-calendar"></i> <span><?php echo lang_date(date('d F')); ?></span> <span id="clock"></span>
+                <?php html_svg_icon('solid', 'calendar'); ?> <span><?php echo lang_date(date('d F')); ?></span> <span id="clock"></span>
             </li>
         </ul>
         <ul class="nav navbar-nav ml-auto">
@@ -123,13 +123,13 @@
                         <strong><?php echo $user->nickname; ?></strong>
                     </div>
                     <a class="dropdown-item" href="<?php echo href_to_profile($user); ?>">
-                        <i class="fa fa-user"></i> <?php echo LANG_MY_PROFILE; ?>
+                        <?php html_svg_icon('solid', 'user'); ?> <?php echo LANG_MY_PROFILE; ?>
                     </a>
                     <a class="dropdown-item" href="<?php echo href_to('admin', 'users', ['edit', $user->id]); ?>">
-                        <i class="fa fa-edit"></i> <?php echo LANG_EDIT; ?>
+                        <?php html_svg_icon('solid', 'edit'); ?> <?php echo LANG_EDIT; ?>
                     </a>
                     <a class="dropdown-item" href="<?php echo href_to('auth', 'logout'); ?>">
-                        <i class="fa fa-sign-out"></i> <?php echo LANG_LOG_OUT; ?>
+                        <?php html_svg_icon('solid', 'sign-out-alt'); ?> <?php echo LANG_LOG_OUT; ?>
                     </a>
                 </div>
             </li>

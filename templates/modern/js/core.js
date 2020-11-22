@@ -19,6 +19,50 @@ $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
 });
 
+icms.template = (function ($) {
+
+    this.onDocumentReady = function(){
+        this.initScrollTop();
+        this.initCookieAlert();
+    };
+
+    this.initCookieAlert = function(){
+        var block = $('#icms-cookiealert');
+        if($(block).length === 0){ return; }
+        if(localStorage.getItem('cookiealert_hide')){ return; }
+        $(window).one('scroll', function() {
+            $(block).addClass('show');
+        });
+        $('.acceptcookies', block).on('click', function(t) {
+            localStorage.setItem('cookiealert_hide', 1);
+            $(block).removeClass('show');
+        });
+    };
+
+    this.initScrollTop = function(){
+        var link = $('#scroll-top');
+        if($(link).length === 0){ return; }
+        if($(window).scrollTop() > 350){
+            $(link).addClass('position-fixed');
+        }
+        $(window).on('scroll', function() {
+            if($(this).scrollTop() > 350){
+                $(link).addClass('position-fixed');
+            } else {
+                $(link).removeClass('position-fixed');
+            }
+        });
+        $(link).on('click', function(t) {
+            $('html, body').animate({
+                scrollTop: 0
+            }, 800), t.preventDefault();
+        });
+    };
+
+    return this;
+
+}).call(icms.template || {},jQuery);
+
 icms.menu = (function ($) {
 
     this.onDocumentReady = function(){

@@ -449,23 +449,18 @@ class cmsTemplate {
 
     /**
      * Выводит виджеты на указанной позиции
-     * Не используя файлы шаблонов обертки виджетов
+     * И выводит их, заменяя {position} в HTML обёртки
      *
      * @param string $position Название позиции
      * @param string $wrapper_html HTML шаблона обёртки позиции
      */
-    public function widgetsPlain($position, $wrapper_html) {
-        $html = '';
-        foreach($this->widgets[$position] as $group){
-            foreach($group as $widget) {
-                if ($widget['class_wrap']) {
-                    $html .= '<div class="'.$widget['class_wrap'].'">'.$widget['body'].'</div>';
-                } else {
-                    $html .= $widget['body'];
-                }
-            }
-        }
-        echo str_replace('{position}', $html, $wrapper_html);
+    public function widgetsInHtml($position, $wrapper_html) {
+
+        ob_start();
+
+        $this->widgets($position);
+
+        echo str_replace('{position}', ob_get_clean(), $wrapper_html);
     }
 
     /**

@@ -14,6 +14,8 @@
 @import "widgets";
 // Типы контента
 @import "content";
+// Таблицы
+@import "tables";
 // Комментарии
 @import "comments";
 // Рейтинг
@@ -55,6 +57,33 @@
                 border-radius: 0;
             }
         }
+    }
+}
+#scroll-top {
+    position: fixed;
+    right: $spacer;
+    z-index: 9999;
+    bottom: $spacer;
+    visibility: hidden;
+    opacity: 0;
+    transition: all .3s;
+    transform: translateY($spacer*5);
+	&.position-fixed {
+		transform: translateY(0);
+		opacity: 1;
+		visibility: visible;
+	}
+}
+.icms-cookiealert {
+    background-color: rgba($black, .9);
+    color: $white;
+    transform: translateY(100%);
+    transition: all 500ms ease-out;
+    opacity: 0;
+    &.show {
+        opacity: 1;
+        transform: translateY(0%);
+        transition-delay: 500ms;
     }
 }
 .loading {

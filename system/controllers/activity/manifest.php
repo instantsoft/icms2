@@ -15,7 +15,8 @@
             'unsubscribe',
             'user_registered',
             'users_add_friendship_mutual',
-            'user_tab_show'
+            'user_tab_show',
+            'users_after_update'
         )
 
     );

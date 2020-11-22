@@ -69,13 +69,13 @@
 <?php } elseif($widget->options['type'] === 'logo') { ?>
     <?php if($core->uri) { ?>
         <a class="navbar-brand mr-3 flex-shrink-0" href="<?php echo href_to_home(); ?>">
-            <img src="<?php echo $this->getTemplateFilePath('images/small_logo.svg'); ?>" class="d-sm-none" alt="<?php html($config->sitename); ?>">
-            <img src="<?php echo $this->getTemplateFilePath('images/logo.svg'); ?>" class="d-none d-sm-block" alt="<?php html($config->sitename); ?>">
+            <img src="<?php echo $logos['small_logo']; ?>" class="d-sm-none" alt="<?php html($config->sitename); ?>">
+            <img src="<?php echo $logos['logo']; ?>" class="d-none d-sm-block" alt="<?php html($config->sitename); ?>">
         </a>
     <?php } else { ?>
         <span class="navbar-brand mr-3 flex-shrink-0">
-            <img src="<?php echo $this->getTemplateFilePath('images/small_logo.svg'); ?>" class="d-sm-none" alt="<?php html($config->sitename); ?>">
-            <img src="<?php echo $this->getTemplateFilePath('images/logo.svg'); ?>" class="d-none d-sm-block" alt="<?php html($config->sitename); ?>">
+            <img src="<?php echo $logos['small_logo']; ?>" class="d-sm-none" alt="<?php html($config->sitename); ?>">
+            <img src="<?php echo $logos['logo']; ?>" class="d-none d-sm-block" alt="<?php html($config->sitename); ?>">
         </span>
     <?php } ?>
 <?php } ?>

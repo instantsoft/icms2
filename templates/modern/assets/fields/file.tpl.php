@@ -4,12 +4,12 @@
 <?php if ($value){ ?>
     <?php $file = is_array($value) ? $value : cmsModel::yamlToArray($value); ?>
     <div id="file_<?php echo $field->element_name; ?>" class="value">
-        <span class="name">
+        <span class="name h5">
             <a href="<?php echo $field->getDownloadURL($file); ?>"><?php echo $file['name']; ?></a>
         </span>
-        <span class="size"><?php echo files_format_bytes($file['size']); ?></span>
-        <a class="ajaxlink delete" href="javascript:" onclick="icms.files.remove('<?php echo $field->element_name; ?>')">
-            <i class="icon-close icons"></i> <?php echo LANG_DELETE; ?>
+        <span class="size mx-2"><?php echo files_format_bytes($file['size']); ?></span>
+        <a class="btn btn-sm btn-danger delete" href="javascript:" onclick="icms.files.remove('<?php echo $field->element_name; ?>')" title="<?php echo LANG_DELETE; ?>" data-toggle="tooltip" data-placement="right">
+            <?php html_svg_icon('solid', 'minus-circle'); ?>
         </a>
     </div>
 <?php } ?>

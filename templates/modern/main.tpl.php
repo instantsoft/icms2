@@ -26,6 +26,21 @@
     </head>
     <body id="<?php echo $device_type; ?>_device_type" data-device="<?php echo $device_type; ?>" class="d-flex flex-column h-100">
         <?php $this->renderLayoutChild('scheme', ['rows' => $rows]); ?>
+        <?php if (!empty($this->options['show_top_btn'])){ ?>
+            <a class="btn btn-secondary btn-lg" href="#<?php echo $device_type; ?>_device_type" id="scroll-top">
+                <?php html_svg_icon('solid', 'chevron-up'); ?>
+            </a>
+        <?php } ?>
+        <?php if (!empty($this->options['show_cookiealert'])){ ?>
+            <div class="alert text-center border-0 rounded-0 m-0 position-fixed fixed-bottom icms-cookiealert" id="icms-cookiealert">
+                <div class="container">
+                    <?php echo $this->options['cookiealert_text']; ?>
+                    <button type="button" class="ml-2 btn btn-primary btn-sm acceptcookies">
+                        <?php echo LANG_MODERN_THEME_COOKIEALERT_AGREE; ?>
+                    </button>
+                </div>
+            </div>
+        <?php } ?>
         <script><?php echo $this->getLangJS('LANG_LOADING', 'LANG_ALL'); ?></script>
         <?php $this->printJavascriptTags(); ?>
         <?php $this->bottom(); ?>
