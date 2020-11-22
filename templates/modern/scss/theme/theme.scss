@@ -75,7 +75,9 @@
 	}
 }
 .icms-cookiealert {
-    background-color: rgba($black, .9);
+    background-color: rgba($black, .8);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     color: $white;
     transform: translateY(100%);
     transition: all 500ms ease-out;

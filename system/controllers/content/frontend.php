@@ -1564,8 +1564,11 @@ class content extends cmsFrontend {
 
     }
 
-    public function validate_rating_score($score) {
-        return $score >= 1 && $score <= 5;
-    }
+    public function isAverageRating($ctype_name, $item_id, $score) {
 
+        $ctype = $this->model->getContentTypeByName($ctype_name);
+        if(!$ctype){ return true; }
+
+        return !array_key_exists('rating_is_average', $ctype['options']) ? true : boolval($ctype['options']['rating_is_average']);
+    }
 }

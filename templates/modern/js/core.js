@@ -450,7 +450,7 @@ icms.forms = (function ($) {
             $(submit_btn).prop('disabled', false).removeClass('is-busy');
 
             if (result.errors === false){
-                $('input[type=text], select, textarea', form).val('');
+                $('input[type=text], select, textarea', form).val('').triggerHandler('input');
                 if ("callback" in result){
                     window[result.callback](form_data, result); return;
                 }

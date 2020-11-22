@@ -32,7 +32,7 @@
             </a>
         <?php } ?>
         <?php if (!empty($this->options['show_cookiealert'])){ ?>
-            <div class="alert text-center border-0 rounded-0 m-0 position-fixed fixed-bottom icms-cookiealert" id="icms-cookiealert">
+            <div class="alert text-center py-3 border-0 rounded-0 m-0 position-fixed fixed-bottom icms-cookiealert" id="icms-cookiealert">
                 <div class="container">
                     <?php echo $this->options['cookiealert_text']; ?>
                     <button type="button" class="ml-2 btn btn-primary btn-sm acceptcookies">
