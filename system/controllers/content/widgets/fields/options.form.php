@@ -26,6 +26,9 @@ class formWidgetContentFieldsOptions extends cmsForm {
                     if($field['is_system']){
                         continue;
                     }
+                    if (!in_array('widget', $field['options']['is_in_item_pos'])) {
+                        continue;
+                    }
                     $list[$field['name']] = $field['title'];
                 }
             }
@@ -63,10 +66,10 @@ class formWidgetContentFieldsOptions extends cmsForm {
                         'title'  => LANG_WD_CONTENT_FIELDS_IF,
                         'parent' => array(
                             'list' => 'options:ctype_id',
-                            'url'  => href_to('content', 'widget_fields_ajax').'?'.http_build_query(['filter' => [
+                            'url'  => href_to('content', 'widget_fields_ajax').'?'.http_build_query(['excluding_filter' => [
                                 'is_system' => 1,
                                 'options' => [
-                                    'is_in_item_pos' => ''
+                                    'is_in_item_pos' => ['page']
                                 ]
                             ]])
                         ),
@@ -88,10 +91,10 @@ class formWidgetContentFieldsOptions extends cmsForm {
                         'is_chosen_multiple' => true,
                         'parent' => array(
                             'list' => 'options:ctype_id',
-                            'url'  => href_to('content', 'widget_fields_ajax').'?'.http_build_query(['filter' => [
+                            'url'  => href_to('content', 'widget_fields_ajax').'?'.http_build_query(['excluding_filter' => [
                                 'is_system' => 1,
                                 'options' => [
-                                    'is_in_item_pos' => ''
+                                    'is_in_item_pos' => ['page']
                                 ]
                             ]])
                         ),

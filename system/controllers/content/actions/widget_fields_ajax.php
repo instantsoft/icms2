@@ -12,7 +12,7 @@ class actionContentWidgetFieldsAjax extends cmsAction {
 		$ctype = $this->model->getContentType($ctype_id);
 		if (!$ctype) { return $this->cms_template->renderJSON(['' => '']); }
 
-        $filter = $this->request->get('filter',[]);
+        $excluding_filter = $this->request->get('excluding_filter', []);
 
 		$fields = $this->model->getContentFields($ctype['name']);
 
@@ -24,8 +24,8 @@ class actionContentWidgetFieldsAjax extends cmsAction {
 			$list[] = ['title'=>'', 'value'=>''];
 			foreach($fields as $field){
                 $is_continue = false;
-                if($filter){
-                    foreach ($filter as $key => $value) {
+                if($excluding_filter){
+                    foreach ($excluding_filter as $key => $value) {
                         if(!is_array($value)){
                             if(isset($field[$key]) && $field[$key] == $value){
                                 $is_continue = true;
@@ -53,7 +53,6 @@ class actionContentWidgetFieldsAjax extends cmsAction {
 		}
 
 		return $this->cms_template->renderJSON($list);
-
     }
 
 }

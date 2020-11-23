@@ -131,7 +131,7 @@ function check_db(){
     }
 
     if($db['engine'] == 'InnoDB'){
-        if ($success) {
+        if ($success === true) {
             $mysqli->commit();
         } else {
             $mysqli->rollback();
@@ -200,7 +200,7 @@ function check_db_charset($mysqli, $charset){
 
 }
 
-function import_dump($mysqli, $file, $prefix, $engine='MyISAM', $delimiter = ';', $charset = 'utf8'){
+function import_dump(&$mysqli, $file, $prefix, $engine='MyISAM', $delimiter = ';', $charset = 'utf8'){
 
     clearstatcache();
     @set_time_limit(0);

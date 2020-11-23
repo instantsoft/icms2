@@ -67,7 +67,7 @@
         &.active::before {
             background-color: $primary;
         }
-        &:hover {
+        &:not(.active):hover {
             &::before {
                 background-color: $nav-tabs-border-color;
             }

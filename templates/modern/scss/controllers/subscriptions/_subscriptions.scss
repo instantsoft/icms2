@@ -18,3 +18,16 @@
     float: none !important;
     margin: 0 !important;
 }
+.icms-subscriptions__label {
+    display: none;
+}
+.icms-filter-panel {
+    .icms-subscriptions__label {
+        display: inline-block;
+    }
+}
+@include media-breakpoint-up(sm) {
+    .icms-subscriptions__label {
+        display: inline-block;
+    }
+}
