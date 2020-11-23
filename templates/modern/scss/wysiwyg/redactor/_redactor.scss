@@ -564,6 +564,12 @@ body .redactor_air .redactor_toolbar {
   color: $black;
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
 }
+@include media-breakpoint-down(md) {
+    #redactor_modal {
+      max-width: 100%;
+      margin-left: -50% !important;
+    }
+}
 #redactor_modal header {
   padding: $modal-inner-padding $modal-inner-padding 0 $modal-inner-padding;
   font-size: $font-size-base * 1.5;

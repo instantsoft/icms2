@@ -71,5 +71,7 @@ $comment-rating-size: 30px;
     margin-bottom: 0;
 }
 .selected-comment {
+    padding-left: $spacer;
+    padding-top: $spacer/2;
     padding-bottom: $spacer;
 }

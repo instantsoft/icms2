@@ -40,7 +40,7 @@ function get_site_config_env() {
     $config = [];
 
     foreach ($env_mapping as $config_key => $env_key) {
-        $config[$config_key] = getenv($env_key, true) ?: getenv($env_key);
+        $config[$config_key] = getenv($env_key);
     }
 
     return $config;

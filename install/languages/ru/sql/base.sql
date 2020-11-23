@@ -1275,7 +1275,6 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (20, 5, 'comments', '1'),
 (20, 6, 'comments', '1'),
 (14, 6, 'comments', '1'),
-(21, 4, 'comments', '1'),
 (23, 5, 'activity', '1'),
 (23, 6, 'activity', '1'),
 (1, 3, 'albums', 'yes'),

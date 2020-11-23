@@ -25,6 +25,10 @@
     height: 1.5rem;
     margin: -0.75rem;
 }
+.ft_html .value img, p img {
+    max-width: 100%;
+    height: auto;
+}
 @-webkit-keyframes loader-button{
     100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}
 }
