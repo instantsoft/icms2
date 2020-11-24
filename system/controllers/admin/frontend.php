@@ -619,8 +619,9 @@ class admin extends cmsFrontend {
                 );
 
                 // проверяем установленную версию
-                $manifest['package']['installed_version'] = call_user_func(array($this, $manifest[$action]['type'].'Installed'), $manifest['package']);
-
+                if(method_exists($this, $manifest[$action]['type'].'Installed')){
+                    $manifest['package']['installed_version'] = call_user_func(array($this, $manifest[$action]['type'].'Installed'), $manifest['package']);
+                }
             }
 
 
@@ -677,10 +678,6 @@ class admin extends cmsFrontend {
                 filterEqual('controller', $manifest_package['controller'])->
                 getFieldFiltered('widgets', 'version');
 
-    }
-
-    private function systemInstalled($manifest_package) {
-        return cmsCore::getVersion();
     }
 
     private function getPackageContentsList(){
@@ -1109,7 +1106,7 @@ class admin extends cmsFrontend {
 
         $form = $this->getForm('widgets_cols', [$do, (!empty($col['id']) ? $col['id'] : 0), $row]);
 
-        $col_scheme_options = cmsEventsManager::hookAll('admin_col_scheme_options_'.$row['template'], ['add', $row, []]);
+        $col_scheme_options = cmsEventsManager::hookAll('admin_col_scheme_options', ['add', $row, []]);
 
         if($col_scheme_options){
             foreach ($col_scheme_options as $controller_name => $fields) {
@@ -1127,7 +1124,7 @@ class admin extends cmsFrontend {
 
         $form = $this->getForm('widgets_rows', [$do]);
 
-        $row_scheme_options = cmsEventsManager::hookAll('admin_row_scheme_options_'.$row['template'], [$do, $row, $col]);
+        $row_scheme_options = cmsEventsManager::hookAll('admin_row_scheme_options', [$do, $row, $col]);
 
         if($row_scheme_options){
             foreach ($row_scheme_options as $controller_name => $fields) {

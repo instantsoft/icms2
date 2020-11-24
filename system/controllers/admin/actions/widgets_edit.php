@@ -8,18 +8,18 @@ class actionAdminWidgetsEdit extends cmsAction {
             return cmsCore::error404();
         }
 
-        if($this->request->has('is_iframe')){
+        if ($this->request->has('is_iframe')) {
             $this->cms_template->setLayout('controllers/admin/widget_edit_layout');
         }
 
-        $template = $this->request->get('template', '');
-        if (!$template) {
+        $template_name = $this->request->get('template', '');
+        if (!$template_name) {
             return cmsCore::error404();
         }
 
         $tpls = cmsCore::getTemplates();
-        if (!in_array($template, $tpls)) {
-            $template = cmsConfig::get('template');
+        if (!in_array($template_name, $tpls)) {
+            $template_name = cmsConfig::get('template');
         }
 
         $widget = cmsCore::getModel('widgets')->getWidgetBinding($binded_id);
@@ -27,20 +27,24 @@ class actionAdminWidgetsEdit extends cmsAction {
             return cmsCore::error404();
         }
 
+        // Чтобы ланг файлы шаблона подгрузились
+        $template = new cmsTemplate($template_name);
+
+        cmsCore::loadTemplateLanguage($template->getInheritNames());
+
         $widget_object = cmsCore::getWidgetObject($widget);
 
-        $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], $widget['options'], $template, $widget_object->isAllowCacheableOption());
+        $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], $widget['options'], $template_name, $widget_object->isAllowCacheableOption());
 
-        $widget_event_name = 'widget_'.($widget['controller'] ? $widget['controller'].'_' : '').$widget['name'].'_form';
+        $widget_event_name = 'widget_' . ($widget['controller'] ? $widget['controller'] . '_' : '') . $widget['name'] . '_form';
 
-        list($form, $widget, $widget_object, $template) = cmsEventsManager::hook(['widget_form', $widget_event_name], [$form, $widget, $widget_object, $template], null, $this->request);
+        list($form, $widget, $widget_object, $template_name) = cmsEventsManager::hook(['widget_form', $widget_event_name], [$form, $widget, $widget_object, $template_name], null, $this->request);
 
-        return $this->cms_template->render('widgets_settings', array(
+        return $this->cms_template->render('widgets_settings', [
             'form'   => $form,
             'widget' => $widget,
             'errors' => false
-        ));
-
+        ]);
     }
 
 }

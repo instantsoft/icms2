@@ -596,11 +596,21 @@ class cmsCore {
 
     /**
      * Подключает языковой файл шаблона
-     * @param string $template_name
+     * @param string|array $template_name
      * @return bool
      */
-    public static function loadTemplateLanguage($template_name){
-        return self::loadLanguage("templates/{$template_name}");
+    public static function loadTemplateLanguage($template_names){
+        if(!is_array($template_names)){
+            $template_names = [$template_names];
+        }
+        $result = false;
+        foreach ($template_names as $template_name) {
+            $result = self::loadLanguage("templates/{$template_name}");
+            if($result){
+                break;
+            }
+        }
+        return $result;
     }
 
     /**

@@ -1,12 +1,18 @@
 <?php
 
-class onBootstrap4TemplateModernBeforeSaveOptions extends cmsAction {
+class onRendererMiddlewareScss extends cmsAction {
 
-    public function run($options){
+    private $last_compile_error = false;
+
+    private $template_path;
+
+    public function run($template_name, $options) {
 
         // Путь к CSS файлам
-        $css_dir = cmsTemplate::TEMPLATE_BASE_PATH . 'modern/css/';
+        $css_dir = cmsTemplate::TEMPLATE_BASE_PATH . $template_name.'/css/';
         $css_dir_path = $this->cms_config->root_path . $css_dir;
+
+        $this->template_path = $this->cms_config->root_path . cmsTemplate::TEMPLATE_BASE_PATH . $template_name . '/';
 
         // Тут все опции SCSS
         $scss = $options['scss'];
@@ -20,7 +26,7 @@ class onBootstrap4TemplateModernBeforeSaveOptions extends cmsAction {
         }
 
         // Компилируем основной CSS файл шаблона
-        $theme_css = $this->compileScss('scss/theme/theme.scss', $scss);
+        $theme_css = $this->compile('scss/theme/theme.scss', $scss);
         if($theme_css){
 
             $compiled_file_path = $css_dir_path.'theme.css';
@@ -35,11 +41,11 @@ class onBootstrap4TemplateModernBeforeSaveOptions extends cmsAction {
         }
 
         // Компилируем вендоры
-        $vendors = cmsCore::getDirsList(cmsTemplate::TEMPLATE_BASE_PATH . 'modern/scss/vendors');
+        $vendors = cmsCore::getDirsList(cmsTemplate::TEMPLATE_BASE_PATH . $template_name.'/scss/vendors');
         if($vendors){
             foreach ($vendors as $vendor_name) {
 
-                $css_data = $this->compileScss('scss/vendors/'.$vendor_name.'/build.scss', $scss);
+                $css_data = $this->compile('scss/vendors/'.$vendor_name.'/build.scss', $scss);
 
                 if($css_data){
 
@@ -58,15 +64,15 @@ class onBootstrap4TemplateModernBeforeSaveOptions extends cmsAction {
         }
 
         // Компилируем CSS компонентов
-        $controllers = cmsCore::getDirsList(cmsTemplate::TEMPLATE_BASE_PATH . 'modern/scss/controllers');
+        $controllers = cmsCore::getDirsList(cmsTemplate::TEMPLATE_BASE_PATH . $template_name.'/scss/controllers');
         if($controllers){
             foreach ($controllers as $controller_name) {
 
-                $css_data = $this->compileScss('scss/controllers/'.$controller_name.'/build.scss', $scss);
+                $css_data = $this->compile('scss/controllers/'.$controller_name.'/build.scss', $scss);
 
                 if($css_data){
 
-                    $css_controller_dir = cmsTemplate::TEMPLATE_BASE_PATH . 'modern/controllers/'.$controller_name.'/';
+                    $css_controller_dir = cmsTemplate::TEMPLATE_BASE_PATH . $template_name.'/controllers/'.$controller_name.'/';
                     $css_controller_dir_path = $this->cms_config->root_path . $css_controller_dir;
 
                     $compiled_file_path = $css_controller_dir_path.'styles.css';
@@ -84,11 +90,11 @@ class onBootstrap4TemplateModernBeforeSaveOptions extends cmsAction {
         }
 
         // Компилируем стили wysiwyg
-        $wysiwygs = cmsCore::getDirsList(cmsTemplate::TEMPLATE_BASE_PATH . 'modern/scss/wysiwyg');
+        $wysiwygs = cmsCore::getDirsList(cmsTemplate::TEMPLATE_BASE_PATH . $template_name.'/scss/wysiwyg');
         if($wysiwygs){
             foreach ($wysiwygs as $wysiwyg_name) {
 
-                $css_data = $this->compileScss('scss/wysiwyg/'.$wysiwyg_name.'/build.scss', $scss);
+                $css_data = $this->compile('scss/wysiwyg/'.$wysiwyg_name.'/build.scss', $scss);
 
                 if($css_data){
 
@@ -106,6 +112,66 @@ class onBootstrap4TemplateModernBeforeSaveOptions extends cmsAction {
         }
 
         return $options;
+    }
+
+    public function compile($path, $vars = []) {
+
+        if(!cmsCore::includeFile('system/libs/scssphp/scss.inc.php')){
+            return false;
+        }
+
+        $scss_file = $this->template_path . $path;
+
+        $data = file_get_contents($scss_file);
+
+        $working_dir = dirname(realpath($scss_file));
+
+        $scss_file_name = basename($scss_file);
+
+        chdir($working_dir);
+
+        $scss = new ScssPhp\ScssPhp\Compiler();
+
+        $scss->setOutputStyle(ScssPhp\ScssPhp\OutputStyle::COMPRESSED);
+
+        if($vars){
+
+            $_vars = [];
+
+            foreach ($vars as $key => $value) {
+                if(!$value){
+                    $_vars[$key] = 'false'; continue;
+                }
+                if($value === 1){
+                    $_vars[$key] = 'true'; continue;
+                }
+                $_vars[$key] = $value;
+            }
+
+            $scss->setVariables($_vars);
+        }
+
+        $result = false;
+
+        try {
+            $result = $scss->compile($data, $scss_file_name);
+        } catch (Exception $exc) {
+            $this->last_compile_error = $exc->getMessage();
+        }
+
+        return $result;
+    }
+
+    public function hasCompileMessage() {
+        return $this->last_compile_error ? true : false;
+    }
+
+    public function getCompileMessage() {
+
+        $msg = $this->last_compile_error;
+        $this->last_compile_error = false;
+
+        return $msg;
     }
 
 }

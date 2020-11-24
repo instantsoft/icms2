@@ -32,7 +32,15 @@ class actionAdminWidgets extends cmsAction {
         $templates = [];
 
         foreach ($tpls as $tpl) {
-            if(file_exists($this->cms_config->root_path . cmsTemplate::TEMPLATE_BASE_PATH. $tpl .'/main.tpl.php')){
+            $template_path = $this->cms_config->root_path . cmsTemplate::TEMPLATE_BASE_PATH. $tpl;
+            $manifest = cmsTemplate::getTemplateManifest($template_path);
+            if($manifest !== null){
+                if (!empty($manifest['properties']['is_frontend'])) {
+                    $templates[$tpl] = !empty($manifest['title']) ? $manifest['title'] : $tpl;
+                }
+                continue;
+            }
+            if(file_exists($template_path .'/main.tpl.php')){
                 $templates[$tpl] = $tpl;
             }
         }

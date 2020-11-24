@@ -634,6 +634,7 @@
     define('LANG_CP_PACKAGE_TYPE_WIDGET_INSTALL', 'Widget installation package');
     define('LANG_CP_PACKAGE_TYPE_WIDGET_UPDATE', 'Widget service pack');
     define('LANG_CP_PACKAGE_TYPE_SYSTEM_UPDATE', 'InstantCMS service pack');
+    define('LANG_CP_PACKAGE_TYPE_SYSTEM_INSTALL', 'InstantCMS service pack');
     define('LANG_CP_PACKAGE_DUBLE_INSTALL', 'Package version %s is already installed. If you want to update it, select the corresponding service pack. If you want to re-install the package, remove the installed version first.');
     define('LANG_CP_PACKAGE_UPDATE_ERROR', '%s "%s" has version <b>%s</b>. You have version <b>%s</b> installed. Select the package with a larger version number to update.');
     define('LANG_CP_PACKAGE_UPDATE_IS_UPDATED', 'The same version of the package is already installed. No update required');

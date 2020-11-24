@@ -1,10 +1,23 @@
 <?php
 
-class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
+class onBootstrap4AdminColSchemeOptions extends cmsAction {
 
 	public function run($data){
 
         list($do, $row, $col) = $data;
+
+        $template = new cmsTemplate($row['template']);
+
+        $manifest = $template->getManifest();
+
+        if(empty($manifest['properties']['vendor'])){
+            return false;
+        }
+
+        // Нам нужны только шаблоны на bootstrap4
+        if($manifest['properties']['vendor'] !== 'bootstrap4'){
+            return false;
+        }
 
         return [
             new fieldCheckbox('options:cut_before', array(

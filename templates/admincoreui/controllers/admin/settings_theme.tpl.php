@@ -19,6 +19,16 @@
         'title' => LANG_CANCEL,
         'href'  => $this->href_to('settings')
     ));
+    if(!empty($manifest['author']['help'])){
+        $this->addMenuItem('breadcrumb-menu', [
+            'title' => LANG_HELP,
+            'url'   => $manifest['author']['help'],
+            'options' => [
+                'target' => '_blank',
+                'icon' => 'icon-question'
+            ]
+        ]);
+    }
 
     $this->renderForm($form, $options, array(
         'action' => '',

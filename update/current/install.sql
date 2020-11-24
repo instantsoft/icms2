@@ -1,6 +1,7 @@
 ALTER TABLE `{users}` CHANGE `pass_token` `pass_token` VARCHAR(64) NULL DEFAULT NULL COMMENT 'Ключ для восстановления пароля';
 ALTER TABLE `{users}_auth_tokens` CHANGE `auth_token` `auth_token` VARCHAR(128) NULL DEFAULT NULL;
 UPDATE `{#}widgets_bind` SET `tpl_wrap`= 'wrapper' WHERE `tpl_wrap` IS NULL;
+UPDATE `{#}widgets_bind` SET `tpl_body`= 'list' WHERE `tpl_body` = 'list_basic' AND `widget_id` = (SELECT id FROM `{#}widgets` WHERE `controller` = 'content' AND `name` = 'list');
 
 DELETE FROM `{#}controllers` WHERE `name` = 'forms';
 INSERT INTO `{#}controllers` (`title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES

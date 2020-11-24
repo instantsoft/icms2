@@ -64,7 +64,7 @@
     $this->addToolButton(array(
         'class' => 'gridicon',
         'childs_count' => count($templates),
-        'title' => LANG_CP_WIDGETS_TEMPLATE.': '.$template_name,
+        'title' => LANG_CP_WIDGETS_TEMPLATE.': '.$templates[$template_name],
         'href'  => ''
     ));
 
@@ -72,7 +72,7 @@
         $this->addToolButton(array(
             'level' => 2,
             'title' => $template,
-            'href'  => $this->href_to('widgets').'?template_name='.$template
+            'href'  => $this->href_to('widgets').'?template_name='.$tkey
         ));
     }
 

@@ -670,6 +670,7 @@
     define('LANG_CP_PACKAGE_TYPE_WIDGET_INSTALL', 'Пакет установки виджета');
     define('LANG_CP_PACKAGE_TYPE_WIDGET_UPDATE', 'Пакет обновления виджета');
     define('LANG_CP_PACKAGE_TYPE_SYSTEM_UPDATE', 'Пакет обновления InstantCMS');
+    define('LANG_CP_PACKAGE_TYPE_SYSTEM_INSTALL', 'Пакет обновления InstantCMS');
     define('LANG_CP_PACKAGE_DUBLE_INSTALL', 'Пакет версии %s уже был установлен. Если вы хотите его обновить, выберите соответствующий пакет обновления. Если вы хотите переустановить пакет, то сначала удалите его в админке.');
     define('LANG_CP_PACKAGE_UPDATE_ERROR', '%s "%s" имеет номер версии <b>%s</b>. У вас установлена версия <b>%s</b>. Для обновления выберите пакет большей версии.');
     define('LANG_CP_PACKAGE_UPDATE_IS_UPDATED', 'Версия пакета обновления соответствует установленной. Обновление не требуется.');

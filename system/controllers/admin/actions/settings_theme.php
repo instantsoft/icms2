@@ -24,6 +24,15 @@ class actionAdminSettingsTheme extends cmsAction {
                 list($template_name, $options) = cmsEventsManager::hook('template_before_save_options', [$template_name, $options]);
                 $options = cmsEventsManager::hook('template_'.$template_name.'_before_save_options', $options);
 
+                // Если шаблон поддерживает SCSS, компилируем
+                $manifest = $template->getManifest();
+                if($manifest !== null && !empty($manifest['properties']['style_middleware'])){
+
+                    cmsCore::getController('renderer', new cmsRequest([
+                        'middleware' => $manifest['properties']['style_middleware']
+                    ]), cmsRequest::CTX_INTERNAL)->render($template_name, $options);
+                }
+
                 if($template->saveOptions($options)){
                     cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
                 } else {
@@ -42,7 +51,7 @@ class actionAdminSettingsTheme extends cmsAction {
 
         if($template_name !== 'default'){
 
-            $inherit_templates = $this->cms_template->getInheritTemplates();
+            $inherit_templates = array_reverse($this->cms_template->getInheritNames());
             $inherit_templates[] = $template_name;
 
             $inherit_templates = array_unique($inherit_templates);
@@ -51,6 +60,7 @@ class actionAdminSettingsTheme extends cmsAction {
         }
 
         return $this->cms_template->render('settings_theme', array(
+            'manifest'      => $template->getManifest(),
             'template_name' => $template_name,
             'options'       => $options,
             'form'          => $form,
