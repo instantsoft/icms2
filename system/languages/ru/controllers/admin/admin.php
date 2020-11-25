@@ -100,6 +100,7 @@
     define('LANG_CP_SYSTEM_NAME_HINT',          'Используется в URL и при создании таблиц в базе данных<br>После создания не изменяется!');
 
     define('LANG_CP_CONTENT_ITEM_ADD',          'Создать запись');
+    define('LANG_CP_CONTENT_ITEM_ADD_CP',       'Создать из админки');
     define('LANG_CP_CONTENT_ITEMS_EDIT',        'Изменить записи');
     define('LANG_CP_CONTENT_FIELDS_IS_ADD',     'Добавить значения к существующим');
     define('LANG_CP_CONTENT_ITEMS_EDIT_S1',     'Выберите поля, которые хотите изменить');

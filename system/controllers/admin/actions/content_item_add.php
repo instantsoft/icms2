@@ -2,18 +2,39 @@
 
 class actionAdminContentItemAdd extends cmsAction {
 
-    public function run($ctype_id, $category_id=1){
+    public function run($ctype_id, $category_id = 1, $add_from_admin = 0) {
 
         $content_model = cmsCore::getModel('content');
 
         $ctype = $content_model->getContentType($ctype_id);
         if (!$ctype) { return cmsCore::error404(); }
 
-        $params = $category_id>1 ? array($category_id) : false;
+        if($add_from_admin){
 
-        $url = href_to($ctype['name'], 'add', $params) . '?back=' . href_to($this->name, 'content');
+            $this->cms_template->addBreadcrumb(LANG_CP_SECTION_CONTENT, $this->cms_template->href_to('content'));
+            $this->cms_template->addBreadcrumb($ctype['title'], $this->cms_template->href_to('content', [$ctype['id']]));
 
-        $this->redirect($url);
+            $this->cms_core->uri_controller = 'content';
+            $this->cms_core->controller = 'content';
+            $this->cms_core->uri_action = $ctype['name'];
+            $this->cms_core->uri = $ctype['name'].'/add'.($category_id ? '/'.$category_id : '');
+
+            $controller = cmsCore::getController('content', $this->request);
+
+            $controller->request->set('ctype_name', $ctype['name']);
+            $controller->request->set('to_id', $category_id);
+            $controller->request->set('back', href_to($this->name, 'content'));
+
+            $controller->executeAction('item_add', []);
+
+        } else {
+
+            $params = $category_id > 1 ? [$category_id] : false;
+
+            $url = href_to($ctype['name'], 'add', $params) . '?back=' . href_to($this->name, 'content');
+
+            $this->redirect($url);
+        }
 
     }
 

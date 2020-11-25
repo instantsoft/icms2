@@ -89,6 +89,7 @@
     define('LANG_CP_GRID_COLYMNS_TO_FILTER',    'Put in filter');
     define('LANG_CP_SYSTEM_NAME_HINT',          'Used in URLs and database table names<br>Cannot be changed later!');
     define('LANG_CP_CONTENT_ITEM_ADD',          'Add Entry');
+    define('LANG_CP_CONTENT_ITEM_ADD_CP',       'Add from adminpanel');
     define('LANG_CP_CONTENT_ITEMS_EDIT',        'Change entries');
     define('LANG_CP_CONTENT_FIELDS_IS_ADD',     'Add Values to Existing');
     define('LANG_CP_CONTENT_ITEMS_EDIT_S1',     'Select the fields you want to change');

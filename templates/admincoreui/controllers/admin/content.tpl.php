@@ -94,15 +94,22 @@
 
     $this->addToolButton(array(
         'class' => 'items animated animate_on_selected',
-        'childs_count' => 5,
+        'childs_count' => 6,
         'title' => LANG_CP_WIDGETS_FA_ITEMS,
         'href'  => ''
     ));
 
     $this->addToolButton(array(
-        'class' => 'add',
+        'class' => 'add add_site',
         'level' => 2,
         'title' => LANG_CP_CONTENT_ITEM_ADD,
+        'href'  => $this->href_to('content', array('item_add'))
+    ));
+
+    $this->addToolButton(array(
+        'class' => 'add add_cpanel',
+        'level' => 2,
+        'title' => LANG_CP_CONTENT_ITEM_ADD_CP,
         'href'  => $this->href_to('content', array('item_add'))
     ));
 
@@ -188,7 +195,8 @@
                 icms.datagrid.setURL("<?php echo $this->href_to('content', array('items_ajax')); ?>/" + key[0] + "/" + key[1]);
                 $('.cp_toolbar .filter a').attr('href', "<?php echo $this->href_to('content', array('filter')); ?>/" + key[0]);
                 $('.cp_toolbar .settings a').attr('href', "<?php echo $this->href_to('ctypes', array('edit')); ?>/" + key[0]);
-                $('.cp_toolbar .add a').attr('href', "<?php echo $this->href_to('content', array('item_add')); ?>/" + key[0] + "/" + key[1]);
+                $('.cp_toolbar .add.add_site a').attr('href', "<?php echo $this->href_to('content', array('item_add')); ?>/" + key[0] + "/" + key[1]);
+                $('.cp_toolbar .add.add_cpanel a').attr('href', "<?php echo $this->href_to('content', array('item_add')); ?>/" + key[0] + "/" + key[1] + "/1");
                 $('.cp_toolbar .edit a').data('url', "<?php echo $this->href_to('content', array('items_edit')); ?>/" + key[0]);
                 $('.cp_toolbar .add_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_add')); ?>/" + key[0] + "/" + key[1]);
                 $('.cp_toolbar .edit_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_edit')); ?>/" + key[0] + "/" + key[1]);

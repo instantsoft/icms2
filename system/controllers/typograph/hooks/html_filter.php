@@ -58,7 +58,7 @@ class onTypographHtmlFilter extends cmsAction {
             'ul', 'ol', 'li',
             'table', 'tbody', 'thead', 'tfoot', 'tr', 'td', 'th',
             'h1','h2','h3','h4','h5','h6',
-            'pre', 'code', 'blockquote',
+            'pre', 'code', 'blockquote', 'picture',
             'video', 'source', 'audio', 'youtube', 'facebook', 'figure', 'figcaption',
             'object', 'param', 'embed', 'iframe', 'spoiler'
         ));
@@ -106,7 +106,8 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgAllowTagParams('h4', array('id' => '#text', 'class' => '#text'));
         $jevix->cfgAllowTagParams('h5', array('id' => '#text', 'class' => '#text'));
         $jevix->cfgAllowTagParams('video', array('controls' => '#text', 'class' => '#text', 'width' => '#int', 'height' => '#int'));
-        $jevix->cfgAllowTagParams('source', array('src' => '#text', 'type' => '#text'));
+        $jevix->cfgAllowTagParams('audio', array('controls' => '#text', 'class' => '#text', 'src' => '#text', 'autoplay' => '#text', 'preload' => '#text'));
+        $jevix->cfgAllowTagParams('source', array('src' => '#text', 'type' => '#text', 'media' => '#text'));
 
         // Устанавливаем параметры тегов являющиеся обязательными. Без них вырезает тег оставляя содержимое.
         $jevix->cfgSetTagParamsRequired('img', 'src');
