@@ -4,15 +4,11 @@ class onRendererMiddlewareScss extends cmsAction {
 
     private $last_compile_error = false;
 
-    private $template_path;
-
     public function run($template_name, $options) {
 
         // Путь к CSS файлам
         $css_dir = cmsTemplate::TEMPLATE_BASE_PATH . $template_name.'/css/';
         $css_dir_path = $this->cms_config->root_path . $css_dir;
-
-        $this->template_path = $this->cms_config->root_path . cmsTemplate::TEMPLATE_BASE_PATH . $template_name . '/';
 
         // Тут все опции SCSS
         $scss = $options['scss'];
@@ -41,7 +37,9 @@ class onRendererMiddlewareScss extends cmsAction {
         }
 
         // Компилируем вендоры
-        $vendors = cmsCore::getDirsList(cmsTemplate::TEMPLATE_BASE_PATH . $template_name.'/scss/vendors');
+        $vendors_dir = $this->cms_template->getTplFilePath('scss/vendors/');
+
+        $vendors = cmsCore::getDirsList(str_replace($this->cms_config->root_path, '', $vendors_dir));
         if($vendors){
             foreach ($vendors as $vendor_name) {
 
@@ -64,7 +62,9 @@ class onRendererMiddlewareScss extends cmsAction {
         }
 
         // Компилируем CSS компонентов
-        $controllers = cmsCore::getDirsList(cmsTemplate::TEMPLATE_BASE_PATH . $template_name.'/scss/controllers');
+        $controllers_dir = $this->cms_template->getTplFilePath('scss/controllers/');
+
+        $controllers = cmsCore::getDirsList(str_replace($this->cms_config->root_path, '', $controllers_dir));
         if($controllers){
             foreach ($controllers as $controller_name) {
 
@@ -90,7 +90,9 @@ class onRendererMiddlewareScss extends cmsAction {
         }
 
         // Компилируем стили wysiwyg
-        $wysiwygs = cmsCore::getDirsList(cmsTemplate::TEMPLATE_BASE_PATH . $template_name.'/scss/wysiwyg');
+        $wysiwygs_dir = $this->cms_template->getTplFilePath('scss/wysiwyg/');
+
+        $wysiwygs = cmsCore::getDirsList(str_replace($this->cms_config->root_path, '', $wysiwygs_dir));
         if($wysiwygs){
             foreach ($wysiwygs as $wysiwyg_name) {
 
@@ -120,7 +122,7 @@ class onRendererMiddlewareScss extends cmsAction {
             return false;
         }
 
-        $scss_file = $this->template_path . $path;
+        $scss_file = $this->cms_template->getTplFilePath($path);
 
         $data = file_get_contents($scss_file);
 

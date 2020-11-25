@@ -105,6 +105,8 @@ function create_config($path, $file){
 
     if (function_exists('opcache_invalidate')) { @opcache_invalidate($file, true); }
 
+    clearstatcache();
+
     return array(
         'error' => false,
     );

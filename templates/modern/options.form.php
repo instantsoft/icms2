@@ -30,6 +30,30 @@ class formModernTemplateOptions extends cmsForm {
             '$cyan'     => LANG_MODERN_C_CYAN
         ];
 
+        $gamma_default = [
+            '$white'    => '#ffffff',
+            '$gray-100' => '#f8f9fa',
+            '$gray-200' => '#eeeeee',
+            '$gray-300' => '#dee2e6',
+            '$gray-400' => '#cccccc',
+            '$gray-500' => '#adb5bd',
+            '$gray-600' => '#888888',
+            '$gray-700' => '#495057',
+            '$gray-800' => '#333333',
+            '$gray-900' => '#222222',
+            '$black'    => '#000000',
+            '$blue'     => '#008cba',
+            '$indigo'   => '#6610f2',
+            '$purple'   => '#6f42c1',
+            '$pink'     => '#e83e8c',
+            '$red'      => '#f04124',
+            '$orange'   => '#fd7e14',
+            '$yellow'   => '#e99002',
+            '$green'    => '#43ac6a',
+            '$teal'     => '#20c997',
+            '$cyan'     => '#5bc0de'
+        ];
+
         $theme_colors = [
             '$primary'   => LANG_MODERN_C_PRIMARY,
             '$secondary' => LANG_MODERN_C_SECONDARY,
@@ -39,6 +63,17 @@ class formModernTemplateOptions extends cmsForm {
             '$danger'    => LANG_MODERN_C_DANGER,
             '$light'     => LANG_MODERN_C_LIGHT,
             '$dark'      => LANG_MODERN_C_DARK
+        ];
+
+        $theme_colors_default = [
+            'primary'   => '$blue',
+            'secondary' => '$gray-600',
+            'success'   => '$green',
+            'info'      => '$cyan',
+            'warning'   => '$yellow',
+            'danger'    => '$red',
+            'light'     => '$gray-100',
+            'dark'      => '$gray-900'
         ];
 
         $fields = array(
@@ -84,16 +119,19 @@ class formModernTemplateOptions extends cmsForm {
 
                     new fieldString('scss:border-radius', array(
                         'title' => LANG_MODERN_THEME_ROUNDED_BASE,
+                        'default' => '.25rem',
                         'visible_depend' => array('scss:enable-rounded' => array('show' => array('1')))
                     )),
 
                     new fieldString('scss:border-radius-lg', array(
                         'title' => LANG_MODERN_THEME_ROUNDED_BASE_LG,
+                        'default' => '.3rem',
                         'visible_depend' => array('scss:enable-rounded' => array('show' => array('1')))
                     )),
 
                     new fieldString('scss:border-radius-sm', array(
                         'title' => LANG_MODERN_THEME_ROUNDED_BASE_SM,
+                        'default' => '.2rem',
                         'visible_depend' => array('scss:enable-rounded' => array('show' => array('1')))
                     )),
 
@@ -106,11 +144,13 @@ class formModernTemplateOptions extends cmsForm {
                     )),
 
                     new fieldCheckbox('scss:enable-responsive-font-sizes', array(
-                        'title' => LANG_MODERN_THEME_ENABLE_RFS
+                        'title' => LANG_MODERN_THEME_ENABLE_RFS,
+                        'default' => 1
                     )),
 
                     new fieldCheckbox('scss:enable-modal-blur', array(
-                        'title' => LANG_MODERN_THEME_ENABLE_MODAL_BLUR
+                        'title' => LANG_MODERN_THEME_ENABLE_MODAL_BLUR,
+                        'default' => 1
                     )),
 
                     new fieldString('scss:grid-gutter-width', array(
@@ -131,10 +171,12 @@ class formModernTemplateOptions extends cmsForm {
                     new fieldString('scss:avatar-inlist-size', array(
                         'title' => LANG_MODERN_THEME_AVATAR_INLIST_SIZE,
                         'hint' => LANG_MODERN_THEME_AVATAR_INLIST_SIZE_HINT,
+                        'default' => '64px'
                     )),
 
                     new fieldList('pagination_template', array(
                         'title' => LANG_MODERN_THEME_PAGINATION_TPL,
+                        'default' => 'pagination',
                         'generator' => function($item) {
                             return cmsTemplate::getInstance()->getAvailableTemplatesFiles('assets/ui', 'pagination*.tpl.php', 'modern');
                         }
@@ -198,7 +240,8 @@ class formModernTemplateOptions extends cmsForm {
                     new fieldList('scss:body-bg', array(
                         'title' => LANG_MODERN_THEME_BGCOLOR,
                         'hint' => LANG_MODERN_THEME_GCOLOR,
-                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma
+                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma,
+                        'default' => '$white'
                     )),
                     new fieldColor('custom_scss:body-bg', array(
                         'visible_depend' => array('scss:body-bg' => array('show' => array('')))
@@ -206,7 +249,8 @@ class formModernTemplateOptions extends cmsForm {
                     new fieldList('scss:body-color', array(
                         'title' => LANG_MODERN_THEME_BCOLOR,
                         'hint' => LANG_MODERN_THEME_GCOLOR,
-                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma
+                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma,
+                        'default' => '$gray-800'
                     )),
                     new fieldColor('custom_scss:body-color', array(
                         'visible_depend' => array('scss:body-color' => array('show' => array('')))
@@ -214,11 +258,12 @@ class formModernTemplateOptions extends cmsForm {
                     new fieldList('scss:link-color', array(
                         'title' => LANG_MODERN_THEME_LINK_COLOR,
                         'hint' => LANG_MODERN_THEME_GCOLOR,
-                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma
+                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma,
+                        'default' => '$blue'
                     )),
                     new fieldColor('custom_scss:link-color', array(
                         'visible_depend' => array('scss:link-color' => array('show' => array('')))
-                    )),
+                    ))
                 ]
             ),
 
@@ -232,7 +277,8 @@ class formModernTemplateOptions extends cmsForm {
 
         foreach ($gamma as $name => $title) {
             $fields['gamma']['childs'][] = new fieldColor('scss:'.str_replace('$', '', $name), array(
-                'title' => $title
+                'title' => $title,
+                'default' => $gamma_default[$name]
             ));
         }
 
@@ -241,7 +287,8 @@ class formModernTemplateOptions extends cmsForm {
             $fields['colors']['childs'][] = new fieldList('scss:'.$name, array(
                 'title' => $title,
                 'hint' => LANG_MODERN_THEME_GCOLOR,
-                'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma
+                'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma,
+                'default' => $theme_colors_default[$name]
             ));
             $fields['colors']['childs'][] = new fieldColor('custom_scss:'.$name, array(
                 'visible_depend' => array('scss:'.$name => array('show' => array('')))

@@ -1942,9 +1942,11 @@ class cmsTemplate {
             ];
         }
 
-        if(!empty($this->manifest['inherit'])){
-            $this->setInheritNames($this->manifest['inherit']);
+        if(!isset($this->manifest['inherit'])){
+            $this->manifest['inherit'] = [];
         }
+
+        $this->setInheritNames($this->manifest['inherit']);
 
         return $this;
     }
