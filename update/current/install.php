@@ -7,10 +7,6 @@ function install_package(){
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
-    if(!$core->db->isFieldExists('widgets_bind', 'tpl_wrap_style')){
-        $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `tpl_wrap_style` VARCHAR(50) NULL DEFAULT NULL AFTER `tpl_wrap`;");
-    }
-
     if(!$core->db->isFieldExists('{users}', 'slug')){
         $core->db->query("ALTER TABLE `{users}` ADD `slug` VARCHAR(100) NULL DEFAULT NULL AFTER `nickname`, ADD INDEX (`slug`);");
     }
@@ -55,7 +51,7 @@ function install_package(){
                 $update = [];
 
                 if($widget['options']['style']){
-                    $update['tpl_body'] = 'list_'.$widget['options']['style'];
+                    $update['tpl_body'] = $widget['options']['style'] == 'basic' ? 'list' : 'list_'.$widget['options']['style'];
                 }
 
                 unset($widget['options']['style']);
