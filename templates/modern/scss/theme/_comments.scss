@@ -22,6 +22,11 @@ $comment-rating-size: 30px;
 @keyframes animate__comment-spin{0%{transform:rotate(0deg)}to{transform:rotate(359deg)}}
 #wall_add_form, #comments_add_form {
     display: none;
+    > form {
+        > .textarea.form-control {
+            margin-bottom: $spacer;
+        }
+    }
 }
 .icms-comments-ns {
     @each $level in $ns-levels{

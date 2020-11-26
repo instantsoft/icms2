@@ -74,18 +74,21 @@
 
 <?php $this->menu('item-menu', true, 'nav nav-tabs mt-3'); ?>
 
-<div class="icms-body-toolbox m-0">
-<?php if (!empty($datasets)){
-    $this->renderAsset('ui/datasets-panel', array(
-        'datasets'        => $datasets,
-        'dataset_name'    => $dataset,
-        'current_dataset' => $current_dataset,
-        'base_ds_url'     => rel_to_href($base_ds_url)
-    ));
-} ?>
+<div class="icms-body-toolbox row align-items-center mt-3 mt-md-4">
+    <div class="col-sm">
+    <?php if (!empty($datasets)){ ?>
+        <?php $this->renderAsset('ui/datasets-panel', array(
+            'datasets'        => $datasets,
+            'dataset_name'    => $dataset,
+            'wrap_class'      => 'flex-fill',
+            'current_dataset' => $current_dataset,
+            'base_ds_url'     => rel_to_href($base_ds_url)
+        )); ?>
+    <?php } ?>
+    </div>
 <?php if (!empty($toolbar_html)) { ?>
-    <div class="ml-auto">
-        <?php echo html_each($toolbar_html); ?>
+    <div class="col-sm-auto ml-n2">
+        <div class="mt-3 mt-sm-0"><?php echo html_each($toolbar_html); ?></div>
     </div>
 <?php } ?>
 </div>

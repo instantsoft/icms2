@@ -195,7 +195,7 @@ class actionPhotosView extends cmsAction {
 
         return $this->cms_template->render($tpl, array(
             'photos_url_params' => $photos_url_params,
-            'row_height'    => $this->getRowHeight(),
+            'row_height'    => $this->getRowHeight((!empty($this->options['preset_related']) ? 'preset_related' : 'preset_small')),
             'next_photo'    => $next_photo,
             'prev_photo'    => $prev_photo,
             'hide_info_block'=> !empty($this->options['hide_photo_item_info']),
