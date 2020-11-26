@@ -15,7 +15,7 @@ class widgetContentFields extends cmsWidget {
 
         $image_field  = $this->getOption('image_field');
         $image_preset = $this->getOption('image_preset');
-        $fields_names = $this->getOption('fields');
+        $fields_names = array_filter($this->getOption('fields'));
         $image_is_parallax = $this->getOption('image_is_parallax');
 
         if(!$fields_names && !$image_field){

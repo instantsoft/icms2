@@ -105,44 +105,42 @@ body .redactor_box_fullscreen {
   width: 100%;
 }
 .redactor_editor {
-  position: relative;
-  overflow: auto;
-  margin: 0 !important;
-  padding: $input-padding-y $input-padding-x;
-  outline: none;
-  background: none;
-  background: $white;
-  box-shadow: none !important;
-  white-space: normal;
-  border: 1px solid $gray-400;
-  box-sizing: border-box;
-  word-break: break-word;
+    position: relative;
+    overflow: auto;
+    margin: 0 !important;
+    padding: $input-padding-y $input-padding-x;
+    outline: none;
+    background: none;
+    background: $white;
+    box-shadow: none !important;
+    white-space: normal;
+    border: 1px solid $gray-400;
+    box-sizing: border-box;
+    word-break: break-word;
+    &:focus {
+        outline: none;
+    }
+    .redactor_placeholder {
+        color: $gray-400 !important;
+        display: block !important;
+    }
+    > *:first-child {
+        margin-top: 0;
+    }
+    /*
+        TYPOGRAPHY
+    */
+    object, embed, video, img {
+        max-width: 100%;
+        width: auto;
+    }
+    video, img {
+        height: auto;
+    }
+    code {
+        white-space: pre;
+    }
 }
-.redactor_editor:focus {
-  outline: none;
-}
-.redactor_editor .redactor_placeholder {
-  color: $gray-400 !important;
-  display: block !important;
-}
-.redactor_editor > *:first-child {
-  margin-top: 0;
-}
-/*
-	TYPOGRAPHY
-*/
-.redactor_editor object,
-.redactor_editor embed,
-.redactor_editor video,
-.redactor_editor img {
-  max-width: 100%;
-  width: auto;
-}
-.redactor_editor video,
-.redactor_editor img {
-  height: auto;
-}
-
 
 /*
 	TOOLBAR

@@ -58,10 +58,13 @@
             <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
         <?php } ?>
     </h1>
-    <?php if ($item['parent_id']){ ?>
-        <h2 class="parent_title item_<?php echo $item['parent_type']; ?>_title">
-            <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
-        </h2>
+    <?php if ($item['parent_id'] && !empty($ctype['is_in_groups'])){ ?>
+        <div class="parent_title item_<?php echo $item['parent_type']; ?>_title mt-n2">
+            <a href="<?php echo rel_to_href($item['parent_url']); ?>">
+                <?php html_svg_icon('solid', 'user-friends'); ?>
+                <?php html($item['parent_title']); ?>
+            </a>
+        </div>
     <?php } ?>
 <?php } ?>
 

@@ -61,16 +61,12 @@ class fieldParent extends cmsFormField {
     }
 
     public function parseTeaser($value){
-        return $this->parse($value, true);
-    }
-
-    public function parse($value, $is_teaser = false){
 
         if (!$value){
             return '';
         }
 
-        $parent_items = $this->getParentItems(!$is_teaser);
+        $parent_items = $this->getParentItems(false);
 
         if (!$parent_items){
             return '';
@@ -84,6 +80,64 @@ class fieldParent extends cmsFormField {
 		}
 
 		return $result ? implode(', ', $result) : '';
+    }
+
+    public function parse($value){
+
+        if (!$value){
+            return '';
+        }
+
+		if (!$this->parent_ctype_name) { return false; }
+
+		if (empty($this->item['id'])) { return false; }
+
+        $controller = cmsCore::getController('content', $this->request);
+
+		$content_model = cmsCore::getModel('content');
+
+		$ctypes = $controller->model->getContentTypes();
+
+		$parent_ctype = $child_ctype = false;
+
+		foreach($ctypes as $ctype){
+			if ($ctype['name'] == $this->parent_ctype_name){
+				$parent_ctype = $ctype;
+			}
+			if ($ctype['name'] == $this->item['ctype_name']){
+				$child_ctype = $ctype;
+			}
+		}
+
+		if (!$parent_ctype) { return false; }
+
+		if (!$child_ctype) {
+            if (cmsController::enabled($this->item['ctype_name'])){
+                $child_ctype = array(
+                    'name'       => $this->item['ctype_name'],
+                    'controller' => $this->item['ctype_name'],
+                    'id'         => null
+                );
+            } else {
+                return false;
+            }
+        } else {
+            $child_ctype['controller'] = 'content';
+        }
+
+        $filter =  "r.parent_ctype_id = {$parent_ctype['id']} AND ".
+                   "r.child_item_id = {$this->item['id']} AND ".
+                   'r.child_ctype_id '.($child_ctype['id'] ? '='.$child_ctype['id'] : 'IS NULL' ).' AND '.
+                   "r.parent_item_id = i.id AND r.target_controller = '{$child_ctype['controller']}'";
+
+        $controller->model->join('content_relations_bind', 'r', $filter);
+        $controller->model->limit(false);
+
+        $controller->setListContext('form_field');
+
+        $parent_ctype['options']['limit'] = 0;
+
+        return $controller->renderItemsList($parent_ctype, '', true);
     }
 
     public function getInput($value) {

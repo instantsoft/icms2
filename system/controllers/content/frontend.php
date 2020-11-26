@@ -321,7 +321,9 @@ class content extends cmsFrontend {
         $hide_except_title = $this->model->applyPrivacyFilter($ctype, cmsUser::isAllowed($ctype['name'], 'view_all'));
 
         // Постраничный вывод
-        $this->model->limitPage($page, $perpage);
+        if($perpage){
+            $this->model->limitPage($page, $perpage);
+        }
 
 		list($ctype, $this->model) = cmsEventsManager::hook('content_list_filter', array($ctype, $this->model));
 		list($ctype, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $this->model));
