@@ -286,6 +286,7 @@ class actionContentCategoryView extends cmsAction {
 
         return $this->cms_template->render($tpl_file, array(
             'category_seo'    => (!empty($category_seo) ? $category_seo : []),
+            'show_h1'         => $this->cms_template->hasPageH1() && !$this->request->isInternal() && !$is_frontpage,
             'base_ds_url'     => $base_ds_url,
             'base_url'        => $base_url,
             'rss_query'       => $rss_query,

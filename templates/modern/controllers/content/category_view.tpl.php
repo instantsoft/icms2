@@ -56,8 +56,8 @@ if (!$is_frontpage){
 }
 
 ?>
-<?php if ($this->hasPageH1() && !$request->isInternal() && !$is_frontpage){  ?>
-    <?php ob_start(); ?>
+<?php ob_start(); ?>
+    <?php if ($show_h1){  ?>
         <h1>
             <?php $this->pageH1(); ?>
             <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
@@ -68,24 +68,25 @@ if (!$is_frontpage){
                 </sup>
             <?php } ?>
         </h1>
-        <?php if (!empty($list_styles)){ ?>
-            <?php $list_icons_mapping = ['' => 'list', 'featured' => 'newspaper', 'table' => 'table', 'tiles' => 'th']; ?>
-            <div class="icms-content-list__styles_btn">
-                <?php foreach ($list_styles as $list_style) { ?>
-                <a data-toggle="tooltip" data-placement="top" rel="nofollow" href="<?php echo $list_style['url']; ?>" class="btn btn-light btn-responsive icms-content-list__<?php echo $list_style['class']; ?>" title="<?php html($list_style['title']); ?>">
-                    <?php html_svg_icon('solid', $list_icons_mapping[$list_style['style']]); ?>
-                </a>
-                <?php } ?>
-            </div>
-        <?php } ?>
-    <?php $this->addToBlock('before_body', ob_get_clean(), true); ?>
-<?php } ?>
+    <?php } ?>
+    <?php if (!empty($list_styles)){ ?>
+        <?php $list_icons_mapping = ['' => 'list', 'featured' => 'newspaper', 'table' => 'table', 'tiles' => 'th']; ?>
+        <div class="icms-content-list__styles_btn">
+            <?php foreach ($list_styles as $list_style) { ?>
+            <a data-toggle="tooltip" data-placement="top" rel="nofollow" href="<?php echo $list_style['url']; ?>" class="btn btn-light btn-responsive icms-content-list__<?php echo $list_style['class']; ?>" title="<?php html($list_style['title']); ?>">
+                <?php html_svg_icon('solid', $list_icons_mapping[$list_style['style']]); ?>
+            </a>
+            <?php } ?>
+        </div>
+    <?php } ?>
+<?php $this->addToBlock('before_body', ob_get_clean(), true); ?>
 
 <?php if ($datasets && !$is_hide_items){
     $this->renderAsset('ui/datasets-panel', array(
         'datasets'        => $datasets,
         'dataset_name'    => $dataset,
         'current_dataset' => $current_dataset,
+        'wrap_class'      => $show_h1 ? null : 'mb-3 mb-md-4',
         'ds_prefix'       => '-',
         'base_ds_url'     => rel_to_href($base_ds_url)
     ));

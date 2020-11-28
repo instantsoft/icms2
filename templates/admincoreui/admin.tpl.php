@@ -77,7 +77,7 @@
         <ul class="nav navbar-nav ml-auto">
             <?php if ($config->is_user_change_lang && count($langs) > 1){ ?>
                 <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#" role="button">
+                    <a class="nav-link text-warning font-weight-bold dropdown-toggle" data-toggle="dropdown" href="#" role="button">
                         <?php echo strtoupper($current_lang); ?>
                     </a>
                     <div class="dropdown-menu">

@@ -7,7 +7,12 @@ class actionAdminWidgetsColDelete extends cmsAction {
         $col = $this->model_widgets->getLayoutCol($id);
         if (!$col) { cmsCore::error404(); }
 
-        $this->model_widgets->deleteWidgetPageBind($col['name'], 'position');
+        $row = $this->model_widgets->getLayoutRow($col['row_id']);
+        if (!$row) { cmsCore::error404(); }
+
+        $this->model_widgets->
+                filterEqual('template', $row['template'])->
+                deleteWidgetPageBind($col['name'], 'position');
 
         $this->model_widgets->deleteLayoutCol($col['id']);
 
@@ -26,7 +31,9 @@ class actionAdminWidgetsColDelete extends cmsAction {
 
                 if($items){
                     foreach ($items as $item) {
-                        $this->model_widgets->deleteWidgetPageBind($item['name'], 'position');
+                        $this->model_widgets->
+                                filterEqual('template', $ns_row['template'])->
+                                deleteWidgetPageBind($item['name'], 'position');
                     }
                 }
 

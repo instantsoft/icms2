@@ -27,7 +27,11 @@ class onRendererMiddlewareScss extends cmsAction {
 
             $compiled_file_path = $css_dir_path.'theme.css';
 
-            if(is_writable($compiled_file_path)){
+            if(!is_dir($css_dir_path)){
+                mkdir($css_dir_path, 0755, true);
+            }
+
+            if(is_writable($compiled_file_path) || !file_exists($compiled_file_path)){
                 file_put_contents($compiled_file_path, $theme_css);
             } else {
                 cmsUser::addSessionMessage(sprintf(LANG_CP_FILE_NOT_WRITABLE, $css_dir.'theme.css'), 'error');
@@ -49,7 +53,7 @@ class onRendererMiddlewareScss extends cmsAction {
 
                     $compiled_file_path = $css_dir_path.$vendor_name.'.css';
 
-                    if(is_writable($compiled_file_path)){
+                    if(is_writable($compiled_file_path) || !file_exists($compiled_file_path)){
                         file_put_contents($compiled_file_path, $css_data);
                     } else {
                         cmsUser::addSessionMessage(sprintf(LANG_CP_FILE_NOT_WRITABLE, $css_dir.$vendor_name.'.css'), 'error');
@@ -77,7 +81,11 @@ class onRendererMiddlewareScss extends cmsAction {
 
                     $compiled_file_path = $css_controller_dir_path.'styles.css';
 
-                    if(is_writable($compiled_file_path)){
+                    if(!is_dir($css_controller_dir_path)){
+                        mkdir($css_controller_dir_path, 0755, true);
+                    }
+
+                    if(is_writable($compiled_file_path) || !file_exists($compiled_file_path)){
                         file_put_contents($compiled_file_path, $css_data);
                     } else {
                         cmsUser::addSessionMessage(sprintf(LANG_CP_FILE_NOT_WRITABLE, $css_controller_dir.'styles.css'), 'error');
@@ -100,9 +108,14 @@ class onRendererMiddlewareScss extends cmsAction {
 
                 if($css_data){
 
-                    $compiled_file_path = $css_dir_path.'wysiwyg/'.$wysiwyg_name.'/styles.css';
+                    $compiled_dir_path = $css_dir_path.'wysiwyg/'.$wysiwyg_name.'/';
+                    $compiled_file_path = $compiled_dir_path.'styles.css';
 
-                    if(is_writable($compiled_file_path)){
+                    if(!is_dir($compiled_dir_path)){
+                        mkdir($compiled_dir_path, 0755, true);
+                    }
+
+                    if(is_writable($compiled_file_path) || !file_exists($compiled_file_path)){
                         file_put_contents($compiled_file_path, $css_data);
                     } else {
                         cmsUser::addSessionMessage(sprintf(LANG_CP_FILE_NOT_WRITABLE, $css_dir.'wysiwyg/'.$wysiwyg_name.'/styles.css'), 'error');

@@ -200,7 +200,7 @@ thead.list_thead {
         margin: 0 0 0 1.5rem !important;
     }
     .sidebar-lg-show .fixed_toolbar {
-        left: 200px;
+        left: 210px;
     }
     .sidebar-lg-show.sidebar-minimized .fixed_toolbar {
         left: 50px;
