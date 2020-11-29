@@ -403,12 +403,12 @@ class cmsForm {
             return $id;
         }
 
-        $pos = array_search($after_id, array_keys($this->structure));
+        $pos = array_search($after_id, array_keys($this->structure), true);
 
         if($pos !== false){
 
-            $before = array_slice($this->structure, 0, $pos + 1);
-            $after  = array_slice($this->structure, $pos + 1);
+            $before = array_slice($this->structure, 0, $pos + 1, true);
+            $after  = array_slice($this->structure, $pos + 1, null, true);
 
             $this->structure = $before + array($id => $structure) + $after;
 
@@ -629,14 +629,14 @@ class cmsForm {
      */
     public function addFieldAfter($after_id, $fieldset_id, $field) {
 
-        $pos = array_search($after_id, array_keys($this->structure[$fieldset_id]['childs']));
+        $pos = array_search($after_id, array_keys($this->structure[$fieldset_id]['childs']), true);
 
         if ($pos === false) {
             return $this;
         }
 
-        $before = array_slice($this->structure[$fieldset_id]['childs'], 0, $pos + 1);
-        $after  = array_slice($this->structure[$fieldset_id]['childs'], $pos + 1);
+        $before = array_slice($this->structure[$fieldset_id]['childs'], 0, $pos + 1, true);
+        $after  = array_slice($this->structure[$fieldset_id]['childs'], $pos + 1, null, true);
 
         $this->structure[$fieldset_id]['childs'] = $before + [$field->name => $field] + $after;
 
