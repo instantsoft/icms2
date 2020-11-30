@@ -193,8 +193,8 @@ class cmsWysiwygMarkitup {
         $template->addJSFromContext('wysiwyg/markitup/jquery.markitup.js');
 
         $css_file = 'wysiwyg/markitup/skins/'.$this->options['skin'].'/style.css';
-        $tpl_css_file = cmsTemplate::TEMPLATE_BASE_PATH. $template->name .'/css/wysiwyg/markitup/styles.css';
-        if(is_readable(cmsConfig::get('root_path').$tpl_css_file)){
+        $tpl_css_file = $template->getTplFilePath('css/wysiwyg/markitup/styles.css', false);
+        if($tpl_css_file){
             $css_file = $tpl_css_file;
         }
 

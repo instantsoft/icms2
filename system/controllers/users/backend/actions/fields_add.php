@@ -29,7 +29,7 @@ class actionUsersFieldsAdd extends cmsAction {
 
             $field = $form->parse($this->request, true);
 
-            $errors = $form->validate($this,  $field);
+            $errors = $form->validate($this, $field);
 
             if (!$errors){
 

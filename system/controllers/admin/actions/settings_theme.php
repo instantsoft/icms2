@@ -49,24 +49,20 @@ class actionAdminSettingsTheme extends cmsAction {
 
         }
 
-        if($template_name !== 'default'){
-
-            $inherit_templates = array_reverse($this->cms_template->getInheritNames());
-            $inherit_templates[] = $template_name;
-
-            $inherit_templates = array_unique($inherit_templates);
-
-            $this->cms_template->setInheritNames($inherit_templates);
-        }
-
-        return $this->cms_template->render('settings_theme', array(
+        $template_file = $this->cms_config->root_path.cmsTemplate::TEMPLATE_BASE_PATH.$template_name.'/controllers/admin/settings_theme.tpl.php';
+        $template_data = [
             'manifest'      => $template->getManifest(),
             'template_name' => $template_name,
             'options'       => $options,
             'form'          => $form,
             'errors'        => isset($errors) ? $errors : false
-        ));
+        ];
 
+        if(is_readable($template_file)){
+            return $this->cms_template->processRender($template_file, $template_data, false, true);
+        }
+
+        return $this->cms_template->render('settings_theme', $template_data);
     }
 
 }

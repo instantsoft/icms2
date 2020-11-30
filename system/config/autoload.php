@@ -2,12 +2,12 @@
 
 /**
  * Определяет и подключает PHP-файл содержащий указанный класс
- * @param string $class_name
+ * @param string $_class_name
  * @return boolean
  */
-function autoLoadCoreClass($class_name){
+function autoLoadCoreClass($_class_name){
 
-    $class_name = strtolower($class_name);
+    $class_name = strtolower($_class_name);
     $class_file = false;
 
     if (strpos($class_name, 'cms') === 0) {
@@ -21,7 +21,13 @@ function autoLoadCoreClass($class_name){
     } else
 
     if (strpos($class_name, 'model') === 0) {
-        $controller = substr($class_name, 5);
+        $controller = strtolower(
+            preg_replace(
+                ['/([A-Z]+)/', '/_([A-Z]+)([A-Z][a-z])/'],
+                ['_$1', '_$1_$2'],
+                lcfirst(substr($_class_name, 5))
+            )
+        );
         $class_file = 'system/controllers/' . $controller . '/model.php';
     }
 

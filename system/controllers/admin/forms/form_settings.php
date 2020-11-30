@@ -190,7 +190,7 @@ class formAdminSettings extends cmsForm {
                     new fieldList('template_admin', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE_ADMIN,
                         'hint' => '<a class="theme_settings theme_settings_options" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
-                        'items' => $backend_templates
+                        'items' => ['' => LANG_BY_DEFAULT] + $backend_templates
                     )),
 
                     new fieldList('template_mobile', array(

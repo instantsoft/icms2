@@ -53,7 +53,14 @@ class backendUsers extends cmsBackend {
     }
 
     public function validate_unique_field($value){
-        return !$this->cms_core->db->isFieldExists('{users}', $value);
+
+        if (empty($value)) { return true; }
+        if (!in_array(gettype($value), array('integer','string'))) { return ERR_VALIDATE_INVALID; }
+
+        $result = $this->cms_core->db->isFieldExists('{users}', $value);
+        if ($result) { return ERR_VALIDATE_UNIQUE_FIELD; }
+
+        return true;
     }
 
     public function getMetaItemFields() {

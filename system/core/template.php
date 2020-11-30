@@ -2793,9 +2793,12 @@ class cmsTemplate {
 
                 if(in_array($file_name, $excluded)){ continue; }
 
+                $file_path = $this->getTemplateFileName($path.'/'.$file_name, true);
+                if(!$file_path){ continue; }
+
                 // Ищем название шаблона внутри файла
                 $file_header = [];
-                if(preg_match( '|Template Name:(.*)$|umi', file_get_contents($this->getTemplateFileName($path.'/'.$file_name)), $file_header) && !empty($file_header[1])){
+                if(preg_match( '|Template Name:(.*)$|umi', file_get_contents($file_path), $file_header) && !empty($file_header[1])){
                     $file_title = string_lang(trim(preg_replace('/\s*(?:\*\/|\?>).*/', '', $file_header[1]))).' ('.$file_name.')';
                 }
 
