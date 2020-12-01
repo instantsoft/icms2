@@ -2760,24 +2760,20 @@ class cmsTemplate {
     public function getAvailableTemplatesFiles($path, $pattern='*.*', $template_name = false, $excluded = []) {
 
         if(!$template_name){
+            $template_instance = new cmsTemplate($this->site_config->template);
+        } else {
+            $template_instance = new cmsTemplate($template_name);
+        }
+
+        $inherit_names = array_reverse($template_instance->getInheritNames());
+
+        $files = $__files = [];
+
+        if(!$template_name){
             $template_name = $this->site_config->template;
         }
 
         $files = $__files = [];
-
-        $inherit_names = array('default');
-        if(file_exists($this->site_config->root_path.self::TEMPLATE_BASE_PATH.$template_name.'/inherit.php')){
-            $names = include $this->site_config->root_path.self::TEMPLATE_BASE_PATH.$template_name.'/inherit.php';
-            if($names){
-                foreach ($names as $name) {
-                    $inherit_names[] = $name;
-                }
-            }
-        }
-        if($template_name !== 'default'){
-            $inherit_names[] = $template_name;
-        }
-        $inherit_names = array_reverse($inherit_names);
 
         foreach ($inherit_names as $name) {
             $_files = cmsCore::getFilesList(self::TEMPLATE_BASE_PATH.$name.'/'.$path, $pattern, true);
@@ -2793,7 +2789,7 @@ class cmsTemplate {
 
                 if(in_array($file_name, $excluded)){ continue; }
 
-                $file_path = $this->getTemplateFileName($path.'/'.$file_name, true);
+                $file_path = $template_instance->getTemplateFileName($path.'/'.$file_name);
                 if(!$file_path){ continue; }
 
                 // Ищем название шаблона внутри файла

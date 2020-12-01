@@ -112,9 +112,6 @@ icms.modal = (function ($) {
     this.bindGallery = function(selector){
         icms.events.on('photoswipe_ready', function (){
             $(selector).jqPhotoSwipe({
-                galleryOpen: function (gallery) {
-                    gallery.toggleDesktopZoom();
-                },
                 maxSpreadZoom: 1,
                 bgOpacity: 0.85,
                 shareEl: false,

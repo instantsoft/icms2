@@ -1133,7 +1133,7 @@ class content extends cmsFrontend {
 
     public function addFormPropsFields($form, $ctype, $item_cats, $is_submitted = false){
 
-        if($is_submitted && $ctype['options']['is_cats_change']){
+        if($is_submitted && (!$item_cats || $ctype['options']['is_cats_change'])){
             $item_cats = [];
             if ($this->request->has('add_cats') && !empty($ctype['options']['is_cats_multi'])){
                 $item_cats = $this->request->get('add_cats', []);

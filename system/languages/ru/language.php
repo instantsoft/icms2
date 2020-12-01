@@ -166,6 +166,9 @@
     define('LANG_PARSER_USER_FILTER_HINT',   'ID пользователя');
     define('LANG_PARSER_USERS',              'Список пользователей');
     define('LANG_PARSER_PARENT',             'Родитель');
+    define('LANG_PARSER_PARENT_STYLE',       'Стиль вывода в записи');
+    define('LANG_PARSER_PARENT_STYLE1',      'Список типа контента');
+    define('LANG_PARSER_PARENT_STYLE2',      'Простой список ссылок');
     define('LANG_PARSER_IMAGE',              'Изображение');
     define('LANG_PARSER_IMAGE_SPELL',        'изображение|изображения|изображений');
     define('LANG_PARSER_IMAGES',             'Набор изображений');

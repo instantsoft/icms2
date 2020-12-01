@@ -12,6 +12,19 @@ class fieldParent extends cmsFormField {
     private $parent_ctype_name = false;
     private $parent_items = null;
 
+    public function getOptions() {
+        return array(
+            new fieldList('item_style', array(
+                'title'   => LANG_PARSER_PARENT_STYLE,
+                'default' => 'ctype_list',
+                'items'   => array(
+                    'ctype_list' => LANG_PARSER_PARENT_STYLE1,
+                    'links_list' => LANG_PARSER_PARENT_STYLE2
+                )
+            ))
+        );
+    }
+
 	public function __construct($name, $options = false) {
 
         parent::__construct($name, $options);
@@ -86,6 +99,10 @@ class fieldParent extends cmsFormField {
 
         if (!$value){
             return '';
+        }
+
+        if ($this->getOption('item_style', 'ctype_list') == 'links_list') {
+            return $this->parseTeaser($value);
         }
 
 		if (!$this->parent_ctype_name) { return false; }
