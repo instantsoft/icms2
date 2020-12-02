@@ -370,6 +370,11 @@
     define('LANG_CP_WIDGETS_ADD_COL',           'Add col');
     define('LANG_CP_WIDGETS_ROWS_TITLE',        'Row Headers');
     define('LANG_CP_WIDGETS_ADD_ROW',           'Add row');
+    define('LANG_CP_WIDGETS_IMPORT_SCHEME',     'Import schema');
+    define('LANG_CP_WIDGETS_FROM_TEMPLATE',     'Template from which to import scheme');
+    define('LANG_CP_WIDGETS_COPY_WIDGETS',      'Transfer widgets');
+    define('LANG_CP_WIDGETS_EMPTY_LAYOUT',      'The selected template is no scheme');
+    define('LANG_CP_WIDGETS_LAYOUT_ISUCCESS',   'Schema imported successfully');
     define('LANG_CP_WIDGETS_ADD_ROW_P',         'Add nested row');
     define('LANG_CP_WIDGETS_ROW_NO_GUTTERS',    'No gutters');
     define('LANG_CP_WIDGETS_ROW_CONT',          'Row container');

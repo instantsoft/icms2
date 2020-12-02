@@ -29,7 +29,10 @@ class actionAdminWidgets extends cmsAction {
 
         cmsCore::loadTemplateLanguage($template_name);
 
+        // Шаблоны для показа виджетов
         $templates = [];
+        // Шаблоны, у которых есть динамическая схема
+        $templates_dynamic_scheme = [];
 
         foreach ($tpls as $tpl) {
             $template_path = $this->cms_config->root_path . cmsTemplate::TEMPLATE_BASE_PATH. $tpl;
@@ -37,6 +40,9 @@ class actionAdminWidgets extends cmsAction {
             if($manifest !== null){
                 if (!empty($manifest['properties']['is_frontend'])) {
                     $templates[$tpl] = !empty($manifest['title']) ? $manifest['title'] : $tpl;
+                }
+                if (!empty($manifest['properties']['is_dynamic_layout'])) {
+                    $templates_dynamic_scheme[$tpl] = !empty($manifest['title']) ? $manifest['title'] : $tpl;
                 }
                 continue;
             }
@@ -62,6 +68,7 @@ class actionAdminWidgets extends cmsAction {
             'controllers'   => $controllers,
             'template_name' => $template_name,
             'templates'     => $templates,
+            'templates_dynamic_scheme' => $templates_dynamic_scheme,
             'widgets_list'  => $widgets_list,
             'scheme_html'   => $scheme_html
         ));

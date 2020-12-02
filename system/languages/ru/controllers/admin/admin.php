@@ -392,6 +392,11 @@
     define('LANG_CP_WIDGETS_ADD_COL',           'Добавить колонку');
     define('LANG_CP_WIDGETS_ROWS_TITLE',        'Заголовки рядов');
     define('LANG_CP_WIDGETS_ADD_ROW',           'Добавить ряд');
+    define('LANG_CP_WIDGETS_IMPORT_SCHEME',     'Импортировать схему');
+    define('LANG_CP_WIDGETS_FROM_TEMPLATE',     'Шаблон, с которого импортировать схему');
+    define('LANG_CP_WIDGETS_COPY_WIDGETS',      'Перенести виджеты');
+    define('LANG_CP_WIDGETS_EMPTY_LAYOUT',      'В выбранном шаблоне нет схемы');
+    define('LANG_CP_WIDGETS_LAYOUT_ISUCCESS',   'Схема успешно импортирована');
     define('LANG_CP_WIDGETS_ADD_ROW_P',         'Добавить вложенный ряд');
     define('LANG_CP_WIDGETS_ROW_NO_GUTTERS',    'Без отступов между колонками');
     define('LANG_CP_WIDGETS_ROW_NESTED_POSITION', 'Позиция вывода');
