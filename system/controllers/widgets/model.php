@@ -446,12 +446,13 @@ class modelWidgets extends cmsModel {
             $item['device_types']     = cmsModel::yamlToArray($item['device_types']);
             $item['template_layouts'] = cmsModel::yamlToArray($item['template_layouts']);
             $item['languages']        = cmsModel::yamlToArray($item['languages']);
+            $item['is_set_access']    = !empty($item['groups_view']) || $item['groups_hide'];
             return $item;
         });
 
     }
 
-    public function getWidgetBindingsScheme($page_id, $template_name) {
+    public function getWidgetBindingsScheme($page_id, $page_ids, $template_name) {
 
         $binds = $this->
             filterStart()->
@@ -460,11 +461,9 @@ class modelWidgets extends cmsModel {
             filterIsNull('bp.template')->
             filterEnd()->
             filterStart()->
-            filterEqual('bp.page_id', 0)->
+            filterIn('bp.page_id', $page_ids)->
             filterOr()->
             filterIsNull('bp.page_id')->
-            filterOr()->
-            filterEqual('bp.page_id', $page_id)->
             filterOr()->
             filterIsNull('bp.position')->
             filterEnd()->
@@ -475,14 +474,15 @@ class modelWidgets extends cmsModel {
             joinInner('widgets', 'w', 'w.id = i.widget_id')->
             joinLeft('widgets_bind_pages', 'bp', 'bp.bind_id = i.id')->
             orderBy('bp.page_id, bp.ordering')->
-            get('widgets_bind') ?: array();
+            get('widgets_bind') ?: [];
 
-        $positions = array();
+        $positions = [];
 
         foreach ($binds as $bind) {
 
             $bind['languages']    = cmsModel::yamlToArray($bind['languages']);
             $bind['device_types'] = cmsModel::yamlToArray($bind['device_types']);
+            $bind['groups_view']  = cmsModel::yamlToArray($bind['groups_view']);
 
             if ($bind['device_types'] && count($bind['device_types']) < 3) {
 
@@ -491,7 +491,6 @@ class modelWidgets extends cmsModel {
                 foreach ($bind['device_types'] as $dt) {
                     $device_types[] = string_lang('LANG_' . $dt . '_DEVICES');
                 }
-
             } else {
                 $device_types = false;
             }
@@ -500,30 +499,29 @@ class modelWidgets extends cmsModel {
                 $bind['position'] = '_unused';
             }
 
-            if($bind['image_hint_path']){
-                $bind['image_hint_path'] = cmsConfig::get('upload_host').'/'.$bind['image_hint_path'];
+            if ($bind['image_hint_path']) {
+                $bind['image_hint_path'] = cmsConfig::get('upload_host') . '/' . $bind['image_hint_path'];
             }
 
-            $positions[$bind['position']][] = array(
-                'id'           => $bind['id'],
-                'bind_id'      => $bind['bind_id'],
-                'widget_id'    => $bind['widget_id'],
-                'title'        => string_replace_svg_icons($bind['title']),
-                'position'     => $bind['position'],
-                'languages'    => $bind['languages'],
-                'image_hint_path' => $bind['image_hint_path'],
+            $positions[$bind['position']][] = [
+                'id'                => $bind['id'],
+                'bind_id'           => $bind['bind_id'],
+                'widget_id'         => $bind['widget_id'],
+                'title'             => string_replace_svg_icons($bind['title']),
+                'position'          => $bind['position'],
+                'languages'         => $bind['languages'],
+                'image_hint_path'   => $bind['image_hint_path'],
                 'device_type_names' => $bind['device_types'],
-                'device_types' => $device_types,
-                'name'         => $bind['name'],
-                'is_tab_prev'  => (bool) $bind['is_tab_prev'],
-                'is_enabled'   => (bool) $bind['is_enabled'],
-                'is_disabled'  => ($bind['page_id'] != $page_id && $bind['position'] !== '_unused')
-            );
-
+                'device_types'      => $device_types,
+                'name'              => $bind['name'],
+                'is_set_access'     => !empty($bind['groups_view']) || $bind['groups_hide'],
+                'is_tab_prev'       => boolval($bind['is_tab_prev']),
+                'is_enabled'        => boolval($bind['is_enabled']),
+                'is_disabled'       => ($bind['page_id'] != $page_id && $bind['position'] !== '_unused')
+            ];
         }
 
         return $positions ? $positions : false;
-
     }
 
     public function addWidgetBinding($widget, $page_id, $position, $template) {

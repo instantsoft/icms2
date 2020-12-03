@@ -1,16 +1,81 @@
 <?php
 /**
- * 2.14.0 => 2.14.1
+ * 2.13.1 => 2.14.0
  */
 function install_package(){
 
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    if(!$core->db->isFieldExists('widgets_bind', 'tpl_wrap_style')){
+        $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `tpl_wrap_style` VARCHAR(50) NULL DEFAULT NULL AFTER `tpl_wrap`;");
+    }
+
+    if(!$core->db->isFieldExists('{users}', 'slug')){
+        $core->db->query("ALTER TABLE `{users}` ADD `slug` VARCHAR(100) NULL DEFAULT NULL AFTER `nickname`, ADD INDEX (`slug`);");
+    }
+
+    if(!$core->db->isFieldExists('geo_countries', 'is_enabled')){
+        $core->db->query("ALTER TABLE `{#}geo_countries` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
+    }
+
+    if(!$core->db->isFieldExists('geo_regions', 'is_enabled')){
+        $core->db->query("ALTER TABLE `{#}geo_regions` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
+    }
+
+    if(!$core->db->isFieldExists('geo_cities', 'is_enabled')){
+        $core->db->query("ALTER TABLE `{#}geo_cities` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
+    }
+
+    if(!$core->db->getRowsCount('widgets', "`controller` IS NULL AND `name` = 'template'")){
+        $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`, `files`) VALUES (NULL, 'template', 'Элементы шаблона', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL, NULL);");
+    }
+
+    if(!$core->db->getRowsCount('widgets', "`controller` = 'content' AND `name` = 'fields'")){
+        $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`, `files`) VALUES ('content', 'fields', 'Поля контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL, NULL);");
+    }
+
+    if(!$core->db->getRowsCount('widgets', "`controller` = 'forms' AND `name` = 'form'")){
+        $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`, `files`) VALUES ('forms', 'form', 'Форма', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL, NULL);");
+    }
+
+    $admin->model->filterEqual('w.controller', 'content');
+    $admin->model->filterEqual('w.name', 'list');
+    $admin->model->joinInner('widgets', 'w', 'w.id = i.widget_id');
+    $admin->model->selectOnly('i.id');
+    $admin->model->select('i.options');
+    $widgets = $admin->model->get('widgets_bind', function ($item, $model){
+        $item['options'] = cmsModel::yamlToArray($item['options']);
+        return $item;
+    });
+    if($widgets){
+        foreach ($widgets as $widget) {
+            if(array_key_exists('style', $widget['options'])){
+
+                $update = [];
+
+                if($widget['options']['style']){
+                    $update['tpl_body'] = $widget['options']['style'] == 'basic' ? 'list' : 'list_'.$widget['options']['style'];
+                }
+
+                unset($widget['options']['style']);
+                $update['options'] = $widget['options'];
+
+                $admin->model->update('widgets_bind', $widget['id'], $update);
+            }
+        }
+    }
+
+    $core->db->importDump(dirname(__FILE__).'/install_modern_widgets.sql');
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
-
+    add_perms(array(
+        'users' => array(
+            'change_slug'
+        )
+    ), 'flag');
     ////////////////////////////////////////////////////////////////////////////
     ///////////////// Индексы //////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
@@ -53,6 +118,8 @@ function install_package(){
             }
         }
     }
+
+    save_controller_options(array('photos', 'messages', 'tags'));
 
     return true;
 }

@@ -786,18 +786,21 @@ class cmsCore {
      */
     public function loadMatchedPages() {
 
-        if($this->matched_pages !== null){
+        if ($this->matched_pages !== null) {
             return $this;
         }
 
-        if($this->widgets_pages === null){
+        if ($this->widgets_pages === null) {
             $this->widgets_pages = cmsCore::getModel('widgets')->getPages();
         }
 
         $this->matched_pages = $this->detectMatchedWidgetPages($this->widgets_pages);
 
         return $this;
+    }
 
+    public function getWidgetsPages() {
+        return $this->widgets_pages;
     }
 
     public function getMatchedPagesIds() {
@@ -951,54 +954,60 @@ class cmsCore {
      * Определяет какие из списка страниц виджетов
      * совпадают по маске с текущей страницей
      *
-     * @param type $pages
-     * @return type
+     * @param array $pages
+     * @param string $uri
+     * @return array
      */
-    private function detectMatchedWidgetPages($pages){
+    public function detectMatchedWidgetPages($pages, $uri = null) {
 
-        if ($this->uri == '') {
-            return array(0, 1);
+        if($uri === null){
+            $uri = $this->uri;
+            $uri_query = $this->uri_query;
+        }
+
+        if ($uri === '') {
+            return [0, 1];
         }
 
         $matched_pages = [];
 
-        $_full_uri = $this->uri.($this->uri_query ? '?'.http_build_query($this->uri_query) : '');
+        $_full_uri = $uri . (!empty($uri_query) ? '?' . http_build_query($uri_query) : '');
 
         //
         // Перебираем все точки привязок и проверяем совпадение
         // маски URL с текущим URL
         //
-        foreach($pages as $page){
+        foreach ($pages as $page) {
 
-            if (empty($page['url_mask']) && !empty($page['id'])) { continue; }
+            if (empty($page['url_mask']) && !empty($page['id'])) {
+                continue;
+            }
 
             $is_mask_match = empty($page['id']);
             $is_stop_match = false;
 
             if (!empty($page['url_mask'])) {
-                foreach($page['url_mask'] as $mask){
-                    $regular = string_mask_to_regular($mask);
-                    $regular = "/^{$regular}$/iu";
-                    $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
+                foreach ($page['url_mask'] as $mask) {
+                    $regular       = string_mask_to_regular($mask);
+                    $regular       = "/^{$regular}$/iu";
+                    $is_mask_match = $is_mask_match || preg_match($regular, $uri);
                 }
             }
 
             if (!empty($page['url_mask_not'])) {
-                foreach($page['url_mask_not'] as $mask){
-                    $regular = string_mask_to_regular($mask);
-                    $regular = "/^{$regular}$/iu";
+                foreach ($page['url_mask_not'] as $mask) {
+                    $regular       = string_mask_to_regular($mask);
+                    $regular       = "/^{$regular}$/iu";
                     $is_stop_match = $is_stop_match || preg_match($regular, $_full_uri);
                 }
             }
 
-            if ($is_mask_match && !$is_stop_match){
+            if ($is_mask_match && !$is_stop_match) {
                 $matched_pages[$page['id']] = $page;
             }
-
         }
 
         return $matched_pages;
-
     }
 
 //============================================================================//
