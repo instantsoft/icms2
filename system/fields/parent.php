@@ -9,8 +9,8 @@ class fieldParent extends cmsFormField {
     public $var_type      = 'string';
     public $filter_type   = 'str';
     protected $input_action = 'bind';
-    private $parent_ctype_name = false;
-    private $parent_items = null;
+    protected $parent_ctype_name = false;
+    protected $parent_items = null;
 
     public function getOptions() {
         return array(

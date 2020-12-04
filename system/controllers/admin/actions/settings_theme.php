@@ -28,9 +28,13 @@ class actionAdminSettingsTheme extends cmsAction {
                 $manifest = $template->getManifest();
                 if($manifest !== null && !empty($manifest['properties']['style_middleware'])){
 
-                    cmsCore::getController('renderer', new cmsRequest([
+                    $renderer = cmsCore::getController('renderer', new cmsRequest([
                         'middleware' => $manifest['properties']['style_middleware']
-                    ]), cmsRequest::CTX_INTERNAL)->render($template_name, $options);
+                    ]), cmsRequest::CTX_INTERNAL);
+
+                    $renderer->cms_template = $template;
+
+                    $renderer->render($template_name, $options);
                 }
 
                 if($template->saveOptions($options)){

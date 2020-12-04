@@ -43,7 +43,7 @@ function get_site_config_env() {
         $config[$config_key] = getenv($env_key);
     }
 
-    return $config;
+    return array_filter($config);
 }
 
 function get_site_config() {
