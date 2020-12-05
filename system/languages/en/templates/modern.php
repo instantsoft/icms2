@@ -67,3 +67,5 @@ define('LANG_MODERN_LOGO_SVG', 'Or paste the base SVG logo');
 define('LANG_MODERN_LOGO_SMALL', 'Upload a small logo');
 define('LANG_MODERN_LOGO_SMALL_HINT', 'Will be shown at low resolutions. ');
 define('LANG_MODERN_LOGO_SMALL_SVG', 'Or insert a small logo in SVG');
+define('LANG_MODERN_VARS', 'Bootstrap4 Overridden Variables');
+define('LANG_MODERN_VARS_SELECT', 'Select a variable');

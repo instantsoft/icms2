@@ -20,6 +20,12 @@ class onRendererMiddlewareScss extends cmsAction {
                 }
             }
         }
+        // Кастомные переменные
+        if(!empty($options['vars'])){
+            foreach ($options['vars'] as $var) {
+                $scss['$'.$var['name']] = $var['value'];
+            }
+        }
 
         // Компилируем основной CSS файл шаблона
         $theme_css = $this->compile('scss/theme/theme.scss', $scss);

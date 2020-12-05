@@ -55,6 +55,9 @@ class formModernTemplateOptions extends cmsForm {
         ];
 
         $theme_colors = [
+            '$body-bg'   => LANG_MODERN_THEME_BGCOLOR,
+            '$body-color'=> LANG_MODERN_THEME_BCOLOR,
+            '$link-color'=> LANG_MODERN_THEME_LINK_COLOR,
             '$primary'   => LANG_MODERN_C_PRIMARY,
             '$secondary' => LANG_MODERN_C_SECONDARY,
             '$success'   => LANG_MODERN_C_SUCCESS,
@@ -66,6 +69,9 @@ class formModernTemplateOptions extends cmsForm {
         ];
 
         $theme_colors_default = [
+            'body-bg'   => '$white',
+            'body-color'=> '$gray-800',
+            'link-color'=> '$blue',
             'primary'   => '$blue',
             'secondary' => '$gray-600',
             'success'   => '$green',
@@ -75,6 +81,11 @@ class formModernTemplateOptions extends cmsForm {
             'light'     => '$gray-100',
             'dark'      => '$gray-900'
         ];
+
+        $exists_vars = array_keys($theme_colors + $gamma);
+        foreach (['$enable-rounded', '$border-radius', '$border-radius-lg', '$border-radius-sm', '$enable-shadows', '$enable-gradients', '$enable-responsive-font-sizes', '$grid-gutter-width', '$spacer', '$font-size-base'] as $fields_var) {
+            $exists_vars[] = $fields_var;
+        }
 
         $fields = array(
 
@@ -236,43 +247,56 @@ class formModernTemplateOptions extends cmsForm {
             'colors' => array(
                 'type' => 'fieldset',
                 'title' => LANG_MODERN_THEME_COLORS,
-                'childs' => [
-                    new fieldList('scss:body-bg', array(
-                        'title' => LANG_MODERN_THEME_BGCOLOR,
-                        'hint' => LANG_MODERN_THEME_GCOLOR,
-                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma,
-                        'default' => '$white'
-                    )),
-                    new fieldColor('custom_scss:body-bg', array(
-                        'visible_depend' => array('scss:body-bg' => array('show' => array('')))
-                    )),
-                    new fieldList('scss:body-color', array(
-                        'title' => LANG_MODERN_THEME_BCOLOR,
-                        'hint' => LANG_MODERN_THEME_GCOLOR,
-                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma,
-                        'default' => '$gray-800'
-                    )),
-                    new fieldColor('custom_scss:body-color', array(
-                        'visible_depend' => array('scss:body-color' => array('show' => array('')))
-                    )),
-                    new fieldList('scss:link-color', array(
-                        'title' => LANG_MODERN_THEME_LINK_COLOR,
-                        'hint' => LANG_MODERN_THEME_GCOLOR,
-                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma,
-                        'default' => '$blue'
-                    )),
-                    new fieldColor('custom_scss:link-color', array(
-                        'visible_depend' => array('scss:link-color' => array('show' => array('')))
-                    ))
-                ]
+                'childs' => []
             ),
 
             'gamma' => array(
                 'type' => 'fieldset',
                 'title' => LANG_MODERN_THEME_GAMMA,
                 'childs' => []
-            )
+            ),
 
+            'bs_vars' => array(
+                'type' => 'fieldset',
+                'title' => 'Bootstrap',
+                'childs' => array(
+                    new fieldList('vars', array(
+                        'title' => LANG_MODERN_VARS,
+                        'hint'  => LANG_EVENTS_MANAGEMENT_HINT,
+                        'is_multiple'  => true,
+                        'single_select' => true,
+                        'dynamic_list' => true,
+                        'select_title' => LANG_MODERN_VARS_SELECT,
+                        'multiple_keys' => array(
+                            'name' => 'field', 'value' => 'field_value'
+                        ),
+                        'generator' => function($item) use ($exists_vars){
+                            $var_file = cmsTemplate::getInstance()->getTplFilePath('scss/bootstrap/_variables.scss');
+
+                            $data = file_get_contents($var_file);
+
+                            preg_match_all('#^(\$[a-z\-0-9]+)\s?\:\s+(.+);#mi', $data, $var_list);
+
+                            $vars = [];
+                            if(!empty($var_list[1])){
+                                foreach ($var_list[1] as $key => $name) {
+                                    if(in_array($name, $exists_vars)){
+                                        continue;
+                                    }
+                                    $value = trim(str_replace('!default', '', $var_list[2][$key]));
+                                    $vars[str_replace('$', '', $name)] = [
+                                        'title' => $name,
+                                        'data' => ['placeholder' => $value]
+                                    ];
+                                }
+                                asort($vars);
+                            }
+
+                            return $vars;
+                        }
+                    ))
+                )
+            )
         );
 
         foreach ($gamma as $name => $title) {
