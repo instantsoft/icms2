@@ -1,5 +1,9 @@
 <?php
-$this->addTplCSSName('datatables.min');
+$this->addTplJSName([
+    'jquery-ui',
+    'i18n/jquery-ui/'.cmsCore::getLanguageName()
+]);
+$this->addTplCSSName(['jquery-ui', 'datatables']);
 $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perpage'];
 ?>
 
@@ -114,11 +118,9 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
         </div>
     </div>
 </div>
-
+<?php ob_start(); ?>
 <script>
-
     <?php echo $this->getLangJS('LANG_LIST_EMPTY', 'LANG_LIST_NONE_SELECTED', 'LANG_PAGE_FIRST', 'LANG_PAGE_LAST'); ?>
-
     icms.datagrid.setOptions({
         url: '<?php echo $source_url; ?>',
         pages_count: 0,
@@ -134,9 +136,8 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
         order_by: '<?php echo isset($filter['order_by']) ? $filter['order_by'] : $options['order_by']; ?>',
         order_to: '<?php echo isset($filter['order_to']) ? $filter['order_to'] : $options['order_to']; ?>'
     });
-
     <?php if ($options['is_auto_init']){ ?>
         icms.datagrid.init();
     <?php } ?>
-
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

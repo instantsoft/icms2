@@ -54,7 +54,6 @@
     define('LANG_CP_SECTION_CONTROLLERS',       'Components');
     define('LANG_CP_SECTION_SETTINGS',          'Settings');
     define('LANG_CP_SECTION_UPDATE',            'Updates');
-    define('LANG_CP_ACTIONS',                   'Actions');
     define('LANG_CP_SELECTED_EDIT',             'Edit');
     define('LANG_CP_SELECTED_DELETE',           'Delete');
     define('LANG_CP_CTYPES_ADD',                'Add Content Type');

@@ -78,4 +78,19 @@
             <img src="<?php echo $logos['logo']; ?>" class="d-none d-sm-block" alt="<?php html($config->sitename); ?>">
         </span>
     <?php } ?>
+<?php } elseif($widget->options['type'] === 'lang_select') { ?>
+        <ul class="nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link text-warning font-weight-bold dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+                    <?php echo strtoupper($current_lang); ?>
+                </a>
+                <div class="dropdown-menu">
+                    <?php foreach ($langs as $lang) { ?>
+                        <a class="dropdown-item<?php if($lang == $current_lang){ ?> active<?php } ?>" href="<?php html(($config->language == $lang ? '' : '/'.$lang).$_SERVER['REQUEST_URI']); ?>">
+                            <?php echo strtoupper($lang); ?>
+                        </a>
+                    <?php } ?>
+                </div>
+            </li>
+        </ul>
 <?php } ?>

@@ -60,7 +60,6 @@
     define('LANG_CP_SECTION_SETTINGS',          'Настройки');
     define('LANG_CP_SECTION_UPDATE',            'Обновления');
 
-    define('LANG_CP_ACTIONS',                   'Действия');
     define('LANG_CP_SELECTED_EDIT',             'Редактировать');
     define('LANG_CP_SELECTED_DELETE',           'Удалить');
 

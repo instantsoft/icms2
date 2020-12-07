@@ -25,7 +25,7 @@
                     $widget->options['menu'],
                     $widget->options['is_detect'],
                     $widget->options['menu_navbar_style'].(!empty($widget->options['class']) ? ' '.$widget->options['class'] : '').(!$widget->options['navbar_expand'] ? ' flex-row icms-navbar-expanded' : ''),
-                    $widget->options['max_items'], true,
+                    $widget->options['max_items'], empty($widget->options['is_detect_strict']),
                     (!empty($widget->options['template']) ? $widget->options['template'] : 'menu'),
                     $widget->title
                 );
@@ -50,7 +50,7 @@
             $widget->options['menu'],
             $widget->options['is_detect'],
             $widget->options['menu_nav_style'].(!empty($widget->options['menu_nav_style_column']) ? ' '.$widget->options['menu_nav_style_column'] : '').(!empty($widget->options['class']) ? ' '.$widget->options['class'] : '').(!empty($widget->options['menu_is_pills']) ? ' nav-pills' : '').(!empty($widget->options['menu_is_fill']) ? ' '.$widget->options['menu_is_fill'] : ''),
-            $widget->options['max_items'], true,
+            $widget->options['max_items'], empty($widget->options['is_detect_strict']),
             (!empty($widget->options['template']) ? $widget->options['template'] : 'menu'),
             $widget->title
         );

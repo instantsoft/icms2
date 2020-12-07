@@ -433,7 +433,7 @@
     define('LANG_EDIT_FOLDER',               'Редактировать папку');
     define('LANG_DELETE_FOLDER',             'Удалить папку');
     define('LANG_DELETE_FOLDER_CONFIRM',     'Вы уверены что хотите удалить папку?\nВсе содержимое также будет удалено!');
-
+    define('LANG_CP_ACTIONS',                'Действия');
     define('LANG_BY_DEFAULT',                'По умолчанию');
     define('LANG_BASIC_OPTIONS',             'Общие');
     define('LANG_YES',                       'Да');

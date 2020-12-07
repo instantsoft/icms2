@@ -1,10 +1,10 @@
 <div class="custom-control custom-switch">
     <?php echo html_checkbox($field->element_name, (bool)$value, 1, array('id'=>$field->id, 'class' => 'custom-control-input')); ?>
-    <?php if ($field->title) { ?>
-        <label class="custom-control-label" for="<?php echo $field->id; ?>">
+    <label class="custom-control-label" for="<?php echo $field->id; ?>">
+        <?php if ($field->title) { ?>
             <?php echo $field->title; ?>
-        </label>
-    <?php } ?>
+        <?php } ?>
+    </label>
 </div>
 <?php if(!empty($field->toggle)) { ?>
 <?php ob_start(); ?>

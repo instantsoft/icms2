@@ -373,3 +373,39 @@ form fieldset {
     max-width: 100%;
     height: auto;
 }
+.btn-dylan {
+    position: relative;
+    transition: all 0.4s ease-in;
+    &:before {
+        content: '';
+        background-color: $input-btn-focus-color;
+        border-radius: 20%;
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        transform: scale(0.001, 0.001);
+    }
+    &:focus {
+        outline: 0;
+        &:before {
+            animation: effect_dylan 0.8s ease-out;
+        }
+    }
+}
+@keyframes effect_dylan {
+  50% {
+    transform: scale(1.5, 1.5);
+    opacity: 0;
+  }
+  99% {
+    transform: scale(0.001, 0.001);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.001, 0.001);
+    opacity: 1;
+  }
+}

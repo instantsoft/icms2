@@ -5,6 +5,7 @@ define ('LANG_WD_T_TYPE_HINT', 'The page body will be displayed in only one widg
 define('LANG_WD_T_SMESSAGES', 'Session Messages');
 define('LANG_WD_T_COPYRIGHT', 'Copyright and Debugging Block');
 define('LANG_WD_T_LOGO', 'Logo');
+define('LANG_WD_T_LANG_SELECT',  'Language selection');
 define('LANG_WD_T_SITE_CLOSED', 'Site offline Message');
 define('LANG_WD_T_SESSION_TYPE', 'How to display session messages?');
 define('LANG_WD_T_SESSION_TYPE1', 'In Position');

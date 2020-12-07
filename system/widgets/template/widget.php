@@ -49,13 +49,21 @@ class widgetTemplate extends cmsWidget {
             if ($logo_small_svg_file){
                 $logos['small_logo'] = $config->upload_root . $logo_small_svg_file['path'];
             }
+        } elseif($type === 'lang_select') {
+            if(!$config->is_user_change_lang){
+                return false;
+            }
+            $current_lang = cmsCore::getLanguageName();
+            $langs = cmsCore::getLanguages();
         }
 
         return [
-            'core'     => cmsCore::getInstance(),
-            'config'   => $config,
-            'logos'    => $logos,
-            'messages' => $messages
+            'core'         => cmsCore::getInstance(),
+            'config'       => $config,
+            'logos'        => $logos,
+            'current_lang' => isset($current_lang) ? $current_lang : '',
+            'langs'        => isset($langs) ? $langs : [],
+            'messages'     => $messages
         ];
 
     }

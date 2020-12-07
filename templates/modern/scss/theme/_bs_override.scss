@@ -52,11 +52,14 @@
         position: relative;
         background-color: transparent;
         &::before {
+            transition: all .5s;
             position: absolute;
             display: block;
             bottom: 0;
             left: 0;
-            width: 100%;
+            right: 0;
+            margin: auto;
+            width: 0%;
             height: 3px;
             background-color: transparent;
             content: '';
@@ -66,9 +69,11 @@
         }
         &.active::before {
             background-color: $primary;
+            width: 100%;
         }
         &:not(.active):hover {
             &::before {
+                width: 100%;
                 background-color: $nav-tabs-border-color;
             }
         }

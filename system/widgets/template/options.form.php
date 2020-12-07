@@ -20,7 +20,8 @@ class formWidgetTemplateOptions extends cmsForm {
                             'smessages'   => LANG_WD_T_SMESSAGES,
                             'copyright'   => LANG_WD_T_COPYRIGHT,
                             'logo'        => LANG_WD_T_LOGO,
-                            'site_closed' => LANG_WD_T_SITE_CLOSED
+                            'site_closed' => LANG_WD_T_SITE_CLOSED,
+                            'lang_select' => LANG_WD_T_LANG_SELECT
                         ]
                     )),
 

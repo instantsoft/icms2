@@ -434,7 +434,7 @@
     define('LANG_EDIT_FOLDER',               'Edit Folder');
     define('LANG_DELETE_FOLDER',             'Delete Folder');
     define('LANG_DELETE_FOLDER_CONFIRM',     'Are you sure you want to delete the folder?\nIts contents will be deleted too!');
-
+    define('LANG_CP_ACTIONS',                'Actions');
     define('LANG_BY_DEFAULT',                'Default');
     define('LANG_BASIC_OPTIONS',             'Basic');
     define('LANG_YES',                       'Yes');
