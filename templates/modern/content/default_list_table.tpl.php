@@ -47,7 +47,7 @@
         <?php foreach($items as $item){ ?>
             <tr>
             <?php foreach($item['fields_names'] as $_field){ ?>
-                <td class="align-middle field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?><?php if ($_field['label_pos'] === 'none') { ?> d-none d-lg-table-cell<?php } ?>">
+                <td class="align-middle field ft_<?php echo $_field['type']; ?> f_<?php echo $_field['name']; ?><?php if ($_field['label_pos'] === 'none') { ?> d-none d-lg-table-cell<?php } ?>">
 
                     <?php if (!isset($item['fields'][$_field['name']])) { continue; } ?>
                     <?php $field = $item['fields'][$_field['name']]; ?>

@@ -34,9 +34,9 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
             <thead>
                 <tr>
                     <?php foreach($columns as $name=>$column){ ?>
-                        <?php if ($name=='id' && !$options['show_id']){ continue; } ?>
+                        <?php if ($name=='id' && !$options['show_id']){ $column['class'] = (isset($column['class']) ? $column['class'] : '').' d-none'; } ?>
                         <th rel="<?php echo $name; ?>" class="<?php if(!empty($column['class'])){ echo $column['class']; } ?> <?php if($options['is_sortable']){ ?>sortable<?php } ?>">
-                            <?php echo $column['title']; ?>
+                            <?php echo isset($column['title']) ? $column['title'] : ''; ?>
                         </th>
                     <?php } ?>
                     <?php if($actions){ ?>
@@ -50,6 +50,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
                 <?php if ($options['is_filter']){ ?>
                 <tr class="filter table-align-middle">
                     <?php foreach($columns as $name=>$column){ ?>
+                        <?php if ($name=='id' && !$options['show_id']){ $column['class'] = (isset($column['class']) ? $column['class'] : '').' d-none'; } ?>
                         <td class="p-2 <?php if(!empty($column['class'])){ ?><?php echo $column['class']; ?><?php } ?>">
                             <?php if (!empty($column['filter']) && $column['filter'] != 'none'){ ?>
                                 <?php $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : array(); ?>

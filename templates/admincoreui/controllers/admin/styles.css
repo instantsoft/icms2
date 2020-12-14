@@ -858,7 +858,7 @@ th.sortable {
 .datagrid .empty{
     color:#8f9ba6;
 }
-.datagrid.table-dragged tbody > tr:not(.filter) > td:first-child::before,
+.datagrid.table-dragged tbody > tr:not(.filter) > td.dragged_handle::before,
 .is-sortable .card-header > .db-sortable-handle::before,
 .layout-col-title > span::before,
 .widgets-layout-scheme:not(.disable-sortable) > .layout-row-title > .cell > span::before {
@@ -887,7 +887,7 @@ th.sortable {
     top: 0.05rem;
     left: -19px;
 }
-.datagrid.table-dragged tbody > tr:hover > td:first-child::before, .is-sortable .card-header:hover > .db-sortable-handle::before, .widgets-layout-scheme:not(.disable-sortable) > .layout-row-title:hover > .cell > span::before, .layout-col-title:hover > span::before {
+.datagrid.table-dragged tbody > tr:hover > td.dragged_handle::before, .is-sortable .card-header:hover > .db-sortable-handle::before, .widgets-layout-scheme:not(.disable-sortable) > .layout-row-title:hover > .cell > span::before, .layout-col-title:hover > span::before {
     opacity: 1;
 }
 .is-sortable .card-header > .db-sortable-handle::before {
@@ -896,7 +896,7 @@ th.sortable {
 .card-body > .card-footer {
     margin: 1.25rem -1.25rem -1.25rem -1.25rem;
 }
-.is-sortable .card-header > .db-sortable-handle, .datagrid.table-dragged tbody > tr:not(.filter) > td:first-child {
+.is-sortable .card-header > .db-sortable-handle, .datagrid.table-dragged tbody > tr:not(.filter) > td.dragged_handle {
     cursor: move;
 }
 .is-sortable .card-header > .db-sortable-handle {
@@ -904,7 +904,7 @@ th.sortable {
     margin: -0.75rem -1.25rem;
     padding: 0.75rem 1.25rem;
 }
-.datagrid.table-dragged tbody > tr > td:first-child, .is-sortable .card-header > .db-sortable-handle {
+.datagrid.table-dragged tbody > tr > td.dragged_handle, .is-sortable .card-header > .db-sortable-handle {
     position: relative;
 }
 .loading{

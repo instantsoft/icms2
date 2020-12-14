@@ -90,7 +90,7 @@ class actionFormsSendAjax extends cmsAction {
                     $form_items_titles[$field->title] = $form_items[$name];
                 }
                 // Вложения
-                if(in_array($field->type, $this->attachment_fields) && $data[$name]){
+                if(in_array($field->field_type, $this->attachment_fields) && $data[$name]){
                     $files = $field->getFiles($data[$name]);
                     if($files){
                         $is_number = count($files) > 1;

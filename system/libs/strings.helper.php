@@ -691,6 +691,7 @@ function string_short($string, $length = 0, $postfix = '', $type = 's'){
     // и после strip_tags не будет пробелов между словами
     $string = str_replace(array("\n", "\r", '<br>', '<br/>', '</p>'), ' ', $string);
     $string = strip_tags($string);
+    $string = preg_replace('#\s\s+#u', ' ', $string);
 
     if (!$length || mb_strlen($string) <= $length) { return $string; }
 

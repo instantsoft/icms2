@@ -3145,7 +3145,7 @@ class cmsTemplate {
 
         if($this->options !== null){ return $this->options; }
 
-        cmsCore::loadTemplateLanguage($this->name);
+        cmsCore::loadTemplateLanguage($this->inherit_names);
 
         return $this->loadOptions();
     }

@@ -488,9 +488,9 @@ function html_each($array){
 function html_minify($html){
 
     $search = array(
-        '/\>[^\S ]+/s',
-        '/[^\S ]+\</s',
-        '/(\s)+/s'
+        '/\>[^\S ]+/us',
+        '/[^\S ]+\</us',
+        '/(\s)+/us'
     );
 
     $replace = array(
@@ -499,10 +499,7 @@ function html_minify($html){
         '\\1'
     );
 
-    $html = preg_replace($search, $replace, $html);
-
-    return $html;
-
+    return preg_replace($search, $replace, $html);
 }
 
 function nf($number, $decimals=2, $thousands_sep=''){

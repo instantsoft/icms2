@@ -1327,7 +1327,7 @@ class cmsController {
 
     public function validate_sysname($value){
         if (empty($value)) { return true; }
-        if (!is_string($value) || !preg_match("/^([a-z0-9\_]*)$/", $value)){ return ERR_VALIDATE_SYSNAME; }
+        if (!is_string($value) || !preg_match("/^([a-z0-9\_]*[a-z]+[a-z0-9\_]*)$/", $value)){ return ERR_VALIDATE_SYSNAME; }
         return true;
     }
 

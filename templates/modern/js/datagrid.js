@@ -336,7 +336,7 @@ icms.datagrid = (function ($) {
         if (!_this.options.is_pagination) {return;}
 
         _this.options.page = page;
-        if (typeof(perpage) != 'undefined'){_this.options.perpage = perpage;}
+        if (typeof(perpage) !== 'undefined'){_this.options.perpage = perpage;}
 
         $('#datagrid_filter input[name=page]').val(_this.options.page);
         $('#datagrid_filter input[name=perpage]').val(_this.options.perpage);
@@ -358,7 +358,7 @@ icms.datagrid = (function ($) {
 
         $.post(_this.options.url, {filter: filter_query, heads: heads}, function(result){
             _this.rowsLoaded(result);
-            if (typeof(callback) != 'undefined'){
+            if (typeof(callback) !== 'undefined'){
                 callback();
             }
         }, 'json');
@@ -381,8 +381,14 @@ icms.datagrid = (function ($) {
             htr.find('> th').remove();
             ftr.find('> td').remove();
             for(var key in result.columns)if(result.columns.hasOwnProperty(key)){
-                if (key==0 && !_this.options.show_id) { continue; }
-                htr.append('<th rel="'+result.columns[key]['name']+'" class="'+result.classes[key]+' '+(result.columns[key]['sortable'] ? ' sortable sorting' : '')+'">'+result.columns[key]['title']+'</th>');
+                var column_class = result.classes[key];
+                if(result.columns[key]['sortable']){
+                    column_class = column_class + ' sortable sorting';
+                }
+                if (key==0 && !_this.options.show_id) {
+                    column_class = column_class + ' d-none';
+                }
+                htr.append('<th rel="'+result.columns[key]['name']+'" class="'+column_class+'">'+result.columns[key]['title']+'</th>');
                 if(result.columns[key]['name'] !== 'dg_actions'){
                     ftr.append('<td class="p-2 '+result.classes[key]+' '+((result.columns[key]['filter'] && $('<div>'+result.columns[key]['filter']+'</div>').find('input').val()) ? ' with_filter' : '')+'">'+(result.columns[key]['filter']||'&nbsp;')+'</td>');
                 }else{
@@ -416,9 +422,18 @@ icms.datagrid = (function ($) {
             var row = this;
             var row_html = '<tr id="tr_id_'+(row[0] > 0 ? row[0] : i)+'" data-id="'+((typeof row[0] === 'number' || typeof row[0] === 'string') ? row[0] : '')+'">';
             $.each(row, function(index){
-                if (index>0 || _this.options.show_id) {
-                    row_html = row_html + '<td class="'+result.classes[index]+'" data-label="'+result.titles[index]+'">' + this + '</td>';
+                var column_class = result.classes[index];
+                if (index === 0) {
+                    if (!_this.options.show_id) {
+                        column_class = column_class + ' d-none';
+                    } else {
+                        column_class = column_class + ' dragged_handle';
+                    }
                 }
+                if (index === 1 && !_this.options.show_id) {
+                    column_class = column_class + ' dragged_handle';
+                }
+                row_html = row_html + '<td class="'+column_class+'" data-label="'+result.titles[index]+'">' + this + '</td>';
             });
             row_html = row_html + '</tr>';
             $('.datagrid tbody').append(row_html);
@@ -427,7 +442,7 @@ icms.datagrid = (function ($) {
         if (_this.options.is_draggable) {
             $('#datagrid').addClass('table-dragged').tableDnD({
                 onDragClass: 'dragged',
-                dragHandle: "tbody > tr:not(.filter) > td:first-child",
+                dragHandle: "tbody > tr:not(.filter) > td.dragged_handle",
                 onDragStart: function(table, row) {
                     clearTimeout(_this.timeout_order);
                 },

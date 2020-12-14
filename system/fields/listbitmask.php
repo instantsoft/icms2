@@ -101,9 +101,9 @@ class fieldListBitmask extends cmsFormField {
 			foreach($items as $key => $item){
 				if (substr($value, $pos, 1) == 1){
                     if($is_autolink){
-                        $html .= '<li class="list-inline-item"><a class="listbitmask_autolink '.$this->item['ctype_name'].'_listbitmask_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($pos+1).'">'.htmlspecialchars($item).'</a></li>';
+                        $html .= '<li class="list-inline-item"><a class="listbitmask_autolink '.$this->item['ctype_name'].'_listbitmask_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'%5B%5D='.urlencode($key).'">'.html($item, false).'</a></li>';
                     } else {
-                        $html .= '<li class="list-inline-item"><span>' . htmlspecialchars($item) . '</span></li>';
+                        $html .= '<li class="list-inline-item"><span>' . html($item, false) . '</span></li>';
                     }
 				}
 				$pos++;
@@ -113,7 +113,6 @@ class fieldListBitmask extends cmsFormField {
 		}
 
         return $html;
-
     }
 
     public function setOptions($options){

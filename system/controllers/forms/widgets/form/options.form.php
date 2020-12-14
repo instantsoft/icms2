@@ -22,9 +22,6 @@ class formWidgetFormsFormOptions extends cmsForm {
                     )),
                     new fieldCheckbox('options:show_title', array(
                         'title' => LANG_SHOW_TITLE
-                    )),
-                    new fieldString('options:continue_link', array(
-                        'title' => LANG_FORMS_CP_CONTINUE_LINK
                     ))
                 )
             )

@@ -90,7 +90,7 @@ class cmsPaginator {
 
         if ($this->query[$this->page_param_name] == 1) { unset($this->query[$this->page_param_name]); }
 
-        return $uri . ($this->query ? $sep .http_build_query($this->query) : '') . '#'.$this->anchor;
+        return $uri . ($this->query ? $sep .http_build_query($this->query) : '') . ($this->anchor ? '#'.$this->anchor : '');
     }
 
     private function getNextPage() {

@@ -393,7 +393,7 @@
     define('ERR_VALIDATE_URL',               'Неверный формат URL');
     define('ERR_VALIDATE_REGEXP',            'Неверный формат');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Только латинские буквы и цифры');
-    define('ERR_VALIDATE_SYSNAME',           'Только латинские буквы (в нижнем регистре), цифры и знаки подчеркивания');
+    define('ERR_VALIDATE_SYSNAME',           'Как минимум одна латинская буква (в нижнем регистре), цифры и знаки подчеркивания');
     define('ERR_VALIDATE_SLUG',              'Только латинские буквы (в нижнем регистре), цифры, дефис и прямой слеш');
     define('ERR_VALIDATE_SLUGS',             'Как минимум одна латинская буква, в нижнем регистре, цифры и дефис');
     define('ERR_VALIDATE_DIGITS',            'Введите только цифры');

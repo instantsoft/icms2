@@ -23,7 +23,6 @@ class widgetFormsForm extends cmsWidget {
         list($form, $form_data) = $_form_data;
 
         $form_data['options']['show_title'] = $this->getOption('show_title');
-        $form_data['options']['continue_link'] = $this->getOption('continue_link') ?: $form_data['options']['continue_link'];
 
         $submited_data = $forms->getSavedUserFormData($form_data['id']);
 

@@ -1,4 +1,4 @@
-<ul class="pagination mb-0 mt-3 mt-md-4">
+<ul class="pagination mb-0 my-3 my-md-4">
 <?php if ($prev_url) { ?>
     <li class="page-item page-item-prev">
         <a class="page-link" href="<?php html($prev_url); ?>">

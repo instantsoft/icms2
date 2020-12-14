@@ -373,6 +373,9 @@ form fieldset {
     max-width: 100%;
     height: auto;
 }
+.pagination:last-child {
+    margin-bottom: 0 !important;
+}
 .btn-dylan {
     position: relative;
     transition: all 0.4s ease-in;
