@@ -890,6 +890,7 @@ class cmsModel {
     public function filterIn($field, $value){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_array($value)){
+            if(!$value){ return $this; }
             foreach($value as $k=>$v){
                 $v = $this->db->escape(strval($v));
                 $value[$k] = "'{$v}'";
@@ -906,6 +907,7 @@ class cmsModel {
     public function filterNotIn($field, $value){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_array($value)){
+            if(!$value){ return $this; }
             foreach($value as $k=>$v){
                 $v = $this->db->escape($v);
                 $value[$k] = "'{$v}'";

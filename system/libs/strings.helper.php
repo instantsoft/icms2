@@ -620,7 +620,7 @@ function string_get_meta_keywords($text, $min_length=5, $limit=10){
 
         $word = trim($word);
         $word = str_replace(array('(',')','+','-','.','!',':','{','}','|','"',',',"'"), '', $word);
-        $word = preg_replace("/\.,\(\)\{\}/i", '', $word);
+        $word = preg_replace("/\.,\(\)\{\}/ui", '', $word);
 
         if($stopwords && in_array($word, $stopwords)){
             continue;

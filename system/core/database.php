@@ -1124,8 +1124,6 @@ class cmsDatabase {
 
         clearstatcache();
 
-        if (function_exists('opcache_invalidate')) { @opcache_invalidate($file, true); }
-
         if (!is_readable($file)){ return false; }
 
         @set_time_limit(0);

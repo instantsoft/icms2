@@ -214,8 +214,10 @@ class cmsConfig {
         $success = false;
 
         if(is_writable($file)){
+
+            if (function_exists('opcache_reset')) { opcache_reset(); }
+
             $success = file_put_contents($file, $dump);
-            if (function_exists('opcache_invalidate')) { @opcache_invalidate($file, true); }
         }
 
         return $success;

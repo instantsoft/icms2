@@ -91,7 +91,7 @@
     }
 }
 .loading {
-    background-image: url("../images/loading.svg");
+    background-image: escape-svg($icms-loading-icon);
     background-repeat: no-repeat;
     background-position: left center;
     > svg {

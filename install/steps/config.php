@@ -103,7 +103,7 @@ function create_config($path, $file){
 
     write_config($file, $config);
 
-    if (function_exists('opcache_invalidate')) { @opcache_invalidate($file, true); }
+    if (function_exists('opcache_reset')) { opcache_reset(); }
 
     clearstatcache();
 

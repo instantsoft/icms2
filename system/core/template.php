@@ -3164,16 +3164,16 @@ class cmsTemplate {
 
     }
 
-    public function saveOptions($options){
+    public function saveOptions($options) {
 
         $options_file = $this->site_config->root_path . "system/config/theme_{$this->name}.yml";
 
-        if(file_exists($options_file)){
-            if(!is_writable($options_file)){
+        if (file_exists($options_file)) {
+            if (!is_writable($options_file)) {
                 return false;
             }
         } else {
-            if(!is_writable(dirname($options_file))){
+            if (!is_writable(dirname($options_file))) {
                 return false;
             }
         }
@@ -3182,10 +3182,7 @@ class cmsTemplate {
 
         $success = file_put_contents($options_file, $options_yaml);
 
-        if ($success && function_exists('opcache_invalidate')) { @opcache_invalidate($options_file, true); }
-
         return $success;
-
     }
 
 //============================================================================//

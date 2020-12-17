@@ -207,8 +207,6 @@ function import_dump(&$mysqli, $file, $prefix, $engine='MyISAM', $delimiter = ';
 
     $file = PATH . 'languages' . DS . LANG . DS . 'sql' . DS . $file;
 
-    if (function_exists('opcache_invalidate')) { @opcache_invalidate($file, true); }
-
     // Кастомные SQL могут отсутствовать
     if (!file_exists($file)){ return true; }
 
