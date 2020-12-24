@@ -691,3 +691,4 @@
     define('LANG_DEBUG_TAB_EVENTS',          'Spent events');
     define('LANG_DEBUG_TAB_WIDGETS',         'Widgets');
     define('LANG_DEBUG_TAB_INCLUDES',        'Included files');
+    define('LANG_DEBUG_TAB_TEMPLATE',        'Templates');

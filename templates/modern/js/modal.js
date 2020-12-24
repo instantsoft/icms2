@@ -34,9 +34,15 @@ icms.modal = (function ($) {
         $(modal_el).modal('show'); return this;
     };
 
-	this.open = function(selector) {
-        $(selector).modal('show');
-	};
+	this.open = function (selector, title, style) {
+        $(modal_el).modal('show');
+        var parent = $(selector).parent();
+        var content = $(selector).detach();
+        self.showContent(title, $(content).html(), style);
+        $(modal_el).on('hidden.bs.modal', function (e) {
+            content.appendTo(parent);
+        });
+    };
 
     this.close = function(){
         $(modal_el).modal('hide');
@@ -84,13 +90,7 @@ icms.modal = (function ($) {
                     var params = $(this).data('params');
 
                     if(url.charAt(0) === '#'){
-                        $(modal_el).modal('show');
-                        var parent = $(url).parent();
-                        var content = $(url).detach();
-                        self.showContent(title, $(content).html(), style);
-                        $(modal_el).on('hidden.bs.modal', function (e) {
-                            content.appendTo(parent);
-                        });
+                        self.open(url, title, style);
                     } else {
                         self.openAjax(url, params, false, title);
                     }

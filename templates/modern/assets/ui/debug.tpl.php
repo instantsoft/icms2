@@ -14,15 +14,34 @@ $active_tab = false;
         </span>
     </div>
     <?php } ?>
-    <ul class="nav nav-tabs" role="tablist">
-        <?php foreach($points_tab as $tab_name => $tab) { ?>
-            <li class="nav-item">
-                <a class="nav-link<?php if(!$active_tab){ $active_tab = $tab_name; ?> active<?php } ?>" href="#tab-<?php echo $tab_name; ?>" data-toggle="tab" role="tab">
-                    <?php echo $tab['title']; ?> <?php echo $tab['count'] ? '<span class="badge badge-pill badge-light">'.$tab['count'].'</span>' : ''; ?>
-                </a>
-            </li>
-        <?php } ?>
-    </ul>
+
+    <?php if($device_type !== 'desktop'){ ?>
+        <div class="dropdown">
+            <button class="btn btn-light" type="button" data-toggle="dropdown">
+                <?php html_svg_icon('solid', 'ellipsis-v'); ?> <?php echo LANG_MENU; ?>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+            <?php foreach($points_tab as $tab_name => $tab) { ?>
+                <li class="nav-item">
+                    <a class="nav-link text-nowrap<?php if(!$active_tab){ $active_tab = $tab_name; ?> active<?php } ?>" href="#tab-<?php echo $tab_name; ?>" data-toggle="tab">
+                        <?php echo $tab['title']; ?> <?php echo $tab['count'] ? '<span class="badge badge-pill badge-light">'.$tab['count'].'</span>' : ''; ?>
+                    </a>
+                </li>
+            <?php } ?>
+            </ul>
+        </div>
+    <?php } else { ?>
+        <ul class="nav nav-tabs" role="tablist">
+            <?php foreach($points_tab as $tab_name => $tab) { ?>
+                <li class="nav-item">
+                    <a class="nav-link<?php if(!$active_tab){ $active_tab = $tab_name; ?> active<?php } ?>" href="#tab-<?php echo $tab_name; ?>" data-toggle="tab" role="tab">
+                        <?php echo $tab['title']; ?> <?php echo $tab['count'] ? '<span class="badge badge-pill badge-light">'.$tab['count'].'</span>' : ''; ?>
+                    </a>
+                </li>
+            <?php } ?>
+        </ul>
+    <?php } ?>
+
     <div class="tab-content">
     <?php foreach($points_data as $tab_name => $data) { ?>
         <div id="tab-<?php echo $tab_name; ?>" class="tab-pane<?php if($active_tab == $tab_name){ ?> active<?php } ?>" role="tabpanel">

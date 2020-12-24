@@ -2266,6 +2266,8 @@ class cmsTemplate {
      */
     public function processRender($tpl_file, $data = [], $request = false, $add_controller_css = false) {
 
+        cmsDebugging::pointStart('template');
+
         if (!$request) { $request = $this->controller->request; }
 
         $hook_name = 'process_render_' . $this->controller->name . '_' . basename(str_replace('-', '_', $tpl_file), '.tpl.php');
@@ -2289,6 +2291,12 @@ class cmsTemplate {
         }
 
         $html = ob_get_clean();
+
+        cmsDebugging::pointProcess('template', function () use($tpl_file) {
+            return [
+                'data' => $this->controller->name.' :: '.$this->name.' :: processRender => '.str_replace($this->site_config->root_path, '', $tpl_file)
+            ];
+        }, 2);
 
         if ($request->isAjax()) {
             echo $html;
@@ -2329,6 +2337,8 @@ class cmsTemplate {
      */
     public function renderControllerChild($controller_name, $tpl_file, $data = array(), $request = false) {
 
+        cmsDebugging::pointStart('template');
+
         if (!$request) { $request = $this->controller->request; }
 
         $tpl_file = $this->getTemplateFileName('controllers/'.$controller_name.'/'.$tpl_file);
@@ -2339,6 +2349,11 @@ class cmsTemplate {
 
         extract($data); include($tpl_file);
 
+        cmsDebugging::pointProcess('template', function () use($tpl_file, $controller_name) {
+            return [
+                'data' => $controller_name.' :: '.$this->name.' :: renderControllerChild => '.str_replace($this->site_config->root_path, '', $tpl_file)
+            ];
+        }, 2);
     }
 
     /**
@@ -2691,13 +2706,15 @@ class cmsTemplate {
      * @param array $data Массив параметров, передаваемых в шаблон
      * @param object $request Объект запроса
      */
-    public function renderAsset($tpl_file, $data = array(), $request = false) {
+    public function renderAsset($tpl_file, $data = [], $request = false) {
+
+        cmsDebugging::pointStart('template');
 
         $tpl_file = $this->getTemplateFileName('assets/' . $tpl_file);
 
         $file_name = basename($tpl_file, '.tpl.php');
 
-        $hook_name = str_replace('-', '_', 'render_asset_'.basename(str_replace($file_name.'.tpl.php', '', $tpl_file)).'_'.$file_name);
+        $hook_name = str_replace('-', '_', 'render_asset_' . basename(str_replace($file_name . '.tpl.php', '', $tpl_file)) . '_' . $file_name);
 
         list($tpl_file, $data, $request) = cmsEventsManager::hook($hook_name, [$tpl_file, $data, $request]);
 
@@ -2705,12 +2722,17 @@ class cmsTemplate {
 
         extract($data); include($tpl_file);
 
-        if($request){
+        cmsDebugging::pointProcess('template', function () use($tpl_file) {
+            return [
+                'data' => $this->name . ' :: renderAsset => ' . str_replace($this->site_config->root_path, '', $tpl_file)
+            ];
+        }, 3);
+
+        if ($request) {
             if ($request->isAjax()) {
                 exit();
             }
         }
-
     }
 
     /**
@@ -2720,14 +2742,13 @@ class cmsTemplate {
      * @param array $data Массив параметров, передаваемых в шаблон
      * @return string
      */
-    public function getRenderedAsset($tpl_file, $data = array()) {
+    public function getRenderedAsset($tpl_file, $data = []) {
 
         ob_start();
 
         $this->renderAsset($tpl_file, $data);
 
         return ob_get_clean();
-
     }
 
     /**
@@ -3010,13 +3031,15 @@ class cmsTemplate {
 //============================================================================//
 //============================================================================//
 
-    public function renderWidget($widget, $data = array()) {
+    public function renderWidget($widget, $data = []) {
+
+        cmsDebugging::pointStart('template');
 
         $tpl_path = cmsCore::getWidgetPath($widget->name, $widget->controller);
 
         $tpl_file = $this->getTemplateFileName($tpl_path . '/' . $widget->getTemplate());
 
-        $hook_name = 'render_widget_'.($widget->controller ? $widget->controller.'_' : '').$widget->name.'_'.basename(str_replace('-', '_', $tpl_file), '.tpl.php');
+        $hook_name = 'render_widget_' . ($widget->controller ? $widget->controller . '_' : '') . $widget->name . '_' . basename(str_replace('-', '_', $tpl_file), '.tpl.php');
 
         list($widget, $tpl_file, $data) = cmsEventsManager::hook($hook_name, [$widget, $tpl_file, $data]);
 
@@ -3028,31 +3051,39 @@ class cmsTemplate {
 
         $html = ob_get_clean();
 
-        if (!$html){ return $this; }
+        if ($html) {
 
-        if (empty($widget->is_tab_prev)){
-            $this->widgets_group_index++;
+            if (empty($widget->is_tab_prev)) {
+                $this->widgets_group_index++;
+            }
+
+            if ($widget->controller && $widget->insert_controller_css) {
+                $css_file = $this->getStylesFileName($widget->controller);
+                if ($css_file) {
+                    $this->addCSSFromContext($css_file);
+                }
+            }
+
+            $this->widgets[$widget->position][$this->widgets_group_index][] = [
+                'id'          => $widget->id,
+                'bind_id'     => $widget->bind_id,
+                'title'       => $widget->is_title ? $widget->title : false,
+                'links'       => isset($widget->links) ? $widget->links : false,
+                'wrapper'     => $widget->getWrapper(),
+                'class'       => isset($widget->css_class) ? $widget->css_class : false,
+                'class_title' => isset($widget->css_class_title) ? $widget->css_class_title : false,
+                'class_wrap'  => (!empty($widget->tpl_wrap_style) ? $widget->tpl_wrap_style : '') . (!empty($widget->css_class_wrap) ? ' ' . $widget->css_class_wrap : ''),
+                'body'        => $html
+            ];
         }
 
-        if($widget->controller && $widget->insert_controller_css){
-            $css_file = $this->getStylesFileName($widget->controller);
-            if ($css_file){ $this->addCSSFromContext($css_file); }
-        }
-
-        $this->widgets[$widget->position][$this->widgets_group_index][] = array(
-            'id'          => $widget->id,
-            'bind_id'     => $widget->bind_id,
-            'title'       => $widget->is_title ? $widget->title : false,
-            'links'       => isset($widget->links) ? $widget->links : false,
-            'wrapper'     => $widget->getWrapper(),
-            'class'       => isset($widget->css_class) ? $widget->css_class : false,
-            'class_title' => isset($widget->css_class_title) ? $widget->css_class_title : false,
-            'class_wrap'  => (!empty($widget->tpl_wrap_style) ? $widget->tpl_wrap_style : '').(!empty($widget->css_class_wrap) ? ' '.$widget->css_class_wrap : ''),
-            'body'        => $html
-        );
+        cmsDebugging::pointProcess('template', function () use($tpl_file, $widget) {
+            return [
+                'data' => ($widget->controller ? $widget->controller . ' :: ' : '') . $widget->name . ' :: ' . $this->name . ' :: renderWidget => ' . str_replace($this->site_config->root_path, '', $tpl_file)
+            ];
+        }, 1);
 
         return $this;
-
     }
 
     /**

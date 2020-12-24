@@ -689,3 +689,4 @@
     define('LANG_DEBUG_TAB_EVENTS',          'Отработавшие события');
     define('LANG_DEBUG_TAB_WIDGETS',         'Виджеты');
     define('LANG_DEBUG_TAB_INCLUDES',        'Подключенные файлы');
+    define('LANG_DEBUG_TAB_TEMPLATE',        'Шаблоны');

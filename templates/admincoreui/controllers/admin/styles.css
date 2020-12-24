@@ -767,6 +767,9 @@ form .child_field{margin-left: 20px}
     border-radius: inherit;
     display: block;
 }
+#cp-widgets-layout .position li > img {
+    max-width: 100% !important;
+}
 #site_settings #fset_2 .chosen-container,
 #site_settings #fset_5 .chosen-container { width:300px !important; }
 #site_settings #fset_2 label, #site_settings #fset_5 label { display: block; }

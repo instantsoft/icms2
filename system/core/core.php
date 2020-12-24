@@ -822,11 +822,11 @@ class cmsCore {
     /**
      * Запускает все виджеты, привязанные к текущей странице
      */
-    public function runWidgets(){
+    public function runWidgets() {
 
         $template = cmsTemplate::getInstance();
 
-        if($template->widgets_rendered){
+        if ($template->widgets_rendered) {
             return $this;
         }
 
@@ -834,48 +834,52 @@ class cmsCore {
 
         $controllers_without_widgets = cmsConfig::get('controllers_without_widgets');
 
-        if ($controllers_without_widgets && in_array($this->controller, $controllers_without_widgets)) { return; }
+        if ($controllers_without_widgets && in_array($this->controller, $controllers_without_widgets)) {
+            return;
+        }
 
         $matched_pages = $this->loadMatchedPages()->getMatchedPages();
         if (!$matched_pages) { return; }
 
         $widgets_list = cmsCore::getModel('widgets')->getWidgetsForPages(array_keys($matched_pages), $template->getName());
 
-        if (is_array($widgets_list)){
+        if (is_array($widgets_list)) {
 
             $device_type = cmsRequest::getDeviceType();
             $layout = $template->getLayout();
             $user = cmsUser::getInstance();
 
-            if($user->is_admin){
+            if ($user->is_admin) {
                 cmsCore::loadControllerLanguage('admin');
             }
 
-            foreach ($widgets_list as $widget){
+            foreach ($widgets_list as $widget) {
 
                 // не выводим виджеты контроллеров, которые отключены
-                if(!empty($widget['controller']) && !cmsController::enabled($widget['controller'])){
+                if (!empty($widget['controller']) && !cmsController::enabled($widget['controller'])) {
                     continue;
                 }
 
                 // проверяем доступ для виджетов
-                if (!$user->isInGroups($widget['groups_view'])) { continue; }
+                if (!$user->isInGroups($widget['groups_view'])) {
+                    continue;
+                }
                 if (!empty($widget['groups_hide']) && $user->isInGroups($widget['groups_hide']) && !$user->is_admin) {
                     continue;
                 }
 
                 // проверяем для каких устройств показывать
-                if($widget['device_types'] && !in_array($device_type, $widget['device_types'])){
+                if ($widget['device_types'] && !in_array($device_type, $widget['device_types'])) {
                     continue;
                 }
 
                 // проверяем для каких макетов показывать
-                if($widget['template_layouts'] && !in_array($layout, $widget['template_layouts'])){
+                if ($widget['template_layouts'] && !in_array($layout, $widget['template_layouts'])) {
                     continue;
                 }
 
                 // проверяем для каких языков показывать
-                if($widget['languages'] && !in_array(cmsCore::getLanguageName(), $widget['languages'])){
+                if ($widget['languages'] && !in_array(cmsCore::getLanguageName(), $widget['languages'])) {
                     continue;
                 }
 
@@ -883,16 +887,15 @@ class cmsCore {
 
                 $this->runWidget($widget);
 
-                cmsDebugging::pointProcess('widgets', array(
-                    'data' => $widget['title'].' => /system/'.cmsCore::getWidgetPath($widget['name'], $widget['controller']).'/widget.php'
-                ), 0);
-
+                cmsDebugging::pointProcess('widgets', function () use($widget) {
+                    return [
+                        'data' => $widget['title'] . ' => /system/' . cmsCore::getWidgetPath($widget['name'], $widget['controller']) . '/widget.php'
+                    ];
+                }, 0);
             }
-
         }
 
         return $this;
-
     }
 
     public static function getWidgetObject($widget) {

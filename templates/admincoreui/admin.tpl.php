@@ -34,6 +34,7 @@
     <?php $this->onDemandTplCSSName([
         'photoswipe', 'vendors/introjs/introjs.min', 'vendors/introjs/themes/introjs-modern'
     ]); ?>
+    <link rel="shortcut icon" href="<?php echo $this->getTemplateFilePath('images/favicons/favicon_admin.ico'); ?>">
     <?php $this->head(false); ?>
 </head>
 <?php $messages = cmsUser::getSessionMessages(); ?>
@@ -190,7 +191,7 @@
         <div class="d-none d-md-block">
             <?php if ($config->debug){ ?>
                 <span class="item">
-                    <a href="#debug_block" class="ajax-modal" title="<?php echo LANG_DEBUG; ?>">
+                    <a href="#debug_block" data-style="xl" class="ajax-modal" title="<?php echo LANG_DEBUG; ?>">
                         <?php echo LANG_DEBUG; ?>
                     </a>
                 </span> &mdash;
