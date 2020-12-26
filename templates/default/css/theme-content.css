@@ -255,7 +255,14 @@ article div.content_categories:last-child {
     padding: 10px;
     border:solid 1px #CCC;
 }
-
+.category_description table {
+    border-collapse: collapse;
+}
+.category_description table th,
+.category_description table td {
+    padding: 10px;
+    border:solid 1px #CCC;
+}
 .ft_html a.read-more {
     display: block;
     margin:5px 0;

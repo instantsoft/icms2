@@ -64,7 +64,7 @@
     $this->addToolButton(array(
         'class' => 'gridicon',
         'childs_count' => count($templates),
-        'title' => LANG_CP_WIDGETS_TEMPLATE.': '.$template_name,
+        'title' => LANG_CP_WIDGETS_TEMPLATE.': '.$templates[$template_name],
         'href'  => ''
     ));
 
@@ -72,7 +72,7 @@
         $this->addToolButton(array(
             'level' => 2,
             'title' => $template,
-            'href'  => $this->href_to('widgets').'?template_name='.$template
+            'href'  => $this->href_to('widgets').'?template_name='.$tkey
         ));
     }
 
@@ -82,6 +82,13 @@
             'title' => LANG_CP_WIDGETS_ADD_ROW,
             'href'  => $this->href_to('widgets', ['row_add', $template_name])
         ));
+        if(count($templates_dynamic_scheme) > 1){
+            $this->addToolButton(array(
+                'class' => 'install add_row ajax-modal',
+                'title' => LANG_CP_WIDGETS_IMPORT_SCHEME,
+                'href'  => $this->href_to('widgets', ['import_scheme', $template_name])
+            ));
+        }
     }
 
     $this->applyToolbarHook('admin_widgets_toolbar');

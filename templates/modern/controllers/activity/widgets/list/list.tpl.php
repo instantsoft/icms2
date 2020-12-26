@@ -78,7 +78,7 @@
             </div>
             <?php if ($is_can_delete) { ?>
                 <div class="dropdown ml-2">
-                    <button class="btn" type="button" data-toggle="dropdown">
+                    <button class="btn btn-dylan" type="button" data-toggle="dropdown">
                         <?php html_svg_icon('solid', 'ellipsis-v'); ?>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">

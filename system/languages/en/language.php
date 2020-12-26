@@ -167,6 +167,9 @@
     define('LANG_PARSER_USER_FILTER_HINT',   'User ID');
     define('LANG_PARSER_USERS',              'User list');
     define('LANG_PARSER_PARENT',             'Parent');
+    define('LANG_PARSER_PARENT_STYLE',       'In item style');
+    define('LANG_PARSER_PARENT_STYLE1',      'Content type list');
+    define('LANG_PARSER_PARENT_STYLE2',      'Simple link list');
     define('LANG_PARSER_IMAGE',              'Image');
     define('LANG_PARSER_IMAGE_SPELL',        'image|image|images');
     define('LANG_PARSER_IMAGE_DELETE',       'Delete the image from the server?');
@@ -391,7 +394,7 @@
     define('ERR_VALIDATE_URL',               'Wrong URL format');
     define('ERR_VALIDATE_REGEXP',            'Wrong format');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Only letters and numbers');
-    define('ERR_VALIDATE_SYSNAME',           'Only letters (lowercase), numbers and break characters');
+    define('ERR_VALIDATE_SYSNAME',           'At least one latin letter (lowercase), numbers and break characters');
     define('ERR_VALIDATE_SLUG',              'Only letters (lowercase), numbers, hyphen and vertical bar');
     define('ERR_VALIDATE_SLUGS',             'At least one latin letter, lowercase, numbers and a hyphen');
     define('ERR_VALIDATE_DIGITS',            'Only numbers');
@@ -431,7 +434,7 @@
     define('LANG_EDIT_FOLDER',               'Edit Folder');
     define('LANG_DELETE_FOLDER',             'Delete Folder');
     define('LANG_DELETE_FOLDER_CONFIRM',     'Are you sure you want to delete the folder?\nIts contents will be deleted too!');
-
+    define('LANG_CP_ACTIONS',                'Actions');
     define('LANG_BY_DEFAULT',                'Default');
     define('LANG_BASIC_OPTIONS',             'Basic');
     define('LANG_YES',                       'Yes');
@@ -688,3 +691,4 @@
     define('LANG_DEBUG_TAB_EVENTS',          'Spent events');
     define('LANG_DEBUG_TAB_WIDGETS',         'Widgets');
     define('LANG_DEBUG_TAB_INCLUDES',        'Included files');
+    define('LANG_DEBUG_TAB_TEMPLATE',        'Templates');

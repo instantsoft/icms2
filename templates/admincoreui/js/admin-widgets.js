@@ -194,6 +194,10 @@ function createWidgetNode(widget){
         widget_dom.addClass('is_tab_prev');
     }
 
+    if (widget.is_set_access){
+        widget_dom.addClass('is_set_access');
+    }
+
     if (widget.device_types){
         widget_dom.addClass('device_restrictions');
         var device_icons = '';
@@ -382,6 +386,12 @@ function widgetUpdated(widget, result){
         widget_dom.addClass('is_tab_prev');
     } else {
         widget_dom.removeClass('is_tab_prev');
+    }
+
+    if (result.widget.is_set_access){
+        widget_dom.addClass('is_set_access');
+    } else {
+        widget_dom.removeClass('is_set_access');
     }
 
     if (!result.widget.device_types){

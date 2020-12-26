@@ -159,21 +159,21 @@ class modelMenu extends cmsModel {
 
     public static function buildMenu($menus, $parse_hooks = true) {
 
-        $items = array();
-        $user  = cmsUser::getInstance();
+        $items = [];
+        $delta = [];
 
-        $delta = array();
+        $user = cmsUser::getInstance();
 
         // перебираем все вернувшиеся пункты меню
-        foreach($menus as $item){
+        foreach ($menus as $item) {
 
             $is_root_added = false;
 
             if (($item['groups_view'] && !$user->isInGroups($item['groups_view'])) ||
                     ($item['groups_hide'] && $user->isInGroups($item['groups_hide']))) {
 
-                if($item['parent_id']){
-                    if(!isset($delta[$item['parent_id']])){
+                if ($item['parent_id']) {
+                    if (!isset($delta[$item['parent_id']])) {
                         $delta[$item['parent_id']] = 1;
                     } else {
                         $delta[$item['parent_id']] += 1;
@@ -181,40 +181,41 @@ class modelMenu extends cmsModel {
                 }
 
                 continue;
-
             }
 
-            $hook_result = array('items' => false);
+            $hook_result = ['items' => false];
 
-            if ($item['title'] && $parse_hooks){
-                if(strpos($item['title'], '{user.') !== false){
+            if ($item['title'] && $parse_hooks) {
+                if (strpos($item['title'], '{user.') !== false) {
                     $item['title'] = string_replace_user_properties($item['title']);
                 }
             }
 
-            if ($item['url'] && $parse_hooks){
+            if ($item['url'] && $parse_hooks) {
+
+                $matches = [];
 
                 // если URL пункта меню содержит свойство пользователя
-                if(strpos($item['url'], '{user.') !== false){
+                if (strpos($item['url'], '{user.') !== false) {
                     $item['url'] = string_replace_user_properties($item['url']);
                 } else
 
                 // если URL пункта меню содержит шаблон {controller:action}
-                if (preg_match('/^{([a-z0-9]+):*([a-z0-9_]*)}$/i', $item['url'], $matches)){
+                if (preg_match('/^{([a-z0-9]+):*([a-z0-9_]*)}$/i', $item['url'], $matches)) {
 
                     // то вызываем хук menu указанного контроллера
                     $controller = $matches[1];
-                    $action = $matches[2];
+                    $action     = $matches[2];
 
-                    $hook_result = cmsEventsManager::hook('menu_'.$controller, array(
+                    $hook_result = cmsEventsManager::hook('menu_' . $controller, [
                         'action'        => $action,
                         'menu_item_id'  => $item['id'],
                         'menu_item_url' => $item['url'],
                         'menu_item'     => $item
-                    ), false);
+                    ], false);
 
                     // если хук вернул результат
-                    if ($hook_result){
+                    if ($hook_result) {
 
                         // получаем новый URL пункта меню
                         $item['url'] = isset($hook_result['url']) ? $hook_result['url'] : '';
@@ -232,17 +233,16 @@ class modelMenu extends cmsModel {
                         }
 
                         $is_root_added = true;
-
                     } else {
                         continue;
                     }
-
                 }
 
-				$is_external = mb_strpos($item['url'], '://') !== false;
+                $is_external = mb_strpos($item['url'], '://') !== false;
 
-                if (!$is_root_added && !$is_external) { $item['url'] = href_to($item['url']); }
-
+                if (!$is_root_added && !$is_external) {
+                    $item['url'] = href_to($item['url']);
+                }
             }
 
             // добавляем обработанную строку в результирующий массив
@@ -250,31 +250,29 @@ class modelMenu extends cmsModel {
 
             // получаем дополнительные пункты меню
             if (isset($hook_result['items']) && is_array($hook_result['items'])) {
-                foreach($hook_result['items'] as $i) {
-                    $i['menu_id'] = $item['menu_id'];
-                    $i['options'] = isset($i['options']) ? $i['options'] : [];
-                    $i['options'] = array_merge($item['options'], $i['options']);
+                foreach ($hook_result['items'] as $i) {
+                    $i['menu_id']    = $item['menu_id'];
+                    $i['options']    = isset($i['options']) ? $i['options'] : [];
+                    $i['options']    = array_merge($item['options'], $i['options']);
                     $items[$i['id']] = $i;
                 }
             }
-
         }
 
-        if($delta){
+        if ($delta) {
             foreach ($delta as $item_id => $d) {
-                if(isset($items[$item_id])){
+                if (isset($items[$item_id])) {
                     $items[$item_id]['childs_count'] -= $d;
                 }
             }
         }
 
-        $tree = array();
+        $tree = [];
 
         cmsModel::buildTreeRecursive($items, $tree);
 
         // возвращаем дерево
         return $tree;
-
     }
 
     public function getMenuItemsTree($menu_id, $parse_hooks = true){

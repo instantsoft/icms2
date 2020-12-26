@@ -25,7 +25,7 @@ if( $ctype['options']['list_show_filter'] ) {
     </p>
 <?php return; } ?>
 
-<div class="content_list tiled <?php echo $ctype['name']; ?>_list row">
+<div class="content_list tiled <?php echo $ctype['name']; ?>_list row mt-3 mt-md-4">
 
     <?php foreach($items as $item){ ?>
 

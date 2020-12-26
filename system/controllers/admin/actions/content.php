@@ -56,7 +56,7 @@ class actionAdminContent extends cmsAction {
 
             $ctype = $content_model->getContentType($ctype_id);
 
-            if(!$ctype){
+            if(!$ctype && $do){
                 return cmsCore::error404();
             }
 

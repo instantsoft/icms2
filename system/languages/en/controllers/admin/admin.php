@@ -54,7 +54,6 @@
     define('LANG_CP_SECTION_CONTROLLERS',       'Components');
     define('LANG_CP_SECTION_SETTINGS',          'Settings');
     define('LANG_CP_SECTION_UPDATE',            'Updates');
-    define('LANG_CP_ACTIONS',                   'Actions');
     define('LANG_CP_SELECTED_EDIT',             'Edit');
     define('LANG_CP_SELECTED_DELETE',           'Delete');
     define('LANG_CP_CTYPES_ADD',                'Add Content Type');
@@ -89,6 +88,7 @@
     define('LANG_CP_GRID_COLYMNS_TO_FILTER',    'Put in filter');
     define('LANG_CP_SYSTEM_NAME_HINT',          'Used in URLs and database table names<br>Cannot be changed later!');
     define('LANG_CP_CONTENT_ITEM_ADD',          'Add Entry');
+    define('LANG_CP_CONTENT_ITEM_ADD_CP',       'Add from adminpanel');
     define('LANG_CP_CONTENT_ITEMS_EDIT',        'Change entries');
     define('LANG_CP_CONTENT_FIELDS_IS_ADD',     'Add Values to Existing');
     define('LANG_CP_CONTENT_ITEMS_EDIT_S1',     'Select the fields you want to change');
@@ -369,6 +369,11 @@
     define('LANG_CP_WIDGETS_ADD_COL',           'Add col');
     define('LANG_CP_WIDGETS_ROWS_TITLE',        'Row Headers');
     define('LANG_CP_WIDGETS_ADD_ROW',           'Add row');
+    define('LANG_CP_WIDGETS_IMPORT_SCHEME',     'Import schema');
+    define('LANG_CP_WIDGETS_FROM_TEMPLATE',     'Template from which to import scheme');
+    define('LANG_CP_WIDGETS_COPY_WIDGETS',      'Transfer widgets');
+    define('LANG_CP_WIDGETS_EMPTY_LAYOUT',      'The selected template is no scheme');
+    define('LANG_CP_WIDGETS_LAYOUT_ISUCCESS',   'Schema imported successfully');
     define('LANG_CP_WIDGETS_ADD_ROW_P',         'Add nested row');
     define('LANG_CP_WIDGETS_ROW_NO_GUTTERS',    'No gutters');
     define('LANG_CP_WIDGETS_ROW_CONT',          'Row container');
@@ -634,6 +639,7 @@
     define('LANG_CP_PACKAGE_TYPE_WIDGET_INSTALL', 'Widget installation package');
     define('LANG_CP_PACKAGE_TYPE_WIDGET_UPDATE', 'Widget service pack');
     define('LANG_CP_PACKAGE_TYPE_SYSTEM_UPDATE', 'InstantCMS service pack');
+    define('LANG_CP_PACKAGE_TYPE_SYSTEM_INSTALL', 'InstantCMS service pack');
     define('LANG_CP_PACKAGE_DUBLE_INSTALL', 'Package version %s is already installed. If you want to update it, select the corresponding service pack. If you want to re-install the package, remove the installed version first.');
     define('LANG_CP_PACKAGE_UPDATE_ERROR', '%s "%s" has version <b>%s</b>. You have version <b>%s</b> installed. Select the package with a larger version number to update.');
     define('LANG_CP_PACKAGE_UPDATE_IS_UPDATED', 'The same version of the package is already installed. No update required');

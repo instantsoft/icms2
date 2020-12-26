@@ -1,4 +1,4 @@
-<?php if (!empty($fields['title']['is_in_item']) && empty($fields['title']['options']['is_in_item_pos'])){ ?>
+<?php if (!empty($fields['title']['is_in_item']) && in_array('page', $fields['title']['options']['is_in_item_pos'])){ ?>
     <h1>
         <?php html($item['title']); ?>
         <?php if ($item['is_private']) { ?>

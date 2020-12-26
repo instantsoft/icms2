@@ -4,7 +4,7 @@ icms.admin = (function ($) {
 
     var self = this;
 
-    this.last_time_delimiter = ':';
+    this.delimiter_class = 'visible';
 
     this.onDocumentReady = function(){
 
@@ -109,8 +109,8 @@ icms.admin = (function ($) {
         var h = today.getHours();
         var m = today.getMinutes();
         m = checkTime(m);
-        $('#clock').text(h + self.last_time_delimiter + m);
-        self.last_time_delimiter = self.last_time_delimiter === ':' ? ' ' : ':';
+        self.delimiter_class = self.delimiter_class === 'visible' ? 'invisible' : 'visible';
+        $('#clock').html(h + '<span class="'+self.delimiter_class+'">:</span>' + m);
         setTimeout(self.startTime, 600);
     };
 

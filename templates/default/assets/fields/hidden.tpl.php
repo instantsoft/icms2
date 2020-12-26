@@ -1,1 +1,1 @@
-<?php echo html_input('hidden', $field->element_name, $value, array('id'=>$field->id)); ?>
+<?php echo html_input('hidden', $field->element_name, $value, $field->data['dom_attr']); ?>

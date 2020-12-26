@@ -114,8 +114,8 @@ class content extends cmsFrontend {
 
         foreach($tree as $cat){
 
-            $item_id   = 'content.'.$ctype['name'].'.'.$cat['id'];
-            $parent_id = 'content.'.$ctype['name'].'.'.$cat['parent_id'];
+            $item_id   = 'content.'.$ctype['name'].'.'.$cat['id'].'.'.$menu_item_id;
+            $parent_id = 'content.'.$ctype['name'].'.'.$cat['parent_id'].'.'.$menu_item_id;
 
             if($cat['parent_id'] > 1){
                 if(!isset($childs_count[$cat['parent_id']])){
@@ -321,7 +321,9 @@ class content extends cmsFrontend {
         $hide_except_title = $this->model->applyPrivacyFilter($ctype, cmsUser::isAllowed($ctype['name'], 'view_all'));
 
         // Постраничный вывод
-        $this->model->limitPage($page, $perpage);
+        if($perpage){
+            $this->model->limitPage($page, $perpage);
+        }
 
 		list($ctype, $this->model) = cmsEventsManager::hook('content_list_filter', array($ctype, $this->model));
 		list($ctype, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $this->model));
@@ -1131,7 +1133,7 @@ class content extends cmsFrontend {
 
     public function addFormPropsFields($form, $ctype, $item_cats, $is_submitted = false){
 
-        if($is_submitted && $ctype['options']['is_cats_change']){
+        if($is_submitted && (!$item_cats || $ctype['options']['is_cats_change'])){
             $item_cats = [];
             if ($this->request->has('add_cats') && !empty($ctype['options']['is_cats_multi'])){
                 $item_cats = $this->request->get('add_cats', []);
@@ -1564,8 +1566,11 @@ class content extends cmsFrontend {
 
     }
 
-    public function validate_rating_score($score) {
-        return $score >= 1 && $score <= 5;
-    }
+    public function isAverageRating($ctype_name, $item_id, $score) {
 
+        $ctype = $this->model->getContentTypeByName($ctype_name);
+        if(!$ctype){ return true; }
+
+        return !array_key_exists('rating_is_average', $ctype['options']) ? true : boolval($ctype['options']['rating_is_average']);
+    }
 }

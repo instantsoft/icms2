@@ -30,7 +30,34 @@ class formModernTemplateOptions extends cmsForm {
             '$cyan'     => LANG_MODERN_C_CYAN
         ];
 
+        $gamma_default = [
+            '$white'    => '#ffffff',
+            '$gray-100' => '#f8f9fa',
+            '$gray-200' => '#eeeeee',
+            '$gray-300' => '#dee2e6',
+            '$gray-400' => '#cccccc',
+            '$gray-500' => '#adb5bd',
+            '$gray-600' => '#888888',
+            '$gray-700' => '#495057',
+            '$gray-800' => '#333333',
+            '$gray-900' => '#222222',
+            '$black'    => '#000000',
+            '$blue'     => '#008cba',
+            '$indigo'   => '#6610f2',
+            '$purple'   => '#6f42c1',
+            '$pink'     => '#e83e8c',
+            '$red'      => '#f04124',
+            '$orange'   => '#fd7e14',
+            '$yellow'   => '#e99002',
+            '$green'    => '#43ac6a',
+            '$teal'     => '#20c997',
+            '$cyan'     => '#5bc0de'
+        ];
+
         $theme_colors = [
+            '$body-bg'   => LANG_MODERN_THEME_BGCOLOR,
+            '$body-color'=> LANG_MODERN_THEME_BCOLOR,
+            '$link-color'=> LANG_MODERN_THEME_LINK_COLOR,
             '$primary'   => LANG_MODERN_C_PRIMARY,
             '$secondary' => LANG_MODERN_C_SECONDARY,
             '$success'   => LANG_MODERN_C_SUCCESS,
@@ -40,6 +67,25 @@ class formModernTemplateOptions extends cmsForm {
             '$light'     => LANG_MODERN_C_LIGHT,
             '$dark'      => LANG_MODERN_C_DARK
         ];
+
+        $theme_colors_default = [
+            'body-bg'   => '$white',
+            'body-color'=> '$gray-800',
+            'link-color'=> '$blue',
+            'primary'   => '$blue',
+            'secondary' => '$gray-600',
+            'success'   => '$green',
+            'info'      => '$cyan',
+            'warning'   => '$yellow',
+            'danger'    => '$red',
+            'light'     => '$gray-100',
+            'dark'      => '$gray-900'
+        ];
+
+        $exists_vars = array_keys($theme_colors + $gamma);
+        foreach (['$enable-rounded', '$border-radius', '$border-radius-lg', '$border-radius-sm', '$enable-shadows', '$enable-gradients', '$enable-responsive-font-sizes', '$grid-gutter-width', '$spacer', '$font-size-base'] as $fields_var) {
+            $exists_vars[] = $fields_var;
+        }
 
         $fields = array(
 
@@ -62,6 +108,21 @@ class formModernTemplateOptions extends cmsForm {
                         'hint' => LANG_MODERN_THEME_COPYRIGHT_YEAR_HINT
                     )),
 
+                    new fieldCheckbox('show_top_btn', array(
+                        'title' => LANG_MODERN_THEME_ENABLE_TOPBTN,
+                        'default' => 1
+                    )),
+
+                    new fieldCheckbox('show_cookiealert', array(
+                        'title' => LANG_MODERN_THEME_SHOW_COOKIEALERT
+                    )),
+
+                    new fieldString('cookiealert_text', array(
+                        'title' => LANG_MODERN_THEME_COOKIEALERT_TEXT,
+                        'is_clean_disable' => true,
+                        'visible_depend' => array('show_cookiealert' => array('show' => array('1')))
+                    )),
+
                     new fieldCheckbox('scss:enable-rounded', array(
                         'title' => LANG_MODERN_THEME_ENABLE_ROUNDED,
                         'default' => 1
@@ -69,16 +130,19 @@ class formModernTemplateOptions extends cmsForm {
 
                     new fieldString('scss:border-radius', array(
                         'title' => LANG_MODERN_THEME_ROUNDED_BASE,
+                        'default' => '.25rem',
                         'visible_depend' => array('scss:enable-rounded' => array('show' => array('1')))
                     )),
 
                     new fieldString('scss:border-radius-lg', array(
                         'title' => LANG_MODERN_THEME_ROUNDED_BASE_LG,
+                        'default' => '.3rem',
                         'visible_depend' => array('scss:enable-rounded' => array('show' => array('1')))
                     )),
 
                     new fieldString('scss:border-radius-sm', array(
                         'title' => LANG_MODERN_THEME_ROUNDED_BASE_SM,
+                        'default' => '.2rem',
                         'visible_depend' => array('scss:enable-rounded' => array('show' => array('1')))
                     )),
 
@@ -91,11 +155,13 @@ class formModernTemplateOptions extends cmsForm {
                     )),
 
                     new fieldCheckbox('scss:enable-responsive-font-sizes', array(
-                        'title' => LANG_MODERN_THEME_ENABLE_RFS
+                        'title' => LANG_MODERN_THEME_ENABLE_RFS,
+                        'default' => 1
                     )),
 
                     new fieldCheckbox('scss:enable-modal-blur', array(
-                        'title' => LANG_MODERN_THEME_ENABLE_MODAL_BLUR
+                        'title' => LANG_MODERN_THEME_ENABLE_MODAL_BLUR,
+                        'default' => 1
                     )),
 
                     new fieldString('scss:grid-gutter-width', array(
@@ -108,13 +174,20 @@ class formModernTemplateOptions extends cmsForm {
                         'default' => '1rem'
                     )),
 
+                    new fieldString('scss:spacer', array(
+                        'title' => LANG_MODERN_THEME_BASE_SPACER,
+                        'default' => '1rem'
+                    )),
+
                     new fieldString('scss:avatar-inlist-size', array(
                         'title' => LANG_MODERN_THEME_AVATAR_INLIST_SIZE,
                         'hint' => LANG_MODERN_THEME_AVATAR_INLIST_SIZE_HINT,
+                        'default' => '64px'
                     )),
 
                     new fieldList('pagination_template', array(
                         'title' => LANG_MODERN_THEME_PAGINATION_TPL,
+                        'default' => 'pagination',
                         'generator' => function($item) {
                             return cmsTemplate::getInstance()->getAvailableTemplatesFiles('assets/ui', 'pagination*.tpl.php', 'modern');
                         }
@@ -123,40 +196,113 @@ class formModernTemplateOptions extends cmsForm {
                 )
             ),
 
+            'logo' => array(
+                'type' => 'fieldset',
+                'title' => LANG_PAGE_LOGO,
+                'childs' => array(
+
+                    new fieldImage('logo', array(
+                        'title' => LANG_MODERN_LOGO,
+                        'hint' => LANG_MODERN_RASTR_HINT,
+                        'context_params' => [
+                            'target_controller' => 'admin',
+                            'target_subject'    => 'theme/modern',
+                            'target_id'         => null
+                        ],
+                        'options' => array(
+                            'sizes' => array('small', 'original')
+                        )
+                    )),
+
+                    new fieldFile('logo_svg', array(
+                        'title' => LANG_MODERN_LOGO_SVG,
+                        'options' => [
+                            'extensions' => 'svg'
+                        ]
+                    )),
+
+                    new fieldImage('logo_small', array(
+                        'title' => LANG_MODERN_LOGO_SMALL,
+                        'hint' => LANG_MODERN_LOGO_SMALL_HINT.LANG_MODERN_RASTR_HINT,
+                        'context_params' => [
+                            'target_controller' => 'admin',
+                            'target_subject'    => 'theme/modern',
+                            'target_id'         => null
+                        ],
+                        'options' => array(
+                            'sizes' => array('small', 'original')
+                        )
+                    )),
+
+                    new fieldFile('logo_small_svg', array(
+                        'title' => LANG_MODERN_LOGO_SMALL_SVG,
+                        'options' => [
+                            'extensions' => 'svg'
+                        ]
+                    ))
+
+                )
+            ),
+
             'colors' => array(
                 'type' => 'fieldset',
                 'title' => LANG_MODERN_THEME_COLORS,
-                'childs' => [
-                    new fieldList('scss:body-bg', array(
-                        'title' => LANG_MODERN_THEME_BGCOLOR,
-                        'hint' => LANG_MODERN_THEME_GCOLOR,
-                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma
-                    )),
-                    new fieldColor('custom_scss:body-bg', array(
-                        'visible_depend' => array('scss:body-bg' => array('show' => array('')))
-                    )),
-                    new fieldList('scss:body-color', array(
-                        'title' => LANG_MODERN_THEME_BCOLOR,
-                        'hint' => LANG_MODERN_THEME_GCOLOR,
-                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma
-                    )),
-                    new fieldColor('custom_scss:body-color', array(
-                        'visible_depend' => array('scss:body-color' => array('show' => array('')))
-                    )),
-                ]
+                'childs' => []
             ),
 
             'gamma' => array(
                 'type' => 'fieldset',
                 'title' => LANG_MODERN_THEME_GAMMA,
                 'childs' => []
-            )
+            ),
 
+            'bs_vars' => array(
+                'type' => 'fieldset',
+                'title' => 'Bootstrap',
+                'childs' => array(
+                    new fieldList('vars', array(
+                        'title' => LANG_MODERN_VARS,
+                        'hint'  => LANG_EVENTS_MANAGEMENT_HINT,
+                        'is_multiple'  => true,
+                        'single_select' => true,
+                        'dynamic_list' => true,
+                        'select_title' => LANG_MODERN_VARS_SELECT,
+                        'multiple_keys' => array(
+                            'name' => 'field', 'value' => 'field_value'
+                        ),
+                        'generator' => function($item) use ($exists_vars){
+                            $var_file = cmsTemplate::getInstance()->getTplFilePath('scss/bootstrap/_variables.scss');
+
+                            $data = file_get_contents($var_file);
+
+                            preg_match_all('#^(\$[a-z\-0-9]+)\s?\:\s+(.+);#mi', $data, $var_list);
+
+                            $vars = [];
+                            if(!empty($var_list[1])){
+                                foreach ($var_list[1] as $key => $name) {
+                                    if(in_array($name, $exists_vars)){
+                                        continue;
+                                    }
+                                    $value = trim(str_replace('!default', '', $var_list[2][$key]));
+                                    $vars[str_replace('$', '', $name)] = [
+                                        'title' => $name,
+                                        'data' => ['placeholder' => $value]
+                                    ];
+                                }
+                                asort($vars);
+                            }
+
+                            return $vars;
+                        }
+                    ))
+                )
+            )
         );
 
         foreach ($gamma as $name => $title) {
             $fields['gamma']['childs'][] = new fieldColor('scss:'.str_replace('$', '', $name), array(
-                'title' => $title
+                'title' => $title,
+                'default' => $gamma_default[$name]
             ));
         }
 
@@ -165,7 +311,8 @@ class formModernTemplateOptions extends cmsForm {
             $fields['colors']['childs'][] = new fieldList('scss:'.$name, array(
                 'title' => $title,
                 'hint' => LANG_MODERN_THEME_GCOLOR,
-                'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma
+                'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma,
+                'default' => $theme_colors_default[$name]
             ));
             $fields['colors']['childs'][] = new fieldColor('custom_scss:'.$name, array(
                 'visible_depend' => array('scss:'.$name => array('show' => array('')))

@@ -22,7 +22,7 @@
         <?php if ($notice['actions']){ ?>
             <div class="buttons mt-2">
                 <?php foreach($notice['actions'] as $name=>$action){ ?>
-                    <?php echo html_button($action['title'], $name, "icms.notices.noticeAction({$notice['id']}, '{$name}')", array('class'=>'btn-sm')); ?>
+                    <?php echo html_button($action['title'], $name, "icms.notices.noticeAction({$notice['id']}, '{$name}')", array('class'=>'btn-sm btn-primary')); ?>
                 <?php } ?>
             </div>
         <?php } ?>

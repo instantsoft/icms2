@@ -16,3 +16,5 @@ define('LANG_RATING_PM', '%s %s rated your item <a href="%s">%s</a>');
 define('LANG_RATING_NOTIFY_VOTE',  'Notify on new item vote');
 define('LANG_RATING_ITEM_LABEL',  'Inscription before the item rating block');
 define('LANG_RATING_LIST_LABEL',  'Inscription before the list item rating block');
+define('LANG_RATING_IS_AVERAGE',  'Rating considered as the average of all evaluations');
+define('LANG_RATING_IS_AVERAGE_HINT',  'Use this option if the rating logic in your template is different from the standard');

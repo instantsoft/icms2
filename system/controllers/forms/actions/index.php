@@ -8,7 +8,7 @@ class actionFormsIndex extends cmsAction {
             cmsCore::error404();
         }
 
-        $_form_data = $this->model->getFormData($name);
+        $_form_data = $this->getFormData($name);
 
         if($_form_data === false){
             return cmsCore::error404();
@@ -22,10 +22,8 @@ class actionFormsIndex extends cmsAction {
 
         return $this->cms_template->render([
             'form_data' => $form_data,
-            'form'      => $form,
-            'errors'    => false
+            'form'      => $form
         ]);
-
     }
 
 }

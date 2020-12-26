@@ -5,6 +5,10 @@
     $this->addBreadcrumb(LANG_CP_SECTION_SETTINGS, $this->href_to('settings'));
     $this->addBreadcrumb(LANG_CP_SETTINGS_TEMPLATE_OPTIONS);
 
+    if($template_name === $this->site_config->template){
+        $this->addMenuItems('admin_toolbar', $this->controller->getSettingsMenu());
+    }
+
     $this->addToolButton(array(
         'class' => 'save',
         'title' => LANG_SAVE,
@@ -15,6 +19,16 @@
         'title' => LANG_CANCEL,
         'href'  => $this->href_to('settings')
     ));
+    if(!empty($manifest['author']['help'])){
+        $this->addMenuItem('breadcrumb-menu', [
+            'title' => LANG_HELP,
+            'url'   => $manifest['author']['help'],
+            'options' => [
+                'target' => '_blank',
+                'icon' => 'icon-question'
+            ]
+        ]);
+    }
 
     $this->renderForm($form, $options, array(
         'action' => '',

@@ -8,6 +8,9 @@ class onWidgetsPageIsAllowed extends cmsAction {
 
     public function run($allowed){
 
+        // Если ранее в хуках уже сработал запрет
+        if(!$allowed){ return false; }
+
         if(!$this->strict && $this->cms_user->is_admin){
             return $allowed;
         }

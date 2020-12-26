@@ -61,11 +61,11 @@ class modelComments extends cmsModel {
      * @param boolean $delete Удалять или скрывать
      * @return integer Количество удаленных комментариев
      */
-    public function deleteComment($id, $delete=false){
+    public function deleteComment($id, $delete = false) {
 
         $delete_count = 0;
 
-        if($delete){
+        if ($delete) {
 
             $activity = cmsCore::getController('activity');
 
@@ -73,7 +73,7 @@ class modelComments extends cmsModel {
 
             // ищем детей
             $childs = $this->getCommentChildIds($id);
-            if($childs){
+            if ($childs) {
                 $this->filterIn('id', $childs)->deleteFiltered('comments');
                 $this->filterIn('comment_id', $childs)->deleteFiltered('comments_rating');
                 $delete_count += count($childs);
@@ -84,15 +84,13 @@ class modelComments extends cmsModel {
             $this->delete('comments_rating', $id, 'comment_id');
 
             $activity->deleteEntry('comments', 'vote.comment', $id);
-
         } else {
-            $this->update('comments', $id, array('is_deleted'=>1));
+            $this->update('comments', $id, array('is_deleted' => 1));
         }
 
         cmsCache::getInstance()->clean('comments.list');
 
         return $delete_count;
-
     }
 
     public function deleteUserComments($user_id){

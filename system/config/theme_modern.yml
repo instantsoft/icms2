@@ -2,6 +2,13 @@
 owner_name:
 owner_url:
 owner_year:
+show_top_btn: 1
+show_cookiealert: 1
+cookiealert_text: >
+  Используя этот сайт,
+  вы соглашаетесь с тем,
+  что мы используем
+  файлы cookie.
 scss:
   enable-rounded: 1
   border-radius: .25rem
@@ -13,9 +20,11 @@ scss:
   enable-modal-blur: 1
   grid-gutter-width: 30px
   font-size-base: 0.9375rem
+  spacer: 1rem
   avatar-inlist-size: 64px
   body-bg: $white
   body-color: $gray-800
+  link-color: $blue
   primary: $blue
   secondary: $gray-600
   success: $green
@@ -46,9 +55,14 @@ scss:
   teal: '#20c997'
   cyan: '#5bc0de'
 pagination_template: pagination
+logo: null
+logo_svg: null
+logo_small: null
+logo_small_svg: null
 custom_scss:
   body-bg:
   body-color:
+  link-color:
   primary:
   secondary:
   success:
@@ -57,3 +71,4 @@ custom_scss:
   danger:
   light:
   dark:
+vars: null

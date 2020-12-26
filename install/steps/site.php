@@ -22,7 +22,7 @@ function step($is_submit){
 
     $result = array(
         'html' => render('step_site', array(
-            'default_template' => 'default',
+            'default_template' => 'modern',
             'default_atemplate' => 'admincoreui',
             'admin_tpls' => $admin_tpls,
             'site_tpls' => $site_tpls

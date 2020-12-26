@@ -8,52 +8,56 @@ class actionAdminWidgetsAdd extends cmsAction {
             cmsCore::error404();
         }
 
-        $widget_id = $this->request->get('widget_id', 0);
-        $page_id   = $this->request->get('page_id', 0);
-        $position  = $this->request->get('position', '');
-        $template  = $this->request->get('template', '');
+        $widget_id     = $this->request->get('widget_id', 0);
+        $page_id       = $this->request->get('page_id', 0);
+        $position      = $this->request->get('position', '');
+        $template_name = $this->request->get('template', '');
 
         $tpls = cmsCore::getTemplates();
-        if (!$template || !in_array($template, $tpls)) {
-            $template = cmsConfig::get('template');
+        if (!$template_name || !in_array($template_name, $tpls)) {
+            $template_name = cmsConfig::get('template');
         }
 
         $widgets_model = cmsCore::getModel('widgets');
 
         $widget = $widgets_model->getWidget($widget_id);
         if (!$widget) {
-            return $this->cms_template->renderJSON(array('error' => true));
+            return $this->cms_template->renderJSON(['error' => true]);
         }
 
-        $res = $widgets_model->addWidgetBinding($widget, $page_id, $position, $template);
+        $res = $widgets_model->addWidgetBinding($widget, $page_id, $position, $template_name);
         if (!$res) {
-            return $this->cms_template->renderJSON(array('error' => true));
+            return $this->cms_template->renderJSON(['error' => true]);
         }
 
         $widget_bind = $widgets_model->getWidgetBinding($res['id']);
         if (!$widget_bind) {
-            return $this->cms_template->renderJSON(array('error' => true));
+            return $this->cms_template->renderJSON(['error' => true]);
         }
+
+        // Чтобы ланг файлы шаблона подгрузились
+        $template = new cmsTemplate($template_name);
+
+        cmsCore::loadTemplateLanguage($template->getInheritNames());
 
         $widget_object = cmsCore::getWidgetObject($widget_bind);
 
-        $form = $this->getWidgetOptionsForm($widget_bind['name'], $widget_bind['controller'], false, $template, $widget_object->isAllowCacheableOption());
+        $form = $this->getWidgetOptionsForm($widget_bind['name'], $widget_bind['controller'], false, $template_name, $widget_object->isAllowCacheableOption());
 
-        $widget_event_name = 'widget_'.($widget_bind['controller'] ? $widget_bind['controller'].'_' : '').$widget_bind['name'].'_form';
+        $widget_event_name = 'widget_' . ($widget_bind['controller'] ? $widget_bind['controller'] . '_' : '') . $widget_bind['name'] . '_form';
 
-        list($form, $widget_bind, $widget_object, $template) = cmsEventsManager::hook(['widget_form', $widget_event_name], [$form, $widget_bind, $widget_object, $template], null, $this->request);
+        list($form, $widget_bind, $widget_object, $template_name) = cmsEventsManager::hook(['widget_form', $widget_event_name], [$form, $widget_bind, $widget_object, $template_name], null, $this->request);
 
         $data = $form->parse(new cmsRequest($widget_bind));
 
         $widgets_model->updateWidgetBinding($res['id'], $data);
 
-        return $this->cms_template->renderJSON(array(
+        return $this->cms_template->renderJSON([
             'error' => false,
             'name'  => $widget['title'],
             'id'    => $res['id'],
             'bp_id' => $res['bp_id']
-        ));
-
+        ]);
     }
 
 }

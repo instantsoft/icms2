@@ -5,6 +5,7 @@ define('LANG_WD_T_TYPE_HINT',  'Тело страницы выведется т�
 define('LANG_WD_T_SMESSAGES',  'Сообщения сессии');
 define('LANG_WD_T_COPYRIGHT',  'Блок копирайта и отладки');
 define('LANG_WD_T_LOGO',  'Логотип');
+define('LANG_WD_T_LANG_SELECT',  'Выбор языка');
 define('LANG_WD_T_SITE_CLOSED',  'Сообщение об отключении сайта');
 define('LANG_WD_T_SESSION_TYPE',  'Как выводить сообщения сессии?');
 define('LANG_WD_T_SESSION_TYPE1',  'На позиции');

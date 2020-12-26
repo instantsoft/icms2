@@ -60,7 +60,6 @@
     define('LANG_CP_SECTION_SETTINGS',          'Настройки');
     define('LANG_CP_SECTION_UPDATE',            'Обновления');
 
-    define('LANG_CP_ACTIONS',                   'Действия');
     define('LANG_CP_SELECTED_EDIT',             'Редактировать');
     define('LANG_CP_SELECTED_DELETE',           'Удалить');
 
@@ -100,6 +99,7 @@
     define('LANG_CP_SYSTEM_NAME_HINT',          'Используется в URL и при создании таблиц в базе данных<br>После создания не изменяется!');
 
     define('LANG_CP_CONTENT_ITEM_ADD',          'Создать запись');
+    define('LANG_CP_CONTENT_ITEM_ADD_CP',       'Создать из админки');
     define('LANG_CP_CONTENT_ITEMS_EDIT',        'Изменить записи');
     define('LANG_CP_CONTENT_FIELDS_IS_ADD',     'Добавить значения к существующим');
     define('LANG_CP_CONTENT_ITEMS_EDIT_S1',     'Выберите поля, которые хотите изменить');
@@ -391,6 +391,11 @@
     define('LANG_CP_WIDGETS_ADD_COL',           'Добавить колонку');
     define('LANG_CP_WIDGETS_ROWS_TITLE',        'Заголовки рядов');
     define('LANG_CP_WIDGETS_ADD_ROW',           'Добавить ряд');
+    define('LANG_CP_WIDGETS_IMPORT_SCHEME',     'Импортировать схему');
+    define('LANG_CP_WIDGETS_FROM_TEMPLATE',     'Шаблон, с которого импортировать схему');
+    define('LANG_CP_WIDGETS_COPY_WIDGETS',      'Перенести виджеты');
+    define('LANG_CP_WIDGETS_EMPTY_LAYOUT',      'В выбранном шаблоне нет схемы');
+    define('LANG_CP_WIDGETS_LAYOUT_ISUCCESS',   'Схема успешно импортирована');
     define('LANG_CP_WIDGETS_ADD_ROW_P',         'Добавить вложенный ряд');
     define('LANG_CP_WIDGETS_ROW_NO_GUTTERS',    'Без отступов между колонками');
     define('LANG_CP_WIDGETS_ROW_NESTED_POSITION', 'Позиция вывода');
@@ -402,7 +407,7 @@
     define('LANG_CP_WIDGETS_ROW_TAG',           'Тег ряда');
     define('LANG_CP_WIDGETS_COL_TAG',           'Тег колонки');
     define('LANG_CP_WIDGETS_ROW_PARRENT_TAG',   'Родительский тег ряда');
-    define('LANG_CP_WIDGETS_ROW_PARRENT_TAG_C', 'CSS класс родительского тег ряда');
+    define('LANG_CP_WIDGETS_ROW_PARRENT_TAG_C', 'CSS класс родительского тега ряда');
     define('LANG_CP_WIDGETS_ROW_CONT_NO',       'Без контейнера');
     define('LANG_CP_WIDGETS_ROW_DEL_CONFIRM',   'Удалить ряд?\nВиджеты переместятся в неиспользуемые');
     define('LANG_CP_WIDGETS_COL_DEL_CONFIRM',   'Удалить колонку (вложенные также удалятся)?\nВиджеты переместятся в неиспользуемые');
@@ -670,6 +675,7 @@
     define('LANG_CP_PACKAGE_TYPE_WIDGET_INSTALL', 'Пакет установки виджета');
     define('LANG_CP_PACKAGE_TYPE_WIDGET_UPDATE', 'Пакет обновления виджета');
     define('LANG_CP_PACKAGE_TYPE_SYSTEM_UPDATE', 'Пакет обновления InstantCMS');
+    define('LANG_CP_PACKAGE_TYPE_SYSTEM_INSTALL', 'Пакет обновления InstantCMS');
     define('LANG_CP_PACKAGE_DUBLE_INSTALL', 'Пакет версии %s уже был установлен. Если вы хотите его обновить, выберите соответствующий пакет обновления. Если вы хотите переустановить пакет, то сначала удалите его в админке.');
     define('LANG_CP_PACKAGE_UPDATE_ERROR', '%s "%s" имеет номер версии <b>%s</b>. У вас установлена версия <b>%s</b>. Для обновления выберите пакет большей версии.');
     define('LANG_CP_PACKAGE_UPDATE_IS_UPDATED', 'Версия пакета обновления соответствует установленной. Обновление не требуется.');

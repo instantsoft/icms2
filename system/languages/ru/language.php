@@ -53,8 +53,8 @@
     define('LANG_COMMENTS',                  'Комментарии');
     define('LANG_RATING',                    'Рейтинг');
     define('LANG_KARMA',                     'Репутация');
-    define('LANG_KARMA_UP',                  'Поднять');
-    define('LANG_KARMA_DOWN',                'Опустить');
+    define('LANG_KARMA_UP',                  'Повысить');
+    define('LANG_KARMA_DOWN',                'Понизить');
     define('LANG_CSS_CLASS',                 'Класс CSS');
     define('LANG_CSS_CLASS_WRAP',            'Класс CSS для контейнера');
     define('LANG_CSS_CLASS_TITLE',           'Класс CSS для заголовка');
@@ -166,6 +166,9 @@
     define('LANG_PARSER_USER_FILTER_HINT',   'ID пользователя');
     define('LANG_PARSER_USERS',              'Список пользователей');
     define('LANG_PARSER_PARENT',             'Родитель');
+    define('LANG_PARSER_PARENT_STYLE',       'Стиль вывода в записи');
+    define('LANG_PARSER_PARENT_STYLE1',      'Список типа контента');
+    define('LANG_PARSER_PARENT_STYLE2',      'Простой список ссылок');
     define('LANG_PARSER_IMAGE',              'Изображение');
     define('LANG_PARSER_IMAGE_SPELL',        'изображение|изображения|изображений');
     define('LANG_PARSER_IMAGES',             'Набор изображений');
@@ -390,7 +393,7 @@
     define('ERR_VALIDATE_URL',               'Неверный формат URL');
     define('ERR_VALIDATE_REGEXP',            'Неверный формат');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Только латинские буквы и цифры');
-    define('ERR_VALIDATE_SYSNAME',           'Только латинские буквы (в нижнем регистре), цифры и знаки подчеркивания');
+    define('ERR_VALIDATE_SYSNAME',           'Как минимум одна латинская буква (в нижнем регистре), цифры и знаки подчеркивания');
     define('ERR_VALIDATE_SLUG',              'Только латинские буквы (в нижнем регистре), цифры, дефис и прямой слеш');
     define('ERR_VALIDATE_SLUGS',             'Как минимум одна латинская буква, в нижнем регистре, цифры и дефис');
     define('ERR_VALIDATE_DIGITS',            'Введите только цифры');
@@ -430,7 +433,7 @@
     define('LANG_EDIT_FOLDER',               'Редактировать папку');
     define('LANG_DELETE_FOLDER',             'Удалить папку');
     define('LANG_DELETE_FOLDER_CONFIRM',     'Вы уверены что хотите удалить папку?\nВсе содержимое также будет удалено!');
-
+    define('LANG_CP_ACTIONS',                'Действия');
     define('LANG_BY_DEFAULT',                'По умолчанию');
     define('LANG_BASIC_OPTIONS',             'Общие');
     define('LANG_YES',                       'Да');
@@ -686,3 +689,4 @@
     define('LANG_DEBUG_TAB_EVENTS',          'Отработавшие события');
     define('LANG_DEBUG_TAB_WIDGETS',         'Виджеты');
     define('LANG_DEBUG_TAB_INCLUDES',        'Подключенные файлы');
+    define('LANG_DEBUG_TAB_TEMPLATE',        'Шаблоны');

@@ -69,13 +69,28 @@
 <?php } elseif($widget->options['type'] === 'logo') { ?>
     <?php if($core->uri) { ?>
         <a class="navbar-brand mr-3 flex-shrink-0" href="<?php echo href_to_home(); ?>">
-            <img src="<?php echo $this->getTemplateFilePath('images/small_logo.svg'); ?>" class="d-sm-none" alt="<?php html($config->sitename); ?>">
-            <img src="<?php echo $this->getTemplateFilePath('images/logo.svg'); ?>" class="d-none d-sm-block" alt="<?php html($config->sitename); ?>">
+            <img src="<?php echo $logos['small_logo']; ?>" class="d-sm-none" alt="<?php html($config->sitename); ?>">
+            <img src="<?php echo $logos['logo']; ?>" class="d-none d-sm-block" alt="<?php html($config->sitename); ?>">
         </a>
     <?php } else { ?>
         <span class="navbar-brand mr-3 flex-shrink-0">
-            <img src="<?php echo $this->getTemplateFilePath('images/small_logo.svg'); ?>" class="d-sm-none" alt="<?php html($config->sitename); ?>">
-            <img src="<?php echo $this->getTemplateFilePath('images/logo.svg'); ?>" class="d-none d-sm-block" alt="<?php html($config->sitename); ?>">
+            <img src="<?php echo $logos['small_logo']; ?>" class="d-sm-none" alt="<?php html($config->sitename); ?>">
+            <img src="<?php echo $logos['logo']; ?>" class="d-none d-sm-block" alt="<?php html($config->sitename); ?>">
         </span>
     <?php } ?>
+<?php } elseif($widget->options['type'] === 'lang_select') { ?>
+        <ul class="nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link text-warning font-weight-bold dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+                    <?php echo strtoupper($current_lang); ?>
+                </a>
+                <div class="dropdown-menu">
+                    <?php foreach ($langs as $lang) { ?>
+                        <a class="dropdown-item<?php if($lang == $current_lang){ ?> active<?php } ?>" href="<?php html(($config->language == $lang ? '' : '/'.$lang).$_SERVER['REQUEST_URI']); ?>">
+                            <?php echo strtoupper($lang); ?>
+                        </a>
+                    <?php } ?>
+                </div>
+            </li>
+        </ul>
 <?php } ?>

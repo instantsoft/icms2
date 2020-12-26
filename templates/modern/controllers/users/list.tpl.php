@@ -21,7 +21,7 @@
 
         <?php foreach($profiles as $profile){ ?>
 
-            <div class="item media mb-3 align-items-center <?php if (!empty($profile['item_css_class'])) { ?> <?php echo implode(' ', $profile['item_css_class']); ?><?php } ?>">
+            <div class="item media mb-3 mb-md-4 align-items-center <?php if (!empty($profile['item_css_class'])) { ?> <?php echo implode(' ', $profile['item_css_class']); ?><?php } ?>">
 
                 <?php if ($dataset_name == 'rating') { ?>
                     <?php $position = $index_first + $index; ?>

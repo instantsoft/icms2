@@ -60,6 +60,10 @@ class actionRatingVote extends cmsAction {
             $average_rating = false;
 
         } else {
+            // Проверяем флаг, что рейтинг считаем как среднее арифметическое
+            if(method_exists($controller, 'isAverageRating')){
+                $average_rating = $controller->isAverageRating($target_subject, $target_id, $score);
+            }
             // валидация оценки
             if(method_exists($controller, 'validate_rating_score') && !$controller->validate_rating_score($score)){
                 return $this->cms_template->renderJSON(array(

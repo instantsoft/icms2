@@ -596,11 +596,21 @@ class cmsCore {
 
     /**
      * Подключает языковой файл шаблона
-     * @param string $template_name
+     * @param string|array $template_name
      * @return bool
      */
-    public static function loadTemplateLanguage($template_name){
-        return self::loadLanguage("templates/{$template_name}");
+    public static function loadTemplateLanguage($template_names){
+        if(!is_array($template_names)){
+            $template_names = [$template_names];
+        }
+        $result = false;
+        foreach ($template_names as $template_name) {
+            $result = self::loadLanguage("templates/{$template_name}");
+            if($result){
+                break;
+            }
+        }
+        return $result;
     }
 
     /**
@@ -776,18 +786,21 @@ class cmsCore {
      */
     public function loadMatchedPages() {
 
-        if($this->matched_pages !== null){
+        if ($this->matched_pages !== null) {
             return $this;
         }
 
-        if($this->widgets_pages === null){
+        if ($this->widgets_pages === null) {
             $this->widgets_pages = cmsCore::getModel('widgets')->getPages();
         }
 
         $this->matched_pages = $this->detectMatchedWidgetPages($this->widgets_pages);
 
         return $this;
+    }
 
+    public function getWidgetsPages() {
+        return $this->widgets_pages;
     }
 
     public function getMatchedPagesIds() {
@@ -809,11 +822,11 @@ class cmsCore {
     /**
      * Запускает все виджеты, привязанные к текущей странице
      */
-    public function runWidgets(){
+    public function runWidgets() {
 
         $template = cmsTemplate::getInstance();
 
-        if($template->widgets_rendered){
+        if ($template->widgets_rendered) {
             return $this;
         }
 
@@ -821,48 +834,52 @@ class cmsCore {
 
         $controllers_without_widgets = cmsConfig::get('controllers_without_widgets');
 
-        if ($controllers_without_widgets && in_array($this->controller, $controllers_without_widgets)) { return; }
+        if ($controllers_without_widgets && in_array($this->controller, $controllers_without_widgets)) {
+            return;
+        }
 
         $matched_pages = $this->loadMatchedPages()->getMatchedPages();
         if (!$matched_pages) { return; }
 
         $widgets_list = cmsCore::getModel('widgets')->getWidgetsForPages(array_keys($matched_pages), $template->getName());
 
-        if (is_array($widgets_list)){
+        if (is_array($widgets_list)) {
 
             $device_type = cmsRequest::getDeviceType();
             $layout = $template->getLayout();
             $user = cmsUser::getInstance();
 
-            if($user->is_admin){
+            if ($user->is_admin) {
                 cmsCore::loadControllerLanguage('admin');
             }
 
-            foreach ($widgets_list as $widget){
+            foreach ($widgets_list as $widget) {
 
                 // не выводим виджеты контроллеров, которые отключены
-                if(!empty($widget['controller']) && !cmsController::enabled($widget['controller'])){
+                if (!empty($widget['controller']) && !cmsController::enabled($widget['controller'])) {
                     continue;
                 }
 
                 // проверяем доступ для виджетов
-                if (!$user->isInGroups($widget['groups_view'])) { continue; }
+                if (!$user->isInGroups($widget['groups_view'])) {
+                    continue;
+                }
                 if (!empty($widget['groups_hide']) && $user->isInGroups($widget['groups_hide']) && !$user->is_admin) {
                     continue;
                 }
 
                 // проверяем для каких устройств показывать
-                if($widget['device_types'] && !in_array($device_type, $widget['device_types'])){
+                if ($widget['device_types'] && !in_array($device_type, $widget['device_types'])) {
                     continue;
                 }
 
                 // проверяем для каких макетов показывать
-                if($widget['template_layouts'] && !in_array($layout, $widget['template_layouts'])){
+                if ($widget['template_layouts'] && !in_array($layout, $widget['template_layouts'])) {
                     continue;
                 }
 
                 // проверяем для каких языков показывать
-                if($widget['languages'] && !in_array(cmsCore::getLanguageName(), $widget['languages'])){
+                if ($widget['languages'] && !in_array(cmsCore::getLanguageName(), $widget['languages'])) {
                     continue;
                 }
 
@@ -870,16 +887,15 @@ class cmsCore {
 
                 $this->runWidget($widget);
 
-                cmsDebugging::pointProcess('widgets', array(
-                    'data' => $widget['title'].' => /system/'.cmsCore::getWidgetPath($widget['name'], $widget['controller']).'/widget.php'
-                ), 0);
-
+                cmsDebugging::pointProcess('widgets', function () use($widget) {
+                    return [
+                        'data' => $widget['title'] . ' => /system/' . cmsCore::getWidgetPath($widget['name'], $widget['controller']) . '/widget.php'
+                    ];
+                }, 0);
             }
-
         }
 
         return $this;
-
     }
 
     public static function getWidgetObject($widget) {
@@ -941,54 +957,60 @@ class cmsCore {
      * Определяет какие из списка страниц виджетов
      * совпадают по маске с текущей страницей
      *
-     * @param type $pages
-     * @return type
+     * @param array $pages
+     * @param string $uri
+     * @return array
      */
-    private function detectMatchedWidgetPages($pages){
+    public function detectMatchedWidgetPages($pages, $uri = null) {
 
-        if ($this->uri == '') {
-            return array(0, 1);
+        if($uri === null){
+            $uri = $this->uri;
+            $uri_query = $this->uri_query;
+        }
+
+        if ($uri === '') {
+            return [0, 1];
         }
 
         $matched_pages = [];
 
-        $_full_uri = $this->uri.($this->uri_query ? '?'.http_build_query($this->uri_query) : '');
+        $_full_uri = $uri . (!empty($uri_query) ? '?' . http_build_query($uri_query) : '');
 
         //
         // Перебираем все точки привязок и проверяем совпадение
         // маски URL с текущим URL
         //
-        foreach($pages as $page){
+        foreach ($pages as $page) {
 
-            if (empty($page['url_mask']) && !empty($page['id'])) { continue; }
+            if (empty($page['url_mask']) && !empty($page['id'])) {
+                continue;
+            }
 
             $is_mask_match = empty($page['id']);
             $is_stop_match = false;
 
             if (!empty($page['url_mask'])) {
-                foreach($page['url_mask'] as $mask){
-                    $regular = string_mask_to_regular($mask);
-                    $regular = "/^{$regular}$/iu";
-                    $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
+                foreach ($page['url_mask'] as $mask) {
+                    $regular       = string_mask_to_regular($mask);
+                    $regular       = "/^{$regular}$/iu";
+                    $is_mask_match = $is_mask_match || preg_match($regular, $uri);
                 }
             }
 
             if (!empty($page['url_mask_not'])) {
-                foreach($page['url_mask_not'] as $mask){
-                    $regular = string_mask_to_regular($mask);
-                    $regular = "/^{$regular}$/iu";
+                foreach ($page['url_mask_not'] as $mask) {
+                    $regular       = string_mask_to_regular($mask);
+                    $regular       = "/^{$regular}$/iu";
                     $is_stop_match = $is_stop_match || preg_match($regular, $_full_uri);
                 }
             }
 
-            if ($is_mask_match && !$is_stop_match){
+            if ($is_mask_match && !$is_stop_match) {
                 $matched_pages[$page['id']] = $page;
             }
-
         }
 
         return $matched_pages;
-
     }
 
 //============================================================================//
@@ -1012,13 +1034,17 @@ class cmsCore {
             $details = LANG_ERROR_503_HINT;
         }
 
+        ob_start();
+
         cmsTemplate::getInstance()->renderAsset('errors/error', [
             'is_debug' => $is_debug,
             'message'  => $message,
             'details'  => $details
         ], self::getInstance()->request);
 
-        die();
+        $html = ob_get_clean();
+
+        die(cmsConfig::get('min_html') ? html_minify($html) : $html);
     }
 
     /**
@@ -1037,13 +1063,16 @@ class cmsCore {
 
         http_response_code(403);
 
-        cmsTemplate::getInstance()->renderAsset('errors/forbidden', array(
+        ob_start();
+
+        cmsTemplate::getInstance()->renderAsset('errors/forbidden', [
             'message'         => $message,
             'show_login_link' => $show_login_link
-        ));
+        ]);
 
-        die();
+        $html = ob_get_clean();
 
+        die(cmsConfig::get('min_html') ? html_minify($html) : $html);
     }
 
     /**
@@ -1059,9 +1088,13 @@ class cmsCore {
 
         http_response_code(404);
 
-        cmsTemplate::getInstance()->renderAsset('errors/notfound');
-        die();
+        ob_start();
 
+        cmsTemplate::getInstance()->renderAsset('errors/notfound');
+
+        $html = ob_get_clean();
+
+        die(cmsConfig::get('min_html') ? html_minify($html) : $html);
     }
 
     /**
@@ -1073,11 +1106,15 @@ class cmsCore {
 
         http_response_code(503);
 
-        cmsTemplate::getInstance()->renderAsset('errors/offline', array(
-            'reason' => cmsConfig::get('off_reason')
-        ));
-        die();
+        ob_start();
 
+        cmsTemplate::getInstance()->renderAsset('errors/offline', [
+            'reason' => cmsConfig::get('off_reason')
+        ]);
+
+        $html = ob_get_clean();
+
+        die(cmsConfig::get('min_html') ? html_minify($html) : $html);
     }
 
     public static function respondIfModifiedSince($lastmod) {

@@ -27,7 +27,8 @@ class formSearchOptions extends cmsForm {
 
                             return $items;
 
-                        }
+                        },
+                        'multiple_select_deselect' => true
                     )),
 
                     new fieldCheckbox('is_hash_tag', array(

@@ -2,7 +2,7 @@
     margin-top: $spacer*1.5;
 }
 .icms-body-toolbox + .content_list {
-    margin-top: $spacer*1.5;
+    margin-top: $spacer*1.5 !important;
 }
 .content_item, .content_list {
     .field:not(.form-group) {
@@ -42,10 +42,6 @@
         &:last-child {
             margin-bottom: 0;
             @include clearfix;
-        }
-        &.ft_html .value img {
-            max-width: 100%;
-            height: auto;
         }
     }
     td > .info_bar {

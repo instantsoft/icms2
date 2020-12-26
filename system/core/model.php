@@ -97,6 +97,11 @@ class cmsModel {
 
 	}
 
+    public static function __set_state($data) {
+        $class = 'model' . string_to_camel('_', $data['name']);
+        return new $class();
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -885,6 +890,7 @@ class cmsModel {
     public function filterIn($field, $value){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_array($value)){
+            if(!$value){ return $this; }
             foreach($value as $k=>$v){
                 $v = $this->db->escape(strval($v));
                 $value[$k] = "'{$v}'";
@@ -901,6 +907,7 @@ class cmsModel {
     public function filterNotIn($field, $value){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_array($value)){
+            if(!$value){ return $this; }
             foreach($value as $k=>$v){
                 $v = $this->db->escape($v);
                 $value[$k] = "'{$v}'";
@@ -1947,32 +1954,44 @@ class cmsModel {
 
 //============================================================================//
 //============================================================================//
-
-    public function getMax($table, $field, $default = 0, $dir = 'MAX'){
+    /**
+     * Возвращает максимальное или минимальное
+     * значение поля таблицы
+     *
+     * @param string $table Таблица
+     * @param string $field Название поля
+     * @param integer $default Значение по умолчанию
+     * @param string $dir Направление: MAX или MIN
+     * @return integer
+     */
+    public function getMax($table, $field, $default = 0, $dir = 'MAX') {
 
         $sql = "SELECT {$dir}(i.{$field}) as {$field}
                 FROM {#}{$table} i
                 ";
 
-        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
+        if ($this->where) {
+            $sql .= 'WHERE ' . $this->where . PHP_EOL;
+        }
 
-        $sql .= "LIMIT 1";
+        $sql .= 'LIMIT 1';
 
         $result = $this->db->query($sql);
 
         $this->resetFilters();
 
-        if (!$this->db->numRows($result)){ return $default; }
+        if (!$this->db->numRows($result)) {
+            return $default;
+        }
 
         $max = $this->db->fetchAssoc($result);
 
         $this->db->freeResult($result);
 
-        return $max[$field];
-
+        return $max[$field] ?: 0;
     }
 
-    public function getMin($table, $field, $default = 0){
+    public function getMin($table, $field, $default = 0) {
         return $this->getMax($table, $field, $default, 'MIN');
     }
 

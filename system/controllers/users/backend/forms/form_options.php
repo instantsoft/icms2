@@ -68,6 +68,19 @@ class formUsersOptions extends cmsForm {
                 )
             ),
 
+            'restrictions' => array(
+                'type' => 'fieldset',
+                'title' => LANG_USERS_RESTRICTIONS,
+                'childs' => array(
+
+                    new fieldText('restricted_slugs', array(
+                        'title' => LANG_USERS_OPT_RESTRICTED_SLUGS,
+                        'hint' => LANG_USERS_OPT_RESTRICTED_SLUGS_HINT,
+                    )),
+
+                )
+            ),
+
             'sociality' => array(
                 'type' => 'fieldset',
                 'title' => LANG_USERS_SOCIALITY,

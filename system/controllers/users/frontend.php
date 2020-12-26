@@ -37,7 +37,7 @@ class users extends cmsFrontend {
         if (is_numeric($action_name)) {
 
             // $action_name это id пользователя
-            $profile = $this->model->getUser($action_name);
+            $profile = $this->model->getUser($action_name, 'join_inviter');
             if (!$profile) { cmsCore::error404(); }
 
             if($profile['slug'] != $action_name){
@@ -414,6 +414,13 @@ class users extends cmsFrontend {
 
         return $this->cms_user->isInGroups($this->options['list_allowed']);
 
+    }
+
+    public function isSlugAllowed($value) {
+
+        if ($this->cms_user->is_admin || !isset($this->options['restricted_slugs'])) { return true; }
+
+        return !string_in_mask_list($value, $this->options['restricted_slugs']);
     }
 
 }

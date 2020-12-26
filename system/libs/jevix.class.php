@@ -605,7 +605,7 @@ class Jevix{
 	 */
 	protected function matchStr($str, $skipSpaces = false){
 		$this->saveState();
-		$len = mb_strlen($str, 'UTF-8');
+		$len = mb_strlen($str);
 		$test = '';
 		while($len-- && $this->curChClass){
 			$test.=$this->curCh;
@@ -628,7 +628,7 @@ class Jevix{
 	 * @return string найденый символ или false
 	 */
 	protected function skipUntilCh($ch){
-		$chPos = mb_strpos($this->text, $ch, $this->curPos, 'UTF-8');
+		$chPos = mb_strpos($this->text, $ch, $this->curPos);
 		if($chPos){
 			return $this->goToPosition($chPos);
 		} else {
@@ -727,7 +727,6 @@ class Jevix{
 
 	protected function tag(&$tag, &$params, &$content, &$short){
 		$this->saveState();
-		$params = array();
 		$tag = '';
 		$closeTag = '';
 		$params = array();
@@ -829,13 +828,13 @@ class Jevix{
 		$restore = $this->saveState();
 
 		// Открытие
-		if(!$this->matchCh('<')) return false;
+        if(!$this->matchCh('<')) { return false; }
 		$this->skipSpaces();
 		if(!$this->name($name)){
 			$this->restoreState();
 			return false;
 		}
-		$name=mb_strtolower($name, 'UTF-8');
+		$name=mb_strtolower($name);
 		// Пробуем получить список атрибутов тега
 		if($this->curCh != '>' && $this->curCh != '/') { $this->tagParams($params); }
 
@@ -930,7 +929,7 @@ class Jevix{
 
 	protected function tagClose(&$name){
 		$this->saveState();
-		if(!$this->matchCh('<')) return false;
+        if(!$this->matchCh('<')) { return false; }
 		$this->skipSpaces();
 		if(!$this->matchCh('/')) {
 			$this->restoreState();
@@ -941,7 +940,7 @@ class Jevix{
 			$this->restoreState();
 			return false;
 		}
-		$name=mb_strtolower($name, 'UTF-8');
+		$name=mb_strtolower($name);
 		$this->skipSpaces();
 		if(!$this->matchCh('>')) {
 			$this->restoreState();
@@ -952,7 +951,7 @@ class Jevix{
 
 	protected function makeTag($tag, $params, $content, $short, $parentTag = null){
 		$this->curParentTag=$parentTag;
-		$tag = mb_strtolower($tag, 'UTF-8');
+		$tag = mb_strtolower($tag);
 
 		// Получаем правила фильтрации тега
 		$tagRules = isset($this->tagsRules[$tag]) ? $this->tagsRules[$tag] : null;
@@ -979,7 +978,7 @@ class Jevix{
 
 		$resParams = array();
 		foreach($params as $param=>$value){
-			$param = mb_strtolower($param, 'UTF-8');
+			$param = mb_strtolower($param);
 			$value = trim($value);
 			if($value == '') { continue; }
 
@@ -1492,7 +1491,7 @@ class Jevix{
 				$this->getCh();
 			}
 
-			if(!mb_strlen($url, 'UTF-8')) {
+			if(!mb_strlen($url)) {
 				$this->restoreState();
 				return false;
 			}
@@ -1505,7 +1504,7 @@ class Jevix{
 				$this->getCh();
 			}
 
-			if(!mb_strlen($url, 'UTF-8')) {
+			if(!mb_strlen($url)) {
 				$this->restoreState();
 				return false;
 			}
@@ -1518,7 +1517,7 @@ class Jevix{
 				$this->getCh();
 			}
 
-			if(!mb_strlen($url, 'UTF-8')) {
+			if(!mb_strlen($url)) {
 				$this->restoreState();
 				return false;
 			}

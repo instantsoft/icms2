@@ -10,8 +10,12 @@ class modelFiles extends cmsModel {
 
     public function deleteFile($id){
 
-        $file = $this->getFile($id);
-        if(!$file){ return false; }
+        if(!is_array($id)){
+            $file = $this->getFile($id);
+            if(!$file){ return false; }
+        } else {
+            $file = $id;
+        }
 
         $is_unlink = files_delete_file($file['path'], 2);
 

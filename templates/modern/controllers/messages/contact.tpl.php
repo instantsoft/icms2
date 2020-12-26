@@ -80,7 +80,7 @@
 
         <?php } else { ?>
 
-            <form action="<?php echo $this->href_to('send'); ?>" method="post" class="position-relative">
+            <form action="<?php echo $this->href_to('send'); ?>" method="post" class="position-relative px-2 px-md-0">
                 <?php echo html_input('hidden', 'last_date', '', array('id' => 'msg_last_date')); ?>
                 <?php echo html_input('hidden', 'contact_id', $contact['id']); ?>
                 <?php echo html_csrf_token(); ?>

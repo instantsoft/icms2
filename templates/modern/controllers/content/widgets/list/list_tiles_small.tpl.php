@@ -7,7 +7,7 @@
 <div class="icms-widget__content_list mb-n2 mr-n2 content_list tiled row justify-content-between no-gutters">
     <?php foreach($items as $item) { ?>
         <div class="col-auto mr-2 mb-2">
-            <div class="icms-content-fields d-flex flex-column h-100">
+            <div class="icms-content-fields d-flex h-100">
             <?php foreach($item['fields'] as $field){ ?>
                 <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_type']; ?>_field"<?php if($field['options']['wrap_width']){ ?> style="width: <?php echo $field['options']['wrap_width']; ?>;"<?php } ?>>
                     <?php if ($field['label_pos'] != 'none'){ ?>
@@ -16,7 +16,7 @@
                         </div>
                     <?php } ?>
                     <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
-                        <h5 class="value">
+                        <div class="value">
                         <?php if ($item['parent_id']){ ?>
                             <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
                             &rarr;
@@ -37,7 +37,7 @@
                                 </span>
                             <?php } ?>
                         <?php } ?>
-                        </h5>
+                        </div>
                     <?php } else { ?>
                         <div class="value">
                             <?php echo $field['html']; ?>

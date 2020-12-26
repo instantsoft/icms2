@@ -36,7 +36,7 @@
         <a class="city_clear_link btn btn-sm btn-outline-danger mr-1" href="#" <?php if (empty($value['name'])){ ?>style="display:none"<?php } ?>>
             <?php echo LANG_DELETE; ?>
         </a>
-        <a class="ajax-modal btn btn-sm btn-outline-secondary" title="<?php html($field->title ? $field->title : LANG_SELECT); ?>" href="<?php echo href_to('geo', 'widget', array($field->id, $value['id'])); ?>">
+        <a class="ajax-modal ml-auto btn btn-sm btn-outline-secondary" title="<?php html($field->title ? $field->title : LANG_SELECT); ?>" href="<?php echo href_to('geo', 'widget', array($field->id, $value['id'])); ?>">
             <?php echo LANG_SELECT; ?>
         </a>
 

@@ -28,10 +28,10 @@
     margin-bottom: 0 !important;
 }
 #desktop_device_type {
-    .icms-menu-hovered .dropdown:hover>.dropdown-menu {
+    .icms-menu-hovered .dropdown:hover>.dropdown-menu, .icms-user-menu:not(.show):hover>.dropdown-menu {
         display: block;
-        -webkit-animation: slide-up .25s ease-in-out;
-        animation: slide-up .25s ease-in-out;
+        -webkit-animation: slide-up .3s ease-in-out;
+        animation: slide-up .3s ease-in-out;
         margin: 0;
     }
 }
@@ -52,11 +52,14 @@
         position: relative;
         background-color: transparent;
         &::before {
+            transition: all .5s;
             position: absolute;
             display: block;
             bottom: 0;
             left: 0;
-            width: 100%;
+            right: 0;
+            margin: auto;
+            width: 0%;
             height: 3px;
             background-color: transparent;
             content: '';
@@ -66,9 +69,11 @@
         }
         &.active::before {
             background-color: $primary;
+            width: 100%;
         }
-        &:hover {
+        &:not(.active):hover {
             &::before {
+                width: 100%;
                 background-color: $nav-tabs-border-color;
             }
         }

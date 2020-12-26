@@ -16,3 +16,5 @@ define('LANG_RATING_PM', '%s %s оценил вашу запись <a href="%s">
 define('LANG_RATING_NOTIFY_VOTE',  'Уведомлять об оценках записей');
 define('LANG_RATING_ITEM_LABEL',  'Подпись перед блоком в записи');
 define('LANG_RATING_LIST_LABEL',  'Подпись перед блоком в списке');
+define('LANG_RATING_IS_AVERAGE',  'Считать рейтинг как среднее арифметическое всех оценок');
+define('LANG_RATING_IS_AVERAGE_HINT',  'Используйте эту опцию, если логика рейтинга в вашем шаблоне отличается от штатной');

@@ -67,5 +67,6 @@
     define('LANG_CONTENT_CONTEXT_LT_TRASH', 'In the trash');
     define('LANG_CONTENT_CONTEXT_LT_MODERATION_LIST', 'In the moderation list');
     define('LANG_CONTENT_CONTEXT_LT_PROFILE_CONTENT', 'In profile');
+    define('LANG_CONTENT_CONTEXT_LT_FORM_FIELD', 'In relations, in field');
     define('LANG_CONTENT_NOTIFY_END_DATE',  'Notify the imminent publication end date of your %s');
     define('LANG_CONTENT_SHOW_FILTER_COUNT',  'offer|offers|offers');

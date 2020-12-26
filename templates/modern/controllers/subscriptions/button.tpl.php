@@ -7,7 +7,7 @@
         <b class="icon-bell-slash">
             <?php html_svg_icon('solid', 'bell-slash'); ?>
         </b>
-        <span class="d-none d-sm-inline-block"></span>
+        <span class="icms-subscriptions__label"></span>
     </a>
     <span title="<?php echo LANG_SBSCR_SUBSCRIBERS; ?>" class="count-subscribers btn btn-responsive btn-outline-secondary position-relative ml-2" data-list_link="<?php echo $this->href_to('list_subscribers', $hash); ?>">
         <?php echo $subscribers_count; ?>

@@ -4,19 +4,45 @@ class actionFormsSendAjax extends cmsAction {
 
     private $attachment_fields = ['file', 'image', 'images'];
 
+    public $request_params = [
+        'form_name' => [
+            'default' => '',
+            'rules'   => [
+                ['required'],
+                ['sysname'],
+                ['max_length', 32]
+            ]
+        ]
+    ];
+
     public function run($hash){
 
         if(is_numeric($hash)){
             cmsCore::error404();
         }
 
-        $_form_data = $this->model->getFormData($hash);
+        // Ячейка, в которой все данные формы
+        $form_fields_group_name = $this->request->get('form_name');
+
+        $_form_data = $this->getFormData($hash, $form_fields_group_name);
 
         if($_form_data === false){
             return cmsCore::error404();
         }
 
         list($form, $form_data) = $_form_data;
+
+        // Данные формы текущего юзера, если отправляли ранее
+        $submited_data = $this->getSavedUserFormData($form_data['id']);
+        // Если форма скрывается после отправки, не даём еще раз отправить
+        if($submited_data){
+            if(!empty($form_data['options']['hide_after_submit'])){
+                return $this->cms_template->renderJSON([
+                    'message' => LANG_FORMS_FORM_IS_SENDED,
+                    'errors' => []
+                ]);
+            }
+        }
 
         $data = $form->parse($this->request, true);
 
@@ -27,10 +53,13 @@ class actionFormsSendAjax extends cmsAction {
         list($form, $form_data, $data, $errors) = cmsEventsManager::hook('forms_after_validate', [$form, $form_data, $data, $errors], null, $this->request);
 
         if ($errors){
-            return $this->cms_template->renderJSON(array(
+            return $this->cms_template->renderJSON([
                 'errors' => $errors
-            ));
+            ]);
         }
+
+        // Делаем массив данных формы нормальными, без $form_fields_group_name
+        $data = $data[$form_fields_group_name];
 
         $send_text = $this->options['send_text'];
         if(!empty($form_data['options']['send_text'])){
@@ -41,11 +70,18 @@ class actionFormsSendAjax extends cmsAction {
 
         // Формируем массив данных формы
         foreach ($form->getStructure() as $fieldset) {
+
             if (empty($fieldset['childs'])) { continue; }
 
             foreach($fieldset['childs'] as $field){
 
-                $name = $field->getName();
+                $name = str_replace($form_fields_group_name.':', '', $field->getName());
+
+                if(!array_key_exists($name, $data)){
+                    continue;
+                }
+
+                $field->setName($name);
 
                 // Данные по имени
                 $form_items[$name] = $field->setItem($data)->getStringValue($data[$name]);
@@ -54,7 +90,7 @@ class actionFormsSendAjax extends cmsAction {
                     $form_items_titles[$field->title] = $form_items[$name];
                 }
                 // Вложения
-                if(in_array($field->type, $this->attachment_fields) && $data[$name]){
+                if(in_array($field->field_type, $this->attachment_fields) && $data[$name]){
                     $files = $field->getFiles($data[$name]);
                     if($files){
                         $is_number = count($files) > 1;
@@ -72,6 +108,9 @@ class actionFormsSendAjax extends cmsAction {
         $form_items['form_data'] = $this->cms_template->getRenderedChild('form_data', [
             'form_items_titles' => $form_items_titles
         ]);
+        // IP адрес
+        $form_items['ip'] = cmsUser::getIp();
+        $form_items['user_name'] = $this->cms_user->is_logged ? $this->cms_user->nickname : LANG_GUEST;
 
         // Отправляем форму из стандартных опций
         foreach ($form_data['options']['send_type'] as $send_type) {
@@ -86,30 +125,58 @@ class actionFormsSendAjax extends cmsAction {
         // В хуке можно отправлять форму еще куда-нибудь
         list($form, $form_data, $data, $form_items, $form_items_titles, $attachments) = cmsEventsManager::hook('forms_send_complete', [$form, $form_data, $data, $form_items, $form_items_titles, $attachments], null, $this->request);
 
-        return $this->cms_template->renderJSON(array(
-            'errors'        => false,
-            'success_text'  => string_replace_keys_values_extended($send_text, $form_items),
-            'continue_link' => (!empty($form_data['options']['continue_link']) ? $form_data['options']['continue_link'] : false),
-            'callback'      => 'formsSuccess'
-        ));
+        // Фиксируем, что форма отправлена
+        $this->saveUserFormData([
+            'form_data'         => $form_data,
+            'data'              => $data,
+            'form_items'        => $form_items,
+            'form_items_titles' => $form_items_titles,
+            'attachments'       => $attachments
+        ]);
 
+        $success_html = $this->cms_template->renderInternal($this, 'form_success', [
+            'form_data' => $form_data,
+            'success_text'  => string_replace_keys_values_extended($send_text, $form_items),
+            'hide_after_submit' => !empty($form_data['options']['hide_after_submit'])
+        ]);
+
+        return $this->cms_template->renderJSON([
+            'errors'       => false,
+            'success_html' => $success_html,
+            'form_id'      => $form_fields_group_name,
+            'callback'     => 'formsSuccess'
+        ]);
     }
 
     private function sendNotice($form_data, $form_items, $form_items_titles, $attachments) {
 
-        if(empty($form_data['options']['send_type_notice'])){
-            return false;
+        $emails = []; $recipients = [];
+
+        if(!empty($form_data['options']['send_type_notice'])){
+
+            $emails = explode(',', trim($form_data['options']['send_type_notice'], ' ,'));
+            $emails = array_map(function($val){ return trim($val); }, $emails);
+
+            $this->model_users->filterIn('email', $emails);
+
+            $recipients = $this->model_users->
+                    filterIsNull('is_locked')->
+                    filterIsNull('is_deleted')->
+                    limit(false)->getUsersIds() ?: [];
+
         }
 
-        $emails = explode(',', trim($form_data['options']['send_type_notice'], ' ,'));
-        $emails = array_map(function($val){ return trim($val); }, $emails);
+        // Если стоит отправка автору записи
+        if(in_array('author', $form_data['options']['send_type'])){
 
-        $this->model_users->filterIn('email', $emails);
+            $author_id = $this->request->get('author_id', 0);
 
-        $recipients = $this->model_users->
-                filterIsNull('is_locked')->
-                filterIsNull('is_deleted')->
-                limit(false)->getUsersIds();
+            if($author_id){
+                $recipients[] = $author_id;
+
+                $recipients = array_unique($recipients);
+            }
+        }
 
         if (!$recipients) {
             return false;
@@ -122,6 +189,7 @@ class actionFormsSendAjax extends cmsAction {
             }
         }
 
+        // Перерендерим с учётом ссылок
         $form_items['form_data'] = $this->cms_template->getRenderedChild('form_data', [
             'form_items_titles' => $form_items_titles
         ]);
@@ -143,12 +211,28 @@ class actionFormsSendAjax extends cmsAction {
 
     private function sendEmail($form_data, $form_items, $form_items_titles, $attachments) {
 
-        if(empty($form_data['options']['send_type_email'])){
-            return false;
+        $emails = [];
+
+        if(!empty($form_data['options']['send_type_email'])){
+            $emails = explode(',', trim($form_data['options']['send_type_email'], ' ,'));
+            $emails = array_map(function($val){ return trim($val); }, $emails);
         }
 
-        $emails = explode(',', trim($form_data['options']['send_type_email'], ' ,'));
-        $emails = array_map(function($val){ return trim($val); }, $emails);
+        // Если стоит отправка автору записи
+        if(in_array('author', $form_data['options']['send_type'])){
+            $author_id = $this->request->get('author_id', 0);
+            if($author_id){
+                $author = $this->model_users->getUser($author_id);
+                if($author){
+                    $emails[] = $author['email'];
+                    $emails = array_unique($emails);
+                }
+            }
+        }
+
+        if(!$emails){
+            return false;
+        }
 
         $letter = !empty($form_data['options']['letter']) ? $form_data['options']['letter'] : $this->options['letter'];
 
@@ -164,6 +248,25 @@ class actionFormsSendAjax extends cmsAction {
                 'text' => $letter
             ], $form_items, false);
         }
+
+        return true;
+    }
+
+    private function saveUserFormData($data) {
+
+        $form_id = $data['form_data']['id'];
+
+        // Для гостей просто сессия
+        if(!$this->cms_user->is_logged){
+            cmsUser::sessionSet('forms:'.$form_id, ['ip' => cmsUser::getIp()]);
+            return true;
+        }
+
+        $data['ip'] = cmsUser::getIp();
+
+        unset($data['form_data']);
+
+        cmsUser::setUPS('forms.data.'.$form_id, $data);
 
         return true;
     }

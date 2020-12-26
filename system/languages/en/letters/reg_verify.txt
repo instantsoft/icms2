@@ -12,6 +12,7 @@ You should do that until {valid_until}.
 
 After that date your registration will be canceled.
 
+If the letter came to you by mistake, ignore it.
 
 --
  Best regards, {site}

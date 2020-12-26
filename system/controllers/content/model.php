@@ -448,25 +448,24 @@ class modelContent extends cmsModel {
 //=======================    ПОЛЯ КОНТЕНТА   =================================//
 //============================================================================//
 
-    public function getDefaultContentFieldOptions(){
-
-        return array(
-            'is_required'     => 0,
-            'is_digits'       => 0,
-            'is_number'       => 0,
-            'is_alphanumeric' => 0,
-            'is_email'        => 0,
-            'is_unique'       => 0,
-            'is_url'          => 0,
-            'disable_drafts'  => 0,
+    public function getDefaultContentFieldOptions() {
+        return [
+            'is_required'           => 0,
+            'is_digits'             => 0,
+            'is_number'             => 0,
+            'is_alphanumeric'       => 0,
+            'is_email'              => 0,
+            'is_unique'             => 0,
+            'is_url'                => 0,
+            'disable_drafts'        => 0,
             'is_date_range_process' => 'hide',
-            'label_in_list'   => 'none',
-            'label_in_item'   => 'none',
-            'wrap_type'       => 'auto',
-            'wrap_width'      => '',
-            'profile_value'   => '',
-        );
-
+            'label_in_list'         => 'none',
+            'label_in_item'         => 'none',
+            'wrap_type'             => 'auto',
+            'wrap_width'            => '',
+            'profile_value'         => '',
+            'is_in_item_pos'        => ['page']
+        ];
     }
 
 //============================================================================//
@@ -552,53 +551,52 @@ class modelContent extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getContentFields($ctype_name, $item_id = false, $enabled = true){
+    public function getContentFields($ctype_name, $item_id = false, $enabled = true) {
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
-        $this->useCache('content.fields.'.$ctype_name);
+        $this->useCache('content.fields.' . $ctype_name);
 
-        if($enabled){
+        if ($enabled) {
             $this->filterEqual('is_enabled', 1);
         }
 
         $this->orderBy('ordering');
 
-        $fields = $this->get($table_name, function($item, $model) use ($ctype_name, $item_id){
+        $fields = $this->get($table_name, function($item, $model) use ($ctype_name, $item_id) {
 
-            $item['options'] = cmsModel::yamlToArray($item['options']);
-            $item['options'] = array_merge($model->getDefaultContentFieldOptions(), $item['options']);
+            $item['options']     = cmsModel::yamlToArray($item['options']);
+            $item['options']     = array_merge($model->getDefaultContentFieldOptions(), $item['options']);
             $item['groups_read'] = cmsModel::yamlToArray($item['groups_read']);
             $item['groups_add']  = cmsModel::yamlToArray($item['groups_add']);
             $item['groups_edit'] = cmsModel::yamlToArray($item['groups_edit']);
             $item['filter_view'] = cmsModel::yamlToArray($item['filter_view']);
-            $item['default'] = $item['values'];
+            $item['default']     = $item['values'];
 
-            $rules = array();
-            if ($item['options']['is_required']) {  $rules[] = array('required'); }
-            if ($item['options']['is_digits']) {  $rules[] = array('digits'); }
-            if ($item['options']['is_number']) {  $rules[] = array('number'); }
-            if ($item['options']['is_alphanumeric']) {  $rules[] = array('alphanumeric'); }
-            if ($item['options']['is_email']) {  $rules[] = array('email'); }
-            if (!empty($item['options']['is_url'])) {  $rules[] = array('url'); }
+            $rules = [];
+            if ($item['options']['is_required']) { $rules[] = ['required']; }
+            if ($item['options']['is_digits']) { $rules[] = ['digits']; }
+            if ($item['options']['is_number']) { $rules[] = ['number']; }
+            if ($item['options']['is_alphanumeric']) { $rules[] = ['alphanumeric']; }
+            if ($item['options']['is_email']) { $rules[] = ['email']; }
+            if (!empty($item['options']['is_url'])) { $rules[] = ['url']; }
 
             if ($item['options']['is_unique']) {
-                if (!$item_id){
-                    $rules[] = array('unique', $model->table_prefix . $ctype_name, $item['name']);
+                if (!$item_id) {
+                    $rules[] = ['unique', $model->table_prefix . $ctype_name, $item['name']];
                 } else {
-                    $rules[] = array('unique_exclude', $model->table_prefix . $ctype_name, $item['name'], $item_id);
+                    $rules[] = ['unique_exclude', $model->table_prefix . $ctype_name, $item['name'], $item_id];
                 }
             }
 
             $item['rules'] = $rules;
 
             return $item;
-
         }, 'name');
 
         // чтобы сработала мультиязычность, если необходима
         // поэтому перебираем тут, а не выше
-        if($fields){
+        if ($fields) {
             foreach ($fields as $name => $field) {
 
                 $field_class = 'field' . string_to_camel('_', $field['type']);
@@ -607,15 +605,15 @@ class modelContent extends cmsModel {
 
                 $field['handler_title'] = $field['handler']->getTitle();
 
-                $field['handler']->setOptions($field);
+                $field_property = $field; unset($field_property['type']);
+
+                $field['handler']->setOptions($field_property);
 
                 $fields[$name] = $field;
-
             }
         }
 
         return $fields;
-
     }
 
     public function getRequiredContentFields($ctype_name){

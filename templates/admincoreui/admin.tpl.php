@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
     <?php $this->addMainTplCSSName([
-        'vendors/font-awesome/css/font-awesome.min',
         'vendors/simple-line-icons/css/simple-line-icons',
         'vendors/toastr/toastr.min',
         'jquery-ui',
@@ -35,6 +34,7 @@
     <?php $this->onDemandTplCSSName([
         'photoswipe', 'vendors/introjs/introjs.min', 'vendors/introjs/themes/introjs-modern'
     ]); ?>
+    <link rel="shortcut icon" href="<?php echo $this->getTemplateFilePath('images/favicons/favicon_admin.ico'); ?>">
     <?php $this->head(false); ?>
 </head>
 <?php $messages = cmsUser::getSessionMessages(); ?>
@@ -59,25 +59,26 @@
                     </a>
                 <?php } else { ?>
                     <a class="nav-link" data-toggle="tooltip" data-placement="bottom" href="<?php echo href_to('admin', 'update'); ?>" title="<?php echo LANG_CP_UPDATE_CHECK; ?>">
-                        <i class="fa fa-rocket fa-lg"></i> <?php echo cmsCore::getVersion(); ?>
+                        <?php html_svg_icon('solid', 'code-branch'); ?> <?php echo cmsCore::getVersion(); ?>
                     </a>
                 <?php } ?>
             </li>
             <?php if (!$config->is_site_on){ ?>
                 <li class="nav-item px-3" id="site_off_notice">
-                    <span class="btn btn-warning text-white">
-                        <i class="fa fa-warning fa-lg"></i> <?php printf(ERR_SITE_OFFLINE_FULL, href_to('admin', 'settings', 'siteon')); ?>
+                    <span class="btn btn-danger text-white">
+                        <?php html_svg_icon('solid', 'exclamation-triangle'); ?>
+                        <?php printf(ERR_SITE_OFFLINE_FULL, href_to('admin', 'settings', 'siteon')); ?>
                     </span>
                 </li>
             <?php } ?>
             <li class="nav-item px-3 text-light" title="<?php echo LANG_TODAY; ?>" data-toggle="tooltip" data-placement="bottom">
-                <i class="fa fa-calendar"></i> <span><?php echo lang_date(date('d F')); ?></span> <span id="clock"></span>
+                <?php html_svg_icon('solid', 'calendar'); ?> <span><?php echo lang_date(date('d F')); ?></span> <span id="clock"></span>
             </li>
         </ul>
         <ul class="nav navbar-nav ml-auto">
             <?php if ($config->is_user_change_lang && count($langs) > 1){ ?>
                 <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#" role="button">
+                    <a class="nav-link text-warning font-weight-bold dropdown-toggle" data-toggle="dropdown" href="#" role="button">
                         <?php echo strtoupper($current_lang); ?>
                     </a>
                     <div class="dropdown-menu">
@@ -123,13 +124,13 @@
                         <strong><?php echo $user->nickname; ?></strong>
                     </div>
                     <a class="dropdown-item" href="<?php echo href_to_profile($user); ?>">
-                        <i class="fa fa-user"></i> <?php echo LANG_MY_PROFILE; ?>
+                        <?php html_svg_icon('solid', 'user'); ?> <?php echo LANG_MY_PROFILE; ?>
                     </a>
                     <a class="dropdown-item" href="<?php echo href_to('admin', 'users', ['edit', $user->id]); ?>">
-                        <i class="fa fa-edit"></i> <?php echo LANG_EDIT; ?>
+                        <?php html_svg_icon('solid', 'edit'); ?> <?php echo LANG_EDIT; ?>
                     </a>
                     <a class="dropdown-item" href="<?php echo href_to('auth', 'logout'); ?>">
-                        <i class="fa fa-sign-out"></i> <?php echo LANG_LOG_OUT; ?>
+                        <?php html_svg_icon('solid', 'sign-out-alt'); ?> <?php echo LANG_LOG_OUT; ?>
                     </a>
                 </div>
             </li>
@@ -190,7 +191,7 @@
         <div class="d-none d-md-block">
             <?php if ($config->debug){ ?>
                 <span class="item">
-                    <a href="#debug_block" class="ajax-modal" title="<?php echo LANG_DEBUG; ?>">
+                    <a href="#debug_block" data-style="xl" class="ajax-modal" title="<?php echo LANG_DEBUG; ?>">
                         <?php echo LANG_DEBUG; ?>
                     </a>
                 </span> &mdash;

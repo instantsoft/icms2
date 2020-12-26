@@ -131,7 +131,7 @@ function check_db(){
     }
 
     if($db['engine'] == 'InnoDB'){
-        if ($success) {
+        if ($success === true) {
             $mysqli->commit();
         } else {
             $mysqli->rollback();
@@ -200,14 +200,12 @@ function check_db_charset($mysqli, $charset){
 
 }
 
-function import_dump($mysqli, $file, $prefix, $engine='MyISAM', $delimiter = ';', $charset = 'utf8'){
+function import_dump(&$mysqli, $file, $prefix, $engine='MyISAM', $delimiter = ';', $charset = 'utf8'){
 
     clearstatcache();
     @set_time_limit(0);
 
     $file = PATH . 'languages' . DS . LANG . DS . 'sql' . DS . $file;
-
-    if (function_exists('opcache_invalidate')) { @opcache_invalidate($file, true); }
 
     // Кастомные SQL могут отсутствовать
     if (!file_exists($file)){ return true; }

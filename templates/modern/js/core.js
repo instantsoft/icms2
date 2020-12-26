@@ -19,6 +19,50 @@ $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
 });
 
+icms.template = (function ($) {
+
+    this.onDocumentReady = function(){
+        this.initScrollTop();
+        this.initCookieAlert();
+    };
+
+    this.initCookieAlert = function(){
+        var block = $('#icms-cookiealert');
+        if($(block).length === 0){ return; }
+        if(localStorage.getItem('cookiealert_hide')){ return; }
+        $(window).one('scroll', function() {
+            $(block).addClass('show');
+        });
+        $('.acceptcookies', block).on('click', function(t) {
+            localStorage.setItem('cookiealert_hide', 1);
+            $(block).removeClass('show');
+        });
+    };
+
+    this.initScrollTop = function(){
+        var link = $('#scroll-top');
+        if($(link).length === 0){ return; }
+        if($(window).scrollTop() > 350){
+            $(link).addClass('position-fixed');
+        }
+        $(window).on('scroll', function() {
+            if($(this).scrollTop() > 350){
+                $(link).addClass('position-fixed');
+            } else {
+                $(link).removeClass('position-fixed');
+            }
+        });
+        $(link).on('click', function(t) {
+            $('html, body').animate({
+                scrollTop: 0
+            }, 800), t.preventDefault();
+        });
+    };
+
+    return this;
+
+}).call(icms.template || {},jQuery);
+
 icms.menu = (function ($) {
 
     this.onDocumentReady = function(){
@@ -399,9 +443,14 @@ icms.forms = (function ($) {
 
         $.post(url, form_data, function(result){
 
+            $('.field_error', form).removeClass('field_error');
+            $('.is-invalid', form).removeClass('is-invalid');
+            $('.invalid-feedback', form).remove();
+
             $(submit_btn).prop('disabled', false).removeClass('is-busy');
 
-            if (result.errors == false){
+            if (result.errors === false){
+                $('input[type=text], select, textarea', form).val('').triggerHandler('input');
                 if ("callback" in result){
                     window[result.callback](form_data, result); return;
                 }
@@ -414,11 +463,10 @@ icms.forms = (function ($) {
                 return;
             }
 
-            if (typeof(result.errors)=='object'){
-
-                $('.field_error', form).removeClass('field_error');
-                $('.invalid-feedback', form).remove();
-
+            if (typeof(result.errors) === 'object'){
+                if(result.message){
+                    icms.modal.alert(result.message, 'danger');
+                }
                 for(var field_id in result.errors){
                     var id = field_id.replace(':', '_');
                     $('#'+id, form).addClass('is-invalid');

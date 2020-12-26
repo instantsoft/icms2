@@ -92,7 +92,7 @@ function grid_content_items($controller, $ctype_name=false){
         array(
             'title' => LANG_EDIT,
             'class' => 'edit',
-            'href'  => href_to($ctype_name, 'edit',  '{id}') . '?back=' . href_to($controller->name, 'content')
+            'href'  => href_to($controller->name, 'content', array('item_edit', $ctype_name, '{id}')) . '?back=' . href_to($controller->name, 'content')
         ),
         array(
             'title' => LANG_RESTORE,

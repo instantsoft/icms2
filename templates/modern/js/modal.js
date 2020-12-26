@@ -13,7 +13,7 @@ icms.modal = (function ($) {
     };
 
     this.render = function (){
-        $('body').prepend('<div class="modal" id="icms_modal" tabindex="-1" role="dialog" aria-modal="true"><div id="icms-modal-spinner" class="h-100 d-flex"><div class="sk-circle  m-auto"><div class="sk-circle1 sk-child"></div><div class="sk-circle2 sk-child"></div><div class="sk-circle3 sk-child"></div><div class="sk-circle4 sk-child"></div><div class="sk-circle5 sk-child"></div><div class="sk-circle6 sk-child"></div><div class="sk-circle7 sk-child"></div><div class="sk-circle8 sk-child"></div><div class="sk-circle9 sk-child"></div><div class="sk-circle10 sk-child"></div><div class="sk-circle11 sk-child"></div><div class="sk-circle12 sk-child"></div></div></div><div class="modal-dialog modal-lg modal-primary" role="document" style="display: none;"><div class="modal-content"><div class="modal-header"><h4 class="modal-title text-truncate"></h4><button class="btn text-white modal-close p-0" type="button" data-dismiss="modal"><svg viewBox="0 0 352 512"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg></button></div><div class="modal-body"></div></div></div></div>');
+        $('body').prepend('<div class="modal" id="icms_modal" tabindex="-1" role="dialog" aria-modal="true"><div id="icms-modal-spinner" class="h-100 d-flex"><div class="sk-circle  m-auto"><div class="sk-circle1 sk-child"></div><div class="sk-circle2 sk-child"></div><div class="sk-circle3 sk-child"></div><div class="sk-circle4 sk-child"></div><div class="sk-circle5 sk-child"></div><div class="sk-circle6 sk-child"></div><div class="sk-circle7 sk-child"></div><div class="sk-circle8 sk-child"></div><div class="sk-circle9 sk-child"></div><div class="sk-circle10 sk-child"></div><div class="sk-circle11 sk-child"></div><div class="sk-circle12 sk-child"></div></div></div><div class="modal-dialog modal-lg modal-primary" role="document" style="display: none;"><div class="modal-content"><div class="modal-header"><h4 class="modal-title text-truncate"></h4><button class="btn ml-auto text-white modal-close p-0" type="button" data-dismiss="modal"><svg viewBox="0 0 352 512"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg></button></div><div class="modal-body"></div></div></div></div>');
         modal_el = $('#icms_modal');
         $(modal_el).on('hidden.bs.modal', function (e) {
             self.onHide();
@@ -34,9 +34,15 @@ icms.modal = (function ($) {
         $(modal_el).modal('show'); return this;
     };
 
-	this.open = function(selector) {
-        $(selector).modal('show');
-	};
+	this.open = function (selector, title, style) {
+        $(modal_el).modal('show');
+        var parent = $(selector).parent();
+        var content = $(selector).detach();
+        self.showContent(title, $(content).html(), style);
+        $(modal_el).on('hidden.bs.modal', function (e) {
+            content.appendTo(parent);
+        });
+    };
 
     this.close = function(){
         $(modal_el).modal('hide');
@@ -57,9 +63,9 @@ icms.modal = (function ($) {
             $(modal_el).find('.modal-body').removeClass(style_body);
         });
         if(title){
-            $(modal_el).find('.modal-header').show().find('.modal-title').html(title);
+            $(modal_el).find('.modal-title').show().html(title);
         } else {
-            $(modal_el).find('.modal-header').hide();
+            $(modal_el).find('.modal-title').hide();
         }
     };
 
@@ -84,13 +90,7 @@ icms.modal = (function ($) {
                     var params = $(this).data('params');
 
                     if(url.charAt(0) === '#'){
-                        $(modal_el).modal('show');
-                        var parent = $(url).parent();
-                        var content = $(url).detach();
-                        self.showContent(title, $(content).html(), style);
-                        $(modal_el).on('hidden.bs.modal', function (e) {
-                            content.appendTo(parent);
-                        });
+                        self.open(url, title, style);
                     } else {
                         self.openAjax(url, params, false, title);
                     }
@@ -112,9 +112,6 @@ icms.modal = (function ($) {
     this.bindGallery = function(selector){
         icms.events.on('photoswipe_ready', function (){
             $(selector).jqPhotoSwipe({
-                galleryOpen: function (gallery) {
-                    gallery.toggleDesktopZoom();
-                },
                 maxSpreadZoom: 1,
                 bgOpacity: 0.85,
                 shareEl: false,
@@ -148,6 +145,9 @@ icms.modal = (function ($) {
         $.ajax({
             url: url,
             data: data,
+            beforeSend: function(request) {
+                request.setRequestHeader('ICMS-Request-Type', 1);
+            },
             success: function(result){
                 self.showContent(title, result);
                 if(open_callback){
@@ -186,10 +186,10 @@ icms.modal = (function ($) {
     this.setHeight = function(height){};
 
 	this.alert = function(text, type) {
-        type = type || '';
+        type = type || 'primary';
         type = type.replace('ui_', '');
         type = type.replace('error', 'danger');
-		this.openHtml(text, '<i class="fa fa-warning fa-lg"></i>', type);
+		this.openHtml('<div class="alert alert-'+type+' border-0 rounded-0 m-n3">'+text+'</div>', '<b>ⓘ</b>', type);
 	};
 
 	return this;

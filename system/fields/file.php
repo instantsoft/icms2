@@ -49,14 +49,14 @@ class fieldFile extends cmsFormField {
             if (!$file){ return ''; }
 
             if($file['counter']){
-                $size_counter = '<span class="size">'.LANG_PARSER_FILE_LABEL_COUNTER.' '
+                $size_counter = '<span class="size ml-2">'.LANG_PARSER_FILE_LABEL_COUNTER.' '
                         .html_spellcount($file['counter'], LANG_TIME1, LANG_TIME2, LANG_TIME10).'</span>';
             }
 
         }
 
         if($this->getOption('show_size')){
-            $size_info = '<span class="size">'.files_format_bytes($file['size']).'</span>';
+            $size_info = '<span class="size ml-2">'.files_format_bytes($file['size']).'</span>';
         }
 
         $name = $this->getOption('show_name') ? $file['name'] : LANG_PARSER_FILE_LABEL_GET;

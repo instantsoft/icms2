@@ -480,7 +480,7 @@ icms.comments = (function ($) {
 
     this.toggleTrack = function(link){
 
-        $(link).addClass('disabled');
+        $(link).addClass('disabled is-busy');
 
         var is_track = $(link).data('is_tracking');
 
@@ -494,14 +494,17 @@ icms.comments = (function ($) {
         };
 
         $.post(this.urls.track, form_data, function(result){
-
-            $(link).removeClass('disabled');
+            setTimeout(function (){
+                $(link).removeClass('disabled is-busy');
+            }, 400);
 
             if (result.error){
                 return;
             }
 
             $(link).data('is_tracking', (is_track ? 0 : 1));
+            $(link).attr('title', (!is_track ? $(link).data('tracking_title') : $(link).data('tracking_stop_title')));
+            $(link).tooltip('dispose').tooltip();
 
             $(link).toggleClass('btn-primary btn-secondary')
                     .find('.icms-comments-track-icon')

@@ -5,7 +5,12 @@
 
         <div class="input_checkbox_list" id="<?php echo $field->id; ?>">
             <?php foreach ($field->data['items'] as $v => $title){ ?>
-                <?php $checked = in_array($v, $value, true); $ch_id = $field->id.$v; $level = substr_count($title, '-')-1; $level = $level<0 ? 0 : $level; ?>
+                <?php
+                $checked = $value && in_array($v, $value, true);
+                $ch_id = $field->id.$v;
+                $level = substr_count($title, '-')-1;
+                $level = $level<0 ? 0 : $level;
+                ?>
                 <div class="custom-control custom-checkbox mb-1">
                     <input name="<?php echo $field->element_name; ?>[]" value="<?php html($v); ?>" type="checkbox" class="custom-control-input" id="<?php echo $ch_id; ?>"<?php if($checked) { ?>checked<?php } ?>>
                     <label class="custom-control-label" for="<?php echo $ch_id; ?>">

@@ -431,33 +431,46 @@ class admin extends cmsFrontend {
 
     public function getSettingsMenu(){
 
-        return cmsEventsManager::hook('admin_settings_menu', array(
-            array(
-                'title' => LANG_BASIC_OPTIONS,
-                'url' => href_to($this->name, 'settings'),
-                'level' => 2,
-                'options' => array(
-                    'icon'  => 'nav-icon icon-globe'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SCHEDULER,
-                'url' => href_to($this->name, 'settings', array('scheduler')),
-                'level' => 2,
-                'options' => array(
-                    'icon'  => 'nav-icon icon-clock'
-                )
-            ),
-            array(
-                'title' => LANG_CP_CHECK_NESTED,
-                'url' => href_to($this->name, 'settings', array('check_nested')),
-                'level' => 2,
-                'options' => array(
-                    'icon'  => 'nav-icon icon-organization'
-                )
-            )
-        ));
+        $template = new cmsTemplate($this->cms_config->template);
 
+        $menu = [];
+
+        $menu[] = [
+            'title'   => LANG_BASIC_OPTIONS,
+            'url'     => href_to($this->name, 'settings'),
+            'level'   => 2,
+            'options' => [
+                'icon' => 'nav-icon icon-globe'
+            ]
+        ];
+        $menu[] = [
+            'title'   => LANG_CP_SCHEDULER,
+            'url'     => href_to($this->name, 'settings', ['scheduler']),
+            'level'   => 2,
+            'options' => [
+                'icon' => 'nav-icon icon-clock'
+            ]
+        ];
+        if($template->hasOptions()){
+            $menu[] = [
+                'title'   => LANG_CP_SETTINGS_TEMPLATE_OPTIONS,
+                'url'     => href_to($this->name, 'settings', ['theme', $this->cms_config->template]),
+                'level'   => 2,
+                'options' => [
+                    'icon' => 'nav-icon icon-settings'
+                ]
+            ];
+        }
+        $menu[] = [
+            'title'   => LANG_CP_CHECK_NESTED,
+            'url'     => href_to($this->name, 'settings', ['check_nested']),
+            'level'   => 2,
+            'options' => [
+                'icon' => 'nav-icon icon-organization'
+            ]
+        ];
+
+        return cmsEventsManager::hook('admin_settings_menu', $menu);
     }
 
     public function getUserGroupsMenu($action = 'view', $id = 0) {
@@ -606,8 +619,9 @@ class admin extends cmsFrontend {
                 );
 
                 // проверяем установленную версию
-                $manifest['package']['installed_version'] = call_user_func(array($this, $manifest[$action]['type'].'Installed'), $manifest['package']);
-
+                if(method_exists($this, $manifest[$action]['type'].'Installed')){
+                    $manifest['package']['installed_version'] = call_user_func(array($this, $manifest[$action]['type'].'Installed'), $manifest['package']);
+                }
             }
 
 
@@ -664,10 +678,6 @@ class admin extends cmsFrontend {
                 filterEqual('controller', $manifest_package['controller'])->
                 getFieldFiltered('widgets', 'version');
 
-    }
-
-    private function systemInstalled($manifest_package) {
-        return cmsCore::getVersion();
     }
 
     private function getPackageContentsList(){
@@ -1096,7 +1106,7 @@ class admin extends cmsFrontend {
 
         $form = $this->getForm('widgets_cols', [$do, (!empty($col['id']) ? $col['id'] : 0), $row]);
 
-        $col_scheme_options = cmsEventsManager::hookAll('admin_col_scheme_options_'.$row['template'], ['add', $row, []]);
+        $col_scheme_options = cmsEventsManager::hookAll('admin_col_scheme_options', ['add', $row, []]);
 
         if($col_scheme_options){
             foreach ($col_scheme_options as $controller_name => $fields) {
@@ -1114,7 +1124,7 @@ class admin extends cmsFrontend {
 
         $form = $this->getForm('widgets_rows', [$do]);
 
-        $row_scheme_options = cmsEventsManager::hookAll('admin_row_scheme_options_'.$row['template'], [$do, $row, $col]);
+        $row_scheme_options = cmsEventsManager::hookAll('admin_row_scheme_options', [$do, $row, $col]);
 
         if($row_scheme_options){
             foreach ($row_scheme_options as $controller_name => $fields) {

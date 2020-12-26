@@ -4,6 +4,7 @@
 
     define('LANG_USERS_LIST',               'User List');
     define('LANG_USERS_PROFILE',            'User Profile');
+    define('LANG_USERS_RESTRICTIONS',       'Restrictions');
     define('LANG_USERS_SOCIALITY',          'Sociality');
     define('LANG_USERS_EDIT_PROFILE',       'Edit Profile');
     define('LANG_USERS_EDIT_USER',          'Edit User');
@@ -38,6 +39,9 @@
     define('LANG_USERS_OPT_MAX_TABS',       'Maximum number of tabs');
     define('LANG_USERS_OPT_MAX_TABS_HINT',  'Other tabs will be hidden under the «More...» item<br>0 — unlimited number');
     define('LANG_USERS_OPT_AUTH_ONLY',      'Allow to view profiles only to authorized users');
+    define('LANG_USERS_OPT_RESTRICTED_SLUGS', 'Restricted profile adresses');
+    define('LANG_USERS_OPT_RESTRICTED_SLUGS_HINT', 'One address per line, you can use * as a wildcard');
+    define('LANG_USERS_OPT_RESTRICTED_SLUG', 'Profile adress <b>%s</b> is forbidden');
     define('LANG_RULE_USERS_CHANGE_EMAIL',   'Allow email change');
     define('LANG_RULE_USERS_CHANGE_EMAIL_PERIOD', 'Email Change Period, days');
     define('LANG_RULE_USERS_CHANGE_EMAIL_PERIOD_HINT', 'Not specified, can always be changed');
@@ -176,3 +180,4 @@
     define('LANG_SESS_LAST_DATE',  'Last activity');
     define('LANG_SESS_TYPE',  'Access type');
     define('LANG_SESSIONS_HINT',  'It shows the sessions with active access authorization when you set the checkbox "Remember me" or sessions with a mobile application. You can at any time to terminate any of the sessions.');
+    define('LANG_USERS_SLUG',  'Your page URL');

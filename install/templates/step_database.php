@@ -8,17 +8,17 @@
 
         <div class="field">
             <label><?php echo LANG_DATABASE_HOST; ?></label>
-            <input type="text" class="input input-icon icon-db-server" name="db[host]" value="<?php echo isset($cfg['db_host']) ? htmlspecialchars($cfg['db_host']) : 'localhost'; ?>" />
+            <input type="text" autocomplete="off" class="input input-icon icon-db-server" name="db[host]" value="<?php echo !empty($cfg['db_host']) ? htmlspecialchars($cfg['db_host']) : 'localhost'; ?>" />
         </div>
 
         <div class="field">
             <label><?php echo LANG_DATABASE_USER; ?></label>
-            <input type="text" class="input input-icon icon-user" name="db[user]" value="<?php echo isset($cfg['db_user']) ? htmlspecialchars($cfg['db_user']) : ''; ?>" />
+            <input type="text" autocomplete="off" class="input input-icon icon-user" name="db[user]" value="<?php echo !empty($cfg['db_user']) ? htmlspecialchars($cfg['db_user']) : ''; ?>" />
         </div>
 
         <div class="field">
             <label><?php echo LANG_DATABASE_PASS; ?></label>
-            <input type="password" class="input input-icon icon-password" name="db[pass]" value="<?php echo isset($cfg['db_pass']) ? htmlspecialchars($cfg['db_pass']) : ''; ?>" />
+            <input type="password" autocomplete="off" class="input input-icon icon-password" name="db[pass]" value="<?php echo !empty($cfg['db_pass']) ? htmlspecialchars($cfg['db_pass']) : ''; ?>" />
         </div>
 
         <div class="field">
@@ -33,7 +33,7 @@
                     <?php } ?>
                 </select>
             <?php } else { ?>
-                <input type="text" class="input input-icon icon-db" name="db[base]" value="<?php echo isset($cfg['db_base']) ? htmlspecialchars($cfg['db_base']) : ''; ?>" />
+                <input type="text" autocomplete="off" class="input input-icon icon-db" name="db[base]" value="<?php echo !empty($cfg['db_base']) ? htmlspecialchars($cfg['db_base']) : ''; ?>" />
             <?php } ?>
         </div>
 
@@ -56,7 +56,7 @@
 
         <div class="field">
             <label><?php echo LANG_DATABASE_PREFIX; ?></label>
-            <input type="text" class="input input-icon icon-db-prefix" name="db[prefix]" value="<?php echo isset($cfg['db_prefix']) ? htmlspecialchars($cfg['db_prefix']) : 'cms_'; ?>" />
+            <input autocomplete="off" type="text" class="input input-icon icon-db-prefix" name="db[prefix]" value="<?php echo !empty($cfg['db_prefix']) ? htmlspecialchars($cfg['db_prefix']) : 'cms_'; ?>" />
         </div>
 
         <div class="field">
@@ -75,7 +75,7 @@
                 </label>
             </div>
 
-            <input type="text" class="input input-icon icon-db-table" id="users_table" name="db[users_table]" value="cms_users" style="display:none" />
+            <input autocomplete="off" type="text" class="input input-icon icon-db-table" id="users_table" name="db[users_table]" value="cms_users" style="display:none" />
 
         </div>
 
@@ -94,4 +94,3 @@
 <div class="buttons">
     <input type="button" name="next" id="btn-next" value="<?php echo LANG_NEXT; ?>" onclick="submitStep()" />
 </div>
-

@@ -99,6 +99,10 @@ icms.dynamicList = function(field_id, element_name, current_values, fields_mappi
                 if (data.field_value !== false) {
                     $('.value input', list_template).val(data.field_value);
                 }
+                var placeholder = $('.key_items_list option[value="'+field+'"]', wrap).data('placeholder');
+                if(placeholder){
+                    $('.value input', list_template).attr('placeholder', placeholder);
+                }
 
             } else {
                 $('.value input', list_template).remove();

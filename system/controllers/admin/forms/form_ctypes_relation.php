@@ -63,7 +63,7 @@ class formAdminCtypesRelation extends cmsForm {
                         'generator' => function($item, $request) use($content_model) {
                             $list     = ['0' => ''];
                             $ctype_id = is_array($item) ? array_value_recursive('child_ctype_id', $item) : false;
-                            if (!$ctype_id && $request) {
+                            if ($request) {
                                 $ctype_id = $request->get('child_ctype_id', '');
                             }
                             if (!$ctype_id) {

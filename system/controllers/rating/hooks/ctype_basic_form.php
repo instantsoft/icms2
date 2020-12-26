@@ -33,16 +33,24 @@ class onRatingCtypeBasicForm extends cmsAction {
 
         $form->addField($fieldset, new fieldCheckbox('options:rating_is_in_item', array(
             'title' => LANG_CP_FIELD_IN_ITEM,
-            'default' => true
+            'default' => true,
+            'visible_depend' => array('is_rating' => array('show' => array('1')))
         )));
 
         $form->addField($fieldset, new fieldCheckbox('options:rating_is_in_list', array(
             'title' => LANG_CP_FIELD_IN_LIST,
-            'default' => true
+            'default' => true,
+            'visible_depend' => array('is_rating' => array('show' => array('1')))
+        )));
+
+        $form->addField($fieldset, new fieldCheckbox('options:rating_is_average', array(
+            'title' => LANG_RATING_IS_AVERAGE,
+            'hint' => LANG_RATING_IS_AVERAGE_HINT,
+            'default' => true,
+            'visible_depend' => array('is_rating' => array('show' => array('1')), 'options:rating_template' => array('hide' => array('widget')))
         )));
 
         return $form;
-
     }
 
 }

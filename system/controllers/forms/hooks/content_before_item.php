@@ -20,8 +20,12 @@ class onFormsContentBeforeItem extends cmsAction {
             }
 
             if (!empty($item[$field['name']])) {
-                $fields[$field['name']]['html'] = $this->parseShortcode($field['html']);
+                $fields[$field['name']]['html'] = $this->parseShortcode($field['html'], $item);
             }
+        }
+
+        if ($ctype['item_append_html']){
+            $ctype['item_append_html'] = $this->parseShortcode($ctype['item_append_html'], $item);
         }
 
         return [$ctype, $item, $fields];

@@ -43,7 +43,7 @@
 }
 
 .redactor_box_fullscreen {
-  z-index: 99 !important;
+  z-index: 9999 !important;
 }
 #redactor_modal_overlay,
 #redactor_modal,
@@ -105,44 +105,42 @@ body .redactor_box_fullscreen {
   width: 100%;
 }
 .redactor_editor {
-  position: relative;
-  overflow: auto;
-  margin: 0 !important;
-  padding: $input-padding-y $input-padding-x;
-  outline: none;
-  background: none;
-  background: $white;
-  box-shadow: none !important;
-  white-space: normal;
-  border: 1px solid $gray-400;
-  box-sizing: border-box;
-  word-break: break-word;
+    position: relative;
+    overflow: auto;
+    margin: 0 !important;
+    padding: $input-padding-y $input-padding-x;
+    outline: none;
+    background: none;
+    background: $white;
+    box-shadow: none !important;
+    white-space: normal;
+    border: 1px solid $gray-400;
+    box-sizing: border-box;
+    word-break: break-word;
+    &:focus {
+        outline: none;
+    }
+    .redactor_placeholder {
+        color: $gray-400 !important;
+        display: block !important;
+    }
+    > *:first-child {
+        margin-top: 0;
+    }
+    /*
+        TYPOGRAPHY
+    */
+    object, embed, video, img {
+        max-width: 100%;
+        width: auto;
+    }
+    video, img {
+        height: auto;
+    }
+    code {
+        white-space: pre;
+    }
 }
-.redactor_editor:focus {
-  outline: none;
-}
-.redactor_editor .redactor_placeholder {
-  color: $gray-400 !important;
-  display: block !important;
-}
-.redactor_editor > *:first-child {
-  margin-top: 0;
-}
-/*
-	TYPOGRAPHY
-*/
-.redactor_editor object,
-.redactor_editor embed,
-.redactor_editor video,
-.redactor_editor img {
-  max-width: 100%;
-  width: auto;
-}
-.redactor_editor video,
-.redactor_editor img {
-  height: auto;
-}
-
 
 /*
 	TOOLBAR
@@ -563,6 +561,14 @@ body .redactor_air .redactor_toolbar {
   background: $white;
   color: $black;
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+}
+@include media-breakpoint-down(md) {
+    #redactor_modal {
+      max-width: 100% !important;
+      width: 100% !important;
+      margin-left: 0 !important;
+      left: 0 !important;
+    }
 }
 #redactor_modal header {
   padding: $modal-inner-padding $modal-inner-padding 0 $modal-inner-padding;

@@ -16,6 +16,40 @@ class formAdminSettings extends cmsForm {
             $open_basedir_hint = LANG_CP_SETTINGS_SESSIONS_BASEDIR.implode(' '.LANG_OR.' ', $open_basedirs);
         }
 
+        $frontend_templates = [];
+        $backend_templates = [];
+
+        $tpls = cmsCore::getTemplates();
+
+        if ($tpls) {
+            foreach ($tpls as $tpl) {
+
+                $template_path = cmsConfig::get('root_path') . cmsTemplate::TEMPLATE_BASE_PATH. $tpl;
+
+                $manifest = cmsTemplate::getTemplateManifest($template_path);
+
+                if($manifest !== null){
+
+                    if (!empty($manifest['properties']['is_frontend'])) {
+                        $frontend_templates[$tpl] = !empty($manifest['title']) ? $manifest['title'] : $tpl;
+                    }
+                    if (!empty($manifest['properties']['is_backend'])) {
+                        $backend_templates[$tpl] = !empty($manifest['title']) ? $manifest['title'] : $tpl;
+                    }
+
+                    continue;
+                }
+                // Нет манифестов, делаем по старинке
+                if(file_exists($template_path .'/main.tpl.php')){
+                    $frontend_templates[$tpl] = $tpl;
+                }
+                if(file_exists($template_path .'/admin.tpl.php')){
+                    $backend_templates[$tpl] = $tpl;
+                }
+            }
+        }
+
+
         return array(
 
             array(
@@ -150,69 +184,25 @@ class formAdminSettings extends cmsForm {
                     new fieldList('template', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE,
                         'hint' => '<a class="theme_settings theme_settings_options" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a><a class="theme_settings inthemer" target="_blank" href="https://addons.instantcms.ru/addons/inthemer.html">'.LANG_CP_SETTINGS_TEMPLATE_INTH.'</a>',
-                        'generator' => function($item) {
-                            $tpls = cmsCore::getTemplates();
-                            $items = array();
-                            if ($tpls) {
-                                foreach ($tpls as $tpl) {
-                                    if(file_exists(cmsConfig::get('root_path') . cmsTemplate::TEMPLATE_BASE_PATH. $tpl .'/main.tpl.php')){
-                                        $items[$tpl] = $tpl;
-                                    }
-                                }
-                            }
-                            return $items;
-                        }
+                        'items' => $frontend_templates
                     )),
 
                     new fieldList('template_admin', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE_ADMIN,
                         'hint' => '<a class="theme_settings theme_settings_options" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
-                        'generator' => function($item) {
-                            $tpls = cmsCore::getTemplates();
-                            $items = array(''=>LANG_BY_DEFAULT);
-                            if ($tpls) {
-                                foreach ($tpls as $tpl) {
-                                    if(file_exists(cmsConfig::get('root_path') . cmsTemplate::TEMPLATE_BASE_PATH. $tpl .'/admin.tpl.php')){
-                                        $items[$tpl] = $tpl;
-                                    }
-                                }
-                            }
-                            return $items;
-                        }
+                        'items' => ['' => LANG_BY_DEFAULT] + $backend_templates
                     )),
 
                     new fieldList('template_mobile', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE_MOBILE,
                         'hint' => '<a class="theme_settings theme_settings_options" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
-                        'generator' => function($item) {
-                            $tpls = cmsCore::getTemplates();
-                            $items = array(''=>LANG_BY_DEFAULT);
-                            if ($tpls) {
-                                foreach ($tpls as $tpl) {
-                                    if(file_exists(cmsConfig::get('root_path') . cmsTemplate::TEMPLATE_BASE_PATH. $tpl .'/main.tpl.php')){
-                                        $items[$tpl] = $tpl;
-                                    }
-                                }
-                            }
-                            return $items;
-                        }
+                        'items' => ['' => LANG_BY_DEFAULT] + $frontend_templates
                     )),
 
                     new fieldList('template_tablet', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE_TABLET,
                         'hint' => '<a class="theme_settings theme_settings_options" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
-                        'generator' => function($item) {
-                            $tpls = cmsCore::getTemplates();
-                            $items = array(''=>LANG_BY_DEFAULT);
-                            if ($tpls) {
-                                foreach ($tpls as $tpl) {
-                                    if(file_exists(cmsConfig::get('root_path') . cmsTemplate::TEMPLATE_BASE_PATH. $tpl .'/main.tpl.php')){
-                                        $items[$tpl] = $tpl;
-                                    }
-                                }
-                            }
-                            return $items;
-                        }
+                        'items' => ['' => LANG_BY_DEFAULT] + $frontend_templates
                     )),
 
                     new fieldList('language', array(
