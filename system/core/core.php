@@ -750,6 +750,8 @@ class cmsCore {
      */
     public function runController(){
 
+        cmsDebugging::pointStart('controller');
+
         $this->defineController();
 
         if (!preg_match('/^[a-z]{1}[a-z0-9_]*$/', $this->controller)){
@@ -777,6 +779,12 @@ class cmsCore {
 
         // запускаем действие
         $controller->runAction($this->uri_action, $this->uri_params);
+
+        cmsDebugging::pointProcess('controller', array(
+            'data'         => 'Run controller \''.$controller->title.'\' -> /system/controllers/'.$controller->name,
+            'x_name'       => $controller->title,
+            'x_controller' => $controller->name
+        ), 0);
 
     }
 
@@ -885,11 +893,15 @@ class cmsCore {
 
                 cmsDebugging::pointStart('widgets');
 
-                $this->runWidget($widget);
+                $result = $this->runWidget($widget);
 
-                cmsDebugging::pointProcess('widgets', function () use($widget) {
+                cmsDebugging::pointProcess('widgets', function () use($widget, $result) {
                     return [
-                        'data' => $widget['title'] . ' => /system/' . cmsCore::getWidgetPath($widget['name'], $widget['controller']) . '/widget.php'
+                        'data' => $widget['title'] . ' => /system/' . cmsCore::getWidgetPath($widget['name'], $widget['controller']) . '/widget.php',
+                        'x_name'       => $widget['name'],
+                        'x_controller' => $widget['controller'],
+                        'x_data'       => $widget,
+                        'x_result'     => $result
                     ];
                 }, 0);
             }

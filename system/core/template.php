@@ -222,6 +222,8 @@ class cmsTemplate {
 
     public function __construct($name = '') {
 
+        cmsDebugging::pointStart('template');
+
         $this->site_config = cmsConfig::getInstance();
 
         if ($name) {
@@ -260,6 +262,14 @@ class cmsTemplate {
             $this->metakeys = $this->site_config->metakeys;
             $this->metadesc = $this->site_config->metadesc;
         }
+
+        cmsDebugging::pointProcess('template', array(
+            'data'         => 'Template initialization => /templates/'.$this->name.'/'.$this->layout.'.tpl.php',
+            'x_name'       => $this->layout,
+            'x_controller' => $this->name,
+            'x_action'     => 'Initialization',
+            'x_data'       => '/templates/'.$this->name.'/'.$this->layout.'.tpl.php'
+        ));
     }
 
     /**
@@ -2294,7 +2304,11 @@ class cmsTemplate {
 
         cmsDebugging::pointProcess('template', function () use($tpl_file) {
             return [
-                'data' => $this->controller->name.' :: '.$this->name.' :: processRender => '.str_replace($this->site_config->root_path, '', $tpl_file)
+                'data'         => $this->controller->name.' :: '.$this->name.' :: processRender => '.str_replace($this->site_config->root_path, '', $tpl_file),
+                'x_name'       => $this->name,
+                'x_controller' => $this->controller->name,
+                'x_action'     => 'processRender',
+                'x_data'       => '/'.str_replace($this->site_config->root_path, '', $tpl_file)
             ];
         }, 2);
 
@@ -2351,7 +2365,11 @@ class cmsTemplate {
 
         cmsDebugging::pointProcess('template', function () use($tpl_file, $controller_name) {
             return [
-                'data' => $controller_name.' :: '.$this->name.' :: renderControllerChild => '.str_replace($this->site_config->root_path, '', $tpl_file)
+                'data'         => $controller_name.' :: '.$this->name.' :: renderControllerChild => '.str_replace($this->site_config->root_path, '', $tpl_file),
+                'x_name'       => $this->name,
+                'x_controller' => $controller_name,
+                'x_action'     => 'renderControllerChild',
+                'x_data'       => '/'.str_replace($this->site_config->root_path, '', $tpl_file)
             ];
         }, 2);
     }
@@ -2724,7 +2742,11 @@ class cmsTemplate {
 
         cmsDebugging::pointProcess('template', function () use($tpl_file) {
             return [
-                'data' => $this->name . ' :: renderAsset => ' . str_replace($this->site_config->root_path, '', $tpl_file)
+                'data'         => $this->name . ' :: renderAsset => ' . str_replace($this->site_config->root_path, '', $tpl_file),
+                'x_name'       => $this->name,
+                'x_controller' => '',
+                'x_action'     => 'renderAsset',
+                'x_data'       => '/'.str_replace($this->site_config->root_path, '', $tpl_file)
             ];
         }, 3);
 
@@ -2989,6 +3011,8 @@ class cmsTemplate {
      */
     public function renderPage(){
 
+        cmsDebugging::pointStart('template');
+
         $core = cmsCore::getInstance();
 
         $config = $this->site_config;
@@ -3025,6 +3049,14 @@ class cmsTemplate {
         } else {
             cmsCore::error(ERR_TEMPLATE_NOT_FOUND. ': '. $this->name.':'.$layout);
         }
+
+        cmsDebugging::pointProcess('template', array(
+            'data'         => 'Page rendering => /templates/'.$this->name.'/'.$layout.'.tpl.php',
+            'x_name'       => $layout,
+            'x_controller' => $this->name,
+            'x_action'     => 'renderPage',
+            'x_data'       => '/templates/'.$this->name.'/'.$layout.'.tpl.php'
+        ));
 
     }
 
@@ -3079,7 +3111,11 @@ class cmsTemplate {
 
         cmsDebugging::pointProcess('template', function () use($tpl_file, $widget) {
             return [
-                'data' => ($widget->controller ? $widget->controller . ' :: ' : '') . $widget->name . ' :: ' . $this->name . ' :: renderWidget => ' . str_replace($this->site_config->root_path, '', $tpl_file)
+                'data'         => ($widget->controller ? $widget->controller . ' :: ' : '') . $widget->name . ' :: ' . $this->name . ' :: renderWidget => ' . str_replace($this->site_config->root_path, '', $tpl_file),
+                'x_name'       => $this->name,
+                'x_controller' => $widget->controller,
+                'x_action'     => 'renderWidget',
+                'x_data'       => '/'.str_replace($this->site_config->root_path, '', $tpl_file)
             ];
         }, 1);
 

@@ -6,6 +6,13 @@
  *
  */
 
+// Массив времени старта и начальной памяти системы для отладки
+$debug_start_data = array(
+    'time'        => microtime(true),
+    'memory'      => memory_get_usage(),
+    'memory_real' => memory_get_usage(true)
+);
+
 // Определяем корень
 define('PATH', dirname(__FILE__));
 
@@ -42,7 +49,8 @@ if(!$config->debug){
     error_reporting(E_ALL);
 
     // включаем отладку
-    cmsDebugging::enable();
+    if (isset($config->debug_mode)) { autoLoadCoreClass($config->debug_mode, true); }
+    cmsDebugging::enable($debug_start_data);
 
 }
 

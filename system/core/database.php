@@ -29,6 +29,12 @@ class cmsDatabase {
     private $mysqli;
 
     /**
+     * Значение поля AUTO_INCREMENT, которое было затронуто предыдущим запросом
+     * @var integer
+     */
+    private $insert_id;
+
+    /**
      * Время соединения с базой
      * @var integer
      */
@@ -147,7 +153,13 @@ class cmsDatabase {
 
         if (!empty($this->options['debug'])){
             cmsDebugging::pointProcess('db', array(
-                'data' => 'Database connection'
+                'data'     => 'Database connection',
+                'x_action' => 'connect',
+                'x_data'   => array(
+                    'db_host' => $this->options['db_host'],
+                    'db_base' => $this->options['db_base'],
+                    'db_user' => $this->options['db_user']
+                )
             ), 3);
         }
 
@@ -312,9 +324,20 @@ class cmsDatabase {
 
         $result = $this->mysqli->query($sql);
 
+        $this->insert_id = $this->mysqli->insert_id;
+
         if (!empty($this->options['debug'])){
+
             cmsDebugging::pointProcess('db', array(
-                'data' => $sql
+                'data'     => $sql,
+                'x_action' => 'query',
+                'x_data'   => array(
+                    'affected_rows' => $this->mysqli->affected_rows,
+                    'info'          => $this->mysqli->info,
+                    'warnings'      => ( $this->mysqli->warning_count ? $this->mysqli->get_warnings() : '')
+                ),
+                'x_result' => $result,
+                'x_error'  => ( $this->mysqli->errno ? ['errno' => $this->mysqli->errno, 'errmsg' => $this->mysqli->error] : '' ),
             ));
         }
 
@@ -373,7 +396,7 @@ class cmsDatabase {
 	 * @return integer
 	 */
 	public function lastId(){
-		return $this->mysqli->insert_id;
+		return $this->insert_id;
 	}
 
     /**

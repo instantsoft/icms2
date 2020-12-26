@@ -36,15 +36,22 @@ class cmsEventsManager {
 
         }
 
+        cmsDebugging::pointStart('x_events');
+
         //получаем все активные контроллеры, привязанные к указанному событию
         $listeners = self::getEventListeners($event_name);
 
         //если активных контроллеров нет, возвращаем данные без изменений
         if (!$listeners) {
 
-            cmsDebugging::pointProcess('events_empty', array(
-                'data' => 'hook => '.$event_name
-            ), 1);
+            cmsDebugging::pointProcess('events_empty', function () use($event_name, $data) {
+                return [
+                    'data'     => 'hook => '.$event_name,
+                    'x_name'   => $event_name,
+                    'x_action' => 'hook',
+                    'x_data'   => $data
+                ];
+            }, 1);
 
             return is_null($default_return) ? $data : $default_return;
 
@@ -63,13 +70,31 @@ class cmsEventsManager {
 
             cmsDebugging::pointStart('events');
 
-                $data = $controller->runHook($event_name, array($data));
+            $dbg_data = $data;
 
-            cmsDebugging::pointProcess('events', array(
-                'data' => 'hook :: '.$listener.' => '.$event_name
-            ), 1);
+            $data = $controller->runHook($event_name, array($data));
+
+            cmsDebugging::pointProcess('events', function () use($event_name, $listener, $data, $dbg_data) {
+                return [
+                    'data'         => 'hook :: '.$listener.' => '.$event_name,
+                    'x_name'       => $event_name,
+                    'x_controller' => $listener,
+                    'x_action'     => 'hook',
+                    'x_data'       => $dbg_data,
+                    'x_result'     => $data
+                ];
+            }, 1);
 
         }
+
+        cmsDebugging::pointProcess('x_events', function () use($event_name, $data) {
+            return [
+                'data'     => 'event :: '.$event_name,
+                'x_name'   => $event_name,
+                'x_action' => 'hook',
+                'x_data'   => $data
+            ];
+        });
 
         return $data;
 
@@ -88,15 +113,22 @@ class cmsEventsManager {
      */
     public static function hookAll($event_name, $data = false, $default_return = null, $_request = false){
 
+        cmsDebugging::pointStart('x_events');
+
         //получаем все активные контроллеры, привязанные к указанному событию
         $listeners = self::getEventListeners($event_name);
 
         //если активных контроллеров нет, возвращаем данные без изменений
         if (!$listeners) {
 
-            cmsDebugging::pointProcess('events_empty', array(
-                'data' => 'hookAll => '.$event_name
-            ), 1);
+            cmsDebugging::pointProcess('events_empty', function () use($event_name, $data) {
+                return [
+                    'data'     => 'hookAll => '.$event_name,
+                    'x_name'   => $event_name,
+                    'x_action' => 'hookAll',
+                    'x_data'   => $data
+                ];
+            }, 1);
 
             return is_null($default_return) ? false : $default_return;
 
@@ -119,17 +151,33 @@ class cmsEventsManager {
 
             cmsDebugging::pointStart('events');
 
-                $result = $controller->runHook($event_name, array($data));
+            $result = $controller->runHook($event_name, array($data));
 
-                if ($result !== false){
-                    $results[$listener] = $result;
-                }
+            if ($result !== false){
+                $results[$listener] = $result;
+            }
 
-            cmsDebugging::pointProcess('events', array(
-                'data' => 'hookAll :: '.$listener.' => '.$event_name
-            ), 1);
+            cmsDebugging::pointProcess('events', function () use($event_name, $listener, $data, $result) {
+                return [
+                    'data'         => 'hookAll :: '.$listener.' => '.$event_name,
+                    'x_name'       => $event_name,
+                    'x_controller' => $listener,
+                    'x_action'     => 'hookAll',
+                    'x_data'       => $data,
+                    'x_result'     => $result
+                ];
+            }, 1);
 
         }
+
+        cmsDebugging::pointProcess('x_events', function () use($event_name, $data) {
+            return [
+                'data'     => 'event :: '.$event_name,
+                'x_name'   => $event_name,
+                'x_action' => 'hookAll',
+                'x_data'   => $data
+            ];
+        });
 
         return $results;
 

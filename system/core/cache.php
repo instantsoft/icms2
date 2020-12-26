@@ -59,22 +59,46 @@ class cmsCache {
 
     private function _set($key, $value, $ttl=false){
 
+        cmsDebugging::pointStart('cache');
+
         if (!$ttl) { $ttl = $this->cache_ttl; }
 
-        return $this->cacher->set($key, $value, $ttl);
+        $result = $this->cacher->set($key, $value, $ttl);
+
+        cmsDebugging::pointProcess('cache', array(
+            'data'     => 'set => '.$key,
+            'x_name'   => $key,
+            'x_action' => 'set',
+            'x_data'   => $value,
+            'x_result' => $result
+        ), 5);
+
+        return $result;
 
     }
 
     private function _get($key){
 
-        if (!$this->cacher->has($key)){ return false; }
-
         cmsDebugging::pointStart('cache');
+
+        if ($this->cacher->has($key)) {
 
             $value = $this->cacher->get($key);
 
+        } else {
+
+            $value = false;
+
+            $error  = 'Key not found';
+
+        }
+
         cmsDebugging::pointProcess('cache', array(
-            'data' => $key
+            'data'     => 'get => '.$key,
+            'x_name'   => $key,
+            'x_action' => 'get',
+            'x_result' => $value,
+            'x_error'  => ( isset($error) ? $error : '' ),
         ), 5);
 
         return $value;

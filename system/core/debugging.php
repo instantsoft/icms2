@@ -4,9 +4,11 @@ class cmsDebugging {
 
     const DECIMALS = 5;
 
-    private static $is_enable   = false;
-    private static $start_time  = [];
-    private static $points_data = [];
+    private static $is_enable     = false;
+    private static $start_time    = [];
+    private static $points_data   = [];
+
+    private static $types_allowed = ['db', 'events_empty', 'events', 'widgets', 'template', 'cache']; // Разрешить учёт этих типов событий
 
     public static function enable() {
 
@@ -22,6 +24,8 @@ class cmsDebugging {
     public static function pointProcess($target, $params, $offset = 2) {
 
         if (!self::$is_enable) { return false; }
+
+        if(!in_array($target, self::$types_allowed)){ return false; }
 
         $backtrace = debug_backtrace();
 
