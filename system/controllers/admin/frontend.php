@@ -1073,9 +1073,12 @@ class admin extends cmsFrontend {
             }else
             if(in_array($field['type'], ['list', 'listbitmask', 'listmultiple'])){
                 $items[$type][$key]['handlers_only'] = '&mdash;';
-                $items[$type][$key]['handler_only'] = function($value, $item)use($field){
+                $items[$type][$key]['handler_only'] = function($value, $item)use($field,$ctype){
                     if(!$value){return '';}
-                    return $field['handler']->parse($value);
+                    $item['ctype'] = $ctype;
+                    $item['ctype_name'] = $ctype['name'];
+                    $field['handler']->setItem($item);
+                    return $field['handler']->parseTeaser($value);
                 };
             }else
             if($field['handler']->is_denormalization){

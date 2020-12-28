@@ -38,7 +38,7 @@ if($ctype['options']['list_show_filter']) {
 
                     <?php if ($field['label_pos'] != 'none'){ ?>
                         <div class="title_<?php echo $field['label_pos']; ?>">
-                            <?php echo $field['title'] . ($field['label_pos']=='left' ? ': ' : ''); ?>
+                            <?php echo string_replace_svg_icons($field['title']) . ($field['label_pos']=='left' ? ': ' : ''); ?>
                         </div>
                     <?php } ?>
 

@@ -15,6 +15,11 @@
         'href'  => "javascript:icms.forms.submit()"
     ));
     $this->addToolButton(array(
+        'class' => 'save',
+        'title' => sprintf(LANG_CP_SUBMIT_COMPILE, 'SCSS'),
+        'href'  => "javascript:icms.forms.submit('.button.submit_compile')"
+    ));
+    $this->addToolButton(array(
         'class' => 'cancel',
         'title' => LANG_CANCEL,
         'href'  => $this->href_to('settings')
@@ -32,5 +37,15 @@
 
     $this->renderForm($form, $options, array(
         'action' => '',
+        'buttons' => [
+            array(
+                'title' => sprintf(LANG_CP_SUBMIT_COMPILE, 'SCSS'),
+                'name' => 'submit_compile',
+                'attributes' => array(
+                    'type' => 'submit',
+                    'class' => 'btn-success submit_compile'
+                )
+            )
+        ],
         'method' => 'post'
     ), $errors);

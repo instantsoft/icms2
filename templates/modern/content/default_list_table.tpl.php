@@ -35,7 +35,7 @@
             <tr>
                 <?php foreach($first_item['fields_names'] as $field){ ?>
                     <th <?php if ($field['label_pos'] === 'none') { ?>class="d-none d-lg-table-cell"<?php } ?>>
-                        <?php echo $field['label_pos'] !== 'none' ? $field['title'] : ''; ?>
+                        <?php echo $field['label_pos'] !== 'none' ? string_replace_svg_icons($field['title']) : ''; ?>
                     </th>
                 <?php } ?>
                 <?php if (!empty($first_item['info_bar'])){ ?>

@@ -889,7 +889,11 @@ class cmsCore {
 
                 cmsDebugging::pointProcess('widgets', function () use($widget) {
                     return [
-                        'data' => $widget['title'] . ' => /system/' . cmsCore::getWidgetPath($widget['name'], $widget['controller']) . '/widget.php'
+                        'data' => $widget['title'] . ' => /system/' . cmsCore::getWidgetPath($widget['name'], $widget['controller']) . '/widget.php',
+                        'context' => [
+                            'target' => $widget['controller'],
+                            'subject' => $widget['name']
+                        ]
                     ];
                 }, 0);
             }

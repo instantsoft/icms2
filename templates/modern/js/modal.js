@@ -38,7 +38,7 @@ icms.modal = (function ($) {
         $(modal_el).modal('show');
         var parent = $(selector).parent();
         var content = $(selector).detach();
-        self.showContent(title, $(content).html(), style);
+        self.showContent(title, $(content).clone(true).removeClass('d-none').show(), style);
         $(modal_el).on('hidden.bs.modal', function (e) {
             content.appendTo(parent);
         });

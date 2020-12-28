@@ -52,7 +52,7 @@ class onContentFulltextSearch extends cmsAction {
 
                 }
 
-                if ($field['type'] == 'image' &&
+                if (!isset($select_fields[$ctype['name']]['image']) && $field['type'] == 'image' &&
                         !$field['is_private'] &&
                         (!$field['groups_read'] || $this->cms_user->isInGroups($field['groups_read']))){
                     $select_fields[$ctype['name']]['image'] = $field['name'];

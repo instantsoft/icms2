@@ -11,7 +11,9 @@ class actionAdminSettingsTheme extends cmsAction {
 
         $options = $template->getOptions();
 
-        if ($this->request->has('submit')){
+        $is_submitted = $this->request->has('submit') || $this->request->has('submit_compile');
+
+        if ($is_submitted){
 
             // Парсим форму и получаем поля записи
             $options = $form->parse($this->request, true, $options);
@@ -24,17 +26,21 @@ class actionAdminSettingsTheme extends cmsAction {
                 list($template_name, $options) = cmsEventsManager::hook('template_before_save_options', [$template_name, $options]);
                 $options = cmsEventsManager::hook('template_'.$template_name.'_before_save_options', $options);
 
-                // Если шаблон поддерживает SCSS, компилируем
-                $manifest = $template->getManifest();
-                if($manifest !== null && !empty($manifest['properties']['style_middleware'])){
+                // Если нужно компилировать и шаблон поддерживает SCSS, компилируем
+                if($this->request->has('submit_compile')){
 
-                    $renderer = cmsCore::getController('renderer', new cmsRequest([
-                        'middleware' => $manifest['properties']['style_middleware']
-                    ]), cmsRequest::CTX_INTERNAL);
+                    $manifest = $template->getManifest();
 
-                    $renderer->cms_template = $template;
+                    if($manifest !== null && !empty($manifest['properties']['style_middleware'])){
 
-                    $renderer->render($template_name, $options);
+                        $renderer = cmsCore::getController('renderer', new cmsRequest([
+                            'middleware' => $manifest['properties']['style_middleware']
+                        ]), cmsRequest::CTX_INTERNAL);
+
+                        $renderer->cms_template = $template;
+
+                        $renderer->render($template_name, $options);
+                    }
                 }
 
                 if($template->saveOptions($options)){
