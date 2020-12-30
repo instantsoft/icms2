@@ -5,7 +5,7 @@
 
 <form id="<?php html($attributes['form_id']); ?>" action="<?php echo $attributes['action']; ?>"
       method="<?php echo $attributes['method']; ?>"
-      class="<?php if ($this->controller->request->isAjax()){ ?>ajax-form<?php } ?>"
+      class="<?php html($attributes['form_class']); ?><?php if ($this->controller->request->isAjax()){ ?> ajax-form<?php } ?>"
       enctype="multipart/form-data"
       accept-charset="utf-8">
 

@@ -67,7 +67,7 @@ class cmsCache {
             'data' => $this->cacher_name.' => set => '.$key,
             'context' => [
                 'target' => $this->cacher_name,
-                'subject' => 'set'
+                'subject' => $key
             ]
         ], 5);
 
@@ -88,7 +88,7 @@ class cmsCache {
             'data' => $this->cacher_name.' => get => '.$key,
             'context' => [
                 'target' => $this->cacher_name,
-                'subject' => 'get'
+                'subject' => $key
             ]
         ], 5);
 

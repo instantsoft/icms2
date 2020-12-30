@@ -2392,6 +2392,7 @@ class cmsTemplate {
             'append_html'  => '',
             'prepend_html' => '',
             'form_id'      => md5(microtime(true)),
+            'form_class'   => '',
             'method'       => 'post'
         ], $attributes);
 

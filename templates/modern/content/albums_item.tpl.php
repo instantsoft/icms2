@@ -65,7 +65,7 @@
 
             <?php if ($is_fields_group) { ?>
                 <div class="fields_group fields_group_<?php echo $ctype['name']; ?>_<?php echo $fieldset_id ?>">
-                    <h3 class="group_title"><?php html($fieldset['title']); ?></h3>
+                    <h3 class="icms-content-fields__group_title"><?php html($fieldset['title']); ?></h3>
             <?php } ?>
 
             <?php if (!empty($fieldset['fields'])) { ?>

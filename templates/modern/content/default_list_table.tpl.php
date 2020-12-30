@@ -17,7 +17,7 @@
     }
 ?>
 <?php if (!$items){ ?>
-    <p class="alert alert-info mt-4" role="alert">
+    <p class="alert alert-info mt-4 alert-list-empty">
         <?php if(!empty($ctype['labels']['many'])){ ?>
             <?php echo sprintf(LANG_TARGET_LIST_EMPTY, $ctype['labels']['many']); ?>
         <?php } else { ?>
