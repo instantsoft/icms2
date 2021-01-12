@@ -424,86 +424,46 @@ class cmsCore {
 
     /**
      * Возвращает массив хуков контроллеров
-     * @param boolean $is_debug Если передано true, то массив формируется из файлов манифестов, иначе - из БД
-     * @param boolean $is_enabled
+     *
+     * @param boolean $is_enabled Только включенные хуки
      * @return array
      */
-    public static function getControllersManifests($is_debug = false, $is_enabled = true){
-
-        if ($is_debug){
-            return self::getManifestsEvents();
-        }
+    public static function getControllersEvents($is_enabled = true) {
 
         $events = [];
 
         $db = cmsDatabase::getInstance();
 
-        if(!$db->ready()){
+        if (!$db->ready()) {
             return $events;
         }
 
-        if($is_enabled){
+        if ($is_enabled) {
             $controllers_events = $db->getRows('events FORCE INDEX (is_enabled)', '`is_enabled` = 1', '*', 'ordering ASC', true);
         } else {
             $controllers_events = $db->getRows('events', '1', '*', 'ordering ASC', true);
         }
 
-        if($controllers_events){
-            foreach($controllers_events as $event){
+        if ($controllers_events) {
+            foreach ($controllers_events as $event) {
                 // для сохранения сортировки + совместимость
-                if(!isset($events[ $event['listener'] ][$event['ordering']])){
-                    $events[ $event['listener'] ][$event['ordering']] = $event['event'];
+                if (!isset($events[$event['listener']][$event['ordering']])) {
+                    $events[$event['listener']][$event['ordering']] = $event['event'];
                 } else {
                     // если вдруг по какой-то причине порядок одинаковый
-                    $events[ $event['listener'] ][intval($event['ordering'].'00'.$event['id'])] = $event['event'];
+                    $events[$event['listener']][intval($event['ordering'] . '00' . $event['id'])] = $event['event'];
                 }
             }
         }
 
         return $events;
-
     }
-
     /**
-     * Возвращает массив хуков контроллеров
-     * Читаются файлы директории hooks контроллера
-     *
-     * @return array
+     * @deprecated
+     * @compatibility
      */
-    public static function getManifestsEvents() {
-
-        $manifests_events = [];
-
-        $controllers = self::getDirsList('system/controllers', true);
-
-        $index = 0;
-
-        foreach ($controllers as $controller_name) {
-
-            $hooks = self::getFilesList('system/controllers/' . $controller_name . '/hooks', '*.php', true, true);
-            if (!$hooks) { continue; }
-
-            $controller_object = self::getController($controller_name);
-
-            foreach ($hooks as $event_name) {
-
-                $hook_class_name = 'on' . string_to_camel('_', $controller_name) . string_to_camel('_', $event_name);
-
-                $hook_object = new $hook_class_name($controller_object);
-
-                // Некоторые хуки не требуют регистрации в базе данных,
-                // Например, хуки для CRON или иные, которые вызываются напрямую
-                // Свойство $disallow_event_db_register в классе хука регулирует это поведение
-                if(empty($hook_object->disallow_event_db_register)){
-
-                    $manifests_events[$controller_name][$index] = $event_name;
-
-                    $index++;
-                }
-            }
-        }
-
-        return $manifests_events;
+    public static function getControllersManifests($is_enabled = true) {
+        return self::getControllersEvents($is_enabled);
     }
 
 //============================================================================//
@@ -601,7 +561,7 @@ class cmsCore {
 
     /**
      * Подключает языковой файл шаблона
-     * @param string|array $template_name
+     * @param string|array $template_names
      * @return bool
      */
     public static function loadTemplateLanguage($template_names){

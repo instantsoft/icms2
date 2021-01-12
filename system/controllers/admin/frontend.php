@@ -690,41 +690,83 @@ class admin extends cmsFrontend {
 
     }
 
+    /**
+     * Возвращает массив хуков контроллеров
+     * Читаются файлы директории hooks контроллера
+     *
+     * @return array
+     */
+    public function getControllersFilesEvents() {
+
+        $events = [];
+
+        $controllers = cmsCore::getDirsList('system/controllers', true);
+
+        $index = 0;
+
+        foreach ($controllers as $controller_name) {
+
+            $hooks = cmsCore::getFilesList('system/controllers/' . $controller_name . '/hooks', '*.php', true, true);
+            if (!$hooks) { continue; }
+
+            $controller_object = cmsCore::getController($controller_name);
+
+            foreach ($hooks as $event_name) {
+
+                $hook_class_name = 'on' . string_to_camel('_', $controller_name) . string_to_camel('_', $event_name);
+
+                $hook_object = new $hook_class_name($controller_object);
+
+                // Некоторые хуки не требуют регистрации в базе данных,
+                // Например, хуки для CRON или иные, которые вызываются напрямую
+                // Свойство $disallow_event_db_register в классе хука регулирует это поведение
+                if(empty($hook_object->disallow_event_db_register)){
+
+                    $events[$controller_name][$index] = $event_name;
+
+                    $index++;
+                }
+            }
+        }
+
+        return $events;
+    }
+
     public function getEventsDifferences($event_controller = false) {
 
-        $result = array(
-            'added'   => array(),
-            'deleted' => array()
-        );
+        $result = [
+            'added'   => [],
+            'deleted' => []
+        ];
 
-        $manifests_events = cmsCore::getManifestsEvents();
-        $database_events  = cmsCore::getControllersManifests(false, false);
+        $manifests_events = $this->getControllersFilesEvents();
+        $database_events  = cmsCore::getControllersEvents(false);
 
-        if($event_controller){
-            if(isset($manifests_events[$event_controller])){
-                $manifests_events = array(
+        if ($event_controller) {
+            if (isset($manifests_events[$event_controller])) {
+                $manifests_events = [
                     $event_controller => $manifests_events[$event_controller]
-                );
+                ];
             } else {
-                $manifests_events = array();
+                $manifests_events = [];
             }
-            if(isset($database_events[$event_controller])){
-                $database_events = array(
+            if (isset($database_events[$event_controller])) {
+                $database_events = [
                     $event_controller => $database_events[$event_controller]
-                );
+                ];
             } else {
-                $database_events = array();
+                $database_events = [];
             }
         }
 
         // добавленные: есть в $manifests_events, нет в $database_events
-        if($manifests_events){
-            foreach ($manifests_events as $controller => $events){
-                foreach ($events as $event){
-                    if(empty($database_events[$controller])){
+        if ($manifests_events) {
+            foreach ($manifests_events as $controller => $events) {
+                foreach ($events as $event) {
+                    if (empty($database_events[$controller])) {
                         $result['added'][$controller][] = $event;
                     }
-                    if(!empty($database_events[$controller]) && !in_array($event, $database_events[$controller])){
+                    if (!empty($database_events[$controller]) && !in_array($event, $database_events[$controller])) {
                         $result['added'][$controller][] = $event;
                     }
                 }
@@ -732,13 +774,13 @@ class admin extends cmsFrontend {
         }
 
         // удалённые: есть в $database_events, нет в $manifests_events
-        if($database_events){
-            foreach ($database_events as $controller => $events){
-                foreach ($events as $event){
-                    if(empty($manifests_events[$controller])){
+        if ($database_events) {
+            foreach ($database_events as $controller => $events) {
+                foreach ($events as $event) {
+                    if (empty($manifests_events[$controller])) {
                         $result['deleted'][$controller][] = $event;
                     }
-                    if(!empty($manifests_events[$controller]) && !in_array($event, $manifests_events[$controller])){
+                    if (!empty($manifests_events[$controller]) && !in_array($event, $manifests_events[$controller])) {
                         $result['deleted'][$controller][] = $event;
                     }
                 }
@@ -746,7 +788,6 @@ class admin extends cmsFrontend {
         }
 
         return $result;
-
     }
 
     public function getWidgetOptionsForm($widget_name, $controller_name = false, $options = false, $template_name = false, $allow_set_cacheable = true){

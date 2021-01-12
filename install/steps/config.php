@@ -67,7 +67,6 @@ function create_config($path, $file){
         'ct_default'			=> 'content',
         'frontpage'             => 'none',
         'debug'					=> 0,
-        'manifest_from_files'   => 0,
         'emulate_lag'			=> '',
         'cache_enabled'			=> 0,
         'cache_method'			=> 'files',

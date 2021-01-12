@@ -182,14 +182,14 @@ class cmsEventsManager {
             return $structure;
         }
 
-        $manifests = cmsCore::getControllersManifests(cmsConfig::get('manifest_from_files'));
-        if (!$manifests) {
+        $events = cmsCore::getControllersEvents();
+        if (!$events) {
             return [];
         }
 
         $structure = [];
 
-        foreach ($manifests as $controller_name => $hooks) {
+        foreach ($events as $controller_name => $hooks) {
 
             if (!cmsController::enabled($controller_name)) {
                 continue;
