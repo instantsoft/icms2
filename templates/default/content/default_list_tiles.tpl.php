@@ -32,7 +32,7 @@
                 <?php if (!empty($item['fields']['photo'])){ ?>
                     <?php $preset = $fields['photo']['options']['size_teaser']; ?>
                     <div class="photo" style="background-image: url(<?php echo html_image_src((empty($item['is_private_item']) ? $item['photo'] : default_images('private', $preset)), $preset, true); ?>);">
-                        <?php if ($fields['date_pub']['is_in_list']){ ?>
+                        <?php if (!empty($fields['date_pub']['is_in_list'])){ ?>
                             <div class="note<?php if(!empty($item['is_new'])){ ?> highlight_new<?php } ?>" title="<?php echo $fields['date_pub']['title']; ?>">
                                 <?php echo $fields['date_pub']['handler']->parse( $item['date_pub'] ); ?>
                             </div>

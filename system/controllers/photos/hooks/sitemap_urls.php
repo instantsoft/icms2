@@ -2,26 +2,29 @@
 
 class onPhotosSitemapUrls extends cmsAction {
 
-    public function run($type){
+    public $disallow_event_db_register = true;
 
-        $urls = array();
+    public function run($type) {
 
-        if ($type != 'photo') { return $urls; }
+        $urls = [];
 
-        $photos = $this->model->limit(false)->getPhotos(0, false, array('title', 'slug'));
+        if ($type !== 'photo') {
+            return $urls;
+        }
 
-        if ($photos){
-            foreach($photos as $photo){
-                $urls[] = array(
+        $photos = $this->model->limit(false)->getPhotos(0, false, ['title', 'slug']);
+
+        if ($photos) {
+            foreach ($photos as $photo) {
+                $urls[] = [
                     'last_modified' => null,
                     'title'         => $photo['title'],
-                    'url'           => href_to_abs($this->name, $photo['slug'].'.html')
-                );
+                    'url'           => href_to_abs($this->name, $photo['slug'] . '.html')
+                ];
             }
         }
 
         return $urls;
-
     }
 
 }

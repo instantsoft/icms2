@@ -215,7 +215,7 @@ class cmsConfig {
 
         if(is_writable($file)){
 
-            if (function_exists('opcache_reset')) { opcache_reset(); }
+            if (function_exists('opcache_reset')) { @opcache_reset(); }
 
             $success = file_put_contents($file, $dump);
         }

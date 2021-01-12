@@ -2,23 +2,27 @@
 
 class onContentSitemapUrls extends cmsAction {
 
-    public function run($ctype_name){
+    public $disallow_event_db_register = true;
 
-        $urls = array();
+    public function run($ctype_name) {
+
+        $urls   = [];
         $action = 'items';
 
-        if (empty($ctype_name)) { return $urls; }
+        if (empty($ctype_name)) {
+            return $urls;
+        }
 
-        if(is_array($ctype_name)){
+        if (is_array($ctype_name)) {
             list($ctype_name, $action) = $ctype_name;
         }
 
-		$ctype = $this->model->getContentTypeByName($ctype_name);
-		if (!$ctype) { return $urls; }
+        $ctype = $this->model->getContentTypeByName($ctype_name);
+        if (!$ctype) { return $urls; }
 
-        if($action == 'items'){
+        if ($action == 'items') {
 
-            if(cmsPermissions::getRuleSubjectPermissions('content', $ctype['name'], 'view_list')){
+            if (cmsPermissions::getRuleSubjectPermissions('content', $ctype['name'], 'view_list')) {
                 return $urls;
             }
 
@@ -27,19 +31,18 @@ class onContentSitemapUrls extends cmsAction {
 
             $items = $this->model->limit(false)->getContentItemsForSitemap($ctype['name']);
 
-            if ($items){
-                foreach($items as $item){
-                    $urls[] = array(
+            if ($items) {
+                foreach ($items as $item) {
+                    $urls[] = [
                         'last_modified' => $item['date_last_modified'],
                         'title'         => $item['title'],
                         'url'           => href_to_abs($ctype['name'], $item['slug'] . '.html')
-                    );
+                    ];
                 }
             }
-
         }
 
-        if($action == 'cats' && $ctype['is_cats']){
+        if ($action == 'cats' && $ctype['is_cats']) {
 
             list($ctype, $this->model) = cmsEventsManager::hook('content_list_sitemap_cats_filter', array($ctype, $this->model));
             list($ctype, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_list_sitemap_cats_filter", array($ctype, $this->model));
@@ -48,20 +51,18 @@ class onContentSitemapUrls extends cmsAction {
 
             $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
 
-            if ($items){
-                foreach($items as $item){
-                    $urls[] = array(
+            if ($items) {
+                foreach ($items as $item) {
+                    $urls[] = [
                         'last_modified' => null,
                         'title'         => $item['title'],
                         'url'           => href_to_abs($base_url, $item['slug'])
-                    );
+                    ];
                 }
             }
-
         }
 
         return $urls;
-
     }
 
 }

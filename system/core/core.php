@@ -466,39 +466,44 @@ class cmsCore {
 
     /**
      * Возвращает массив хуков контроллеров
-     * из файлов манифестов
+     * Читаются файлы директории hooks контроллера
+     *
      * @return array
      */
-    public static function getManifestsEvents(){
+    public static function getManifestsEvents() {
 
         $manifests_events = [];
 
-        $controllers = cmsCore::getDirsList('system/controllers', true);
+        $controllers = self::getDirsList('system/controllers', true);
 
         $index = 0;
 
-        foreach($controllers as $controller_name){
+        foreach ($controllers as $controller_name) {
 
-            $manifest_file = cmsConfig::get('root_path') . 'system/controllers/' . $controller_name . '/manifest.php';
+            $hooks = self::getFilesList('system/controllers/' . $controller_name . '/hooks', '*.php', true, true);
+            if (!$hooks) { continue; }
 
-            if (!is_readable($manifest_file)){ continue; }
+            $controller_object = self::getController($controller_name);
 
-            $manifest = include $manifest_file;
+            foreach ($hooks as $event_name) {
 
-            if (empty($manifest['hooks']) || !is_array($manifest['hooks'])) { continue; }
+                $hook_class_name = 'on' . string_to_camel('_', $controller_name) . string_to_camel('_', $event_name);
 
-            foreach ($manifest['hooks'] as $hook) {
+                $hook_object = new $hook_class_name($controller_object);
 
-                $manifests_events[ $controller_name ][$index] = $hook;
+                // Некоторые хуки не требуют регистрации в базе данных,
+                // Например, хуки для CRON или иные, которые вызываются напрямую
+                // Свойство $disallow_event_db_register в классе хука регулирует это поведение
+                if(empty($hook_object->disallow_event_db_register)){
 
-                $index++;
+                    $manifests_events[$controller_name][$index] = $event_name;
 
+                    $index++;
+                }
             }
-
         }
 
         return $manifests_events;
-
     }
 
 //============================================================================//
@@ -1271,12 +1276,12 @@ class cmsCore {
      * @param bool $is_include Подключать каждый файл?
      * @return array
      */
-    public static function getFilesList($root_dir, $pattern='*.*', $is_strip_ext=false, $is_include=false){
+    public static function getFilesList($root_dir, $pattern = '*.*', $is_strip_ext = false, $is_include = false) {
 
         $config = cmsConfig::getInstance();
 
         $directory = $config->root_path . $root_dir;
-        $pattern = $directory . '/' . $pattern;
+        $pattern   = $directory . '/' . $pattern;
 
         $list = [];
 
@@ -1293,14 +1298,14 @@ class cmsCore {
 
             $file = basename($file);
 
-            if ($is_strip_ext){ $file = pathinfo($file, PATHINFO_FILENAME); }
+            if ($is_strip_ext) {
+                $file = pathinfo($file, PATHINFO_FILENAME);
+            }
 
             $list[] = $file;
-
         }
 
         return $list;
-
     }
 
 //============================================================================//

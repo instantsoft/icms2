@@ -2,6 +2,8 @@
 
 class onContentSubscribeItemUrl extends cmsAction {
 
+    public $disallow_event_db_register = true;
+
     public function run($subscription){
 
         $ctype = $this->model->getContentTypeByName($subscription['subject']);

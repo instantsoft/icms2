@@ -1,14 +1,3 @@
-<?php /*
-<div id="lead-sponsor">
-    <div class="hint">
-        <?php echo LANG_CP_DASHBOARD_LEAD_SPONSOR; ?>
-        <a href="https://instantcms.ru/sponsorship.html">?</a>
-    </div>
-    <a href="">
-        <img src="<?php echo href_to(cmsTemplate::TEMPLATE_BASE_PATH.'default/images/'); ?>">
-    </a>
-</div>
-*/ ?>
 <div class="row mb-3">
     <div class="col-md-6 mb-3 mb-md-0">
         <a class="btn btn-block btn-light" href="https://instantcms.ru/donate.html" target="_blank"><?php echo LANG_CP_DASHBOARD_LINKS_DONATE; ?></a>
@@ -36,7 +25,7 @@
     </h5>
     <p class="m-0 text-light"><?php echo LANG_CP_DASHBOARD_INVIDEO_HINT; ?></p>
 </div>
-<div class="">
+<div>
     <i class="icon-map icons font-2xl float-left mr-3 mt-2"></i>
     <h5 class="mb-1">
         <a class="text-white" href="https://instantcms.ru/blogs/instantsoft/instantmaps-dlja-instantcms-2.html" target="_blank">
@@ -45,3 +34,12 @@
     </h5>
     <p class="m-0 text-light"><?php echo LANG_CP_DASHBOARD_INMAPS_HINT; ?></p>
 </div>
+<hr>
+<?php /*
+<div class="d-flex">
+    <a class="text-white text-decoration-none text-center" href="" target="_blank">
+        <span></span>
+        <span class="d-block"></span>
+    </a>
+</div>
+*/ ?>

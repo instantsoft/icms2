@@ -1,9 +1,9 @@
-<div class="widget_online_list">
+<div class="widget_online_list<?php if ($is_avatars) { ?> d-flex flex-wrap mr-n2 mb-n2<?php } ?>">
     <?php foreach($profiles as $profile) { ?>
         <?php $url = href_to_profile($profile); ?>
 
         <?php if ($is_avatars) { ?>
-            <a href="<?php echo $url; ?>" class="icms-user-avatar <?php if (!empty($profile['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" title="<?php html($profile['nickname']); ?>">
+            <a href="<?php echo $url; ?>" class="icms-user-avatar peer_online mr-2 mb-2" title="<?php html($profile['nickname']); ?>">
             <?php if($profile['avatar']){ ?>
                 <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname']); ?>
             <?php } else { ?>

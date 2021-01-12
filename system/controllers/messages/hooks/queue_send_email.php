@@ -2,6 +2,8 @@
 
 class onMessagesQueueSendEmail extends cmsAction {
 
+    public $disallow_event_db_register = true;
+
 	public function run($attempt, $to, $letter, $is_nl2br_text = null){
 
         $before_send = cmsEventsManager::hook('before_send_email', array(

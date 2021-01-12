@@ -2,6 +2,8 @@
 
 class onContentSubscriptionMatchList extends cmsAction {
 
+    public $disallow_event_db_register = true;
+
     public function run($subscription, $items){
 
         // результирующий список

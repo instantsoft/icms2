@@ -755,7 +755,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (26, 'user_delete', 'content', 26, 1),
 (27, 'user_privacy_types', 'content', 27, 1),
 (28, 'sitemap_sources', 'content', 28, 1),
-(29, 'rss_feed_list', 'content', 29, 1),
 (30, 'rss_content_controller_form', 'content', 30, 1),
 (31, 'rss_content_controller_after_update', 'content', 31, 1),
 (32, 'frontpage', 'content', 32, 1),

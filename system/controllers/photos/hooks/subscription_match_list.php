@@ -2,17 +2,17 @@
 
 class onPhotosSubscriptionMatchList extends cmsAction {
 
-    public function run($subscription, $items){
+    public $disallow_event_db_register = true;
 
-        $params = array();
-        $match_list = array();
+    public function run($subscription, $items) {
 
-        if(!empty($subscription['params']['filters'])){
+        $params     = [];
+        $match_list = [];
 
+        if (!empty($subscription['params']['filters'])) {
             foreach ($subscription['params']['filters'] as $filters) {
                 $params[$filters['field']] = $filters['value'];
             }
-
         }
 
         // проверяем фотографии по этому списку
@@ -20,52 +20,47 @@ class onPhotosSubscriptionMatchList extends cmsAction {
 
             $is_coincides = false;
 
-            if($params){
+            if ($params) {
 
-                $found = array();
+                $found = [];
 
                 // проверяем фильтрацию
                 foreach ($params as $key => $value) {
 
                     // для ширины и высоты отдельные фильтры
-                    if(in_array($key, array('width', 'height'))){
-                        if($photo[$key] >= $value){
+                    if (in_array($key, array('width', 'height'))) {
+                        if ($photo[$key] >= $value) {
                             $found[] = $key;
                         }
                     } else {
-                        if($photo[$key] == $value){
+                        if ($photo[$key] == $value) {
                             $found[] = $key;
                         }
                     }
-
                 }
 
                 // все фильтры должны совпасть
-                if(count($found) == count($params)){
+                if (count($found) == count($params)) {
                     $is_coincides = true;
                 }
-
             } else {
                 $is_coincides = true;
             }
 
-            if($is_coincides){
+            if ($is_coincides) {
 
-                $_presets = array_keys($photo['image']);
+                $_presets     = array_keys($photo['image']);
                 $small_preset = end($_presets);
 
-                $match_list[] = array(
+                $match_list[] = [
                     'url'       => href_to_abs('photos', $photo['slug'] . '.html'),
                     'image_src' => html_image_src($photo['image'], $small_preset, true, false),
                     'title'     => $photo['title']
-                );
-
+                ];
             }
-
         }
 
         return $match_list;
-
     }
 
 }

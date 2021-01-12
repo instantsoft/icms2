@@ -2,7 +2,9 @@
 
 class onAuthCronDeleteExpiredUnverified extends cmsAction {
 
-    public function run(){
+    public $disallow_event_db_register = true;
+
+    public function run() {
 
         $verify_exp = empty($this->options['verify_exp']) ? 48 : $this->options['verify_exp'];
 
@@ -17,16 +19,14 @@ class onAuthCronDeleteExpiredUnverified extends cmsAction {
         $users = $users_model->getUsers();
         if (!$users) { return false; }
 
-        foreach($users as $user){
+        foreach ($users as $user) {
 
             $user = cmsEventsManager::hook('user_delete', $user);
 
             $users_model->deleteUser($user['id']);
-
         }
 
         return true;
-
     }
 
 }
