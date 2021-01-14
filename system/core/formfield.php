@@ -176,19 +176,6 @@ class cmsFormField {
     }
 
     /**
-     * Магия для var_export
-     * @param array $data
-     * @return \field_class
-     */
-    public static function __set_state($data) {
-
-        $field_class  = 'field'.string_to_camel('_', $data['class']);
-
-        return new $field_class($data['name'], $data);
-
-    }
-
-    /**
      * Возвращает свойство поля по названию
      * @param string $key Имя свойства
      * @return mixed

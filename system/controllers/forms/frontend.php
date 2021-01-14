@@ -121,6 +121,7 @@ class forms extends cmsFrontend {
             'title' => LANG_FORMS_PAGE_URL,
             'default' => $this->cms_config->host . $this->cms_core->uri_absolute
         ]));
+        $form->addField($fieldset_id, new fieldHidden($submit_form_name.':fake_string'));
 
         // Разбиваем поля по группам
         $fieldsets = cmsForm::mapFieldsToFieldsets($fields);

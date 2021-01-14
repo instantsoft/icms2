@@ -34,12 +34,15 @@
     </h5>
     <p class="m-0 text-light"><?php echo LANG_CP_DASHBOARD_INMAPS_HINT; ?></p>
 </div>
-<hr>
 <?php /*
-<div class="d-flex">
-    <a class="text-white text-decoration-none text-center" href="" target="_blank">
-        <span></span>
-        <span class="d-block"></span>
-    </a>
+<hr>
+<div>
+    <i class="icon-globe icons font-2xl float-left mr-3 mt-2"></i>
+    <h5 class="mb-1">
+        <a class="text-white" href="" target="_blank">
+            advertising
+        </a>
+    </h5>
+    <p class="m-0 text-light">advertising hint</p>
 </div>
 */ ?>
