@@ -1055,7 +1055,9 @@ class cmsController {
      */
     public function redirect($url, $code=303){
 
-        if ($this->request->isAjax()){
+        list($url, $code) = cmsEventsManager::hook('redirect', [$url, $code]);
+
+	if ($this->request->isAjax()){
 
             $this->cms_template->renderAsset('ui/redirect_continue', array(
                 'redirect_url' => href_to($url)
