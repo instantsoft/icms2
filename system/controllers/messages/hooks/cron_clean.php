@@ -2,9 +2,11 @@
 
 class onMessagesCronClean extends cmsAction {
 
-	public function run(){
+    public $disallow_event_db_register = true;
 
-        if(empty($this->options['time_delete_old'])){
+    public function run() {
+
+        if (empty($this->options['time_delete_old'])) {
             return false;
         }
 
@@ -12,7 +14,6 @@ class onMessagesCronClean extends cmsAction {
                 filterNotNull('is_deleted')->deleteFiltered('{users}_messages');
 
         return true;
-
     }
 
 }

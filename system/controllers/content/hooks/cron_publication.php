@@ -2,45 +2,49 @@
 
 class onContentCronPublication extends cmsAction {
 
-	public function run(){
+    public $disallow_event_db_register = true;
 
-		$ctypes = $this->model->getContentTypes();
+    public function run() {
 
-        $is_pub_items = array();
+        $ctypes = $this->model->getContentTypes();
 
-		foreach($ctypes as $ctype){
+        $is_pub_items = [];
 
-			if (!$ctype['is_date_range']) { continue; }
+        foreach ($ctypes as $ctype) {
+
+            if (!$ctype['is_date_range']) {
+                continue;
+            }
 
             $pub_items = $this->model->filterNotEqual('is_pub', 1)->
                     filterIsNull('is_deleted')->
                     filter('i.date_pub <= NOW()')->
                     filterStart()->
-                        filter('i.date_pub_end > NOW()')->
-                        filterOr()->
-                        filterIsNull('i.date_pub_end')->
+                    filter('i.date_pub_end > NOW()')->
+                    filterOr()->
+                    filterIsNull('i.date_pub_end')->
                     filterEnd()->
-                    get($this->model->table_prefix.$ctype['name']);
+                    get($this->model->table_prefix . $ctype['name']);
 
-            if($pub_items){
+            if ($pub_items) {
                 $this->model->publishDelayedContentItems($ctype['name']);
                 $is_pub_items[$ctype['name']] = $pub_items;
             }
 
-            if($ctype['options']['is_date_range_process'] === 'delete') {
+            if ($ctype['options']['is_date_range_process'] === 'delete') {
                 $this->model->deleteExpiredContentItems($ctype['name']);
-            } elseif($ctype['options']['is_date_range_process'] === 'in_basket') {
+            } elseif ($ctype['options']['is_date_range_process'] === 'in_basket') {
                 $this->model->toTrashExpiredContentItems($ctype['name']);
             } else {
                 $this->model->hideExpiredContentItems($ctype['name']);
             }
+        }
 
-		}
-
-        if($is_pub_items){
+        if ($is_pub_items) {
             cmsEventsManager::hook('publish_delayed_content', $is_pub_items);
         }
 
+        return true;
     }
 
 }

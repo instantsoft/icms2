@@ -14,7 +14,7 @@
     define('LANG_CP_PAGE_OPTIONS',              'Customize this page');
     define('LANG_CP_SU',                        'System utilization');
     define('LANG_CP_SU_DISK',                   'Disk space');
-    define('LANG_CP_SU_CPU',                    'CPU');
+    define('LANG_CP_SU_CPU',                    'Load average');
     define('LANG_CP_CACHE',                     'Caching');
     define('LANG_CP_WO_AUTO_GROUP',             'Automatically detect group\'s page');
     define('LANG_CP_WO_AUTO_GROUP_HINT',        'On group page widget displays the group\'s items');
@@ -511,6 +511,7 @@
     define('LANG_CP_SETTINGS_TEMPLATE_ADMIN',   'Control panel theme');
     define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Mobile theme');
     define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Tablet theme');
+    define('LANG_CP_SUBMIT_COMPILE',            'Save and compile %s');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Theme Settings');
     define('LANG_CP_SETTINGS_TEMPLATE_INTH',    'Create your own theme');
     define('LANG_CP_SETTINGS_EDITOR',           'Default HTML editor');
@@ -567,7 +568,6 @@
     define('LANG_CP_ORDER_SUCCESS',             'The order was successfully saved');
     define('LANG_CP_PERMISSIONS_SUCCESS',       'The access rules saved successfully');
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Debug mode enabled');
-    define('LANG_CP_SETTINGS_MANIFEST_FROM_FILES', 'Load events from manifest.php files');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Emulate network lag');
     define('LANG_CP_SETTINGS_CACHE_CLEAN',      'Clear cache');
     define('LANG_CP_ADDONS_DATA_ERROR',         'Error getting data, try again later.');

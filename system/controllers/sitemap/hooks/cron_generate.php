@@ -2,6 +2,8 @@
 
 class onSitemapCronGenerate extends cmsAction {
 
+    public $disallow_event_db_register = true;
+
     private $max_count = 50000;
     private $max_html_count = 500;
 

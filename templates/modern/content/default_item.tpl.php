@@ -30,7 +30,7 @@
 
             <?php if ($is_fields_group) { ?>
                 <div class="fields_group fields_group_<?php echo $ctype['name']; ?>_<?php echo $fieldset_id ?>">
-                    <h3 class="group_title"><?php html($fieldset['title']); ?></h3>
+                    <h3 class="icms-content-fields__group_title"><?php html($fieldset['title']); ?></h3>
             <?php } ?>
 
             <?php if (!empty($fieldset['fields'])) { ?>
@@ -38,7 +38,9 @@
 
                     <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_type']; ?>_field" <?php if($field['options']['wrap_width']){ ?> style="width: <?php echo $field['options']['wrap_width']; ?>;"<?php } ?>>
                         <?php if ($field['options']['label_in_item'] != 'none') { ?>
-                            <div class="field_label title_<?php echo $field['options']['label_in_item']; ?>"><?php html($field['title']); ?>: </div>
+                            <div class="field_label title_<?php echo $field['options']['label_in_item']; ?>">
+                                <?php echo string_replace_svg_icons($field['title']).($field['options']['label_in_item']=='left' ? ': ' : ''); ?>
+                            </div>
                         <?php } ?>
                         <div class="value"><?php echo $field['html']; ?></div>
                     </div>

@@ -18,7 +18,7 @@
 ?>
 
 <?php if (!$items){ ?>
-    <p class="alert alert-info mt-4" role="alert">
+    <p class="alert alert-info mt-4 alert-list-empty">
         <?php if(!empty($ctype['labels']['many'])){ ?>
             <?php echo sprintf(LANG_TARGET_LIST_EMPTY, $ctype['labels']['many']); ?>
         <?php } else { ?>
@@ -38,7 +38,7 @@
 
                     <?php if ($field['label_pos'] != 'none'){ ?>
                         <div class="title_<?php echo $field['label_pos']; ?>">
-                            <?php echo $field['title'] . ($field['label_pos']=='left' ? ': ' : ''); ?>
+                            <?php echo string_replace_svg_icons($field['title']) . ($field['label_pos']=='left' ? ': ' : ''); ?>
                         </div>
                     <?php } ?>
 

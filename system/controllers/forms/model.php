@@ -49,7 +49,9 @@ class modelForms extends cmsModel {
         $form['params'] = [
             'action'   => !empty($form['options']['action']) ? $form['options']['action'] : href_to('forms', 'send_ajax', $form['hash']),
             'hide_toolbar' => true,
+            'params' => ['form_spam_token' => md5($form['hash'].$form['name'])],
             'tpl_form' => $form['tpl_form'],
+            'form_class' => 'icms-forms__'.$form['name'],
             'submit'   => ['title' => LANG_SEND],
             'method'   => !empty($form['options']['method']) ? $form['options']['method'] : 'ajax'
         ];

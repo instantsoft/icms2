@@ -17,7 +17,7 @@
     }
 ?>
 <?php if (!$items){ ?>
-    <p class="alert alert-info mt-4" role="alert">
+    <p class="alert alert-info mt-4 alert-list-empty">
         <?php if(!empty($ctype['labels']['many'])){ ?>
             <?php echo sprintf(LANG_TARGET_LIST_EMPTY, $ctype['labels']['many']); ?>
         <?php } else { ?>
@@ -35,7 +35,7 @@
             <tr>
                 <?php foreach($first_item['fields_names'] as $field){ ?>
                     <th <?php if ($field['label_pos'] === 'none') { ?>class="d-none d-lg-table-cell"<?php } ?>>
-                        <?php echo $field['label_pos'] !== 'none' ? $field['title'] : ''; ?>
+                        <?php echo $field['label_pos'] !== 'none' ? string_replace_svg_icons($field['title']) : ''; ?>
                     </th>
                 <?php } ?>
                 <?php if (!empty($first_item['info_bar'])){ ?>

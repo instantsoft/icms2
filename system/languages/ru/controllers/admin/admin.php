@@ -14,7 +14,7 @@
     define('LANG_CP_PAGE_OPTIONS',              'Настроить эту страницу');
     define('LANG_CP_SU',                        'Система');
     define('LANG_CP_SU_DISK',                   'Место на диске');
-    define('LANG_CP_SU_CPU',                    'Процессор');
+    define('LANG_CP_SU_CPU',                    'Средняя загрузка');
     define('LANG_CP_CACHE',                     'Кэширование');
     define('LANG_CP_WO_AUTO_GROUP',             'Автоматически определять группу');
     define('LANG_CP_WO_AUTO_GROUP_HINT',        'На страницах групп виджет выведет указанные записи группы');
@@ -538,6 +538,7 @@
 	define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Добавлять в тег title страницы название сайта');
 	define('LANG_CP_SETTINGS_SET_HEAD_PRELOAD',  'Формировать заголовки HTTP Preload');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');
+    define('LANG_CP_SUBMIT_COMPILE',            'Сохранить и скомпилировать %s');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления по умолчанию');
     define('LANG_CP_SETTINGS_TEMPLATE_ADMIN',   'Тема оформления для панели управления');
     define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Тема оформления для мобильных устройств');
@@ -601,7 +602,6 @@
     define('LANG_CP_PERMISSIONS_SUCCESS',       'Правила доступа успешно сохранены');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Включить режим отладки');
-    define('LANG_CP_SETTINGS_MANIFEST_FROM_FILES', 'Загружать события из файлов manifest.php');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Имитировать сетевые задержки');
 
     define('LANG_CP_SETTINGS_CACHE_CLEAN',      'Очистить кеш');

@@ -2,29 +2,36 @@
 
 class onContentWysiwygLinksList extends cmsAction {
 
-    public function run($ctype_name, $target_id){
+    public $disallow_event_db_register = true;
 
-        $urls = array();
+    public function run($ctype_name, $target_id) {
 
-        if (empty($ctype_name)) { return $urls; }
+        $urls = [];
 
-		$is_ctype_exists = $this->model->getContentTypeByName($ctype_name);
-		if (!$is_ctype_exists) { return $urls; }
+        if (empty($ctype_name)) {
+            return $urls;
+        }
 
-        $items = $this->model->limit(500)->getContentItemsForSitemap($ctype_name, array('title'));
+        $is_ctype_exists = $this->model->getContentTypeByName($ctype_name);
+        if (!$is_ctype_exists) {
+            return $urls;
+        }
 
-        if ($items){
-            $urls[] = array('url' => '', 'name' => '');
-            foreach($items as $item){
-                $urls[] = array(
-                    'url'  => href_to($ctype_name, $item['slug'].'.html'),
+        $items = $this->model->limit(500)->getContentItemsForSitemap($ctype_name, ['title']);
+
+        if ($items) {
+
+            $urls[] = ['url' => '', 'name' => ''];
+
+            foreach ($items as $item) {
+                $urls[] = [
+                    'url'  => href_to($ctype_name, $item['slug'] . '.html'),
                     'name' => htmlspecialchars($item['title'])
-                );
+                ];
             }
         }
 
         return $urls;
-
     }
 
 }

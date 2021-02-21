@@ -67,7 +67,6 @@ function create_config($path, $file){
         'ct_default'			=> 'content',
         'frontpage'             => 'none',
         'debug'					=> 0,
-        'manifest_from_files'   => 0,
         'emulate_lag'			=> '',
         'cache_enabled'			=> 0,
         'cache_method'			=> 'files',
@@ -103,7 +102,7 @@ function create_config($path, $file){
 
     write_config($file, $config);
 
-    if (function_exists('opcache_reset')) { opcache_reset(); }
+    if (function_exists('opcache_reset')) { @opcache_reset(); }
 
     clearstatcache();
 

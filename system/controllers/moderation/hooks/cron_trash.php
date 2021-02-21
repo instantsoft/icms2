@@ -2,12 +2,13 @@
 
 class onModerationCronTrash extends cmsAction {
 
-	public function run(){
+    public $disallow_event_db_register = true;
 
-		$this->model->deleteExpiredTrashContentItems();
+    public function run() {
+
+        $this->model->deleteExpiredTrashContentItems();
 
         return true;
-
     }
 
 }

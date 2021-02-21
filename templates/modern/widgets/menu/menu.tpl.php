@@ -7,6 +7,9 @@
         if ($widget->options['navbar_color_scheme']) {
             $nav_class[] = $widget->options['navbar_color_scheme'];
         }
+        if ($widget->options['menu_navbar_style'] !== 'navbar-nav') {
+            $widget->options['menu_navbar_style'] .= ' w-100';
+        }
     ?>
     <nav class="<?php echo implode(' ', $nav_class); ?>">
         <?php if ($widget->options['toggler_icon']) { ?>

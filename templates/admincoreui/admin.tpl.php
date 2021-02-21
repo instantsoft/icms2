@@ -91,7 +91,7 @@
                 </li>
             <?php } ?>
             <li class="nav-item d-sm-down-none">
-                <a data-toggle="dropdown" id="notices_counter" class="nav-link" href="<?php echo href_to('admin', 'messages_notices'); ?>" title="<?php echo LANG_ADMIN_NOTICES; ?>" data-toggle="tooltip" data-placement="left">
+                <a data-toggle="dropdown" id="notices_counter" class="nav-link d-flex justify-content-center" href="<?php echo href_to('admin', 'messages_notices'); ?>" title="<?php echo LANG_ADMIN_NOTICES; ?>" data-toggle="tooltip" data-placement="left">
                     <i class="icon-bell font-xl"></i>
                     <?php if($notices_count){ ?>
                         <span class="badge badge-pill badge-danger"><?php echo $notices_count; ?></span>
@@ -106,18 +106,22 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<?php echo href_to_home(); ?>" target="_blank" title="<?php echo LANG_CP_BACK_TO_SITE; ?>" data-toggle="tooltip" data-placement="bottom">
+                <a class="nav-link d-flex justify-content-center" href="<?php echo href_to_home(); ?>" target="_blank" title="<?php echo LANG_CP_BACK_TO_SITE; ?>" data-toggle="tooltip" data-placement="bottom">
                     <i class="icon-share-alt icons font-xl"></i>
                 </a>
             </li>
             <li class="nav-item d-md-down-none">
-                <a class="nav-link" href="<?php echo LANG_HELP_URL; ?>" target="_blank" title="<?php echo LANG_HELP; ?>" data-toggle="tooltip" data-placement="bottom">
+                <a class="nav-link d-flex justify-content-center" href="<?php echo LANG_HELP_URL; ?>" target="_blank" title="<?php echo LANG_HELP; ?>" data-toggle="tooltip" data-placement="bottom">
                     <i class="icon-question icons font-xl"></i>
                 </a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                    <img class="img-avatar" src="<?php echo html_avatar_image_src($user->avatar, 'micro'); ?>" alt="<?php html($user->nickname); ?>">
+                <a class="nav-link icms-user-avatar" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    <?php if($user->avatar){ ?>
+                        <img class="img-avatar" src="<?php echo html_avatar_image_src($user->avatar, 'micro'); ?>" alt="<?php html($user->nickname); ?>">
+                    <?php } else { ?>
+                        <?php echo html_avatar_image_empty($user->nickname, 'avatar__mini'); ?>
+                    <?php } ?>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                     <div class="dropdown-header text-center">

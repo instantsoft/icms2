@@ -2,6 +2,8 @@
 
 class onRendererMiddlewareScss extends cmsAction {
 
+    public $disallow_event_db_register = true;
+
     private $last_compile_error = false;
 
     public function run($template_name, $options) {

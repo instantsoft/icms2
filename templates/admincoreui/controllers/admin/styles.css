@@ -290,7 +290,7 @@ thead.list_thead {
     }
 }
 .card-summary > span:not(:last-of-type):after {
-    content: '•';
+    content: '\002022';
     margin: 0 4px;
 }
 .modal-body img {
@@ -1165,4 +1165,25 @@ td > .spinner > div {
 .icms-cpanel .minicolors-theme-default .minicolors-swatch {
     width: calc(1.5em + 0.5rem);
     height: calc(1.5em + 0.5rem);
+}
+.icms-user-avatar>* {
+    border-radius: 50%;
+    overflow: hidden;
+    border: none;
+}
+.icms-profile-avatar__default {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: .875rem;
+}
+.icms-profile-avatar__default svg {
+    width: 100%;
+    height: 100%;
+}
+.icms-profile-avatar__default.avatar__mini {
+    width: 35px;
+    height: 35px;
+    margin: 0 10px;
 }

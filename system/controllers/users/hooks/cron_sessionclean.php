@@ -2,6 +2,8 @@
 
 class onUsersCronSessionclean extends cmsAction {
 
+    public $disallow_event_db_register = true;
+
     public function run(){
 
         if($this->cms_config->session_save_handler !== 'files'){

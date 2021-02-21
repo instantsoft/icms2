@@ -1,11 +1,11 @@
-<div class="widget_profiles_list<?php if ($style=='tiles'){ ?> d-flex justify-content-between flex-wrap<?php } ?>">
+<div class="widget_profiles_list<?php if ($style=='tiles'){ ?> d-flex flex-wrap mr-n2 mb-n2<?php } ?>">
     <?php foreach($profiles as $profile){ ?>
         <?php $url = href_to_profile($profile); ?>
 
-        <div class="item<?php if ($style=='list'){ ?> media mb-3 align-items-center<?php } ?>">
+        <?php if ($style=='list'){ ?><div class="item media mb-3 align-items-center"><?php } ?>
 
             <?php if (!empty($fields['avatar']) && $fields['avatar']['is_in_list']){ ?>
-                <a href="<?php echo $url; ?>" class="icms-user-avatar<?php if ($style=='list'){ ?>  mr-3<?php } ?> <?php if (!empty($profile['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" title="<?php html($profile['nickname']); ?>">
+                <a href="<?php echo $url; ?>" class="icms-user-avatar<?php if ($style=='list'){ ?>  mr-3<?php } else { ?> mr-2 mb-2<?php } ?> <?php if (!empty($profile['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" title="<?php html($profile['nickname']); ?>">
                 <?php if($profile['avatar']){ ?>
                     <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname']); ?>
                 <?php } else { ?>
@@ -40,7 +40,7 @@
                     <?php } ?>
                 </div>
             <?php } ?>
-        </div>
+        <?php if ($style=='list'){ ?></div><?php } ?>
 
     <?php } ?>
 </div>

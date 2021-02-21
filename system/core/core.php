@@ -424,81 +424,46 @@ class cmsCore {
 
     /**
      * Возвращает массив хуков контроллеров
-     * @param boolean $is_debug Если передано true, то массив формируется из файлов манифестов, иначе - из БД
-     * @param boolean $is_enabled
+     *
+     * @param boolean $is_enabled Только включенные хуки
      * @return array
      */
-    public static function getControllersManifests($is_debug = false, $is_enabled = true){
-
-        if ($is_debug){
-            return self::getManifestsEvents();
-        }
+    public static function getControllersEvents($is_enabled = true) {
 
         $events = [];
 
         $db = cmsDatabase::getInstance();
 
-        if(!$db->ready()){
+        if (!$db->ready()) {
             return $events;
         }
 
-        if($is_enabled){
+        if ($is_enabled) {
             $controllers_events = $db->getRows('events FORCE INDEX (is_enabled)', '`is_enabled` = 1', '*', 'ordering ASC', true);
         } else {
             $controllers_events = $db->getRows('events', '1', '*', 'ordering ASC', true);
         }
 
-        if($controllers_events){
-            foreach($controllers_events as $event){
+        if ($controllers_events) {
+            foreach ($controllers_events as $event) {
                 // для сохранения сортировки + совместимость
-                if(!isset($events[ $event['listener'] ][$event['ordering']])){
-                    $events[ $event['listener'] ][$event['ordering']] = $event['event'];
+                if (!isset($events[$event['listener']][$event['ordering']])) {
+                    $events[$event['listener']][$event['ordering']] = $event['event'];
                 } else {
                     // если вдруг по какой-то причине порядок одинаковый
-                    $events[ $event['listener'] ][intval($event['ordering'].'00'.$event['id'])] = $event['event'];
+                    $events[$event['listener']][intval($event['ordering'] . '00' . $event['id'])] = $event['event'];
                 }
             }
         }
 
         return $events;
-
     }
-
     /**
-     * Возвращает массив хуков контроллеров
-     * из файлов манифестов
-     * @return array
+     * @deprecated
+     * @compatibility
      */
-    public static function getManifestsEvents(){
-
-        $manifests_events = [];
-
-        $controllers = cmsCore::getDirsList('system/controllers', true);
-
-        $index = 0;
-
-        foreach($controllers as $controller_name){
-
-            $manifest_file = cmsConfig::get('root_path') . 'system/controllers/' . $controller_name . '/manifest.php';
-
-            if (!is_readable($manifest_file)){ continue; }
-
-            $manifest = include $manifest_file;
-
-            if (empty($manifest['hooks']) || !is_array($manifest['hooks'])) { continue; }
-
-            foreach ($manifest['hooks'] as $hook) {
-
-                $manifests_events[ $controller_name ][$index] = $hook;
-
-                $index++;
-
-            }
-
-        }
-
-        return $manifests_events;
-
+    public static function getControllersManifests($is_enabled = true) {
+        return self::getControllersEvents($is_enabled);
     }
 
 //============================================================================//
@@ -596,7 +561,7 @@ class cmsCore {
 
     /**
      * Подключает языковой файл шаблона
-     * @param string|array $template_name
+     * @param string|array $template_names
      * @return bool
      */
     public static function loadTemplateLanguage($template_names){
@@ -889,7 +854,11 @@ class cmsCore {
 
                 cmsDebugging::pointProcess('widgets', function () use($widget) {
                     return [
-                        'data' => $widget['title'] . ' => /system/' . cmsCore::getWidgetPath($widget['name'], $widget['controller']) . '/widget.php'
+                        'data' => $widget['title'] . ' => /system/' . cmsCore::getWidgetPath($widget['name'], $widget['controller']) . '/widget.php',
+                        'context' => [
+                            'target' => $widget['controller'],
+                            'subject' => $widget['name']
+                        ]
                     ];
                 }, 0);
             }
@@ -1267,12 +1236,12 @@ class cmsCore {
      * @param bool $is_include Подключать каждый файл?
      * @return array
      */
-    public static function getFilesList($root_dir, $pattern='*.*', $is_strip_ext=false, $is_include=false){
+    public static function getFilesList($root_dir, $pattern = '*.*', $is_strip_ext = false, $is_include = false) {
 
         $config = cmsConfig::getInstance();
 
         $directory = $config->root_path . $root_dir;
-        $pattern = $directory . '/' . $pattern;
+        $pattern   = $directory . '/' . $pattern;
 
         $list = [];
 
@@ -1289,14 +1258,14 @@ class cmsCore {
 
             $file = basename($file);
 
-            if ($is_strip_ext){ $file = pathinfo($file, PATHINFO_FILENAME); }
+            if ($is_strip_ext) {
+                $file = pathinfo($file, PATHINFO_FILENAME);
+            }
 
             $list[] = $file;
-
         }
 
         return $list;
-
     }
 
 //============================================================================//

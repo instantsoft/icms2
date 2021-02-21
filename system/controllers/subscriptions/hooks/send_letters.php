@@ -2,6 +2,8 @@
 
 class onSubscriptionsSendLetters extends cmsAction {
 
+    public $disallow_event_db_register = true;
+
 	public function run($attempt, $controller_name, $subject, $items){
 
         // получаем список для контроллера и субъекта

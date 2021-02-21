@@ -1,16 +1,17 @@
 <?php
+
 class cmsAction {
 
     protected $controller;
     protected $params;
-
     protected $extended_langs = [];
 
-    public function __construct($controller, $params=array()){
-        $this->controller = $controller;
-        $this->params = $params;
+    public function __construct($controller, $params = []) {
 
-        if($this->extended_langs){
+        $this->controller = $controller;
+        $this->params     = $params;
+
+        if ($this->extended_langs) {
             foreach ($this->extended_langs as $controller_name) {
                 cmsCore::loadControllerLanguage($controller_name);
             }

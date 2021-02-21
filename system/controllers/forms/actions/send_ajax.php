@@ -12,10 +12,20 @@ class actionFormsSendAjax extends cmsAction {
                 ['sysname'],
                 ['max_length', 32]
             ]
+        ],
+        'form_spam_token' => [
+            'default' => '',
+            'rules'   => [
+                ['required'],
+                ['sysname'],
+                ['max_length', 32]
+            ]
         ]
     ];
 
     public function run($hash){
+
+        if (!$this->request->isAjax()) { return cmsCore::error404(); }
 
         if(is_numeric($hash)){
             cmsCore::error404();
@@ -31,6 +41,15 @@ class actionFormsSendAjax extends cmsAction {
         }
 
         list($form, $form_data) = $_form_data;
+
+        // Проверяем спам токен, который отправляется дополнительно к параметрам формы
+        $form_spam_token = md5($form_data['hash'].$form_data['name']);
+        $form_spam_token_post = $this->request->get('form_spam_token');
+        if($form_spam_token !== $form_spam_token_post){
+            return $this->cms_template->renderJSON([
+                'errors' => ['form_spam_token' => 'not equal']
+            ]);
+        }
 
         // Данные формы текущего юзера, если отправляли ранее
         $submited_data = $this->getSavedUserFormData($form_data['id']);
@@ -60,6 +79,13 @@ class actionFormsSendAjax extends cmsAction {
 
         // Делаем массив данных формы нормальными, без $form_fields_group_name
         $data = $data[$form_fields_group_name];
+
+        // Фейковое поле не должно быть заполнено
+        if(!empty($data['fake_string'])){
+            return $this->cms_template->renderJSON([
+                'errors' => ['fake_string' => 'not empty']
+            ]);
+        }
 
         $send_text = $this->options['send_text'];
         if(!empty($form_data['options']['send_text'])){
