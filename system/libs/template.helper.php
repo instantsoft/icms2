@@ -98,7 +98,9 @@ function html_checkbox($name, $checked=false, $value=1, $attributes=array()){
 function html_radio($name, $checked=false, $value=1, $attributes=array()){
     if ($checked) { $attributes['checked'] = 'checked'; }
     $attr_str = html_attr_str($attributes);
-	return '<input type="radio" class="form-control input_radio" name="'.$name.'" value="'.$value.'" '.$attr_str.'/>';
+    $class = 'input-radio';
+    if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
+  return '<input type="radio" class="form-check-input '.$class.'" name="'.$name.'" value="'.$value.'" '.$attr_str.'/>';
 }
 
 function html_date($date=false, $is_time=false){

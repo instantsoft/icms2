@@ -3,7 +3,7 @@
 <div id="user_profile_title" class="d-flex align-items-center">
 
     <div class="avatar icms-user-avatar d-none d-lg-flex mr-3 <?php if (!empty($profile['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
-        <?php if($profile['avatar']){ ?>
+        <?php if(!empty($profile['avatar'])){ ?>
             <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname']); ?>
         <?php } else { ?>
             <?php echo html_avatar_image_empty($profile['nickname'], 'avatar__inlist'); ?>
