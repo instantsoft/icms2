@@ -1,20 +1,20 @@
 <div class="pagebar">
     <span class="pagebar_nav">
         <?php if ($prev_url) { ?>
-            <a class="pagebar_page" href="<?php html($prev_url); ?>">
+            <a class="pagebar_page pagebar_prev_btn" href="<?php html($prev_url); ?>">
                 ← <?php echo LANG_PAGE_PREV; ?>
             </a>
         <?php } else { ?>
-            <span class="pagebar_page disabled">
+            <span class="pagebar_page pagebar_prev_btn disabled">
                 ← <?php echo LANG_PAGE_PREV; ?>
             </span>
         <?php } ?>
         <?php if ($next_url) { ?>
-            <a class="pagebar_page" href="<?php html($next_url); ?>">
+            <a class="pagebar_page pagebar_next_btn" href="<?php html($next_url); ?>">
                 <?php echo LANG_PAGE_NEXT; ?> →
             </a>
         <?php } else { ?>
-            <span class="pagebar_page disabled">
+            <span class="pagebar_page pagebar_next_btn disabled">
                 <?php echo LANG_PAGE_NEXT; ?> →
             </span>
         <?php } ?>
