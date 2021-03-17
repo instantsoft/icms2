@@ -916,6 +916,13 @@ function get_localized_value($field, $data) {
     return null;
 
 }
+
+function nf_amount($value, $decimals = 2, $thousands_sep = ' ') {
+
+    $value = number_format(floatval($value), $decimals, '.', $thousands_sep);
+
+    return rtrim(rtrim($value, '0'), '.');
+}
 //============================================================================//
 
 /**

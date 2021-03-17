@@ -2440,6 +2440,10 @@ class cmsTemplate {
     }
 
     public function renderGridRowsJSON($grid, $dataset, $total = 1, $pages_count = 1) {
+        echo json_encode($this->getGridRows($grid, $dataset, $total, $pages_count));
+    }
+
+    public function getGridRows($grid, $dataset, $total = 1, $pages_count = 1) {
 
         $rows = $titles = $classes = [];
         $row_index = 0;
@@ -2464,13 +2468,16 @@ class cmsTemplate {
                         $field = $column['key_alias'];
                     }
 
-                    if (!is_array($row[$field]) && !isset($column['handler'])){
-                        $value = html($row[$field], false);
+                    if(isset($row[$field])){
+                        if (!is_array($row[$field]) && !isset($column['handler'])){
+                            $value = html($row[$field], false);
+                        } else {
+                            $value = $row[$field];
+                        }
+                        if ($value === null) { $value = ''; }
                     } else {
-                        $value = $row[$field];
+                        $value = '';
                     }
-
-                    if ($value === null) { $value = ''; }
 
                     if (isset($column['flag']) && $column['flag']){
 
@@ -2644,17 +2651,14 @@ class cmsTemplate {
             }
         }
 
-        $result = array(
+        return [
             'classes'     => $classes,
             'titles'      => $titles,
             'rows'        => $rows,
             'pages_count' => $pages_count,
             'total'       => $total,
             'columns'     => $columns
-        );
-
-        echo json_encode($result);
-
+        ];
     }
 
     /**

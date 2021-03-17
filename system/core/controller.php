@@ -1,4 +1,12 @@
 <?php
+/**
+ * Основной класс всех контроллеров
+ *
+ * @property \cmsConfig $cms_config
+ * @property \cmsCore $cms_core
+ * @property \cmsTemplate $cms_template
+ * @property \cmsUser $cms_user
+ */
 class cmsController {
 
     private static $controllers;

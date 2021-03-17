@@ -385,8 +385,9 @@ icms.datagrid = (function ($) {
                 if(result.columns[key]['sortable']){
                     column_class = column_class + ' sortable sorting';
                 }
-                if (key==0 && !_this.options.show_id) {
+                if (key == 0 && !_this.options.show_id) {
                     column_class = column_class + ' d-none';
+                    result.classes[key] = result.classes[key] + ' d-none';
                 }
                 htr.append('<th rel="'+result.columns[key]['name']+'" class="'+column_class+'">'+result.columns[key]['title']+'</th>');
                 if(result.columns[key]['name'] !== 'dg_actions'){

@@ -45,7 +45,7 @@ class cmsModel {
 
     //условия для выборок
     public $table      = '';
-    public $select     = array('i.*');
+    public $select     = ['i.*'];
     public $distinct   = '';
     public $straight_join = '';
     public $join       = '';
@@ -57,7 +57,7 @@ class cmsModel {
     public $index_action = '';
     public $limit      = 1000;
     public $perpage    = 50;
-
+    public $encoded_fields = [];
     public $is_transaction_started = false;
 
     public $keep_filters = false;
@@ -75,11 +75,11 @@ class cmsModel {
     protected $approved_filtered = false;
     protected $available_filtered = false;
     protected $hp_filtered = false;
-    protected $joined_session_online = array();
+    protected $joined_session_online = [];
 
-    protected static $cached = array();
+    protected static $cached = [];
 
-    private $cache_key = false;
+    protected $cache_key = false;
 
     protected $lang;
     protected $default_lang;
@@ -629,7 +629,8 @@ class cmsModel {
 
     public function resetFilters(){
 
-        $this->select       = array('i.*');
+        $this->select       = ['i.*'];
+        $this->encoded_fields = [];
         $this->group_by     = '';
         $this->order_by     = '';
         $this->index_action = '';
@@ -638,7 +639,7 @@ class cmsModel {
         $this->join         = '';
         $this->distinct     = '';
         $this->straight_join = '';
-        $this->joined_session_online = array();
+        $this->joined_session_online = [];
 
 		if ($this->keep_filters) { return $this; }
 
@@ -651,7 +652,6 @@ class cmsModel {
         $this->hp_filtered        = false;
 
         return $this;
-
     }
 
     public function localizedOn() {
@@ -1285,6 +1285,33 @@ class cmsModel {
         return $this;
     }
 
+    /**
+     * Добавляет к выборке зашифрованное поле
+     *
+     * @param string $field Имя поля
+     * @param string $as Псевдоним при выборке
+     * @param mixed $key Ключ шифрования
+     * @return $this
+     */
+    public function selectAesDecrypt($field, $as = false, $key = '') {
+
+        $a = $as ? $as : str_replace('enc_', '', $field);
+
+        $this->encoded_fields[] = $as ? $as : $field;
+        if ($key) {
+            if (is_callable($key) && ($key instanceof Closure)) {
+                $key = $key($this);
+            } else {
+                $key = "'" . $this->db->escape($key) . "'";
+            }
+            $field = "AES_DECRYPT(`{$field}`, {$key})";
+        } else {
+            $field = "AES_DECRYPT(`{$field}`, @aeskey)";
+        }
+        $this->select[] = $as ? $field . ' as ' . $as : $field;
+        return $this;
+    }
+
     public function select($field, $as=false){
         $this->select[] = $as ? $field.' as `'.$as.'`' : $field;
         return $this;
@@ -1683,6 +1710,8 @@ class cmsModel {
             $sql .= PHP_EOL.$this->read_type;
         }
 
+        $encoded_fields = $this->encoded_fields;
+
         $this->resetFilters();
 
         // если указан ключ кеша для этого запроса
@@ -1720,6 +1749,13 @@ class cmsModel {
         // для кеша формируем массив без обработки коллбэком
         if ($this->cache_key){
             $_item = $item;
+        }
+
+        if($encoded_fields){
+            foreach ($encoded_fields as $field) {
+                $item[$field] = base64_decode($item[$field]);
+                unset($item['enc_'.$field]);
+            }
         }
 
         if(is_callable($item_callback)){
@@ -1823,6 +1859,8 @@ class cmsModel {
 
         $sql = $this->getSQL();
 
+        $encoded_fields = $this->encoded_fields;
+
         // сбрасываем фильтры
         $this->resetFilters();
 
@@ -1882,6 +1920,13 @@ class cmsModel {
                     $_items[$key] = $item;
                 } else {
                     $_items[] = $item;
+                }
+            }
+
+            if($encoded_fields){
+                foreach ($encoded_fields as $efield) {
+                    $item[$efield] = base64_decode($item[$efield]);
+                    unset($item['enc_'.$efield]);
                 }
             }
 
@@ -2141,6 +2186,7 @@ class cmsModel {
 
                     switch ($column['filter']){
                         case 'in': $this->filterIn($filter_field, explode(',', $filter[$field])); break;
+                        case 'filled': ($filter[$field] ? $this->filterNotNull($filter_field) : $this->filterIsNull($filter_field)); break;
                         case 'exact': $this->filterEqual($filter_field, $filter[$field]); break;
                         case 'like': $this->filterLike($filter_field, "%{$filter[$field]}%"); break;
                         case 'date':
@@ -2154,7 +2200,6 @@ class cmsModel {
         }
 
         return $this;
-
     }
 
 //============================================================================//

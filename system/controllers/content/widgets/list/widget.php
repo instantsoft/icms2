@@ -284,7 +284,7 @@ class widgetContentList extends cmsWidget {
 
         $bar = []; $user = cmsUser::getInstance();
 
-        if (in_array('date_pub', $shown_fields) && $user->isInGroups($fields['date_pub']['groups_read'])){
+        if (!empty($fields['date_pub']) && in_array('date_pub', $shown_fields) && $user->isInGroups($fields['date_pub']['groups_read'])){
             $bar['date_pub'] = [
                 'css'   => 'bi_date_pub',
                 'icon'  => 'calendar-alt',
@@ -293,7 +293,7 @@ class widgetContentList extends cmsWidget {
             ];
         }
 
-        if (in_array('user', $shown_fields) && $user->isInGroups($fields['user']['groups_read'])){
+        if (!empty($fields['user']) && in_array('user', $shown_fields) && $user->isInGroups($fields['user']['groups_read'])){
             $bar['user'] = [
                 'css'  => 'bi_user',
                 'icon' => 'user',

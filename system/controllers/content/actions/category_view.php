@@ -261,7 +261,7 @@ class actionContentCategoryView extends cmsAction {
 
             // Получаем список подкатегорий для текущей
             $current_cat_id = $category['id'] ? $category['id'] : 1;
-            $subcats = $this->model->filterIsNull('is_hidden')->
+            $subcats = cmsCore::getModel('content')->filterIsNull('is_hidden')->
                     getSubCategories($ctype['name'], $current_cat_id);
 
             // Формируем параметры, используемые в шаблоне
