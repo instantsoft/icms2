@@ -53,23 +53,38 @@
         <?php } ?>
         <?php if ($attributes['cancel']['show']) { echo html_button($attributes['cancel']['title'], 'cancel', "location.href='{$attributes['cancel']['href']}'", array('class'=>'btn-secondary button-cancel')); } ?>
         <?php if(!empty($attributes['buttons'])){ ?>
-            <div class="dropdown d-inline-block dropup">
-                <button class="btn btn-secondary" type="button" data-toggle="dropdown" data-display="static">
-                    <?php html_svg_icon('solid', 'ellipsis-h'); ?>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right dropdown-menu-md-left">
-                <?php foreach ($attributes['buttons'] as $button) { ?>
-                    <?php if (!empty($button['hide'])) { continue; } ?>
-                    <?php if (isset($button['attributes']['class'])) { $button['attributes']['class'] .= ' dropdown-item'; } ?>
-                    <?php echo html_button(
-                            $button['title'],
-                            $button['name'],
-                            (isset($button['onclick']) ? $button['onclick'] : ''),
-                            (isset($button['attributes']) ? $button['attributes'] : ['class' => 'dropdown-item'])
-                        ); ?>
-                <?php } ?>
+
+            <?php $many_buttons = count($attributes['buttons']) > 1; ?>
+
+            <?php if($many_buttons){ ?>
+                <div class="dropdown d-inline-block dropup">
+                    <button class="btn btn-secondary" type="button" data-toggle="dropdown" data-display="static">
+                        <?php html_svg_icon('solid', 'ellipsis-h'); ?>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-md-left">
+            <?php } ?>
+
+            <?php foreach ($attributes['buttons'] as $button) {
+
+                if (!empty($button['hide'])) { continue; }
+
+                if ($many_buttons){
+                    $button['attributes']['class'] = isset($button['attributes']['class']) ? $button['attributes']['class'] .= ' dropdown-item' : 'dropdown-item';
+                }
+
+                echo html_button(
+                    $button['title'],
+                    $button['name'],
+                    (isset($button['onclick']) ? $button['onclick'] : ''),
+                    (isset($button['attributes']) ? $button['attributes'] : [])
+                );
+            } ?>
+
+            <?php if($many_buttons){ ?>
+                    </div>
                 </div>
-            </div>
+            <?php } ?>
+
         <?php } ?>
     </div>
 
