@@ -31,7 +31,10 @@ class actionAdminCheckFtp extends cmsAction {
 
             if(!$errors){
 
-                if($is_pasv) { ftp_pasv($connection, true); }
+                if($is_pasv) { 
+                    ftp_set_option($connection, FTP_USEPASVADDRESS, false);
+                    ftp_pasv($connection, true); 
+                }
 
                 $_file_list = ftp_nlist($connection, $path);
 
