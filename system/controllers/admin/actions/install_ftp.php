@@ -76,7 +76,10 @@ class actionAdminInstallFtp extends cmsAction {
         $session = @ftp_login($connection, $account['user'], $account['pass']);
         if (!$session){ cmsUser::addSessionMessage(LANG_CP_FTP_AUTH_FAILED, 'error'); return false; }
 
-        if($account['is_pasv']) { ftp_pasv($connection, true); }
+        if($account['is_pasv']) { 
+	 	ftp_set_option($connection, FTP_USEPASVADDRESS, false);
+		ftp_pasv($connection, true);
+	}
 
 		if (!$this->checkDestination($connection, $account)){
 			return false;

@@ -144,7 +144,7 @@ class cmsWysiwygRedactor {
                     $('#'+field_element).redactor('focus');
                 });
                 icms.forms.addWysiwygsAddPool(dom_id, function(field_element, text){
-                    $('#'+field_element).redactor('insertText', text);
+                    $('#'+field_element).redactor('insertHtml', text);
                 });
             }
         </script>
