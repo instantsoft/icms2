@@ -802,15 +802,15 @@ class cmsController {
 //============================================================================//
 
     /**
-     * Загружает и возвращает описание структуры grid таблицы
-     * @param string $grid_name Название
-     * @param array $params Параметры для передачи в функцию описания grid-а
-     * @param string $ups_key Ключ UPS
-     * @return array || false
+     * Возвращает параметры грида
+     *
+     * @param string $grid_name
+     * @param mixed $params
+     * @return array
      */
-    public function loadDataGrid($grid_name, $params = false, $ups_key = ''){
+    public function getDataGrid($grid_name, $params = false) {
 
-        $default_options = array(
+        $default_options = [
             'order_by'      => 'id',
             'order_to'      => 'asc',
             'show_id'       => true,
@@ -825,19 +825,19 @@ class cmsController {
             'drag_save_url' => '',
             'is_selectable' => false,
             'load_columns'  => false
-        );
+        ];
 
         $grid_file = $this->root_path . 'grids/grid_' . $grid_name . '.php';
 
-        if (!is_readable($grid_file)){
-            cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $grid_file));
+        if (!is_readable($grid_file)) {
+            return [false, []];
         }
 
-        include($grid_file);
+        include_once ($grid_file);
 
-        $args = array($this);
+        $args = [$this];
         if ($params) {
-            if (!is_array($params)){
+            if (!is_array($params)) {
                 $params = [$params];
             }
             foreach ($params as $p) {
@@ -845,7 +845,7 @@ class cmsController {
             }
         }
 
-        $grid = call_user_func_array('grid_'.$grid_name, $args);
+        $grid = call_user_func_array('grid_' . $grid_name, $args);
 
         if (!isset($grid['options'])) {
             $grid['options'] = $default_options;
@@ -853,8 +853,77 @@ class cmsController {
             $grid['options'] = array_merge($default_options, $grid['options']);
         }
 
-		$grid = cmsEventsManager::hook('grid_'.$this->name.'_'.$grid_name, $grid);
-        list($grid, $args) = cmsEventsManager::hook('grid_'.$this->name.'_'.$grid_name.'_args', array($grid, $args));
+        return [$grid, $args];
+    }
+
+    /**
+     * Возвращает отключаемые колонки грида
+     *
+     * @param string $grid_name
+     * @param mixed $params
+     * @return type
+     */
+    public function getDataGridSwitchableColumns($grid_name, $params = false) {
+
+        list($grid, $args) = $this->getDataGrid($grid_name, $params);
+
+        if (!$grid){
+            return [];
+        }
+
+        $columns = [];
+
+        foreach ($grid['columns'] as $key => $item) {
+            if(!empty($item['switchable'])){
+                $columns[$key] = $item['title'];
+            }
+        }
+
+        return $columns;
+    }
+
+    /**
+     * Загружает и возвращает описание структуры grid таблицы
+     * @param string $grid_name Название
+     * @param array $params Параметры для передачи в функцию описания grid-а
+     * @param mixed $ups_key Ключ UPS или готовый массив параметров
+     * @return array || false
+     */
+    public function loadDataGrid($grid_name, $params = false, $ups_key = '') {
+
+        list($grid, $args) = $this->getDataGrid($grid_name, $params);
+
+        if (!$grid){
+            return cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $this->root_path . 'grids/grid_' . $grid_name . '.php'));
+        }
+
+        $grid = cmsEventsManager::hook('grid_' . $this->name . '_' . $grid_name, $grid);
+        list($grid, $args) = cmsEventsManager::hook('grid_' . $this->name . '_' . $grid_name . '_args', array($grid, $args));
+
+        if ($ups_key) {
+            $filter_str = is_array($ups_key) ? $ups_key : cmsUser::getUPS($ups_key);
+            if ($filter_str) {
+                $filter = [];
+                if(is_array($filter_str)){
+
+                    if(!empty($filter_str['filter'])){
+                        parse_str($filter_str['filter'], $filter);
+                    }
+
+                    if(!empty($filter_str['columns'])){
+                        foreach ($filter_str['columns'] as $key => $is_enabled) {
+                            if(!$is_enabled && isset($grid['columns'][$key])){
+                                unset($grid['columns'][$key]);
+                            }
+                        }
+                        $grid['options']['load_columns'] = true;
+                    }
+                } else {
+                    parse_str($filter_str, $filter);
+                }
+                $grid['filter'] = $filter;
+            }
+        }
 
         if ($this->request->isAjax() && $this->request->has('heads')) {
 
@@ -872,16 +941,7 @@ class cmsController {
             }
         }
 
-        if($ups_key){
-            $filter_str = cmsUser::getUPS($ups_key);
-            if($filter_str){
-                parse_str($filter_str, $filter);
-                $grid['filter'] = $filter;
-            }
-        }
-
         return $grid;
-
     }
 
 //============================================================================//
