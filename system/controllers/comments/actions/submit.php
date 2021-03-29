@@ -150,7 +150,9 @@ class actionCommentsSubmit extends cmsAction {
             'target_id'         => $this->target_id,
             'content'           => $this->content,
             'content_html'      => $this->content_html,
-            'author_url'        => $this->cms_user->ip
+            'author_ip'         => function ($db){
+                return '\''.$db->escape(string_iptobin($this->cms_user->ip)).'\'';
+            }
         );
 
         // гость

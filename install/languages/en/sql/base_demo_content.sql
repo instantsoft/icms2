@@ -21,7 +21,7 @@ INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `titl
 (15, 0, 'content', 'add.albums', 'Adding albums', 'added album %s'),
 (17, 1, 'content', 'add.news', 'Adding news', 'added news %s');
 
-INSERT INTO `{#}comments` (`id`, `parent_id`, `level`, `ordering`, `user_id`, `date_pub`, `target_controller`, `target_subject`, `target_id`, `target_url`, `target_title`, `author_name`, `author_email`, `author_url`, `content`, `content_html`, `is_deleted`, `is_private`, `rating`) VALUES
+INSERT INTO `{#}comments` (`id`, `parent_id`, `level`, `ordering`, `user_id`, `date_pub`, `target_controller`, `target_subject`, `target_id`, `target_url`, `target_title`, `author_name`, `author_email`, `author_ip`, `content`, `content_html`, `is_deleted`, `is_private`, `rating`) VALUES
 (1, 0, 1, 1, 1, CURRENT_TIMESTAMP, 'content', 'articles', 4, 'articles/4-undersaturated-diamond-preconditions-and-development.html', 'Undersaturated diamond: preconditions and development', NULL, NULL, NULL, 'This article is so complicated...', 'This article is so complicated…', NULL, 0, 0),
 (2, 1, 2, 2, 1, CURRENT_TIMESTAMP, 'content', 'articles', 4, 'articles/4-undersaturated-diamond-preconditions-and-development.html', 'Undersaturated diamond: preconditions and development', NULL, NULL, NULL, 'I didn''t understand anything', 'I didn''t understand anything', NULL, 0, 0);
 

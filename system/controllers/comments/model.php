@@ -279,6 +279,8 @@ class modelComments extends cmsModel {
 
         return $this->get('comments', function($item, $model) use ($callback){
 
+            $item['author_ip'] = string_bintoip($item['author_ip']);
+
             $item['user'] = array(
                 'id'        => $item['user_id'],
                 'slug'      => $item['user_slug'],
@@ -305,6 +307,8 @@ class modelComments extends cmsModel {
         $this->joinUserLeft()->joinSessionsOnline();
 
         return $this->getItemById('comments', $id, function($item, $model){
+
+            $item['author_ip'] = string_bintoip($item['author_ip']);
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
@@ -487,12 +491,11 @@ class modelComments extends cmsModel {
 
         $time = $this->
                     filterIsNull('user_id')->
-                    filterEqual('author_url', $ip)->
+                    filterEqual('author_ip', string_iptobin($ip))->
                     orderBy('date_pub', 'desc')->
                     getFieldFiltered('comments', 'date_pub');
 
         return $time ? strtotime($time) : 0;
-
     }
 
     public function isRssFeedEnable() {

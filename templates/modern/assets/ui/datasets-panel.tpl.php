@@ -12,13 +12,20 @@
                 <?php $ds_url = sprintf($base_ds_url, ($ds_counter > 0 ? $ds_prefix.$set['name'] : '')); ?>
 
                 <?php if ($ds_selected){ ?>
-                    <span class="nav-link active"><?php echo $set['title']; ?></span>
+                    <span class="nav-link active">
+                        <?php echo $set['title']; ?>
+                        <?php if (!empty($set['counter'])){ ?>
+                            <span class="counter badge"><?php html($set['counter']); ?></span>
+                        <?php } ?>
+                    </span>
                 <?php } else { ?>
                     <a class="nav-link" href="<?php echo $ds_url.($active_filters_query ? '?'.$active_filters_query : ''); ?>">
                         <?php echo $set['title']; ?>
+                        <?php if (!empty($set['counter'])){ ?>
+                            <span class="counter badge"><?php html($set['counter']); ?></span>
+                        <?php } ?>
                     </a>
                 <?php } ?>
-
             </li>
             <?php $ds_counter++; ?>
         <?php } ?>

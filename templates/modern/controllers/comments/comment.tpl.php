@@ -81,9 +81,9 @@
                 <a href="<?php echo $author_url; ?>" class="user <?php if($entry['user_id'] && $target_user_id == $entry['user_id']){ ?>btn btn-success btn-sm border-0<?php } ?>"><?php echo $entry['user']['nickname']; ?></a>
             <?php } else { ?>
                 <span class="guest_name user"><?php echo $entry['author_name']; ?></span>
-                <?php if ($user->is_admin && !empty($entry['author_url'])) { ?>
+                <?php if ($user->is_admin && !empty($entry['author_ip'])) { ?>
                     <span class="guest_ip">
-                        [<?php echo $entry['author_url']; ?>]
+                        [<?php echo $entry['author_ip']; ?>]
                     </span>
                 <?php } ?>
             <?php } ?>

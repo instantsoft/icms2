@@ -18,6 +18,9 @@ class actionCommentsCommentsList extends cmsAction {
             $this->model->setPerPage(admin::perpage);
 
             if ($filter_str){
+                if(!empty($filter['author_ip'])){
+                    $filter['author_ip'] = string_iptobin($filter['author_ip']);
+                }
                 $this->model->applyGridFilter($grid, $filter);
             }
 

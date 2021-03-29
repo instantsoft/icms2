@@ -456,7 +456,7 @@ class cmsDatabase {
      */
     public function getTableFieldsTypes($table) {
 
-		$result = $this->query("SELECT DATA_TYPE, COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{#}{$table}'");
+		$result = $this->query("SELECT DATA_TYPE, COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = '{$this->options['db_base']}' AND table_name = '{#}{$table}'");
 
         $fields = [];
 

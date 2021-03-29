@@ -14,7 +14,7 @@ $this->renderGrid($this->href_to('comments_list'), $grid); ?>
 <script type="text/javascript">
     $(function(){
         $(document).on('click', '.datagrid .filter_ip', function (){
-            $('#filter_author_url').val($(this).text()).trigger('input');
+            $('#filter_author_ip').val($(this).text()).trigger('input');
             return false;
         });
         $('#datagrid').on('click', '.approve_comment', function (){

@@ -268,7 +268,9 @@ class modelUsers extends cmsModel {
         if(!$type){ $type = cmsRequest::getDeviceType(); }
 
         return $this->insert('{users}_auth_tokens', array(
-            'ip'          => sprintf('%u', ip2long(cmsUser::getIp())),
+            'ip' => function ($db){
+                return '\''.$db->escape(string_iptobin(cmsUser::getIp())).'\'';
+            },
             'access_type' => array(
                 'type' => $type,
                 'subj' => $subj
@@ -295,7 +297,7 @@ class modelUsers extends cmsModel {
 
     public function getUserAuthTokens($user_id){
         return $this->filterEqual('user_id', $user_id)->get('{users}_auth_tokens', function ($item, $model){
-            $item['ip'] = long2ip($item['ip']);
+            $item['ip'] = string_bintoip($item['ip']);
             $item['date_log'] = $item['date_log'] ? $item['date_log'] : $item['date_auth'];
             $item['access_type'] = cmsModel::yamlToArray($item['access_type']);
             return $item;

@@ -3,6 +3,10 @@ class cmsModel {
 
     public $name;
 
+    /**
+     * Объект базы данных
+     * @var \cmsDatabase
+     */
     public $db;
 
     /**
@@ -40,8 +44,8 @@ class cmsModel {
      * Префикс таблиц контента
      * @var string
      */
-    public $table_prefix = cmsModel::DEFAULT_TABLE_PREFIX;
-    public $table_category_postfix = cmsModel::DEFAULT_TABLE_CATEGORY_POSTFIX;
+    public $table_prefix = self::DEFAULT_TABLE_PREFIX;
+    public $table_category_postfix = self::DEFAULT_TABLE_CATEGORY_POSTFIX;
 
     //условия для выборок
     public $table      = '';

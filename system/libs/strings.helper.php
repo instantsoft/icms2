@@ -8,17 +8,16 @@
  * @param string $string Исходная строка
  * @return string
  */
-function string_to_camel($delimiter, $string){
+function string_to_camel($delimiter, $string) {
 
     $result = '';
-    $words = explode($delimiter, mb_strtolower($string));
+    $words  = explode($delimiter, mb_strtolower($string));
 
-    foreach($words as $word){
+    foreach ($words as $word) {
         $result .= ucfirst($word);
     }
 
     return $result;
-
 }
 
 /**
@@ -26,10 +25,8 @@ function string_to_camel($delimiter, $string){
  * @param string $string
  * @return string
  */
-function string_strip_br($string){
-
+function string_strip_br($string) {
     return str_replace('<br>', '', str_replace('<br/>', '', $string));
-
 }
 
 /**
@@ -43,24 +40,23 @@ function string_strip_br($string){
  * @param string $default
  * @return string
  */
-function string_lang($constant, $default=false){
+function string_lang($constant, $default = false) {
 
     $constant = strtoupper($constant);
 
     if (!$default) { $default = $constant; }
 
-    if (strpos($constant, 'LANG_') === false){
+    if (strpos($constant, 'LANG_') === false) {
         $constant = 'LANG_' . $constant;
     }
 
-    if (defined($constant)){
+    if (defined($constant)) {
         $string = constant($constant);
     } else {
         $string = $default;
     }
 
     return $string;
-
 }
 
 /**
@@ -72,12 +68,12 @@ function string_lang($constant, $default=false){
  * @param string $mask
  * @return string
  */
-function string_mask_to_regular($mask){
-    return str_replace(array(
-        '%','/','*','?','{slug}'
-    ), array(
-        '([0-9]+)','\/','(.*)','\?','([a-z0-9\-]*)'
-    ), trim($mask));
+function string_mask_to_regular($mask) {
+    return str_replace([
+        '%', '/', '*', '?', '{slug}'
+    ], [
+        '([0-9]+)', '\/', '(.*)', '\?', '([a-z0-9\-]*)'
+    ], trim($mask));
 }
 
 /**
@@ -93,50 +89,49 @@ function string_mask_to_regular($mask){
  * @param string $string_list
  * @return array
  */
-function string_parse_list($string_list){
+function string_parse_list($string_list) {
 
-    if (!$string_list) { return array(); }
+    if (!$string_list) { return []; }
 
     $user = cmsUser::getInstance();
 
     $rows = explode("\n", $string_list);
 
-    $list = array();
+    $list = [];
 
-    foreach($rows as $row){
+    foreach ($rows as $row) {
 
         if (!$row) { continue; }
 
         $row = trim($row);
 
-        if ( preg_match('/^{(.*)}$/i', $row, $matches) ){
-            if (!$user->is_logged){ continue; }
+        if (preg_match('/^{(.*)}$/i', $row, $matches)) {
+            if (!$user->is_logged) { continue; }
             $row = trim($matches[1]);
         }
 
-        if (!mb_strstr($row, '|')){
-            $list[] = array('value' => trim($row));
+        if (!mb_strstr($row, '|')) {
+            $list[] = ['value' => trim($row)];
         } else {
-            list($id, $value) = explode("|", $row);
-            $list[] = array(
-                'id' => trim($id),
+            list($id, $value) = explode('|', $row);
+            $list[] = [
+                'id'    => trim($id),
                 'value' => trim($value)
-            );
+            ];
         }
-
     }
 
     return $list;
-
 }
 
-function string_explode_list($string_list, $index_as_value = false){
+function string_explode_list($string_list, $index_as_value = false) {
 
-    $items = array();
-    $rows = explode("\n", trim($string_list));
-    if (is_array($rows)){
-        foreach($rows as $count=>$row){
-            if (mb_strpos($row, '|')){
+    $items = [];
+    $rows  = explode("\n", trim($string_list));
+
+    if (is_array($rows)) {
+        foreach ($rows as $count => $row) {
+            if (mb_strpos($row, '|')) {
                 list($index, $value) = explode('|', trim($row));
             } else {
                 $index = $index_as_value ? $row : ($count + 1);
@@ -145,8 +140,8 @@ function string_explode_list($string_list, $index_as_value = false){
             $items[trim($index)] = trim($value);
         }
     }
-    return $items;
 
+    return $items;
 }
 
 /**
@@ -157,51 +152,52 @@ function string_explode_list($string_list, $index_as_value = false){
  * @param string $mask_list
  * @return boolean
  */
-function string_in_mask_list($string, $mask_list){
+function string_in_mask_list($string, $mask_list) {
 
     if (!$mask_list) { return false; }
 
     $mask_list = explode("\n", $mask_list);
 
-    foreach($mask_list as $item){
+    foreach ($mask_list as $item) {
 
         $regular = string_mask_to_regular($item);
         $regular = "/^{$regular}$/iu";
 
-        if (preg_match($regular, $string)){
+        if (preg_match($regular, $string)) {
             return true;
         }
-
     }
 
     return false;
-
 }
 
 /**
  * Генерирует случайную последовательность символов заданной длины
- * @param int $length
+ *
+ * @param integer $length Длина последовательности
+ * @param string $seed Соль
  * @return string
  */
-function string_random($length=32, $seed=''){
+function string_random($length = 32, $seed = '') {
 
     $rand_funct = 'mt_rand';
     if (function_exists('random_int')) {
         $rand_funct = 'random_int';
     }
 
-    if(function_exists('random_bytes')){
+    if (function_exists('random_bytes')) {
         $salt = bin2hex(random_bytes(128));
     } else {
-        $salt = substr(md5(md5($rand_funct(0, PHP_INT_MAX).md5(md5(cmsConfig::get('db_pass'))))), $rand_funct(0, 16), $rand_funct(8, 15));
+        $salt = substr(md5(md5($rand_funct(0, PHP_INT_MAX) . md5(md5(cmsConfig::get('db_pass'))))), $rand_funct(0, 16), $rand_funct(8, 15));
     }
 
     $string = md5(md5(md5($salt) . chr($rand_funct(0, 127)) . microtime(true) . chr($rand_funct(0, 127))) . chr($rand_funct(0, 127)) . md5(md5($seed)));
 
-    if ($length < 32) { $string = substr($string, 0, $length); }
+    if ($length < 32) {
+        $string = substr($string, 0, $length);
+    }
 
     return $string;
-
 }
 
 /**
@@ -215,39 +211,38 @@ function string_random($length=32, $seed=''){
  * @param bool $is_add_back Добавлять к строке слово "назад"?
  * @return string
  */
-function string_date_age($date, $options, $is_add_back=false){
+function string_date_age($date, $options, $is_add_back = false) {
 
-    if (!$date) { return; }
+    if (!$date) { return ''; }
 
-	$date2 = !empty($options['from_date']) ? $options['from_date'] : false;
+    $date2 = !empty($options['from_date']) ? $options['from_date'] : false;
 
     $diff = real_date_diff($date, $date2);
 
-    $diff_str = array();
+    $diff_str = [];
 
-    if (in_array('y', $options) && $diff[0]){
+    if (in_array('y', $options) && $diff[0]) {
         $diff_str[] = html_spellcount($diff[0], LANG_YEAR1, LANG_YEAR2, LANG_YEAR10);
     }
-    if (in_array('m', $options) && $diff[1]){
+    if (in_array('m', $options) && $diff[1]) {
         $diff_str[] = html_spellcount($diff[1], LANG_MONTH1, LANG_MONTH2, LANG_MONTH10);
     }
-    if (in_array('d', $options) && $diff[2]){
+    if (in_array('d', $options) && $diff[2]) {
         $diff_str[] = html_spellcount($diff[2], LANG_DAY1, LANG_DAY2, LANG_DAY10);
     }
-    if (in_array('h', $options) && $diff[3]){
+    if (in_array('h', $options) && $diff[3]) {
         $diff_str[] = html_spellcount($diff[3], LANG_HOUR1, LANG_HOUR2, LANG_HOUR10);
     }
-    if (in_array('i', $options) && $diff[4]){
+    if (in_array('i', $options) && $diff[4]) {
         $diff_str[] = html_spellcount($diff[4], LANG_MINUTE1, LANG_MINUTE2, LANG_MINUTE10);
     }
 
     if (!$diff_str) {
         return LANG_SECONDS_AGO;
     } else {
-        $diff_str = trim( implode(' ', $diff_str) );
+        $diff_str = trim(implode(' ', $diff_str));
         return $is_add_back ? sprintf(LANG_DATE_AGO, $diff_str) : $diff_str;
     }
-
 }
 
 /**
@@ -260,27 +255,27 @@ function string_date_age($date, $options, $is_add_back=false){
  * @param bool $is_add_back Добавлять к строке слово "назад"?
  * @return string
  */
-function string_date_age_max($date, $is_add_back=false){
+function string_date_age_max($date, $is_add_back = false) {
 
-    if (!$date) { return; }
+    if (!$date) { return ''; }
 
     $diff = real_date_diff($date);
 
     $diff_str = '';
 
-    if ($diff[0]){
+    if ($diff[0]) {
         $diff_str = html_spellcount($diff[0], LANG_YEAR1, LANG_YEAR2, LANG_YEAR10);
     } else
-    if ($diff[1]){
+    if ($diff[1]) {
         $diff_str = html_spellcount($diff[1], LANG_MONTH1, LANG_MONTH2, LANG_MONTH10);
     } else
-    if ($diff[2]){
+    if ($diff[2]) {
         $diff_str = html_spellcount($diff[2], LANG_DAY1, LANG_DAY2, LANG_DAY10);
     } else
-    if ($diff[3]){
+    if ($diff[3]) {
         $diff_str = html_spellcount($diff[3], LANG_HOUR1, LANG_HOUR2, LANG_HOUR10);
     } else
-    if ($diff[4]){
+    if ($diff[4]) {
         $diff_str = html_spellcount($diff[4], LANG_MINUTE1, LANG_MINUTE2, LANG_MINUTE10);
     }
 
@@ -289,7 +284,6 @@ function string_date_age_max($date, $is_add_back=false){
     } else {
         return $is_add_back ? sprintf(LANG_DATE_AGO, $diff_str) : $diff_str;
     }
-
 }
 
 /**
@@ -309,33 +303,35 @@ function string_date_age_max($date, $is_add_back=false){
  * @param string $date2
  * @return array
  */
-function real_date_diff($date1, $date2 = null){
+function real_date_diff($date1, $date2 = null) {
 
-    $diff = array();
+    $diff = [];
 
-    if (!is_string($date1)){ return false; }
+    if (!is_string($date1)) { return false; }
 
     //Если вторая дата не задана принимаем ее как текущую
-    if(!$date2) {
+    if (!$date2) {
         $cd = getdate();
     } else {
         $cd = getdate(strtotime($date2));
     }
 
-    $date2 = $cd['year'].'-'.$cd['mon'].'-'.$cd['mday'].' '.$cd['hours'].':'.$cd['minutes'].':'.$cd['seconds'];
+    $date2 = $cd['year'] . '-' . $cd['mon'] . '-' . $cd['mday'] . ' ' . $cd['hours'] . ':' . $cd['minutes'] . ':' . $cd['seconds'];
 
     //Преобразуем даты в массив
     $pattern = '/(\d+)\-(\d+)\-(\d+)(\s+(\d+)\:(\d+)\:(\d+))?/';
     preg_match($pattern, $date1, $matches);
-    $d1 = array((int)$matches[1], (int)$matches[2], (int)$matches[3], (int)$matches[5], (int)$matches[6], (int)$matches[7]);
+    $d1 = [intval($matches[1]), intval($matches[2]), intval($matches[3]), intval($matches[5]), intval($matches[6]), intval($matches[7])];
     preg_match($pattern, $date2, $matches);
-    $d2 = array((int)$matches[1], (int)$matches[2], (int)$matches[3], (int)$matches[5], (int)$matches[6], (int)$matches[7]);
+    $d2 = [intval($matches[1]), intval($matches[2]), intval($matches[3]), intval($matches[5]), intval($matches[6]), intval($matches[7])];
 
     //Если вторая дата меньше чем первая, меняем их местами
-    for($i=0; $i<count($d2); $i++) {
-        if($d2[$i]>$d1[$i]) break;
-        if($d2[$i]<$d1[$i]) {
-            $t = $d1;
+    for ($i = 0; $i < count($d2); $i++) {
+        if ($d2[$i] > $d1[$i]) {
+            break;
+        }
+        if ($d2[$i] < $d1[$i]) {
+            $t  = $d1;
             $d1 = $d2;
             $d2 = $t;
             break;
@@ -343,25 +339,24 @@ function real_date_diff($date1, $date2 = null){
     }
 
     //Вычисляем разность между датами (как в столбик)
-    $md1 = array(31, $d1[0]%4||(!($d1[0]%100)&&$d1[0]%400)?28:29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-    $md2 = array(31, $d2[0]%4||(!($d2[0]%100)&&$d2[0]%400)?28:29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-    $min_v = array(NULL, 1, 1, 0, 0, 0);
-    $max_v = array(NULL, 12, $d2[1]==1?$md2[11]:$md2[$d2[1]-2], 23, 59, 59);
-    for($i=5; $i>=0; $i--) {
-        if($d2[$i]<$min_v[$i]) {
-            $d2[$i-1]--;
-            $d2[$i]=$max_v[$i];
+    $md1   = [31, $d1[0] % 4 || (!($d1[0] % 100) && $d1[0] % 400) ? 28 : 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    $md2   = [31, $d2[0] % 4 || (!($d2[0] % 100) && $d2[0] % 400) ? 28 : 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    $min_v = [NULL, 1, 1, 0, 0, 0];
+    $max_v = [NULL, 12, $d2[1] == 1 ? $md2[11] : $md2[$d2[1] - 2], 23, 59, 59];
+    for ($i = 5; $i >= 0; $i--) {
+        if ($d2[$i] < $min_v[$i]) {
+            $d2[$i - 1]--;
+            $d2[$i] = $max_v[$i];
         }
-        $diff[$i] = $d2[$i]-$d1[$i];
-        if($diff[$i]<0) {
-            $d2[$i-1]--;
-            $i==2 ? $diff[$i] += $md1[$d1[1]-1] : $diff[$i] += $max_v[$i]-$min_v[$i]+1;
+        $diff[$i] = $d2[$i] - $d1[$i];
+        if ($diff[$i] < 0) {
+            $d2[$i - 1]--;
+            $i == 2 ? $diff[$i] += $md1[$d1[1] - 1] : $diff[$i] += $max_v[$i] - $min_v[$i] + 1;
         }
     }
 
     //Возвращаем результат
     return $diff;
-
 }
 
 /**
@@ -437,29 +432,26 @@ function string_replace_svg_icons($string){
  * @param string $string
  * @return string
  */
-function string_replace_user_properties($string){
+function string_replace_user_properties($string) {
 
     $matches_count = preg_match_all('/{user.([a-z0-9_]+)}/i', $string, $matches);
 
-    if ($matches_count){
+    if ($matches_count) {
 
         $user = cmsUser::getInstance();
 
-        for($i=0; $i<$matches_count; $i++){
+        for ($i = 0; $i < $matches_count; $i++) {
 
-            $tag = $matches[0][$i];
+            $tag      = $matches[0][$i];
             $property = $matches[1][$i];
 
-            if (isset($user->$property)){
+            if (isset($user->$property)) {
                 $string = str_replace($tag, $user->$property, $string);
             }
-
         }
-
     }
 
     return $string;
-
 }
 
 /**
@@ -469,18 +461,21 @@ function string_replace_user_properties($string){
  * @param string $string
  * @param array $data
  */
-function string_replace_keys_values($string, $data){
+function string_replace_keys_values($string, $data) {
 
-    if(strpos($string, '{') === false){ return $string; }
+    if (strpos($string, '{') === false) { return $string; }
 
-	foreach($data as $k=>$v){
-		if (is_array($v) || is_object($v)) { unset($data[$k]); }
-	}
+    foreach ($data as $k => $v) {
+        if (is_array($v) || is_object($v)) {
+            unset($data[$k]);
+        }
+    }
 
-    $keys = array_map(function($key){ return '{'.$key.'}'; }, array_keys($data));
+    $keys = array_map(function ($key) {
+        return '{' . $key . '}';
+    }, array_keys($data));
 
     return str_replace($keys, array_values($data), $string);
-
 }
 
 /**
@@ -604,11 +599,11 @@ function string_make_links($string){
  * @param int $limit Количество слов в результирующей строке
  * @return string
  */
-function string_get_meta_keywords($text, $min_length=5, $limit=10){
+function string_get_meta_keywords($text, $min_length = 5, $limit = 10) {
 
-    $stat = array();
+    $stat = [];
 
-    $text = str_replace(array("\n", '<br>', '<br/>'), ' ', $text);
+    $text = str_replace(["\n", '<br>', '<br/>'], ' ', $text);
     $text = strip_tags($text);
     $text = mb_strtolower($text);
 
@@ -616,18 +611,18 @@ function string_get_meta_keywords($text, $min_length=5, $limit=10){
 
     $words = explode(' ', $text);
 
-    foreach($words as $word){
+    foreach ($words as $word) {
 
         $word = trim($word);
-        $word = str_replace(array('(',')','+','-','.','!',':','{','}','|','"',',',"'"), '', $word);
+        $word = str_replace(['(', ')', '+', '-', '.', '!', ':', '{', '}', '|', '"', ',', "'"], '', $word);
         $word = preg_replace("/\.,\(\)\{\}/ui", '', $word);
 
-        if($stopwords && in_array($word, $stopwords)){
+        if ($stopwords && in_array($word, $stopwords)) {
             continue;
         }
 
-        if (mb_strlen($word)>=$min_length){
-            $stat[$word] = isset($stat[$word]) ? $stat[$word]+1 : 1;
+        if (mb_strlen($word) >= $min_length) {
+            $stat[$word] = isset($stat[$word]) ? $stat[$word] + 1 : 1;
         }
     }
 
@@ -636,7 +631,6 @@ function string_get_meta_keywords($text, $min_length=5, $limit=10){
     $stat = array_slice($stat, 0, $limit, true);
 
     return implode(', ', array_keys($stat));
-
 }
 
 /**
@@ -646,10 +640,8 @@ function string_get_meta_keywords($text, $min_length=5, $limit=10){
  * @param int $limit Максимальная длина результата
  * @return string
  */
-function string_get_meta_description($text, $limit=250){
-
+function string_get_meta_description($text, $limit = 250) {
     return string_short($text, $limit);
-
 }
 
 /**
@@ -658,16 +650,16 @@ function string_get_meta_description($text, $limit=250){
  * @param string $lang Язык, например ru, en
  * @return array
  */
-function string_get_stopwords($lang='ru') {
+function string_get_stopwords($lang = 'ru') {
     static $words = null;
-    if(isset($words[$lang])){
+    if (isset($words[$lang])) {
         return $words[$lang];
     }
-    $file = PATH.'/system/languages/'.$lang.'/stopwords/stopwords.php';
-    if(file_exists($file)){
+    $file = PATH . '/system/languages/' . $lang . '/stopwords/stopwords.php';
+    if (file_exists($file)) {
         $words[$lang] = include $file;
     } else {
-        $words[$lang] = array();
+        $words[$lang] = [];
     }
     return $words[$lang];
 }
@@ -716,7 +708,6 @@ function string_short($string, $length = 0, $postfix = '', $type = 's'){
     }
 
     return $string . $postfix;
-
 }
 
 /**
@@ -725,26 +716,26 @@ function string_short($string, $length = 0, $postfix = '', $type = 's'){
  * @param string $string
  * @return string
  */
-function string_compress($string){
+function string_compress($string) {
 
     $string = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $string);
     $string = preg_replace('/\s{2,}/', '', $string);
     $string = str_replace(["\r\n", "\r", "\n", "\t"], '', $string);
 
     return $string;
-
 }
 
 /**
  * Преобразует первый символ строки в верхний регистр
  * multi-bytes ucfirst
  *
- * @param string $str
+ * @param string $string
  * @return string
  */
 function string_ucfirst($string) {
-    return mb_strtoupper(mb_substr($string, 0, 1)).mb_substr($string, 1);
+    return mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1);
 }
+
 //============================================================================//
 
 /**
@@ -757,20 +748,19 @@ function string_ucfirst($string) {
  * @param type $value
  * @return type
  */
-function array_collection_to_list($collection, $key, $value=false){
+function array_collection_to_list($collection, $key, $value = false) {
 
     $value = $value ? $value : $key;
 
-    $list = array();
+    $list = [];
 
-    if (is_array($collection)){
-        foreach($collection as $item){
-            $list[ $item[$key] ] = $item[$value];
+    if (is_array($collection)) {
+        foreach ($collection as $item) {
+            $list[$item[$key]] = $item[$value];
         }
     }
 
     return $list;
-
 }
 
 /**
@@ -798,21 +788,22 @@ function array_filter_recursive($input) {
  */
 function array_value_recursive($needle, $haystack, $delimiter = ':') {
 
-    if(!is_array($haystack)){ return null; }
+    if (!is_array($haystack)) { return null; }
 
     $name_parts = !is_array($needle) ? explode($delimiter, $needle) : $needle;
 
     foreach ($name_parts as $name) {
-        if(!is_array($haystack) || !array_key_exists($name, $haystack)){
+        if (!is_array($haystack) || !array_key_exists($name, $haystack)) {
             return null;
         } else {
             $haystack = $haystack[$name];
-            if($haystack === null){ $haystack = false; }
+            if ($haystack === null) {
+                $haystack = false;
+            }
         }
     }
 
     return $haystack;
-
 }
 
 /**
@@ -838,7 +829,6 @@ function set_array_value_recursive($path, $array, $value, $delimiter = ':') {
     $_array = $value;
 
     return $array;
-
 }
 
 /**
@@ -855,38 +845,34 @@ function set_array_value_recursive($path, $array, $value, $delimiter = ':') {
  */
 function array_order_by(&$array, $fields, $direction = 'asc') {
 
-    if(!$array){ return false; }
+    if (!$array) { return false; }
 
-    if(is_string($fields)){
-        $list = array(array(
+    if (is_string($fields)) {
+        $list = [[
             'by' => $fields,
             'to' => $direction
-        ));
+        ]];
     } else {
         $list = $fields;
     }
 
-    $args = array();
+    $args = [];
 
     foreach ($array as $k => $item) {
 
         $key = 0;
 
         foreach ($list as $order) {
-
             $args[$key][$k] = $item[$order['by']];
-                $key++;
-            $args[$key] = constant('SORT_'.strtoupper($order['to']));
-                $key++;
-
+            $key++;
+            $args[$key] = constant('SORT_' . strtoupper($order['to']));
+            $key++;
         }
-
     }
 
     $args[] = &$array;
 
     return call_user_func_array('array_multisort', $args);
-
 }
 
 function multi_array_unique($array) {
@@ -900,36 +886,88 @@ function multi_array_unique($array) {
     }
 
     return $result;
-
 }
 
+/**
+ * Возвращает значение поля с учётом языка
+ *
+ * @param string $field Название поля без языкового префикса
+ * @param array $data Массив данных
+ * @return mixed
+ */
 function get_localized_value($field, $data) {
 
     $lang = cmsCore::getLanguageHrefPrefix();
 
-    $field .= ($lang ? '_'.$lang : '');
+    $field .= ($lang ? '_' . $lang : '');
 
-    if(array_key_exists($field, $data)){
+    if (array_key_exists($field, $data)) {
         return $data[$field];
     }
 
     return null;
-
 }
 
+/**
+ * Форматирует число с плавающей точкой
+ *
+ * @param float $value Число с плавающей точкой
+ * @param integer $decimals Кол-во знаков после запятой
+ * @param integer $thousands_sep Разделитель тысячей
+ * @return string
+ */
 function nf_amount($value, $decimals = 2, $thousands_sep = ' ') {
 
     $value = number_format(floatval($value), $decimals, '.', $thousands_sep);
 
     return rtrim(rtrim($value, '0'), '.');
 }
+
+/**
+ * Преобразует ipv4/ipv6 адрес в
+ * упакованный формат для хранения
+ *
+ * @param string $ip
+ * @return string
+ */
+function string_iptobin($ip) {
+    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        return current(unpack('A4', inet_pton($ip)));
+    } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+        return current(unpack('A16', inet_pton($ip)));
+    } else {
+        return null;
+    }
+}
+
+/**
+ * Преобразует упакованный ipv4/ipv6 адрес в
+ * читаемый формат
+ *
+ * @param string $str
+ * @return string
+ */
+function string_bintoip($str) {
+    $len = strlen($str);
+    if ($len === 16 || $len === 4) {
+        return inet_ntop(pack('A' . $len, $str));
+    } else {
+        return null;
+    }
+}
+
 //============================================================================//
 
 /**
  * Выводит переменную рекурсивно
+ * Используется для отладки
+ *
  * @param mixed $var
+ * @param boolean $halt
 */
-function dump($var, $halt=true){
-    echo '<pre>'; print_r($var); echo '</pre>';
+function dump($var, $halt = true) {
+    echo '<pre>';
+    print_r($var);
+    echo '</pre>';
     if ($halt) { die(); }
 }

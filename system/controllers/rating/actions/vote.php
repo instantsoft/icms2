@@ -80,7 +80,7 @@ class actionRatingVote extends cmsAction {
             'target_subject'    => $target_subject,
             'target_id'         => $target_id,
             'score'             => $score,
-            'ip'                => sprintf('%u', ip2long(cmsUser::getIp()))
+            'ip'                => $this->cms_user->ip
         );
 
         $target = $controller->model->getRatingTarget($target_subject, $target_id);

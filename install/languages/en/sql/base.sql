@@ -209,7 +209,7 @@ CREATE TABLE `{#}comments` (
   `target_title` varchar(100) DEFAULT NULL COMMENT 'Commented object title',
   `author_name` varchar(100) DEFAULT NULL COMMENT 'Author (guest) name',
   `author_email` varchar(100) DEFAULT NULL COMMENT 'Author (guest) E-mail',
-  `author_url` varchar(15) DEFAULT NULL COMMENT 'Author ip',
+  `author_ip` varbinary(16) DEFAULT NULL COMMENT 'Author ip',
   `content` text COMMENT 'Comment text',
   `content_html` text COMMENT 'Sanitized text',
   `is_deleted` tinyint(1) unsigned DEFAULT NULL COMMENT 'Comment deleted?',
@@ -219,7 +219,7 @@ CREATE TABLE `{#}comments` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `target_id` (`target_id`,`target_controller`,`target_subject`,`ordering`),
-  KEY `author_url` (`author_url`),
+  KEY `author_ip` (`author_ip`),
   KEY `is_approved` (`is_approved`,`is_deleted`,`date_pub`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='User comments';
 
@@ -1322,7 +1322,7 @@ CREATE TABLE `{#}rating_log` (
   `target_subject` varchar(32) DEFAULT NULL COMMENT 'Subject (target content type)',
   `target_id` int(11) unsigned DEFAULT NULL COMMENT 'Subject ID (target content items)',
   `score` tinyint(1) DEFAULT NULL COMMENT 'Score value',
-  `ip` int(10) unsigned DEFAULT NULL COMMENT 'ip-address',
+  `ip` varbinary(16) DEFAULT NULL COMMENT 'ip-address',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `target_id` (`target_id`,`target_controller`,`target_subject`),
@@ -1450,7 +1450,7 @@ CREATE TABLE `{#}users_auth_tokens` (
   `date_log` timestamp NULL DEFAULT NULL,
   `user_id` int(11) unsigned DEFAULT NULL,
   `access_type` varchar(100) DEFAULT NULL,
-  `ip` int(10) unsigned DEFAULT NULL,
+  `ip` varbinary(16) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_token` (`auth_token`),
   KEY `user_id` (`user_id`)

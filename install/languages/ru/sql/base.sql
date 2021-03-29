@@ -209,7 +209,7 @@ CREATE TABLE `{#}comments` (
   `target_title` varchar(100) DEFAULT NULL COMMENT 'Заголовок объекта комментирования',
   `author_name` varchar(100) DEFAULT NULL COMMENT 'Имя автора (гостя)',
   `author_email` varchar(100) DEFAULT NULL COMMENT 'E-mail автора (гостя)',
-  `author_url` varchar(15) DEFAULT NULL COMMENT 'ip адрес',
+  `author_ip` varbinary(16) DEFAULT NULL COMMENT 'ip адрес',
   `content` text COMMENT 'Текст комментария',
   `content_html` text COMMENT 'Текст после типографа',
   `is_deleted` tinyint(1) unsigned DEFAULT NULL COMMENT 'Комментарий удален?',
@@ -219,7 +219,7 @@ CREATE TABLE `{#}comments` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `target_id` (`target_id`,`target_controller`,`target_subject`,`ordering`),
-  KEY `author_url` (`author_url`),
+  KEY `author_ip` (`author_ip`),
   KEY `is_approved` (`is_approved`,`is_deleted`,`date_pub`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Комментарии пользователей';
 
@@ -1321,7 +1321,7 @@ CREATE TABLE `{#}rating_log` (
   `target_subject` varchar(32) DEFAULT NULL COMMENT 'Субъект (тип оцениваемого контента)',
   `target_id` int(11) unsigned DEFAULT NULL COMMENT 'ID субъекта (записи оцениваемого контента)',
   `score` tinyint(1) DEFAULT NULL COMMENT 'Значение оценки',
-  `ip` int(10) unsigned DEFAULT NULL COMMENT 'ip-адрес проголосовавшего',
+  `ip` varbinary(16) DEFAULT NULL COMMENT 'ip-адрес проголосовавшего',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `target_id` (`target_id`,`target_controller`,`target_subject`),
@@ -1747,7 +1747,7 @@ CREATE TABLE `{#}users_auth_tokens` (
   `date_log` timestamp NULL DEFAULT NULL,
   `user_id` int(11) unsigned DEFAULT NULL,
   `access_type` varchar(100) DEFAULT NULL,
-  `ip` int(10) unsigned DEFAULT NULL,
+  `ip` varbinary(16) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_token` (`auth_token`),
   KEY `user_id` (`user_id`)

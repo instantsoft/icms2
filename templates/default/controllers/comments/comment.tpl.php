@@ -49,9 +49,9 @@
 				<a class="user" href="<?php echo href_to_profile($entry['user']); ?>"><?php echo $entry['user']['nickname']; ?></a>
 			<?php } else { ?>
 				<span class="guest_name user"><?php echo $entry['author_name']; ?></span>
-				<?php if ($user->is_admin && !empty($entry['author_url'])) { ?>
+				<?php if ($user->is_admin && !empty($entry['author_ip'])) { ?>
 					<span class="guest_ip">
-						[<?php echo $entry['author_url']; ?>]
+						[<?php echo $entry['author_ip']; ?>]
 					</span>
 				<?php } ?>
 			<?php } ?>

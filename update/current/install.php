@@ -7,6 +7,10 @@ function install_package(){
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    migrateCommentsIps();
+    migrateRatingLogIps();
+    migrateAuthTokensIps();
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
@@ -99,4 +103,72 @@ function save_controller_options($controllers) {
         }
     }
 
+}
+
+function migrateAuthTokensIps() {
+
+    $model = new cmsModel();
+
+    $model->db->query("TRUNCATE `{users}_auth_tokens`");
+    $model->db->query("ALTER TABLE `{users}_auth_tokens` CHANGE `ip` `ip` VARBINARY(16) NULL DEFAULT NULL");
+
+    return true;
+}
+
+function migrateRatingLogIps() {
+
+    $model = new cmsModel();
+
+    $table_fields = $model->db->getTableFieldsTypes('rating_log');
+
+    if($table_fields['ip'] == 'varbinary'){
+        return false;
+    }
+
+    $logs = $model->selectOnly('ip')->select('id')->limit(false)->get('rating_log', function($item, $model){
+        return $item['ip'];
+    });
+
+    $model->db->query("ALTER TABLE `{#}rating_log` CHANGE `ip` `ip` VARBINARY(16) NULL DEFAULT NULL COMMENT 'ip-адрес проголосовавшего';");
+
+    if($logs){
+        foreach ($logs as $id => $ip) {
+
+            $model->filterEqual('id', $id)->updateFiltered('rating_log', [
+                'ip' => function ($db) use($ip){
+                    return '\''.$db->escape(string_iptobin($ip)).'\'';
+                }
+            ], true);
+        }
+    }
+
+    return true;
+}
+
+function migrateCommentsIps() {
+
+    $model = new cmsModel();
+
+    if($model->db->isFieldExists('comments', 'author_ip')){
+        return false;
+    }
+
+    $comments = $model->selectOnly('author_url')->select('id')->limit(false)->get('comments', function($item, $model){
+        return $item['author_url'];
+    });
+
+    $model->db->query("ALTER TABLE `{#}comments` CHANGE `author_url` `author_ip` VARBINARY(16) NULL DEFAULT NULL COMMENT 'ip адрес'");
+
+    if($comments){
+        foreach ($comments as $id => $author_ip) {
+
+            $model->filterEqual('id', $id)->updateFiltered('comments', [
+                'author_ip' => function ($db) use($author_ip){
+                    return '\''.$db->escape(string_iptobin($author_ip)).'\'';
+                }
+            ], true);
+        }
+    }
+
+    return true;
 }
