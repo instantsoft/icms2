@@ -8,6 +8,8 @@ class actionAdminWidgetsLoad extends cmsAction {
             cmsCore::error404();
         }
 
+        cmsCore::loadAllControllersLanguages();
+
         $page_id  = $this->request->get('page_id', 0);
         $template = $this->request->get('template', '');
 
