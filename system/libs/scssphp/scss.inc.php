@@ -33,6 +33,7 @@ if (!class_exists('ScssPhp\ScssPhp\Version', false)) {
     include_once __DIR__ . '/SourceMap/Base64VLQ.php';
     include_once __DIR__ . '/SourceMap/SourceMapGenerator.php';
     include_once __DIR__ . '/Type.php';
+    include_once __DIR__ . '/Util/Path.php';
     include_once __DIR__ . '/Util.php';
     include_once __DIR__ . '/Version.php';
 }
