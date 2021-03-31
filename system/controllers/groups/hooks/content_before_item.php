@@ -6,7 +6,7 @@ class onGroupsContentBeforeItem extends cmsAction {
 
         list($ctype, $item, $fields) = $data;
 
-        if (!empty($item['parent_id'])){
+        if (!empty($item['parent_id']) && !$ctype['is_in_groups_only']){
 
             $group = $this->model->getGroup($item['parent_id']);
 

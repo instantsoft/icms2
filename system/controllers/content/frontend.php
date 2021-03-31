@@ -713,7 +713,7 @@ class content extends cmsFrontend {
     public function getItemForm($ctype, $fields, $action, $data = [], $item_id = false, $item = false) {
 
         // Контейнер для передачи дополнительных списков:
-        // $groups_list, $folders_list и т.д.
+        // $folders_list и т.д.
         extract($data);
 
         // Строим форму
@@ -779,20 +779,6 @@ class content extends cmsFrontend {
                 'is_empty' => true,
                 'is_hidden' => true
             ));
-        }
-
-        // Если этот контент можно создавать в группах (сообществах) то добавляем
-        // поле выбора группы
-        if (($action == 'add' || $this->cms_user->is_admin) && !empty($groups_list) && $groups_list != array('0'=>'')){
-
-            $fieldset_id = $form->addFieldset(LANG_GROUP, 'group_wrap', array('is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('group_wrap', $ctype['options']['is_collapsed'])));
-            $form->addField($fieldset_id,
-                new fieldList('parent_id', array(
-                        'items' => $groups_list
-                    )
-                )
-            );
-
         }
 
         // Разбиваем поля по группам

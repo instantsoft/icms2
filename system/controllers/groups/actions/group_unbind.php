@@ -13,6 +13,10 @@ class actionGroupsGroupUnbind extends cmsAction {
         $ctype = $this->model_content->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
+        if($ctype['is_in_groups_only']){
+            cmsCore::error404();
+        }
+
         $item = $this->model_content->getContentItem($ctype['name'], $item_id);
         if (!$item) { cmsCore::error404(); }
 

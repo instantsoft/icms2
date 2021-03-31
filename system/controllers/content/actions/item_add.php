@@ -14,10 +14,10 @@ class actionContentItemAdd extends cmsAction {
         $ctype = $this->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
-        $permissions = cmsEventsManager::hook('content_add_permissions', array(
+        $permissions = cmsEventsManager::hook('content_add_permissions', [
             'can_add' => false,
             'ctype'   => $ctype
-        ));
+        ]);
 
         $is_check_parent_perm = false;
 
@@ -34,7 +34,6 @@ class actionContentItemAdd extends cmsAction {
 
         // проверяем что не превышен лимит на число записей
         $user_items_count = $this->model->getUserContentItemsCount($ctype['name'], $this->cms_user->id, false);
-
         if (cmsUser::isPermittedLimitReached($ctype['name'], 'limit', $user_items_count)){
             cmsUser::addSessionMessage(sprintf(LANG_CONTENT_COUNT_LIMIT, $ctype['labels']['many']), 'error');
             $this->redirectBack();
@@ -42,7 +41,6 @@ class actionContentItemAdd extends cmsAction {
 
         // проверяем что не превышен лимит на число записей в сутки
         $user_items_24count = $this->model->getUserContentItemsCount24($ctype['name'], $this->cms_user->id, false);
-
         if (cmsUser::isPermittedLimitReached($ctype['name'], 'limit24', $user_items_24count)){
             cmsUser::addSessionMessage(sprintf(LANG_CONTENT_COUNT_LIMIT24, $ctype['labels']['many'], $ctype['labels']['two']), 'error');
             $this->redirectBack();
@@ -54,7 +52,7 @@ class actionContentItemAdd extends cmsAction {
             $this->redirectBack();
         }
 
-		$item = array();
+		$item = [];
 
         if ($ctype['is_cats']){
             $category_id = $this->request->get('to_id', 0);
@@ -64,27 +62,8 @@ class actionContentItemAdd extends cmsAction {
         $props = $this->model->getContentProps($ctype['name']);
         $ctype['props'] = $props;
 
-        // Если этот контент можно создавать в группах (сообществах) то получаем список групп
-        $groups_list = array();
-
-        if ($ctype['is_in_groups'] || $ctype['is_in_groups_only']){
-
-            $groups_model = cmsCore::getModel('groups');
-            $groups = $groups_model->getUserGroups($this->cms_user->id);
-
-            $groups_list = ($ctype['is_in_groups_only']) ? array() : array('0'=>'');
-            $groups_list = $groups_list + array_collection_to_list($groups, 'id', 'title');
-
-            $group_id = $this->request->get('group_id', 0);
-            // если вне групп добавление записей запрещено, даём выбор только одной группы
-            if(!cmsUser::isAllowed($ctype['name'], 'add') && isset($groups_list[$group_id])){
-                $groups_list = array($group_id => $groups_list[$group_id]);
-            }
-
-        }
-
         // Если включены личные папки - получаем их список
-        $folders_list = array();
+        $folders_list = [];
 
         if ($ctype['is_folders']){
             $folders_list = $this->model->getContentFolders($ctype['id'], $this->cms_user->id);
@@ -97,13 +76,12 @@ class actionContentItemAdd extends cmsAction {
         // Получаем поля для данного типа контента
         $fields = $this->model->orderBy('ordering')->getContentFields($ctype['name']);
 
-        $form = $this->getItemForm($ctype, $fields, 'add', array(
-            'groups_list' => $groups_list,
+        $form = $this->getItemForm($ctype, $fields, 'add', [
             'folders_list' => $folders_list
-        ));
+        ]);
 
+        // Связи
         $parents = $this->model->getContentTypeParents($ctype['id']);
-
         if ($parents){
             foreach($parents as $parent){
 
@@ -136,7 +114,6 @@ class actionContentItemAdd extends cmsAction {
                 }
 
                 break;
-
             }
         }
 
@@ -170,10 +147,6 @@ class actionContentItemAdd extends cmsAction {
         $is_draf_submitted = $this->request->has('to_draft');
 
         if (!$is_submitted && !empty($category_id)) { $item['category_id'] = $category_id; }
-
-		if ($this->request->has('group_id') && $groups_list && !$is_submitted){
-			$item['parent_id'] = $this->request->get('group_id', 0);
-		}
 
         $item['ctype_name'] = $ctype['name'];
 		$item['ctype_id']   = $ctype['id'];
@@ -310,16 +283,14 @@ class actionContentItemAdd extends cmsAction {
 					}
 
                 }
-
             }
 
             if ($errors){
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
-        return $this->cms_template->render('item_form', array(
+        return $this->cms_template->render('item_form', [
             'do'               => 'add',
             'page_title'       => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
             'cancel_url'       => ($back_url ? $back_url : ($ctype['options']['list_on'] ? href_to($ctype['name']) : $this->getBackURL())),
@@ -328,7 +299,6 @@ class actionContentItemAdd extends cmsAction {
             'item'             => $item,
             'form'             => $form,
             'props'            => $props,
-            'group'            => ((!empty($item['parent_id']) && !empty($groups[$item['parent_id']])) ? $groups[$item['parent_id']] : array()),
             'is_moderator'     => $is_moderator,
             'is_premoderation' => $is_premoderation,
             'button_save_text' => (($is_premoderation && !$is_moderator) ? LANG_MODERATION_SEND : LANG_SAVE),
@@ -336,8 +306,7 @@ class actionContentItemAdd extends cmsAction {
             'hide_draft_btn'   => !empty($ctype['options']['disable_drafts']),
             'is_load_props'    => !isset($errors),
             'errors'           => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }

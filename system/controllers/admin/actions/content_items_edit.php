@@ -10,22 +10,9 @@ class actionAdminContentItemsEdit extends cmsAction {
         $items = $this->request->get('selected', []);
         if (!$items) { cmsCore::error404(); }
 
-        $groups_list = [];
-
-        if ($ctype['is_in_groups'] || $ctype['is_in_groups_only']){
-
-            $groups = cmsCore::getModel('groups')->getGroups();
-
-            if ($groups){
-                $groups_list = ($ctype['is_in_groups_only']) ? [] : array('0'=>'');
-                $groups_list = $groups_list + array_collection_to_list($groups, 'id', 'title');
-            }
-
-        }
-
         $fields = $this->model_content->orderBy('ordering')->getContentFields($ctype['name']);
 
-        $form = $this->controller_content->getItemForm($ctype, $fields, 'add', ['groups_list' => $groups_list]);
+        $form = $this->controller_content->getItemForm($ctype, $fields, 'add');
 
         // Форма выбора полей для обновления
         $form_select = new cmsForm();

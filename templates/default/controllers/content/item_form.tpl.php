@@ -4,20 +4,10 @@
 
     $this->setPageTitle($page_title);
 
-    if(!empty($group)){
-
-        $this->addBreadcrumb(LANG_GROUPS, href_to('groups'));
-        $this->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
-        if ($ctype['options']['list_on']){
-            $this->addBreadcrumb((empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile']), href_to('groups', $group['slug'], array('content', $ctype['name'])));
-        }
-
-    } else {
-
+    if(!$this->isBreadcrumbs()){
         if ($ctype['options']['list_on'] && !$parent){
             $this->addBreadcrumb($ctype['title'], href_to($ctype['name']));
         }
-
     }
 
     $this->addBreadcrumb($page_title);
