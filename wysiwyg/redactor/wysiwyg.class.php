@@ -117,6 +117,10 @@ class cmsWysiwygRedactor {
             }
         }
 
+        if (in_array('clips', $this->options['plugins'])){
+            $this->options['clipsUrl'] = href_to('wysiwyg/redactor/files/plugins/clips/index.html');
+        }
+
         if($this->lang !== 'en'){
             $template->addJSFromContext('wysiwyg/redactor/files/lang/'.$this->lang.'.js');
         }

@@ -4,7 +4,7 @@ RedactorPlugins.clips = {
 	init: function()
 	{
         $.ajax({
-            url: "/wysiwyg/redactor/files/plugins/clips/index.html",
+            url: this.opts.clipsUrl,
             dataType: "html"
         }).done(function(data){
             var div = document.createElement('div');
