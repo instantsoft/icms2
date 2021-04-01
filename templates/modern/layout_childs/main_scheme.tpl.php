@@ -80,12 +80,14 @@
                 $col_class[] = $col['class'];
             }
         ?>
-        <?php if($this->hasWidgetsOn($col['name'])){ ?>
+        <?php if($this->hasWidgetsOn($col['positions'])){ ?>
             <<?php echo $col['tag']; ?> class="<?php echo implode(' ', $col_class); ?>">
                 <?php if(!empty($col['rows']['before'])){ ?>
                     <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['before']]); ?>
                 <?php } ?>
-                <?php $this->widgets($col['name']); ?>
+                <?php if($this->hasWidgetsOn($col['name'])){ ?>
+                    <?php $this->widgets($col['name']); ?>
+                <?php } ?>
                 <?php if(!empty($col['rows']['after'])){ ?>
                     <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['after']]); ?>
                 <?php } ?>

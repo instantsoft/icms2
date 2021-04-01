@@ -37,6 +37,7 @@ class modelWidgets extends cmsModel {
         ));
 
         $items = $this->get('layout_cols', function($item, $model) {
+            $item['positions'] = [$item['name']];
             $item['options'] = cmsModel::stringToArray($item['options']);
             $item['row_options'] = cmsModel::stringToArray($item['row_options']);
             return $item;
@@ -46,7 +47,19 @@ class modelWidgets extends cmsModel {
 
         if($items){
 
-            $last_row_id = 0;
+            $getRowItem = function($item, $positions){
+                $item['positions'] = $positions;
+                return [
+                    'id'        => $item['row_id'],
+                    'parent_id' => $item['parent_id'],
+                    'title'     => $item['row_title'],
+                    'tag'       => $item['row_tag'],
+                    'class'     => $item['row_class'],
+                    'options'   => $item['row_options'],
+                    'positions' => $positions,
+                    'cols'      => [$item['id'] => $item]
+                ];
+            };
 
             foreach ($items as $item) {
                 if($item['parent_id']){
@@ -57,31 +70,14 @@ class modelWidgets extends cmsModel {
                         $child_positions[$item['parent_id']][] = $item['name'];
                     }
 
-                    if($last_row_id != $item['row_id']){
-
-                        $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']] = [
-                            'id'        => $item['row_id'],
-                            'parent_id' => $item['parent_id'],
-                            'nested_position' => $item['nested_position'],
-                            'title'     => $item['row_title'],
-                            'tag'       => $item['row_tag'],
-                            'class'     => $item['row_class'],
-                            'options'   => $item['row_options'],
-                            'positions' => [$item['name']],
-                            'cols'      => [$item['id'] => $item]
-                        ];
-
+                    if(!isset($ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']])){
+                        $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']] = $getRowItem($item, [$item['name']]);
                     } else {
                         $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['positions'][] = $item['name'];
                         $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['cols'][$item['id']] = $item;
                     }
-
-                    $last_row_id = $item['row_id'];
-
                 }
             }
-
-            $last_row_id = 0;
 
             foreach ($items as $item) {
 
@@ -92,7 +88,7 @@ class modelWidgets extends cmsModel {
                     $item['rows'] = $ns_rows[$item['id']];
                 }
 
-                if($last_row_id != $item['row_id']){
+                if(!isset($rows[$item['row_id']])){
 
                     $positions = [];
                     if(isset($child_positions[$item['id']])){
@@ -100,23 +96,11 @@ class modelWidgets extends cmsModel {
                     }
                     $positions[] = $item['name'];
 
-                    $rows[$item['row_id']] = [
-                        'id'        => $item['row_id'],
-                        'parent_id' => $item['parent_id'],
-                        'title'     => $item['row_title'],
-                        'tag'       => $item['row_tag'],
-                        'class'     => $item['row_class'],
-                        'options'   => $item['row_options'],
-                        'positions' => $positions,
-                        'cols'      => [$item['id'] => $item]
-                    ];
-
+                    $rows[$item['row_id']] = $getRowItem($item, $positions);
                 } else {
                     $rows[$item['row_id']]['positions'][] = $item['name'];
                     $rows[$item['row_id']]['cols'][$item['id']] = $item;
                 }
-
-                $last_row_id = $item['row_id'];
             }
 
         }
