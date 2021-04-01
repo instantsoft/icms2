@@ -471,78 +471,72 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function updateCategoryTree($ctype_name, $tree, $categories_count){
+    public function updateCategoryTree($ctype_name, $tree, $categories_count) {
 
         cmsCache::getInstance()->clean('content.categories');
 
         $this->updateCategoryTreeNode($ctype_name, $tree);
         $this->updateCategoryTreeNodeSlugs($ctype_name, $tree);
 
-        $root_keys = array(
-            'ns_left' => 1,
-            'ns_right' => 1 + ($categories_count*2) + 1
-        );
+        $root_keys = [
+            'ns_left'  => 1,
+            'ns_right' => 1 + ($categories_count * 2) + 1
+        ];
 
-        $this->update($this->getContentCategoryTableName($ctype_name), 1, $root_keys);
-
-        return true;
-
+        return $this->update($this->getContentCategoryTableName($ctype_name), 1, $root_keys);
     }
 
-    public function updateCategoryTreeNode($ctype_name, $tree){
+    public function updateCategoryTreeNode($ctype_name, $tree) {
 
         $table_name = $this->getContentCategoryTableName($ctype_name);
 
-        foreach($tree as $node){
+        foreach ($tree as $node) {
 
-            $this->update($table_name, $node['key'], array(
+            $this->update($table_name, $node['key'], [
                 'parent_id' => $node['parent_key'],
-                'ns_left' => $node['left'],
-                'ns_right' => $node['right'],
-                'ns_level' => $node['level'],
-            ));
+                'ns_left'   => $node['left'],
+                'ns_right'  => $node['right'],
+                'ns_level'  => $node['level'],
+            ]);
 
-            if (!empty($node['children'])){
+            if (!empty($node['children'])) {
                 $this->updateCategoryTreeNode($ctype_name, $node['children']);
             }
-
         }
 
         return true;
-
     }
 
-    public function updateCategoryTreeNodeSlugs($ctype_name, $tree){
+    public function updateCategoryTreeNodeSlugs($ctype_name, $tree) {
 
         $table_name = $this->getContentCategoryTableName($ctype_name);
 
-        foreach($tree as $node){
+        foreach ($tree as $node) {
 
-            $path = $this->getCategoryPath($ctype_name, array(
-                'id' => $node['key'],
+            $path = $this->getCategoryPath($ctype_name, [
+                'id'        => $node['key'],
                 'parent_id' => $node['parent_key'],
-                'ns_left' => $node['left'],
-                'ns_right' => $node['right'],
-                'ns_level' => $node['level']
-            ));
+                'ns_left'   => $node['left'],
+                'ns_right'  => $node['right'],
+                'ns_level'  => $node['level']
+            ]);
 
-            $slug = $this->getCategorySLUG(array(
-                'path' => $path,
-                'title' => $node['title']
-            ), $ctype_name);
+            $slug = $this->getCategorySLUG([
+                'path'  => $path,
+                'title' => $node['title'],
+                'id'    => $node['key']
+            ], $ctype_name);
 
-            $this->update($table_name, $node['key'], array(
+            $this->update($table_name, $node['key'], [
                 'slug' => $slug
-            ));
+            ]);
 
-            if (!empty($node['children'])){
+            if (!empty($node['children'])) {
                 $this->updateCategoryTreeNodeSlugs($ctype_name, $node['children']);
             }
-
         }
 
         return true;
-
     }
 
 //============================================================================//
