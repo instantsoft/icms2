@@ -3,6 +3,15 @@ if (!RedactorPlugins) var RedactorPlugins = {};
 RedactorPlugins.clips = {
 	init: function()
 	{
+        $.ajax({
+            url: this.opts.clipsUrl,
+            dataType: "html"
+        }).done(function(data){
+            var div = document.createElement('div');
+            div.innerHTML = data;
+            document.body.append(div);
+        });
+
 		var callback = $.proxy(function()
 		{
 			$('#redactor_modal').find('.redactor_clip_link').each($.proxy(function(i, s)
@@ -32,4 +41,3 @@ RedactorPlugins.clips = {
 		this.modalClose();
 	}
 };
-
