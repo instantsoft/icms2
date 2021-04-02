@@ -12,6 +12,18 @@ class onRendererMiddlewareScss extends cmsAction {
         $css_dir = cmsTemplate::TEMPLATE_BASE_PATH . $template_name.'/css/';
         $css_dir_path = $this->cms_config->root_path . $css_dir;
 
+        // Формируем строку шрифтов
+        if(isset($options['font_type'])){ // Совместимость
+            if(!$options['font_type']){
+                if($options['font_string']){
+                    $options['scss']['font-family-sans-serif'] = $options['font_string'];
+                }
+            }
+            if($options['font_type'] == 'gfont'){
+                $options['scss']['font-family-sans-serif'] = '"'.str_replace('+', ' ', $options['gfont']).'", sans-serif';
+            }
+        }
+
         // Тут все опции SCSS
         $scss = $options['scss'];
         // Заменяем опции, которые формируются из select, но могут быть заданы вручную

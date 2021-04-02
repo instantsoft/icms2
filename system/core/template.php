@@ -499,14 +499,16 @@ class cmsTemplate {
                     $widget['wrapper'] = $wrapper;
                 }
 
-                if (!empty($widget['wrapper'])) {
-                    include($this->getTemplateFileName('widgets/' . $widget['wrapper']));
-                } else {
+                if (empty($widget['wrapper'])) {
                     if ($widget['class_wrap']) {
                         echo '<div class="' . $widget['class_wrap'] . '">' . $widget['body'] . '</div>';
                     } else {
                         echo $widget['body'];
                     }
+                } else if ($widget['wrapper'] == '-1') {
+                    echo string_replace_keys_values(string_replace_svg_icons($widget['tpl_wrap_custom']), $widget);
+                } else {
+                    include($this->getTemplateFileName('widgets/' . $widget['wrapper']));
                 }
             } else {
 
@@ -3075,6 +3077,7 @@ class cmsTemplate {
                 'title'       => $widget->is_title ? $widget->title : false,
                 'links'       => isset($widget->links) ? $widget->links : false,
                 'wrapper'     => $widget->getWrapper(),
+                'tpl_wrap_custom' => isset($widget->tpl_wrap_custom) ? $widget->tpl_wrap_custom : '',
                 'class'       => isset($widget->css_class) ? $widget->css_class : false,
                 'class_title' => isset($widget->css_class_title) ? $widget->css_class_title : false,
                 'class_wrap'  => (!empty($widget->tpl_wrap_style) ? $widget->tpl_wrap_style : '') . (!empty($widget->css_class_wrap) ? ' ' . $widget->css_class_wrap : ''),

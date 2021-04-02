@@ -10,6 +10,10 @@
         <?php $this->addMainTplCSSName([
             'theme'
         ]); ?>
+        <?php if(!empty($this->options['font_type']) && $this->options['font_type'] == 'gfont') {
+            $this->addHead('<link rel="preconnect" href="https://fonts.gstatic.com">');
+            $this->addCSS('https://fonts.googleapis.com/css?family='.$this->options['gfont'].':400,400i,700,700i&display=swap&subset=cyrillic-ext', false);
+        } ?>
         <?php $this->addMainTplJSName('jquery', true); ?>
         <?php $this->addMainTplJSName('vendors/popper.js/js/popper.min'); ?>
         <?php $this->addMainTplJSName('vendors/bootstrap/bootstrap.min'); ?>

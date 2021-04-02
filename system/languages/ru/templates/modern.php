@@ -59,7 +59,8 @@ define('LANG_MODERN_C_WARNING', 'Предупреждающий цвет');
 define('LANG_MODERN_C_DANGER', 'Отрицательный цвет');
 define('LANG_MODERN_C_LIGHT', 'Светлый цвет');
 define('LANG_MODERN_C_DARK', 'Тёмный цвет');
-define('LANG_MODERN_WIDGETS_TRANSPARENT', 'Прозрачный');
+define('LANG_MODERN_WIDGETS_SQUARE', 'Прозрачный №2');
+define('LANG_MODERN_WIDGETS_TRANSPARENT', 'Прозрачный №1');
 define('LANG_MODERN_WIDGETS_COMPACT', 'Компактный');
 define('LANG_MODERN_LOGO', 'Загрузите основной логотип');
 define('LANG_MODERN_RASTR_HINT', 'В растровом формате');
@@ -69,3 +70,7 @@ define('LANG_MODERN_LOGO_SMALL_HINT', 'Будет показан на малых
 define('LANG_MODERN_LOGO_SMALL_SVG', 'Или выберите маленький логотип в SVG');
 define('LANG_MODERN_VARS', 'Переопределяемые переменные Bootstrap4');
 define('LANG_MODERN_VARS_SELECT', 'Выберите переменную');
+define('LANG_MODERN_FONT_TYPE', 'Шрифт сайта');
+define('LANG_MODERN_FONT_TYPE_STR', 'Указать строку шрифта вручную');
+define('LANG_MODERN_FONT_STRING', 'Укажите приоритетный список из одного или нескольких названий семейства шрифтов c гладкими окончаниями');
+define('LANG_MODERN_FONT_GOOGLE', 'Шрифт Google');

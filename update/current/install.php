@@ -7,6 +7,10 @@ function install_package(){
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    if(!$core->db->isFieldExists('widgets_bind', 'tpl_wrap_custom')){
+        $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `tpl_wrap_custom` TEXT NULL DEFAULT NULL AFTER `tpl_wrap`");
+    }
+
     migrateCommentsIps();
     migrateRatingLogIps();
     migrateAuthTokensIps();

@@ -54,6 +54,15 @@ scss:
   green: '#43ac6a'
   teal: '#20c997'
   cyan: '#5bc0de'
+font_type:
+font_string: >
+  -apple-system, BlinkMacSystemFont,
+  "Segoe UI", Roboto, "Helvetica Neue",
+  Arial, "Noto Sans", "Liberation Sans",
+  sans-serif, "Apple Color Emoji", "Segoe
+  UI Emoji", "Segoe UI Symbol", "Noto
+  Color Emoji"
+gfont: Roboto
 pagination_template: pagination
 logo: null
 logo_svg: null

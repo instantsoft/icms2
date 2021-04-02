@@ -26,7 +26,7 @@
         }
     }
 }
-.icms-widget__transparent {
+.icms-widget__transparent, .icms-widget__square {
     &.card {
         border: none;
         background-color: transparent;
@@ -56,6 +56,51 @@
     }
     > .card-body, > .icms-widgets > .card-body {
         padding: 0;
+    }
+}
+.icms-widget__square {
+    > .card-header {
+        border-bottom: none;
+        padding: 0;
+        text-transform: uppercase;
+        letter-spacing: -0.2px;
+        font-weight: 700;
+        position: relative;
+        > span:first-child {
+            position: relative;
+            padding: 0 $spacer 0 $spacer*1.5;
+            background: $white;
+            color: $info;
+            &:before {
+                display: inline-block;
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                height: $spacer*0.9;
+                width: $spacer*0.9;
+                background: $info;
+                top: 50%;
+                margin-top: -$spacer*0.5;
+            }
+        }
+        .links {
+            background: $white;
+            padding-left: $spacer;
+            z-index: 1;
+        }
+        &:before {
+            content: '';
+            display: inline-block;
+            height: 3px;
+            position: absolute;
+            top: 50%;
+            margin-top: -1.5px;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba($black, 0.07);
+        }
     }
 }
 .bg-dark, .bg-secondary {

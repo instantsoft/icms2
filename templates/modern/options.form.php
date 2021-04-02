@@ -169,6 +169,52 @@ class formModernTemplateOptions extends cmsForm {
                         'default' => '30px'
                     )),
 
+					new fieldList('font_type', array(
+                        'title'   => LANG_MODERN_FONT_TYPE,
+                        'default' => '',
+                        'items'   => array(
+                            '' => LANG_MODERN_FONT_TYPE_STR,
+							'gfont' => 'Google'
+                        )
+                    )),
+
+                    new fieldString('font_string', array(
+                        'title' => LANG_MODERN_FONT_STRING,
+                        'default' => '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+                        'visible_depend' => array('font_type' => array('show' => array('')))
+                    )),
+
+					new fieldList('gfont', array(
+                        'title'   => LANG_MODERN_FONT_GOOGLE,
+                        'default' => 'Roboto',
+                        'visible_depend' => array('font_type' => array('show' => array('gfont'))),
+                        'items'   => array(
+							'Alegreya'                  => 'Alegreya',
+                            'Alegreya+Sans'             => 'Alegreya Sans',
+                            'Alegreya+Sans+SC'          => 'Alegreya Sans SC',
+                            'Arimo'                     => 'Arimo',
+                            'Arsenal'                   => 'Arsenal',
+                            'Cormorant'                 => 'Cormorant',
+                            'Cormorant+Garamond'        => 'Cormorant Garamond',
+                            'Cormorant+Infant'          => 'Cormorant Infant',
+                            'Cuprum'                    => 'Cuprum',
+                            'EB+Garamond'               => 'EB Garamond',
+                            'Fira+Sans+Extra+Condensed' => 'Fira Sans Extra Condensed',
+                            'Lora'                      => 'Lora',
+                            'Montserrat'                => 'Montserrat',
+                            'Montserrat+Alternates'     => 'Montserrat Alternates',
+                            'Noto+Serif'                => 'Noto Serif',
+                            'PT+Serif'                  => 'PT Serif',
+                            'Philosopher'               => 'Philosopher',
+                            'Roboto'                    => 'Roboto',
+                            'Roboto+Condensed'          => 'Roboto+Condensed',
+                            'Scada'                     => 'Scada',
+                            'Tinos'                     => 'Tinos',
+                            'Vollkorn'                  => 'Vollkorn',
+                            'Open+Sans'                 => 'Open Sans'
+                        )
+                    )),
+
                     new fieldString('scss:font-size-base', array(
                         'title' => LANG_MODERN_THEME_BASE_FS,
                         'default' => '1rem'

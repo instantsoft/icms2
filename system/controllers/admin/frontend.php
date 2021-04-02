@@ -821,7 +821,7 @@ class admin extends cmsFrontend {
 				'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
 				'default' => 'wrapper',
                 'generator' => function($item) use ($template_name){
-                    return ['' => LANG_WIDGET_WRAPPER_TPL_NO] + $this->cms_template->getAvailableTemplatesFiles('widgets', 'wrapper*.tpl.php', $template_name);
+                    return ['' => LANG_WIDGET_WRAPPER_TPL_NO, '-1' => LANG_WIDGET_WRAPPER_TPL_CUST] + $this->cms_template->getAvailableTemplatesFiles('widgets', 'wrapper*.tpl.php', $template_name);
                 }
             )));
 
@@ -849,6 +849,24 @@ class admin extends cmsFrontend {
                 )));
             }
 
+            $wrap_custom_fields = [
+                'title' => LANG_TITLE,
+                'id'    => 'ID',
+                'body'  => LANG_WIDGET_BODY
+            ];
+
+            $form->addField($design_fieldset_id, new fieldHtml('tpl_wrap_custom', [
+                'title' => LANG_WIDGET_WRAPPER_TPL_CUST,
+                'patterns_hint' => [
+                    'patterns' =>  $wrap_custom_fields,
+                    'text_panel' => '',
+                    'always_show' => true,
+                    'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN
+                ],
+                'options' => ['editor' => 'ace'],
+                'visible_depend' => ['tpl_wrap' => ['show' => ['-1']]]
+            ]));
+
             $form->addField($design_fieldset_id, new fieldList('tpl_body', array(
                 'title' => LANG_WIDGET_BODY_TPL,
 				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
@@ -859,17 +877,18 @@ class admin extends cmsFrontend {
             )));
 
             $form->addField($design_fieldset_id, new fieldString('class_wrap', array(
-                'title' => LANG_CSS_CLASS_WRAP
+                'title' => LANG_CSS_CLASS_WRAP,
+                'visible_depend' => ['tpl_wrap' => ['hide' => ['-1']]]
             )));
 
             $form->addField($design_fieldset_id, new fieldString('class_title', array(
                 'title' => LANG_CSS_CLASS_TITLE,
-                'visible_depend' => ['tpl_wrap' => ['hide' => ['', 'wrapper_plain']]]
+                'visible_depend' => ['tpl_wrap' => ['hide' => ['', 'wrapper_plain', '-1']]]
             )));
 
             $form->addField($design_fieldset_id, new fieldString('class', array(
                 'title' => LANG_CSS_CLASS_BODY,
-                'visible_depend' => ['tpl_wrap' => ['hide' => ['', 'wrapper_plain']]]
+                'visible_depend' => ['tpl_wrap' => ['hide' => ['', 'wrapper_plain', '-1']]]
             )));
 
         //

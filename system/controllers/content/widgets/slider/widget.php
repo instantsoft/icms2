@@ -56,7 +56,7 @@ class widgetContentSlider extends cmsWidget {
                 $model->distinctSelect();
             }
         } else {
-            $model->joinInner($table_name, 'c', 'c.id = i.category_id');
+            $model->joinLeft($table_name, 'c', 'c.id = i.category_id');
         }
 
         // применяем приватность

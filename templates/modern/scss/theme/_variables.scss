@@ -15,6 +15,15 @@ $modal-content-border-width: 0;
 $modal-backdrop-opacity: .7;
 $modal-header-padding-y: .25rem;
 $modal-header-padding-x: 0;
+$carousel-control-width: 10% !default;
+
+$navbar-light-color:                rgba($black, .8);
+$navbar-light-hover-color:          rgba($black, .9);
+$navbar-light-active-color:         $primary;
+$navbar-light-disabled-color:       rgba($black, .3);
+$navbar-light-toggler-icon-bg:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='#{$navbar-light-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+$navbar-light-toggler-border-color: rgba($black, .2);
+
+$breadcrumb-font-size: $font-size-base*0.875;
 $breadcrumb-padding-x: 0;
 $breadcrumb-bg: transparent;
-$carousel-control-width: 10% !default;

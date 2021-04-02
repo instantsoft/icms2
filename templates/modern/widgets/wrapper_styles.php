@@ -7,6 +7,7 @@
 
 return [
     'wrapper' => [
+        'icms-widget__square' => LANG_MODERN_WIDGETS_SQUARE,
         'icms-widget__transparent' => LANG_MODERN_WIDGETS_TRANSPARENT,
         'icms-widget__compact' => LANG_MODERN_WIDGETS_COMPACT
     ]
