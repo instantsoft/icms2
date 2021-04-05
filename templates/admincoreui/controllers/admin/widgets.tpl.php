@@ -2,7 +2,8 @@
 
     $this->addTplJSName([
         'datatree',
-        'admin-widgets'
+        'admin-widgets',
+        'vendors/filesaver.min',
     ]);
     $this->addTplCSSName('datatree');
 
@@ -82,13 +83,16 @@
             'title' => LANG_CP_WIDGETS_ADD_ROW,
             'href'  => $this->href_to('widgets', ['row_add', $template_name])
         ));
-        if(count($templates_dynamic_scheme) > 1){
-            $this->addToolButton(array(
-                'class' => 'install add_row ajax-modal',
-                'title' => LANG_CP_WIDGETS_IMPORT_SCHEME,
-                'href'  => $this->href_to('widgets', ['import_scheme', $template_name])
-            ));
-        }
+        $this->addToolButton(array(
+            'class' => 'install add_row ajax-modal',
+            'title' => LANG_CP_WIDGETS_IMPORT_SCHEME,
+            'href'  => $this->href_to('widgets', ['import_scheme', $template_name])
+        ));
+        $this->addToolButton(array(
+            'class' => 'export ajax-modal',
+            'title' => LANG_CP_WIDGETS_EXPORT_SCHEME,
+            'href'  => $this->href_to('widgets', ['export_scheme', $template_name])
+        ));
     }
 
     $this->applyToolbarHook('admin_widgets_toolbar');

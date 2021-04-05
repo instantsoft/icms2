@@ -123,6 +123,9 @@
 .cp_toolbar .install > a::before {
     content: "\e084";
 }
+.cp_toolbar .export > a::before {
+    content: "\e083";
+}
 .cp_toolbar .edit > a::before {
     content: "\e05f";
 }

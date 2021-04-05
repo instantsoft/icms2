@@ -429,65 +429,82 @@ icms.forms = (function ($) {
 
         icms.forms.submitted = true;
 
+        /**
+         * Совместимость, передаётся в колбэк
+         * @type coreforms.toJSON.o
+         */
         var form_data = this.toJSON($(form));
-
-        if(additional_params){
-            $.extend(form_data, additional_params);
-        }
-
-        var url = $(form).attr('action');
 
         var submit_btn = $(form).find('.button-submit');
 
         $(submit_btn).prop('disabled', true).addClass('is-busy');
 
-        $.post(url, form_data, function(result){
+        var formData = new FormData(form);
 
-            $('.field_error', form).removeClass('field_error');
-            $('.is-invalid', form).removeClass('is-invalid');
-            $('.invalid-feedback', form).remove();
-
-            $(submit_btn).prop('disabled', false).removeClass('is-busy');
-
-            if (result.errors === false){
-                $('input[type=text], select, textarea', form).val('').triggerHandler('input');
-                if ("callback" in result){
-                    window[result.callback](form_data, result); return;
-                }
-                if (result.success_text){
-                    icms.modal.alert(result.success_text);
-                }
-                if (result.redirect_uri){
-                    window.location.href = result.redirect_uri;
-                }
-                return;
+        if(additional_params){
+            for(var name in additional_params){
+                formData.append(name, additional_params[name]);
             }
+        }
 
-            if (typeof(result.errors) === 'object'){
-                if(result.message){
-                    icms.modal.alert(result.message, 'danger');
+        $.ajax({
+            url: $(form).attr('action'),
+            type: 'POST',
+            data: formData,
+            success: function (result) {
+
+                $('.field_error', form).removeClass('field_error');
+                $('.is-invalid', form).removeClass('is-invalid');
+                $('.invalid-feedback', form).remove();
+
+                $(submit_btn).prop('disabled', false).removeClass('is-busy');
+
+                if (result.errors === false){
+                    $('input[type=text], select, textarea', form).val('').triggerHandler('input');
+                    if ("callback" in result){
+                        window[result.callback](form_data, result); return;
+                    }
+                    if (result.success_text){
+                        icms.modal.alert(result.success_text);
+                    }
+                    if (result.redirect_uri){
+                        window.location.href = result.redirect_uri;
+                    }
+                    return;
                 }
-                for(var field_id in result.errors){
-                    var id = field_id.replace(':', '_');
-                    $('#'+id, form).addClass('is-invalid');
-                    $('#f_'+id, form).addClass('field_error').append('<div class="invalid-feedback">' + result.errors[field_id] + '</div>');
-                    $(form).find('ul.tabbed > li > a[href = "#'+$('#f_'+id, form).parents('.tab').attr('id')+'"]').trigger('click');
+
+                if (typeof(result.errors) === 'object'){
+                    if(result.message){
+                        icms.modal.alert(result.message, 'danger');
+                    }
+                    for(var field_id in result.errors){
+                        var id = field_id.replace(':', '_');
+                        $('#'+id, form).addClass('is-invalid');
+                        $('#f_'+id, form).addClass('field_error').append('<div class="invalid-feedback">' + result.errors[field_id] + '</div>');
+                        $(form).find('ul.tabbed > li > a[href = "#'+$('#f_'+id, form).parents('.tab').attr('id')+'"]').trigger('click');
+                    }
+
+                    icms.events.run('icms_forms_submitajax', result);
+
+                    icms.modal.resize();
+
+                    icms.forms.submitted = false;
+
+                    return;
+
                 }
-
-                icms.events.run('icms_forms_submitajax', result);
-
-                icms.modal.resize();
-
-                icms.forms.submitted = false;
-
-                return;
-
-            }
-
-        }, 'json');
+            },
+            error: function (error) {
+                $(submit_btn).prop('disabled', false).removeClass('is-busy');
+                icms.modal.alert('<div>Status: '+error.status+'</div>'+error.responseText, 'danger');
+            },
+            dataType: 'json',
+            cache: false,
+            contentType: false,
+            processData: false
+        });
 
         return false;
-
     };
 
     this.initSymbolCount = function (field_id, max, min){

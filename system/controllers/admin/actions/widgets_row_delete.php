@@ -30,7 +30,7 @@ class actionAdminWidgetsRowDelete extends cmsAction {
                 if($ns_items){
                     foreach ($ns_items as $ns_row) {
                         $this->deleteRow($ns_row);
-                    }
+}
                 }
 
             }

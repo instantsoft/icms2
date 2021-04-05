@@ -370,7 +370,13 @@
     define('LANG_CP_WIDGETS_ROWS_TITLE',        'Row Headers');
     define('LANG_CP_WIDGETS_ADD_ROW',           'Add row');
     define('LANG_CP_WIDGETS_IMPORT_SCHEME',     'Import schema');
+    define('LANG_CP_WIDGETS_IMPORT_TYPE',       'Where import?');
+    define('LANG_CP_WIDGETS_IMPORT_TYPE_EX',    'Existing template');
+    define('LANG_CP_WIDGETS_LFILE',             'Schema file');
+    define('LANG_CP_WIDGETS_LFILE_HINT',        'If the schema already exists, it will be replaced with the imported one. Make a backup if necessary.');
+    define('LANG_CP_WIDGETS_EXPORT_SCHEME',     'Export schema');
     define('LANG_CP_WIDGETS_FROM_TEMPLATE',     'Template from which to import scheme');
+    define('LANG_CP_WIDGETS_SAVE_WIDGETS',      'Export widgets');
     define('LANG_CP_WIDGETS_COPY_WIDGETS',      'Transfer widgets');
     define('LANG_CP_WIDGETS_EMPTY_LAYOUT',      'The selected template is no scheme');
     define('LANG_CP_WIDGETS_LAYOUT_ISUCCESS',   'Schema imported successfully');
