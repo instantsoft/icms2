@@ -66,6 +66,7 @@ class actionAdminWidgetsExportScheme extends cmsAction {
 
                         $this->model->select('w.controller', 'controller');
                         $this->model->select('w.name', 'name');
+                        $this->model->select('w.title', 'widget_title');
                         $this->model->join('widgets', 'w', 'w.id = i.widget_id');
 
                         $export['widgets']['widgets_bind'] = $this->model->filterIn('id', $bind_ids)->get('widgets_bind', function($item, $model){

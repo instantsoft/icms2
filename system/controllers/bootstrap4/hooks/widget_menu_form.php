@@ -19,6 +19,48 @@ class onBootstrap4WidgetMenuForm extends cmsAction {
             return $_data;
         }
 
+        $form->addField('menu_options', new fieldList('options:navbar_color_scheme', array(
+            'title' => LANG_BS4_NAVBAR_COLOR_SCHEME,
+            'items' => [
+                '' => LANG_BY_DEFAULT,
+                'navbar-dark' => LANG_BS4_NAVBAR_COLOR_SCHEME_D,
+                'navbar-light' => LANG_BS4_NAVBAR_COLOR_SCHEME_L
+            ]
+        )));
+
+        $form->addField('menu_options', new fieldList('options:menu_nav_style', array(
+            'title' => LANG_BS4_MENU_NAV_STYLE,
+            'items' => [
+                '' => LANG_BS4_MENU_NAV_STYLE_HL,
+                'justify-content-center' => LANG_BS4_MENU_NAV_STYLE_HC,
+                'justify-content-end'    => LANG_BS4_MENU_NAV_STYLE_HR,
+                'flex-column'            => LANG_BS4_MENU_NAV_STYLE_V
+            ]
+        )));
+
+        $form->addField('menu_options', new fieldList('options:menu_nav_style_add', array(
+            'title' => LANG_BS4_MENU_NAV_STYLE_ADD,
+            'items' => [
+                '' => '',
+                'flex-sm-row justify-content-sm-start'  => LANG_BS4_MENU_NAV_STYLE_HL.' ≥576px',
+                'flex-md-row justify-content-md-start'  => LANG_BS4_MENU_NAV_STYLE_HL.' ≥768px',
+                'flex-lg-row justify-content-lg-start'  => LANG_BS4_MENU_NAV_STYLE_HL.' ≥992px',
+                'flex-xl-row justify-content-xl-start'  => LANG_BS4_MENU_NAV_STYLE_HL.' ≥1200px',
+                'flex-sm-row justify-content-sm-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥576px',
+                'flex-md-row justify-content-md-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥768px',
+                'flex-lg-row justify-content-lg-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥992px',
+                'flex-xl-row justify-content-xl-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥1200px',
+                'flex-sm-row justify-content-sm-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥576px',
+                'flex-md-row justify-content-md-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥768px',
+                'flex-lg-row justify-content-lg-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥992px',
+                'flex-xl-row justify-content-xl-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥1200px',
+                'flex-sm-column' => LANG_BS4_MENU_NAV_STYLE_V.' ≥576px',
+                'flex-md-column' => LANG_BS4_MENU_NAV_STYLE_V.' ≥768px',
+                'flex-lg-column' => LANG_BS4_MENU_NAV_STYLE_V.' ≥992px',
+                'flex-xl-column' => LANG_BS4_MENU_NAV_STYLE_V.' ≥1200px'
+            ]
+        )));
+
         $form->addField('menu_options', new fieldList('options:menu_type', array(
             'title' => LANG_BS4_MENU_TYPE,
             'items' => [
@@ -39,34 +81,6 @@ class onBootstrap4WidgetMenuForm extends cmsAction {
                 'navbar-expand-md' => sprintf(LANG_BS4_NAVBAR_EXPAND_ON, '≥768px'),
                 'navbar-expand-lg' => sprintf(LANG_BS4_NAVBAR_EXPAND_ON, '≥992px'),
                 'navbar-expand-xl' => sprintf(LANG_BS4_NAVBAR_EXPAND_ON, '≥1200px')
-            ],
-            'visible_depend' => ['options:menu_type' => ['show' => ['navbar']]]
-        )));
-
-        $form->addField('menu_options', new fieldList('options:navbar_color_scheme', array(
-            'title' => LANG_BS4_NAVBAR_COLOR_SCHEME,
-            'items' => [
-                'navbar-dark' => LANG_BS4_NAVBAR_COLOR_SCHEME_D,
-                'navbar-light' => LANG_BS4_NAVBAR_COLOR_SCHEME_L
-            ],
-            'visible_depend' => ['options:menu_type' => ['show' => ['navbar']]]
-        )));
-
-        $form->addField('menu_options', new fieldList('options:menu_navbar_style', array(
-            'title' => LANG_BS4_MENU_NAV_STYLE,
-            'items' => [
-                'navbar-nav' => LANG_BS4_MENU_NAV_STYLE_HL,
-                'navbar-nav justify-content-center'    => LANG_BS4_MENU_NAV_STYLE_HC,
-                'navbar-nav justify-content-sm-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥576px',
-                'navbar-nav justify-content-md-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥768px',
-                'navbar-nav justify-content-lg-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥992px',
-                'navbar-nav justify-content-xl-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥1200px',
-                'navbar-nav justify-content-end'       => LANG_BS4_MENU_NAV_STYLE_HR,
-                'navbar-nav justify-content-sm-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥576px',
-                'navbar-nav justify-content-md-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥768px',
-                'navbar-nav justify-content-lg-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥992px',
-                'navbar-nav justify-content-xl-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥1200px',
-                'navbar-nav flex-column'               => LANG_BS4_MENU_NAV_STYLE_V
             ],
             'visible_depend' => ['options:menu_type' => ['show' => ['navbar']]]
         )));
@@ -96,36 +110,6 @@ class onBootstrap4WidgetMenuForm extends cmsAction {
         // ****************************************************************** //
         //                     Опции обычного меню                            //
         // ****************************************************************** //
-        $form->addField('menu_options', new fieldList('options:menu_nav_style', array(
-            'title' => LANG_BS4_MENU_NAV_STYLE,
-            'items' => [
-                'nav' => LANG_BS4_MENU_NAV_STYLE_HL,
-                'nav justify-content-center'    => LANG_BS4_MENU_NAV_STYLE_HC,
-                'nav justify-content-sm-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥576px',
-                'nav justify-content-md-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥768px',
-                'nav justify-content-lg-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥992px',
-                'nav justify-content-xl-center' => LANG_BS4_MENU_NAV_STYLE_HC.' ≥1200px',
-                'nav justify-content-end'       => LANG_BS4_MENU_NAV_STYLE_HR,
-                'nav justify-content-sm-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥576px',
-                'nav justify-content-md-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥768px',
-                'nav justify-content-lg-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥992px',
-                'nav justify-content-xl-end'    => LANG_BS4_MENU_NAV_STYLE_HR.' ≥1200px',
-                'nav flex-column'               => LANG_BS4_MENU_NAV_STYLE_V
-            ],
-            'visible_depend' => ['options:menu_type' => ['show' => ['nav']]]
-        )));
-
-        $form->addField('menu_options', new fieldList('options:menu_nav_style_column', array(
-            'title' => LANG_BS4_MENU_NAV_STYLE_COLUMN,
-            'items' => [
-                '' => LANG_CP_NEVER,
-                'flex-sm-column' => '≥576px',
-                'flex-md-column' => '≥768px',
-                'flex-lg-column' => '≥992px',
-                'flex-xl-column' => '≥1200px'
-            ],
-            'visible_depend' => ['options:menu_nav_style' => ['show' => ['nav','nav justify-content-center','nav justify-content-end']], 'options:menu_type' => ['hide' => ['navbar']]]
-        )));
 
         $form->addField('menu_options', new fieldCheckbox('options:menu_is_pills', array(
             'title' => LANG_BS4_MENU_IS_PILLS,

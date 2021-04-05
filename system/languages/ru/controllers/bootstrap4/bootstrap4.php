@@ -13,11 +13,11 @@ define('LANG_BS4_TOGGLER_ICON', 'Показывать иконку показа 
 define('LANG_BS4_TOGGLER_ICON_HINT', 'Если выключено, вы можете разместить HTML иконки на любой другой позиции');
 define('LANG_BS4_TOGGLER_SHOW_SITENAME', 'Показывать название сайта');
 define('LANG_BS4_MENU_NAV_STYLE', 'Расположение меню');
+define('LANG_BS4_MENU_NAV_STYLE_ADD', 'Расположение меню на других разрешениях');
 define('LANG_BS4_MENU_NAV_STYLE_HL', 'Горизонтальное, по левому краю');
 define('LANG_BS4_MENU_NAV_STYLE_HC', 'Горизонтальное, по центру');
 define('LANG_BS4_MENU_NAV_STYLE_HR', 'Горизонтальное, по правому краю');
 define('LANG_BS4_MENU_NAV_STYLE_V', 'Вертикальное');
-define('LANG_BS4_MENU_NAV_STYLE_COLUMN', 'Становиться вертикальным при разрешениях');
 define('LANG_BS4_MENU_IS_PILLS', 'Активные пункты как кнопки');
 define('LANG_BS4_MENU_IS_FILL', 'Заполнять всю ширину контейнера');
 define('LANG_BS4_MENU_IS_FILL_JUS', 'Равного размера');

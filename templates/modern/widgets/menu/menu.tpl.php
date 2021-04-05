@@ -7,9 +7,6 @@
         if ($widget->options['navbar_color_scheme']) {
             $nav_class[] = $widget->options['navbar_color_scheme'];
         }
-        if ($widget->options['menu_navbar_style'] !== 'navbar-nav') {
-            $widget->options['menu_navbar_style'] .= ' w-100';
-        }
     ?>
     <nav class="<?php echo implode(' ', $nav_class); ?>">
         <?php if ($widget->options['toggler_icon']) { ?>
@@ -24,10 +21,24 @@
         <?php } ?>
         <div class="collapse navbar-collapse<?php if (!$widget->options['navbar_expand']) { ?> show<?php } ?>" id="target-<?php echo $widget->options['menu']; ?>">
             <?php
+                $navbar_class = ['navbar-nav'];
+                if (!empty($widget->options['menu_nav_style'])) {
+                    $navbar_class[] = $widget->options['menu_nav_style']. ' w-100';
+                }
+                if (!empty($widget->options['menu_nav_style_add'])) {
+                    $navbar_class[] = $widget->options['menu_nav_style_add'];
+                }
+                if (!empty($widget->options['class'])) {
+                    $navbar_class[] = $widget->options['class'];
+                }
+                if (empty($widget->options['navbar_expand'])) {
+                    $navbar_class[] = 'flex-row icms-navbar-expanded';
+                }
+
                 $this->menu(
                     $widget->options['menu'],
                     $widget->options['is_detect'],
-                    $widget->options['menu_navbar_style'].(!empty($widget->options['class']) ? ' '.$widget->options['class'] : '').(!$widget->options['navbar_expand'] ? ' flex-row icms-navbar-expanded' : ''),
+                    implode(' ', $navbar_class),
                     $widget->options['max_items'], empty($widget->options['is_detect_strict']),
                     (!empty($widget->options['template']) ? $widget->options['template'] : 'menu'),
                     $widget->title
@@ -49,10 +60,31 @@
     </nav>
 <?php } elseif($widget->options['menu_type'] == 'nav'){ ?>
     <?php
+
+        $nav_class = ['nav'];
+        if ($widget->options['navbar_color_scheme']) {
+            $nav_class[] = $widget->options['navbar_color_scheme'];
+        }
+        if (!empty($widget->options['menu_nav_style'])) {
+            $nav_class[] = $widget->options['menu_nav_style'];
+        }
+        if (!empty($widget->options['menu_nav_style_add'])) {
+            $nav_class[] = $widget->options['menu_nav_style_add'];
+        }
+        if (!empty($widget->options['class'])) {
+            $nav_class[] = $widget->options['class'];
+        }
+        if (!empty($widget->options['menu_is_pills'])) {
+            $nav_class[] = 'nav-pills';
+        }
+        if (!empty($widget->options['menu_is_fill'])) {
+            $nav_class[] = $widget->options['menu_is_fill'];
+        }
+
         $this->menu(
             $widget->options['menu'],
             $widget->options['is_detect'],
-            $widget->options['menu_nav_style'].(!empty($widget->options['menu_nav_style_column']) ? ' '.$widget->options['menu_nav_style_column'] : '').(!empty($widget->options['class']) ? ' '.$widget->options['class'] : '').(!empty($widget->options['menu_is_pills']) ? ' nav-pills' : '').(!empty($widget->options['menu_is_fill']) ? ' '.$widget->options['menu_is_fill'] : ''),
+            implode(' ', $nav_class),
             $widget->options['max_items'], empty($widget->options['is_detect_strict']),
             (!empty($widget->options['template']) ? $widget->options['template'] : 'menu'),
             $widget->title

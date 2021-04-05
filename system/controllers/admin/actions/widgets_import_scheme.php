@@ -212,6 +212,9 @@ class actionAdminWidgetsImportScheme extends cmsAction {
 
                 // Нет такого виджета, пропускаем
                 if(!isset($widgets[$search_key][$search_name])){
+
+                    cmsUser::addSessionMessage(sprintf(LANG_CP_WIDGETS_SKIP_IMPORT, $wb['widget_title']), 'info');
+
                     continue;
                 }
 
