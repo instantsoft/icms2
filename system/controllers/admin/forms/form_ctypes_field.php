@@ -46,6 +46,7 @@ class formAdminCtypesField extends cmsForm {
                 'childs' => array(
                     new fieldList('type', array(
                         'default' => 'string',
+                        'hint' => $do=='edit' ? LANG_CP_FIELD_TYPE_HINT : '',
                         'generator' => function() {
                             return cmsForm::getAvailableFormFields('only_public', 'content');
                         }

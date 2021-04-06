@@ -743,7 +743,15 @@ class modelContent extends cmsModel {
                 if($field_old['type'] != $field['type']){ $this->db->dropIndex($content_table_name, $field_old['name']); }
 
                 $sql = "ALTER TABLE `{#}{$content_table_name}` CHANGE `{$field_old['name']}` `{$field['name']}` {$field_handler->getSQL()}";
-                $this->db->query($sql);
+                // Пробуем сменить
+                $result = $this->db->query($sql, false, true);
+                // Не получилось конвертировать (вероятно задан sql_mode в MySQL)
+                if($result === false){
+                    // очищаем данные
+                    $this->db->query("UPDATE `{#}{$content_table_name}` SET `{$field_old['name']}` = NULL");
+                    // И заново меняем
+                    $this->db->query($sql);
+                }
 
                 if(($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type'])){
 

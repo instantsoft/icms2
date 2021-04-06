@@ -243,6 +243,7 @@
     define('LANG_CP_FIELD',                     'Поле');
     define('LANG_CP_FIELD_FORMAT',              'Формат поля');
     define('LANG_CP_FIELD_TYPE',                'Тип поля');
+    define('LANG_CP_FIELD_TYPE_HINT',           'Внимание! Существующие данные этого поля могут быть удалены!');
     define('LANG_CP_FIELD_TYPE_OPTS',           'Настройки поля');
     define('LANG_CP_FIELD_VALUES',              'Предустановленные значения');
     define('LANG_CP_FIELD_PROFILE_VALUE',       'Значение из профиля пользователя');

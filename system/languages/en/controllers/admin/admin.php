@@ -227,6 +227,7 @@
     define('LANG_CP_FIELD',                     'Field');
     define('LANG_CP_FIELD_FORMAT',              'Field validation');
     define('LANG_CP_FIELD_TYPE',                'Field type');
+    define('LANG_CP_FIELD_TYPE_HINT',           'Attention! Existing data in this field can be deleted!');
     define('LANG_CP_FIELD_TYPE_OPTS',           'Field options');
     define('LANG_CP_FIELD_VALUES',              'Default value (or a list of entries)');
     define('LANG_CP_FIELD_PROFILE_VALUE',       'Get value from the user profile field');
