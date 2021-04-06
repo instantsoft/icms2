@@ -222,6 +222,9 @@ class actionContentCategoryView extends cmsAction {
             $items_list_html = $this->renderItemsList($ctype, $page_url, false, $category['id'], array(), $dataset);
         }
 
+        // сбрасываем фильтры если, например, список не запрашивали
+        $this->model->resetFilters();
+
         $tpl_file = $this->cms_template->getTemplateFileName('controllers/content/category_view_' . $ctype['name'], true) ?
                 'category_view_' . $ctype['name'] : 'category_view';
 
@@ -261,7 +264,7 @@ class actionContentCategoryView extends cmsAction {
 
             // Получаем список подкатегорий для текущей
             $current_cat_id = $category['id'] ? $category['id'] : 1;
-            $subcats = cmsCore::getModel('content')->filterIsNull('is_hidden')->
+            $subcats = $this->model->filterIsNull('is_hidden')->
                     getSubCategories($ctype['name'], $current_cat_id);
 
             // Формируем параметры, используемые в шаблоне

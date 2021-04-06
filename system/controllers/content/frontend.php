@@ -349,7 +349,7 @@ class content extends cmsFrontend {
         if($this->request->has('show_count')){
 
             if(!empty($ctype['labels']['many'])){
-                $hint = LANG_SHOW.' '.html_spellcount($total, $ctype['labels']['one'], $ctype['labels']['two'], $ctype['labels']['many'], 0);
+                $hint = LANG_SHOW.' '.html_spellcount($total, $ctype['labels']['one_accusative'], $ctype['labels']['two_accusative'], $ctype['labels']['many_accusative'], 0);
             } else {
                 $hint = LANG_SHOW.' '.html_spellcount($total, LANG_CONTENT_SHOW_FILTER_COUNT, false, false, 0);
             }

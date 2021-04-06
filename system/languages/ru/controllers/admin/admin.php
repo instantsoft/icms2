@@ -217,9 +217,15 @@
     define('LANG_CP_ITEMVIEW_SHARE_CODE',       'HTML код для социальных кнопок');
 
     define('LANG_CP_NUMERALS_LABELS',           'Числительные');
-    define('LANG_CP_NUMERALS_1_LABEL',          'Один / одна / одно (...)');
-    define('LANG_CP_NUMERALS_2_LABEL',          'Два / две (...)');
-    define('LANG_CP_NUMERALS_10_LABEL',         'Много (...)');
+    define('LANG_CP_NUMERALS_1_LABEL',          'Один / одна / одно (Именительный)');
+    define('LANG_CP_NUMERALS_2_LABEL',          'Два / две (Именительный)');
+    define('LANG_CP_NUMERALS_10_LABEL',         'Много (Именительный)');
+    define('LANG_CP_NUMERALS_1_ALABEL',         'Одного / одну / одно (Винительный)');
+    define('LANG_CP_NUMERALS_2_ALABEL',         'Два / две (Винительный)');
+    define('LANG_CP_NUMERALS_10_ALABEL',        'Много (Винительный)');
+    define('LANG_CP_NUMERALS_1_GLABEL',         'Одного / однй (Родительный)');
+    define('LANG_CP_NUMERALS_2_GLABEL',         'Двух / двоих (Родительный)');
+    define('LANG_CP_NUMERALS_10_GLABEL',        'Много (Родительный)');
     define('LANG_CP_ACTIONS_LABELS',            'Операции');
     define('LANG_CP_ACTION_ADD_LABEL',          'Создать (...)');
     define('LANG_CP_LIST_LABELS',               'Заголовки списков');

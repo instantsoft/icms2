@@ -206,6 +206,12 @@
     define('LANG_CP_NUMERALS_1_LABEL',          'One (...)');
     define('LANG_CP_NUMERALS_2_LABEL',          'Two (...)');
     define('LANG_CP_NUMERALS_10_LABEL',         'Many (...)');
+    define('LANG_CP_NUMERALS_1_ALABEL',         'One (Accusative)');
+    define('LANG_CP_NUMERALS_2_ALABEL',         'Two (Accusative)');
+    define('LANG_CP_NUMERALS_10_ALABEL',        'Many (Accusative)');
+    define('LANG_CP_NUMERALS_1_GLABEL',         'One (Genitive)');
+    define('LANG_CP_NUMERALS_2_GLABEL',         'Two (Genitive)');
+    define('LANG_CP_NUMERALS_10_GLABEL',        'Many (Genitive)');
     define('LANG_CP_ACTIONS_LABELS',            'Actions');
     define('LANG_CP_ACTION_ADD_LABEL',          'Add (...)');
     define('LANG_CP_LIST_LABELS',               'Headings');

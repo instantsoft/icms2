@@ -283,42 +283,65 @@ class modelContent extends cmsModel {
         return self::$all_ctypes;
     }
 
-    public function getContentTypesFiltered(){
+    public function getContentTypesFiltered() {
 
         $this->useCache('content.types');
 
-        if (!$this->order_by){ $this->orderBy('ordering'); }
+        if (!$this->order_by) { $this->orderBy('ordering'); }
 
-        return $this->get('content_types', function($item, $model){
+        return $this->get('content_types', function ($item, $model) {
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
-            $item['labels'] = cmsModel::yamlToArray($item['labels']);
+            $item['labels']  = $model->makeContentTypeLabels($item['labels']);
 
             // YAML некорректно преобразовывает пустые значения массива
             // убрать после перевода всего на JSON
-            if(!empty($item['options']['list_style'])){
-                if(is_array($item['options']['list_style'])){
-                    $list_styles = array();
+            if (!empty($item['options']['list_style'])) {
+                if (is_array($item['options']['list_style'])) {
+                    $list_styles = [];
                     foreach ($item['options']['list_style'] as $key => $value) {
                         $list_styles[$key] = is_array($value) ? '' : $value;
                     }
                     $item['options']['list_style'] = $list_styles;
                 }
             }
-            if(!empty($item['options']['context_list_cover_sizes'])){
-                if(is_array($item['options']['context_list_cover_sizes'])){
-                    $list_styles = array();
+            if (!empty($item['options']['context_list_cover_sizes'])) {
+                if (is_array($item['options']['context_list_cover_sizes'])) {
+                    $list_styles = [];
                     foreach ($item['options']['context_list_cover_sizes'] as $key => $value) {
-                        $list_styles[$key?$key:''] = $value;
+                        $list_styles[$key ? $key : ''] = $value;
                     }
                     $item['options']['context_list_cover_sizes'] = $list_styles;
                 }
             }
 
             return $item;
-
         });
+    }
 
+    private function makeContentTypeLabels($labels){
+
+        $labels = cmsModel::yamlToArray($labels);
+        if (empty($labels['one_accusative'])) {
+            $labels['one_accusative'] = $labels['one'];
+        }
+        if (empty($labels['two_accusative'])) {
+            $labels['two_accusative'] = $labels['two'];
+        }
+        if (empty($labels['many_accusative'])) {
+            $labels['many_accusative'] = $labels['many'];
+        }
+        if (empty($labels['one_genitive'])) {
+            $labels['one_genitive'] = $labels['one'];
+        }
+        if (empty($labels['two_genitive'])) {
+            $labels['two_genitive'] = $labels['two'];
+        }
+        if (empty($labels['many_genitive'])) {
+            $labels['many_genitive'] = $labels['many'];
+        }
+
+        return $labels;
     }
 
     public function getContentTypesCountFiltered(){
