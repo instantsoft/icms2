@@ -727,7 +727,7 @@ class modelGroups extends cmsModel {
 
             $counts[ $ctype['name'] ] = array(
                 'count'      => $count,
-                'is_in_list' => $ctype['options']['list_on'],
+                'is_in_list' => $ctype['is_in_groups'],
                 'title'      => empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'],
                 'title_add'  => $ctype['labels']['create']
             );

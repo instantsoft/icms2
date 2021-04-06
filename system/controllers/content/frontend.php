@@ -211,7 +211,6 @@ class content extends cmsFrontend {
         }
 
         return $filter_query_params ? http_build_query($filter_query_params) : '';
-
     }
 
     public function renderItemsList($ctype, $page_url, $hide_filter = false, $category_id = 0, $filters = [], $dataset = false, $ext_hidden_params = []){
@@ -304,16 +303,15 @@ class content extends cmsFrontend {
 			}
 		}
 
+        // Активный фильтры из GET параметров
+        $filter_query = $this->getActiveFiltersQuery();
+
         // Если мы в фильтре, дополняем его урл
         // полями, которых в нём нет
         if($this->list_filter){
-
-            $filter_query = $this->getActiveFiltersQuery();
-
             if($filter_query){
                 $page_url['filter_link'] .= '?'.$filter_query;
             }
-
         }
 
         // применяем приватность
@@ -493,13 +491,20 @@ class content extends cmsFrontend {
 
         $this->cms_template->setContext($this);
 
-        $html = $this->cms_template->renderContentList($ctype, array(
+        // $filter_query это активный фильтр GET параметров
+        // преобразовываем в массив $filter_active для работы пагинации
+        // не используем $this->active_filters, поскольку там в том числе и
+        // фильтры от "Фильтров" типа контента, им тут делать нечего
+        parse_str($filter_query, $filter_active);
+
+        $html = $this->cms_template->renderContentList($ctype, [
 			'category_id'       => $category_id,
             'page_url'          => $page_url,
             'ctype'             => $ctype,
             'fields'            => $fields,
             'props'             => $props,
             'props_fields'      => $props_fields,
+            'filter_query'      => array_merge($filter_active, $ext_hidden_params), // Используется в пагинации
             'filters'           => $this->active_filters,
             'ext_hidden_params' => $ext_hidden_params,
             'page'              => $page,
@@ -509,12 +514,11 @@ class content extends cmsFrontend {
             'user'              => $this->cms_user,
             'dataset'           => $dataset,
             'hide_except_title' => $hide_except_title
-        ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
+        ], new cmsRequest([], cmsRequest::CTX_INTERNAL));
 
         $this->cms_template->restoreContext();
 
         return $html;
-
     }
 
     public function getItemInfoBar($ctype, $item, $fields, $subject = 'item') {

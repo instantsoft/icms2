@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Контроллер сообществ
+ *
+ * @property \modelGroups $model
+ */
 class groups extends cmsFrontend {
 
     const JOIN_POLICY_FREE = 0;

@@ -141,4 +141,4 @@ if( $ctype['options']['list_show_filter'] ) {
     <?php } ?>
 
 </div>
-<?php echo html_pagebar($page, $perpage, $total, $page_url, array_merge($filters, $ext_hidden_params)); ?>
+<?php echo html_pagebar($page, $perpage, $total, $page_url, $filter_query); ?>

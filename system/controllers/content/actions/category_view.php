@@ -109,6 +109,9 @@ class actionContentCategoryView extends cmsAction {
         }
 
         if ($this->list_filter) {
+            if (!$base_url && empty($category['slug'])) {
+                $page_url = str_replace('/'.$ctype['name'], '', $page_url);
+            }
             $page_url = [
                 'base'        => $page_url . '/' . $this->list_filter['slug'],
                 'filter_link' => $page_url . '/' . $this->list_filter['slug'],

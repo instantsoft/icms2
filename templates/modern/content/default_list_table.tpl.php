@@ -95,4 +95,4 @@
     </table>
 
 </div>
-<?php echo html_pagebar($page, $perpage, $total, $page_url, array_merge($filters, $ext_hidden_params)); ?>
+<?php echo html_pagebar($page, $perpage, $total, $page_url, $filter_query); ?>

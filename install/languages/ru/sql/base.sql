@@ -330,8 +330,6 @@ CREATE TABLE `{#}content_types` (
   `ordering` int(11) DEFAULT NULL,
   `is_enabled` tinyint(1) UNSIGNED DEFAULT '1',
   `is_date_range` tinyint(1) unsigned DEFAULT NULL,
-  `is_premod_add` tinyint(1) unsigned DEFAULT NULL COMMENT 'Модерация при создании?',
-  `is_premod_edit` tinyint(1) unsigned DEFAULT NULL COMMENT 'Модерация при редактировании',
   `is_cats` tinyint(1) unsigned DEFAULT NULL COMMENT 'Категории включены?',
   `is_cats_recursive` tinyint(1) unsigned DEFAULT NULL COMMENT 'Сквозной просмотр категорий?',
   `is_folders` tinyint(1) unsigned DEFAULT NULL,
