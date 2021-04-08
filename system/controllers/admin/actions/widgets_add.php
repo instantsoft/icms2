@@ -18,19 +18,17 @@ class actionAdminWidgetsAdd extends cmsAction {
             $template_name = cmsConfig::get('template');
         }
 
-        $widgets_model = cmsCore::getModel('widgets');
-
-        $widget = $widgets_model->getWidget($widget_id);
+        $widget = $this->model_backend_widgets->getWidget($widget_id);
         if (!$widget) {
             return $this->cms_template->renderJSON(['error' => true]);
         }
 
-        $res = $widgets_model->addWidgetBinding($widget, $page_id, $position, $template_name);
+        $res = $this->model_backend_widgets->addWidgetBinding($widget, $page_id, $position, $template_name);
         if (!$res) {
             return $this->cms_template->renderJSON(['error' => true]);
         }
 
-        $widget_bind = $widgets_model->getWidgetBinding($res['id']);
+        $widget_bind = $this->model_backend_widgets->getWidgetBinding($res['id']);
         if (!$widget_bind) {
             return $this->cms_template->renderJSON(['error' => true]);
         }
@@ -50,7 +48,7 @@ class actionAdminWidgetsAdd extends cmsAction {
 
         $data = $form->parse(new cmsRequest($widget_bind));
 
-        $widgets_model->updateWidgetBinding($res['id'], $data);
+        $this->model_backend_widgets->updateWidgetBinding($res['id'], $data);
 
         return $this->cms_template->renderJSON([
             'error' => false,

@@ -262,6 +262,9 @@ class actionAdminWidgetsImportScheme extends cmsAction {
             ];
         }
 
+        // Удаляем текущую схему и виджеты
+        $this->deleteLayout($to_template_name);
+
         // Колонки
         $cols_db = $this->model->filterIn('row_id', array_keys($rows))->get('layout_cols');
 

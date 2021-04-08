@@ -15,9 +15,9 @@ class actionAdminWidgets extends cmsAction {
 
         cmsCore::loadAllControllersLanguages();
 
-        $controllers = $this->model_widgets->getPagesControllers();
+        $controllers = $this->model_backend_widgets->getPagesControllers();
 
-        $widgets_list = $this->model_widgets->getAvailableWidgets();
+        $widgets_list = $this->model_backend_widgets->getAvailableWidgets();
 
         $tpls = cmsCore::getTemplates();
 
@@ -123,7 +123,7 @@ class actionAdminWidgets extends cmsAction {
 
         $this->cms_template->addTplJSName('admin-scheme');
 
-        $rows = $this->model_widgets->getLayoutRows($template->getName());
+        $rows = $this->model_backend_widgets->getLayoutRows($template->getName());
 
         return $template->getRenderedChild('widgets_scheme', array(
             'rows_titles_pos' => $this->rows_titles_pos,

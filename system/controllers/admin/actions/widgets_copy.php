@@ -8,15 +8,13 @@ class actionAdminWidgetsCopy extends cmsAction {
             return cmsCore::error404();
         }
 
-        $widgets_model = cmsCore::getModel('widgets');
-
-        $copy = $widgets_model->copyWidgetByPage($bp_id);
+        $copy = $this->model_backend_widgets->copyWidgetByPage($bp_id);
         if (!$copy) {
             return $this->cms_template->renderJSON(array('error' => true));
         }
 
-        $widget_bind  = $widgets_model->getWidgetBinding($copy['id']);
-        $binding_page = $widgets_model->getWidgetBindPage($copy['bp_id']);
+        $widget_bind  = $this->model_backend_widgets->getWidgetBinding($copy['id']);
+        $binding_page = $this->model_backend_widgets->getWidgetBindPage($copy['bp_id']);
 
         if ($widget_bind['device_types'] && $widget_bind['device_types'] !== array(0) && count($widget_bind['device_types']) < 3) {
 
@@ -41,7 +39,6 @@ class actionAdminWidgetsCopy extends cmsAction {
             'error'  => false,
             'widget' => $widget_bind
         ));
-
     }
 
 }

@@ -4,10 +4,10 @@ class actionAdminWidgetsColEdit extends cmsAction {
 
     public function run($id){
 
-        $col = $this->model_widgets->getLayoutCol($id);
+        $col = $this->model_backend_widgets->getLayoutCol($id);
         if (!$col) { cmsCore::error404(); }
 
-        $row = $this->model_widgets->getLayoutRow($col['row_id']);
+        $row = $this->model_backend_widgets->getLayoutRow($col['row_id']);
         if (!$row) { cmsCore::error404(); }
 
         $form = $this->getSchemeColForm('edit', $row, $col);
@@ -20,7 +20,12 @@ class actionAdminWidgetsColEdit extends cmsAction {
 
             if (!$errors){
 
-                $this->model_widgets->updateLayoutCol($col['id'], $_col);
+                $this->model_backend_widgets->updateLayoutCol($col['id'], $_col);
+
+                // Если изменилось название позиции, меняем в виджетах
+                if($col['name'] != $_col['name']){
+                    $this->model_backend_widgets->updateWidgetBindPosition($col['name'], $_col['name'], $row['template']);
+                }
 
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 

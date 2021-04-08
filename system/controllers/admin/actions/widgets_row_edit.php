@@ -4,7 +4,7 @@ class actionAdminWidgetsRowEdit extends cmsAction {
 
     public function run($id){
 
-        $row = $this->model_widgets->getLayoutRow($id);
+        $row = $this->model_backend_widgets->getLayoutRow($id);
         if (!$row) { cmsCore::error404(); }
 
         $form = $this->getSchemeRowForm('edit', $row);
@@ -23,7 +23,7 @@ class actionAdminWidgetsRowEdit extends cmsAction {
 
             if (!$errors){
 
-                $this->model_widgets->updateLayoutRow($row['id'], $_row);
+                $this->model_backend_widgets->updateLayoutRow($row['id'], $_row);
 
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 

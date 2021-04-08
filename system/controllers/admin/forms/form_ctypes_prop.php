@@ -4,7 +4,7 @@ class formAdminCtypesProp extends cmsForm {
 
     public function init($do, $ctype) {
 
-        $model = cmsCore::getModel('content');
+        $model = cmsCore::getModel('backend_content');
 
         return array(
             'basic' => array(

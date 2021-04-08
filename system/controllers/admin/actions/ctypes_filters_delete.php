@@ -8,15 +8,14 @@ class actionAdminCtypesFiltersDelete extends cmsAction {
             cmsCore::error404();
         }
 
-        $ctype = $this->model_content->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
         if (!$ctype) { cmsCore::error404(); }
 
-        $this->model_content->deleteContentFilter($ctype, $id);
+        $this->model_backend_content->deleteContentFilter($ctype, $id);
 
         cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
         $this->redirectBack();
-
     }
 
 }

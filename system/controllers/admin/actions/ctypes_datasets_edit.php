@@ -6,12 +6,12 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
 
         if (!$dataset_id) { cmsCore::error404(); }
 
-        $dataset = $old_dataset = $this->model_content->getContentDataset($dataset_id);
+        $dataset = $old_dataset = $this->model_backend_content->getContentDataset($dataset_id);
         if (!$dataset) { cmsCore::error404(); }
 
         if($dataset['ctype_id']){
 
-            $ctype = $this->model_content->getContentType($dataset['ctype_id']);
+            $ctype = $this->model_backend_content->getContentType($dataset['ctype_id']);
             if (!$ctype) { cmsCore::error404(); }
 
             $controller_name = 'content';
@@ -26,20 +26,20 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
                 'id'    => null
             );
 
-            $this->model_content->setTablePrefix('');
+            $this->model_backend_content->setTablePrefix('');
 
             $controller_name = $dataset['target_controller'];
 
         }
 
-        $fields  = $this->model_content->getContentFields($ctype['name']);
+        $fields  = $this->model_backend_content->getContentFields($ctype['name']);
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
         $cats_list = array();
 
         if($ctype['id']){
 
-            $cats = $this->model_content->getCategoriesTree($ctype['name'], false);
+            $cats = $this->model_backend_content->getCategoriesTree($ctype['name'], false);
 
             if ($cats){
                 foreach($cats as $c){
@@ -61,7 +61,7 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
 
             if (!$errors){
 
-                $this->model_content->updateContentDataset($dataset_id, $dataset, $ctype, $old_dataset);
+                $this->model_backend_content->updateContentDataset($dataset_id, $dataset, $ctype, $old_dataset);
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 

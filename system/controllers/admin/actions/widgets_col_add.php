@@ -4,7 +4,7 @@ class actionAdminWidgetsColAdd extends cmsAction {
 
     public function run($row_id){
 
-        $row = $this->model_widgets->getLayoutRow($row_id);
+        $row = $this->model_backend_widgets->getLayoutRow($row_id);
         if (!$row) { cmsCore::error404(); }
 
         $form = $this->getSchemeColForm('add', $row);
@@ -17,7 +17,7 @@ class actionAdminWidgetsColAdd extends cmsAction {
 
             if (!$errors){
 
-                $this->model_widgets->addLayoutCol($col);
+                $this->model_backend_widgets->addLayoutCol($col);
 
                 return $this->cms_template->renderJSON(array(
                     'errors' => false,

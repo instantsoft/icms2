@@ -6,7 +6,7 @@ class actionAdminCtypesEdit extends cmsAction {
 
         if (!$id) { cmsCore::error404(); }
 
-        $ctype = $this->model_content->getContentType($id);
+        $ctype = $this->model_backend_content->getContentType($id);
         if (!$ctype) { cmsCore::error404(); }
 
         $form = $this->getForm('ctypes_basic', array('edit', $ctype));
@@ -39,7 +39,7 @@ class actionAdminCtypesEdit extends cmsAction {
                 $ctype = cmsEventsManager::hook("ctype_before_update", $ctype);
                 $ctype = cmsEventsManager::hook("ctype_{$ctype['name']}_before_update", $ctype);
 
-                $this->model_content->updateContentType($id, $ctype);
+                $this->model_backend_content->updateContentType($id, $ctype);
 
                 $ctype['id'] = $id;
                 cmsEventsManager::hook("ctype_after_update", $ctype);

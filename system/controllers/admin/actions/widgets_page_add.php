@@ -2,7 +2,7 @@
 
 class actionAdminWidgetsPageAdd extends cmsAction {
 
-    public function run(){
+    public function run() {
 
         $form = $this->getForm('widgets_page');
 
@@ -10,43 +10,35 @@ class actionAdminWidgetsPageAdd extends cmsAction {
 
         $page = $form->parse($this->request, $is_submitted);
 
-        if ($is_submitted){
+        if ($is_submitted) {
 
             $errors = $form->validate($this, $page);
 
-            if (!$errors){
+            if (!$errors) {
 
-                $widgets_model = cmsCore::getModel('widgets');
+                $page_id = $this->model_backend_widgets->addPage($page);
 
-                $page_id = $widgets_model->addPage($page);
-
-                if ($page_id){
+                if ($page_id) {
 
                     cmsUser::addSessionMessage(sprintf(LANG_CP_WIDGET_PAGE_CREATED, $page['title']), 'success');
 
                     cmsUser::setCookiePublic('widgets_tree_path', "/custom/custom.{$page_id}");
-
                 }
 
                 $this->redirectToAction('widgets');
-
             }
 
-            if ($errors){
-
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
-
         }
 
-        return $this->cms_template->render('widgets_page', array(
+        return $this->cms_template->render('widgets_page', [
             'do'     => 'add',
             'page'   => $page,
             'form'   => $form,
             'errors' => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }

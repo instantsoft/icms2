@@ -27,7 +27,7 @@ class actionAdminCtypesAdd extends cmsAction {
                 $ctype = cmsEventsManager::hook('ctype_before_add', $ctype);
                 $ctype = cmsEventsManager::hook("ctype_{$ctype['name']}_before_add", $ctype);
 
-                $ctype_id = $this->model_content->addContentType($ctype);
+                $ctype_id = $this->model_backend_content->addContentType($ctype);
 
                 $ctype['id'] = $ctype_id;
 
@@ -58,7 +58,6 @@ class actionAdminCtypesAdd extends cmsAction {
             'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
-
     }
 
 }

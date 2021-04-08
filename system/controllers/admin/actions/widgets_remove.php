@@ -8,7 +8,7 @@ class actionAdminWidgetsRemove extends cmsAction {
 
         if (!$id) { cmsCore::error404(); }
 
-        $widget = $this->model_widgets->getWidget($id);
+        $widget = $this->model_backend_widgets->getWidget($id);
         if (!$widget) {
             return cmsCore::error404();
         }
@@ -22,7 +22,7 @@ class actionAdminWidgetsRemove extends cmsAction {
 
         $widget = cmsEventsManager::hook(['widget_before_remove', $widget_before_event_name], $widget);
 
-        $this->model_widgets->deleteWidget($id);
+        $this->model_backend_widgets->deleteWidget($id);
 
         $success_text = LANG_CP_WIDGET_REMOVE_SUCCESS;
 

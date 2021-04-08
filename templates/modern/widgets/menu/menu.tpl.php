@@ -47,9 +47,9 @@
             <?php if ($widget->options['show_search_form']) { ?>
                 <form class="form-inline<?php if ($widget->options['show_search_form'] == 2) { ?> icms-navbar-form__show_on_hide<?php } ?> ml-auto my-2 my-lg-0" action="<?php echo href_to('search'); ?>" method="get">
                     <div class="input-group">
-                        <?php echo html_input('text', 'q', '', ['placeholder'=>ERR_SEARCH_TITLE, 'class' => 'border-0']); ?>
+                        <?php echo html_input('text', 'q', '', ['placeholder'=>ERR_SEARCH_TITLE, 'autocomplete' => 'off']); ?>
                         <div class="input-group-append">
-                            <button class="btn bg-white text-muted" type="submit">
+                            <button class="btn" type="submit">
                                 <?php html_svg_icon('solid', 'search'); ?>
                             </button>
                         </div>

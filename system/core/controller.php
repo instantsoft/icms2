@@ -102,18 +102,33 @@ class cmsController {
 
         $this->title = defined($title_constant) ? constant($title_constant) : $this->name;
 
-        if (cmsCore::isModelExists($this->name)){
-            $this->model = cmsCore::getModel($this->name);
-        } elseif($this->outer_controller_model) {
-            $this->model = cmsCore::getModel($this->outer_controller_model);
-        }
+        $this->loadModel();
 
         if ($this->useOptions){
             $this->options = $this->getOptions();
         }
 
         $this->loadCallback();
+    }
 
+    protected function loadModel() {
+
+        // Контроллер сам решает, какая модель ему нужна
+        if($this->outer_controller_model) {
+            $this->model = cmsCore::getModel($this->outer_controller_model);
+            return;
+        }
+
+        // Мы в бэкенде?
+        if($this instanceof cmsBackend){
+            if (cmsCore::isModelExists($this->name.'/backend')){
+                $this->model = cmsCore::getModel('backend_'.$this->name);
+            }
+        }
+
+        if ($this->model === null && cmsCore::isModelExists($this->name)){
+            $this->model = cmsCore::getModel($this->name);
+        }
     }
 
     public function setRequest( cmsRequest $request) {

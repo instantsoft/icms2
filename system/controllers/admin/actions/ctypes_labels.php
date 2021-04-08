@@ -10,9 +10,7 @@ class actionAdminCtypesLabels extends cmsAction {
 
         $form = $this->getForm('ctypes_labels');
 
-        $content_model = cmsCore::getModel('content');
-
-        $ctype = $content_model->getContentType($id);
+        $ctype = $this->model_backend_content->getContentType($id);
         if (!$ctype) { cmsCore::error404(); }
 
         cmsCore::loadControllerLanguage('content');
@@ -25,7 +23,7 @@ class actionAdminCtypesLabels extends cmsAction {
 
             if (!$errors){
 
-                $content_model->updateContentType($id, $ctype);
+                $this->model_backend_content->updateContentType($id, $ctype);
 
                 $activity_controller = cmsCore::getController('activity');
 

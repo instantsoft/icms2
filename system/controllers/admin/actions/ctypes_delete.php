@@ -10,17 +10,17 @@ class actionAdminCtypesDelete extends cmsAction {
             cmsCore::error404();
         }
 
-        $ctype = $this->model_content->getContentType($id);
+        $ctype = $this->model_backend_content->getContentType($id);
 
         $ctype = cmsEventsManager::hook('ctype_before_delete', $ctype);
 
-        $this->model_content->deleteContentType($id);
+        $this->model_backend_content->deleteContentType($id);
 
         cmsEventsManager::hook('ctype_after_delete', $ctype);
 
-        cmsCore::getModel('widgets')->deletePagesByName('content', "{$ctype['name']}.*");
+        $this->model_backend_widgets->deletePagesByName('content', "{$ctype['name']}.*");
 
-        $binded_widgets = $this->model_content->get('widgets_bind', function($item, $model){
+        $binded_widgets = $this->model_backend_content->get('widgets_bind', function($item, $model){
             $item['options'] = cmsModel::yamlToArray($item['options']);
             return $item;
         });
@@ -28,7 +28,7 @@ class actionAdminCtypesDelete extends cmsAction {
         if($binded_widgets){
             foreach ($binded_widgets as $widget) {
                 if(isset($widget['options']['ctype_id']) && $ctype['id'] == $widget['options']['ctype_id']){
-                    $this->model_content->delete('widgets_bind', $widget['id']);
+                    $this->model_backend_content->delete('widgets_bind', $widget['id']);
                 }
             }
         }
@@ -38,7 +38,6 @@ class actionAdminCtypesDelete extends cmsAction {
         cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
         $this->redirectToAction('ctypes');
-
     }
 
 }

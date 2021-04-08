@@ -28,9 +28,7 @@ class actionAdminMenuEdit extends cmsAction {
                 // обновление виджетов меню, в которых используется это меню
                 if (!$menu['is_fixed'] && $menu['name'] !== $new_menu['name']){
 
-                    $widgets_model = cmsCore::getModel('widgets');
-
-                    $w_binds = $widgets_model->join('widgets', 'w', 'w.id = i.widget_id')->
+                    $w_binds = $this->model_backend_widgets->join('widgets', 'w', 'w.id = i.widget_id')->
                             filterEqual('w.name', 'menu')->get('widgets_bind', function($item, $model){
                         $item['options'] = cmsModel::yamlToArray($item['options']);
                         return $item;
@@ -41,7 +39,7 @@ class actionAdminMenuEdit extends cmsAction {
                         if(isset($w_bind['options']['menu']) && $w_bind['options']['menu'] === $menu['name']){
                             $new = array('options' => $w_bind['options']);
                             $new['options']['menu'] = $new_menu['name'];
-                            $widgets_model->updateWidgetBinding($w_bind['id'], $new);
+                            $this->model_backend_widgets->updateWidgetBinding($w_bind['id'], $new);
                         }
 
                     }

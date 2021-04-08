@@ -40,6 +40,46 @@
         color: inherit;
     }
 }
+.navbar {
+    .form-control {
+        box-shadow: inset 0 -1px 0 $gray-400;
+        transition: box-shadow .2s;
+        background-color: transparent;
+        border: none;
+        border-radius: 0;
+        &:focus {
+            box-shadow: inset 0 -2px 0 $primary;
+            ~.input-group-append {
+                .btn {
+                    color: $primary;
+                }
+            }
+        }
+    }
+    .input-group-append {
+        .btn {
+            color: $gray-400;
+        }
+    }
+    .bg-dark &,
+    .bg-primary & {
+        .form-control {
+            color: $white;
+            box-shadow: inset 0 -1px 0 rgba($white, .5);
+            &:focus {
+                box-shadow: inset 0 -2px 0 $white;
+                ~.input-group-append {
+                    .btn {
+                        color: $white;
+                    }
+                }
+            }
+            &::placeholder {
+                color: rgba($white, .5);
+            }
+        }
+    }
+}
 .navbar-nav {
     &.icms-navbar-expanded:not(.flex-column) {
         .nav-item {
@@ -224,6 +264,13 @@ form {
     .text-muted {
         color: lighten($text-muted, 30) !important;
     }
+}
+.table-hover {
+  > tbody > tr,
+  > tbody > tr > th,
+  > tbody > tr > td {
+    transition: background-color .3s, color .3s;
+  }
 }
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1108514
 // slick slider

@@ -6,16 +6,14 @@ class actionAdminCtypesPropsEdit extends cmsAction {
 
         if (!$ctype_id || !$prop_id) { cmsCore::error404(); }
 
-        $content_model = cmsCore::getModel('content');
-
-        $ctype = $content_model->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
         if (!$ctype) { cmsCore::error404(); }
 
         $form = $this->getForm('ctypes_prop', ['edit', $ctype]);
 
         $is_submitted = $this->request->has('submit');
 
-        $prop = $content_model->getContentProp($ctype['name'], $prop_id);
+        $prop = $this->model_backend_content->getContentProp($ctype['name'], $prop_id);
 
         if ($is_submitted){
 
@@ -32,12 +30,11 @@ class actionAdminCtypesPropsEdit extends cmsAction {
                 unset($prop['new_fieldset']);
 
                 // сохраняем поле
-                $content_model->updateContentProp($ctype['name'], $prop_id, $prop);
+                $this->model_backend_content->updateContentProp($ctype['name'], $prop_id, $prop);
 
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
-                $this->redirectToAction('ctypes', array('props', $ctype['id']));
-
+                $this->redirectToAction('ctypes', ['props', $ctype['id']]);
             }
 
             if ($errors){
@@ -46,14 +43,13 @@ class actionAdminCtypesPropsEdit extends cmsAction {
 
         }
 
-        return $this->cms_template->render('ctypes_prop', array(
+        return $this->cms_template->render('ctypes_prop', [
             'do'     => 'edit',
             'ctype'  => $ctype,
             'prop'   => $prop,
             'form'   => $form,
             'errors' => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }

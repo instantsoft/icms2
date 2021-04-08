@@ -369,9 +369,7 @@ class admin extends cmsFrontend {
 
     public function addCtypeWidgetsPages($ctype){
 
-        $widgets_model = cmsCore::getModel('widgets');
-
-        $widgets_model->addPage(array(
+        $this->model_backend_widgets->addPage(array(
             'controller' => 'content',
             'name' => "{$ctype['name']}.all",
             'title_const' => 'LANG_WP_CONTENT_ALL_PAGES',
@@ -382,7 +380,7 @@ class admin extends cmsFrontend {
             )
         ));
 
-        $widgets_model->addPage(array(
+        $this->model_backend_widgets->addPage(array(
             'controller' => 'content',
             'name' => "{$ctype['name']}.list",
             'title_const' => 'LANG_WP_CONTENT_LIST',
@@ -404,14 +402,14 @@ class admin extends cmsFrontend {
             )
         ));
 
-        $widgets_model->addPage(array(
+        $this->model_backend_widgets->addPage(array(
             'controller' => 'content',
             'name' => "{$ctype['name']}.item",
             'title_const' => 'LANG_WP_CONTENT_ITEM',
             'url_mask' => "{$ctype['name']}/*.html"
         ));
 
-        $widgets_model->addPage(array(
+        $this->model_backend_widgets->addPage(array(
             'controller' => 'content',
             'name' => "{$ctype['name']}.edit",
             'title_const' => 'LANG_WP_CONTENT_ITEM_EDIT',
@@ -423,7 +421,6 @@ class admin extends cmsFrontend {
         ));
 
         return true;
-
     }
 
 //============================================================================//

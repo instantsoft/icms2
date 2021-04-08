@@ -2,69 +2,66 @@
 
 class actionAdminCtypesRelationsEdit extends cmsAction {
 
-    public function run($ctype_id, $relation_id){
+    public function run($ctype_id, $relation_id) {
 
-        if (!$ctype_id || !$relation_id) { cmsCore::error404(); }
+        if (!$ctype_id || !$relation_id) {
+            cmsCore::error404();
+        }
 
-        $content_model = cmsCore::getModel('content');
-
-        $ctype = $content_model->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
         if (!$ctype) { cmsCore::error404(); }
 
-		$relation = $content_model->getContentRelation($relation_id);
+        $relation = $this->model_backend_content->getContentRelation($relation_id);
         if (!$relation) { cmsCore::error404(); }
 
-        $form = $this->getForm('ctypes_relation', array('edit', $ctype['id']));
+        $form = $this->getForm('ctypes_relation', ['edit', $ctype['id']]);
 
         $form->setFieldProperty('basic', 'child_ctype_id', 'is_visible', false);
 
-        if ($relation['layout'] != 'tab'){
+        if ($relation['layout'] != 'tab') {
             $form->hideFieldset('tab-opts');
         }
 
-        if ($this->request->has('submit')){
+        if ($this->request->has('submit')) {
 
             $form->removeField('basic', 'child_ctype_id');
 
-			$relation = array_merge($relation, $form->parse($this->request, true));
+            $relation = array_merge($relation, $form->parse($this->request, true));
 
-            $errors = $form->validate($this,  $relation);
+            $errors = $form->validate($this, $relation);
 
-            if($relation['layout'] == 'list' && $content_model->filterEqual('ctype_id', $ctype['id'])->
-                    filterEqual('layout', 'list')->filterNotEqual('id', $relation['id'])->
-                    getCount('content_relations')){
+            if ($relation['layout'] == 'list' && $this->model_backend_content->filterEqual('ctype_id', $ctype['id'])->
+                            filterEqual('layout', 'list')->filterNotEqual('id', $relation['id'])->
+                            getCount('content_relations')) {
                 $errors['layout'] = LANG_CP_RELATION_LAYOUT_LIST_ERROR;
             }
-            $content_model->resetFilters();
+            $this->model_backend_content->resetFilters();
 
-            if (!$errors){
+            if (!$errors) {
 
                 $relation['ctype_id'] = $ctype_id;
 
-                $content_model->updateContentRelation($relation_id, $relation);
+                $this->model_backend_content->updateContentRelation($relation_id, $relation);
 
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
-                $this->redirectToAction('ctypes', array('relations', $ctype['id']));
-
+                $this->redirectToAction('ctypes', ['relations', $ctype['id']]);
             }
 
-            if ($errors){
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
-        $relation['child_ctype_id'] = $relation['target_controller'].':'.$relation['child_ctype_id'];
+        $relation['child_ctype_id'] = $relation['target_controller'] . ':' . $relation['child_ctype_id'];
 
-        return $this->cms_template->render('ctypes_relation', array(
+        return $this->cms_template->render('ctypes_relation', [
             'do'       => 'edit',
             'ctype'    => $ctype,
             'relation' => $relation,
             'form'     => $form,
             'errors'   => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }

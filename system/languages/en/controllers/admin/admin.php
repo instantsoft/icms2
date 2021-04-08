@@ -187,6 +187,7 @@
     define('LANG_CP_CONTEXT_SELECT_LIST',       'Select a list');
     define('LANG_CP_LISTVIEW_STYLE_SLIDER',     'Slider');
     define('LANG_CP_LISTVIEW_STYLE_BASIC',      'Basic list');
+    define('LANG_CP_LISTVIEW_STYLE_MASONRY',    'Masonry');
     define('LANG_CP_LISTVIEW_STYLE_FEATURED',   'Featured list');
     define('LANG_CP_LISTVIEW_STYLE_TILES',      'Tiles');
     define('LANG_CP_LISTVIEW_STYLE_TABLE',      'Table');

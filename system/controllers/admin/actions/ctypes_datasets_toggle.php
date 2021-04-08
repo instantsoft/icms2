@@ -10,7 +10,7 @@ class actionAdminCtypesDatasetsToggle extends cmsAction {
 			));
 		}
 
-		$dataset = $this->model_content->getContentDataset($dataset_id);
+		$dataset = $this->model_backend_content->getContentDataset($dataset_id);
         if (!$dataset) {
 			return $this->cms_template->renderJSON(array(
 				'error' => true
@@ -19,7 +19,7 @@ class actionAdminCtypesDatasetsToggle extends cmsAction {
 
 		$is_visible = $dataset['is_visible'] ? 0 : 1;
 
-		$this->model_content->toggleContentDatasetVisibility($dataset_id, $is_visible);
+		$this->model_backend_content->toggleContentDatasetVisibility($dataset_id, $is_visible);
 
 		return $this->cms_template->renderJSON(array(
 			'error' => false,

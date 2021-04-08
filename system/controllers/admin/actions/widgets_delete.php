@@ -8,37 +8,31 @@ class actionAdminWidgetsDelete extends cmsAction {
             return cmsCore::error404();
         }
 
-        $widgets_model = cmsCore::getModel('widgets');
-
         $del_all = false;
 
-        $bp = $widgets_model->getWidgetBindPage($bp_id);
+        $bp = $this->model_backend_widgets->getWidgetBindPage($bp_id);
 
         if ($bp) {
 
-            $count = $widgets_model->getWidgetBindPageCount($bp['bind_id']);
+            $count = $this->model_backend_widgets->getWidgetBindPageCount($bp['bind_id']);
 
             if ($count < 2) {
 
-                $widgets_model->deleteWidgetBinding($bp['bind_id']);
+                $this->model_backend_widgets->deleteWidgetBinding($bp['bind_id']);
 
                 $del_all = $bp['bind_id'];
-
             } else {
 
-                $widgets_model->deleteWidgetPageBind($bp_id);
-
+                $this->model_backend_widgets->deleteWidgetPageBind($bp_id);
             }
 
-            list($bp, $widgets_model, $del_all) = cmsEventsManager::hook('widget_after_delete', [$bp, $widgets_model, $del_all]);
-
+            list($bp, $this->model_backend_widgets, $del_all) = cmsEventsManager::hook('widget_after_delete', [$bp, $this->model_backend_widgets, $del_all]);
         }
 
-        return $this->cms_template->renderJSON(array(
+        return $this->cms_template->renderJSON([
             'errors' => false,
             'del_id' => $del_all
-        ));
-
+        ]);
     }
 
 }

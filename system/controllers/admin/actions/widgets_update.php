@@ -20,9 +20,7 @@ class actionAdminWidgetsUpdate extends cmsAction {
             $template_name = cmsConfig::get('template');
         }
 
-        $widgets_model = cmsCore::getModel('widgets');
-
-        $widget = $widgets_model->getWidgetBinding($widget_id);
+        $widget = $this->model_backend_widgets->getWidgetBinding($widget_id);
         if (!$widget) {
             return cmsCore::error404();
         }
@@ -46,9 +44,9 @@ class actionAdminWidgetsUpdate extends cmsAction {
 
         if (!$errors) {
 
-            $widgets_model->updateWidgetBinding($widget_id, $widget);
+            $this->model_backend_widgets->updateWidgetBinding($widget_id, $widget);
 
-            $widget = $widgets_model->getWidgetBinding($widget_id);
+            $widget = $this->model_backend_widgets->getWidgetBinding($widget_id);
 
             if ($widget['device_types'] && $widget['device_types'] !== array(0) && count($widget['device_types']) < 3) {
 

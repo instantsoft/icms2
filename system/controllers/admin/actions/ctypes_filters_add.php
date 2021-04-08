@@ -6,13 +6,13 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
 
         if (!$ctype_id) { cmsCore::error404(); }
 
-        $ctype = $this->model_content->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
         if (!$ctype) { cmsCore::error404(); }
 
-        $fields  = $this->model_content->getContentFields($ctype['name']);
+        $fields  = $this->model_backend_content->getContentFields($ctype['name']);
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
-        $props = $this->model_content->getContentProps($ctype['name']);
+        $props = $this->model_backend_content->getContentProps($ctype['name']);
         $props_fields = cmsCore::getController('content')->getPropsFields($props);
 
         $filter = [
@@ -20,11 +20,11 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
         ];
 
         if($id){
-            $filter = $this->model_content->getContentFilter($ctype, $id);
+            $filter = $this->model_backend_content->getContentFilter($ctype, $id);
             if (!$filter) { cmsCore::error404(); }
         }
 
-        $table_name = $this->model_content->table_prefix . $ctype['name'] . '_filters';
+        $table_name = $this->model_backend_content->table_prefix . $ctype['name'] . '_filters';
 
         $form = $this->getForm('ctypes_filter', array($do, $ctype, $fields, $props_fields, $table_name, $filter));
 
@@ -36,7 +36,7 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
 
             $errors = $form->validate($this, $filter);
 
-            $category = $this->model_content->getCategoryBySLUG($ctype['name'], $filter['slug']);
+            $category = $this->model_backend_content->getCategoryBySLUG($ctype['name'], $filter['slug']);
 
             if($category){
                 $errors['slug'] = LANG_CP_FILTER_ERROR_SLUG;
@@ -46,11 +46,11 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
 
                 if($do == 'add'){
 
-                    $this->model_content->addContentFilter($filter, $ctype);
+                    $this->model_backend_content->addContentFilter($filter, $ctype);
 
                 } else {
 
-                    $this->model_content->updateContentFilter($filter, $ctype);
+                    $this->model_backend_content->updateContentFilter($filter, $ctype);
 
                 }
 
@@ -73,7 +73,6 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
             'form'    => $form,
             'errors'  => isset($errors) ? $errors : false
         ));
-
     }
 
 }

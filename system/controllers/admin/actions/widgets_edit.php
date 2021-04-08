@@ -22,7 +22,7 @@ class actionAdminWidgetsEdit extends cmsAction {
             $template_name = cmsConfig::get('template');
         }
 
-        $widget = cmsCore::getModel('widgets')->getWidgetBinding($binded_id);
+        $widget = $this->model_backend_widgets->getWidgetBinding($binded_id);
         if (!$widget) {
             return cmsCore::error404();
         }
