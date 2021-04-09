@@ -2,7 +2,7 @@
 
 class modelComments extends cmsModel {
 
-    private $childs = array();
+    private $childs = [];
 
     public function filterCommentTarget($target_controller, $target_subject, $target_id = null) {
 
@@ -67,8 +67,6 @@ class modelComments extends cmsModel {
 
         if ($delete) {
 
-            $activity = cmsCore::getController('activity');
-
             $delete_count = 1;
 
             // ищем детей
@@ -77,13 +75,15 @@ class modelComments extends cmsModel {
                 $this->filterIn('id', $childs)->deleteFiltered('comments');
                 $this->filterIn('comment_id', $childs)->deleteFiltered('comments_rating');
                 $delete_count += count($childs);
-                $activity->deleteEntry('comments', 'vote.comment', $childs);
             }
 
             $this->delete('comments', $id);
             $this->delete('comments_rating', $id, 'comment_id');
 
-            $activity->deleteEntry('comments', 'vote.comment', $id);
+            // Добавляем к списку id детей, id удаляемого комментария
+            $comments_ids = $childs; $comments_ids[] = $id;
+
+            cmsEventsManager::hook('comments_after_delete_list', $comments_ids);
         } else {
             $this->update('comments', $id, array('is_deleted' => 1));
         }
@@ -103,25 +103,25 @@ class modelComments extends cmsModel {
 
     }
 
-    public function deleteComments($target_controller, $target_subject, $target_id=false){
+    public function deleteComments($target_controller, $target_subject, $target_id = false) {
 
         $this->selectOnly('i.id');
 
         $this->filterEqual('target_controller', $target_controller);
         $this->filterEqual('target_subject', $target_subject);
-		if ($target_id){
-			$this->filterEqual('target_id', $target_id);
-		}
+        if ($target_id) {
+            $this->filterEqual('target_id', $target_id);
+        }
 
         $this->lockFilters();
 
-        $ids = $this->get('comments', function($item, $model){
+        $ids = $this->get('comments', function ($item, $model) {
             return $item['id'];
         });
 
         $this->unlockFilters();
 
-        if($ids){
+        if ($ids) {
 
             $this->deleteFiltered('comments');
 
@@ -129,12 +129,10 @@ class modelComments extends cmsModel {
 
             cmsCache::getInstance()->clean('comments.list');
 
-            cmsCore::getController('activity')->deleteEntry('comments', 'vote.comment', $ids);
-
+            cmsEventsManager::hook('comments_after_delete_list', $ids);
         }
 
         return $ids ? true : false;
-
     }
 
     public function setCommentsIsDeleted($target_controller, $target_subject, $target_id, $delete = 1){
@@ -328,22 +326,21 @@ class modelComments extends cmsModel {
 
         $this->loadCommentChildIds($id);
 
-        if($this->childs){
+        if ($this->childs) {
 
-            if($clear){
+            if ($clear) {
 
-                $return = $this->childs; $this->childs = array();
+                $return = $this->childs;
+
+                $this->childs = [];
 
                 return $return;
-
             }
 
             return $this->childs;
-
         }
 
         return $this->childs;
-
     }
 
     private function loadCommentChildIds($id) {

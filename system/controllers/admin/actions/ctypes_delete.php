@@ -33,8 +33,6 @@ class actionAdminCtypesDelete extends cmsAction {
             }
         }
 
-        cmsCore::getController('activity')->deleteType('content', "add.{$ctype['name']}");
-
         cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
         $this->redirectToAction('ctypes');

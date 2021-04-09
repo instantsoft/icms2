@@ -916,7 +916,26 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (191, 'widget_content_list_form', 'content', 191, 1),
 (192, 'content_before_item', 'forms', 192, 1),
 (193, 'users_after_update', 'activity', 193, 1),
-(194, 'content_item_form_context', 'groups', 194, 1);
+(194, 'content_item_form_context', 'groups', 194, 1),
+(195, 'ctype_labels_after_update', 'activity', 195, 1),
+(196, 'ctype_after_delete', 'activity', 196, 1),
+(197, 'comments_rate_after', 'activity', 197, 1),
+(198, 'content_albums_after_delete', 'activity', 198, 1),
+(199, 'content_photos_after_add', 'activity', 199, 1),
+(200, 'comments_after_delete_list', 'activity', 200, 1),
+(201, 'content_after_delete', 'activity', 201, 1),
+(202, 'content_after_delete', 'comments', 202, 1),
+(203, 'content_after_delete', 'rating', 203, 1),
+(204, 'content_after_delete', 'tags', 204, 1),
+(205, 'content_after_restore', 'activity', 205, 1),
+(206, 'content_after_trash_put', 'activity', 206, 1),
+(207, 'content_after_restore', 'comments', 207, 1),
+(208, 'content_after_trash_put', 'comments', 208, 1),
+(209, 'content_groups_after_delete', 'activity', 209, 1),
+(210, 'group_after_join', 'activity', 210, 1),
+(211, 'group_after_leave', 'activity', 211, 1),
+(212, 'groups_after_accept_request', 'activity', 212, 1),
+(213, 'groups_after_update', 'activity', 213, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

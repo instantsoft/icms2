@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Базовый класс экшенов
+ *
+ * @property \cmsConfig $cms_config
+ * @property \cmsCore $cms_core
+ * @property \cmsTemplate $cms_template
+ * @property \cmsUser $cms_user
+ */
 class cmsAction {
 
     protected $controller;
@@ -35,7 +42,7 @@ class cmsAction {
     }
 
     public function __call($name, $arguments) {
-        return call_user_func_array(array($this->controller, $name), $arguments);
+        return call_user_func_array([$this->controller, $name], $arguments);
     }
 
 }

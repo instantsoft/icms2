@@ -1502,112 +1502,85 @@ class modelContent extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function restoreContentItem($ctype_name, $id){
+    public function restoreContentItem($ctype_name, $id) {
 
         $table_name = $this->table_prefix . $ctype_name;
 
-        if(is_numeric($id)){
+        if (is_numeric($id)) {
             $item = $this->getContentItem($ctype_name, $id);
-            if(!$item){ return false; }
+            if (!$item) { return false; }
         } else {
             $item = $id;
         }
 
-        cmsCore::getController('activity')->addEntry('content', "add.{$ctype_name}", array(
-            'user_id'          => $item['user_id'],
-            'subject_title'    => $item['title'],
-            'subject_id'       => $item['id'],
-            'subject_url'      => href_to_rel($ctype_name, $item['slug'] . '.html'),
-            'is_private'       => isset($item['is_private']) ? $item['is_private'] : 0,
-            'group_id'         => isset($item['parent_id']) ? $item['parent_id'] : null,
-            'is_parent_hidden' => $item['is_parent_hidden'],
-            'date_pub'         => $item['date_pub'],
-            'is_pub'           => $item['is_pub']
-        ));
+        cmsCache::getInstance()->clean('content.list.' . $ctype_name);
+        cmsCache::getInstance()->clean('content.item.' . $ctype_name);
 
-        cmsCore::getModel('comments')->setCommentsIsDeleted('content', $ctype_name, $item['id'], null);
+        $success = $this->update($table_name, $item['id'], ['is_deleted' => null]);
 
-        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
-        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
-
-        $this->update($table_name, $item['id'], array('is_deleted' => null));
-
-        cmsEventsManager::hook('content_after_restore', array($ctype_name, $item));
+        cmsEventsManager::hook('content_after_restore', [$ctype_name, $item]);
         cmsEventsManager::hook("content_{$ctype_name}_after_restore", $item);
 
-        return true;
-
+        return $success;
     }
 
-    public function toTrashContentItem($ctype_name, $id){
+    public function toTrashContentItem($ctype_name, $id) {
 
         $table_name = $this->table_prefix . $ctype_name;
 
-        if(is_numeric($id)){
+        if (is_numeric($id)) {
             $item = $this->getContentItem($ctype_name, $id);
-            if(!$item){ return false; }
+            if (!$item) { return false; }
         } else {
             $item = $id;
         }
 
-        cmsCore::getController('activity')->deleteEntry('content', "add.{$ctype_name}", $item['id']);
+        cmsCache::getInstance()->clean('content.list.' . $ctype_name);
+        cmsCache::getInstance()->clean('content.item.' . $ctype_name);
 
-        cmsCore::getModel('comments')->setCommentsIsDeleted('content', $ctype_name, $item['id']);
+        $success = $this->update($table_name, $item['id'], ['is_deleted' => 1]);
 
-        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
-        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
-
-        $this->update($table_name, $item['id'], array('is_deleted' => 1));
-
-        cmsEventsManager::hook('content_after_trash_put', array($ctype_name, $item));
+        cmsEventsManager::hook('content_after_trash_put', [$ctype_name, $item]);
         cmsEventsManager::hook("content_{$ctype_name}_after_trash_put", $item);
 
-        return true;
-
+        return $success;
     }
 
-    public function deleteContentItem($ctype_name, $id){
+    public function deleteContentItem($ctype_name, $id) {
 
         $table_name = $this->table_prefix . $ctype_name;
 
         $item = $this->getContentItem($ctype_name, $id);
-        if(!$item){ return false; }
+        if (!$item) { return false; }
 
         $ctype = $this->getContentTypeByName($ctype_name);
 
-        cmsEventsManager::hook('content_before_delete', array('ctype_name'=>$ctype_name, 'item'=>$item));
+        cmsEventsManager::hook('content_before_delete', ['ctype_name' => $ctype_name, 'item' => $item]);
         cmsEventsManager::hook("content_{$ctype_name}_before_delete", $item);
 
         $fields = $this->getContentFields($ctype_name, $id);
 
-        foreach($fields as $field){
+        foreach ($fields as $field) {
             $field['handler']->delete($item[$field['name']]);
         }
 
-        cmsCore::getController('activity')->deleteEntry('content', "add.{$ctype_name}", $id);
-
-        cmsCore::getModel('comments')->deleteComments('content', $ctype_name, $id);
-        cmsCore::getModel('rating')->deleteVotes('content', $ctype_name, $id);
-        cmsCore::getModel('tags')->deleteTags('content', $ctype_name, $id);
-
-        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
-        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.list.' . $ctype_name);
+        cmsCache::getInstance()->clean('content.item.' . $ctype_name);
 
         $this->deletePropsValues($ctype_name, $id);
 
         $this->deleteContentItemRelations($ctype['id'], $id);
 
-        $this->filterEqual('item_id', $item['id'])->deleteFiltered($table_name.'_cats_bind');
+        $this->filterEqual('item_id', $item['id'])->deleteFiltered($table_name . '_cats_bind');
 
         $success = $this->delete($table_name, $id);
 
-        if($success){
-            cmsEventsManager::hook('content_after_delete', array('ctype_name'=>$ctype_name, 'item'=>$item));
+        if ($success) {
+            cmsEventsManager::hook('content_after_delete', ['ctype_name' => $ctype_name, 'ctype' => $ctype, 'item' => $item]);
             cmsEventsManager::hook("content_{$ctype_name}_after_delete", $item);
         }
 
         return $success;
-
     }
 
     public function deleteUserContent($user_id){

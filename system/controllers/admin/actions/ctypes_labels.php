@@ -2,7 +2,7 @@
 
 class actionAdminCtypesLabels extends cmsAction {
 
-    public function run($id = null){
+    public function run($id = null) {
 
         if (!$id) { cmsCore::error404(); }
 
@@ -15,62 +15,39 @@ class actionAdminCtypesLabels extends cmsAction {
 
         cmsCore::loadControllerLanguage('content');
 
-        if ($this->request->has('submit')){
+        if ($this->request->has('submit')) {
 
             $ctype = array_merge($ctype, $form->parse($this->request, true));
 
-            $errors = $form->validate($this,  $ctype);
+            $errors = $form->validate($this, $ctype);
 
-            if (!$errors){
+            if (!$errors) {
 
                 $this->model_backend_content->updateContentType($id, $ctype);
 
-                $activity_controller = cmsCore::getController('activity');
+                $ctype = cmsEventsManager::hook('ctype_labels_after_update', $ctype);
 
-                if ($activity_controller->isTypeExists('content', "add.{$ctype['name']}")){
-
-                    $activity_controller->updateType('content', "add.{$ctype['name']}", array(
-                        'title' => sprintf(LANG_CONTENT_ACTIVITY_ADD, $ctype['labels']['many']),
-                        'description' => sprintf(LANG_CONTENT_ACTIVITY_ADD_DESC, $ctype['labels']['create'], '%s')
-                    ));
-
-                } else {
-
-                    $activity_controller->addType(array(
-                        'controller'  => 'content',
-                        'name'        => "add.{$ctype['name']}",
-                        'is_enabled'  => 0,
-                        'title'       => sprintf(LANG_CONTENT_ACTIVITY_ADD, $ctype['labels']['many']),
-                        'description' => sprintf(LANG_CONTENT_ACTIVITY_ADD_DESC, $ctype['labels']['create'], '%s')
-                    ));
-
-                }
-
-                if ($wizard_mode){
-                    $this->redirectToAction('ctypes', array('fields', $id), array('wizard_mode'=>true));
+                if ($wizard_mode) {
+                    $this->redirectToAction('ctypes', ['fields', $id], ['wizard_mode' => true]);
                 } else {
 
                     cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                    $this->redirectToAction('ctypes', array('labels', $ctype['id']));
-
+                    $this->redirectToAction('ctypes', ['labels', $ctype['id']]);
                 }
-
             }
 
-            if ($errors){
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
-        return $this->cms_template->render('ctypes_labels', array(
+        return $this->cms_template->render('ctypes_labels', [
             'id'     => $id,
             'ctype'  => $ctype,
             'form'   => $form,
             'errors' => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }

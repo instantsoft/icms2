@@ -40,7 +40,7 @@ class modelGroups extends cmsModel {
 
     }
 
-    public function updateGroup($id, $group){
+    public function updateGroup($id, $group) {
 
         $result = $this->update('groups', $id, $group);
 
@@ -50,18 +50,13 @@ class modelGroups extends cmsModel {
 
         $this->updateGroupContentParams($id, $group);
 
-        $update = array('subject_title' => $group['title']);
-        if(!empty($group['slug'])){
-            $update['subject_url'] = href_to_rel('groups', $group['slug']);
+        if (empty($group['id'])) {
+            $group['id'] = $id;
         }
 
-        $activity = cmsCore::getController('activity');
-
-        $activity->updateEntry('groups', 'join', $id, $update);
-        $activity->updateEntry('groups', 'leave', $id, $update);
+        cmsEventsManager::hook('groups_after_update', $group);
 
         return $result;
-
     }
 
     public function approveGroup($id, $moderator_user_id){
@@ -146,20 +141,16 @@ class modelGroups extends cmsModel {
 
     }
 
-    public function deleteGroup($group){
+    public function deleteGroup($group) {
 
         cmsEventsManager::hook('content_groups_before_delete', $group);
 
         $this->deleteGroupMemberships($group['id']);
         $this->deleteGroupInvites($group['id']);
 
-        foreach($group['fields'] as $field){
+        foreach ($group['fields'] as $field) {
             $field['handler']->delete($group[$field['name']]);
         }
-
-        $this->filterEqual('group_id', $group['id'])->deleteFiltered('activity');
-
-        cmsCache::getInstance()->clean('activity.entries');
 
         $success = $this->delete('groups', $group['id']);
 
@@ -174,7 +165,6 @@ class modelGroups extends cmsModel {
         cmsEventsManager::hook('content_groups_after_delete', $group);
 
         return $success;
-
     }
 
     public function deleteUserGroupsAndMemberships($user_id){

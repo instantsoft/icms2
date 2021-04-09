@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelActivity $model
+ */
 class activity extends cmsFrontend {
 
     protected $useOptions = true;

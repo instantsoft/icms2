@@ -163,38 +163,6 @@ class actionPhotosUpload extends cmsAction {
 
             list($photos, $this->album, $this->ctype) = cmsEventsManager::hook('content_photos_after_add', array($photos, $this->album, $this->ctype));
 
-            $activity_thumb_images = array();
-
-            $photos_count = count($photos);
-            if ($photos_count > 5) {
-                $photos = array_slice($photos, 0, 4);
-            }
-
-            if ($photos_count) {
-                foreach ($photos as $photo) {
-
-                    $_presets     = array_keys($photo['image']);
-                    $small_preset = end($_presets);
-
-                    $activity_thumb_images[] = array(
-                        'url'   => href_to_rel('photos', $photo['slug'] . '.html'),
-                        'src'   => html_image_src($photo['image'], $small_preset),
-                        'title' => $photo['title']
-                    );
-                }
-            }
-
-            cmsCore::getController('activity')->addEntry($this->name, 'add.photos', array(
-                'user_id'       => $this->cms_user->id,
-                'subject_title' => $this->album['title'],
-                'subject_id'    => $this->album['id'],
-                'subject_url'   => href_to_rel('albums', $this->album['slug'] . '.html'),
-                'is_private'    => isset($this->album['is_private']) ? $this->album['is_private'] : 0,
-                'group_id'      => isset($this->album['parent_id']) ? $this->album['parent_id'] : null,
-                'images'        => $activity_thumb_images,
-                'images_count'  => $photos_count
-            ));
-
             $this->redirect(href_to('albums', $this->album['slug'] . '.html'));
         }
 

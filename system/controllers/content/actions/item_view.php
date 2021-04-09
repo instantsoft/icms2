@@ -557,7 +557,12 @@ class actionContentItemView extends cmsAction {
                 if ($item['is_approved'] || $item['is_draft']){
 
                     $back_url = str_replace($this->cms_config->host, '', $this->getBackURL());
-                    if($back_url == '/' || strpos($back_url, '/add') !== false || strpos($back_url, '/edit/') !== false){ $back_url = ''; }
+                    if($back_url == '/' ||
+                            strpos($back_url, '/upload') !== false ||
+                            strpos($back_url, '/add') !== false ||
+                            strpos($back_url, '/edit/') !== false){
+                        $back_url = '';
+                    }
 
                     $tool_buttons['delete'] = array(
                         'title'   => sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create']),
