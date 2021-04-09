@@ -99,6 +99,22 @@ icms.menu = (function ($) {
                 }
             });
 
+            $('.icms-user-menu').each(function (){
+                $(this).on('show.bs.dropdown', function () {
+                    $('body').addClass('overflow-hidden');
+                }).on('hide.bs.dropdown', function () {
+                    $('body').removeClass('overflow-hidden');
+                });
+                var avatar = $(this).find('.icms-user-menu__summary .icms-user-avatar').clone();
+                $(avatar).on('click', function(){ return false; });
+                var nickname = $('<span class="ml-3 text-white">'+$(this).find('.icms-user-menu__nickname').text()+'</span>');
+                $(nickname).on('click', function(){ return false; });
+                var header = $('<li class="bg-primary d-flex align-items-center m-0 h5 p-3"><button type="button" class="btn ml-auto text-white p-0"><svg viewBox="0 0 352 512" style="width: 1rem;"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg></button></li>');
+                $(header).prepend(nickname);
+                $(header).prepend(avatar);
+                $(this).find('.icms-user-menu__items').prepend(header);
+            });
+
         }
     };
 
