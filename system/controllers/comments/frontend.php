@@ -96,6 +96,12 @@ class comments extends cmsFrontend {
             'presets' => $this->options['editor_presets']
         ]);
 
+        // Контекст использования
+        $editor_params['options']['upload_params'] = [
+            'target_controller' => 'comments',
+            'target_subject' => $this->target_subject
+        ];
+
         return array(
             'name'  => 'icms',
             'title' => $this->comments_title,

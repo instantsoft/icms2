@@ -57,40 +57,84 @@ class modelComments extends cmsModel {
 //============================================================================//
     /**
      *
-     * @param integer $id ID комментария
-     * @param boolean $delete Удалять или скрывать
-     * @return integer Количество удаленных комментариев
+     * @param array $comment Данные комментария
+     * @param boolean $is_delete Удалять или скрывать
+     * @return array Список ID удалённых комментариев
      */
-    public function deleteComment($id, $delete = false) {
+    public function deleteComment($comment, $is_delete = false) {
 
-        $delete_count = 0;
+        $delete_ids = [];
 
-        if ($delete) {
+        if(!is_array($comment) && is_numeric($comment)){
+            $comment = $this->getComment($comment);
+            if (!$comment){ return $delete_ids; }
+        }
 
-            $delete_count = 1;
+        if ($is_delete) {
+
+            $delete_ids[] = $comment['id'];
 
             // ищем детей
-            $childs = $this->getCommentChildIds($id);
+            $childs = $this->getCommentChildIds($comment['id']);
             if ($childs) {
-                $this->filterIn('id', $childs)->deleteFiltered('comments');
-                $this->filterIn('comment_id', $childs)->deleteFiltered('comments_rating');
-                $delete_count += count($childs);
+                foreach ($childs as $child_id) {
+                    $delete_ids = array_merge($delete_ids, $this->deleteComment($child_id, true));
+                }
             }
 
-            $this->delete('comments', $id);
-            $this->delete('comments_rating', $id, 'comment_id');
+            $this->delete('comments', $comment['id']);
+            $this->delete('comments_rating', $comment['id'], 'comment_id');
 
             // Добавляем к списку id детей, id удаляемого комментария
-            $comments_ids = $childs; $comments_ids[] = $id;
+            $comments_ids = $childs; $comments_ids[] = $comment['id'];
 
             cmsEventsManager::hook('comments_after_delete_list', $comments_ids);
+
+            // обновляем количество
+            $comments_count = $this->
+                    filterEqual('target_controller', $comment['target_controller'])->
+                    filterEqual('target_subject', $comment['target_subject'])->
+                    filterEqual('target_id', $comment['target_id'])->
+                    getCommentsCount();
+
+            cmsCore::getModel($comment['target_controller'])->
+                    updateCommentsCount($comment['target_subject'], $comment['target_id'], $comments_count);
+
+            // Удаляем изображения
+            $paths = string_html_get_images_path($comment['content_html']);
+            if ($paths) {
+
+                $files_model = cmsCore::getModel('files');
+
+                foreach ($paths as $path) {
+
+                    $file = $files_model->getFileByPath($path);
+                    if (!$file) { continue; }
+
+                    @unlink(cmsConfig::get('upload_path') . $file['path']);
+
+                    $files_model->filterEqual('path', $file['path']);
+
+                    $files_model->deleteFiltered('uploaded_files');
+                }
+            }
+
+            $comment = cmsEventsManager::hook('comments_after_delete', $comment);
+
         } else {
-            $this->update('comments', $id, array('is_deleted' => 1));
+
+            $this->update('comments', $comment['id'], ['is_deleted' => 1]);
+
+            $comment = cmsEventsManager::hook('comments_after_hide', $comment);
         }
 
         cmsCache::getInstance()->clean('comments.list');
 
-        return $delete_count;
+        if (!$comment['is_approved']) {
+            $comment = cmsEventsManager::hook('comments_after_refuse', $comment);
+        }
+
+        return $delete_ids;
     }
 
     public function deleteUserComments($user_id){
@@ -105,7 +149,7 @@ class modelComments extends cmsModel {
 
     public function deleteComments($target_controller, $target_subject, $target_id = false) {
 
-        $this->selectOnly('i.id');
+        $this->selectOnly('i.id')->select('i.content_html');
 
         $this->filterEqual('target_controller', $target_controller);
         $this->filterEqual('target_subject', $target_subject);
@@ -115,13 +159,15 @@ class modelComments extends cmsModel {
 
         $this->lockFilters();
 
-        $ids = $this->get('comments', function ($item, $model) {
-            return $item['id'];
+        $comments = $this->get('comments', function ($item, $model) {
+            return $item['content_html'];
         });
 
         $this->unlockFilters();
 
-        if ($ids) {
+        if ($comments) {
+
+            $ids = array_keys($comments);
 
             $this->deleteFiltered('comments');
 
@@ -129,10 +175,30 @@ class modelComments extends cmsModel {
 
             cmsCache::getInstance()->clean('comments.list');
 
+            // Удаляем изображения
+            $files_model = cmsCore::getModel('files');
+
+            foreach ($comments as $id => $content_html) {
+                $paths = string_html_get_images_path($content_html);
+                if ($paths) {
+                    foreach ($paths as $path) {
+
+                        $file = $files_model->getFileByPath($path);
+                        if (!$file) { continue; }
+
+                        @unlink(cmsConfig::get('upload_path') . $file['path']);
+
+                        $files_model->filterEqual('path', $file['path']);
+
+                        $files_model->deleteFiltered('uploaded_files');
+                    }
+                }
+            }
+
             cmsEventsManager::hook('comments_after_delete_list', $ids);
         }
 
-        return $ids ? true : false;
+        return $comments ? true : false;
     }
 
     public function setCommentsIsDeleted($target_controller, $target_subject, $target_id, $delete = 1){

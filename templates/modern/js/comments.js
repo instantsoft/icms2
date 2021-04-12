@@ -462,12 +462,19 @@ icms.comments = (function ($) {
                 _this.setModerationCounter();
             } else {
 
-                $('.icms-comment-html', c).html('<div class="alert alert-secondary">'+LANG_COMMENT_DELETED+'</div>');
-                $('.icms-comment-rating', c).remove();
-                $('.icms-comment-controls', c).remove();
-
                 _this.restoreForm();
 
+                if(result.delete_ids.length > 0){
+                    $('#comments_add_form').detach().insertBefore('#comments_list');
+                    for (var key in result.delete_ids){
+                        var comment_id = result.delete_ids[key];
+                        $($('#comments_list #comment_'+comment_id)).remove();
+                    }
+                } else {
+                    $('.icms-comment-html', c).html('<div class="alert alert-secondary">'+LANG_COMMENT_DELETED+'</div>');
+                    $('.icms-comment-rating', c).remove();
+                    $('.icms-comment-controls', c).remove();
+                }
             }
 
             icms.events.run('icms_comments_remove', result);
@@ -475,7 +482,6 @@ icms.comments = (function ($) {
         }, 'json');
 
         return false;
-
     };
 
     this.toggleTrack = function(link){

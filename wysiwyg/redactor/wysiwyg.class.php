@@ -33,19 +33,27 @@ class cmsWysiwygRedactor {
 
         if ($user->is_logged) {
 
-            $context = $core->getUriData();
-            $upload_params = [];
+            if(empty($config['upload_params'])){
 
-            if($context['controller']){
-                $upload_params['target_controller'] = $context['controller'];
-            }
+                $context = $core->getUriData();
+                $upload_params = [];
 
-            if($context['action']){
-                $upload_params['target_subject'] = mb_substr($context['action'], 0, 32);
-            }
+                if($context['controller']){
+                    $upload_params['target_controller'] = $context['controller'];
+                }
 
-            if(strpos($core->uri, '/add/') === false && !empty($context['params'][1]) && is_numeric($context['params'][1])){
-                $upload_params['target_id'] = $context['params'][1];
+                if($context['action']){
+                    $upload_params['target_subject'] = mb_substr($context['action'], 0, 32);
+                }
+
+                if(strpos($core->uri, '/add/') === false && !empty($context['params'][1]) && is_numeric($context['params'][1])){
+                    $upload_params['target_id'] = $context['params'][1];
+                }
+            } else {
+
+                $upload_params = $config['upload_params'];
+
+                unset($config['upload_params']);
             }
 
             $upload_params_string = ($upload_params ? '?'.http_build_query($upload_params) : '');
@@ -54,7 +62,7 @@ class cmsWysiwygRedactor {
 
             $this->options['imageGetJson'] = href_to('files', 'files_list', ['image']).$upload_params_string;
 
-            if($context['controller'] && $context['action']){
+            if(!empty($upload_params['target_controller']) && !empty($upload_params['target_subject'])){
                 $this->options['predefinedLinks'] = href_to('wysiwygs', 'links_list').$upload_params_string;
             }
 

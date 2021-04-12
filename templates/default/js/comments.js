@@ -434,10 +434,17 @@ icms.comments = (function ($) {
                 _this.setModerationCounter();
             } else {
 
-                c.html('<span class="deleted">'+LANG_COMMENT_DELETED+'</span>');
+                if(result.delete_ids.length > 0){
+                    $('#comments_add_form').detach().insertBefore('#comments_list');
+                    for (var key in result.delete_ids){
+                        var comment_id = result.delete_ids[key];
+                        $($('#comments_list #comment_'+comment_id)).remove();
+                    }
+                } else {
+                    c.html('<span class="deleted">'+LANG_COMMENT_DELETED+'</span>');
+                }
 
                 _this.restoreForm();
-
             }
 
             icms.events.run('icms_comments_remove', result);
@@ -445,7 +452,6 @@ icms.comments = (function ($) {
         }, 'json');
 
         return false;
-
     };
 
     //=====================================================================//

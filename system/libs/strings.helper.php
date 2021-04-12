@@ -956,6 +956,40 @@ function string_bintoip($str) {
     }
 }
 
+/**
+ * Получает из HTML текста относительные пути
+ * из тегов <img>
+ *
+ * @param string $text
+ * @return array
+ */
+function string_html_get_images_path($text) {
+
+    $upload_root = cmsConfig::get('upload_root');
+
+    $matches = $paths = [];
+
+    preg_match_all('#<img src="([^"]+)"#uis', $text, $matches, PREG_SET_ORDER);
+
+    if($matches){
+        foreach($matches as $match){
+
+            if(empty($match[1])){ continue; }
+            if(strpos($match[1], 'http') === 0){ continue; }
+
+            $path = $match[1];
+
+            if(strpos($path, $upload_root) === 0){
+                $path = str_replace($upload_root, '', $path);
+            }
+
+            $paths[] = $path;
+        }
+    }
+
+    return $paths;
+}
+
 //============================================================================//
 
 /**

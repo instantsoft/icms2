@@ -170,7 +170,7 @@ class fieldHtml extends cmsFormField {
 
         if($action == 'add' && !empty($item[$this->name])){
 
-            $paths = $this->getImagesPath($item[$this->name]);
+            $paths = string_html_get_images_path($item[$this->name]);
 
             if($paths){
                 foreach($paths as $path){
@@ -184,12 +184,11 @@ class fieldHtml extends cmsFormField {
         }
 
         return;
-
     }
 
     public function delete($value){
 
-        $paths = $this->getImagesPath($value);
+        $paths = string_html_get_images_path($value);
 
         if($paths){
 
@@ -211,36 +210,6 @@ class fieldHtml extends cmsFormField {
         }
 
         return true;
-
-    }
-
-    private function getImagesPath($text) {
-
-        $upload_root = cmsConfig::get('upload_root');
-
-        $matches = $paths = array();
-
-        preg_match_all('#<img src="([^"]+)"#uis', $text, $matches, PREG_SET_ORDER);
-
-        if($matches){
-            foreach($matches as $match){
-
-                if(empty($match[1])){ continue; }
-                if(strpos($match[1], 'http') === 0){ continue; }
-
-                $path = $match[1];
-
-                if(strpos($path, $upload_root) === 0){
-                    $path = str_replace($upload_root, '', $path);
-                }
-
-                $paths[] = $path;
-
-            }
-        }
-
-        return $paths;
-
     }
 
     public function getInput($value){
@@ -252,7 +221,6 @@ class fieldHtml extends cmsFormField {
         ]);
 
         return parent::getInput($value);
-
     }
 
 }
