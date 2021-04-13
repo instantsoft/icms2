@@ -27,7 +27,7 @@ class actionAdminWidgetsRowAddNs extends cmsAction {
                 // Для заполнения дефолтными настройками
                 $default_col = $this->getSchemeColForm('add', $row)->parse(new cmsRequest([]), false);
 
-                $this->model_widgets->model_backend_widgets($_row, $default_col);
+                $this->model_backend_widgets->addLayoutRow($_row, $default_col);
 
                 return $this->cms_template->renderJSON(array(
                     'errors' => false,

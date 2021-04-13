@@ -2121,5 +2121,12 @@ class modelContent extends cmsModel {
         return true;
 
     }
-
+    /**
+     * @deprecated
+     *
+     * Метод для совместимости
+     */
+    public function userIsContentTypeModerator($ctype_name, $user_id){
+        return cmsCore::getModel('moderation')->userIsContentModerator($ctype_name, $user_id);
+    }
 }
