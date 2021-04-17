@@ -627,6 +627,7 @@
     define('LANG_SUBSCRIBERS_SPELL',         'подписчик|подписчика|подписчиков');
     define('LANG_DOWNLOAD_SPELL',            'скачивание|скачивания|скачиваний');
     define('LANG_USERS_SPELL',               'пользователь|пользователя|пользователей');
+    define('LANG_USERS_GEN',                 'пользователей');
 
     define('LANG_ISLEFT',                    'осталось');
 

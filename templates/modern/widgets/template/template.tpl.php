@@ -20,7 +20,7 @@
 
         <?php ob_start(); ?>
         <script>
-            toastr.options = {progressBar: true, preventDuplicates: true, timeOut: 3000, newestOnTop: true, closeButton: true, hideDuration: 600};
+            toastr.options = {progressBar: true, preventDuplicates: true, timeOut: 3500, newestOnTop: true, closeButton: true, hideDuration: 800};
             <?php if ($messages){ ?>
                 $(function(){
                 <?php foreach($messages as $message){ ?>

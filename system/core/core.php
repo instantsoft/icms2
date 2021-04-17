@@ -74,7 +74,7 @@ class cmsCore {
             if (!empty($segments[0]) && preg_match('/^[a-z]{2}$/i', $segments[0])) {
                 if(is_dir($config->root_path.'system/languages/'.$segments[0].'/')){
                     // язык по умолчанию без префиксов, дубли нам не нужны
-                    if($segments[0] != $config->language){
+                    if($segments[0] != $config->getConfig('language')){
 
                         // включаем для моделей поддержку
                         cmsModel::globalLocalizedOn();

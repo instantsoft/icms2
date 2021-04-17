@@ -118,6 +118,6 @@
 
 <?php } else { ?>
     <div class="alert alert-info mt-4" role="alert">
-        <?php echo LANG_LIST_EMPTY; ?>
+        <?php echo sprintf(LANG_TARGET_LIST_EMPTY, LANG_USERS_GEN); ?>
     </div>
 <?php } ?>

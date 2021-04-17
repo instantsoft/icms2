@@ -46,6 +46,10 @@ class formUsersOptions extends cmsForm {
                 'title' => LANG_USERS_PROFILE,
                 'childs' => array(
 
+                    new fieldCheckbox('show_user_groups', array(
+                        'title' => LANG_USERS_OPT_SHOW_USER_GROUPS
+                    )),
+
                     new fieldCheckbox('is_auth_only', array(
                         'title' => LANG_USERS_OPT_AUTH_ONLY,
                     )),

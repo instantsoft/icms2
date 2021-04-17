@@ -10,8 +10,7 @@ class actionAdminSettings extends cmsAction {
             return;
         }
 
-        $values = $this->cms_config->getAll();
-        $values['time_zone'] = $values['cfg_time_zone'];
+        $values = $this->cms_config->getConfig();
 
         $form = $this->getForm('settings');
 

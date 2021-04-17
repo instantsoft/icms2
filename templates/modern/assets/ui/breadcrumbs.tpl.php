@@ -1,6 +1,6 @@
 <?php $listed = []; $position = 2; $count = count($breadcrumbs); ?>
 <ol class="breadcrumb mb-0 text-truncate flex-nowrap position-relative flex-fill" itemscope itemtype="https://schema.org/BreadcrumbList">
-    <li class="breadcrumb-item">
+    <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
         <a href="<?php echo $options['home_url']; ?>" title="<?php echo LANG_HOME; ?>" itemprop="item">
             <?php html_svg_icon('solid', 'home'); ?>
             <meta itemprop="name" content="<?php echo LANG_HOME; ?>" />

@@ -71,6 +71,16 @@ if(defined('SESSION_START')){
 
 }
 
+// Язык браузера
+if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && !empty($config->is_user_change_lang)){
+    $user_lang = strtolower(substr((string)$_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+    if($user_lang !== $config->getConfig('language') &&
+            preg_match('/^[a-z]{2}$/i', $user_lang) &&
+            is_dir($config->root_path.'system/languages/'.$user_lang.'/')){
+        $config->set('language', $user_lang);
+    }
+}
+
 // Устанавливаем часовую зону
 date_default_timezone_set($config->time_zone);
 

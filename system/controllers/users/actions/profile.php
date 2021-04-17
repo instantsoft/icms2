@@ -108,6 +108,22 @@ class actionUsersProfile extends cmsAction {
             ]
         ];
 
+        if (!empty($this->options['show_user_groups'])){
+
+            $groups = $this->model->getGroups();
+
+            $groups_title = [];
+
+            foreach ($profile['groups'] as $group_id) {
+                $groups_title[] = $groups[$group_id]['title'];
+            }
+
+            $fields['groups'] = [
+                'title' => LANG_GROUPS,
+                'text'  => implode(', ', $groups_title)
+            ];
+        }
+
         if (!$profile['is_online']){
             $fields['date_log'] = [
                 'title' => LANG_USERS_PROFILE_LOGDATE,

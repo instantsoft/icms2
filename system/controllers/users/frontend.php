@@ -27,10 +27,10 @@ class users extends cmsFrontend {
      * Текущий просматриваемый профиль
      * @var array
      */
-    public $profile = array();
+    public $profile = [];
 
-    public $tabs = array();
-    public $tabs_controllers = array();
+    public $tabs = [];
+    public $tabs_controllers = [];
 
     public function routeAction($action_name){
 
@@ -51,7 +51,13 @@ class users extends cmsFrontend {
             }
 
             $profile = $this->model->getUserBySlug($action_name);
-            if (!$profile) { cmsCore::error404(); }
+            // Не нашли профиль, значит это набор списка
+            if (!$profile) {
+
+                array_unshift($this->current_params, $action_name);
+
+                return 'index';
+            }
         }
 
         // разблокируем вызов экшенов, которым запрещено вызываться напрямую
@@ -76,12 +82,18 @@ class users extends cmsFrontend {
         // это главная страница профиля, первым параметром добавляем
         // сам профиль
         if (!$this->cms_core->uri_params){
+
+            $this->cms_template->addHead('<link rel="canonical" href="'.href_to_profile($profile, false, true).'"/>');
+
             array_unshift($this->current_params, $this->profile);
             return 'profile';
         }
 
         // Ищем экшен внутри профиля
         if ($this->isActionExists('profile_'.$this->cms_core->uri_params[0])){
+
+            $this->cms_template->addHead('<link rel="canonical" href="'.href_to_profile($profile, [$this->cms_core->uri_params[0]], true).'"/>');
+
             $this->current_params[0] = $this->profile;
             return 'profile_'.$this->cms_core->uri_params[0];
         }
@@ -91,7 +103,6 @@ class users extends cmsFrontend {
         // сам профиль
         array_unshift($this->current_params, $this->profile);
         return 'profile_tab';
-
     }
 
     public function setCurrentProfile($profile) {
@@ -311,65 +322,64 @@ class users extends cmsFrontend {
 
     }
 
-    public function getDatasets(){
+    public function getDatasets() {
 
-        $datasets = array();
+        $datasets = [];
 
         // Все (новые)
-        $datasets['all'] = array(
-                'name' => 'all',
-                'title' => LANG_USERS_DS_LATEST,
-                'order' => array('date_reg', 'desc')
-        );
+        $datasets['all'] = [
+            'name'  => 'all',
+            'title' => LANG_USERS_DS_LATEST,
+            'order' => ['date_reg', 'desc']
+        ];
 
         // Онлайн
-        if ($this->options['is_ds_online']){
-            $datasets['online'] = array(
-                'name' => 'online',
-                'title' => LANG_USERS_DS_ONLINE,
-                'order' => array('date_log', 'desc'),
-                'filter' => function($model, $dset){
+        if ($this->options['is_ds_online']) {
+            $datasets['online'] = [
+                'name'   => 'online',
+                'title'  => LANG_USERS_DS_ONLINE,
+                'order'  => ['date_log', 'desc'],
+                'filter' => function ($model, $dset) {
                     return $model->joinSessionsOnline('i')->filterOnlineUsers();
                 }
-            );
+            ];
         }
 
         // Рейтинг
-        if ($this->options['is_ds_rating']){
-            $datasets['rating'] = array(
-                'name' => 'rating',
+        if ($this->options['is_ds_rating']) {
+            $datasets['rating'] = [
+                'name'  => 'rating',
                 'title' => LANG_USERS_DS_RATED,
-                'order' => array('karma desc, rating desc', '')
-            );
+                'order' => ['karma desc, rating desc', '']
+            ];
         }
 
         // Популярные
-        if ($this->options['is_ds_popular']){
-            $datasets['popular'] = array(
-                'name' => 'popular',
+        if ($this->options['is_ds_popular']) {
+            $datasets['popular'] = [
+                'name'  => 'popular',
                 'title' => LANG_USERS_DS_POPULAR,
-                'order' => array('friends_count', 'desc')
-            );
+                'order' => ['friends_count', 'desc']
+            ];
         }
 
         // Группы
         $f_groups = $this->model->getFilteredGroups();
 
-        if ($f_groups){
-            foreach($f_groups as $group){
-                $datasets[ $group['name'] ] = array(
-                    'name' => $group['name'],
-                    'title' => $group['title'],
-                    'order' => array('date_reg', 'desc'),
-                    'filter' => function($model, $dset){
+        if ($f_groups) {
+            foreach ($f_groups as $group) {
+                $datasets[$group['name']] = [
+                    'name'   => $group['name'],
+                    'title'  => $group['title'],
+                    'order'  => ['date_reg', 'desc'],
+                    'filter' => function ($model, $dset) {
                         return $model->filterGroupByName($dset['name']);
                     }
-                );
+                ];
             }
         }
 
         return cmsEventsManager::hook('profiles_datasets', $datasets);
-
     }
 
     public function logoutLockedUser($user){

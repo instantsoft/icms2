@@ -200,9 +200,19 @@ class formAdminCtypesBasic extends cmsForm {
                     new fieldCheckbox('options:list_off_breadcrumb', array(
                         'title' => LANG_CP_LIST_OFF_BREADCRUMB
                     )),
+                    new fieldCheckbox('options:list_off_breadcrumb_ctype', array(
+                        'title' => LANG_CP_LIST_OFF_BREADCRUMB_CTYPE,
+                        'visible_depend' => array('options:list_off_breadcrumb' => array('show' => array('0')))
+                    )),
                     new fieldCheckbox('options:list_on', array(
                         'title' => LANG_CP_LISTVIEW_ON,
                         'default' => true
+                    )),
+                    new fieldCheckbox('options:list_off_index', array(
+                        'title' => LANG_CP_LISTVIEW_OFF_INDEX,
+                        'hint'  => LANG_CP_LISTVIEW_OFF_INDEX_HINT,
+                        'default' => false,
+                        'visible_depend' => array('options:list_on' => array('show' => array('1')))
                     )),
                     new fieldCheckbox('options:profile_on', array(
                         'title' => LANG_CP_PROFILELIST_ON,

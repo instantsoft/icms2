@@ -251,7 +251,7 @@ class actionContentCategoryView extends cmsAction {
 
         if (empty($ctype['options']['list_off_breadcrumb'])) {
 
-            if ($ctype['options']['list_on'] && !$is_frontpage) {
+            if (empty($ctype['options']['list_off_breadcrumb_ctype']) && $ctype['options']['list_on'] && !$is_frontpage) {
                 $this->cms_template->addBreadcrumb($list_header, href_to($ctype['name']));
             }
 
@@ -375,6 +375,12 @@ class actionContentCategoryView extends cmsAction {
 
             // значит переданный $_ctype_name = корневая страница типа контента
             if ($slug === 'index') {
+
+                // Если просмотр главной страницы типа контента выключен
+                if (!empty($ctype['options']['list_off_index'])) {
+                    return cmsCore::error404();
+                }
+
                 return [$ctype, ['id' => false, 'description' => (!empty($ctype['description']) ? $ctype['description'] : '')], $slug];
             }
 

@@ -1931,7 +1931,7 @@ class cmsTemplate {
      * Применяет манифест текущего шаблона
      * @return $this
      */
-    protected function applyManifest() {
+    public function applyManifest() {
 
         $this->loadManifest();
 

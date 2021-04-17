@@ -628,6 +628,7 @@
     define('LANG_SUBSCRIBERS_SPELL',         'subscriber |subscriber|subscribers');
     define('LANG_DOWNLOAD_SPELL',            'download|download|downloads');
     define('LANG_USERS_SPELL',               'user|users|users');
+    define('LANG_USERS_GEN',                 'users');
 
     define('LANG_ISLEFT',                    'left');
 

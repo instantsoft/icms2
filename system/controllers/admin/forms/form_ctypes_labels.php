@@ -30,27 +30,6 @@ class formAdminCtypesLabels extends cmsForm {
                             array('max_length', 100)
                         )
                     )),
-                    new fieldString('labels:one_accusative', array(
-                        'title' => LANG_CP_NUMERALS_1_ALABEL,
-                        'rules' => array(
-                            array('required'),
-                            array('max_length', 100)
-                        )
-                    )),
-                    new fieldString('labels:two_accusative', array(
-                        'title' => LANG_CP_NUMERALS_2_ALABEL,
-                        'rules' => array(
-                            array('required'),
-                            array('max_length', 100)
-                        )
-                    )),
-                    new fieldString('labels:many_accusative', array(
-                        'title' => LANG_CP_NUMERALS_10_ALABEL,
-                        'rules' => array(
-                            array('required'),
-                            array('max_length', 100)
-                        )
-                    )),
                     new fieldString('labels:one_genitive', array(
                         'title' => LANG_CP_NUMERALS_1_GLABEL,
                         'rules' => array(
@@ -67,6 +46,27 @@ class formAdminCtypesLabels extends cmsForm {
                     )),
                     new fieldString('labels:many_genitive', array(
                         'title' => LANG_CP_NUMERALS_10_GLABEL,
+                        'rules' => array(
+                            array('required'),
+                            array('max_length', 100)
+                        )
+                    )),
+                    new fieldString('labels:one_accusative', array(
+                        'title' => LANG_CP_NUMERALS_1_ALABEL,
+                        'rules' => array(
+                            array('required'),
+                            array('max_length', 100)
+                        )
+                    )),
+                    new fieldString('labels:two_accusative', array(
+                        'title' => LANG_CP_NUMERALS_2_ALABEL,
+                        'rules' => array(
+                            array('required'),
+                            array('max_length', 100)
+                        )
+                    )),
+                    new fieldString('labels:many_accusative', array(
+                        'title' => LANG_CP_NUMERALS_10_ALABEL,
                         'rules' => array(
                             array('required'),
                             array('max_length', 100)

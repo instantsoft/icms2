@@ -90,6 +90,11 @@ class actionUsersProfileEdit extends cmsAction {
                     ['unique_exclude', '{users}', 'slug', $profile['id']],
                     [function($controller, $data, $value) {
 
+                        $datasets = $this->getDatasets();
+
+                        if (isset($datasets[$value])) {
+                            return sprintf(LANG_USERS_OPT_RESTRICTED_SLUG, $value);
+                        }
                         if (!$this->isSlugAllowed($value)) {
                             return sprintf(LANG_USERS_OPT_RESTRICTED_SLUG, $value);
                         }

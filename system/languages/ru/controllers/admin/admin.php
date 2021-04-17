@@ -190,7 +190,10 @@
     define('LANG_CP_LISTVIEW_OPTIONS',          'Просмотр списка');
     define('LANG_CP_PROFILELIST_ON',            'Просмотр списка в профилях пользователей включен');
     define('LANG_CP_LISTVIEW_ON',               'Просмотр списка на сайте включен');
+    define('LANG_CP_LISTVIEW_OFF_INDEX',        'Выключить просмотр списка главной страницы типа контента');
+    define('LANG_CP_LISTVIEW_OFF_INDEX_HINT',   'Список будет доступен только в категориях');
     define('LANG_CP_LIST_OFF_BREADCRUMB',       'Не показывать хлебные крошки');
+    define('LANG_CP_LIST_OFF_BREADCRUMB_CTYPE', 'Не показывать в хлебных крошках тип контента');
     define('LANG_CP_LISTVIEW_FILTER',           'Показывать фильтр');
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Разворачивать панель фильтра');
     define('LANG_CP_LISTVIEW_STYLE',            'Стиль списка по умолчанию');
@@ -224,7 +227,7 @@
     define('LANG_CP_NUMERALS_1_ALABEL',         'Одного / одну / одно (Винительный)');
     define('LANG_CP_NUMERALS_2_ALABEL',         'Два / две (Винительный)');
     define('LANG_CP_NUMERALS_10_ALABEL',        'Много (Винительный)');
-    define('LANG_CP_NUMERALS_1_GLABEL',         'Одного / однй (Родительный)');
+    define('LANG_CP_NUMERALS_1_GLABEL',         'Одного / одной (Родительный)');
     define('LANG_CP_NUMERALS_2_GLABEL',         'Двух / двоих (Родительный)');
     define('LANG_CP_NUMERALS_10_GLABEL',        'Много (Родительный)');
     define('LANG_CP_ACTIONS_LABELS',            'Операции');

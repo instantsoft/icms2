@@ -118,8 +118,7 @@ class actionAdminInstallFinish extends cmsAction {
         // осознано для самостоятельной отладки
         if($this->cms_config->production_time > 0){
 
-            $values = $this->cms_config->getAll();
-            $values['time_zone'] = $values['cfg_time_zone'];
+            $values = $this->cms_config->getConfig();
             $values['production_time'] += 1;
 
             $this->cms_config->save($values);
@@ -127,7 +126,6 @@ class actionAdminInstallFinish extends cmsAction {
         }
 
         return $success;
-
     }
 
     private function componentInstall($manifest) {
