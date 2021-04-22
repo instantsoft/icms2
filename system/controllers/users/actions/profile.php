@@ -44,7 +44,13 @@ class actionUsersProfile extends cmsAction {
         }
 
         // Друзья
-        $friends = $this->options['is_friends_on'] ? $this->model->getFriends($profile['id']) : [];
+        $friends = [];
+        if($this->options['is_friends_on']){
+            if(!empty($this->options['profile_max_friends_count'])){
+                $this->model->limit($this->options['profile_max_friends_count']);
+            }
+            $friends = $this->model->getFriends($profile['id']);
+        }
 
         // Контент
 		$content->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
@@ -87,14 +93,14 @@ class actionUsersProfile extends cmsAction {
             'is_own_profile' => $this->is_own_profile,
             'is_friends_on'  => $this->options['is_friends_on'],
             'tool_buttons'   => $this->getToolButtons($profile),
-            'show_all_flink' => isset($this->tabs['friends']),
             'friends'        => $friends,
             'content_counts' => $content_counts,
             'sys_fields'     => $sys_fields,
             'fields'         => $fields,
             'fieldsets'      => $fieldsets,
             'wall_html'      => false, // Не используется, чтобы нотиса в старых шаблонах не было
-            'tabs'           => $this->getProfileMenu($profile)
+            'tabs'           => $this->getProfileMenu($profile),
+            'show_all_flink' => isset($this->tabs['friends'])
         ));
 
     }

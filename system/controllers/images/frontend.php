@@ -56,6 +56,11 @@ class images extends cmsFrontend {
             $upload_url .= '?'.http_build_query($upload_params);
         }
 
+        $preview_url = '';
+        if($is_image_exists){
+            $preview_url = $this->cms_config->upload_host . '/' . (isset($paths['small']) ? $paths['small'] : reset($paths));
+        }
+
         return $this->cms_template->renderInternal($this, 'upload_single', [
 			'name'              => $name,
             'paths'             => $paths,
@@ -63,6 +68,7 @@ class images extends cmsFrontend {
             'upload_url'        => $upload_url,
             'delete_url'        => href_to('images', 'delete'),
             'dom_id'            => $dom_id,
+            'preview_url'       => $preview_url,
             'is_image_exists'   => $is_image_exists,
             'allow_import_link' => $allow_import_link
         ]);

@@ -16,6 +16,10 @@ class actionContentItemEdit extends cmsAction {
         $item = $this->model->localizedOff()->getContentItem($ctype['name'], $id);
         if (!$item) { cmsCore::error404(); }
 
+        if ($ctype['is_cats'] && $item['category_id'] > 1){
+            $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
+        }
+
         // возвращаем как было
         $this->model->localizedRestore();
 
@@ -279,8 +283,11 @@ class actionContentItemEdit extends cmsAction {
             }
         }
 
+        $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
+
         return $this->cms_template->render('item_form', [
             'do'                => 'edit',
+            'base_url'          => $base_url,
             'page_title'        => $item['title'],
             'cancel_url'        => ($back_url ? $back_url : ($ctype['options']['item_on'] ? href_to($ctype['name'], $item['slug'] . '.html') : false)),
             'ctype'             => $ctype,

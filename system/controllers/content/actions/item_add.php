@@ -146,7 +146,15 @@ class actionContentItemAdd extends cmsAction {
         // форма отправлена к контексте черновика
         $is_draf_submitted = $this->request->has('to_draft');
 
-        if (!$is_submitted && !empty($category_id)) { $item['category_id'] = $category_id; }
+        // Передана категория, в которую добавляем
+        if (!$is_submitted && !empty($category_id)) {
+
+            $item['category_id'] = $category_id;
+
+            if ($ctype['is_cats'] && $item['category_id'] > 1){
+                $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
+            }
+        }
 
         $item['ctype_name'] = $ctype['name'];
 		$item['ctype_id']   = $ctype['id'];
@@ -290,8 +298,11 @@ class actionContentItemAdd extends cmsAction {
             }
         }
 
+        $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
+
         return $this->cms_template->render('item_form', [
             'do'               => 'add',
+            'base_url'         => $base_url,
             'page_title'       => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
             'cancel_url'       => ($back_url ? $back_url : ($ctype['options']['list_on'] ? href_to($ctype['name']) : $this->getBackURL())),
             'parent'           => isset($parent) ? $parent : false,

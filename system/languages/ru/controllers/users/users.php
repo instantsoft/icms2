@@ -52,6 +52,7 @@
     define('LANG_USERS_OPT_KARMA_COMMENTS', 'Спрашивать пояснение при оценке репутации');
     define('LANG_USERS_OPT_KARMA_TIME',     'Период голосования за репутацию, дней');
     define('LANG_USERS_OPT_KARMA_TIME_HINT','Пользователь сможет оценивать репутацию другого пользователя только один раз в указанный период');
+    define('LANG_USERS_OPT_MAX_FRIENDS_COUNT', 'Максимальное количество друзей на главной странице профиля');
 
     define('LANG_USERS_MIG_TITLE',              'Название правила');
     define('LANG_USERS_MIG_IS_ACTIVE',          'Правило активно');

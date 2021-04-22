@@ -396,6 +396,12 @@ class actionContentItemView extends cmsAction {
         cmsModel::cacheResult('current_ctype_props_fields', $props_fields);
         cmsModel::cacheResult('current_ctype_props_props_fieldsets', $props_fieldsets);
 
+        // После кэширования, если инфобар отключен для вывода на странице, убираем его
+        // Например, он может быть выведен в виджете "Поля контента"
+        if(!empty($ctype['options']['disable_info_block'])){
+            $item['info_bar'] = [];
+        }
+
         // SEO параметры
         $item_seo = $this->applyItemSeo($ctype, $item, $fields);
 

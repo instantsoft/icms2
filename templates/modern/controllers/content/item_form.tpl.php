@@ -4,8 +4,13 @@
     $this->setPageTitle($page_title);
 
     if(!$this->isBreadcrumbs()){
-        if ($ctype['options']['list_on'] && !$parent){
+        if ($ctype['options']['list_on'] && empty($ctype['options']['list_off_breadcrumb_ctype']) && !$parent){
             $this->addBreadcrumb($ctype['title'], href_to($ctype['name']));
+        }
+        if(!empty($item['category']['path'])){
+            foreach($item['category']['path'] as $c){
+                $this->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
+            }
         }
     }
 

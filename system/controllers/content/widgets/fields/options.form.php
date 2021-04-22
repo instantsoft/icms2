@@ -62,8 +62,18 @@ class formWidgetContentFieldsOptions extends cmsForm {
                             array('required')
                         )
                     )),
+                    new fieldImage('options:image_path', array(
+                        'title'  => LANG_WD_FIELDS_IMG,
+                        'hint'    => LANG_WD_FIELDS_IMG_HINT,
+                        'options' => array(
+                            'sizes' => array(
+                                'original'
+                            )
+                        )
+                    )),
                     new fieldList('options:image_field', array(
-                        'title'  => LANG_WD_CONTENT_FIELDS_IF,
+                        'title' => LANG_WD_CONTENT_FIELDS_IF,
+                        'hint'  => LANG_WD_CONTENT_FIELDS_IF_HINT,
                         'parent' => array(
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_fields_ajax').'?'.http_build_query(['excluding_filter' => [
@@ -83,8 +93,7 @@ class formWidgetContentFieldsOptions extends cmsForm {
                         'visible_depend' => array('options:image_field' => array('hide' => array('')))
                     )),
                     new fieldCheckbox('options:image_is_parallax', array(
-                        'title' => LANG_WD_CONTENT_FIELDS_IFPA,
-                        'visible_depend' => array('options:image_field' => array('hide' => array('')))
+                        'title' => LANG_WD_CONTENT_FIELDS_IFPA
                     )),
                     new fieldList('options:fields', array(
                         'title' => LANG_CP_CTYPE_FIELDS,
@@ -102,6 +111,9 @@ class formWidgetContentFieldsOptions extends cmsForm {
                         'rules' => array(
                             array('required')
                         )
+                    )),
+                    new fieldCheckbox('options:show_info_block', array(
+                        'title' => LANG_WD_CONTENT_FIELDS_SHOW_INFO_BLOCK
                     ))
                 )
             )

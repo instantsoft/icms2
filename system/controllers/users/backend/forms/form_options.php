@@ -94,6 +94,12 @@ class formUsersOptions extends cmsForm {
                         'title' => LANG_USERS_OPT_FRIENDSHIP,
                     )),
 
+                    new fieldNumber('profile_max_friends_count', array(
+                        'title' => LANG_USERS_OPT_MAX_FRIENDS_COUNT,
+                        'default' => 10,
+                        'visible_depend' => array('is_friends_on' => array('show' => array('1')))
+                    )),
+
                     new fieldCheckbox('is_karma_comments', array(
                         'title' => LANG_USERS_OPT_KARMA_COMMENTS,
                     )),

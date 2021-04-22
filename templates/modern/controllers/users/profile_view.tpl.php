@@ -14,9 +14,9 @@
 
 <?php $this->renderChild('profile_header', ['profile' => $profile, 'meta_profile' => $meta_profile, 'tabs' => $tabs, 'fields' => $fields]); ?>
 
-<div id="user_profile" class="icms-users-profile__view row mt-3">
+<div id="user_profile" class="icms-users-profile__view row mt-3 mt-md-4">
 
-    <div id="left_column" class="col-md-4">
+    <div id="left_column" class="col-md-3">
 
         <?php if (!empty($fields['avatar']) && $fields['avatar']['is_in_item']){ ?>
             <div id="avatar">
@@ -45,9 +45,9 @@
                             <?php echo $profile['friends_count']; ?>
                         </span>
                     </div>
-                    <div class="friends-list mt-2 d-flex flex-wrap">
+                    <div class="friends-list mt-2 d-flex flex-wrap mr-n2 mb-n2">
                         <?php foreach($friends as $friend){ ?>
-                            <a href="<?php echo href_to_profile($friend); ?>" class="icms-user-avatar mr-2 small <?php if (!empty($friend['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" title="<?php html($friend['nickname']); ?>" data-toggle="tooltip" data-placement="top">
+                            <a href="<?php echo href_to_profile($friend); ?>" class="icms-user-avatar mb-2 mr-2 small <?php if (!empty($friend['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" title="<?php html($friend['nickname']); ?>" data-toggle="tooltip" data-placement="top">
                                 <?php if($friend['avatar']){ ?>
                                     <?php echo html_avatar_image($friend['avatar'], 'micro', $friend['nickname']); ?>
                                 <?php } else { ?>
@@ -71,7 +71,7 @@
 
         <?php $this->block('users_profile_view_blocks'); ?>
     </div>
-    <div id="right_column" class="col-md-8 mt-3 mt-md-0">
+    <div id="right_column" class="col-md-9 mt-3 mt-md-0">
             <div id="information" class="content_item">
 
                 <?php foreach($sys_fields as $name => $field){ ?>

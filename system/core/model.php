@@ -161,28 +161,28 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getRootCategory($ctype_name){
-
+    public function getRootCategory($ctype_name) {
         return $this->db->getFields($this->getContentCategoryTableName($ctype_name), 'parent_id=0');
-
     }
 
-    public function getCategory($ctype_name, $id, $by_field='id'){
+    public function getCategory($ctype_name, $id, $by_field = 'id', $array_fields = ['allow_add']) {
 
         $this->useCache('content.categories');
 
         $category = $this->getItemByField($this->getContentCategoryTableName($ctype_name), $by_field, $id);
-
         if (!$category) { return false; }
 
         $category['path'] = $this->getCategoryPath($ctype_name, $category);
 
-        if(!empty($category['allow_add'])){
-            $category['allow_add'] = cmsModel::yamlToArray($category['allow_add']);
+        if($array_fields){
+            foreach ($array_fields as $array_field) {
+                if (!empty($category[$array_field])) {
+                    $category[$array_field] = cmsModel::yamlToArray($category[$array_field]);
+                }
+            }
         }
 
         return $category;
-
     }
 
     public function getCategoryBySLUG($ctype_name, $slug){
@@ -217,7 +217,9 @@ class cmsModel {
             $this->filterGt('parent_id', 0);
         }
 
-        $this->orderBy('ns_left');
+        if(!$this->order_by){
+            $this->orderBy('ns_left');
+        }
 
         $this->useCache('content.categories');
 

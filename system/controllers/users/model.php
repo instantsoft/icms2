@@ -853,25 +853,24 @@ class modelUsers extends cmsModel {
 //==============================    ДРУЖБА   =================================//
 //============================================================================//
 
-    public function filterFriends($user_id, $is_mutual = 1){
+    public function filterFriends($user_id, $is_mutual = 1) {
 
         $this->joinInner('{users}_friends', 'f', 'f.friend_id = i.id');
 
-        $this->filterEqual('f.user_id', (int)$user_id);
+        $this->filterEqual('f.user_id', (int) $user_id);
 
-        if($is_mutual !== null){
+        if ($is_mutual !== null) {
             $this->filterEqual('f.is_mutual', $is_mutual);
         } else {
             // подписчики (null) и друзья (1)
             $this->filterStart();
-                $this->filterEqual('f.is_mutual', 1);
-                    $this->filterOr();
-                $this->filterIsNull('f.is_mutual');
+            $this->filterEqual('f.is_mutual', 1);
+            $this->filterOr();
+            $this->filterIsNull('f.is_mutual');
             $this->filterEnd();
         }
 
         return $this;
-
     }
 
     public function getFriends($user_id){
@@ -898,11 +897,8 @@ class modelUsers extends cmsModel {
             $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
 
             return $user;
-
         });
-
     }
-
 
     public function getFriendsCount($user_id){
 
@@ -928,15 +924,17 @@ class modelUsers extends cmsModel {
         $this->resetFilters();
 
         return $count;
-
     }
 
     public function cacheSubscribersCount($user_id){
 
         cmsCache::getInstance()->clean('users.user.'.$user_id);
 
-        return $this->update('{users}', $user_id, array('subscribers_count' => $this->getSubscribersCount($user_id)), true);
+        $success = $this->update('{users}', $user_id, ['subscribers_count' => $this->getSubscribersCount($user_id)], true);
 
+        cmsEventsManager::hook('users_subscribers_count_update', $user_id);
+
+        return $success;
     }
 
     public function getFriendsIds($user_id){
@@ -965,7 +963,6 @@ class modelUsers extends cmsModel {
         }
 
         return $data;
-
     }
 
     public function getFriendshipRequested($user_id, $friend_id, $field = 'is_mutual'){
@@ -984,14 +981,13 @@ class modelUsers extends cmsModel {
         $this->filterEnd();
 
         return $this->getFieldFiltered('{users}_friends', $field);
-
     }
 
-    public function isFriendshipRequested($user_id, $friend_id){
+    public function isFriendshipRequested($user_id, $friend_id) {
         return $this->getFriendshipRequested($user_id, $friend_id, 'id');
     }
 
-    public function isFriendshipExists($user_id, $friend_id){
+    public function isFriendshipExists($user_id, $friend_id) {
 
         $this->useCache('users.friends');
 
@@ -1007,26 +1003,24 @@ class modelUsers extends cmsModel {
         $this->filterEqual('friend_id', $user_id);
         $this->filterEnd();
 
-        return (bool)$this->getFieldFiltered('{users}_friends', 'id');
-
+        return (bool) $this->getFieldFiltered('{users}_friends', 'id');
     }
 
-
-    public function isFriendshipMutual($user_id, $friend_id){
+    public function isFriendshipMutual($user_id, $friend_id) {
 
         $this->useCache('users.friends');
 
         $this->filterStart();
             $this->filterStart();
-            $this->filterEqual('user_id', $user_id);
-            $this->filterEqual('friend_id', $friend_id);
+                $this->filterEqual('user_id', $user_id);
+                $this->filterEqual('friend_id', $friend_id);
             $this->filterEnd();
 
             $this->filterOr();
 
             $this->filterStart();
-            $this->filterEqual('user_id', $friend_id);
-            $this->filterEqual('friend_id', $user_id);
+                $this->filterEqual('user_id', $friend_id);
+                $this->filterEqual('friend_id', $user_id);
             $this->filterEnd();
         $this->filterEnd();
 
@@ -1034,11 +1028,10 @@ class modelUsers extends cmsModel {
 
         $this->filterEqual('is_mutual', 1);
 
-        return (bool)$this->getFieldFiltered('{users}_friends', 'id');
-
+        return (bool) $this->getFieldFiltered('{users}_friends', 'id');
     }
 
-    public function subscribeUser($user_id, $friend_id){
+    public function subscribeUser($user_id, $friend_id) {
 
         cmsCache::getInstance()->clean('users.friends');
 
@@ -1048,10 +1041,9 @@ class modelUsers extends cmsModel {
         ));
 
         return $this->cacheSubscribersCount($friend_id);
-
     }
 
-    public function unsubscribeUser($user_id, $friend_id){
+    public function unsubscribeUser($user_id, $friend_id) {
 
         $this->filterEqual('user_id', $user_id);
         $this->filterEqual('friend_id', $friend_id);
@@ -1060,29 +1052,27 @@ class modelUsers extends cmsModel {
         cmsCache::getInstance()->clean('users.friends');
 
         return $this->cacheSubscribersCount($friend_id);
-
     }
 
-    public function addFriendship($user_id, $friend_id){
+    public function addFriendship($user_id, $friend_id) {
 
         $is_mutual = false;
 
-        if ($this->isFriendshipRequested($friend_id, $user_id)){
+        if ($this->isFriendshipRequested($friend_id, $user_id)) {
 
             $this->filterEqual('user_id', $friend_id);
             $this->filterEqual('friend_id', $user_id);
 
-            $this->updateFiltered('{users}_friends', array(
+            $this->updateFiltered('{users}_friends', [
                 'is_mutual' => true
-            ));
+            ]);
 
             $this->cacheSubscribersCount($user_id);
 
             $is_mutual = true;
-
         }
 
-        if ($is_mutual){
+        if ($is_mutual) {
 
             $this->filterEqual('id', $user_id)->increment('{users}', 'friends_count');
             $this->filterEqual('id', $friend_id)->increment('{users}', 'friends_count');
@@ -1090,28 +1080,25 @@ class modelUsers extends cmsModel {
             $friend = $this->getUser($friend_id);
 
             list($user_id, $friend) = cmsEventsManager::hook('users_add_friendship_mutual', [$user_id, $friend]);
-
         }
 
-        if ($this->isFriendshipRequested($user_id, $friend_id)){
+        if ($this->isFriendshipRequested($user_id, $friend_id)) {
 
             $this->filterEqual('user_id', $user_id);
             $this->filterEqual('friend_id', $friend_id);
 
-            $this->updateFiltered('{users}_friends', array(
+            $this->updateFiltered('{users}_friends', [
                 'is_mutual' => true
-            ));
+            ]);
 
             $this->cacheSubscribersCount($friend_id);
-
         } else {
 
-            $this->insert('{users}_friends', array(
+            $this->insert('{users}_friends', [
                 'user_id'   => $user_id,
                 'friend_id' => $friend_id,
                 'is_mutual' => $is_mutual
-            ));
-
+            ]);
         }
 
         list($user_id, $friend_id, $is_mutual) = cmsEventsManager::hook('users_add_friendship', [$user_id, $friend_id, $is_mutual]);
@@ -1121,13 +1108,13 @@ class modelUsers extends cmsModel {
         return $is_mutual;
     }
 
-    public function deleteFriendship($user_id, $friend_id){
+    public function deleteFriendship($user_id, $friend_id) {
 
         $is_mutual = $this->isFriendshipMutual($user_id, $friend_id);
 
         list($user_id, $friend_id, $is_mutual) = cmsEventsManager::hook('users_before_delete_friendship', [$user_id, $friend_id, $is_mutual]);
 
-        if ($is_mutual){
+        if ($is_mutual) {
             $this->filterEqual('id', $user_id)->decrement('{users}', 'friends_count');
             $this->filterEqual('id', $friend_id)->decrement('{users}', 'friends_count');
         }
@@ -1136,13 +1123,13 @@ class modelUsers extends cmsModel {
         $this->filterEqual('friend_id', $friend_id);
         $success = $this->deleteFiltered('{users}_friends');
 
-        if($success){
+        if ($success) {
             $this->filterEqual('user_id', $friend_id);
             $this->filterEqual('friend_id', $user_id);
             $success = $this->deleteFiltered('{users}_friends');
         }
 
-        if($success){
+        if ($success) {
             list($user_id, $friend_id, $is_mutual) = cmsEventsManager::hook('users_after_delete_friendship', [$user_id, $friend_id, $is_mutual]);
         }
 
@@ -1151,9 +1138,9 @@ class modelUsers extends cmsModel {
         return $success;
     }
 
-    public function keepInSubscribers($user_id, $friend_id){
+    public function keepInSubscribers($user_id, $friend_id) {
 
-        if ($this->isFriendshipMutual($user_id, $friend_id)){
+        if ($this->isFriendshipMutual($user_id, $friend_id)) {
             $this->filterEqual('id', $user_id)->decrement('{users}', 'friends_count');
             $this->filterEqual('id', $friend_id)->decrement('{users}', 'friends_count');
         }
@@ -1164,14 +1151,13 @@ class modelUsers extends cmsModel {
 
         $this->filterEqual('user_id', $friend_id);
         $this->filterEqual('friend_id', $user_id);
-        $this->updateFiltered('{users}_friends', array(
+        $this->updateFiltered('{users}_friends', [
             'is_mutual' => null
-        ));
+        ]);
 
         cmsCache::getInstance()->clean('users.friends');
 
         return $this->cacheSubscribersCount($user_id);
-
     }
 
 //============================================================================//
@@ -1283,7 +1269,7 @@ class modelUsers extends cmsModel {
 //============================    РЕПУТАЦИЯ   ================================//
 //============================================================================//
 
-    public function isUserCanVoteKarma($user_id, $profile_id, $voting_days=1){
+    public function isUserCanVoteKarma($user_id, $profile_id, $voting_days = 1) {
 
         $this->filterEqual('user_id', $user_id);
         $this->filterEqual('profile_id', $profile_id);
@@ -1296,10 +1282,9 @@ class modelUsers extends cmsModel {
         $this->resetFilters();
 
         return $votes_count > 0 ? false : true;
-
     }
 
-    public function addKarmaVote($vote){
+    public function addKarmaVote($vote) {
 
         cmsCache::getInstance()->clean('users.karma');
 
@@ -1307,15 +1292,13 @@ class modelUsers extends cmsModel {
 
         if (!$result) { return false; }
 
-        $this->
-            filterEqual('id', $vote['profile_id'])->
-            increment('{users}', 'karma', $vote['points']);
+        $this->filterEqual('id', $vote['profile_id'])->
+                increment('{users}', 'karma', $vote['points']);
 
         return $result;
-
     }
 
-    public function getKarmaLogCount($profile_id){
+    public function getKarmaLogCount($profile_id) {
 
         $this->useCache('users.karma');
 
@@ -1324,7 +1307,6 @@ class modelUsers extends cmsModel {
         $this->resetFilters();
 
         return $count;
-
     }
 
     public function getKarmaLog($profile_id){
@@ -1355,76 +1337,67 @@ class modelUsers extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function updateUserRating($user_id, $score){
+    public function updateUserRating($user_id, $score) {
 
         $this->filterEqual('id', $user_id);
 
-		if ($score > 0){
+        if ($score > 0) {
             $this->increment('{users}', 'rating', abs($score));
-		}
-		if ($score < 0){
+        }
+        if ($score < 0) {
             $this->decrement('{users}', 'rating', abs($score));
-		}
+        }
 
         cmsCache::getInstance()->clean('users.list');
-        cmsCache::getInstance()->clean('users.user.'.$user_id);
+        cmsCache::getInstance()->clean('users.user.' . $user_id);
 
+        cmsEventsManager::hook('users_rating_update', [$user_id, $score]);
+
+        return true;
     }
 
 //============================================================================//
 //============================================================================//
 
-    public function getMigrationRulesCount(){
-
+    public function getMigrationRulesCount() {
         return $this->getCount('{users}_groups_migration');
-
     }
 
-    public function getMigrationRules(){
-
+    public function getMigrationRules() {
         return $this->get('{users}_groups_migration');
-
     }
 
-    public function getMigrationRule($id){
-
+    public function getMigrationRule($id) {
         return $this->getItemById('{users}_groups_migration', $id);
-
     }
 
-    public function addMigrationRule($rule){
-
+    public function addMigrationRule($rule) {
         return $this->insert('{users}_groups_migration', $rule);
-
     }
 
-    public function updateMigrationRule($id, $rule){
-
+    public function updateMigrationRule($id, $rule) {
         return $this->update('{users}_groups_migration', $id, $rule);
-
     }
 
-    public function deleteMigrationRule($id){
-
+    public function deleteMigrationRule($id) {
         return $this->delete('{users}_groups_migration', $id);
-
     }
 
 //============================================================================//
 //============================================================================//
 
-    public function setUPS($key, $data, $user_id){
-        if(is_array($data)){
+    public function setUPS($key, $data, $user_id) {
+        if (is_array($data)) {
             $data = self::arrayToYaml($data);
         }
-        $insert = array(
-            'user_id' => $user_id,
-            'skey' => $key,
+        $insert = [
+            'user_id'  => $user_id,
+            'skey'     => $key,
             'settings' => $data
-        );
-        $update = array(
+        ];
+        $update = [
             'settings' => $data
-        );
+        ];
 
         $ret = $this->insertOrUpdate('{users}_personal_settings', $insert, $update);
         cmsCache::getInstance()->clean('users.ups');
@@ -1432,47 +1405,47 @@ class modelUsers extends cmsModel {
         return $ret;
     }
 
-    public function getSetUPS($key){
+    public function getSetUPS($key) {
 
         $this->useCache('users.ups');
 
-        $this->selectList(array(
+        $this->selectList([
             'i.settings' => 'settings',
-            'i.user_id' => 'user_id'
-        ), true);
+            'i.user_id'  => 'user_id'
+        ], true);
 
         $this->filterEqual('skey', $key);
 
-        return $this->get('{users}_personal_settings', function($item, $model){
-            if(strpos($item['settings'], '---') === 0){
+        return $this->get('{users}_personal_settings', function ($item, $model) {
+            if (strpos($item['settings'], '---') === 0) {
                 $item['settings'] = cmsModel::yamlToArray($item['settings']);
             }
             return $item['settings'];
         }, 'user_id');
-
     }
 
-    public function getUPS($key, $user_id){
+    public function getUPS($key, $user_id) {
+
         $this->useCache('users.ups');
 
         $this->filterEqual('user_id', $user_id)->filterEqual('skey', $key);
 
-        return $this->getItem('{users}_personal_settings', function($item, $model){
-            if(strpos($item['settings'], '---') === 0){
+        return $this->getItem('{users}_personal_settings', function ($item, $model) {
+            if (strpos($item['settings'], '---') === 0) {
                 $item['settings'] = cmsModel::yamlToArray($item['settings']);
             }
             return $item['settings'];
         });
     }
 
-    public function deleteUPS($key, $user_id=null){
-        if($user_id && $key){
+    public function deleteUPS($key, $user_id = null) {
+        if ($user_id && $key) {
             $this->filterEqual('user_id', $user_id)->filterEqual('skey', $key);
-        }elseif($user_id){
+        } elseif ($user_id) {
             $this->filterEqual('user_id', $user_id);
-        }elseif($key){
+        } elseif ($key) {
             $this->filterEqual('skey', $key);
-        }else{
+        } else {
             return false;
         }
         $ret = $this->deleteFiltered('{users}_personal_settings');

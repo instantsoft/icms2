@@ -42,8 +42,7 @@ class actionCommentsRate extends cmsAction {
         $success = $this->model->rateComment($comment['id'], $this->cms_user->id, $score);
 
         if ($success && $comment['user_id'] && !empty($this->options['update_user_rating'])) {
-            $rating = $this->model->getItemById('{users}', $comment['user_id']);
-            $this->model->update('{users}', $comment['user_id'], ['rating' => ($rating['rating'] + $score)]);
+            $this->model_users->updateUserRating($comment['user_id'], $score);
         }
 
         list($comment, $score) = cmsEventsManager::hook('comments_rate_after', [$comment, $score]);

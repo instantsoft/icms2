@@ -42,19 +42,19 @@
         </a>
     </div>
 
-    <div class="upload d-flex align-items-center">
-        <div id="file-uploader-<?php echo $dom_id; ?>" data-uploaded_count="<?php echo ($max_photos && $images && count($images)) ? count($images) : 0; ?>"></div>
+    <div class="upload row align-items-center">
+        <div id="file-uploader-<?php echo $dom_id; ?>" data-uploaded_count="<?php echo ($max_photos && $images && count($images)) ? count($images) : 0; ?>" class="col-sm-auto"></div>
         <?php if($allow_import_link){ ?>
-            <div class="image_link upload">
-                <span class="mx-2"><?php echo LANG_OR; ?></span>
+            <span class="col-sm-auto my-1"><?php echo LANG_OR; ?></span>
+            <span class="col-sm-auto image_link">
                 <a class="input_link_block btn btn-secondary" href="#">
                     <?php html_svg_icon('solid', 'link'); ?>
                     <?php echo LANG_PARSER_ADD_FROM_LINK; ?>
                 </a>
-            </div>
+            </span>
         <?php } ?>
         <?php if($max_photos){ ?>
-            <div class="ml-2 upload photo_limit_hint text-muted">
+            <div class="col-sm-auto upload photo_limit_hint text-muted">
                 <?php echo sprintf(LANG_PARSER_IMAGE_MAX_COUNT_HINT, html_spellcount($max_photos, LANG_PARSER_IMAGE_SPELL)); ?>
             </div>
         <?php } ?>

@@ -60,7 +60,7 @@ class onTypographHtmlFilter extends cmsAction {
             'h1','h2','h3','h4','h5','h6',
             'pre', 'code', 'blockquote', 'picture',
             'video', 'source', 'audio', 'youtube', 'facebook', 'figure', 'figcaption',
-            'object', 'param', 'embed', 'iframe', 'spoiler'
+            'object', 'param', 'embed', 'iframe', 'spoiler', 'cite', 'footer'
         ));
 
         // Устанавливаем коротие теги. (не имеющие закрывающего тега)
@@ -88,6 +88,7 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgAllowTagParams('span', array('style' => '#text'));
         $jevix->cfgAllowTagParams('input', array('tabindex' => '#text', 'type' => '#text', 'id' => '#text'));
         $jevix->cfgAllowTagParams('label', array('class' => '#text', 'for' => '#text'));
+        $jevix->cfgAllowTagParams('footer', array('class' => '#text'));
         $jevix->cfgAllowTagParams('object', array('width' => '#int', 'height' => '#int', 'data' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com')), 'type' => '#text'));
         $jevix->cfgAllowTagParams('param', array('name' => '#text', 'value' => '#text'));
         $jevix->cfgAllowTagParams('embed', array('src' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com')), 'type' => '#text','allowscriptaccess' => '#text', 'allowfullscreen' => '#text','width' => '#int', 'height' => '#int', 'flashvars'=> '#text', 'wmode'=> '#text'));

@@ -15,7 +15,7 @@
     </div>
 
     <div class="preview block" <?php if (!$is_image_exists) { ?>style="display:none"<?php } ?><?php if ($is_image_exists) { ?> data-paths="<?php html(json_encode($paths)); ?>"<?php } ?>>
-        <div><img src="<?php if ($is_image_exists) { echo cmsConfig::get('upload_host') . '/' . reset($paths); } ?>" /></div>
+        <div><img src="<?php if ($preview_url) { echo $preview_url; } ?>" /></div>
         <a class="btn btn-danger btn-sm py-0 px-1" href="javascript:" onclick="icms.images.remove('<?php echo $dom_id; ?>')" title="<?php echo LANG_DELETE; ?>">
             <?php html_svg_icon('solid', 'minus-circle'); ?>
         </a>

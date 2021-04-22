@@ -52,6 +52,7 @@
     define('LANG_USERS_OPT_KARMA_COMMENTS', 'Explain reputation vote');
     define('LANG_USERS_OPT_KARMA_TIME',     'Reputation voting period, days');
     define('LANG_USERS_OPT_KARMA_TIME_HINT','A user will be able to vote for another user\'s reputation only once in a specified period');
+    define('LANG_USERS_OPT_MAX_FRIENDS_COUNT', 'Maximum number of friends on the main profile page');
 
     define('LANG_USERS_MIG_TITLE',              'Rule title');
     define('LANG_USERS_MIG_IS_ACTIVE',          'Rule is active');

@@ -137,7 +137,7 @@ class cmsDatabase {
 
         }
 
-        $this->mysqli->set_charset($this->options['db_charset']);
+        $this->setCharset($this->options['db_charset']);
 
         if(!empty($this->options['clear_sql_mode'])){
             $this->mysqli->query("SET sql_mode=''");
@@ -157,10 +157,35 @@ class cmsDatabase {
 
         $this->setTimezone();
 
-		$this->prefix = $this->options['db_prefix'];
+        $this->setDbPrefix($this->options['db_prefix']);
 
         $this->init_start_time = time();
 
+        return true;
+    }
+
+    /**
+     * Задаёт набор символов по умолчанию
+     * @return boolean
+     */
+	public function setCharset($charset){
+        return $this->mysqli->set_charset($charset);
+    }
+
+    /**
+     * Меняем базу данных, заданную по умолчанию
+     * @return boolean
+     */
+	public function changeDb($db_name){
+        return $this->mysqli->select_db($db_name);
+    }
+
+    /**
+     * Устанавливаем/меняем префикс таблиц
+     * @return boolean
+     */
+    public function setDbPrefix($db_prefix){
+        $this->prefix = $db_prefix;
         return true;
     }
 
@@ -1017,20 +1042,16 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
-    public function dropTable($table_name){
-
-        $sql = "DROP TABLE IF EXISTS {#}{$table_name}";
-
-        $this->query($sql);
-
+    public function dropTable($table_name) {
+        return $this->query("DROP TABLE IF EXISTS `{#}{$table_name}`");
     }
 
-    public function dropTableField($table_name, $field_name){
+    public function dropTableField($table_name, $field_name) {
+        return $this->query("ALTER TABLE `{#}{$table_name}` DROP `{$field_name}`");
+    }
 
-        $sql = "ALTER TABLE `{#}{$table_name}` DROP `{$field_name}`";
-
-        $this->query($sql);
-
+    public function truncateTable($table_name) {
+        return $this->query("TRUNCATE TABLE `{#}{$table_name}`");
     }
 
     public function addTableField($table_name, $field_name, $sql) {
@@ -1040,46 +1061,41 @@ class cmsDatabase {
         }
 
         return $this->query("ALTER TABLE `{#}{$table_name}` ADD `{$field_name}` {$sql}");
-
     }
 
-    public function isTableExists($table_name){
+    public function isTableExists($table_name) {
 
-		$result = $this->query('show tables');
+        $result = $this->query('show tables');
 
         $tables = [];
 
-        while($data = $this->fetchRow($result)){
+        while ($data = $this->fetchRow($result)) {
             $tables[] = $data[0];
         }
 
-        $table_name = $this->replacePrefix('{#}'.$table_name);
+        $table_name = $this->replacePrefix('{#}' . $table_name);
 
-		return in_array($table_name, $tables, true);
+        return in_array($table_name, $tables, true);
+    }
 
-	}
-
-//============================================================================//
-//============================================================================//
-
-    public function isFieldUnique($table_name, $field_name, $value, $exclude_row_id = false){
+    public function isFieldUnique($table_name, $field_name, $value, $exclude_row_id = false) {
 
         $value = $this->escape(trim($value));
 
-		$where = "(`{$field_name}` = '{$value}')";
+        $where = "(`{$field_name}` = '{$value}')";
 
-		if ($exclude_row_id) { $where .= " AND (id <> '{$exclude_row_id}')"; }
+        if ($exclude_row_id) {
+            $where .= " AND (id <> '{$exclude_row_id}')";
+        }
 
-        return !(bool)$this->getRowsCount($table_name, $where, 1);
-
+        return !(bool) $this->getRowsCount($table_name, $where, 1);
     }
 
-    public function isFieldExists($table_name, $field){
+    public function isFieldExists($table_name, $field) {
 
         $table_fields = $this->getTableFields($table_name);
 
         return in_array($field, $table_fields, true);
-
     }
 
 //============================================================================//

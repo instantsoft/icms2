@@ -14,7 +14,7 @@ class actionAdminCtypesPropsAdd extends cmsAction {
 
         $is_submitted = $this->request->has('submit');
 
-        $cats    = [ntval($category_id)];
+        $cats    = [intval($category_id)];
         $subcats = $this->model_backend_content->getSubCategoriesTree($ctype['name'], $category_id, false);
 
         if (is_array($subcats)) {
