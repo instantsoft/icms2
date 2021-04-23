@@ -1546,9 +1546,9 @@ CREATE TABLE `{#}users_contacts` (
   `user_id` int(11) unsigned DEFAULT NULL COMMENT 'User ID',
   `contact_id` int(11) unsigned DEFAULT NULL COMMENT 'Contact (other user) ID',
   `date_last_msg` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last message date',
-  `messages` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Messages count',
+  `new_messages` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'New messages count',
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`,`contact_id`),
+  KEY `user_id` (`user_id`,`date_last_msg`),
   KEY `contact_id` (`contact_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='User contacts';
 
@@ -1705,9 +1705,7 @@ CREATE TABLE `{#}users_messages` (
   `content` text NOT NULL COMMENT 'Message',
   `is_deleted` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `from_id` (`from_id`,`to_id`),
-  KEY `to_id` (`to_id`,`is_new`,`is_deleted`),
-  KEY `date_delete` (`date_delete`)
+  KEY `to_id` (`to_id`,`from_id`,`is_deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='User private messages';
 
 DROP TABLE IF EXISTS `{#}users_notices`;

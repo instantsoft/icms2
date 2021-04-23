@@ -3,9 +3,9 @@
 <?php if ($contact){ ?>
 <div id="pm_contact">
 
-    <div class="border-bottom py-2 pl-md-2 d-flex align-items-center icms-messages-toolbar pannel-toolbar sticky-top bg-white">
+    <div class="border-bottom py-2 px-lg-2 d-flex align-items-center icms-messages-toolbar pannel-toolbar sticky-top bg-white">
         <div class="icms-messages-toolbar__info d-flex w-100 align-items-center">
-            <button id="contact_toggle" class="btn mr-2 d-block d-md-none">
+            <button id="contact_toggle" class="btn mr-2 d-block d-lg-none">
                 <?php html_svg_icon('solid', 'chevron-left'); ?>
             </button>
             <a href="<?php echo href_to_profile($contact); ?>" class="icms-user-avatar mr-2 small <?php if (!empty($contact['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
@@ -43,25 +43,26 @@
                 </div>
             </div>
         </div>
-        <div class="icms-messages-toolbar__action d-none w-100 align-items-center">
+        <div class="icms-messages-toolbar__action d-none w-100 align-items-center px-2 px-lg-0">
             <?php echo html_button(LANG_DELETE, 'delete_msgs', 'icms.messages.deleteMsgs()', ['class'=>'btn-sm btn-primary', 'id' => 'delete_msgs']); ?>
             <?php echo html_button(LANG_CANCEL, 'delete_msgs', '', ['class'=>'btn-sm btn-secondary ml-auto', 'id' => 'cancel_msgs']); ?>
         </div>
     </div>
 
-    <div id="pm_chat" class="icms-messages-chat bg-gray border-bottom overflow-hidden text-center">
+    <div id="pm_chat" class="icms-messages-chat bg-gray border-bottom text-center d-flex flex-column">
         <?php if($has_older){ ?>
             <a class="show-older btn btn-secondary mt-2 mb-0" href="#show-older" onclick="return icms.messages.showOlder(<?php echo $contact['id'] ?>, this);" rel="<?php echo $messages[0]['id']; ?>">
                 <span><?php echo LANG_PM_SHOW_OLDER_MESSAGES; ?></span>
             </a>
         <?php } ?>
+            <div class="mt-auto"></div>
 
         <?php if ($messages){ ?>
             <?php echo $this->renderChild('message', ['messages'=>$messages, 'user'=>$user, 'last_date' => '']); ?>
         <?php } ?>
     </div>
 
-    <div class="composer py-2 px-0 p-md-2">
+    <div class="composer py-2 px-0 p-lg-2">
 
         <?php if ($contact['is_ignored']){ ?>
 
@@ -80,7 +81,7 @@
 
         <?php } else { ?>
 
-            <form action="<?php echo $this->href_to('send'); ?>" method="post" class="position-relative px-2 px-md-0">
+            <form action="<?php echo $this->href_to('send'); ?>" method="post" class="position-relative px-2 px-lg-0">
                 <?php echo html_input('hidden', 'last_date', '', array('id' => 'msg_last_date')); ?>
                 <?php echo html_input('hidden', 'contact_id', $contact['id']); ?>
                 <?php echo html_csrf_token(); ?>
@@ -93,7 +94,12 @@
                     </span>
                     <span>
                         <span class="ctrenter_hint text-muted mr-2">ctrl+enter</span>
-                        <?php echo html_button(LANG_SEND, 'send', 'icms.messages.send()', ['class'=>'btn-primary']); ?>
+                        <button class="button btn btn-primary" value="1" name="send" onclick="icms.messages.send()" type="button">
+                            <span>
+                                <?php html_svg_icon('solid', 'paper-plane'); ?>
+                                <?php echo LANG_SEND; ?>
+                            </span>
+                        </button>
                     </span>
                 </div>
             </form>

@@ -1,9 +1,15 @@
 .icms-messages {
+    &.modal-messages {
+        margin: -$modal-inner-padding !important;
+        background-color: $white;
+    }
+    height: calc(100vh - #{$modal-dialog-margin * 2} - #{$modal-header-padding-y * 2} - #{$modal-title-line-height * $h4-font-size});
     .contact_nickname {
         line-height: 1.4;
     }
     .icms-messages-chat {
-        min-height: 400px;
+        height: calc(100% - 206px);
+        overflow-y: auto;
     }
     .markItUp .markItUpEditor {
         height: auto;
@@ -40,6 +46,27 @@
     .pannel-toolbar {
         height: 54px;
     }
+    .layout, .layout > *, .layout &__contacts-block {
+        height: inherit;
+    }
+    .icms-messages__contacts-list {
+        display: flex;
+        flex-direction: column;
+        padding-left: 0;
+        margin-bottom: 0;
+        border-radius: 0;
+        height: calc(100% - 54px);
+        overflow-y: auto;
+    }
+}
+
+@include media-breakpoint-up(sm) {
+    .icms-messages {
+        &.modal-messages {
+
+        }
+        height: calc(100vh - #{$modal-dialog-margin-y-sm-up * 2} - #{$modal-header-padding-y * 2} - #{$modal-title-line-height * $h4-font-size});
+    }
 }
 .bg-gray {
     background-color: $gray-200;
@@ -47,12 +74,18 @@
 .bg-success_light {
     background-color: lighten($success, 40);
 }
-#pm_contact .smilepanel {
-    position: absolute;
-    top: -51px;
-    padding: 0 $spacer*0.25;
-    background-color: $white;
-    right: 0px;
-    border: 1px solid $gray-400;
-    box-shadow: $box-shadow;
+#pm_contact {
+    height: inherit;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    .smilepanel {
+        position: absolute;
+        top: -51px;
+        padding: 0 $spacer*0.25;
+        background-color: $white;
+        right: 0px;
+        border: 1px solid $gray-400;
+        box-shadow: $box-shadow;
+    }
 }

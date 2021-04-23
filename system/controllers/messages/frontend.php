@@ -4,11 +4,12 @@ class messages extends cmsFrontend {
     protected $useOptions = true;
 
     private $sender_id;
-    private $recipients = array();
+    private $recipients = [];
     private $is_ignore_options = false;
 
     /**
      * Все запросы могут быть выполнены только авторизованными и только по аякс
+     *
      * @param string $action_name
      */
     public function before($action_name) {
@@ -21,10 +22,13 @@ class messages extends cmsFrontend {
 
             if (!cmsUser::isLogged()){ cmsCore::error404(); }
 
+            // Здесь виджеты не нужны
+            if ($action_name !== 'index') {
+                $this->cms_template->widgets_rendered = true;
+            }
         }
 
         return true;
-
     }
 
     /**
@@ -67,11 +71,11 @@ class messages extends cmsFrontend {
      * @param string $content
      * @return integer | false
      */
-    public function sendMessage($content){
+    public function sendMessage($content) {
 
-        // Создаем контакты
-        foreach($this->recipients as $contact_id){
-            if (!$this->model->isContactExists($contact_id, $this->sender_id)){
+        // Создаем контакты получателям
+        foreach ($this->recipients as $contact_id) {
+            if (!$this->model->isContactExists($contact_id, $this->sender_id)) {
                 $this->model->addContact($contact_id, $this->sender_id);
             }
         }
@@ -79,19 +83,17 @@ class messages extends cmsFrontend {
         // Сохраняем сообщение
         $message_id = $this->model->addMessage($this->sender_id, $this->recipients, $content);
 
-        if ($message_id){
+        if ($message_id) {
 
             // Обновляем даты последних сообщений в контактах
-            foreach($this->recipients as $contact_id){
+            foreach ($this->recipients as $contact_id) {
                 $this->model->updateContactsDateLastMsg($this->sender_id, $contact_id);
             }
 
             cmsEventsManager::hook('send_user_message', array($this->sender_id, $this->recipients, $content));
-
         }
 
         return $message_id ? $message_id : false;
-
     }
 
     /**

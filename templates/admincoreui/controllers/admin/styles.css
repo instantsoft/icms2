@@ -1,3 +1,13 @@
+/* для фиксации блоков при прокрутке */
+@media (min-width: 1366px) {
+    #cp_header + .app-body {
+        overflow-x: initial;
+    }
+    .quickview-wrapper .quickview-wrapper__sticky-wraper {
+        position: sticky;
+        top: calc(1rem + 101px);
+    }
+}
 .is-busy {
     position: relative;
 }

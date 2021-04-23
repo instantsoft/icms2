@@ -1531,9 +1531,9 @@ CREATE TABLE `{#}users_contacts` (
   `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID пользователя',
   `contact_id` int(11) unsigned DEFAULT NULL COMMENT 'ID контакта (другого пользователя)',
   `date_last_msg` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Дата последнего сообщения',
-  `messages` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Кол-во сообщений',
+  `new_messages` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Кол-во новых сообщений',
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`,`contact_id`),
+  KEY `user_id` (`user_id`,`date_last_msg`),
   KEY `contact_id` (`contact_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Контакты пользователей';
 
@@ -1690,9 +1690,7 @@ CREATE TABLE `{#}users_messages` (
   `content` text NOT NULL COMMENT 'Текст сообщения',
   `is_deleted` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `from_id` (`from_id`,`to_id`),
-  KEY `to_id` (`to_id`,`is_new`,`is_deleted`),
-  KEY `date_delete` (`date_delete`)
+  KEY `to_id` (`to_id`,`from_id`,`is_deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Личные сообщения пользователей';
 
 DROP TABLE IF EXISTS `{#}users_notices`;

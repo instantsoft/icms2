@@ -46,7 +46,7 @@
                         <?php echo ($is_today ? html_time($message['date_pub']): html_date_time($message['date_pub'])); ?>
                     </small>
                 </div>
-                <div class="message_text">
+                <div class="message_text text-break">
                     <?php echo $message['content']; ?>
                 </div>
             </div>

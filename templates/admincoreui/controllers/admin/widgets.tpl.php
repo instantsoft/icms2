@@ -102,61 +102,63 @@
 <div class="row align-items-stretch mb-4">
     <div class="col-sm-auto quickview-wrapper" id="left-quickview">
         <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
-        <div class="card-body bg-white h-100 pt-3 no-overflow" id="intro-step1">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#datatree"><?php echo LANG_CP_WIDGETS_PAGES; ?></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#all-widgets"><?php echo LANG_CP_WIDGETS_ALL; ?></a>
-                </li>
-            </ul>
-            <div class="tab-content border-right-0 border-bottom-0 border-left-0">
-                <div class="tab-pane p-0 pt-2 show active" id="datatree" role="tabpanel">
-                    <ul id="treeData">
-                        <li id="core" class="folder">
-                            <?php echo LANG_WP_SYSTEM; ?>
-                            <ul>
-                                <li id="core.0"><?php echo LANG_WP_ALL_PAGES; ?></li>
-                                <li id="core.1"><?php echo LANG_WP_HOME_PAGE; ?></li>
-                            </ul>
-                        </li>
-                        <?php foreach($controllers as $controller_name => $controller_title){ ?>
-                            <li id="<?php echo $controller_name ? $controller_name : 'custom'; ?>" class="lazy folder"><?php echo $controller_title; ?></li>
-                        <?php } ?>
-                    </ul>
-                </div>
-                <div class="tab-pane p-0 pt-2" id="all-widgets" role="tabpanel">
-                    <div id="cp-widgets-list" class="mt-3">
-                        <?php if ($widgets_list){ ?>
-                            <div id="accordion">
-                                <?php foreach($widgets_list as $controller_name => $widgets){ ?>
-                                    <div class="section">
-                                        <?php $controller_title = $controller_name ? constant("LANG_".mb_strtoupper($controller_name)."_CONTROLLER") : LANG_CP_WIDGETS_MISC; ?>
-                                        <a class="btn btn-primary btn-block mb-1 text-left rounded-0" href="#" rel="<?php echo $controller_name; ?>" data-toggle="collapse" data-target="#w-<?php echo $controller_name; ?>">
-                                            <?php echo $controller_title; ?>
-                                        </a>
-                                        <ul class="mt-3 px-2 list-unstyled collapse <?php echo !$controller_name ? 'show' : ''; ?>" id="w-<?php echo $controller_name; ?>" data-parent="#accordion">
-                                            <?php foreach($widgets as $widget){ ?>
-                                            <li rel="new" data-id="<?php echo $widget['id']; ?>">
-                                                    <span class="title"><?php echo $widget['title']; ?></span>
-                                                    <?php if($widget['is_external']){ ?>
-                                                        <span class="actions float-md-right d-flex">
-                                                            <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>">
-                                                                <i class="icon-close icons font-xl d-block"></i>
-                                                            </a>
-                                                        </span>
-                                                    <?php } ?>
-                                                    <?php if($widget['image_hint_path']){ ?>
-                                                        <img src="<?php echo $widget['image_hint_path']; ?>">
-                                                    <?php } ?>
-                                                </li>
-                                            <?php } ?>
-                                        </ul>
-                                    </div>
-                                <?php } ?>
-                            </div>
-                        <?php } ?>
+        <div class="card-body bg-white h-100 pt-3 no-overflow">
+            <div class="quickview-wrapper__sticky-wraper" id="intro-step1">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#datatree"><?php echo LANG_CP_WIDGETS_PAGES; ?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#all-widgets"><?php echo LANG_CP_WIDGETS_ALL; ?></a>
+                    </li>
+                </ul>
+                <div class="tab-content border-right-0 border-bottom-0 border-left-0">
+                    <div class="tab-pane p-0 pt-2 show active" id="datatree" role="tabpanel">
+                        <ul id="treeData">
+                            <li id="core" class="folder">
+                                <?php echo LANG_WP_SYSTEM; ?>
+                                <ul>
+                                    <li id="core.0"><?php echo LANG_WP_ALL_PAGES; ?></li>
+                                    <li id="core.1"><?php echo LANG_WP_HOME_PAGE; ?></li>
+                                </ul>
+                            </li>
+                            <?php foreach($controllers as $controller_name => $controller_title){ ?>
+                                <li id="<?php echo $controller_name ? $controller_name : 'custom'; ?>" class="lazy folder"><?php echo $controller_title; ?></li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                    <div class="tab-pane p-0 pt-2" id="all-widgets" role="tabpanel">
+                        <div id="cp-widgets-list" class="mt-3">
+                            <?php if ($widgets_list){ ?>
+                                <div id="accordion">
+                                    <?php foreach($widgets_list as $controller_name => $widgets){ ?>
+                                        <div class="section">
+                                            <?php $controller_title = $controller_name ? constant("LANG_".mb_strtoupper($controller_name)."_CONTROLLER") : LANG_CP_WIDGETS_MISC; ?>
+                                            <a class="btn btn-primary btn-block mb-1 text-left rounded-0" href="#" rel="<?php echo $controller_name; ?>" data-toggle="collapse" data-target="#w-<?php echo $controller_name; ?>">
+                                                <?php echo $controller_title; ?>
+                                            </a>
+                                            <ul class="mt-3 px-2 list-unstyled collapse <?php echo !$controller_name ? 'show' : ''; ?>" id="w-<?php echo $controller_name; ?>" data-parent="#accordion">
+                                                <?php foreach($widgets as $widget){ ?>
+                                                <li rel="new" data-id="<?php echo $widget['id']; ?>">
+                                                        <span class="title"><?php echo $widget['title']; ?></span>
+                                                        <?php if($widget['is_external']){ ?>
+                                                            <span class="actions float-md-right d-flex">
+                                                                <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>">
+                                                                    <i class="icon-close icons font-xl d-block"></i>
+                                                                </a>
+                                                            </span>
+                                                        <?php } ?>
+                                                        <?php if($widget['image_hint_path']){ ?>
+                                                            <img src="<?php echo $widget['image_hint_path']; ?>">
+                                                        <?php } ?>
+                                                    </li>
+                                                <?php } ?>
+                                            </ul>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            <?php } ?>
+                        </div>
                     </div>
                 </div>
             </div>
