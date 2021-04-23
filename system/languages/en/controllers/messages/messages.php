@@ -8,6 +8,7 @@
     define('LANG_PM_SHOW_OLDER_MESSAGES',   'Show previous messages &uarr;');
     define('LANG_PM_ACTION_IGNORE',         'Ignore');
     define('LANG_PM_ACTION_FORGIVE',        'Unignore');
+    define('LANG_PM_SELECT_CONTACT',        'Select contact');
     define('LANG_PM_DELETE_CONTACT',        'Delete contact');
     define('LANG_PM_DELETE_CONTACT_CONFIRM','Delete the contact from the list?');
     define('LANG_PM_IGNORE_CONTACT_CONFIRM','Add the contact to the blacklist? You will not receive messages from this user');
@@ -45,3 +46,5 @@
     define('LANG_PM_SENDER_USER_ID_HINT',   'Enter the user email. If not specified, the message will be sent from you.');
     define('LANG_PM_PMAILING_NOT_RECIPIENTS', 'No recipients according to specified criteria');
     define('LANG_PM_IS_ENABLE_PM', 'Enable private messages');
+    define('LANG_PM_SELECT_FIRST_CONTACT', 'Automatically select the first contact from the list');
+    define('LANG_PM_SELECT_FIRST_CONTACT_HINT', 'When opening a message box');

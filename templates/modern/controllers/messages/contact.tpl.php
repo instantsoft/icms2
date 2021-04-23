@@ -8,23 +8,25 @@
             <button id="contact_toggle" class="btn mr-2 d-block d-lg-none">
                 <?php html_svg_icon('solid', 'chevron-left'); ?>
             </button>
-            <a href="<?php echo href_to_profile($contact); ?>" class="icms-user-avatar mr-2 small <?php if (!empty($contact['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
-                <?php if($contact['avatar']){ ?>
-                    <?php echo html_avatar_image($contact['avatar'], 'micro', $contact['nickname']); ?>
-                <?php } else { ?>
-                    <?php echo html_avatar_image_empty($contact['nickname'], 'avatar__mini'); ?>
-                <?php } ?>
-            </a>
-            <span class="contact_nickname">
-                <?php echo $contact['nickname']; ?>
-                <small title="<?php echo LANG_USERS_PROFILE_LOGDATE; ?>" class="user_date_log text-muted d-block">
-                     <?php if (!$contact['is_online']) { ?>
-                        <?php echo string_date_age_max($contact['date_log'], true); ?>
+            <a href="<?php echo href_to_profile($contact); ?>" class="text-decoration-none d-flex align-items-center">
+                <span class="icms-user-avatar mr-2 small <?php if (!empty($contact['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
+                    <?php if($contact['avatar']){ ?>
+                        <?php echo html_avatar_image($contact['avatar'], 'micro', $contact['nickname']); ?>
                     <?php } else { ?>
-                        <?php echo LANG_ONLINE; ?>
+                        <?php echo html_avatar_image_empty($contact['nickname'], 'avatar__mini'); ?>
                     <?php } ?>
-                </small>
-            </span>
+                </span>
+                <span class="contact_nickname">
+                    <?php echo $contact['nickname']; ?>
+                    <small title="<?php echo LANG_USERS_PROFILE_LOGDATE; ?>" class="user_date_log text-muted d-block">
+                         <?php if (!$contact['is_online']) { ?>
+                            <?php echo string_date_age_max($contact['date_log'], true); ?>
+                        <?php } else { ?>
+                            <?php echo LANG_ONLINE; ?>
+                        <?php } ?>
+                    </small>
+                </span>
+            </a>
             <div class="actions ml-auto">
                 <div class="dropdown">
                     <button class="btn" type="button" data-toggle="dropdown">

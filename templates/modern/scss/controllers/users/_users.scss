@@ -11,5 +11,12 @@
             float: left;
             font-size: $h5-font-size;
         }
+        a {
+            margin: -($font-size-base*$headings-line-height/2) 0 0;
+            background: $white;
+            padding-left: $spacer;
+            float: right;
+            line-height: $headings-line-height;
+        }
     }
 }

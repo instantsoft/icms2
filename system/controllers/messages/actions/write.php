@@ -18,6 +18,9 @@ class actionMessagesWrite extends cmsAction {
             $this->model->addContact($this->cms_user->id, $contact_id);
         }
 
+        // Выбираем контакт сразу
+        $this->request->set('contact_first_select', 1);
+
         $this->executeAction('index');
     }
 

@@ -16,6 +16,13 @@ class formMessagesOptions extends cmsForm {
                         'default' => true
                     )),
 
+                    new fieldCheckbox('is_contact_first_select', array(
+                        'title' => LANG_PM_SELECT_FIRST_CONTACT,
+                        'hint'  => LANG_PM_SELECT_FIRST_CONTACT_HINT,
+                        'default' => false,
+                        'visible_depend' => array('is_enable_pm' => array('show' => array('1')))
+                    )),
+
                     new fieldList('editor', array(
                         'title' => LANG_PARSER_HTML_EDITOR,
                         'default' => cmsConfig::get('default_editor'),

@@ -8,6 +8,7 @@
     define('LANG_PM_SHOW_OLDER_MESSAGES',   'Показать предыдущие сообщения &uarr;');
     define('LANG_PM_ACTION_IGNORE',         'В игнор');
     define('LANG_PM_ACTION_FORGIVE',        'Прекратить игнор');
+    define('LANG_PM_SELECT_CONTACT',        'Выберите контакт');
     define('LANG_PM_DELETE_CONTACT',        'Удалить контакт');
     define('LANG_PM_DELETE_CONTACT_CONFIRM','Удалить контакт из списка?');
     define('LANG_PM_IGNORE_CONTACT_CONFIRM','Добавить контакт в черный список? Вы не будете получать от него сообщения после этого');
@@ -45,3 +46,5 @@
     define('LANG_PM_SENDER_USER_ID_HINT',   'Введите email пользователя. Если не указан, сообщение будет отправлено от вас.');
     define('LANG_PM_PMAILING_NOT_RECIPIENTS', 'Нет получателей по заданным критериям');
     define('LANG_PM_IS_ENABLE_PM', 'Включить личные сообщения');
+    define('LANG_PM_SELECT_FIRST_CONTACT', 'Автоматически выбирать первый контакт из списка');
+    define('LANG_PM_SELECT_FIRST_CONTACT_HINT', 'При открытии окна сообщений');

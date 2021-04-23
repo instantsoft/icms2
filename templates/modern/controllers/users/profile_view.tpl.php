@@ -72,59 +72,61 @@
         <?php $this->block('users_profile_view_blocks'); ?>
     </div>
     <div id="right_column" class="col-md-9 mt-3 mt-md-0">
-            <div id="information" class="content_item">
+        <div id="information" class="content_item">
 
-                <?php foreach($sys_fields as $name => $field){ ?>
-                    <div class="field ft_string f_<?php echo $name; ?>">
-                        <div class="text-secondary title title_left">
-                            <?php echo $field['title']; ?>:
-                        </div>
-                        <div class="value">
-                            <?php if (!empty($field['href'])){ ?>
-                                <a href="<?php echo $field['href']; ?>">
-                                    <?php echo $field['text']; ?>
-                                </a>
-                            <?php } else {?>
+            <?php foreach($sys_fields as $name => $field){ ?>
+                <div class="field ft_string f_<?php echo $name; ?>">
+                    <div class="text-secondary title title_left">
+                        <?php echo $field['title']; ?>:
+                    </div>
+                    <div class="value">
+                        <?php if (!empty($field['href'])){ ?>
+                            <a href="<?php echo $field['href']; ?>">
                                 <?php echo $field['text']; ?>
-                            <?php } ?>
+                            </a>
+                        <?php } else {?>
+                            <?php echo $field['text']; ?>
+                        <?php } ?>
+                    </div>
+                </div>
+            <?php } ?>
+
+            <?php foreach($fieldsets as $fieldset){ ?>
+
+                <?php if (!$fieldset['fields']) { continue; } ?>
+
+                <div class="fieldset">
+
+                <?php if ($fieldset['title']){ ?>
+                    <div class="fieldset_title">
+                        <h3><?php echo $fieldset['title']; ?></h3>
+                    </div>
+                <?php } ?>
+
+                <?php foreach($fieldset['fields'] as $field){ ?>
+                    <?php
+                        if (!isset($field['options']['label_in_item'])) {
+                            $label_pos = 'none';
+                        } else {
+                            $label_pos = $field['options']['label_in_item'];
+                        }
+                    ?>
+
+                    <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
+                        <?php if ($label_pos != 'none'){ ?>
+                            <div class="text-secondary title title_<?php echo $label_pos; ?>"><?php echo $field['title']; ?>: </div>
+                        <?php } ?>
+                        <div class="value">
+                            <?php echo $field['html']; ?>
                         </div>
                     </div>
                 <?php } ?>
 
-                <?php foreach($fieldsets as $fieldset){ ?>
+                </div>
+            <?php } ?>
 
-                    <?php if (!$fieldset['fields']) { continue; } ?>
-
-                    <div class="fieldset">
-
-                    <?php if ($fieldset['title']){ ?>
-                        <div class="fieldset_title">
-                            <h3><?php echo $fieldset['title']; ?></h3>
-                        </div>
-                    <?php } ?>
-
-                    <?php foreach($fieldset['fields'] as $field){ ?>
-                        <?php
-                            if (!isset($field['options']['label_in_item'])) {
-                                $label_pos = 'none';
-                            } else {
-                                $label_pos = $field['options']['label_in_item'];
-                            }
-                        ?>
-
-                        <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
-                            <?php if ($label_pos != 'none'){ ?>
-                                <div class="text-secondary title title_<?php echo $label_pos; ?>"><?php echo $field['title']; ?>: </div>
-                            <?php } ?>
-                            <div class="value">
-                                <?php echo $field['html']; ?>
-                            </div>
-                        </div>
-                    <?php } ?>
-
-                    </div>
-                <?php } ?>
-            </div>
+            <?php $this->block('users_profile_information_blocks'); ?>
+        </div>
     </div>
 </div>
 <?php $this->block('users_profile_view_bottom'); ?>

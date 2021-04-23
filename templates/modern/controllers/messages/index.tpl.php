@@ -77,7 +77,11 @@
             </div>
         </div>
 
-        <div class="left-panel col-lg-9"></div>
+        <div class="left-panel col-lg-9 d-lg-block">
+            <div class="h-100 text-muted d-flex align-items-center justify-content-center bg-light">
+                <span class="h3 m-0"><?php echo LANG_PM_SELECT_CONTACT; ?></span>
+            </div>
+        </div>
 
     </div>
 
@@ -88,7 +92,12 @@
         <?php } ?>
         icms.messages.options.refreshInterval = <?php echo $refresh_time; ?>;
         icms.messages.initUserSearch();
-        icms.messages.selectContact(<?php echo $first_id; ?>);
+        <?php if($is_contact_first_select){ ?>
+            icms.messages.selectContact(<?php echo $first_id; ?>);
+        <?php } else { ?>
+            $('.left-panel').addClass('d-none');
+            $('.right-panel').removeClass('d-none');
+        <?php } ?>
         icms.messages.bindMyMsg();
         <?php if($is_modal){ ?>
             $('#icms_modal .modal-dialog').addClass('modal-xl modal-dialog-icms-messages');

@@ -22,7 +22,7 @@
 
 <div class="icms-users-profile__view row mt-3 mt-md-4">
 
-    <div id="left_column" class="col-md-4">
+    <div id="left_column" class="col-md-3">
         <?php if (!empty($fields['avatar']) && $fields['avatar']['is_in_item']){ ?>
             <div id="avatar">
                 <?php if($profile['avatar']){ ?>
@@ -37,7 +37,7 @@
         <?php } ?>
     </div>
 
-    <div id="right_column" class="col-md-8 mt-3 mt-md-0">
+    <div id="right_column" class="col-md-9 mt-3 mt-md-0">
         <div id="information" class="content_item">
             <div class="fieldset">
                 <div class="fieldset_title">

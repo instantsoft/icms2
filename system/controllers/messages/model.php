@@ -25,7 +25,7 @@ class modelMessages extends cmsModel {
         // Чужой контакт
         if ($is_both) {
 
-            $new_count = $this->getNewMessagesCount($contact_id);
+            $new_count = $this->getNewContactMessagesCount($contact_id, $user_id);
 
             $this->filterEqual('contact_id', $user_id);
             $this->filterEqual('user_id', $contact_id);
@@ -275,6 +275,13 @@ class modelMessages extends cmsModel {
 
     }
 
+    public function getNewContactMessagesCount($user_id, $contact_id) {
+
+        $this->filterEqual('from_id', $contact_id);
+
+        return $this->getNewMessagesCount($user_id);
+    }
+
     public function getNewMessagesCount($user_id) {
 
         $this->filterEqual('to_id', $user_id);
@@ -294,13 +301,16 @@ class modelMessages extends cmsModel {
         ], true);
 
         // Обновляем кол-во новых
+        // Не обновляя дату последнего сообщения
         if($success){
 
-            $new_count = $this->getNewMessagesCount($user_id);
+            $new_count = $this->getNewContactMessagesCount($user_id, $contact_id);
 
             $this->filterEqual('contact_id', $contact_id);
             $this->filterEqual('user_id', $user_id);
-            $this->updateFiltered('{users}_contacts', ['new_messages' => $new_count], true);
+            $this->updateFiltered('{users}_contacts', ['new_messages' => $new_count, 'date_last_msg' => function ($db){
+                return '`date_last_msg`';
+            }], true);
         }
 
         return $success;
