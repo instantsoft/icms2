@@ -49,7 +49,7 @@ class modelMessages extends cmsModel {
 
         $this->orderBy('date_last_msg', 'desc');
 
-        return $this->get('{users}_contacts');
+        return $this->get('{users}_contacts', false, false) ?: [];
     }
 
     public function getContactsCount($user_id) {
@@ -92,7 +92,9 @@ class modelMessages extends cmsModel {
         $this->filterEqual('contact_id', $contact_id);
         $this->filterEqual('user_id', $user_id);
 
-        return boolval($this->getItem('{users}_contacts'));
+        $contact = $this->getItem('{users}_contacts');
+
+        return !empty($contact['id']) ? $contact['id'] : 0;
     }
 
     public function deleteContact($user_id, $contact_id) {

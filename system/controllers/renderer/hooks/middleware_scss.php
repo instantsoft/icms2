@@ -68,13 +68,14 @@ class onRendererMiddlewareScss extends cmsAction {
             foreach ($vendors as $vendor_name) {
 
                 $css_data = $this->compile('scss/vendors/'.$vendor_name.'/build.scss', $scss);
-
                 if($css_data){
-
                     $compiled_file_path = $css_dir_path.$vendor_name.'.css';
-
                     if(is_writable($compiled_file_path) || !file_exists($compiled_file_path)){
-                        file_put_contents($compiled_file_path, $css_data);
+                        if(!file_exists($compiled_file_path) && !is_writable(dirname($compiled_file_path))){
+                            cmsUser::addSessionMessage(sprintf(LANG_CP_INSTALL_NOT_WRITABLE, $css_dir), 'error');
+                        } else {
+                            file_put_contents($compiled_file_path, $css_data);
+                        }
                     } else {
                         cmsUser::addSessionMessage(sprintf(LANG_CP_FILE_NOT_WRITABLE, $css_dir.$vendor_name.'.css'), 'error');
                     }

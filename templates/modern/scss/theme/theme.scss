@@ -321,6 +321,8 @@ form fieldset {
         padding: 0;
         overflow: hidden;
         border: none;
+        min-width: 32px;
+        min-height: 32px;
     }
     &.peer_online:after, &.peer_no_online:after {
         bottom: 0;
@@ -381,7 +383,7 @@ form fieldset {
         border-color: $gray-800 !important;
     }
 }
-.ft_html .value img, p img {
+img {
     max-width: 100%;
     height: auto;
 }

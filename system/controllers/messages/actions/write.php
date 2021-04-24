@@ -8,18 +8,14 @@ class actionMessagesWrite extends cmsAction {
             return cmsCore::error404();
         }
 
-        $is_contact_exists = $this->model->isContactExists($this->cms_user->id, $contact_id);
+        $contact_exists_id = $this->model->isContactExists($this->cms_user->id, $contact_id);
 
-        if ($is_contact_exists) {
-            $this->model->updateContactsDateLastMsg($this->cms_user->id, $contact_id, false);
+        if (!$contact_exists_id) {
+            $contact_exists_id = $this->model->addContact($this->cms_user->id, $contact_id);
         }
 
-        if (!$is_contact_exists) {
-            $this->model->addContact($this->cms_user->id, $contact_id);
-        }
-
-        // Выбираем контакт сразу
-        $this->request->set('contact_first_select', 1);
+        // Какой контакт выбираем
+        $this->request->set('select_contact_id', $contact_exists_id);
 
         $this->executeAction('index');
     }

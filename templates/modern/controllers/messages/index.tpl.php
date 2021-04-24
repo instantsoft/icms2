@@ -41,10 +41,8 @@
                 <div id="user_search_panel" class="bg-gray p-2 border-bottom pannel-toolbar">
                     <?php echo html_input('text', '', '', array('placeholder' => LANG_PM_USER_SEARCH)); ?>
                 </div>
-                <div class="contacts icms-messages__contacts-list list-group">
-                    <?php $first_id = false; ?>
+                <div class="contacts icms-messages__contacts-list list-group" id="contacts-list">
                     <?php foreach($contacts as $contact){ ?>
-                        <?php $first_id = $first_id ? $first_id : $contact['id']; ?>
                         <?php $nickname = mb_strlen($contact['nickname']) > 15 ? mb_substr($contact['nickname'], 0, 15).'...' : $contact['nickname']; ?>
                         <a id="contact-<?php echo $contact['id']; ?>" href="#<?php echo $contact['id']; ?>" class="text-decoration-none d-flex align-items-center contact list-group-item border-0 rounded-0 p-2" onclick="return icms.messages.selectContact(<?php echo $contact['id']; ?>);" title="<?php echo $contact['nickname']; ?>" rel="<?php echo $contact['id']; ?>">
 
@@ -91,14 +89,16 @@
             icms.messages.is_modal = false;
         <?php } ?>
         icms.messages.options.refreshInterval = <?php echo $refresh_time; ?>;
-        icms.messages.initUserSearch();
-        <?php if($is_contact_first_select){ ?>
-            icms.messages.selectContact(<?php echo $first_id; ?>);
-        <?php } else { ?>
-            $('.left-panel').addClass('d-none');
-            $('.right-panel').removeClass('d-none');
-        <?php } ?>
-        icms.messages.bindMyMsg();
+        $(function(){
+            icms.messages.initUserSearch();
+            <?php if($select_contact_id){ ?>
+                icms.messages.selectContact(<?php echo $select_contact_id; ?>);
+            <?php } else { ?>
+                $('.left-panel').addClass('d-none');
+                $('.right-panel').removeClass('d-none');
+            <?php } ?>
+            icms.messages.bindMyMsg();
+        });
         <?php if($is_modal){ ?>
             $('#icms_modal .modal-dialog').addClass('modal-xl modal-dialog-icms-messages');
             icms.modal.setCallback('close', function (){

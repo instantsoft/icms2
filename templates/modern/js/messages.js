@@ -26,11 +26,11 @@ icms.messages = (function ($) {
     };
 
     this.setMsgLastDate = function (last_date){
-        $('#msg_last_date').val(last_date);
+        $('#msg_last_date', pm_window).val(last_date);
     };
 
     this.getMsgLastDate = function (){
-        return $('#msg_last_date').val();
+        return $('#msg_last_date', pm_window).val();
     };
 
     this.showLoader = function (contact){
@@ -43,7 +43,7 @@ icms.messages = (function ($) {
 
     this.initUserSearch = function (){
         var user_list = $('.right-panel .contacts .contact', pm_window);
-        $('#user_search_panel input').on('input', function() {
+        $('#user_search_panel input', pm_window).on('input', function() {
             var uquery = $(this).val();
             $(user_list).removeClass('d-none').addClass('d-flex');
             if(uquery.length > 1){
@@ -194,6 +194,7 @@ icms.messages = (function ($) {
             });
         }
 
+        this.scrollContact(contact);
         this.msg_ids = [];
 
         $.post(url, form_data, function(result){
@@ -239,22 +240,24 @@ icms.messages = (function ($) {
 
     };
 
-    this.scrollChat = function(){
-        $('#pm_chat').stop().animate({
-            scrollTop: $('#pm_chat')[0].scrollHeight
+    this.scrollContact = function(contact){
+        $('#contacts-list', pm_window).stop().animate({
+            scrollTop: contact[0].scrollHeight * contact.index()
         }, 500);
-        if(self.is_modal){
-            $('#icms_modal').stop().animate({
-                scrollTop: $('#icms_modal')[0].scrollHeight
-            }, 500);
-        }
+    };
+
+    this.scrollChat = function(){
+        var pm_chat = $('#pm_chat', pm_window);
+        pm_chat.stop().animate({
+            scrollTop: pm_chat[0].scrollHeight
+        }, 500);
     };
 
     this.send = function(){
 
-        var form = $('#pm_contact .composer form');
+        var form = $('#pm_contact .composer form', pm_window);
 
-        var form_data = icms.forms.toJSON( form );
+        var form_data = icms.forms.toJSON(form);
 
         if (!form_data.content) {return;}
 
@@ -287,14 +290,14 @@ icms.messages = (function ($) {
         }
 
 		if (result.message){
-			$('#pm_contact .icms-messages-chat').append(result.message);
+			$('#pm_contact .icms-messages-chat', pm_window).append(result.message);
 			this.scrollChat();
 		}
 
     };
 
     this.error = function (text){
-        $('#error_wrap').html(text).fadeIn().delay(5000).fadeOut(); return false;
+        $('#error_wrap', pm_window).html(text).fadeIn().delay(5000).fadeOut(); return false;
     };
 
     this.setContactCounter = function(id, value){
@@ -317,8 +320,6 @@ icms.messages = (function ($) {
         if (!self.options.isRefresh) { return false; }
 
         if (!$(pm_window).is(':visible')){ return false; }
-
-        var form = $('.composer form', pm_window);
 
         var url = pm_window.data('refresh-url');
 
