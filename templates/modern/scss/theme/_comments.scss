@@ -46,6 +46,8 @@ $comment-rating-size: 30px;
 .comment {
     .icms-user-avatar > img {
         max-width: $spacer*1.25;
+        min-width: auto;
+        min-height: auto;
     }
     .icms-user-avatar.peer_online:after, .icms-user-avatar.peer_no_online:after {
         bottom: -2px;

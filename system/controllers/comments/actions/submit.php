@@ -336,13 +336,17 @@ class actionCommentsSubmit extends cmsAction {
 
         $comment = $this->model->getComment($this->comment_id);
         if (!$comment) {
-            return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR));
+            return $this->cms_template->renderJSON(array('error' => true, 'message' => '404'));
         }
 
         if (!cmsUser::isAllowed('comments', 'edit', 'all')) {
             if (cmsUser::isAllowed('comments', 'edit', 'own') && $comment['user']['id'] != $this->cms_user->id) {
                 return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR));
             }
+        }
+
+        if (cmsUser::isPermittedLimitReached('comments', 'times', ((time() - strtotime($comment['date_pub']))/60))){
+            return $this->cms_template->renderJSON(array('error' => true, 'message' => 'Time is over'));
         }
 
         list($this->comment_id, $this->content, $this->content_html, $data) = cmsEventsManager::hook('comment_before_update', array(

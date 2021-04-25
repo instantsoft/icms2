@@ -36,6 +36,10 @@ class actionCommentsDelete extends cmsAction {
             }
         }
 
+        if (cmsUser::isPermittedLimitReached('comments', 'times', ((time() - strtotime($comment['date_pub']))/60))){
+            return $this->cms_template->renderJSON(array('error' => true, 'message' => 'Time is over'));
+        }
+
         $comment = cmsEventsManager::hook('comments_before_delete', $comment);
 
         // можем ли полностью удалять

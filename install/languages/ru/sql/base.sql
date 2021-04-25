@@ -1237,7 +1237,8 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (47, 'content', 'limit24', 'number', NULL),
 (48, 'users', 'change_email', 'flag', NULL),
 (49, 'users', 'change_email_period', 'number', NULL),
-(50, 'users', 'change_slug', 'flag', NULL);
+(50, 'users', 'change_slug', 'flag', NULL),
+(51, 'comments', 'times', 'number', NULL);
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (

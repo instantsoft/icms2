@@ -21,12 +21,17 @@
         $target_url = rel_to_href($entry['target_url']) . "#comment_{$entry['id']}";
     }
 
+    if (cmsUser::isPermittedLimitReached('comments', 'times', ((time() - strtotime($entry['date_pub']))/60))){
+        $is_edit_own = false;
+        $is_delete_own = false;
+    }
+
     if ($is_controls || !empty($is_moderator)){
         $is_can_edit = $is_edit_all || ($is_edit_own && $entry['user']['id'] == $user->id);
         $is_can_delete = $is_delete_all || ($is_delete_own && $entry['user']['id'] == $user->id);
     }
 
-    $is_selected = $is_highlight_new && ((int)strtotime($entry['date_pub']) > (int)strtotime($user->date_log));
+    $is_selected = $is_highlight_new && (strtotime($entry['date_pub']) > strtotime($user->date_log));
 
     $level = 0;
     if($is_levels){

@@ -21,6 +21,11 @@
         $target_url = rel_to_href($entry['target_url']) . "#comment_{$entry['id']}";
     }
 
+    if (cmsUser::isPermittedLimitReached('comments', 'times', ((time() - strtotime($entry['date_pub']))/60))){
+        $is_edit_own = false;
+        $is_delete_own = false;
+    }
+
     if ($is_controls || !empty($is_moderator)){
         $is_can_edit = cmsUser::isAllowed('comments', 'edit', 'all') || (cmsUser::isAllowed('comments', 'edit', 'own') && $entry['user']['id'] == $user->id);
         $is_can_delete = cmsUser::isAllowed('comments', 'delete', 'all') || (cmsUser::isAllowed('comments', 'delete', 'own') && $entry['user']['id'] == $user->id);
