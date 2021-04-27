@@ -129,6 +129,7 @@
     define('LANG_PARSER_TEXT_MAX_LEN',       'Максимальная длина');
     define('LANG_PARSER_TEXT_MIN_LEN',       'Минимальная длина');
     define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Показывать количество символов при вводе');
+    define('LANG_PARSER_IS_STRIP_TAGS',      'Вырезать все HTML теги при сохранении');
     define('LANG_PARSER_HTML',               'Текст HTML');
     define('LANG_PARSER_HTML_EDITOR',        'Редактор HTML');
     define('LANG_PARSER_HTML_EDITOR_GR',     'Редакторы HTML для групп');

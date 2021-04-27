@@ -130,6 +130,7 @@
     define('LANG_PARSER_TEXT_MAX_LEN',       'Maximum length');
     define('LANG_PARSER_TEXT_MIN_LEN',       'Minimum length');
     define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Show characters count');
+    define('LANG_PARSER_IS_STRIP_TAGS',      'Strip all HTML tags on save');
     define('LANG_PARSER_HTML',               'HTML text');
     define('LANG_PARSER_HTML_EDITOR',        'WYSIWYG editor');
     define('LANG_PARSER_HTML_EDITOR_GR',     'WYSIWYG editors for groups');

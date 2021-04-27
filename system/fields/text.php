@@ -22,6 +22,9 @@ class fieldText extends cmsFormField {
             new fieldCheckbox('show_symbol_count', array(
                 'title' => LANG_PARSER_SHOW_SYMBOL_COUNT
             )),
+            new fieldCheckbox('is_strip_tags', array(
+                'title' => LANG_PARSER_IS_STRIP_TAGS
+            )),
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
 				'extended_option' => true
@@ -102,6 +105,9 @@ class fieldText extends cmsFormField {
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ));
         } else {
+            if($this->getProperty('is_strip_tags') === true || $this->getOption('is_strip_tags')){
+                return nl2br($value);
+            }
             return nl2br(html($value, false));
         }
 
@@ -126,7 +132,7 @@ class fieldText extends cmsFormField {
     }
 
     public function store($value, $is_submitted, $old_value=null){
-        if($this->getProperty('is_strip_tags') === true){
+        if($this->getProperty('is_strip_tags') === true || $this->getOption('is_strip_tags')){
             return trim(strip_tags($value));
         }
         return parent::store($value, $is_submitted, $old_value);

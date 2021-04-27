@@ -259,7 +259,9 @@ icms.comments = (function ($) {
 
         $.post(this.urls.refresh, form_data, function(result){
 
-            $('.refresh_btn', comments_widget).removeClass('refresh_spin');
+            setTimeout(function (){
+                $('.refresh_btn', comments_widget).removeClass('refresh_spin');
+            }, 500);
 
             icms.events.run('icms_comments_refresh', result);
 

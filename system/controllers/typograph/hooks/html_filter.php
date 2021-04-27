@@ -297,8 +297,9 @@ class onTypographHtmlFilter extends cmsAction {
         cmsCore::loadLib('geshi/geshi', 'GeSHi');
 
         $geshi = new GeSHi(htmlspecialchars_decode($content), (isset($params['type']) ? $params['type'] : 'php'));
+        $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
 
-        return $geshi->parse_code();
+        return '<div class="bb_tag_code">'.$geshi->parse_code().'</div>';
 
     }
 
