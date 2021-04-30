@@ -150,7 +150,7 @@ class admin extends cmsFrontend {
                     $current_load_average = round(100*($la[2]/$cpu_count));
 
                     // вероятно определили неверно
-                    if($current_load_average > 100){
+                    if($current_load_average > 110){
                         $cpu_count = round($current_load_average/100);
                         cmsUser::sessionSet('cpu_count', $cpu_count);
                         $current_load_average = round(100*($la[2]/$cpu_count));

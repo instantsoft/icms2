@@ -132,6 +132,9 @@ button.loading {
     }
 }
 .icms-form__symbols_count_wrap {
+    > input {
+        padding-right: $input-padding-x*4;
+    }
     .symbols_count {
         position: absolute;
         top: 0;

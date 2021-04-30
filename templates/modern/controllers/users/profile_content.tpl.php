@@ -59,7 +59,7 @@
         ));
     }
 ?>
-<?php ob_start(); ?>
+<?php if(empty($hide_h1)){ ob_start(); ?>
 <a class="avatar icms-user-avatar d-none d-lg-flex mr-3 <?php if (!empty($profile['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" href="<?php echo href_to_profile($profile); ?>">
     <?php if($profile['avatar']){ ?>
         <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname']); ?>
@@ -82,7 +82,7 @@
         </sup>
     <?php } ?>
 </h1>
-<?php $this->addToBlock('before_body', ob_get_clean().($toolbar_html ? html_each($toolbar_html) : '')); ?>
+<?php $this->addToBlock('before_body', ob_get_clean().($toolbar_html ? html_each($toolbar_html) : '')); } ?>
 <?php if (!empty($datasets) || $folders){ ?>
 <div class="row align-content-end">
     <?php if (!empty($datasets)){ ?>

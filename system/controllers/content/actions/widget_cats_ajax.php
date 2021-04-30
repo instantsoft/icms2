@@ -6,7 +6,7 @@ class actionContentWidgetCatsAjax extends cmsAction {
 
 		if (!$this->request->isAjax() || !cmsUser::isAdmin()){ return cmsCore::error404(); }
 
-        $list = ['' => ''];
+        $list = [['title'=>'', 'value'=>'']];
 
 		$ctype_id = $this->request->get('value', 0);
 		if (!$ctype_id) {
