@@ -46,10 +46,6 @@ class actionGroupsGroup extends cmsAction {
 
             cmsUser::addSessionMessage($item_view_notice, 'info');
         }
-        
-        if ($this->cms_core->uri_action !== $group['slug']){
-            $this->redirect(href_to('groups', $group['slug']), 301);
-        }
 
         $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
         $this->cms_template->addBreadcrumb($group['title']);
