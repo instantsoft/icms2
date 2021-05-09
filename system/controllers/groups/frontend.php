@@ -104,9 +104,9 @@ class groups extends cmsFrontend {
 
         if (!$this->cms_core->uri_params){ return 'group'; }
 		
-		if ($this->cms_core->uri_action !== $group['slug']){  
-				$this->redirect(href_to('groups', $group['slug'], $this->cms_core->uri_params), 301);
-		}
+	if ($this->cms_core->uri_action !== $group['slug']){  
+		$this->redirect(href_to('groups', $group['slug'], $this->cms_core->uri_params), 301);
+	}
 
         return 'group_' . $this->cms_core->uri_params[0];
 
