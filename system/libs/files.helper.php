@@ -271,35 +271,57 @@ function files_get_upload_dir($user_id = 0) {
  * @param string $url URL, откуда нужно получить данные
  * @param integer $timeout Таймаут соединения
  * @param boolean $json_decode Преобразовывать JSON
+ * @param array $params Дополнительные параметры
  * @return string
  */
-function file_get_contents_from_url($url, $timeout = 5, $json_decode = false){
+function file_get_contents_from_url($url, $timeout = 5, $json_decode = false, $params = []) {
 
-    if (function_exists('curl_init')){
+    if (function_exists('curl_init')) {
 
         $curl = curl_init();
 
-        if(strpos($url, 'https') === 0){
+        if (strpos($url, 'https') === 0) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         }
+        $headers = ['User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 OPR/68.0.3618.173'];
+        if (!empty($params['cookie'])) {
+
+            $cookie = [];
+            foreach ($params['cookie'] as $k => $v) {
+                $cookie[] = $k . '=' . $v;
+            }
+
+            $headers[] = 'Cookie: ' . implode('; ', $cookie);
+            unset($params['cookie']);
+        }
+        if (!empty($params['proxy'])) {
+            curl_setopt($curl, CURLOPT_PROXY, $params['proxy']['host'] . ':' . $params['proxy']['port']);
+            curl_setopt($curl, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+            unset($params['proxy']);
+        }
+        if (!empty($params)) {
+            foreach ($params as $key => $value) {
+                $headers[] = $key . ': ' . $value;
+            }
+        }
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, false);
         curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
         $data = curl_exec($curl);
         curl_close($curl);
-
     } else {
         $data = @file_get_contents($url);
     }
 
-    if($json_decode){
+    if ($json_decode) {
         return json_decode($data, true);
     }
 
     return $data;
-
 }
 
 /**

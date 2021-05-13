@@ -7,9 +7,9 @@ INSERT INTO `{#}widgets_bind` (`id`, `template_layouts`, `languages`, `widget_id
 (23, NULL, NULL, 3, 'Уведомления', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: notices\ntemplate: menu\nis_detect: null\nmax_items: 0\n', 'menu', NULL, NULL);
 
 INSERT INTO `{#}widgets_bind_pages` (`id`, `bind_id`, `template`, `is_enabled`, `page_id`, `position`, `ordering`) VALUES
-(1, 1, 'default', 1, 0, 'top', 1),
-(2, 2, 'default', 1, 0, 'header', 1),
-(3, 5, 'default', 1, 0, 'left-top', 1),
-(4, 20, 'default', 1, 0, 'right-center', 1),
-(5, 22, 'default', 1, 0, 'header', 3),
-(6, 23, 'default', 1, 0, 'header', 3);
+(1, 1, 'default', 1, 0, 'top', 0),
+(2, 2, 'default', 1, 0, 'header', 0),
+(3, 5, 'default', 1, 0, 'left-top', 0),
+(4, 20, 'default', 1, 0, 'right-center', 0),
+(5, 22, 'default', 1, 0, 'header', 1),
+(6, 23, 'default', 1, 0, 'header', 2);

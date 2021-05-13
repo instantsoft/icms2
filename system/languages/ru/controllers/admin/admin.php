@@ -380,6 +380,7 @@
     define('LANG_CP_MENU_ITEM_TARGET_PARENT',   'В родительском окне');
     define('LANG_CP_MENU_ITEM_TARGET_TOP',      'Поверх всех фреймов');
     define('LANG_CP_MENU_IS_FIXED',             'Нельзя удалить системное меню');
+    define('LANG_CP_WIDGETS_SHOW_ALL',          'Показывать все виджеты');
     define('LANG_CP_WIDGETS_SKIP_IMPORT',       'Виджет &laquo;%s&raquo; не был импортирован, т.к. он не установлен у вас');
     define('LANG_CP_WIDGETS_ROW_NONE',          'Вы еще не создали ни одного ряда');
     define('LANG_CP_WIDGETS_COL_VA',            'Вертикальное выравнивание колонок');

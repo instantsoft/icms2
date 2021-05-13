@@ -8,7 +8,7 @@ class actionAdminWidgetsReorder extends cmsAction {
             return cmsCore::error404();
         }
 
-        $items = $this->request->get('items');
+        $items = $this->request->get('items', []);
         if (!$items) {
             return cmsCore::error404();
         }

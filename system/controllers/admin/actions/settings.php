@@ -99,7 +99,7 @@ class actionAdminSettings extends cmsAction {
 
                 if (!$values['cache_enabled']){
 
-                    $cacher = cmsCache::getCacher((object)$values);
+                    $cacher = cmsCache::getCacher((object)array_merge($this->cms_config->getAll(), $values));
 
                     $cacher->start();
                         $cacher->clean();

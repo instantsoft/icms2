@@ -55,11 +55,10 @@ $(function() {
 
     var last_pos;
     $( "#cp-widgets-layout .position" ).sortable({
-        items: "li:not(.disabled)",
-        revert: true,
+        items: "li",
+        cancel: ".disabled",
         opacity: 0.9,
         delay: 150,
-        cancel: '.actions',
         connectWith: ".position",
         placeholder: 'placeholder',
         update: function(event, ui) {
@@ -230,7 +229,9 @@ function createWidgetNode(widget){
     } else {
         widgetAddActionButtons(widget_dom);
     }
-
+    if (widget.is_hidden) {
+        widget_dom.addClass('is_hidden');
+    }
     if (!widget.is_enabled) {
         widget_dom.addClass('hide').find('.actions .hide').attr('title', LANG_SHOW);
     }
@@ -458,10 +459,10 @@ function widgetsSavePositionOrderings(position){
     if($('li:not(.disabled)', list).length < 1){return false;}
     if(position === '_copy'){return true;}
 
-    $('li:not(.disabled)', list).each(function(){
+    $('li', list).each(function(){
         var id = $(this).attr('bind-id');
         var bp_id = $(this).attr('data-bp_id');
-        id_list.push({id:id, bp_id:bp_id});
+        id_list.push({id:id, bp_id:bp_id, is_disabled: ($(this).hasClass('disabled') ? 1 : 0)});
         if(! +id || ! +bp_id){
             id_now[id] = true;
         }

@@ -11,6 +11,22 @@ function install_package(){
         $core->db->query("ALTER TABLE `{users}_contacts` CHANGE `messages` `new_messages` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Кол-во новых сообщений';");
     }
 
+    $widgets_bind = [];
+    $wbinds = $admin->model->orderBy('i.page_id, i.position, i.ordering')->
+                    get('widgets_bind_pages') ?: [];
+    foreach ($wbinds as $wbind) {
+        $widgets_bind[$wbind['template']][$wbind['position']][] = $wbind;
+    }
+    foreach ($widgets_bind as $tpl => $positions) {
+        foreach ($positions as $wbs) {
+            foreach ($wbs as $ordering => $wb) {
+                $admin->model->update('widgets_bind_pages', $wb['id'], [
+                    'ordering' => $ordering
+                ]);
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

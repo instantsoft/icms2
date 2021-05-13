@@ -13,15 +13,15 @@ INSERT INTO `{#}widgets_bind` (`id`, `template_layouts`, `languages`, `widget_id
 (21, NULL, NULL, 13, 'Search', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '', NULL, 'wrapper', NULL);
 
 INSERT INTO `{#}widgets_bind_pages` (`id`, `bind_id`, `template`, `is_enabled`, `page_id`, `position`, `ordering`) VALUES
-(7, 6, 'default', 1, 1, 'right-bottom', 1),
-(8, 8, 'default', 1, 1, 'right-bottom', 4),
-(9, 9, 'default', 1, 1, 'left-bottom', 4),
-(10, 10, 'default', 1, 1, 'left-bottom', 2),
-(11, 11, 'default', 1, 1, 'left-bottom', 5),
-(12, 12, 'default', 1, 147, 'right-bottom', 1),
-(13, 13, 'default', 1, 1, 'left-bottom', 3),
-(14, 14, 'default', 1, 1, 'right-bottom', 2),
-(15, 15, 'default', 1, 0, 'footer', 1),
-(16, 16, 'default', 1, 1, 'left-bottom', 1),
+(7, 6, 'default', 1, 1, 'right-bottom', 0),
+(8, 8, 'default', 1, 1, 'right-bottom', 2),
+(9, 9, 'default', 1, 1, 'left-bottom', 3),
+(10, 10, 'default', 1, 1, 'left-bottom', 1),
+(11, 11, 'default', 1, 1, 'left-bottom', 4),
+(12, 12, 'default', 1, 147, 'right-bottom', 3),
+(13, 13, 'default', 1, 1, 'left-bottom', 2),
+(14, 14, 'default', 1, 1, 'right-bottom', 1),
+(15, 15, 'default', 1, 0, 'footer', 0),
+(16, 16, 'default', 1, 1, 'left-bottom', 0),
 (17, 17, 'default', 1, 1, 'left-top', 1),
-(19, 21, 'default', 1, 1, 'right-top', 1);
+(19, 21, 'default', 1, 1, 'right-top', 0);

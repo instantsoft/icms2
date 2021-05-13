@@ -189,7 +189,13 @@
             <?php echo $scheme_html; ?>
             <?php if($is_dynamic_scheme){ ?>
                 <div class="row my-3 justify-content-end">
-                    <div class="col-sm-auto ml-auto text-muted" id="rows_titles_pos">
+                    <div class="col-sm-auto ml-auto text-muted border-right">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="form-check-input input-checkbox custom-control-input" name="show_all_wd" value="1" id="show_all_wd" checked="checked">
+                            <label class="custom-control-label" for="show_all_wd"><?php echo LANG_CP_WIDGETS_SHOW_ALL; ?></label>
+                        </div>
+                    </div>
+                    <div class="col-sm-auto text-muted" id="rows_titles_pos">
                         <span class="d-inline-block mr-3"><?php echo LANG_CP_WIDGETS_ROWS_TITLE; ?></span>
                         <div class="custom-control custom-radio custom-control-inline">
                             <input <?php if($rows_titles_pos == 'left'){ ?>checked<?php } ?> class="custom-control-input" type="radio" id="r-left" name="rows_titles_pos" value="left">

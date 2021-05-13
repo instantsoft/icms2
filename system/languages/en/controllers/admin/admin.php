@@ -359,6 +359,7 @@
     define('LANG_CP_MENU_ITEM_TARGET_PARENT',   'Parent window');
     define('LANG_CP_MENU_ITEM_TARGET_TOP',      'On top of all frames');
     define('LANG_CP_MENU_IS_FIXED',             'This menu cannot be deleted');
+    define('LANG_CP_WIDGETS_SHOW_ALL',          'Show all widgets');
     define('LANG_CP_WIDGETS_SKIP_IMPORT',       '&laquo;%s&raquo; widget was not imported because not installed');
     define('LANG_CP_WIDGETS_ROW_NONE',          'You have not created a single row');
     define('LANG_CP_WIDGETS_COL_VA',           'Vertical Column Alignment');

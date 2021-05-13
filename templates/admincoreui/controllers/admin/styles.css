@@ -751,7 +751,16 @@ form .child_field{margin-left: 20px}
     cursor: default;
 }
 #cp-widgets-layout .position li.disabled > .title::before {
-    content: "\e031";
+    content: "\e08e";
+}
+#cp-widgets-layout .position li.is_hidden {
+    opacity: 0.6;
+}
+#cp-widgets-layout .position li.is_hidden > .title {
+    padding: .3rem .5rem;
+}
+#cp-widgets-layout .position li.is_hidden > .title::before {
+    content: "\e01a";
 }
 #cp-widgets-layout .position li.hide {
     color: #813838;

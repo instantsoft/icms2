@@ -158,6 +158,7 @@ class actionAuthLogin extends cmsAction {
         // Мы не передаём название шаблона для вывода
         // Оно берется из названия текущего экшена
         return $this->cms_template->render([
+            'is_reg_enabled' => $this->options['is_reg_enabled'],
             'ajax_page_redirect' => $ajax_page_redirect,
             'errors'     => (isset($errors) ? $errors : false),
             'data'       => $data,

@@ -19,7 +19,7 @@
             'action' => href_to('auth', 'login'),
             'method' => 'post',
             'cancel' => array(
-                'show'  => true,
+                'show'  => $is_reg_enabled,
                 'title' => LANG_NO_ACCOUNT.' '.LANG_REGISTRATION,
                 'href'  => $this->href_to('register').($back_url ? '?back='.$back_url : '')),
             'submit' => array(

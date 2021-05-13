@@ -924,6 +924,16 @@ function nf_amount($value, $decimals = 2, $thousands_sep = ' ') {
 }
 
 /**
+ * Приводит число с плавающей точкой к нормальному виду
+ *
+ * @param float $value
+ * @return string
+ */
+function bc_format($value) {
+    return sprintf('%.'.BCMATHSCALE.'f', $value);
+}
+
+/**
  * Преобразует ipv4/ipv6 адрес в
  * упакованный формат для хранения
  *

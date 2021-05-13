@@ -1274,52 +1274,81 @@ class cmsController {
 //============================================================================//
 //============================================================================//
 
-    public function validate_required($value, $disable_empty = true){
-        if($value === '0' && !$disable_empty){ return true; }
+    public function validate_required($value, $disable_empty = true) {
+        if ($value === '0' && !$disable_empty) {
+            return true;
+        }
         if (empty($value)) { return ERR_VALIDATE_REQUIRED; }
         return true;
     }
 
-    public function validate_min($min, $value){
+    public function validate_min($min, $value) {
 
         if (empty($value)) { $value = 0; }
 
-        if (!in_array(gettype($value), array('integer','string','double')) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)){
+        if (!in_array(gettype($value), array('integer', 'string', 'double')) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)) {
             return ERR_VALIDATE_NUMBER;
         }
 
-        if ((float)$value < $min) { return sprintf(ERR_VALIDATE_MIN, $min); }
+        if (floatval($value) < $min) {
+            return sprintf(ERR_VALIDATE_MIN, $min);
+        }
 
         return true;
-
     }
 
-    public function validate_max($max, $value){
+    public function validate_max($max, $value) {
 
         if (empty($value)) { $value = 0; }
 
-        if (!in_array(gettype($value), array('integer','string','double')) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)){
+        if (!in_array(gettype($value), array('integer', 'string', 'double')) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)) {
             return ERR_VALIDATE_NUMBER;
         }
 
-        if ((float)$value > $max) { return sprintf(ERR_VALIDATE_MAX, $max); }
+        if (floatval($value) > $max) {
+            return sprintf(ERR_VALIDATE_MAX, $max);
+        }
 
         return true;
-
     }
 
-    public function validate_minfloat($min, $value){
+    /**
+     * Валидация float чисел: минимум
+     * Требуется библиотека bcmath
+     *
+     * @param float $min Минимальное число
+     * @param mixed $value Значение для валидации
+     * @return boolean
+     */
+    public function validate_minfloat($min, $value) {
         if (empty($value)) { return true; }
-        if(bccomp(sprintf('%.8f', $min), sprintf('%.8f', $value), 8) === 1){
+        if (!in_array(gettype($value), array('integer', 'string', 'double')) || !preg_match('/^([\-]?)([0-9\.,]+)$/i', $value)) {
+            return ERR_VALIDATE_NUMBER;
+        }
+        $value = bc_format(str_replace(',', '.', $value));
+        $min   = bc_format($min);
+        if (bccomp($min, $value) === 1) {
             return sprintf(ERR_VALIDATE_MIN, $min);
         }
         return true;
     }
-
-    public function validate_maxfloat($min, $value){
+    /**
+     * Валидация float чисел: максимум
+     * Требуется библиотека bcmath
+     *
+     * @param float $max Максимальное число
+     * @param mixed $value Значение для валидации
+     * @return boolean
+     */
+    public function validate_maxfloat($max, $value) {
         if (empty($value)) { return true; }
-        if(bccomp(sprintf('%.8f', $min), sprintf('%.8f', $value), 8) === -1){
-            return sprintf(ERR_VALIDATE_MAX, $min);
+        if (!in_array(gettype($value), array('integer', 'string', 'double')) || !preg_match('/^([\-]?)([0-9\.,]+)$/i', $value)) {
+            return ERR_VALIDATE_NUMBER;
+        }
+        $value = bc_format(str_replace(',', '.', $value));
+        $max   = bc_format($max);
+        if (bccomp($max, $value) === -1) {
+            return sprintf(ERR_VALIDATE_MAX, $max);
         }
         return true;
     }

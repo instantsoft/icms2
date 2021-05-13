@@ -2,6 +2,8 @@ var page_id = 0;
 var page_controller = 'core';
 var current_pallette = null;
 
+var show_all_wd = $.cookie('icms[show_all_wd]');
+
 $(function() {
 
     current_pallette = false;
@@ -40,7 +42,8 @@ $(function() {
 
     var last_pos;
     $( "#cp-widgets-layout .position" ).sortable({
-        items: "li:not(.disabled)",
+        items: "li",
+        cancel: ".disabled",
         opacity: 0.9,
         delay: 150,
         handle: '.title',
@@ -107,6 +110,18 @@ $(function() {
         return false;
     });
 
+    $('#show_all_wd').on('click', function(e){
+        show_all_wd = $(this).is(':checked') ? 1 : 0;
+        $.cookie('icms[show_all_wd]', show_all_wd, {expires: 365, path: '/'});
+        if(show_all_wd){
+            $('#cp-widgets-layout .position li.is_hidden').removeClass('d-none');
+        } else {
+            $('#cp-widgets-layout .position li.is_hidden').addClass('d-none');
+        }
+    });
+    if(show_all_wd == 0){
+        $('#show_all_wd').prop('checked', false);
+    }
 });
 
 function widgetsSelectPage(key){
@@ -165,9 +180,7 @@ function widgetsLoad(page_id){
         for(var pos in result.scheme){
 
             for (var idx in result.scheme[pos]){
-
                 createWidgetNode(result.scheme[pos][idx]);
-
             }
 
         }
@@ -177,7 +190,6 @@ function widgetsLoad(page_id){
         icms.events.run('admin_widgets_load', result);
 
     }, 'json');
-
 
 }
 
@@ -223,7 +235,12 @@ function createWidgetNode(widget){
     } else {
         widgetAddActionButtons(widget_dom);
     }
-
+    if (widget.is_hidden) {
+        widget_dom.addClass('is_hidden');
+        if(show_all_wd == 0){
+            widget_dom.addClass('d-none');
+        }
+    }
     if (!widget.is_enabled) {
         widget_dom.addClass('hide').find('.actions .hide').attr('title', LANG_SHOW);
     }
@@ -470,10 +487,10 @@ function widgetsSavePositionOrderings(position){
     if($('li:not(.disabled)', list).length < 1){return false;}
     if(position === '_copy'){return true;}
 
-    $('li:not(.disabled)', list).each(function(){
+    $('li', list).each(function(){
         var id = $(this).attr('bind-id');
         var bp_id = $(this).attr('data-bp_id');
-        id_list.push({id:id, bp_id:bp_id});
+        id_list.push({id:id, bp_id:bp_id, is_disabled: ($(this).hasClass('disabled') ? 1 : 0)});
         if(! +id || ! +bp_id){
             id_now[id] = true;
         }

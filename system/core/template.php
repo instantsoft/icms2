@@ -3012,6 +3012,7 @@ class cmsTemplate {
                 extract($this->layout_params);
             }
 
+            $rows = [];
             // Есть ли поддержка динамической схемы
             if (!empty($this->manifest['properties']['is_dynamic_layout'])) {
                 $rows = cmsCore::getModel('widgets')->getLayoutRows($this->name);

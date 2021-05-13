@@ -1,5 +1,5 @@
 <?php foreach($votes as $vote){ ?>
-    <div class="item d-flex align-items-center">
+    <div class="item d-flex align-items-center mb-3">
         <?php if(!empty($vote['user']['id'])){ ?>
             <a href="<?php echo href_to_profile($vote['user']); ?>" class="icms-user-avatar mr-3">
             <?php if($vote['user']['avatar']){ ?>

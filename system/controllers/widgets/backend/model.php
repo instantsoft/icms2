@@ -309,20 +309,13 @@ class modelBackendWidgets extends modelWidgets {
                 filterOr()->
                 filterIsNull('bp.template')->
                 filterEnd()->
-                filterStart()->
-                filterIn('bp.page_id', $page_ids)->
-                filterOr()->
-                filterIsNull('bp.page_id')->
-                filterOr()->
-                filterIsNull('bp.position')->
-                filterEnd()->
                 select('w.title', 'name')->
                 select('w.image_hint_path', 'image_hint_path')->
                 select('bp.*')->
                 select('IFNULL(bp.bind_id,i.id)', 'bind_id')->
                 joinInner('widgets', 'w', 'w.id = i.widget_id')->
                 joinLeft('widgets_bind_pages', 'bp', 'bp.bind_id = i.id')->
-                orderBy('bp.page_id, bp.ordering')->
+                orderBy('bp.position, bp.ordering')->
                 get('widgets_bind') ?: [];
 
         $positions = [];
@@ -366,6 +359,7 @@ class modelBackendWidgets extends modelWidgets {
                 'is_set_access'     => !empty($bind['groups_view']) || $bind['groups_hide'],
                 'is_tab_prev'       => boolval($bind['is_tab_prev']),
                 'is_enabled'        => boolval($bind['is_enabled']),
+                'is_hidden'         => (!in_array($bind['page_id'], $page_ids) && $bind['position'] !== '_unused'),
                 'is_disabled'       => ($bind['page_id'] != $page_id && $bind['position'] !== '_unused')
             ];
         }
@@ -529,35 +523,39 @@ class modelBackendWidgets extends modelWidgets {
         $in = [];
         foreach ($items as $item) {
             if (!empty($item['bp_id'])) {
-                $in[] = $item['bp_id'];
+                $in[] = intval($item['bp_id']);
             }
         }
 
         $now = $in ? $this->filterIn('id', $in)->get('widgets_bind_pages') : [];
-        $i   = 0;
 
         $new = [];
 
-        foreach ($items as $item) {
+        foreach ($items as $ordering => $item) {
 
             if (!empty($item['bp_id']) && !empty($now[$item['bp_id']])) {
 
-                $this->updateWidgetBindPage($item['bp_id'], [
-                    'page_id'  => $page_id,
-                    'ordering' => $i,
+                $update_data = [
+                    'ordering' => $ordering,
                     'position' => $position,
                     'template' => $template
-                ]);
-            } else { // копия
+                ];
+
+                if(empty($item['is_disabled'])){
+                    $update_data['page_id'] = $page_id;
+                }
+
+                $this->updateWidgetBindPage($item['bp_id'], $update_data);
+
+            } else {
+                // копия
                 if ($this->filterEqual('id', $item['id'])->getCount('widgets_bind', 'id', true)) {
 
-                    $id = $this->addWidgetBindPage($item['id'], $page_id, $position, $template, $i, ($position === '_unused') ? 0 : 1);
+                    $id = $this->addWidgetBindPage($item['id'], $page_id, $position, $template, $ordering, ($position === '_unused') ? 0 : 1);
 
                     $new[$id] = $item['id']; // $item['id'] может быть одинаковый
                 }
             }
-
-            $i++;
         }
 
         return $new;

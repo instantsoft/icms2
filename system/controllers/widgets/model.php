@@ -125,10 +125,10 @@ class modelWidgets extends cmsModel {
                 select('i.id', 'id')->
                 join('widgets_bind', 'wb', 'wb.id = i.bind_id')->
                 join('widgets', 'w', 'w.id = wb.widget_id')->
+                filterIn('page_id', $pages_list)->
                 filterEqual('template', $template)->
                 filterEqual('is_enabled', 1)->
-                filterIn('page_id', $pages_list)->
-                orderBy('i.page_id, i.position, i.ordering')->forceIndex('page_id')->
+                orderBy('i.position, i.ordering')->forceIndex('page_id')->
                 get('widgets_bind_pages', function($item, $model){
 
                     $item['options'] = cmsModel::yamlToArray($item['options']);
@@ -139,9 +139,7 @@ class modelWidgets extends cmsModel {
                     $item['device_types'] = cmsModel::yamlToArray($item['device_types']);
 
                     return $item;
-                });
-
-        if(!$widgets_bind){ return cmsEventsManager::hook('widgets_before_list', []); }
+                }) ?: [];
 
         return cmsEventsManager::hook('widgets_before_list', $widgets_bind);
     }

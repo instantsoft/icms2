@@ -179,6 +179,15 @@ class cmsConfig {
         if (!array_key_exists('allow_users_time_zone', $this->data)) {
             $this->data['allow_users_time_zone'] = 1;
         }
+        if (!array_key_exists('bcmathscale', $this->data)) {
+            $this->data['bcmathscale'] = 8;
+        }
+        // Ставим константу, для вспомогательных функций
+        define('BCMATHSCALE', $this->data['bcmathscale']);
+        // разрядность математической библиотеки
+        if(function_exists('bcscale')){
+            bcscale($this->data['bcmathscale']);
+        }
 
         if (empty($this->data['native_yaml']) || !function_exists('yaml_emit')) {
             $this->data['native_yaml'] = 0;

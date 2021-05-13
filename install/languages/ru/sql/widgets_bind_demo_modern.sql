@@ -18,20 +18,20 @@ INSERT INTO `{#}widgets_bind` (`id`, `template_layouts`, `languages`, `widget_id
 (126, NULL, NULL, 14, 'Социальные кнопки', NULL, NULL, NULL, NULL, NULL, NULL, '---\n', NULL, '---\ncontent: |\n  <div class=\"py-2\">\r\n      <a class=\"text-light\" href=\"#\">{brands%facebook}</a>\r\n      <a class=\"text-light ml-2\" href=\"#\">{brands%github}</a>\r\n      <a class=\"text-light ml-2\" href=\"#\">{brands%instagram}</a>\r\n      <a class=\"text-light ml-2\" href=\"#\">{brands%odnoklassniki}</a>\r\n      <a class=\"text-light ml-2\" href=\"#\">{brands%vk}</a>\r\n      <a class=\"text-light ml-2\" href=\"#\">{brands%telegram}</a>\r\n  </div>\n', 'html', NULL, NULL, NULL, 1);
 
 INSERT INTO `{#}widgets_bind_pages` (`id`, `bind_id`, `template`, `is_enabled`, `page_id`, `position`, `ordering`) VALUES
-(75, 69, 'modern', 1, 153, 'con_header', 1),
-(77, 71, 'modern', 1, 1, 'pos_8', 4),
+(75, 69, 'modern', 1, 153, 'con_header', 0),
+(77, 71, 'modern', 1, 1, 'pos_8', 5),
 (78, 72, 'modern', 1, 1, 'pos_40', 0),
 (85, 79, 'modern', 1, 0, 'pos_32', 0),
 (92, 86, 'modern', 1, 1, 'pos_9', 0),
-(94, 88, 'modern', 1, 1, 'pos_8', 5),
+(94, 88, 'modern', 1, 1, 'pos_8', 6),
 (95, 89, 'modern', 1, 1, 'pos_33', 0),
 (97, 91, 'modern', 1, 1, 'pos_9', 2),
 (98, 92, 'modern', 1, 1, 'pos_9', 1),
-(111, 105, 'modern', 1, 1, 'pos_8', 1),
+(111, 105, 'modern', 1, 1, 'pos_8', 2),
 (114, 108, 'modern', 1, 1, 'pos_9', 3),
 (115, 109, 'modern', 1, 1, 'pos_9', 4),
-(116, 110, 'modern', 1, 1, 'pos_8', 2),
-(118, 112, 'modern', 1, 1, 'pos_8', 3),
+(116, 110, 'modern', 1, 1, 'pos_8', 3),
+(118, 112, 'modern', 1, 1, 'pos_8', 4),
 (130, 124, 'modern', 1, 0, 'pos_38', 0),
 (131, 125, 'modern', 1, 0, 'pos_39', 0),
 (132, 126, 'modern', 1, 0, 'pos_26', 0);
