@@ -492,7 +492,7 @@ class cmsTemplate {
 
         foreach ($this->widgets[$position] as $group) {
 
-            if (sizeof($group) == 1) {
+            if (count($group) == 1) {
 
                 $widget = $group[0];
                 if ($wrapper) {
@@ -695,7 +695,7 @@ class cmsTemplate {
             //
 
             $visible_items = array_slice($menu, 0, $first_level_limit, true);
-            $more_items    = array_slice($menu, $first_level_limit, sizeof($menu) - $first_level_limit, true);
+            $more_items    = array_slice($menu, $first_level_limit, count($menu) - $first_level_limit, true);
 
             $item_more_id = 10000;
 
@@ -748,9 +748,9 @@ class cmsTemplate {
 
         if ($this->breadcrumbs) {
             if ($options['strip_last']) {
-                unset($this->breadcrumbs[sizeof($this->breadcrumbs) - 1]);
+                unset($this->breadcrumbs[count($this->breadcrumbs) - 1]);
             } else {
-                $this->breadcrumbs[sizeof($this->breadcrumbs) - 1]['is_last'] = true;
+                $this->breadcrumbs[count($this->breadcrumbs) - 1]['is_last'] = true;
             }
         }
 
@@ -1010,7 +1010,7 @@ class cmsTemplate {
         if (empty($this->menus['toolbar'])) {
             return false;
         }
-        return (bool) sizeof($this->menus['toolbar']);
+        return (bool) count($this->menus['toolbar']);
     }
 
 // ========================================================================== //
@@ -2049,7 +2049,7 @@ class cmsTemplate {
      */
     public function restoreContext() {
 
-        if (!sizeof($this->controllers_queue)) {
+        if (!count($this->controllers_queue)) {
             return false;
         }
 
@@ -2645,7 +2645,7 @@ class cmsTemplate {
             if($grid['actions']){
                 $columns[] = array(
                     'sortable'  => false,
-                    'width'     => sizeof($grid['actions']) * 30,
+                    'width'     => count($grid['actions']) * 30,
                     'title'     => LANG_CP_ACTIONS,
                     'name'      => 'dg_actions',
                     'filter'    => ''

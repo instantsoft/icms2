@@ -30,7 +30,7 @@
 			</div>
 			<div class="buttons">
 				<?php echo html_submit(LANG_FILTER_APPLY); ?>
-				<?php if (sizeof($filters)){ ?>
+				<?php if (count($filters)){ ?>
                     <a class="cancel_filter_link" href="<?php echo $page_url; ?>"><?php echo LANG_CANCEL; ?></a>
 				<?php } ?>
 			</div>

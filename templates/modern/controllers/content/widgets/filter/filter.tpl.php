@@ -29,7 +29,7 @@
         </div>
         <div class="buttons d-flex">
             <?php echo html_submit(LANG_FILTER_APPLY); ?>
-            <?php if (sizeof($filters)){ ?>
+            <?php if (count($filters)){ ?>
                 <a class="btn btn-secondary cancel_filter_link mx-2" href="<?php echo $page_url; ?>"><?php echo LANG_CANCEL; ?></a>
             <?php } ?>
         </div>

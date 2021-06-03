@@ -82,7 +82,7 @@
     </div>
 </div>
 
-<?php if ($max_entries && ($count == $max_entries) && (sizeof($entries) > $count) && ($page == 1)){ ?>
+<?php if ($max_entries && ($count == $max_entries) && (count($entries) > $count) && ($page == 1)){ ?>
     <a class="show_more btn btn-primary btn-block" href="#wall-more" onclick="return icms.wall.more()">
         <?php echo LANG_SHOW_ALL; ?>
     </a>

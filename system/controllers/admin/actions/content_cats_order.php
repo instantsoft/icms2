@@ -53,7 +53,7 @@ class actionAdminContentCatsOrder extends cmsAction {
         foreach($tree as $idx => $node){
 
             if (!empty($node['children'])){
-                $my_count = sizeof($node['children']);
+                $my_count = count($node['children']);
                 $count = $my_count + $this->countChilds($node['children'], $count);
             }
 
@@ -74,7 +74,7 @@ class actionAdminContentCatsOrder extends cmsAction {
             $node['parent_key'] = $parent_key;
 
             if (!empty($node['children'])){
-                $count = sizeof($node['children']);
+                $count = count($node['children']);
                 $node['children'] = $this->prepareTree($node['children'], $node['key']);
                 $node['children_count'] = $this->countChilds($node['children'], $count);
             } else {

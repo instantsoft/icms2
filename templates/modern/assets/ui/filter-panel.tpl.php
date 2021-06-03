@@ -57,7 +57,7 @@ $form_url_sep = strpos($form_url, '?') === false ? '?' : '&';
             <?php if ($fields_count) { ?>
                 <div class="buttons d-flex flex-column flex-md-row">
                     <?php echo html_submit(LANG_FILTER_APPLY); ?>
-                    <?php if (sizeof($filters)){ ?>
+                    <?php if (count($filters)){ ?>
                         <a class="btn btn-secondary cancel_filter_link my-2 my-md-0 mx-md-2" href="<?php echo ((is_array($page_url) && !empty($page_url['cancel'])) ? $page_url['cancel'] : $form_url); ?>">
                             <?php echo LANG_CANCEL; ?>
                         </a>

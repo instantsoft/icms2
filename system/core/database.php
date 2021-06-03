@@ -860,7 +860,7 @@ class cmsDatabase {
         $sql = "CREATE TABLE IF NOT EXISTS `{#}{$table_name}` (\n";
 
         $fcount = 0;
-        $ftotal = sizeof($structure);
+        $ftotal = count($structure);
 
         $indexes = $fulltext = $unique = $indexes_created = [];
 

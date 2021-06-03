@@ -351,7 +351,7 @@ class cmsForm {
     private function addStructure($id, $structure) {
 
         if ($id === null) {
-            $id = sizeof($this->structure);
+            $id = count($this->structure);
         }
 
         if ($this->isFieldsetExists($id)) {
@@ -373,7 +373,7 @@ class cmsForm {
     private function addStructureToBeginning($id, $structure) {
 
         if ($id === null) {
-            $id = sizeof($this->structure);
+            $id = count($this->structure);
         }
 
         if ($this->isFieldsetExists($id)) {
@@ -396,7 +396,7 @@ class cmsForm {
     private function addStructureAfter($after_id, $id, $structure) {
 
         if ($id === null) {
-            $id = sizeof($this->structure);
+            $id = count($this->structure);
         }
 
         if ($this->isFieldsetExists($id)) {
@@ -936,7 +936,7 @@ class cmsForm {
 
         }
 
-        if (!sizeof($errors)) { return false; }
+        if (!count($errors)) { return false; }
 
         return $errors;
     }

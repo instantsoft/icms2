@@ -229,7 +229,7 @@ class modelMenu extends cmsModel {
                         }
 
                         if (isset($hook_result['items']) && is_array($hook_result['items'])) {
-                            $item['childs_count'] = sizeof($hook_result['items']);
+                            $item['childs_count'] = count($hook_result['items']);
                         }
 
                         $is_root_added = true;

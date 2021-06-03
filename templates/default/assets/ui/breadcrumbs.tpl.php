@@ -31,7 +31,7 @@
                 <meta itemprop="position" content="<?php echo $position++; ?>" />
             </li>
 
-            <?php if ($id < sizeof($breadcrumbs)-1){ ?>
+            <?php if ($id < count($breadcrumbs)-1){ ?>
                 <li class="sep"></li>
             <?php } ?>
 

@@ -662,7 +662,7 @@ class cmsController {
 
         }
 
-        if (!sizeof($errors)) { return false; }
+        if (!count($errors)) { return false; }
 
         return $errors;
 
