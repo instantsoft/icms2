@@ -1,1 +1,7 @@
+<IfModule php7_module>
 php_flag engine 0
+</IfModule>
+ 
+<IfModule php8_module>
+php_flag engine 0
+</IfModule>
