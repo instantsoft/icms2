@@ -668,6 +668,7 @@
     define('LANG_HOUR2',                     'hours');
     define('LANG_HOUR10',                    'hours');
     define('LANG_MINUTES',                   'Minutes');
+    define('LANG_MINUTE_1',                  'minute');
     define('LANG_MINUTE1',                   'minute');
     define('LANG_MINUTE2',                   'minutes');
     define('LANG_MINUTE10',                  'minutes');

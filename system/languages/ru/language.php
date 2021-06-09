@@ -667,6 +667,7 @@
     define('LANG_HOUR2',                     'часа');
     define('LANG_HOUR10',                    'часов');
     define('LANG_MINUTES',                   'Минуты');
+    define('LANG_MINUTE_1',                  'минуту');
     define('LANG_MINUTE1',                   'минута');
     define('LANG_MINUTE2',                   'минуты');
     define('LANG_MINUTE10',                  'минут');

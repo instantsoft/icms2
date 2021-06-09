@@ -310,7 +310,7 @@ class modelContent extends cmsModel {
         return $this->getCount($table_name);
     }
 
-    public function getContentFields($ctype_name, $item_id = false, $enabled = true) {
+    public function getContentFields($ctype_name, $item_id = false, $enabled = true, $show_fields = []) {
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
@@ -322,7 +322,11 @@ class modelContent extends cmsModel {
 
         $this->orderBy('ordering');
 
-        $fields = $this->get($table_name, function($item, $model) use ($ctype_name, $item_id) {
+        $fields = $this->get($table_name, function($item, $model) use ($ctype_name, $item_id, $show_fields) {
+
+            if($show_fields && !in_array($item['name'], $show_fields)){
+                return false;
+            }
 
             $item['options']     = cmsModel::yamlToArray($item['options']);
             $item['options']     = array_merge($model->getDefaultContentFieldOptions(), $item['options']);

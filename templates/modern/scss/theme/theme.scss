@@ -126,6 +126,46 @@ button.loading {
 .is_collapse > .field, .is_collapse > .field_tabbed, .hide_field {
     display: none !important;
 }
+.is_collapsed {
+    transition: $transition-base;
+    > legend:before {
+        content: '+';
+        display: inline-block;
+        margin: 0 $spacer 0 $spacer;
+    }
+    &.do_expand {
+        > legend {
+            cursor: pointer;
+            &:before {
+                content: '';
+                display: none;
+            }
+        }
+    }
+}
+.is_collapse {
+    padding: 0 !important;
+    margin: 0 !important;
+    position: relative;
+    background: $light;
+    height: $spacer*2.4;
+    box-sizing: border-box;
+    line-height: $line-height-base*1.35;
+    cursor: pointer;
+    > legend {
+        padding: 0 !important;
+        margin: 0 !important;
+        position: absolute;
+        top: 0;
+        width: 100% !important;
+        box-sizing: border-box;
+        display: block;
+        left: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
 .ft_rmfield {
     > label {
         display: block;

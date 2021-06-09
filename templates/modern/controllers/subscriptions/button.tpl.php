@@ -1,5 +1,5 @@
 <?php $this->addTplJSName('subscriptions'); ?>
-<div class="subscribe_wrap position-relative ml-2 d-flex">
+<div class="subscribe_wrap position-relative ml-2 d-flex flex-shrink-0">
     <a href="#" class="btn subscriber btn-responsive" data-hash="<?php echo $hash; ?>" data-link0="<?php echo $this->href_to('subscribe'); ?>" data-link1="<?php echo $this->href_to('unsubscribe'); ?>" data-text0="<?php echo LANG_USERS_SUBSCRIBE; ?>" data-text1="<?php echo LANG_USERS_UNSUBSCRIBE; ?>" data-issubscribe="<?php echo (int)$user_is_subscribed; ?>" data-target="<?php html(json_encode($target)); ?>">
         <b class="icon-bell">
             <?php html_svg_icon('solid', 'bell'); ?>

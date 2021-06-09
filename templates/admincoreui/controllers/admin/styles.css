@@ -374,6 +374,11 @@ form .field_error .form-control, form .field_error textarea, form .field_error s
 form .field_error .invalid-feedback {
     display: block;
 }
+form .reguired_field>label:after {
+    content: '*';
+    color: #dc3545;
+    padding-left: 0.5rem;
+}
 .ft_hidden {
     display: none;
 }

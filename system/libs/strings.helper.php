@@ -251,7 +251,7 @@ function string_date_age($date, $options, $is_add_back = false) {
  *
  * Пример вывода: "3 дня"
  *
- * @param string $date
+ * @param string | array $date Дата или массив двух дат
  * @param bool $is_add_back Добавлять к строке слово "назад"?
  * @return string
  */
@@ -259,7 +259,11 @@ function string_date_age_max($date, $is_add_back = false) {
 
     if (!$date) { return ''; }
 
-    $diff = real_date_diff($date);
+    if(is_array($date)){
+        $diff = real_date_diff($date[0], $date[1]);
+    } else {
+        $diff = real_date_diff($date);
+    }
 
     $diff_str = '';
 
@@ -276,7 +280,7 @@ function string_date_age_max($date, $is_add_back = false) {
         $diff_str = html_spellcount($diff[3], LANG_HOUR1, LANG_HOUR2, LANG_HOUR10);
     } else
     if ($diff[4]) {
-        $diff_str = html_spellcount($diff[4], LANG_MINUTE1, LANG_MINUTE2, LANG_MINUTE10);
+        $diff_str = html_spellcount($diff[4], LANG_MINUTE_1, LANG_MINUTE2, LANG_MINUTE10);
     }
 
     if (!$diff_str) {

@@ -1,9 +1,10 @@
 <?php
 $this->addTplJSName([
+    'jquery-chosen',
     'jquery-ui',
     'i18n/jquery-ui/'.cmsCore::getLanguageName()
 ]);
-$this->addTplCSSName(['jquery-ui', 'datatables']);
+$this->addTplCSSName(['jquery-ui', 'datatables', 'jquery-chosen']);
 $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perpage'];
 ?>
 
@@ -62,6 +63,14 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
                                     <?php if (!empty($column['filter_select'])){ ?>
 
                                         <?php echo html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'custom-select custom-select-sm'))); ?>
+
+                                    <?php if (!empty($filter_attributes['multiple'])) { ?>
+                                        <?php ob_start(); ?>
+                                        <script type="text/javascript">
+                                            $('#filter_<?php echo $name; ?>').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', placeholder_text_single: '<?php echo LANG_SELECT; ?>', placeholder_text_multiple: '<?php echo LANG_SELECT_MULTIPLE; ?>', disable_search_threshold: 8, width: '100%', allow_single_deselect: true, search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>', search_contains: true, hide_results_on_select: false});
+                                        </script>
+                                        <?php $this->addBottom(ob_get_clean()); ?>
+                                    <?php } ?>
 
                                     <?php } else { ?>
 
