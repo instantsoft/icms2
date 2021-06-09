@@ -34,7 +34,7 @@
                     </th>
                 <?php } ?>
                 <?php if($actions){ ?>
-                    <th width="<?php echo (sizeof($actions) * 30); ?>" class="center" rel="dg_actions">
+                    <th width="<?php echo (count($actions) * 30); ?>" class="center" rel="dg_actions">
                         <?php echo LANG_CP_ACTIONS; ?>
                     </th>
                 <?php } ?>

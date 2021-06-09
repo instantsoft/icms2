@@ -647,7 +647,7 @@ class cmsCore {
         if (isset($segments[1])) { $this->uri_action = $segments[1]; }
 
         // Определяем параметры действия из всех остальных сегментов
-        if (sizeof($segments)>2){
+        if (count($segments)>2){
             $this->uri_params = array_slice($segments, 2);
         }
 

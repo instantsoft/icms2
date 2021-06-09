@@ -71,7 +71,7 @@
     <?php } ?>
 </div>
 
-<?php if ($max_entries && ($count == $max_entries) && (sizeof($entries) > $count) && ($page == 1)){ ?>
+<?php if ($max_entries && ($count == $max_entries) && (count($entries) > $count) && ($page == 1)){ ?>
     <div class="show_more">
         <a href="#wall-more" onclick="return icms.wall.more()"><?php echo LANG_SHOW_ALL; ?></a>
     </div>

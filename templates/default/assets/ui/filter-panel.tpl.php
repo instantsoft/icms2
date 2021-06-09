@@ -55,7 +55,7 @@
                 <div class="spinner filter_loader"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>
                 <div class="buttons">
                     <?php echo html_submit(LANG_FILTER_APPLY); ?>
-                    <?php if (sizeof($filters)){ ?>
+                    <?php if (count($filters)){ ?>
                         <div class="link">
                             <a class="cancel_filter_link" href="<?php echo ((is_array($page_url) && !empty($page_url['cancel'])) ? $page_url['cancel'] : $form_url); ?>">
                                 <?php echo LANG_CANCEL; ?>

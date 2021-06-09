@@ -147,7 +147,7 @@ class modelMessages extends cmsModel {
             ]);
         }
 
-        return sizeof($message_ids) > 1 ? $message_ids : $message_ids[0];
+        return count($message_ids) > 1 ? $message_ids : $message_ids[0];
     }
 
     public function deleteMessages($user_id, $ids) {
@@ -337,7 +337,7 @@ class modelMessages extends cmsModel {
             ]);
         }
 
-        return sizeof($notice_ids) > 1 ? $notice_ids : $notice_ids[0];
+        return count($notice_ids) > 1 ? $notice_ids : $notice_ids[0];
     }
 
     public function deleteNotice($id) {

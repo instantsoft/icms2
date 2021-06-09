@@ -46,12 +46,12 @@ class actionAdminControllersEdit extends cmsAction {
         $ctype = cmsCore::getModel('content')->getContentTypeByName($backend_controller->maintained_ctype ? $backend_controller->maintained_ctype : $controller_name);
 
         // Определяем текущий экшен бакенда
-        $action_name = sizeof($this->params)>1 ? $this->params[1] : 'index';
+        $action_name = count($this->params)>1 ? $this->params[1] : 'index';
 
         //
         // Удаляем из массива параметров название контроллера и экшен
         //
-        if (sizeof($this->params) <= 2) {
+        if (count($this->params) <= 2) {
             $params = array();
         } else {
             $params = $this->params;

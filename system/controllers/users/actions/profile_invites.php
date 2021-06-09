@@ -143,7 +143,7 @@ class actionUsersProfileInvites extends cmsAction {
 
             $this->model_auth->markInviteSended($invite['id'], $this->cms_user->id, $email);
 
-            if ((sizeof($results['success']) + sizeof($results['failed'])) >= $profile['invites_count']) {
+            if ((count($results['success']) + count($results['failed'])) >= $profile['invites_count']) {
                 break;
             }
 

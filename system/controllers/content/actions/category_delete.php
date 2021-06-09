@@ -14,9 +14,9 @@ class actionContentCategoryDelete extends cmsAction {
         $category = $this->model->getCategory($ctype['name'], $this->request->get('id', 0));
         if (!$category) { cmsCore::error404(); }
 
-        if ($category['path'] && sizeof($category['path']) > 1){
+        if ($category['path'] && count($category['path']) > 1){
             $path   = array_values($category['path']);
-            $parent = $path[sizeof($category['path']) - 2];
+            $parent = $path[count($category['path']) - 2];
         }
 
         $this->model->deleteCategory($ctype['name'], $category['id'], true);
