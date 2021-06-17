@@ -405,6 +405,9 @@ class content extends cmsFrontend {
 
         // заполняем поля для шаблона
         if($items){
+
+            list($ctype, $items, $fields) = cmsEventsManager::hook('content_before_fields_list', [$ctype, $items, $fields]);
+
             foreach ($items as $key => $item) {
 
                 $item['ctype'] = $ctype;

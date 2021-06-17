@@ -250,45 +250,41 @@ class cmsPermissions {
      * @param mixed $value Значение правила. Если не передано, значение не учитывается
      * @param string $subject Субъект правила. Если не передан, то одинаков с компонентом
      *
-     * @return array Массив пользователей с данными: id, email, nickname, avatar, notify_options, is_online
+     * @return array Массив пользователей
      */
-    static function getRulesGroupMembers($controller, $name, $value = false, $subject = false) {
+    public static function getRulesGroupMembers($controller, $name, $value = false, $subject = false) {
 
-        if(!$subject){ $subject = $controller; }
+        if (!$subject) { $subject = $controller; }
 
         $model = new cmsModel();
 
         $rule = $model->filterEqual('controller', $controller)->filterEqual('name', $name)->getItem('perms_rules');
-        if(!$rule){ return array(); }
+        if (!$rule) { return []; }
 
         $model->filterEqual('subject', $subject)->filterEqual('rule_id', $rule['id']);
-        if($value){
+        if ($value) {
             $model->filterEqual('value', $value);
         }
 
-        $groups_ids = $model->selectOnly('group_id')->get('perms_users', function($item, $model){
+        $groups_ids = $model->selectOnly('group_id')->get('perms_users', function ($item, $model) {
             return $item['group_id'];
         }, 'group_id');
-        if(!$groups_ids){ return array(); }
-
-        $model->joinSessionsOnline();
+        if (!$groups_ids) { return []; }
 
         return $model->filterIn('group_id', $groups_ids)->
-                selectOnly('user_id', 'id')->
-                joinUser('user_id', array(
-                    'u.notify_options' => 'notify_options',
-                    'u.email'          => 'email',
-                    'u.nickname'       => 'nickname',
-                    'u.avatar'         => 'avatar'
-                ))->
-                get('{users}_groups_members', function($item, $model){
+            selectOnly('i.user_id', 'id')->
+            joinUser('user_id', [
+                'u.notify_options' => 'notify_options',
+                'u.email'          => 'email',
+                'u.slug'           => 'slug',
+                'u.nickname'       => 'nickname',
+                'u.avatar'         => 'avatar'
+            ])->joinSessionsOnline()->get('{users}_groups_members', function ($item, $model) {
 
-                    $item['notify_options'] = cmsModel::yamlToArray($item['notify_options']);
+                $item['notify_options'] = cmsModel::yamlToArray($item['notify_options']);
 
-                    return $item;
-
-                });
-
+                return $item;
+            }) ?: [];
     }
 
 }

@@ -269,16 +269,14 @@ button.loading {
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 80%);
     }
 }
-blockquote {
-    margin: 0 0 $spacer*0.5;
+blockquote, .bb_quote {
+    margin: $spacer 0;
     padding: $spacer*0.75 $spacer;
     background-color: theme-color-level('secondary', $alert-bg-level);
     border-left:5px solid $teal;
-    quotes: "\201C""\201D""\2018""\2019";
     position: relative;
-    display: flex;
     &:before {
-        content: open-quote;
+        content: "\201C";
         font-size: $font-size-base*3;
         position: absolute;
         top: 0;
@@ -454,6 +452,10 @@ img {
             animation: effect_dylan 0.8s ease-out;
         }
     }
+}
+code {
+    display: block;
+    white-space: pre-wrap;
 }
 @keyframes effect_dylan {
   50% {

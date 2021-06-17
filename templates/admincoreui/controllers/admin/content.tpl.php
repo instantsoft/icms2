@@ -150,7 +150,7 @@
 ?>
 
 <div class="row flex-nowrap align-items-stretch mb-4">
-    <div class="col-sm col-xl-2 quickview-wrapper" id="left-quickview">
+    <div class="col-sm col-xl-3 col-xxl-2 quickview-wrapper" id="left-quickview">
         <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
         <div id="datatree" class="card-body bg-white h-100 pt-3">
             <ul id="treeData">
@@ -160,7 +160,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-sm-12 col-xl-10">
+    <div class="col-sm-12 col-xl-9 col-xxl-10">
         <?php $this->renderGrid(false, $grid); ?>
     </div>
 </div>

@@ -52,7 +52,7 @@ $active_tab = false;
                             <?php echo $query['src']; ?>
                         </div>
                         <?php if($query['data']){ ?>
-                            <div class="debug_data mt-2 p-2 bg-light">
+                            <div class="debug_data mt-2 p-2 bg-light text-break">
                                 <?php echo isset($query['data_callback']) ? $query['data_callback']($query['data']) : nl2br(htmlspecialchars($query['data'])); ?>
                             </div>
                         <?php } ?>

@@ -716,8 +716,17 @@ class actionContentItemView extends cmsAction {
 
             }
 
-            return [$ctype, $item];
+            list(
+                $slug,
+                $ctype,
+                $item
+            ) = cmsEventsManager::hook(['content_item_by_slug', "content_{$ctype['name']}_item_by_slug"], [
+                $slug,
+                $ctype,
+                $item
+            ], null, $this->request);
 
+            return [$ctype, $item];
         }
 
         // ничего не нашли

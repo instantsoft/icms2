@@ -162,7 +162,6 @@ span.dynatree-node a{
     padding-right: 3px;
 }
 ul li ul span.dynatree-node a{
-    max-width: 118px;
     text-overflow: ellipsis;
     overflow: hidden;
 }

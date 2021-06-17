@@ -21,8 +21,12 @@
                     <?php $output = $prop['handler']->getFilterInput($value); ?>
                     <?php if (!$output){ continue; } ?>
                     <div class="form-group col-md-12 field ft_<?php echo $prop['type']; ?> f_prop_<?php echo $prop['id']; ?>">
-                        <label class="font-weight-bold"><?php echo $prop['title']; ?></label>
-                        <?php echo $output; ?>
+                        <label class="font-weight-bold clickable" data-toggle="collapse" data-target="#collapse_p<?php echo $prop['id']; ?>">
+                            <span class="collapse__angle-down"><?php html_svg_icon('solid', 'angle-down'); ?></span>
+                            <span class="collapse__angle-up"><?php html_svg_icon('solid', 'angle-up'); ?></span>
+                            <?php echo $prop['title']; ?>
+                        </label>
+                        <div id="collapse_p<?php echo $prop['id']; ?>" class="collapse show"><?php echo $output; ?></div>
                     </div>
                 <?php } ?>
             <?php } ?>

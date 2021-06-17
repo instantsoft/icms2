@@ -172,7 +172,7 @@ class cmsModel {
         $category = $this->getItemByField($this->getContentCategoryTableName($ctype_name), $by_field, $id);
         if (!$category) { return false; }
 
-        $category['path'] = $this->getCategoryPath($ctype_name, $category);
+        $category['path'] = $this->getCategoryPath($ctype_name, $category, $array_fields);
 
         if($array_fields){
             foreach ($array_fields as $array_field) {
@@ -269,7 +269,7 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getCategoryPath($ctype_name, $category) {
+    public function getCategoryPath($ctype_name, $category, $array_fields = []) {
 
         if (!isset($category['ns_left'])){
             $category = $this->getCategory($ctype_name, $category['id']);
@@ -284,8 +284,16 @@ class cmsModel {
 
         $this->useCache('content.categories');
 
-        return $this->get($this->getContentCategoryTableName($ctype_name));
-
+        return $this->get($this->getContentCategoryTableName($ctype_name), function($item, $model) use($array_fields) {
+            if($array_fields){
+                foreach ($array_fields as $array_field) {
+                    if (!empty($item[$array_field])) {
+                        $item[$array_field] = cmsModel::yamlToArray($item[$array_field]);
+                    }
+                }
+            }
+            return $item;
+        });
     }
 
 //============================================================================//
@@ -1224,6 +1232,11 @@ class cmsModel {
     public function selectOnly($field, $as=false){
         $this->select = array();
         $this->select[] = $as ? $field.' as `'.$as.'`' : $field;
+        return $this;
+    }
+
+    public function joinQuery($query, $as, $on, $join_type = self::INNER_JOIN){
+        $this->join .= $join_type.' '.$query.' as '.$as.' ON '.$on.PHP_EOL;
         return $this;
     }
 

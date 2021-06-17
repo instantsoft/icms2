@@ -607,10 +607,11 @@ class cmsFormField {
 
         } else if ($this->hasDefaultValue()) {
 
-            $items = $this->items = (!empty($this->show_empty_value) ? ['' => ''] : [])  + string_explode_list($this->getDefaultValue());
+            $this->items = (!empty($this->show_empty_value) ? ['' => ''] : [])  + string_explode_list($this->getDefaultValue());
 
-            ksort($items);
+            ksort($this->items, SORT_NATURAL);
 
+            $items = $this->items;
         }
 
         return $items;

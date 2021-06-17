@@ -2,7 +2,8 @@
 
 Hello, {nickname}.
 
-An update has been made on your subscription list «<a href="{list_url}">{title}</a>»: {subjects}.
+An update has been made on your subscription list «<a href="{list_url}">{title}</a>»
+{subjects}
 
 --
  Best regards, {site}
