@@ -38,12 +38,11 @@ class cmsCore {
         return self::$instance;
     }
 
-    public function __construct(){
+    public function __construct() {
 
         $this->request = new cmsRequest($_REQUEST);
 
         self::detectLanguage();
-
     }
 
     /*
@@ -66,29 +65,37 @@ class cmsCore {
 
         self::$language = $config->language;
 
-        if(!empty($_SERVER['REQUEST_URI']) && !empty($config->is_user_change_lang)){
+        if (!empty($_SERVER['REQUEST_URI']) && !empty($config->is_user_change_lang)) {
 
             $segments = explode('/', mb_substr($_SERVER['REQUEST_URI'], mb_strlen($config->root)));
 
+            if (empty($segments[0])) { return; }
+
+            $query_str = '';
+            // Есть ли в GET параметры
+            $pos_que   = mb_strpos($segments[0], '?');
+            if ($pos_que !== false) {
+                $query_str = mb_substr($segments[0], $pos_que);
+                $segments[0] = strstr($segments[0], '?', true);
+            }
+
             // язык может быть только двухбуквенный, определяем его по первому сегменту
-            if (!empty($segments[0]) && preg_match('/^[a-z]{2}$/i', $segments[0])) {
-                if(is_dir($config->root_path.'system/languages/'.$segments[0].'/')){
+            if (preg_match('/^[a-z]{2}$/i', $segments[0])) {
+                if (is_dir($config->root_path . 'system/languages/' . $segments[0] . '/')) {
                     // язык по умолчанию без префиксов, дубли нам не нужны
-                    if($segments[0] != $config->language){
+                    if ($segments[0] != $config->language) {
 
                         // включаем для моделей поддержку
                         cmsModel::globalLocalizedOn();
 
-                        self::$language = self::$language_href_prefix = $segments[0]; unset($segments[0]);
+                        self::$language = self::$language_href_prefix = $segments[0];
+                        unset($segments[0]);
 
-                        $_SERVER['REQUEST_URI'] = $config->root.implode('/', $segments);
-
+                        $_SERVER['REQUEST_URI'] = $config->root . implode('/', $segments) . $query_str;
                     }
                 }
             }
-
         }
-
     }
 
     public static function getLanguageHrefPrefix() {
@@ -99,7 +106,7 @@ class cmsCore {
         return self::$language;
     }
 
-    public static function changeLanguage($new_lang){
+    public static function changeLanguage($new_lang) {
         self::$language = $new_lang;
     }
 
@@ -112,14 +119,13 @@ class cmsCore {
      * @param boolean $show_date Показывать дату версии
      * @return string
      */
-    public static function getVersion($show_date = false){
+    public static function getVersion($show_date = false) {
 
         $version = self::getVersionArray();
 
         if (!$show_date && isset($version['date'])) { unset($version['date']); }
 
-        return $version['version'].($show_date ? ' '.LANG_FROM.' '.$version['date'] : '');
-
+        return $version['version'] . ($show_date ? ' ' . LANG_FROM . ' ' . $version['date'] : '');
     }
 
     /**
@@ -134,40 +140,38 @@ class cmsCore {
      *  -- date
      * @return array
      */
-    public static function getVersionArray(){
+    public static function getVersionArray() {
 
-        if(self::$core_version === null){
+        if (self::$core_version === null) {
 
             $file = cmsConfig::get('root_path') . 'system/config/version.ini';
-            if (!is_readable($file)){ die('system/config/version.ini not found'); }
+            if (!is_readable($file)) {
+                die('system/config/version.ini not found');
+            }
 
             $version = parse_ini_file($file);
 
-            self::$core_version = array(
+            self::$core_version = [
                 'date'    => $version['date'],
-                'version' => $version['major'] .'.'. $version['minor'] .'.'. $version['build'],
+                'version' => $version['major'] . '.' . $version['minor'] . '.' . $version['build'],
                 'raw'     => $version
-            );
-
+            ];
         }
 
         return self::$core_version;
-
     }
 
 //============================================================================//
 //============================================================================//
 
-    public static function isWritable($path, $is_force_mkdir=true) {
+    public static function isWritable($path, $is_force_mkdir = true) {
 
-        if ($is_force_mkdir && (!file_exists($path))) { @mkdir($path); }
+        if ($is_force_mkdir && (!file_exists($path))) {
+            @mkdir($path);
+        }
 
         return (is_writable($path));
-
     }
-
-//============================================================================//
-//============================================================================//
 
     /**
      * Подключает файл
