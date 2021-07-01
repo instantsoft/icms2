@@ -109,7 +109,7 @@
             <div class="text<?php if($dim_negative && $entry['rating'] < 0){ ?> bad<?php echo ($entry['rating'] < -6 ? 6 : abs($entry['rating'])) ?> bad<?php } ?>">
                 <?php echo $entry['content_html']; ?>
             </div>
-            <?php if ($is_controls || !empty($is_moderator)){ ?>
+            <?php if (empty($entry['hide_controls']) && ($is_controls || !empty($is_moderator))){ ?>
                 <div class="links">
                     <?php if ($no_approved_class){ ?>
                         <a href="#approve" class="approve hide_approved" onclick="return icms.comments.approve(<?php echo $entry['id']; ?>)"><?php echo LANG_COMMENTS_APPROVE; ?></a>

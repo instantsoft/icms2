@@ -12,6 +12,8 @@ define('LANG_BS4_SHOW_SEARCH_FORM_2', 'Только когда меню скры
 define('LANG_BS4_TOGGLER_ICON', 'Показывать иконку показа меню, когда оно скрыто');
 define('LANG_BS4_TOGGLER_ICON_HINT', 'Если выключено, вы можете разместить HTML иконки на любой другой позиции');
 define('LANG_BS4_TOGGLER_SHOW_SITENAME', 'Показывать название сайта');
+define('LANG_BS4_TOGGLER_SHOW_LOGO', 'Показывать логотип');
+define('LANG_BS4_TOGGLER_RIGHT_MENU', 'Блок меню выровнен по правой стороне');
 define('LANG_BS4_MENU_NAV_STYLE', 'Расположение меню');
 define('LANG_BS4_MENU_NAV_STYLE_ADD', 'Расположение меню на других разрешениях');
 define('LANG_BS4_MENU_NAV_STYLE_HL', 'Горизонтальное, по левому краю');

@@ -232,11 +232,21 @@ button.loading {
 .icms-body-toolbox {
     h1 {
         margin: 0;
-        flex: 1 1 auto !important;
+        order: 1;
     }
-    margin-bottom: $spacer*0.5;
-    display: flex !important;
-    align-items: center !important;
+    margin-bottom: $spacer*1.5;
+    display: flex;
+    flex-direction: column;
+}
+@include media-breakpoint-up(lg) {
+    .icms-body-toolbox {
+        h1 {
+            flex: 1 1 auto !important;
+            order: 0;
+        }
+        align-items: center !important;
+        flex-direction: row;
+    }
 }
 @include media-breakpoint-between(xs,sm){
   .btn-responsive {
@@ -332,7 +342,7 @@ blockquote, .bb_quote {
     color: $orange;
     font-size: $font-size-base;
 }
-form fieldset {
+form .without-tabs fieldset {
     padding: $spacer $spacer 0 $spacer;
     border-radius: $card-border-radius;
     border: solid 1px $card-border-color;

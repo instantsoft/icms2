@@ -44,7 +44,7 @@ span.dynatree-radio,
 span.dynatree-drag-helper-img,
 #dynatree-drop-marker{
     width: 16px;
-    height: 15px;
+    height: 16px;
     display: inline-block; /* Required to make a span sizeable */
     vertical-align: top;
     background-repeat: no-repeat;
@@ -63,21 +63,21 @@ span.dynatree-connector{
     background-position: -16px -64px;
 }
 span.dynatree-expander{
-    background-position: 0px -80px;
+    background-position: 0px -78px;
     cursor: pointer;
 }
 .dynatree-exp-cl span.dynatree-expander{
     background-position: 0px -96px;
 }
 .dynatree-exp-cd span.dynatree-expander{
-    background-position: -64px -80px;
+    background-position: -64px -78px;
 }
 .dynatree-exp-cdl span.dynatree-expander{
-    background-position: -64px -96px;
+    background-position: -64px -94px;
 }
 .dynatree-exp-e span.dynatree-expander,
 .dynatree-exp-ed span.dynatree-expander{
-    background-position: -32px -80px;
+    background-position: -32px -78px;
 }
 .dynatree-exp-el span.dynatree-expander,
 .dynatree-exp-edl span.dynatree-expander{
@@ -130,10 +130,10 @@ span.dynatree-icon{
     background-position: 0px -2px;
 }
 .dynatree-ico-cf span.dynatree-icon{
-    background-position: 0px -17px;
+    background-position: 0px -14px;
 }
 .dynatree-ico-ef span.dynatree-icon {
-    background-position: -65px -17px;
+    background-position: -65px -14px;
 }
 .dynatree-statusnode-wait span.dynatree-icon{
     background-image: url("../images/datatree/loading.svg");
@@ -142,8 +142,8 @@ span.dynatree-icon{
     background-position: 0px -112px;
 }
 span.dynatree-node{
+    align-items: flex-start;
     display: flex;
-    align-items: center;
 }
 ul.dynatree-container a{
     color: #23282c;
@@ -155,6 +155,7 @@ ul.dynatree-container a{
 }
 ul.dynatree-container a:hover{
     background-color: #f0f3f5;
+    border-radius: 2px;
 }
 span.dynatree-node a{
     display: inline-block;
@@ -162,8 +163,8 @@ span.dynatree-node a{
     padding-right: 3px;
 }
 ul li ul span.dynatree-node a{
-    text-overflow: ellipsis;
-    overflow: hidden;
+    white-space:normal;
+    max-width:calc(100% - 40px);
 }
 .no-overflow ul li ul span.dynatree-node a {
     max-width: none;
@@ -175,6 +176,7 @@ ul.dynatree-container a:focus,
 span.dynatree-focused a:link {
     background-color: #c8ced3;
     outline-color: #136684;
+    border-radius: 2px;
 }
 span.dynatree-selected a{
     color: 	#4dbd74;
@@ -183,6 +185,7 @@ span.dynatree-selected a{
 span.dynatree-active a{
     background-color: #20a8d8 !important;
     color: #FFF !important;
+    border-radius: 2px;
 }
 div.dynatree-drag-helper a{
     border: 1px solid #5c6873;

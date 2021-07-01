@@ -102,6 +102,16 @@ class onBootstrap4WidgetMenuForm extends cmsAction {
             'visible_depend' => ['options:menu_type' => ['show' => ['navbar']]]
         )));
 
+        $form->addField('menu_options', new fieldCheckbox('options:toggler_show_logo', array(
+            'title' => LANG_BS4_TOGGLER_SHOW_LOGO,
+            'visible_depend' => ['options:toggler_icon' => ['show' => ['1']], 'options:menu_type' => ['hide' => ['nav']]]
+        )));
+
+        $form->addField('menu_options', new fieldCheckbox('options:toggler_right_menu', array(
+            'title' => LANG_BS4_TOGGLER_RIGHT_MENU,
+            'visible_depend' => ['options:toggler_icon' => ['show' => ['1']], 'options:toggler_show_logo' => ['hide' => ['0']], 'options:toggler_icon' => ['hide' => ['0']], 'options:menu_type' => ['hide' => ['nav']]]
+        )));
+
         $form->addField('menu_options', new fieldCheckbox('options:toggler_show_sitename', array(
             'title' => LANG_BS4_TOGGLER_SHOW_SITENAME,
             'visible_depend' => ['options:toggler_icon' => ['show' => ['1']], 'options:menu_type' => ['hide' => ['nav']]]

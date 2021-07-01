@@ -12,6 +12,8 @@ define('LANG_BS4_SHOW_SEARCH_FORM_2', 'Only when the menu is hidden');
 define('LANG_BS4_TOGGLER_ICON', 'Show the menu icon when it is hidden');
 define('LANG_BS4_TOGGLER_ICON_HINT', 'If disabled, you can place HTML icons in any other position');
 define('LANG_BS4_TOGGLER_SHOW_SITENAME', 'Show site name');
+define('LANG_BS4_TOGGLER_SHOW_LOGO', 'Show logo');
+define('LANG_BS4_TOGGLER_RIGHT_MENU', 'Menu block is right aligned');
 define('LANG_BS4_MENU_NAV_STYLE', 'Menu style');
 define('LANG_BS4_MENU_NAV_STYLE_ADD', 'Menu style at other resolutions ');
 define('LANG_BS4_MENU_NAV_STYLE_HL', 'Horizontal, Left');

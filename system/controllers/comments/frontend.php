@@ -80,11 +80,11 @@ class comments extends cmsFrontend {
 
         $rss_link = '';
         if ($this->isControllerEnabled('rss') && $this->model->isRssFeedEnable()){
-            $rss_link = href_to('rss', 'feed', 'comments').'?'.http_build_query(array(
+            $rss_link = href_to('rss', 'feed', 'comments').'?'.http_build_query([
                 'tc' => $this->target_controller,
                 'ts' => $this->target_subject,
                 'ti' => $this->target_id
-            ));
+            ]);
         }
 
         if(!$this->comments_title){
@@ -102,10 +102,11 @@ class comments extends cmsFrontend {
             'target_subject' => $this->target_subject
         ];
 
-        return array(
+        return [
             'name'  => 'icms',
+            'icon'  => $rss_link ? ['href' => $rss_link, 'icon' => 'rss', 'title' => 'RSS', 'class' => 'inline_rss_icon'] : [],
             'title' => $this->comments_title,
-            'html'  => $this->cms_template->renderInternal($this, 'list', array(
+            'html'  => $this->cms_template->renderInternal($this, 'list', [
                 'user'              => $this->cms_user,
                 'editor_params'     => $editor_params,
                 'target_controller' => $this->target_controller,
@@ -123,8 +124,8 @@ class comments extends cmsFrontend {
                 'guest_name'        => cmsUser::getCookie('comments_guest_name', 'string', function ($cookie){ return trim(strip_tags($cookie)); }),
                 'guest_email'       => cmsUser::getCookie('comments_guest_email', 'string', function ($cookie){ return trim(strip_tags($cookie)); }),
                 'is_can_rate'       => cmsUser::isAllowed('comments', 'rate')
-            ))
-        );
+            ])
+        ];
 
     }
 

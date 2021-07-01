@@ -28,6 +28,15 @@ $comment-rating-size: 30px;
         }
     }
 }
+.icms-comments {
+    &__tabs {
+        &-tab {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+    }
+}
 .icms-comments-ns {
     @each $level in $ns-levels{
         &.ns-#{$level} {

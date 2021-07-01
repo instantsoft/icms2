@@ -7,19 +7,29 @@
         if ($widget->options['navbar_color_scheme']) {
             $nav_class[] = $widget->options['navbar_color_scheme'];
         }
+        $site_name = html(cmsConfig::get('sitename'), false);
     ?>
     <nav class="<?php echo implode(' ', $nav_class); ?>">
         <?php if ($widget->options['toggler_icon']) { ?>
-            <?php if ($widget->options['toggler_show_sitename']) { ?>
+            <?php if ($widget->options['toggler_show_sitename'] && empty($widget->options['toggler_show_logo'])) { ?>
                 <span class="navbar-brand icms-navbar-brand__show_on_hide">
-                    <?php echo cmsConfig::get('sitename'); ?>
+                    <?php echo $site_name; ?>
                 </span>
+            <?php } ?>
+            <?php if (!empty($widget->options['toggler_show_logo'])) { ?>
+                <<?php if($core->uri) { ?>a href="<?php echo href_to_home(); ?>"<?php } else { ?>span<?php } ?> class="navbar-brand flex-shrink-0">
+                    <img src="<?php echo $logos['small_logo']; ?>" class="d-sm-none" alt="<?php echo $site_name; ?>">
+                    <img src="<?php echo $logos['logo']; ?>" class="d-none d-sm-block" alt="<?php echo $site_name; ?>">
+                    <?php if ($widget->options['toggler_show_sitename']) { ?>
+                        <?php echo $site_name; ?>
+                    <?php } ?>
+                </<?php if($core->uri) { ?>a<?php } else { ?>span<?php } ?>>
             <?php } ?>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#target-<?php echo $widget->options['menu']; ?>">
                 <span class="navbar-toggler-icon"></span>
             </button>
         <?php } ?>
-        <div class="collapse navbar-collapse<?php if (!$widget->options['navbar_expand']) { ?> show<?php } ?>" id="target-<?php echo $widget->options['menu']; ?>">
+        <div class="collapse<?php if (!empty($widget->options['toggler_right_menu'])) { ?> ml-auto flex-grow-0<?php } ?> navbar-collapse<?php if (!$widget->options['navbar_expand']) { ?> show<?php } ?>" id="target-<?php echo $widget->options['menu']; ?>">
             <?php
                 $navbar_class = ['navbar-nav'];
                 if (!empty($widget->options['menu_nav_style'])) {

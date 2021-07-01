@@ -128,7 +128,7 @@
                 <?php echo $entry['content_html']; ?>
             <?php } ?>
         </div>
-        <?php if (!$entry['is_deleted'] && ($is_controls || !empty($is_moderator))){ ?>
+        <?php if (!$entry['is_deleted'] && empty($entry['hide_controls']) && ($is_controls || !empty($is_moderator))){ ?>
             <div class="icms-comment-controls mt-2">
                 <?php if ($no_approved_class){ ?>
                     <a href="#approve" class="btn btn-outline-success btn-sm border-0 mr-1 approve hide_approved" onclick="return icms.comments.approve(<?php echo $entry['id']; ?>)">

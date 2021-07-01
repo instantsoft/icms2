@@ -100,6 +100,7 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgAllowTagParams('div', array('style' => '#text', 'class' => '#text'));
         $jevix->cfgAllowTagParams('spoiler', array('title' => '#text'));
         $jevix->cfgAllowTagParams('code', array('type' => '#text'));
+        $jevix->cfgAllowTagParams('pre', array('class' => '#text'));
         $jevix->cfgAllowTagParams('figure', array('style' => '#text', 'class' => '#text'));
         $jevix->cfgAllowTagParams('figcaption', array('style' => '#text', 'class' => '#text'));
         $jevix->cfgAllowTagParams('h2', array('id' => '#text', 'class' => '#text'));
@@ -155,6 +156,7 @@ class onTypographHtmlFilter extends cmsAction {
 
         // Ставим колбэк для кода
         $jevix->cfgSetTagCallbackFull('code', array($this, 'parseCode'));
+        $jevix->cfgSetTagCallbackFull('pre', array($this, 'parsePre'));
 
         // Ставим колбэк для спойлеров
         $jevix->cfgSetTagCallbackFull('spoiler', array($this, 'parseSpoiler'));
@@ -300,7 +302,19 @@ class onTypographHtmlFilter extends cmsAction {
         $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
 
         return '<div class="bb_tag_code">'.$geshi->parse_code().'</div>';
+    }
 
+    public function parsePre($tag, $params, $content){
+
+        $content = htmlspecialchars_decode($content);
+        $content = preg_replace('#^<code>(.*)<\/code>$#uis', '$1', $content);
+
+        cmsCore::loadLib('geshi/geshi', 'GeSHi');
+
+        $geshi = new GeSHi($content, (isset($params['class']) ? str_replace('language-', '', $params['class']) : 'php'));
+        $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
+
+        return '<div class="bb_tag_code">'.$geshi->parse_code().'</div>';
     }
 
 }

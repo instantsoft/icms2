@@ -2,38 +2,34 @@
 $this->addTplJSName('jquery-scroll');
 $this->addTplJSName('comments');
 ?>
-<div class="d-flex justify-content-between align-items-center mt-3 mt-md-4">
-<?php if ($can_add){ ?>
-    <div id="comments_add_link">
-        <a href="#reply" class="btn btn-primary ajaxlink" onclick="return icms.comments.add()">
-            <?php echo $this->controller->labels->add; ?>
-        </a>
+<?php if ($can_add || $user->is_logged){ ?>
+    <div class="d-flex justify-content-between align-items-center mt-3 mt-md-4">
+    <?php if ($can_add){ ?>
+        <div id="comments_add_link">
+            <a href="#reply" class="btn btn-primary ajaxlink" onclick="return icms.comments.add()">
+                <?php echo $this->controller->labels->add; ?>
+            </a>
+        </div>
+    <?php } ?>
+    <?php if ($user->is_logged){ ?>
+        <div class="d-flex">
+            <?php if ($is_karma_allowed){ ?>
+                <a href="#" id="is_track" data-is_tracking="<?php echo (int)!$is_tracking; ?>" class="btn btn-<?php if($is_tracking){ ?>secondary<?php } else { ?>primary<?php } ?> icms-comments-tracking position-relative mr-2" data-toggle="tooltip" data-placement="top" title="<?php html(!$is_tracking ? $this->controller->labels->track : LANG_COMMENTS_TRACK_STOP); ?>" data-tracking_title="<?php html($this->controller->labels->track); ?>" data-tracking_stop_title="<?php html(LANG_COMMENTS_TRACK_STOP); ?>">
+                    <b class="icms-comments-track-icon <?php if($is_tracking){ ?>d-none<?php } ?>">
+                        <?php html_svg_icon('solid', 'bell'); ?>
+                    </b>
+                    <b class="icms-comments-track-icon <?php if(!$is_tracking){ ?>d-none<?php } ?>">
+                        <?php html_svg_icon('solid', 'bell-slash'); ?>
+                    </b>
+                </a>
+            <?php } ?>
+            <a id="icms-refresh-id" href="#refresh" data-toggle="tooltip" data-placement="right" class="btn btn-secondary refresh_btn d-none" onclick="return icms.comments.refresh()" title="<?php echo $this->controller->labels->refresh; ?>">
+                <?php html_svg_icon('solid', 'sync-alt'); ?>
+            </a>
+        </div>
+    <?php } ?>
     </div>
 <?php } ?>
-    <div class="d-flex">
-    <?php if ($user->is_logged){ ?>
-        <?php if ($is_karma_allowed){ ?>
-            <a href="#" id="is_track" data-is_tracking="<?php echo (int)!$is_tracking; ?>" class="btn btn-<?php if($is_tracking){ ?>secondary<?php } else { ?>primary<?php } ?> icms-comments-tracking position-relative" data-toggle="tooltip" data-placement="top" title="<?php html(!$is_tracking ? $this->controller->labels->track : LANG_COMMENTS_TRACK_STOP); ?>" data-tracking_title="<?php html($this->controller->labels->track); ?>" data-tracking_stop_title="<?php html(LANG_COMMENTS_TRACK_STOP); ?>">
-                <b class="icms-comments-track-icon <?php if($is_tracking){ ?>d-none<?php } ?>">
-                    <?php html_svg_icon('solid', 'bell'); ?>
-                </b>
-                <b class="icms-comments-track-icon <?php if(!$is_tracking){ ?>d-none<?php } ?>">
-                    <?php html_svg_icon('solid', 'bell-slash'); ?>
-                </b>
-            </a>
-        <?php } ?>
-        <a id="icms-refresh-id" href="#refresh" data-toggle="tooltip" data-placement="right" class="btn btn-secondary refresh_btn d-none" onclick="return icms.comments.refresh()" title="<?php echo $this->controller->labels->refresh; ?>">
-            <?php html_svg_icon('solid', 'sync-alt'); ?>
-        </a>
-    <?php } ?>
-    <?php if ($rss_link){ ?>
-        <a href="<?php echo $rss_link; ?>" class="btn ml-2 d-none d-lg-block inline_rss_icon" title="RSS">
-            <?php html_svg_icon('solid', 'rss'); ?>
-        </a>
-    <?php } ?>
-    </div>
-</div>
-
 
 <div id="comments_list" class="my-3 my-md-4">
 
