@@ -87,6 +87,7 @@ function check_db(){
     }
 
     $mysqli->set_charset($db['db_charset']);
+    $mysqli->query("SET sql_mode=''");
 
     $collation_name = get_db_collation($db['db_charset']);
 
