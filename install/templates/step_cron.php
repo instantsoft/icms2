@@ -8,7 +8,7 @@
 </ul>
 
 <p><?php echo LANG_CRON_EXAMPLE; ?></p>
-<pre><?php echo $php_path ? $php_path : 'php'; ?> -f <?php echo $doc_root; ?>/cron.php <?php echo $_SERVER['HTTP_HOST']; ?> > /dev/null</pre>
+<pre>cd <?php echo $doc_root ?>/ && php cron.php > /dev/null</pre>
 
 <p><?php echo LANG_CRON_SUPPORT_1, ' ', LANG_CRON_SUPPORT_2; ?></p>
 
