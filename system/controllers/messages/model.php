@@ -220,7 +220,7 @@ class modelMessages extends cmsModel {
         $this->filterIn('from_id', [$user_id, $contact_id]);
         $this->filterIsNull('is_deleted');
 
-        $this->orderBy('id', 'desc');
+        $this->orderBy('date_pub', 'desc');
 
         $messages = $this->get('{users}_messages', function ($item, $model) {
 

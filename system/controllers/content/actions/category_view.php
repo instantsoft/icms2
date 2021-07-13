@@ -16,6 +16,11 @@ class actionContentCategoryView extends cmsAction {
 
         list($ctype, $category, $slug) = $this->getCategoryAndSlugAndCtype();
 
+        // Скрытая категория
+        if(!empty($category['is_hidden'])){
+            return cmsCore::error404();
+        }
+
         // Текущий набор
         $dataset = $this->request->get('dataset', '');
 
@@ -257,7 +262,9 @@ class actionContentCategoryView extends cmsAction {
 
             if (!empty($category['path'])) {
                 foreach ($category['path'] as $c) {
-                    $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
+                    if(empty($c['is_hidden'])){
+                        $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
+                    }
                 }
             }
         }

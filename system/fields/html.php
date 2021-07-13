@@ -111,6 +111,7 @@ class fieldHtml extends cmsFormField {
     public function afterParse($value, $item){
 
         if ($this->getOption('parse_patterns')){
+            $value = string_replace_svg_icons($value);
             $value = string_replace_keys_values_extended($value, $item);
         }
 

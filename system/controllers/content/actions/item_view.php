@@ -432,7 +432,9 @@ class actionContentItemView extends cmsAction {
 
                         if(!empty($item['category']['path'])){
                             foreach($item['category']['path'] as $c){
-                                $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
+                                if(empty($c['is_hidden'])){
+                                    $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
+                                }
                             }
                         }
 
@@ -442,7 +444,6 @@ class actionContentItemView extends cmsAction {
             }
 
             $this->cms_template->addBreadcrumb($item['title']);
-
         }
 
         $tool_buttons = $this->getToolButtons($ctype, $item, $is_moderator, $childs);

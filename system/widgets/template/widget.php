@@ -21,7 +21,31 @@ class widgetTemplate extends cmsWidget {
                 return false;
             }
         } elseif($type === 'smessages') {
+
             $messages = cmsUser::getSessionMessages();
+
+            if($this->options['session_type'] === 'toastr'){
+
+                $template->addTplCSSName(['toastr']);
+                $template->addTplJSName(['vendors/toastr/toastr.min']);
+
+                ob_start(); ?>
+                <script>
+                    toastr.options = {progressBar: true, preventDuplicates: true, timeOut: 20000, newestOnTop: true, closeButton: true, hideDuration: 400};
+                    <?php if ($messages){ ?>
+                        $(function(){
+                        <?php foreach($messages as $message){ ?>
+                            toastr.<?php echo $message['class']; ?>('<?php echo str_replace(["\n", "'"], ' ', $message['text']); ?>');
+                         <?php } ?>
+                        });
+                     <?php } ?>
+                </script>
+                <?php $template->addBottom(ob_get_clean());
+
+                // Чтобы не выводилась пустая позиция в виджете
+                return false;
+            }
+
         } elseif($type === 'site_closed') {
             if ($config->is_site_on){
                 return false;

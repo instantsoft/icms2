@@ -119,7 +119,7 @@
             <?php } ?>
         </h6>
 
-        <div class="icms-comment-html<?php if($dim_negative && $entry['rating'] < 0){ ?> bad<?php echo ($entry['rating'] < -6 ? 6 : abs($entry['rating'])) ?> bad<?php } ?>">
+        <div class="icms-comment-html text-break<?php if($dim_negative && $entry['rating'] < 0){ ?> bad<?php echo ($entry['rating'] < -6 ? 6 : abs($entry['rating'])) ?> bad<?php } ?>">
             <?php if($entry['is_deleted']){ ?>
                 <div class="alert alert-secondary">
                     <?php echo LANG_COMMENT_DELETED; ?>

@@ -9,37 +9,14 @@
 <?php } elseif($widget->options['type'] === 'breadcrumbs') { ?>
     <?php $this->breadcrumbs($widget->options['breadcrumbs']); ?>
 <?php } elseif($widget->options['type'] === 'smessages') { ?>
-    <?php if($widget->options['session_type'] === 'toastr'){ ?>
-
-        <?php $this->addTplCSSName([
-            'toastr'
-        ]); ?>
-        <?php $this->addTplJSName([
-            'vendors/toastr/toastr.min',
-        ]); ?>
-
-        <?php ob_start(); ?>
-        <script>
-            toastr.options = {progressBar: true, preventDuplicates: true, timeOut: 5000, newestOnTop: true, closeButton: true, hideDuration: 400};
-            <?php if ($messages){ ?>
-                $(function(){
-                <?php foreach($messages as $message){ ?>
-                    toastr.<?php echo $message['class']; ?>('<?php echo str_replace(["\n", "'"], ' ', $message['text']); ?>');
-                 <?php } ?>
-                });
-             <?php } ?>
-        </script>
-        <?php $this->addBottom(ob_get_clean()); ?>
-    <?php } else { ?>
-        <?php if ($messages){ foreach($messages as $message){ ?>
-        <div class="alert alert-<?php echo str_replace(['error'], ['danger'], $message['class']); ?> alert-dismissible fade show" role="alert">
-            <?php echo $message['text']; ?>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <?php } } ?>
-    <?php } ?>
+    <?php if ($messages){ foreach($messages as $message){ ?>
+    <div class="alert alert-<?php echo str_replace(['error'], ['danger'], $message['class']); ?> alert-dismissible fade show" role="alert">
+        <?php echo $message['text']; ?>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <?php } } ?>
 <?php } elseif($widget->options['type'] === 'copyright') { ?>
     <div class="d-flex align-items-center text-muted icms-links-inherit-color">
         <a href="<?php echo $this->options['owner_url'] ? $this->options['owner_url'] : href_to_home(); ?>">

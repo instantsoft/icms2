@@ -39,7 +39,13 @@ class formRedirectOptions extends cmsForm {
 
                     new fieldCheckbox('is_check_refer', array(
                         'title' => LANG_REDIRECT_IS_CHECK_REFER
-                    ))
+                    )),
+
+                    new fieldHtml('rewrite_json', [
+                        'title' => LANG_REDIRECT_REWRITE_JSON,
+                        'hint' => nl2br(LANG_REDIRECT_REWRITE_JSON_HINT),
+                        'options' => ['editor' => 'ace', 'editor_options' => ['mode' => 'ace/mode/json']],
+                    ])
 
                 )
             )

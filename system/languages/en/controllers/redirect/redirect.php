@@ -22,3 +22,10 @@ define('LANG_REDIRECT_IS_CHECK_LINK_HINT', 'Links are checked through the <a hre
 define('LANG_REDIRECT_WHITE_LIST', 'Domain whitelist');
 define('LANG_REDIRECT_WHITE_LIST_HINT', 'These domains will not be checked.');
 define('LANG_REDIRECT_REDIRECT_TIME', 'Link timer');
+define('LANG_REDIRECT_REWRITE_JSON', 'Rules for redirect and address switching');
+define('LANG_REDIRECT_REWRITE_JSON_HINT', 'In JSON format. An array of the form:
+{
+"source": "regular expression, to compare with the current URI",
+"target": "URI for redirection, if source matches",
+"action": "action when the source is matched: rewrite, redirect, redirect-301"
+}');

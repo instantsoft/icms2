@@ -22,3 +22,10 @@ define('LANG_REDIRECT_IS_CHECK_LINK_HINT', 'Ссылки проверяются 
 define('LANG_REDIRECT_WHITE_LIST', 'Белый список доменов');
 define('LANG_REDIRECT_WHITE_LIST_HINT', 'Эти домены не будут проверяться.');
 define('LANG_REDIRECT_REDIRECT_TIME', 'Таймер перехода для ссылок');
+define('LANG_REDIRECT_REWRITE_JSON', 'Правила для редиректа и подмены адресов');
+define('LANG_REDIRECT_REWRITE_JSON_HINT', 'В формате JSON. Массив вида:
+{
+"source": "регулярное выражение, для сравнения с текущим URI",
+"target": "URI для перенаправления, при совпадении source",
+"action": "действие при совпадении source: rewrite, redirect, redirect-301"
+}');

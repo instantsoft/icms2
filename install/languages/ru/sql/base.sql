@@ -936,7 +936,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (211, 'group_after_leave', 'activity', 211, 1),
 (212, 'groups_after_accept_request', 'activity', 212, 1),
 (213, 'groups_after_update', 'activity', 213, 1),
-(214, 'render_widget_menu_menu', 'bootstrap4', 214, 1);
+(214, 'render_widget_menu_menu', 'bootstrap4', 214, 1),
+(215, 'engine_start', 'redirect', 215, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
