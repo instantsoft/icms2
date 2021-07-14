@@ -21,6 +21,15 @@
                         </div>
                     <?php } ?>
                 </div>
+                <?php
+                $this->addTplJSNameFromContext('vendors/slick/slick.min');
+                $this->addTplCSSNameFromContext('slick');
+                ob_start();
+                ?>
+                <script>
+                    icms.menu.initSwipe('.info_bar', {variableWidth: true});
+                </script>
+                <?php $this->addBottom(ob_get_clean()); ?>
             <?php } ?>
         </div>
     </div>

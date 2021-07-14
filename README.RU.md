@@ -1,3 +1,9 @@
+<p>
+  <a href="https://instantcms.ru">
+    <img alt="InstantCMS" src="https://instantcms.ru/templates/icms/images/logo.svg" />
+  </a>
+</p>
+
 # InstantCMS
 
 Бесплатная, открытая система управления контентом, которая позволяет создавать веб-сайты любой сложности: начиная от визиток и заканчивая социальными сетями и большими порталами.

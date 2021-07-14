@@ -253,6 +253,8 @@ class users extends cmsFrontend {
         $content_model->orderBy('ordering');
         $fields = $content_model->getContentFields('{users}');
 
+        $this->model->filterEqual('is_locked', null);
+
         // Постраничный вывод
         $this->model->limitPage($page, $perpage);
 

@@ -170,6 +170,12 @@
         color: $white;
         background-color: $primary;
     }
+    &.active {
+        > .counter.badge {
+            background-color: $white;
+            color: $primary;
+        }
+    }
 }
 .navbar-dark {
     .nav-link {

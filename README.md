@@ -1,6 +1,6 @@
 <p>
   <a href="https://instantcms.ru">
-    <img alt="InstantCMS" src="https://instantcms.ru/templates/ic4/images/InstantCMS-logo-gray.svg" />
+    <img alt="InstantCMS" src="https://instantcms.ru/templates/icms/images/logo.svg" />
   </a>
 </p>
 
