@@ -57,11 +57,7 @@
                             <span class="contact_nickname">
                                 <span><?php echo $nickname; ?></span>
                                 <small title="<?php echo LANG_USERS_PROFILE_LOGDATE; ?>" class="d-block text-muted">
-                                    <?php if (!$contact['is_online']) { ?>
-                                       <?php echo string_date_age_max($contact['date_log'], true); ?>
-                                   <?php } else { ?>
-                                       <?php echo LANG_ONLINE; ?>
-                                   <?php } ?>
+                                    <?php echo html_date_time($contact['date_last_msg']); ?>
                                 </small>
                             </span>
                             <?php if ($contact['new_messages']) { ?>

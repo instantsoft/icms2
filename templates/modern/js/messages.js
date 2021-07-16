@@ -159,7 +159,6 @@ icms.messages = (function ($) {
 
     this.toggleContactOnline = function (contact){
 
-        $('.contact_nickname > small', contact).html($('.icms-messages-toolbar .user_date_log', pm_window).text());
         if($('.icms-messages-toolbar .icms-user-avatar', pm_window).hasClass('peer_online')){
             $('.icms-user-avatar', contact).addClass('peer_online').removeClass('peer_no_online');
         } else {

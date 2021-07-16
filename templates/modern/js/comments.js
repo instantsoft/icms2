@@ -240,7 +240,7 @@ icms.comments = (function ($) {
         var comments_widget = $('#comments_widget');
 
         if (clear_selection){
-            $('.comment', comments_widget).removeClass('selected-comment shadow');
+            $('.comment', comments_widget).removeClass('selected-comment');
         }
 
         $('.refresh_btn', comments_widget).addClass('refresh_spin');
@@ -272,7 +272,7 @@ icms.comments = (function ($) {
                 for (var comment_index in result.comments){
                     var comment = result.comments[ comment_index ];
                     _this.append( comment );
-                    $('#comment_'+comment.id).addClass('selected-comment shadow');
+                    $('#comment_'+comment.id).addClass('selected-comment');
                     $('input[name=timestamp]', form).val(comment.timestamp);
                     _this.target.timestamp = comment.timestamp;
                 }
@@ -522,9 +522,9 @@ icms.comments = (function ($) {
     };
 
     this.show = function(id){
-        $('#comments_widget .comment').removeClass('selected-comment shadow');
+        $('#comments_widget .comment').removeClass('selected-comment');
         var c = $('#comment_'+id);
-        c.addClass('selected-comment shadow');
+        c.addClass('selected-comment');
         $.scrollTo( c, 500, {offset: {left:0, top:-10}} );
         return false;
     };

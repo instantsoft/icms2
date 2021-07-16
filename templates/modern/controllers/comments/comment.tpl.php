@@ -40,9 +40,9 @@
 
 ?>
 
-<div id="comment_<?php echo $entry['id']; ?>" class="media my-4 comment<?php if($is_selected){ ?> selected-comment shadow<?php } ?> icms-comments-ns ns-<?php echo $level; ?>" data-level="<?php echo $entry['level']; ?>">
+<div id="comment_<?php echo $entry['id']; ?>" class="media my-3 my-lg-4 comment<?php if($is_selected){ ?> selected-comment shadow<?php } ?> icms-comments-ns ns-<?php echo $level; ?>" data-level="<?php echo $entry['level']; ?>">
     <?php if(!$entry['is_deleted']){ ?>
-        <div class="d-flex align-items-start flex-column mr-3 icms-comment-rating <?php echo $no_approved_class; ?>">
+        <div class="d-flex align-items-start flex-column mr-2 mr-lg-3 icms-comment-rating <?php echo $no_approved_class; ?>">
             <div class="d-flex align-items-center flex-column w-100">
                 <?php if ($is_can_rate && ($entry['user_id'] != $user->id) && empty($entry['is_rated'])){ ?>
                     <a href="#rate-up" class="icms-comment-rating_btn text-success rate-up" title="<?php echo html( LANG_COMMENT_RATE_UP ); ?>" data-id="<?php echo $entry['id']; ?>">
@@ -70,7 +70,7 @@
     <?php } ?>
     <div class="media-body">
 
-        <h6 class="d-md-flex align-items-center mb-2">
+        <h6 class="d-md-flex align-items-center mb-3">
             <span class="d-none d-sm-inline-block mr-2">
                 <?php if ($entry['user_id']) { ?>
                     <a href="<?php echo $author_url; ?>" class="icms-user-avatar <?php if (!empty($entry['user']['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
@@ -98,38 +98,43 @@
                     <?php html($entry['target_title']); ?>
                 </a>
             <?php } ?>
-            <small class="text-muted ml-2">
-                <?php html_svg_icon('solid', 'history'); ?>
-                <span class="<?php echo $no_approved_class; ?>">
-                    <?php echo string_date_age_max($entry['date_pub'], true); ?>
-                </span>
-                <?php if ($entry['date_last_modified']){ ?>
-                    <span data-toggle="tooltip" data-placement="top" class="date_last_modified ml-2" title="<?php echo LANG_CONTENT_EDITED.' '.strip_tags(html_date_time($entry['date_last_modified'])); ?>">
-                        <?php html_svg_icon('solid', 'pen'); ?>
+            <?php if (empty($entry['hide_date'])) { ?>
+                <small class="text-muted ml-2">
+                    <?php html_svg_icon('solid', 'history'); ?>
+                    <span class="<?php echo $no_approved_class; ?>">
+                        <?php echo string_date_age_max($entry['date_pub'], true); ?>
                     </span>
-                <?php } ?>
-                <?php if ($no_approved_class){ ?>
-                    <span class="hide_approved ml-2">
-                        <?php echo html_bool_span(LANG_CONTENT_NOT_APPROVED, false); ?>
-                    </span>
-                <?php } ?>
-            </small>
+                    <?php if ($entry['date_last_modified']){ ?>
+                        <span data-toggle="tooltip" data-placement="top" class="date_last_modified ml-2" title="<?php echo LANG_CONTENT_EDITED.' '.strip_tags(html_date_time($entry['date_last_modified'])); ?>">
+                            <?php html_svg_icon('solid', 'pen'); ?>
+                        </span>
+                    <?php } ?>
+                    <?php if ($no_approved_class){ ?>
+                        <span class="hide_approved ml-2">
+                            <?php echo html_bool_span(LANG_CONTENT_NOT_APPROVED, false); ?>
+                        </span>
+                    <?php } ?>
+                </small>
+            <?php } ?>
             <?php if ($is_controls){ ?>
                 <a data-toggle="tooltip" data-placement="top" href="#comment_<?php echo $entry['id']; ?>" class="text-dark ml-2 mr-4" name="comment_<?php echo $entry['id']; ?>" title="<?php html( LANG_COMMENT_ANCHOR ); ?>">#</a>
             <?php } ?>
         </h6>
 
-        <div class="icms-comment-html text-break<?php if($dim_negative && $entry['rating'] < 0){ ?> bad<?php echo ($entry['rating'] < -6 ? 6 : abs($entry['rating'])) ?> bad<?php } ?>">
-            <?php if($entry['is_deleted']){ ?>
-                <div class="alert alert-secondary">
-                    <?php echo LANG_COMMENT_DELETED; ?>
-                </div>
-            <?php } else { ?>
+        <?php if($entry['is_deleted']){ ?>
+            <div class="alert alert-secondary">
+                <?php echo LANG_COMMENT_DELETED; ?>
+            </div>
+        <?php } elseif(!empty($entry['hide_controls'])) { ?>
+            <?php echo $entry['content_html']; ?>
+        <?php } else { ?>
+            <div class="icms-comment-html text-break<?php if($dim_negative && $entry['rating'] < 0){ ?> bad<?php echo ($entry['rating'] < -6 ? 6 : abs($entry['rating'])) ?> bad<?php } ?>">
                 <?php echo $entry['content_html']; ?>
-            <?php } ?>
-        </div>
+            </div>
+        <?php } ?>
+
         <?php if (!$entry['is_deleted'] && empty($entry['hide_controls']) && ($is_controls || !empty($is_moderator))){ ?>
-            <div class="icms-comment-controls mt-2">
+            <div class="icms-comment-controls mt-1">
                 <?php if ($no_approved_class){ ?>
                     <a href="#approve" class="btn btn-outline-success btn-sm border-0 mr-1 approve hide_approved" onclick="return icms.comments.approve(<?php echo $entry['id']; ?>)">
                         <?php html_svg_icon('solid', 'check'); ?>
@@ -137,7 +142,7 @@
                     </a>
                 <?php } ?>
                 <?php if ($is_can_add && empty($is_moderator)){ ?>
-                    <a href="#reply" class="btn btn-outline-secondary btn-sm border-0 mr-1 reply <?php echo $no_approved_class; ?>" onclick="return icms.comments.add(<?php echo $entry['id']; ?>)">
+                    <a href="#reply" class="btn btn-link btn-sm border-0 mr-1 reply <?php echo $no_approved_class; ?>" onclick="return icms.comments.add(<?php echo $entry['id']; ?>)">
                         <?php html_svg_icon('solid', 'reply'); ?>
                         <?php echo LANG_REPLY; ?>
                     </a>

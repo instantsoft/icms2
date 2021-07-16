@@ -1,8 +1,5 @@
 $ns-levels: 1,2,3,4,5,6,7,8,9,10;
 $comment-rating-size: 30px;
-.icms-comment-rating {
-    min-width: $comment-rating-size;
-}
 .text-success.rate-up, .rate-down.text-danger {
     color: $secondary  !important;
 }
@@ -36,22 +33,23 @@ $comment-rating-size: 30px;
             right: 0;
         }
     }
-}
-.icms-comments-ns {
-    @each $level in $ns-levels{
-        &.ns-#{$level} {
-            margin-left: $spacer*$level*0.5;
-        }
-    }
-    @include media-breakpoint-up(lg) {
+    &-ns {
         @each $level in $ns-levels{
             &.ns-#{$level} {
-                margin-left: calc(#{$comment-rating-size*$level} + #{$spacer*$level});
+                margin-left: $spacer*$level*0.5;
             }
         }
-    }
+        @include media-breakpoint-up(lg) {
+            @each $level in $ns-levels{
+                &.ns-#{$level} {
+                    margin-left: calc(#{$comment-rating-size*$level} + #{$spacer*$level});
+                }
+            }
+        }
 
+    }
 }
+
 .comment {
     .icms-user-avatar > img {
         max-width: $spacer*1.25;
@@ -83,11 +81,42 @@ $comment-rating-size: 30px;
     .bad2{opacity:.65;}
     .bad1{opacity:.8;}
 }
-.icms-comment-html > *:last-child {
-    margin-bottom: 0;
+.icms-comment {
+    &-html {
+        position: relative;
+        border-radius: $border-radius;
+        padding: $spacer;
+        background-color: $gray-100;
+        border: $border-width solid $border-color;
+        &:after, &:before {
+            display: block;
+            position: absolute;
+            top: -10px;
+            left: 2.5rem;
+            width: 18px;
+            height: 10px;
+            pointer-events: none;
+            content: " ";
+            -webkit-clip-path: polygon(50% 0, 0% 100%, 100% 100%);
+            clip-path: polygon(50% 0, 0% 100%, 100% 100%);
+        }
+        &:before {
+            background-color: $border-color;
+        }
+        &:after {
+            background-color: $gray-100;
+            margin-top: 1px;
+        }
+        > *:last-child {
+            margin-bottom: 0;
+        }
+    }
+    &-rating {
+        min-width: $comment-rating-size;
+    }
 }
 .selected-comment {
-    padding-left: $spacer;
-    padding-top: $spacer/2;
-    padding-bottom: $spacer;
+    .icms-comment-html {
+        box-shadow: $box-shadow;
+    }
 }

@@ -3,19 +3,19 @@
 class actionUsersProfileEditPassword extends cmsAction {
 
     public $lock_explicit_call = true;
-
     protected $extended_langs = ['auth'];
-
     private $verify_exp = 24;
 
-    public function run($profile){
+    public function run($profile) {
 
         // проверяем наличие доступа
-        if (!$this->is_own_profile && !$this->cms_user->is_admin) { cmsCore::error404(); }
+        if (!$this->is_own_profile && !$this->cms_user->is_admin) {
+            cmsCore::error404();
+        }
 
         $form = $this->getForm('password', [$profile]);
 
-        $ups_key = 'users.change_email_'.md5($profile['email']);
+        $ups_key = 'users.change_email_' . md5($profile['email']);
 
         // Если разрешено, добавляем возможность смены email
         if (cmsUser::isAllowed('users', 'change_email', true, true)) {
@@ -28,70 +28,67 @@ class actionUsersProfileEditPassword extends cmsAction {
             $sended = cmsUser::getUPS($ups_key);
 
             // уже ранее меняли или мы в процессе
-            if($sended){
+            if ($sended) {
 
-                $diff_days = intval((time() - $sended['timestamp'])/86400);
+                $diff_days = intval((time() - $sended['timestamp']) / 86400);
 
-                $verify_hours_exp = round((time() - $sended['timestamp'])/3600) >= $this->verify_exp;
+                $verify_hours_exp = round((time() - $sended['timestamp']) / 3600) >= $this->verify_exp;
 
-                if (cmsUser::isPermittedLimitHigher('users', 'change_email_period', $diff_days, true)){
+                if (cmsUser::isPermittedLimitHigher('users', 'change_email_period', $diff_days, true)) {
                     $show_email_field = false;
                 }
-
             }
 
             $form->addFieldsetAfter('basic', LANG_EMAIL, 'email');
 
             // Не отправляли ничего
-            if(!$sended || $verify_hours_exp === true || !empty($sended['accepted'])){
+            if (!$sended || $verify_hours_exp === true || !empty($sended['accepted'])) {
 
-                if($show_email_field){
+                if ($show_email_field) {
 
                     $form->addField('email', new fieldString('new_email', [
                         'title' => LANG_EMAIL_NEW,
                         'hint'  => LANG_EMAIL_NEW_HINT,
                         'type'  => 'email',
-                        'rules' => array(
-                            array('email'),
-                            array(function($controller, $data, $value)use($profile){
+                        'rules' => [
+                            ['email'],
+                            [function ($controller, $data, $value)use ($profile) {
 
-                                $email_exists_id = $controller->model->db->getField('{users}', "email = '{$value}'", 'id');
+                                if (!$value) { return true; }
 
-                                if ($email_exists_id){
+                                $exists = $controller->model->getItemByField('{users}', 'email', $value);
+
+                                if ($exists) {
                                     return LANG_REG_EMAIL_EXISTS;
                                 }
 
                                 return true;
-
-                            })
-                        )
+                            }]
+                        ]
                     ]));
-
                 }
-
             } else {
                 $form->addField('email', new fieldString('new_email_confirm_hash', [
                     'title' => LANG_EMAIL_NEW_HASH,
-                    'rules' => array(
-                        array('required')
-                    )
+                    'rules' => [
+                        ['required']
+                    ]
                 ]));
             }
-
         }
 
-        $data = array(
+        $data = [
             '2fa' => $profile['2fa'],
             'new_email_confirm_hash' => $this->request->get('new_email_confirm_hash', '')
-        );
+        ];
 
-        if ($this->request->has('submit')){
+        if ($this->request->has('submit')) {
 
             $data = $form->parse($this->request, true);
 
             $errors = $form->validate($this, $data);
 
-            if (!$errors){
+            if (!$errors) {
 
                 $success_text = [LANG_SUCCESS_MSG];
 
@@ -100,7 +97,7 @@ class actionUsersProfileEditPassword extends cmsAction {
                 $profile = array_merge($profile, $data);
 
                 // если запрашивали смену email
-                if(!empty($data['new_email'])){
+                if (!empty($data['new_email'])) {
 
                     $verify_data = [
                         'email'     => $data['new_email'],
@@ -114,19 +111,18 @@ class actionUsersProfileEditPassword extends cmsAction {
                     // письмо на новый email
                     $this->controller_messages->sendEmail(['email' => $data['new_email'], 'name' => $profile['nickname']], ['name' => 'email_verify'], [
                         'nickname'    => $profile['nickname'],
-                        'page_url'    => href_to_profile($profile, ['edit', 'password'], true).'?new_email_confirm_hash='.$verify_data['hash'],
+                        'page_url'    => href_to_profile($profile, ['edit', 'password'], true) . '?new_email_confirm_hash=' . $verify_data['hash'],
                         'hash'        => $verify_data['hash'],
                         'valid_until' => html_date(date('d.m.Y H:i', time() + ($this->verify_exp * 3600)), true)
                     ]);
 
                     $success_text[] = sprintf(LANG_USERS_EMAIL_VERIFY, $data['new_email']);
-
                 }
 
                 // Пришло подтверждение
-                if(!empty($data['new_email_confirm_hash'])){
+                if (!empty($data['new_email_confirm_hash'])) {
 
-                    if($sended['hash'] === $data['new_email_confirm_hash']){
+                    if ($sended['hash'] === $data['new_email_confirm_hash']) {
 
                         $verify_data_old = [
                             'accepted'  => 1,
@@ -136,29 +132,29 @@ class actionUsersProfileEditPassword extends cmsAction {
                         ];
 
                         // На старый email
-                        cmsUser::setUPS('users.change_email_'.md5($sended['email']), $verify_data_old);
+                        cmsUser::setUPS('users.change_email_' . md5($sended['email']), $verify_data_old);
 
                         // уведомление на старый
-                        $this->controller_messages->sendEmail(['email' => $profile['email'], 'name' => $profile['nickname']], ['name' => 'email_verify_notice'], [
-                            'nickname' => $profile['nickname'],
-                            'new_email' => $sended['email']
-                        ]);
+                        $this->controller_messages->sendEmail(
+                            ['email' => $profile['email'], 'name' => $profile['nickname']],
+                            ['name' => 'email_verify_notice'],
+                            ['nickname'  => $profile['nickname'], 'new_email' => $sended['email']]
+                        );
 
                         $profile['email'] = $sended['email'];
-
                     } else {
+
                         $errors['new_email_confirm_hash'] = LANG_CONFIRM_CODE_ERROR;
                     }
-
                 }
 
-                if(!$errors){
+                if (!$errors) {
 
                     $result = $this->model->updateUser($profile['id'], $profile);
 
-                    if ($result['success']){
+                    if ($result['success']) {
 
-                        if(!empty($data['password1'])){
+                        if (!empty($data['password1'])) {
                             $success_text[] = LANG_PASS_CHANGED;
                         }
 
@@ -171,25 +167,21 @@ class actionUsersProfileEditPassword extends cmsAction {
                     } else {
                         $errors = $result['errors'];
                     }
-
                 }
-
             }
 
-            if ($errors){
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
-        return $this->cms_template->render('profile_edit_password', array(
+        return $this->cms_template->render('profile_edit_password', [
             'id'      => $profile['id'],
             'profile' => $profile,
             'data'    => $data,
             'form'    => $form,
             'errors'  => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }

@@ -679,9 +679,14 @@ function string_get_stopwords($lang = 'ru') {
  *              s (sentence) - по последнему предложению
  *              w (word) - по последнему слову
  *              пустая строка или любой другой символ - обрезать в любом месте
+ * @param array $clean_tags Массив тегов, которые надо вырезать вместе с содержимым перед очисткой
  * @return string
  */
-function string_short($string, $length = 0, $postfix = '', $type = 's'){
+function string_short($string, $length = 0, $postfix = '', $type = 's', $clean_tags = []){
+
+    if($clean_tags){
+        $string = preg_replace( '#<('. implode('|', $clean_tags).')[^>]*?>.*</\\1>#sui', '', $string);
+    }
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами

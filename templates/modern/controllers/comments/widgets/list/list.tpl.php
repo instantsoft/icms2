@@ -8,7 +8,7 @@
 
             <div class="media-body">
 
-                <h6 class="d-inline-block mb-2">
+                <h4 class="d-inline-block h6 mb-2">
                     <?php if ($show_avatars){ ?>
                         <span class="mr-2">
                             <?php if ($entry['user_id']) { ?>
@@ -27,11 +27,25 @@
                     <?php } else { ?>
                         <span class="guest_name user"><?php echo $entry['author_name']; ?></span>
                     <?php } ?>
-                    &rarr;
-                    <a class="subject" href="<?php echo $target_url; ?>">
-                        <?php html($entry['target_title']); ?>
-                    </a>
-                    <small class="text-muted ml-2">
+                    <?php if ($entry['target_title']) { ?>
+                        &rarr;
+                        <a class="subject" href="<?php echo $target_url; ?>">
+                            <?php html($entry['target_title']); ?>
+                        </a>
+                    <?php } ?>
+                </h4>
+
+                <?php if ($show_text) { ?>
+                    <div class="icms-comment-html__widget">
+                        <?php if (!empty($entry['disallow_clean_content'])) { ?>
+                            <?php echo $entry['content_html']; ?>
+                        <?php } else { ?>
+                            <?php echo string_short($entry['content_html'], 70, '...', 'w'); ?>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+                <?php if (empty($entry['hide_date'])) { ?>
+                    <div class="text-muted small mt-2">
                         <?php html_svg_icon('solid', 'history'); ?>
                         <span>
                             <?php echo string_date_age_max($entry['date_pub'], true); ?>
@@ -46,15 +60,8 @@
                                 <?php html_svg_icon('solid', 'lock'); ?>
                             </span>
                         <?php } ?>
-                    </small>
-                </h6>
-
-                <?php if ($show_text) { ?>
-                    <div class="icms-comment-html">
-                        <?php echo html_clean($entry['content_html'], 50); ?>
                     </div>
                 <?php } ?>
-
             </div>
 
         </div>
