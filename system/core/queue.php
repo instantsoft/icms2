@@ -3,7 +3,7 @@
 class cmsQueue {
 
     protected static $max_attempts = 4;
-    protected static $max_run_jobs = 20;
+    protected static $max_run_jobs = 50;
     protected static $table = 'jobs';
 
     /**

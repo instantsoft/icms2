@@ -36,7 +36,12 @@ class actionMessagesShowOlder extends cmsAction {
             return $this->cms_template->renderJSON(['error' => true]);
         }
 
-        $messages = $this->model->filterLt('id', $message_id)->
+        $message = $this->model->getMessage($message_id);
+        if (!$message) {
+            return $this->cms_template->renderJSON(['error' => true]);
+        }
+
+        $messages = $this->model->filterLt('date_pub', $message['date_pub'])->
                 limit($this->options['limit'] + 1)->
                 getMessages($this->cms_user->id, $contact_id);
 
@@ -49,11 +54,11 @@ class actionMessagesShowOlder extends cmsAction {
 
         $this->cms_template->renderJSON([
             'error'     => ($messages ? false : true),
-            'html'      => ($messages ? $this->cms_template->render('message', array(
+            'html'      => ($messages ? $this->cms_template->render('message', [
                 'messages'  => $messages,
                 'last_date' => '',
                 'user'      => $this->cms_user
-            ), new cmsRequest([], cmsRequest::CTX_INTERNAL)) : ''),
+            ], new cmsRequest([], cmsRequest::CTX_INTERNAL)) : ''),
             'has_older' => $has_older,
             'older_id'  => $messages[0]['id']
         ]);

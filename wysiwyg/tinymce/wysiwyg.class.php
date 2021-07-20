@@ -50,10 +50,18 @@ class cmsWysiwygTinymce {
         'plugins' => [
             'autoresize'
         ],
+        'codesample_languages' => [
+            ['text' => 'HTML/XML', 'value' => 'html'],
+            ['text' => 'PHP', 'value' => 'php'],
+            ['text' => 'JavaScript', 'value' => 'javascript'],
+            ['text' => 'CSS', 'value' => 'css'],
+            ['text' => 'Bash', 'value' => 'bash'],
+        ],
         'toolbar' => 'formatselect | bold italic strikethrough forecolor backcolor | link image media table | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat',
         'min_height'            => 200,
         'max_height'            => 700,
         'browser_spellcheck'    => true,
+        'contextmenu'           => false,
         'menubar'               => false,
         'statusbar'             => false,
         'relative_urls'         => false,
@@ -296,19 +304,12 @@ class cmsWysiwygTinymce {
                 icms.forms.addWysiwygsSavePool(dom_id, function(field_element){
                     tinymce.activeEditor.save();
                 });
-                <?php //** Prevent bootstrap dialog from blocking focusin **/ ?>
-                $(document).on('focusin', function(e) {
-                    if ($(e.target).closest(".tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
-                        e.stopImmediatePropagation();
-                    }
-                });
             }
         </script>
 
         <?php $template->addBottom(ob_get_clean());
 
         self::$redactor_loaded = true;
-
     }
 
     public function getParams() {
@@ -345,7 +346,6 @@ class cmsWysiwygTinymce {
         }
 
         return cmsEventsManager::hook('wysiwyg_tinymce_form_options', [$plugins, $buttons, $this->quickbars_insert_buttons, $this->quickbars_selection_buttons, $this->block_formats]);
-
     }
 
 }

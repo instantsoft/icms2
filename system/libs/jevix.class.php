@@ -321,16 +321,6 @@ class Jevix{
 	}
 
 	/**
-	 * CONFIGURATION: Adding autoadd attributes and their values to tag. If the 'rewrite' set as true, the attribute value will be replaced
-	 * @param string $tag tag
-	 * @param string|array $params array of pairs array('name'=>attributeName, 'value'=>attributeValue, 'rewrite'=>true|false)
-	 * @deprecated устаревший синтаксис. Используйте cfgSetTagParamDefault
-	 */
-	function cfgSetTagParamsAutoAdd($tag, $params){
-		throw new Exception('cfgSetTagParamsAutoAdd() is Deprecated. Use cfgSetTagParamDefault() instead');
-	}
-
-	/**
 	 * КОНФИГУРАЦИЯ: Установка дефолтных значений для атрибутов тега
 	 * @param string $tag тег
 	 * @param string $param атрибут

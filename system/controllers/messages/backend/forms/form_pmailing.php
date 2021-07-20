@@ -19,6 +19,7 @@ class formMessagesPmailing extends cmsForm {
                 'childs' => array(
                     new fieldHtml('message_text', array(
                         'title' => LANG_MESSAGE,
+                        'options' => ['editor' => 'ace'],
                         'rules' => array(
                             array('required')
                         )
@@ -27,7 +28,8 @@ class formMessagesPmailing extends cmsForm {
                         'title' => LANG_PM_PMAILING_TYPE,
                         'items' => array(
                             'notify'  => LANG_PM_PMAILING_TYPE_NOTIFY,
-                            'message' => LANG_PM_PMAILING_TYPE_MESSAGE
+                            'message' => LANG_PM_PMAILING_TYPE_MESSAGE,
+                            'email' => LANG_PM_PMAILING_TYPE_EMAIL
                         )
                     )),
                     new fieldString('sender_user_email', array(

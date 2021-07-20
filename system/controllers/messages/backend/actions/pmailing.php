@@ -12,8 +12,6 @@ class actionMessagesPmailing extends cmsAction {
 
             $mailing = $form->parse($this->request, true);
 
-            $mailing['message_text'] = cmsEventsManager::hook('html_filter', $mailing['message_text']);
-
             $errors = $form->validate($this, $mailing);
 
             if($mailing['sender_user_email']){
@@ -80,12 +78,31 @@ class actionMessagesPmailing extends cmsAction {
 
                     if ($mailing['type'] === 'notify') {
 
+                        $mailing['message_text'] = cmsEventsManager::hook('html_filter', $mailing['message_text']);
+
                         $notices_ids = $this->controller_messages->sendNoticePM(array(
                             'content' => $mailing['message_text']
                         ));
 
                         $count = is_array($notices_ids) ? count($notices_ids) : ($notices_ids ? 1 : 0);
 
+                    }
+
+                    if ($mailing['type'] === 'email') {
+
+                        $emails = $this->model_users->
+                            filterIn('id', array_keys($recipients))->
+                            limit(false)->selectOnly('i.email', 'email')->select('nickname')->get('{users}', function($user){
+                                return $user['nickname'];
+                            }, 'email');
+
+                        foreach ($emails as $email => $nickname) {
+                            $this->controller_messages->sendEmail(['email' => $email], [
+                                'text' => $mailing['message_text']
+                            ], ['nickname' => $nickname]);
+                        }
+
+                        $count = count($emails);
                     }
 
                     cmsUser::addSessionMessage(sprintf(

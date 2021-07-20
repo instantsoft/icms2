@@ -5,68 +5,66 @@ class onTypographHtmlFilter extends cmsAction {
     private $build_redirect_link = true;
     private $is_auto_br = true;
 
-    public function run($data){
+    public function run($data) {
 
-        $errors       = null;
+        $errors = null;
         $build_smiles = true;
 
-        if (is_array($data)){
+        if (is_array($data)) {
 
             $text = $data['text'];
 
-            if(isset($data['is_auto_br'])){
+            if (isset($data['is_auto_br'])) {
                 $this->is_auto_br = $data['is_auto_br'];
             }
 
-            if(isset($data['build_redirect_link'])){
+            if (isset($data['build_redirect_link'])) {
                 $this->build_redirect_link = $data['build_redirect_link'];
             }
 
-            if(isset($data['build_smiles'])){
+            if (isset($data['build_smiles'])) {
                 $build_smiles = $data['build_smiles'];
             }
-
         } else {
             $text = $data;
         }
 
-        if(!cmsController::enabled('redirect')){
+        if (!cmsController::enabled('redirect')) {
             $this->build_redirect_link = false;
         }
 
         $text = $this->getJevix()->parse($text, $errors);
 
-        if($build_smiles){
+        if ($build_smiles) {
             $text = $this->replaceEmotionToSmile($text);
         }
 
         return $text;
-
     }
 
-    private function getJevix(){
+    private function getJevix() {
 
         cmsCore::loadLib('jevix.class', 'Jevix');
 
         $jevix = new Jevix();
 
         // Устанавливаем разрешённые теги. (Все не разрешенные теги считаются запрещенными.)
-        $jevix->cfgAllowTags(array(
+        $jevix->cfgAllowTags([
             'p', 'br', 'span', 'div',
             'a', 'img', 'input', 'label',
             'b', 'i', 'u', 's', 'del', 'em', 'strong', 'sup', 'sub', 'hr', 'font',
             'ul', 'ol', 'li',
             'table', 'tbody', 'thead', 'tfoot', 'tr', 'td', 'th',
-            'h1','h2','h3','h4','h5','h6',
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
             'pre', 'code', 'blockquote', 'picture',
             'video', 'source', 'audio', 'youtube', 'facebook', 'figure', 'figcaption',
             'object', 'param', 'embed', 'iframe', 'spoiler', 'cite', 'footer'
-        ));
+        ]);
 
         // Устанавливаем коротие теги. (не имеющие закрывающего тега)
-        $jevix->cfgSetTagShort(array(
+        $jevix->cfgSetTagShort([
             'br', 'img', 'hr', 'embed', 'input', 'source'
-        ));
+        ]);
 
         // Устанавливаем преформатированные теги. (в них все будет заменятся на HTML сущности)
         $jevix->cfgSetTagPreformatted(array(
@@ -74,60 +72,60 @@ class onTypographHtmlFilter extends cmsAction {
         ));
 
         // Устанавливаем теги, которые необходимо вырезать из текста вместе с контентом.
-        $jevix->cfgSetTagCutWithContent(array(
+        $jevix->cfgSetTagCutWithContent([
             'script', 'style', 'meta'
-        ));
+        ]);
 
-        $jevix->cfgSetTagIsEmpty(array(
-            'param','embed','a','iframe','div'
-        ));
+        $jevix->cfgSetTagIsEmpty([
+            'param', 'embed', 'a', 'iframe', 'div'
+        ]);
 
         // Устанавливаем разрешённые параметры тегов. Также можно устанавливать допустимые значения этих параметров.
-        $jevix->cfgAllowTagParams('a', array('href' => '#link', 'name' => '#text', 'target' => '#text', 'class' => '#text'));
-        $jevix->cfgAllowTagParams('img', array('src', 'style' => '#text', 'alt' => '#text', 'title' => '#text', 'align' => array('right', 'left', 'center'), 'width' => '#int', 'height' => '#int', 'hspace' => '#int', 'vspace' => '#int', 'class' => '#text'));
-        $jevix->cfgAllowTagParams('span', array('style' => '#text'));
-        $jevix->cfgAllowTagParams('input', array('tabindex' => '#text', 'type' => '#text', 'id' => '#text'));
-        $jevix->cfgAllowTagParams('label', array('class' => '#text', 'for' => '#text'));
-        $jevix->cfgAllowTagParams('footer', array('class' => '#text'));
-        $jevix->cfgAllowTagParams('object', array('width' => '#int', 'height' => '#int', 'data' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com')), 'type' => '#text'));
-        $jevix->cfgAllowTagParams('param', array('name' => '#text', 'value' => '#text'));
-        $jevix->cfgAllowTagParams('embed', array('src' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com')), 'type' => '#text','allowscriptaccess' => '#text', 'allowfullscreen' => '#text','width' => '#int', 'height' => '#int', 'flashvars'=> '#text', 'wmode'=> '#text'));
-        $jevix->cfgAllowTagParams('iframe', array('width' => '#int', 'height' => '#int', 'style' => '#text', 'frameborder' => '#int', 'allowfullscreen' => '#text', 'src' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com','my.mail.ru','facebook.com',parse_url($this->cms_config->host, PHP_URL_HOST)))));
-        $jevix->cfgAllowTagParams('table', array('width' => '#int', 'height' => '#int', 'cellpadding' => '#int', 'cellspacing' => '#int', 'border' => '#int', 'style' => '#text', 'align'=>'#text', 'valign'=>'#text'));
-        $jevix->cfgAllowTagParams('td', array('width' => '#int', 'height' => '#int', 'style' => '#text', 'align'=>'#text', 'valign'=>'#text', 'colspan'=>'#int', 'rowspan'=>'#int'));
-        $jevix->cfgAllowTagParams('th', array('width' => '#int', 'height' => '#int', 'style' => '#text', 'align'=>'#text', 'valign'=>'#text', 'colspan'=>'#int', 'rowspan'=>'#int'));
-        $jevix->cfgAllowTagParams('p', array('style' => '#text'));
-        $jevix->cfgAllowTagParams('div', array('style' => '#text', 'class' => '#text'));
-        $jevix->cfgAllowTagParams('spoiler', array('title' => '#text'));
-        $jevix->cfgAllowTagParams('code', array('type' => '#text'));
-        $jevix->cfgAllowTagParams('pre', array('class' => '#text'));
-        $jevix->cfgAllowTagParams('figure', array('style' => '#text', 'class' => '#text'));
-        $jevix->cfgAllowTagParams('figcaption', array('style' => '#text', 'class' => '#text'));
-        $jevix->cfgAllowTagParams('h2', array('id' => '#text', 'class' => '#text'));
-        $jevix->cfgAllowTagParams('h3', array('id' => '#text', 'class' => '#text'));
-        $jevix->cfgAllowTagParams('h4', array('id' => '#text', 'class' => '#text'));
-        $jevix->cfgAllowTagParams('h5', array('id' => '#text', 'class' => '#text'));
-        $jevix->cfgAllowTagParams('video', array('controls' => '#text', 'class' => '#text', 'width' => '#int', 'height' => '#int'));
-        $jevix->cfgAllowTagParams('audio', array('controls' => '#text', 'class' => '#text', 'src' => '#text', 'autoplay' => '#text', 'preload' => '#text'));
-        $jevix->cfgAllowTagParams('source', array('src' => '#text', 'type' => '#text', 'media' => '#text'));
+        $jevix->cfgAllowTagParams('a', ['href' => '#link', 'name' => '#text', 'target' => '#text', 'class' => '#text']);
+        $jevix->cfgAllowTagParams('img', ['src', 'style' => '#text', 'alt' => '#text', 'title' => '#text', 'align' => ['right', 'left', 'center'], 'width' => '#int', 'height' => '#int', 'hspace' => '#int', 'vspace' => '#int', 'class' => '#text']);
+        $jevix->cfgAllowTagParams('span', ['style' => '#text']);
+        $jevix->cfgAllowTagParams('input', ['tabindex' => '#text', 'type' => '#text', 'id' => '#text']);
+        $jevix->cfgAllowTagParams('label', ['class' => '#text', 'for' => '#text']);
+        $jevix->cfgAllowTagParams('footer', ['class' => '#text']);
+        $jevix->cfgAllowTagParams('object', ['width' => '#int', 'height' => '#int', 'data' => ['#domain' => ['youtube.com', 'rutube.ru', 'vimeo.com', 'vk.com']], 'type' => '#text']);
+        $jevix->cfgAllowTagParams('param', ['name' => '#text', 'value' => '#text']);
+        $jevix->cfgAllowTagParams('embed', ['src' => ['#domain' => ['youtube.com', 'rutube.ru', 'vimeo.com', 'vk.com']], 'type' => '#text', 'allowscriptaccess' => '#text', 'allowfullscreen' => '#text', 'width' => '#int', 'height' => '#int', 'flashvars' => '#text', 'wmode' => '#text']);
+        $jevix->cfgAllowTagParams('iframe', ['width' => '#int', 'height' => '#int', 'style' => '#text', 'frameborder' => '#int', 'allowfullscreen' => '#text', 'src' => ['#domain' => ['youtube.com', 'rutube.ru', 'vimeo.com', 'vk.com', 'my.mail.ru', 'facebook.com', parse_url($this->cms_config->host, PHP_URL_HOST)]]]);
+        $jevix->cfgAllowTagParams('table', ['width' => '#int', 'height' => '#int', 'cellpadding' => '#int', 'cellspacing' => '#int', 'border' => '#int', 'style' => '#text', 'align' => '#text', 'valign' => '#text']);
+        $jevix->cfgAllowTagParams('td', ['width' => '#int', 'height' => '#int', 'style' => '#text', 'align' => '#text', 'valign' => '#text', 'colspan' => '#int', 'rowspan' => '#int']);
+        $jevix->cfgAllowTagParams('th', ['width' => '#int', 'height' => '#int', 'style' => '#text', 'align' => '#text', 'valign' => '#text', 'colspan' => '#int', 'rowspan' => '#int']);
+        $jevix->cfgAllowTagParams('p', ['style' => '#text']);
+        $jevix->cfgAllowTagParams('div', ['style' => '#text', 'class' => '#text']);
+        $jevix->cfgAllowTagParams('spoiler', ['title' => '#text']);
+        $jevix->cfgAllowTagParams('code', ['type' => '#text']);
+        $jevix->cfgAllowTagParams('pre', ['class' => '#text']);
+        $jevix->cfgAllowTagParams('figure', ['style' => '#text', 'class' => '#text']);
+        $jevix->cfgAllowTagParams('figcaption', ['style' => '#text', 'class' => '#text']);
+        $jevix->cfgAllowTagParams('h2', ['id' => '#text', 'class' => '#text']);
+        $jevix->cfgAllowTagParams('h3', ['id' => '#text', 'class' => '#text']);
+        $jevix->cfgAllowTagParams('h4', ['id' => '#text', 'class' => '#text']);
+        $jevix->cfgAllowTagParams('h5', ['id' => '#text', 'class' => '#text']);
+        $jevix->cfgAllowTagParams('video', ['controls' => '#text', 'class' => '#text', 'width' => '#int', 'height' => '#int']);
+        $jevix->cfgAllowTagParams('audio', ['controls' => '#text', 'class' => '#text', 'src' => '#text', 'autoplay' => '#text', 'preload' => '#text']);
+        $jevix->cfgAllowTagParams('source', ['src' => '#text', 'type' => '#text', 'media' => '#text']);
 
         // Устанавливаем параметры тегов являющиеся обязательными. Без них вырезает тег оставляя содержимое.
         $jevix->cfgSetTagParamsRequired('img', 'src');
         $jevix->cfgSetTagParamsRequired('a', 'href');
 
         // Устанавливаем теги которые может содержать тег контейнер
-        $jevix->cfgSetTagChilds('video',array('source'),false,true);
-        $jevix->cfgSetTagChilds('ul',array('li'),false,true);
-        $jevix->cfgSetTagChilds('ol',array('li'),false,true);
-        $jevix->cfgSetTagChilds('table',array('tr', 'tbody', 'thead', 'tfoot', 'th', 'td'),false,true);
-        $jevix->cfgSetTagChilds('tbody',array('tr', 'td', 'th'),false,true);
-        $jevix->cfgSetTagChilds('thead',array('tr', 'td', 'th'),false,true);
-        $jevix->cfgSetTagChilds('tfoot',array('tr', 'td', 'th'),false,true);
-        $jevix->cfgSetTagChilds('tr',array('td'),false,true);
-        $jevix->cfgSetTagChilds('tr',array('th'),false,true);
+        $jevix->cfgSetTagChilds('video', ['source'], false, true);
+        $jevix->cfgSetTagChilds('ul', ['li'], false, true);
+        $jevix->cfgSetTagChilds('ol', ['li'], false, true);
+        $jevix->cfgSetTagChilds('table', ['tr', 'tbody', 'thead', 'tfoot', 'th', 'td'], false, true);
+        $jevix->cfgSetTagChilds('tbody', ['tr', 'td', 'th'], false, true);
+        $jevix->cfgSetTagChilds('thead', ['tr', 'td', 'th'], false, true);
+        $jevix->cfgSetTagChilds('tfoot', ['tr', 'td', 'th'], false, true);
+        $jevix->cfgSetTagChilds('tr', ['td'], false, true);
+        $jevix->cfgSetTagChilds('tr', ['th'], false, true);
 
         // Устанавливаем автозамену
-        $jevix->cfgSetAutoReplace(array('+/-', '(c)', '(с)', '(r)', '(C)', '(С)', '(R)'), array('±', '©', '©', '®', '©', '©', '®'));
+        $jevix->cfgSetAutoReplace(['+/-', '(c)', '(с)', '(r)', '(C)', '(С)', '(R)'], ['±', '©', '©', '®', '©', '©', '®']);
 
         // включаем режим замены переноса строк на тег <br/>
         $jevix->cfgSetAutoBrMode($this->is_auto_br);
@@ -136,33 +134,32 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgSetAutoLinkMode(true);
 
         // обрабатываем внешние ссылки
-        $jevix->cfgSetTagCallbackFull('a', array($this, 'linkRedirectPrefix'));
+        $jevix->cfgSetTagCallbackFull('a', [$this, 'linkRedirectPrefix']);
 
-        $jevix->cfgSetTagCallbackFull('img', array($this, 'parseImg'));
+        $jevix->cfgSetTagCallbackFull('img', [$this, 'parseImg']);
 
         // Отключаем типографирование в определенном теге
-        $jevix->cfgSetTagNoTypography(array('pre', 'youtube', 'iframe', 'code'));
+        $jevix->cfgSetTagNoTypography(['pre', 'youtube', 'iframe', 'code']);
 
-        $jevix->cfgSetTagNoAutoBr(array('ul','ol','code','video'));
+        $jevix->cfgSetTagNoAutoBr(['ul', 'ol', 'code', 'video']);
 
         // Ставим колбэк для youtube
-        $jevix->cfgSetTagCallbackFull('youtube', array($this, 'parseYouTubeVideo'));
+        $jevix->cfgSetTagCallbackFull('youtube', [$this, 'parseYouTubeVideo']);
 
         // Ставим колбэк для facebook
-        $jevix->cfgSetTagCallbackFull('facebook', array($this, 'parseFacebookVideo'));
+        $jevix->cfgSetTagCallbackFull('facebook', [$this, 'parseFacebookVideo']);
 
         // Ставим колбэк на iframe
-        $jevix->cfgSetTagCallbackFull('iframe', array($this, 'parseIframe'));
+        $jevix->cfgSetTagCallbackFull('iframe', [$this, 'parseIframe']);
 
         // Ставим колбэк для кода
-        $jevix->cfgSetTagCallbackFull('code', array($this, 'parseCode'));
-        $jevix->cfgSetTagCallbackFull('pre', array($this, 'parsePre'));
+        $jevix->cfgSetTagCallbackFull('code', [$this, 'parseCode']);
+        $jevix->cfgSetTagCallbackFull('pre', [$this, 'parsePre']);
 
         // Ставим колбэк для спойлеров
-        $jevix->cfgSetTagCallbackFull('spoiler', array($this, 'parseSpoiler'));
+        $jevix->cfgSetTagCallbackFull('spoiler', [$this, 'parseSpoiler']);
 
         return $jevix;
-
     }
 
     public function linkRedirectPrefix($tag, $params, $content) {
@@ -171,34 +168,32 @@ class onTypographHtmlFilter extends cmsAction {
 
         $is_external_link = !empty($href_params['host']) && strpos($params['href'], $this->cms_config->host) !== 0;
 
-        if($is_external_link){
+        if ($is_external_link) {
 
-            $params['class']  = (isset($params['class']) ? $params['class'].' external_link' : 'external_link');
+            $params['class']  = (isset($params['class']) ? $params['class'] . ' external_link' : 'external_link');
             $params['target'] = '_blank';
 
-            if($this->build_redirect_link){
-                $params['href'] = href_to('redirect').'?url='.urlencode($params['href']);
+            if ($this->build_redirect_link) {
+                $params['href'] = href_to('redirect') . '?url=' . urlencode($params['href']);
             }
-
         }
 
         $tag_string = '<a';
 
-        foreach($params as $param => $value) {
+        foreach ($params as $param => $value) {
             if ($value != '') {
-                $tag_string.=' '.$param.'="'.$value.'"';
+                $tag_string .= ' ' . $param . '="' . $value . '"';
             }
         }
 
-        $tag_string .= '>'.$content.'</a>';
+        $tag_string .= '>' . $content . '</a>';
 
         return $tag_string;
-
     }
 
     public function parseImg($tag, $params, $content) {
 
-        if(!empty($params['style'])){
+        if (!empty($params['style'])) {
 
             $styles = explode(';', rtrim(trim($params['style']), ';'));
 
@@ -206,105 +201,108 @@ class onTypographHtmlFilter extends cmsAction {
 
                 list($css_name, $css_value) = explode(':', $style);
 
-                if(trim($css_name) == 'height'){ unset($styles[$k]); }
-
+                if (trim($css_name) == 'height') {
+                    unset($styles[$k]);
+                }
             }
 
             $params['style'] = implode(';', $styles);
+        }
 
+        if (!in_array('alt', array_keys($params))) {
+            $params['alt'] = LANG_PHOTO;
         }
 
         $tag_string = '<img';
 
-        foreach($params as $param => $value) {
+        foreach ($params as $param => $value) {
             if (in_array($param, ['height'])) {
                 continue;
             }
             if ($value != '') {
-                $tag_string.=' '.$param.'="'.$value.'"';
+                $tag_string .= ' ' . $param . '="' . $value . '"';
             }
         }
 
         $tag_string .= '>';
 
-        return $tag_string;
+        if (!empty($params['width'])) {
+            $tag_string = '<a href="' . $params['src'] . '" class="icms-image__modal ajax-modal d-inline-block" style="max-width:' . $params['width'] . 'px">' . $tag_string . '</a>';
+        }
 
+        return $tag_string;
     }
 
     public function parseSpoiler($tag, $params, $content) {
 
-        if(empty($content)){
+        if (empty($content)) {
             return '';
         }
 
         $id = string_random();
-        $title = !empty($params['title']) ? htmlspecialchars($params['title']) : '';
+        $title = !empty($params['title']) ? $params['title'] : '';
 
-        return '<div class="spoiler"><input tabindex="-1" type="checkbox" id="'.$id.'"><label for="'.$id.'">'.$title.'</label><div class="spoiler_body">'.$content.'</div></div>';
-
+        return '<div class="spoiler"><input tabindex="-1" type="checkbox" id="' . $id . '"><label for="' . $id . '">' . $title . '</label><div class="spoiler_body">' . $content . '</div></div>';
     }
 
     public function parseIframe($tag, $params, $content) {
 
-        if(empty($params['src'])){
+        if (empty($params['src'])) {
             return '';
         }
 
         return $this->getVideoCode($params['src']);
-
     }
 
-    public function parseFacebookVideo($tag, $params, $content){
+    public function parseFacebookVideo($tag, $params, $content) {
 
         $video_link = (trim(strip_tags($content)));
 
         $pattern = '#^(?:(?:https|http)?://)?(?:www\.)?(?:facebook\.com(?:/[^\/]+/videos/|/video\.php\?v=))([0-9]+)(?:.+)?$#x';
         preg_match($pattern, $video_link, $matches);
 
-        if(empty($matches[1])){
+        if (empty($matches[1])) {
             $pattern = '#^(?:(?:https|http)?://)?(?:www\.)?(?:facebook\.com(?:/[^\/]+/videos/[^\/]+))/([0-9]+)(?:.+)?$#x';
             preg_match($pattern, $video_link, $matches);
         }
 
-        if(empty($matches[1])){
+        if (empty($matches[1])) {
             return '';
         }
 
-        return $this->getVideoCode('https://www.facebook.com/video/embed?video_id='.$matches[1]);
-
+        return $this->getVideoCode('https://www.facebook.com/video/embed?video_id=' . $matches[1]);
     }
 
-    public function parseYouTubeVideo($tag, $params, $content){
+    public function parseYouTubeVideo($tag, $params, $content) {
 
         $video_id = $this->parseYouTubeVideoID(trim(strip_tags($content)));
 
-        return $this->getVideoCode('//www.youtube.com/embed/'.$video_id);
-
+        return $this->getVideoCode('//www.youtube.com/embed/' . $video_id);
     }
 
     private function getVideoCode($src) {
-        return '<div class="video_wrap embed-responsive embed-responsive-16by9"><iframe class="video_frame embed-responsive-item" src="'.$src.'" frameborder="0" allowfullscreen></iframe></div>';
+        return '<div class="video_wrap embed-responsive embed-responsive-16by9"><iframe class="video_frame embed-responsive-item" src="' . html($src, false) . '" frameborder="0" allowfullscreen></iframe></div>';
     }
 
     private function parseYouTubeVideoID($url) {
 
         $pattern = '#^(?:(?:https|http)?://)?(?:www\.)?(?:youtu\.be/|youtube\.com(?:/embed/|/v/|/watch\?v=|/watch\?.+&v=))([\w-]{11})(?:.+)?$#x';
         preg_match($pattern, $url, $matches);
-        return (isset($matches[1])) ? $matches[1] : false;
 
+        return (isset($matches[1])) ? $matches[1] : false;
     }
 
-    public function parseCode($tag, $params, $content){
+    public function parseCode($tag, $params, $content) {
 
         cmsCore::loadLib('geshi/geshi', 'GeSHi');
 
         $geshi = new GeSHi(htmlspecialchars_decode($content), (isset($params['type']) ? $params['type'] : 'php'));
         $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
 
-        return '<div class="bb_tag_code">'.$geshi->parse_code().'</div>';
+        return '<div class="bb_tag_code">' . $geshi->parse_code() . '</div>';
     }
 
-    public function parsePre($tag, $params, $content){
+    public function parsePre($tag, $params, $content) {
 
         $content = htmlspecialchars_decode($content);
         $content = preg_replace('#^<code>(.*)<\/code>$#uis', '$1', $content);
@@ -314,7 +312,7 @@ class onTypographHtmlFilter extends cmsAction {
         $geshi = new GeSHi($content, (isset($params['class']) ? str_replace('language-', '', $params['class']) : 'php'));
         $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
 
-        return '<div class="bb_tag_code">'.$geshi->parse_code().'</div>';
+        return '<div class="bb_tag_code">' . $geshi->parse_code() . '</div>';
     }
 
 }

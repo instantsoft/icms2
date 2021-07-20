@@ -1,6 +1,6 @@
 <div class="icms-widget card mb-3 mb-md-4 <?php if ($widget['class_wrap']) { ?> <?php echo $widget['class_wrap'];  } ?>" id="widget_wrapper_<?php echo $widget['id']; ?>">
     <?php if ($widget['title'] && $is_titles){ ?>
-    <h5 class="card-header d-flex align-items-center<?php if ($widget['class_title']) { ?> <?php echo $widget['class_title'];  } ?>">
+    <h3 class="h5 card-header d-flex align-items-center<?php if ($widget['class_title']) { ?> <?php echo $widget['class_title'];  } ?>">
         <span><?php echo string_replace_svg_icons($widget['title']); ?></span>
         <?php if (!empty($widget['links'])) { ?>
             <span class="links ml-auto">
@@ -12,7 +12,7 @@
                 <?php } ?>
             </span>
         <?php } ?>
-    </h5>
+    </h3>
     <?php } ?>
     <div class="card-body<?php if ($widget['class']) { ?> <?php echo $widget['class'];  } ?>">
         <?php echo $widget['body']; ?>

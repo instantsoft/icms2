@@ -355,7 +355,7 @@ form .without-tabs fieldset {
     }
 }
 @if $enable-modal-blur {
-    .modal.show ~ *:not(.ui-widget) > * {
+    .modal.show ~ *:not(.ui-widget):not(.tox) > * {
         -webkit-filter: blur(2px);
         -moz-filter: blur(2px);
         -ms-filter: blur(2px);

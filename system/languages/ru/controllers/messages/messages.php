@@ -39,9 +39,11 @@
     define('LANG_PM_REALTIME_SOCKET_PORT',  'Порт сокет сервера');
     define('LANG_PM_PMAILING_TYPE_NOTIFY',  'Как уведомление');
     define('LANG_PM_PMAILING_TYPE_MESSAGE', 'Как личное сообщение');
+    define('LANG_PM_PMAILING_TYPE_EMAIL',   'Как Email');
     define('LANG_PM_PMAILING_SENDED',       'Отправлено %s');
     define('LANG_PM_NOTIFY',                'уведомление|уведомления|уведомлений');
     define('LANG_PM_MESSAGE',               'сообщение|сообщения|сообщений');
+    define('LANG_PM_EMAIL',                 'сообщение|сообщения|сообщений');
     define('LANG_PM_SENDER_USER_ID',        'От чьего имени отправлять');
     define('LANG_PM_SENDER_USER_ID_HINT',   'Введите email пользователя. Если не указан, сообщение будет отправлено от вас.');
     define('LANG_PM_PMAILING_NOT_RECIPIENTS', 'Нет получателей по заданным критериям');

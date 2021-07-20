@@ -7,6 +7,12 @@ icms.modal = (function ($) {
     var modal_el;
 
     this.onDocumentReady = function() {
+        /** tinymce prevent bootstrap dialog from blocking focusin **/
+        $(document).on('focusin', function(e) {
+            if ($(e.target).closest(".tox-tinymce, .tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
+                e.stopImmediatePropagation();
+            }
+        });
         self.render();
         self.bind('a.ajax-modal');
         self.bind('.ajax-modal > a');
