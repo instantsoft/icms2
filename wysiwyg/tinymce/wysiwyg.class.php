@@ -286,6 +286,12 @@ class cmsWysiwygTinymce {
                         }
                     });
                 };
+                tinymce_options.setup = function (editor) {
+                    editor.addShortcut(
+                    'ctrl+13', 'ctr + enter submit', function () {
+                        $('#'+dom_id).trigger('keydown', [{keyCode: 13, ctrlKey: true}]);
+                    });
+                };
                 <?php if($template_css){ ?>
                     tinymce_options.content_css = '<?php echo $template_css; ?>';
                 <?php } ?>

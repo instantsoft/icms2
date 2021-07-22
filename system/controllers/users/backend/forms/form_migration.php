@@ -4,128 +4,76 @@ class formUsersMigration extends cmsForm {
 
     public function init($do) {
 
-        $groups = cmsCore::getModel('users')->getGroups();
+        $groups = array_collection_to_list(cmsCore::getModel('users')->getGroups(), 'id', 'title');
 
-        return array(
-
-            'basic' => array(
-                'type' => 'fieldset',
-                'childs' => array(
-
-                    new fieldString('title', array(
+        return [
+            'basic' => [
+                'type'   => 'fieldset',
+                'childs' => [
+                    new fieldString('title', [
                         'title' => LANG_USERS_MIG_TITLE,
-                        'rules' => array(
-                            array('required'),
-                            array('max_length', 256)
-                        )
-                    )),
-
-                    new fieldCheckbox('is_active', array(
+                        'rules' => [
+                            ['required'],
+                            ['max_length', 256]
+                        ]
+                    ]),
+                    new fieldCheckbox('is_active', [
                         'title' => LANG_USERS_MIG_IS_ACTIVE,
-                    )),
-
-                )
-            ),
-
-            array(
-                'type' => 'fieldset',
-                'childs' => array(
-
-                    new fieldList('is_keep_group', array(
+                    ]),
+                    new fieldList('is_keep_group', [
                         'title' => LANG_USERS_MIG_ACTION,
-                        'items' => array(
+                        'items' => [
                             0 => LANG_USERS_MIG_ACTION_CHANGE,
                             1 => LANG_USERS_MIG_ACTION_ADD
-                        )
-                    )),
-
-                    new fieldList('group_from_id', array(
+                        ]
+                    ]),
+                    new fieldList('group_from_id', [
                         'title' => LANG_USERS_MIG_FROM,
-                        'generator' => function() use($groups){
-                            return array_collection_to_list($groups, 'id', 'title');
-                        }
-                    )),
-
-                    new fieldList('group_to_id', array(
+                        'items' => $groups
+                    ]),
+                    new fieldList('group_to_id', [
                         'title' => LANG_USERS_MIG_TO,
-                        'generator' => function() use($groups){
-                            return array_collection_to_list($groups, 'id', 'title');
-                        }
-                    )),
-
-                )
-            ),
-
-            array(
-                'type' => 'fieldset',
-                'childs' => array(
-
-                    new fieldCheckbox('is_passed', array(
+                        'items' => $groups
+                    ]),
+                    new fieldCheckbox('is_passed', [
                         'title' => LANG_USERS_MIG_COND_DATE,
-                    )),
-
-                    new fieldList('passed_from', array(
+                    ]),
+                    new fieldList('passed_from', [
                         'title' => LANG_USERS_MIG_PASSED_FROM,
-                        'items' => array(
+                        'items' => [
                             0 => LANG_USERS_MIG_PASSED_REG,
                             1 => LANG_USERS_MIG_PASSED_MIG
-                        )
-                    )),
-
-                    new fieldNumber('passed_days', array(
+                        ],
+                        'visible_depend' => ['is_passed' => ['show' => ['1']]]
+                    ]),
+                    new fieldNumber('passed_days', [
                         'title' => LANG_USERS_MIG_PASSED,
-                    )),
-
-                )
-            ),
-
-            array(
-                'type' => 'fieldset',
-                'childs' => array(
-
-                    new fieldCheckbox('is_rating', array(
+                        'visible_depend' => ['is_passed' => ['show' => ['1']]]
+                    ]),
+                    new fieldCheckbox('is_rating', [
                         'title' => LANG_USERS_MIG_COND_RATING,
-                    )),
-
-                    new fieldNumber('rating', array(
+                    ]),
+                    new fieldNumber('rating', [
                         'title' => LANG_USERS_MIG_RATING,
-                    )),
-
-                )
-            ),
-
-            array(
-                'type' => 'fieldset',
-                'childs' => array(
-
-                    new fieldCheckbox('is_karma', array(
+                        'visible_depend' => ['is_rating' => ['show' => ['1']]]
+                    ]),
+                    new fieldCheckbox('is_karma', [
                         'title' => LANG_USERS_MIG_COND_KARMA,
-                    )),
-
-                    new fieldNumber('karma', array(
+                    ]),
+                    new fieldNumber('karma', [
                         'title' => LANG_USERS_MIG_KARMA,
-                    )),
-
-                )
-            ),
-
-            array(
-                'type' => 'fieldset',
-                'childs' => array(
-
-                    new fieldCheckbox('is_notify', array(
+                        'visible_depend' => ['is_karma' => ['show' => ['1']]]
+                    ]),
+                    new fieldCheckbox('is_notify', [
                         'title' => LANG_USERS_MIG_NOTIFY,
-                    )),
-
-                    new fieldHtml('notify_text', array(
-                        'title' => LANG_USERS_MIG_NOTIFY_TEXT
-                    ))
-
-                )
-            )
-
-        );
-
+                    ]),
+                    new fieldHtml('notify_text', [
+                        'title' => LANG_USERS_MIG_NOTIFY_TEXT,
+                        'visible_depend' => ['is_notify' => ['show' => ['1']]]
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

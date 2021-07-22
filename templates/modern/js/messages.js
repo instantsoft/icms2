@@ -213,8 +213,9 @@ icms.messages = (function ($) {
 
             self.scrollChat();
 
-            $('.composer form', pm_window).on('keydown', function(event){
-                if (event.keyCode === 10 || event.keyCode == 13 && event.ctrlKey) {
+            $('.composer form', pm_window).on('keydown', function(event, external_event){
+                event = external_event || event;
+                if (event.keyCode === 10 || event.keyCode === 13 && event.ctrlKey) {
                     self.send();
                 }
             });

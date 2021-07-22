@@ -31,15 +31,13 @@ class fieldUser extends cmsFormField {
 
         $users_model = cmsCore::getModel('users');
 
-        $users = $users_model->filterLike('nickname', "%{$value}%")->getUsers();
+        $users_ids = $users_model->filterLike('nickname', "%{$value}%")->getUsersIds();
 
-        if (!$users) {
+        if (!$users_ids) {
             return $model->filterIsNull($this->name . '_id');
         } else {
-            $users_ids = array_collection_to_list($users, 'id', 'id');
             return $model->filterIn($this->name . '_id', $users_ids);
         }
-
     }
 
 }

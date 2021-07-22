@@ -37,7 +37,7 @@
                 'name'       => 'delete_profile',
                 'onclick'    => "icms.users.delete('" . href_to_profile($profile, ['delete']) . "', '" . LANG_USERS_DELETE_PROFILE . "');",
                 'attributes' => array(
-                    'class' => 'delete_profile'
+                    'class' => 'delete_profile mt-3 mt-md-0 float-md-right btn-danger'
                 )
             )
         ),

@@ -8,75 +8,89 @@ class onUsersCronMigration extends cmsAction {
 
         $rules = $this->model->filterEqual('is_active', 1)->getMigrationRules();
 
-        if (!$rules) { return true; }
+        if (!$rules) {
+            return true;
+        }
 
         foreach ($rules as $rule) {
 
-            extract($rule);
+            // Получаем юзеров, которые уже в нужной группе
+            // Чтобы несколько раз не переводить
+            $to_user_ids = $this->model->limit(false)->
+                    filterEqual('group_id', $rule['group_to_id'])->
+                    get('{users}_groups_members', function($user, $model) {
+                return $user['user_id'];
+            }, false);
 
-            $this->model->filterGroup($group_from_id);
+            // Если есть, исключаем
+            if($to_user_ids){
+                $this->model->filterNotIn('id', $to_user_ids);
+            }
+
+            // Фильтруем по группе, с которой переводим
+            $this->model->filterGroup($rule['group_from_id']);
+
             $this->model->filterIsNull('is_locked');
+            $this->model->filterIsNull('is_deleted');
 
-            $users = $this->model->getUsers();
+            $this->model->selectOnly('i.id');
+            $this->model->select('i.date_group')->select('i.date_reg');
+            $this->model->select('i.rating')->select('i.karma');
+            $this->model->select('i.groups');
 
+            // Ограничения по рейтингу
+            if ($rule['is_rating']) {
+                $this->model->filterGtEqual('rating', $rule['rating']);
+            }
+            // Ограничения по карме
+            if ($rule['is_karma']) {
+                $this->model->filterGtEqual('karma', $rule['karma']);
+            }
+            // Ограничения по дате
+            if ($rule['is_passed']) {
+
+                $passed_field = $rule['passed_from'] ? 'date_group' : 'date_reg';
+
+                $this->model->filterDateOlder($passed_field, $rule['passed_days']);
+            }
+
+            $users = $this->model->limit(false)->get('{users}', function($user, $model) {
+                $user['groups'] = cmsModel::yamlToArray($user['groups']);
+                return $user;
+            }, false);
             if (!$users) { continue; }
-
-            $passed_field = $passed_from ? 'date_group' : 'date_reg';
-            $now_time     = time();
 
             foreach ($users as $user) {
 
-                $is_migrate = true;
-
-                if ($is_passed) {
-
-                    $start_time = strtotime($user[$passed_field]);
-
-                    $days = round(($now_time - $start_time) / 60 / 60 / 24);
-
-                    if ($days < $passed_days) {
-                        $is_migrate = false;
-                    }
-                }
-
-                if ($is_rating) {
-                    if ($user['rating'] < $rating) {
-                        $is_migrate = false;
-                    }
-                }
-
-                if ($is_karma) {
-                    if ($user['karma'] < $karma) {
-                        $is_migrate = false;
-                    }
-                }
-
-                if (!$is_migrate) { continue; }
-
-                if (!$is_keep_group) {
-                    if (($key = array_search($group_from_id, $user['groups'])) !== false) {
+                // Меняем группу
+                if (!$rule['is_keep_group']) {
+                    if (($key = array_search($rule['group_from_id'], $user['groups'])) !== false) {
                         unset($user['groups'][$key]);
                     }
                 }
 
-                $user['groups'][] = $group_to_id;
-                $user['groups']   = array_unique($user['groups']);
+                $user['groups'][] = $rule['group_to_id'];
+                $user['groups'] = array_unique($user['groups']);
 
                 $this->model->updateUser($user['id'], [
                     'groups'     => $user['groups'],
                     'date_group' => null
                 ]);
 
-                if (!$is_notify) { continue; }
+                // Уведомление
+                if (!$rule['is_notify']) {
+                    continue;
+                }
 
-                $messenger = cmsCore::getController('messages');
+                $this->controller_messages->addRecipient($user['id']);
 
-                $messenger->addRecipient($user['id']);
+                $this->controller_messages->sendNoticePM(['content' => nl2br($rule['notify_text'])]);
 
-                $messenger->sendNoticePM(['content' => nl2br($notify_text)]);
+                $this->controller_messages->clearRecipients();
             }
         }
 
+        return true;
     }
 
 }

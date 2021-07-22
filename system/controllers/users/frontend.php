@@ -242,7 +242,7 @@ class users extends cmsFrontend {
 
     }
 
-    public function renderProfilesList($page_url, $dataset_name = false, $actions = false){
+    public function renderProfilesList($page_url, $dataset_name = false, $actions = false) {
 
         $page = $this->request->get('page', 1);
         $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
@@ -260,57 +260,70 @@ class users extends cmsFrontend {
 
         list($fields, $this->model) = cmsEventsManager::hook('profiles_list_filter', array($fields, $this->model));
 
-        $filters = array();
+        $filters = [];
 
         // проверяем запросы фильтрации по полям
-        foreach($fields as $name => $field){
+        foreach ($fields as $name => $field) {
 
-            if (!$field['is_in_filter']) { continue; }
+            if (!$field['is_in_filter']) {
+                continue;
+            }
 
             $field['handler']->setItem(['ctype_name' => 'users', 'id' => null])->setContext('filter');
 
             $fields[$name] = $field;
 
-            if (!$this->request->has($name)){ continue; }
-
-            $value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
-            if (!$value) { continue; }
-
-            $value = $field['handler']->storeFilter($value);
-			if (!$value) { continue; }
-
-            if($field['handler']->applyFilter($this->model, $value) !== false){
-                $filters[$name] = $value;
+            if (!$this->request->has($name)) {
+                continue;
             }
 
+            $value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
+            if (!$value) {
+                continue;
+            }
+
+            $value = $field['handler']->storeFilter($value);
+            if (!$value) {
+                continue;
+            }
+
+            if ($field['handler']->applyFilter($this->model, $value) !== false) {
+                $filters[$name] = $value;
+            }
+        }
+
+        // Фильтр по IP только для администраторов
+        if($this->cms_user->is_admin && $this->request->has('ip')){
+            $this->model->filterEqual('ip', $this->request->get('ip', ''));
         }
 
         // Получаем количество и список записей
         $total = $this->model->getUsersCount();
 
-        if($this->request->has('show_count')){
+        if ($this->request->has('show_count')) {
 
-            $hint = LANG_SHOW.' '.html_spellcount($total, LANG_USERS_SPELL, false, false, 0);
+            $hint = LANG_SHOW . ' ' . html_spellcount($total, LANG_USERS_SPELL, false, false, 0);
 
             return $this->cms_template->renderJSON([
                 'count'       => $total,
                 'filter_link' => false,
                 'hint'        => $hint
             ]);
-
         }
 
         $profiles = $this->model->getUsers($actions);
 
-        if($this->request->isStandard()){
-            if(!$profiles && $page > 1){ cmsCore::error404(); }
+        if ($this->request->isStandard()) {
+            if (!$profiles && $page > 1) {
+                cmsCore::error404();
+            }
         }
 
         $this->model->makeProfileFields($fields, $profiles, $this->cms_user);
 
         list($profiles, $fields) = cmsEventsManager::hook('profiles_before_list', [$profiles, $fields]);
 
-        return $this->cms_template->renderInternal($this, 'list', array(
+        return $this->cms_template->renderInternal($this, 'list', [
             'page_url'     => $page_url,
             'fields'       => $fields,
             'filters'      => $filters,
@@ -320,8 +333,7 @@ class users extends cmsFrontend {
             'profiles'     => $profiles,
             'dataset_name' => $dataset_name,
             'user'         => $this->cms_user
-        ));
-
+        ]);
     }
 
     public function getDatasets() {
