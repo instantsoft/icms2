@@ -14,9 +14,11 @@
             </li>
         <?php } ?>
     </ul>
-    <?php foreach ($comment_systems as $key => $comment_system) { ?>
-        <div id="tab-<?php echo $comment_system['name']; ?>" class="tab-pane<?php if(!$key){ ?> show active<?php } ?> <?php echo $target_controller.'_'.$target_subject; ?>_comments">
-            <?php echo $comment_system['html']; ?>
-        </div>
-    <?php } ?>
+    <div class="tab-content">
+        <?php foreach ($comment_systems as $key => $comment_system) { ?>
+            <div id="tab-<?php echo $comment_system['name']; ?>" class="tab-pane<?php if(!$key){ ?> show active<?php } ?> <?php echo $target_controller.'_'.$target_subject; ?>_comments" role="tablist">
+                <?php echo $comment_system['html']; ?>
+            </div>
+        <?php } ?>
+    </div>
 </div>

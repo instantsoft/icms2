@@ -102,7 +102,8 @@ class Jevix{
 	const STATE_INSIDE_CALLBACK_TAG = 6;
 
 	public $tagsRules = array();
-	public $entities1 = array('"'=>'&quot;', "'"=>'&#39;', '&'=>'&amp;', '<'=>'&lt;', '>'=>'&gt;');
+	//public $entities1 = array('"'=>'&quot;', "'"=>'&#39;', '&'=>'&amp;', '<'=>'&lt;', '>'=>'&gt;');
+	public $entities1 = array('"'=>'&quot;', "'"=>'&#39;', '<'=>'&lt;', '>'=>'&gt;');
 	public $entities2 = array('<'=>'&lt;', '>'=>'&gt;', '"'=>'&quot;');
 	public $textQuotes = array(array('«', '»'), array('„', '“'));
 	public $dash = " — ";

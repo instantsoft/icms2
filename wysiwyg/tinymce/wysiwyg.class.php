@@ -50,11 +50,15 @@ class cmsWysiwygTinymce {
         'plugins' => [
             'autoresize'
         ],
+        'textpattern_patterns' => [
+            ['start' => '> ', 'format' => 'blockquote']
+        ],
         'codesample_languages' => [
             ['text' => 'HTML/XML', 'value' => 'html'],
             ['text' => 'PHP', 'value' => 'php'],
             ['text' => 'JavaScript', 'value' => 'javascript'],
             ['text' => 'CSS', 'value' => 'css'],
+            ['text' => 'SQL', 'value' => 'sql'],
             ['text' => 'Bash', 'value' => 'bash'],
         ],
         'toolbar' => 'formatselect | bold italic strikethrough forecolor backcolor | link image media table | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat',

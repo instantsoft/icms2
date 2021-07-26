@@ -109,6 +109,11 @@ class actionCommentsSubmit extends cmsAction {
             'build_smiles' => $editor_params['editor'] == 'markitup'
         ]);
 
+        // Если редактор не указан, то это textarea, вырезаем все теги
+        if(!$editor_params['editor']){
+            $this->content_html = strip_tags($this->content_html, '<br>');
+        }
+
 		if (!$this->content_html){
 			return $this->cms_template->renderJSON(array(
 				'error'   => true,
@@ -118,7 +123,6 @@ class actionCommentsSubmit extends cmsAction {
 		}
 
         return call_user_func(array($this, 'run'.ucfirst($this->request->get('action'))));
-
     }
 
     /**

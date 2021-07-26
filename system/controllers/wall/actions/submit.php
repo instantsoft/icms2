@@ -57,6 +57,11 @@ class actionWallSubmit extends cmsAction {
             'build_smiles' => $editor_params['editor'] == 'markitup'
         ]);
 
+        // Если редактор не указан, то это textarea, вырезаем все теги
+        if(!$editor_params['editor']){
+            $content_html = strip_tags($content_html, '<br>');
+        }
+
         if($this->validate_required($content_html) !== true){
             return $this->error(ERR_VALIDATE_REQUIRED);
         }

@@ -281,7 +281,7 @@ class onTypographHtmlFilter extends cmsAction {
     }
 
     private function getVideoCode($src) {
-        return '<div class="video_wrap embed-responsive embed-responsive-16by9"><iframe class="video_frame embed-responsive-item" src="' . html($src, false) . '" frameborder="0" allowfullscreen></iframe></div>';
+        return '<div class="video_wrap embed-responsive embed-responsive-16by9"><iframe class="video_frame embed-responsive-item" src="' . $src . '" frameborder="0" allowfullscreen></iframe></div>';
     }
 
     private function parseYouTubeVideoID($url) {

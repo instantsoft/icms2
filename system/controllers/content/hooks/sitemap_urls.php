@@ -42,24 +42,60 @@ class onContentSitemapUrls extends cmsAction {
             }
         }
 
-        if ($action == 'cats' && $ctype['is_cats']) {
+        if ($action == 'cats') {
 
-            list($ctype, $this->model) = cmsEventsManager::hook('content_list_sitemap_cats_filter', array($ctype, $this->model));
-            list($ctype, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_list_sitemap_cats_filter", array($ctype, $this->model));
+            // Главная
+            if (empty($ctype['options']['list_off_index'])) {
+                $urls[] = [
+                    'last_modified' => date('Y-m-d'),
+                    'title'         => $ctype['title'],
+                    'url'           => href_to_abs($ctype['name'])
+                ];
+            }
 
-            $items = $this->model->limit(false)->getCategoriesTree($ctype['name'], false);
+            // Получаем список наборов
+            $datasets = $this->getCtypeDatasets($ctype, array(
+                'cat_id' => false
+            ));
 
-            $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
+            if ($datasets && count($datasets) > 1) {
 
-            if ($items) {
-                foreach ($items as $item) {
-                    $urls[] = [
-                        'last_modified' => null,
-                        'title'         => $item['title'],
-                        'url'           => href_to_abs($base_url, $item['slug'])
-                    ];
+                $ds_counter = 0;
+
+                foreach($datasets as $ds){
+
+                    if($ds_counter){
+                        $urls[] = [
+                            'last_modified' => date('Y-m-d'),
+                            'title'         => $ds['title'],
+                            'url'           => href_to_abs($ctype['name']).'-'.$ds['name']
+                        ];
+                    }
+
+                    $ds_counter++;
                 }
             }
+
+            if ($ctype['is_cats']) {
+
+                list($ctype, $this->model) = cmsEventsManager::hook('content_list_sitemap_cats_filter', array($ctype, $this->model));
+                list($ctype, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_list_sitemap_cats_filter", array($ctype, $this->model));
+
+                $items = $this->model->limit(false)->getCategoriesTree($ctype['name'], false);
+
+                $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
+
+                if ($items) {
+                    foreach ($items as $item) {
+                        $urls[] = [
+                            'last_modified' => null,
+                            'title'         => $item['title'],
+                            'url'           => href_to_abs($base_url, $item['slug'])
+                        ];
+                    }
+                }
+            }
+
         }
 
         return $urls;

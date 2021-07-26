@@ -290,6 +290,25 @@ class formModernTemplateOptions extends cmsForm {
                 )
             ),
 
+            'favicon' => array(
+                'type' => 'fieldset',
+                'title' => LANG_MODERN_FAVICON,
+                'childs' => array(
+
+                    new fieldFile('favicon', array(
+                        'title' => LANG_MODERN_FAVICON_FILE,
+                        'options' => [
+                            'extensions' => 'ico,svg'
+                        ]
+                    )),
+
+                    new fieldHtml('favicon_head_html', [
+                        'title'   => LANG_MODERN_FAVICON_HEAD,
+                        'options' => ['editor' => 'ace']
+                    ])
+                )
+            ),
+
             'colors' => array(
                 'type' => 'fieldset',
                 'title' => LANG_MODERN_THEME_COLORS,

@@ -31,7 +31,7 @@ class cmsUser {
     }
 
     public static function get($key){
-        return self::getInstance()->$key;
+        return isset(self::getInstance()->$key) ? self::getInstance()->$key : null;
     }
 
     public static function getIp(){

@@ -128,29 +128,31 @@ class users extends cmsFrontend {
 
     }
 
-    public function getProfileMenu($profile){
+    public function getProfileMenu($profile) {
 
-        $menu = array(
-            array(
+        $menu = [
+            [
                 'title'    => LANG_USERS_PROFILE_INDEX,
                 'url'      => href_to_profile($profile),
                 'url_mask' => href_to_profile($profile)
-            )
-        );
+            ]
+        ];
 
-        if ($profile['is_deleted']){
+        if ($profile['is_deleted']) {
             return $menu;
         }
 
         $this->tabs = $this->model->getUsersProfilesTabs(true, 'name');
 
-        $this->tabs_controllers = array();
+        $this->tabs_controllers = ['users' => $this];
 
-		if ($this->tabs){
-			foreach($this->tabs as $tab){
+        if ($this->tabs) {
+            foreach ($this->tabs as $tab) {
 
                 // включен ли контроллер
-                if(!$this->isControllerEnabled($tab['controller'])){ continue; }
+                if (!$this->isControllerEnabled($tab['controller'])) {
+                    continue;
+                }
 
                 // права доступа
                 if (($tab['groups_view'] && !$this->cms_user->isInGroups($tab['groups_view'])) ||
@@ -159,37 +161,36 @@ class users extends cmsFrontend {
                 }
 
                 // опция "показывать только владельцу профиля"
-                if($tab['show_only_owner'] && $profile['id'] != $this->cms_user->id){
+                if ($tab['show_only_owner'] && $profile['id'] != $this->cms_user->id) {
                     continue;
                 }
 
-				$default_tab_info = array(
-					'title' => $tab['title'],
+                $default_tab_info = [
+                    'title' => $tab['title'],
                     'url'   => href_to_profile($profile, [$tab['name']])
-                );
+                ];
 
-				if (empty($this->tabs_controllers[$tab['controller']])){
-					$controller = cmsCore::getController($tab['controller'], $this->request);
-				} else {
-					$controller = $this->tabs_controllers[$tab['controller']];
-				}
+                if (empty($this->tabs_controllers[$tab['controller']])) {
+                    $controller = cmsCore::getController($tab['controller'], $this->request);
+                } else {
+                    $controller = $this->tabs_controllers[$tab['controller']];
+                }
 
-				$tab_info = $controller->runHook('user_tab_info', array('profile'=>$profile, 'tab_name'=>$tab['name']));
+                $tab_info = $controller->runHook('user_tab_info', ['profile' => $profile, 'tab_name' => $tab['name']]);
 
-				if ($tab_info === false) {
+                if ($tab_info === false) {
                     unset($this->tabs[$tab['name']]);
-					continue;
-				} else if ($tab_info === true) {
-					$tab_info = $default_tab_info;
-				} else {
-					$tab_info = array_merge($default_tab_info, $tab_info);
-				}
+                    continue;
+                } else if ($tab_info === true) {
+                    $tab_info = $default_tab_info;
+                } else {
+                    $tab_info = array_merge($default_tab_info, $tab_info);
+                }
 
-				$menu[] = $tab_info;
+                $menu[] = $tab_info;
 
-				$this->tabs_controllers[$tab['controller']] = $controller;
-
-			}
+                $this->tabs_controllers[$tab['controller']] = $controller;
+            }
         }
 
         return $menu;

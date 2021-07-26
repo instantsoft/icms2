@@ -88,23 +88,23 @@ class actionMessagesSend extends cmsAction {
         //
         // Отправляем сообщение
         //
-        $is_textarea_editor = !$this->options['editor'];
 
-        if (!$is_textarea_editor) {
+        $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->options['editor'],
+            'presets' => $this->options['editor_presets']
+        ]);
 
-            $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
-                'editor'  => $this->options['editor'],
-                'presets' => $this->options['editor_presets']
-            ]);
-
-            $is_textarea_editor = $editor_params['editor'] === 'markitup';
-        }
-
+        // Типографируем текст
         $content_html = cmsEventsManager::hook('html_filter', [
             'text'         => $content,
-            'is_auto_br'   => $is_textarea_editor,
-            'build_smiles' => $is_textarea_editor
+            'is_auto_br'   => (!$editor_params['editor'] || $editor_params['editor'] == 'markitup'),
+            'build_smiles' => $editor_params['editor'] == 'markitup'
         ]);
+
+        // Если редактор не указан, то это textarea, вырезаем все теги
+        if(!$editor_params['editor']){
+            $content_html = strip_tags($content_html, '<br>');
+        }
 
         if (!$content_html) {
             return $this->cms_template->renderJSON([

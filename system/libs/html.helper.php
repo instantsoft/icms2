@@ -303,7 +303,7 @@ function html_wysiwyg($field_id, $content = '', $wysiwyg = false, $config = []) 
     if (!$wysiwyg) {
 
         if ($wysiwyg === null) {
-            return '<textarea class="textarea form-control" id="' . $field_id . '" name="' . $field_id . '">' . html($content, false) . '</textarea>';
+            return '<textarea class="textarea form-control" rows="5" id="' . $field_id . '" name="' . $field_id . '">' . html($content, false) . '</textarea>';
         }
 
         $wysiwyg = cmsConfig::get('default_editor');
