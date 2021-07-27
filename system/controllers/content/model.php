@@ -1923,7 +1923,7 @@ class modelContent extends cmsModel {
 
         $category = $this->getCategory($ctype_name, $id);
 
-        $this->filterCategory($ctype_name, $category, true);
+        $this->filterCategory($ctype_name, $category, true, true);
 
         if (!$is_delete_content){
             $table_name = $this->table_prefix . $ctype_name;

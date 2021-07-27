@@ -114,7 +114,7 @@ class widgetContentList extends cmsWidget {
         // Включен показ категорий?
         if (in_array('category', $shown_fields)) {
 
-            $table_name      = $model->getContentCategoryTableName($ctype['name']);
+            $table_name = $model->getContentCategoryTableName($ctype['name']);
             $bind_table_name = $table_name . '_bind';
 
             $model->select('c.title', 'cat_title');
@@ -122,7 +122,7 @@ class widgetContentList extends cmsWidget {
 
             if ($category){
 
-                $model->joinInner($bind_table_name, 'b FORCE INDEX (item_id)', 'b.item_id = i.id');
+                $model->joinInner($bind_table_name, 'b', 'b.item_id = i.id');
                 $model->joinInner($table_name, 'c', 'c.id = b.category_id');
 
                 $model->filterGtEqual('c.ns_left', $category['ns_left']);
@@ -136,7 +136,7 @@ class widgetContentList extends cmsWidget {
             }
         } else {
             if ($category){
-                $model->filterCategory($ctype['name'], $category, true);
+                $model->filterCategory($ctype['name'], $category, true, !empty($ctype['options']['is_cats_multi']));
             }
         }
 

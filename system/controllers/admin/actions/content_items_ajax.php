@@ -70,7 +70,7 @@ class actionAdminContentItemsAjax extends cmsAction {
 
         }
 
-        $content_model->filterCategory($ctype['name'], $category, true);
+        $content_model->filterCategory($ctype['name'], $category, true, !empty($ctype['options']['is_cats_multi']));
 
         $content_model->disableDeleteFilter();
         $content_model->disableApprovedFilter();

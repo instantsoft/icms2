@@ -20,7 +20,7 @@ class onContentRssFeedList extends cmsAction {
         }
 
         if (!empty($category)) {
-            $this->model->filterCategory($feed['ctype_name'], $category, true);
+            $this->model->filterCategory($feed['ctype_name'], $category, true, true);
         }
 
         if (!empty($author)) {

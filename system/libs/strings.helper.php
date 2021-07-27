@@ -496,7 +496,7 @@ function string_replace_keys_values($string, $data) {
  */
 function string_replace_keys_values_extended($string, $data){
 
-    $matches_count = preg_match_all('/{([^}]+)}/ui', $string, $matches);
+    $matches_count = preg_match_all('/{([а-яёa-z]{1}[^}\n]+)}/ui', $string, $matches);
 
     if ($matches_count){
 

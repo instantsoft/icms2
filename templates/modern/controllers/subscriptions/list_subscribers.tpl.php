@@ -8,11 +8,15 @@
 
                 <?php if ($profile['nickname']){ ?>
                     <a href="<?php echo href_to_profile($profile); ?>" class="icms-user-avatar mr-3 <?php if (!empty($profile['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
-                        <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname'], $profile['is_deleted']); ?>
+                        <?php if($profile['avatar']){ ?>
+                            <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname']); ?>
+                        <?php } else { ?>
+                            <?php echo html_avatar_image_empty($profile['nickname'], 'avatar__inlist'); ?>
+                        <?php } ?>
                     </a>
                 <?php } else {?>
                     <span class="peer_no_online">
-                        <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], ($profile['guest_name'] ? $profile['guest_name'] : LANG_GUEST), false); ?>
+                        <?php echo html_avatar_image_empty(($profile['guest_name'] ? $profile['guest_name'] : LANG_GUEST), 'avatar__inlist'); ?>
                     </span>
                 <?php }?>
 

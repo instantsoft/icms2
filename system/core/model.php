@@ -864,66 +864,53 @@ class cmsModel {
         $this->order_by = 'fsort desc';
 
         return $this->filter($search_param);
-
     }
 
-    public function filterCategory($ctype_name, $category, $is_recursive=false){
+    public function filterCategory($ctype_name, $category, $is_recursive = false, $is_multi_cats = false) {
 
-        $table_name      = $this->getContentCategoryTableName($ctype_name);
+        $table_name = $this->getContentCategoryTableName($ctype_name);
         $bind_table_name = $table_name . '_bind';
 
-        if (!$is_recursive){
+        if (!$is_recursive) {
 
-            $this->joinInner($bind_table_name, 'b FORCE INDEX (item_id)', 'b.item_id = i.id')->filterEqual('b.category_id', $category['id']);
-
+            $this->joinInner($bind_table_name, 'b', 'b.item_id = i.id')->filterEqual('b.category_id', $category['id']);
         } else {
 
             // для корневой категории фильтрация не нужна
-            if(!$category['parent_id']){
+            if (!$category['parent_id']) {
                 return $this;
             }
 
-            /**
-             * Нам нужны только уникальные значения
-             * Закомментировано потому что DISTINCT дает нагрузку
-             * @todo сделать анализ кол-ва записей, вложенности категорий и динамически включать или отключать
-             * В общих случаях, когда дерево категорий имеет первый и второй уровень раскомментировать не нужно
-             * Для малых БД, где повсеместно используется принадлежность к нескольким категориям ниже второго уровня
-             * имеет смысл раскомментировать строку ниже
-             */
-            //$this->distinctSelect();
+            if($is_multi_cats){
+                $this->distinctSelect();
+            }
 
-            $this->joinInner($bind_table_name, 'b FORCE INDEX (item_id)', 'b.item_id = i.id');
+            $this->joinInner($bind_table_name, 'b', 'b.item_id = i.id');
             $this->joinInner($table_name, 'c', 'c.id = b.category_id');
             $this->filterGtEqual('c.ns_left', $category['ns_left']);
             $this->filterLtEqual('c.ns_right', $category['ns_right']);
-
         }
 
         return $this;
-
     }
 
-	public function filterCategoryId($ctype_name, $category_id, $is_recursive=false){
+    public function filterCategoryId($ctype_name, $category_id, $is_recursive = false) {
 
-		if (!$is_recursive){
+        if (!$is_recursive) {
 
-            if($category_id){
-                return $this->filterCategory($ctype_name, array('id'=>$category_id));
+            if ($category_id) {
+                return $this->filterCategory($ctype_name, ['id' => $category_id]);
             }
+        } else {
 
-		} else {
-
-			$category = $this->getCategory($ctype_name, $category_id);
-            if($category){
-                return $this->filterCategory($ctype_name, $category, true);
+            $category = $this->getCategory($ctype_name, $category_id);
+            if ($category) {
+                return $this->filterCategory($ctype_name, $category, true, true);
             }
-
-		}
+        }
 
         return $this;
-
-	}
+    }
 
     public function disablePrivacyFilter(){
         $this->privacy_filter_disabled = true;

@@ -110,7 +110,7 @@ class onContentSubscriptionMatchList extends cmsAction {
                 }
             }
 
-            $this->model->filterCategory($ctype['name'], $category, $is_recursive);
+            $this->model->filterCategory($ctype['name'], $category, $is_recursive, !empty($ctype['options']['is_cats_multi']));
 
         }
 

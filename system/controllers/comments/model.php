@@ -134,6 +134,13 @@ class modelComments extends cmsModel {
         return $delete_ids;
     }
 
+    public function restoreUserComments($user_id) {
+
+        cmsCache::getInstance()->clean('comments.list');
+
+        return $this->filterEqual('user_id', $user_id)->updateFiltered('comments', ['is_deleted' => null]);
+    }
+
     public function deleteUserComments($user_id) {
 
         cmsCache::getInstance()->clean('comments.list');

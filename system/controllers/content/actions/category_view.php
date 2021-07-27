@@ -86,7 +86,7 @@ class actionContentCategoryView extends cmsAction {
         if ($ctype['is_cats']) {
             // Фильтр по категории
             if ($slug != 'index') {
-                $this->model->filterCategory($ctype['name'], $category, $ctype['is_cats_recursive']);
+                $this->model->filterCategory($ctype['name'], $category, $ctype['is_cats_recursive'], !empty($ctype['options']['is_cats_multi']));
             } elseif (!$ctype['is_cats_recursive']) {
                 $this->model->filterCategory($ctype['name'], array('id' => 1));
             }

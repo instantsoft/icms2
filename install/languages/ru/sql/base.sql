@@ -937,7 +937,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (212, 'groups_after_accept_request', 'activity', 212, 1),
 (213, 'groups_after_update', 'activity', 213, 1),
 (214, 'render_widget_menu_menu', 'bootstrap4', 214, 1),
-(215, 'engine_start', 'redirect', 215, 1);
+(215, 'engine_start', 'redirect', 215, 1),
+(216, 'restore_user', 'comments', 216, 1),
+(217, 'set_user_is_deleted', 'comments', 217, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
