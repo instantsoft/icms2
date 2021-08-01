@@ -69,6 +69,7 @@ define('LANG_PROCESS_VERIFY_EMAIL', 'E-mailverification');
 define('LANG_RESTORE_TOKEN_EXPIRED', 'Password recovery request is expired ');
 define('LANG_RESTORE_TOKEN_IS_SEND', 'Password recovery instruction has been sent, check the "Spam" folder');
 define('LANG_RESTORE_BLOCK', 'Account is blocked');
+define('LANG_RESTORE_IS_DELETED', 'Account is deleted');
 define('LANG_PASS_RESTORE', 'Password Recovery');
 define('LANG_EMAIL_NOT_FOUND', 'This e-mail not found in our database');
 define('LANG_TOKEN_SENDED', 'We sent you an e-mail with further instructions on password recovery');

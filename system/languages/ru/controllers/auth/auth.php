@@ -69,6 +69,7 @@ define('LANG_PROCESS_VERIFY_EMAIL', 'Подтверждение регистра
 define('LANG_RESTORE_TOKEN_EXPIRED', 'Запрос на восстановление пароля истёк');
 define('LANG_RESTORE_TOKEN_IS_SEND', 'Инструкция по восстановлению пароля уже была отправлена, проверьте папку "Спам"');
 define('LANG_RESTORE_BLOCK', 'Аккаунт заблокирован');
+define('LANG_RESTORE_IS_DELETED', 'Аккаунт удалён');
 define('LANG_PASS_RESTORE', 'Восстановление пароля');
 define('LANG_EMAIL_NOT_FOUND', 'Указанный E-mail не найден в нашей базе');
 define('LANG_TOKEN_SENDED', 'На указанный адрес E-mail отправлены инструкции по восстановлению пароля');

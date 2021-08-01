@@ -32,7 +32,7 @@
                         </a>
                     <?php } ?>
 
-                    <div class="media-body text-truncate">
+                    <div class="media-body">
                         <?php if (!empty($fields['nickname']) && $fields['nickname']['is_in_list']){ ?>
                             <h5 class="my-0">
                                 <a href="<?php echo href_to_profile($entry['user']); ?>">
@@ -47,13 +47,13 @@
                         <?php } ?>
                     </div>
 
-                    <div class="actions text-muted d-flex align-items-center">
-                        <span class="mr-2">
-                            <?php echo string_date_age_max($entry['date_pub'], true); ?>
-                        </span>
-                        <span class="h3 m-0 <?php echo html_signed_class($entry['points']); ?>">
+                    <div class="actions text-muted text-right">
+                        <div class="h3 m-0 <?php echo html_signed_class($entry['points']); ?>">
                             <?php echo html_signed_num($entry['points']); ?>
-                        </span>
+                        </div>
+                        <div class="small">
+                            <?php echo string_date_age_max($entry['date_pub'], true); ?>
+                        </div>
                     </div>
 
                 </div>

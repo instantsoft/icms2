@@ -4,9 +4,7 @@ class actionAdminContentItemEdit extends cmsAction {
 
     public function run($ctype_name, $id) {
 
-        $content_model = cmsCore::getModel('content');
-
-        $ctype = $content_model->getContentTypeByName($ctype_name);
+        $ctype = $this->model_backend_content->getContentTypeByName($ctype_name);
         if (!$ctype) { return cmsCore::error404(); }
 
         $this->cms_template->addBreadcrumb(LANG_CP_SECTION_CONTENT, $this->cms_template->href_to('content'));

@@ -612,6 +612,27 @@ class cmsFormField {
             ksort($this->items, SORT_NATURAL);
 
             $items = $this->items;
+
+        } else if($this->getOption('list_where') === 'table'){
+
+            $model = new cmsModel();
+
+            $list_where_cond = $this->getOption('list_where_cond');
+            if($list_where_cond){
+                $list_where_cond = json_decode($list_where_cond, true);
+                if(is_array($list_where_cond)){
+                    $model->applyDatasetFilters(['filters' => $list_where_cond]);
+                }
+            }
+
+            $this->items = $model->selectTranslatedField($this->getOption('list_where_title'), $this->getOption('list_table'))->
+                    get($this->getOption('list_table'), function ($item, $model){
+                return $item[$this->getOption('list_where_title')];
+            }, $this->getOption('list_where_id'));
+
+            ksort($this->items, SORT_NATURAL);
+
+            $items = $this->items;
         }
 
         return $items;

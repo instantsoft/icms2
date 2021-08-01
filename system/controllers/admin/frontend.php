@@ -195,9 +195,7 @@ class admin extends cmsFrontend {
 
         $menu = []; $ctype_new_count = 0;
 
-        $model_content = cmsCore::getModel('content');
-
-        $ctypes = $model_content->getContentTypes();
+        $ctypes = $this->model_backend_content->getContentTypes();
 
         if($show_submenu){
             foreach ($ctypes as $ctype) {
@@ -279,7 +277,6 @@ class admin extends cmsFrontend {
         ];
 
         return cmsEventsManager::hook('adminpanel_menu', $menu);
-
     }
 
 //============================================================================//
@@ -339,7 +336,7 @@ class admin extends cmsFrontend {
 
         if($do != 'add'){
 
-            $ctype = cmsCore::getModel('content')->getContentType($id);
+            $ctype = $this->model_backend_content->getContentType($id);
 
             if($ctype){
 
@@ -1060,14 +1057,11 @@ class admin extends cmsFrontend {
     }
 
     public function getContentGridColumnsSettings($ctype_id){
-        $content_model = cmsCore::getModel('content');
 
-        $ctype = $content_model->getContentType($ctype_id);
-        if(!$ctype){return false;}
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
+        if (!$ctype) { return false; }
 
-        $content_table = $content_model->table_prefix.$ctype['name'];
-
-        $fields  = $content_model->getContentFields($ctype['name']);
+        $fields = $this->model_backend_content->getContentFields($ctype['name']);
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
         $items = array(

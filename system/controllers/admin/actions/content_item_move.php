@@ -2,18 +2,18 @@
 
 class actionAdminContentItemMove extends cmsAction {
 
-    public function run($ctype_id, $parent_id){
+    public function run($ctype_id, $parent_id) {
 
-        $items = $this->request->get('selected', array());
+        $items = $this->request->get('selected', []);
 
         $is_submitted = $this->request->has('items');
 
-        $content_model = cmsCore::getModel('content');
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
 
-        $ctype = $content_model->getContentType($ctype_id);
-        if (!$ctype) { return cmsCore::error404(); }
-
-		$fields = $content_model->getContentFields($ctype['name']);
+        $fields = $this->model_backend_content->getContentFields($ctype['name']);
 
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
@@ -22,61 +22,56 @@ class actionAdminContentItemMove extends cmsAction {
         $fieldset_id = $form->addFieldset(LANG_MOVE_TO_CATEGORY);
 
         $form->addField($fieldset_id,
-            new fieldList('category_id', array(
-                    'default' => $parent_id,
-                    'generator' => function($data) use($ctype) {
-                        $content_model = cmsCore::getModel('content');
-                        $tree = $content_model->getCategoriesTree($ctype['name']);
-                        foreach($tree as $c){
-                            $items[$c['id']] = str_repeat('- ', $c['ns_level']).' '.$c['title'];
+                new fieldList('category_id', [
+                    'default'   => $parent_id,
+                    'generator' => function ($data) use ($ctype) {
+                        $items = [];
+                        $tree = $this->model_backend_content->getCategoriesTree($ctype['name']);
+                        foreach ($tree as $c) {
+                            $items[$c['id']] = str_repeat('- ', $c['ns_level']) . ' ' . $c['title'];
                         }
                         return $items;
                     }
-                )
-            )
+                ])
         );
 
-        $form->addField($fieldset_id,
-            new fieldHidden('items')
-        );
+        $form->addField($fieldset_id, new fieldHidden('items'));
 
         $data = $form->parse($this->request, $is_submitted);
 
-        if ($is_submitted){
+        if ($is_submitted) {
 
             // Проверяем правильность заполнения
-            $errors = $form->validate($this,  $data);
+            $errors = $form->validate($this, $data);
 
-            if (!$errors){
+            if (!$errors) {
 
                 $data['items'] = explode(',', $data['items']);
-                $content_model->moveContentItemsToCategory($ctype, $data['category_id'], $data['items'], $fields);
 
-                cmsEventsManager::hook("content_{$ctype['name']}_move_content_items", array($ctype, $fields, $data));
+                $this->model_backend_content->moveContentItemsToCategory($ctype, $data['category_id'], $data['items'], $fields);
 
-                return $this->cms_template->renderJSON(array(
-                    'errors' => false,
+                cmsEventsManager::hook("content_{$ctype['name']}_move_content_items", [$ctype, $fields, $data]);
+
+                return $this->cms_template->renderJSON([
+                    'errors'   => false,
                     'callback' => 'contentItemsMoved'
-                ));
-
+                ]);
             }
 
-            if ($errors){
-                return $this->cms_template->renderJSON(array(
+            if ($errors) {
+                return $this->cms_template->renderJSON([
                     'errors' => true
-                ));
+                ]);
             }
-
         }
 
-        return $this->cms_template->render('content_item_move', array(
+        return $this->cms_template->render('content_item_move', [
             'ctype'     => $ctype,
             'parent_id' => $parent_id,
             'items'     => $items,
             'form'      => $form,
             'errors'    => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }

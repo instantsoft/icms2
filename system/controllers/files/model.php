@@ -8,7 +8,7 @@ class modelFiles extends cmsModel {
         return $this->insert('uploaded_files', $file);
     }
 
-    public function deleteFile($id){
+    public function deleteFile($id, $dir_level = 2){
 
         if(!is_array($id)){
             $file = $this->getFile($id);
@@ -17,7 +17,7 @@ class modelFiles extends cmsModel {
             $file = $id;
         }
 
-        $is_unlink = files_delete_file($file['path'], 2);
+        $is_unlink = files_delete_file($file['path'], $dir_level);
 
         $is_delete = $this->delete('uploaded_files', $file['id']);
 

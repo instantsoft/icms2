@@ -212,6 +212,7 @@ button.loading {
     svg {
         width: 100%;
         height: 100%;
+        text-rendering: optimizeSpeed;
     }
     &.avatar__inlist {
         width: $avatar-inlist-size;
@@ -466,6 +467,18 @@ img {
 code {
     display: block;
     white-space: pre-wrap;
+}
+// Селекторы для скрытия текста меню, оставляя одну иконку
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+    .nav-item-text#{$infix}-show .nav-item-text {
+        display: inline-block;
+    }
+    .nav-item-text#{$infix}-hide .nav-item-text {
+        display: none;
+    }
+  }
 }
 @keyframes effect_dylan {
   50% {

@@ -4,13 +4,13 @@ class actionAdminContentItemsEdit extends cmsAction {
 
     public function run($ctype_id){
 
-        $ctype = $this->model_content->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
         if (!$ctype) { return cmsCore::error404(); }
 
         $items = $this->request->get('selected', []);
         if (!$items) { cmsCore::error404(); }
 
-        $fields = $this->model_content->orderBy('ordering')->getContentFields($ctype['name']);
+        $fields = $this->model_backend_content->orderBy('ordering')->getContentFields($ctype['name']);
 
         $form = $this->controller_content->getItemForm($ctype, $fields, 'add');
 
@@ -243,17 +243,15 @@ class actionAdminContentItemsEdit extends cmsAction {
             'form'      => $form_select,
             'errors'    => isset($errors) ? $errors : false
         ]);
-
     }
 
     public function getContentItems($ctype_name, $items){
 
-        $table_name = $this->model_content->table_prefix . $ctype_name;
+        $table_name = $this->model_backend_content->table_prefix . $ctype_name;
 
-        $this->model_content->filterIn('id', $items);
+        $this->model_backend_content->filterIn('id', $items);
 
-        return $this->model_content->get($table_name);
-
+        return $this->model_backend_content->get($table_name);
     }
 
 }

@@ -4,6 +4,10 @@
  */
 class modelBackendContent extends modelContent {
 
+    public function loadAllCtypes() {
+        return $this->reloadAllCtypes(false);
+    }
+
     public function addContentType($ctype){
 
         if(!isset($ctype['labels'])){

@@ -4,13 +4,14 @@ class actionAdminContentFilter extends cmsAction {
 
     public function run($ctype_id){
 
-        $content_model = cmsCore::getModel('content');
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
 
-        $ctype = $content_model->getContentType($ctype_id);
+        $datasets = $this->model_backend_content->getContentDatasets($ctype_id);
 
-        $datasets = $content_model->getContentDatasets($ctype_id);
-
-        $fields  = $content_model->getContentFields($ctype['name']);
+        $fields  = $this->model_backend_content->getContentFields($ctype['name']);
 
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
@@ -49,7 +50,6 @@ class actionAdminContentFilter extends cmsAction {
             'fields'     => $fields,
             'diff_order' => $diff_order
         ));
-
     }
 
 }

@@ -4,27 +4,23 @@ class formWidgetUsersOnlineOptions extends cmsForm {
 
     public function init() {
 
-        return array(
-
-            array(
-                'type' => 'fieldset',
-                'title' => LANG_OPTIONS,
-                'childs' => array(
-
-                    new fieldCheckbox('options:is_avatars', array(
+        return [
+            [
+                'type'   => 'fieldset',
+                'title'  => LANG_OPTIONS,
+                'childs' => [
+                    new fieldCheckbox('options:is_avatars', [
                         'title' => LANG_WD_USERS_ONLINE_AVATARS
-                    )),
-
-
-                    new fieldListGroups('options:groups', array(
-                        'title' => LANG_WD_USERS_ONLINE_GROUPS,
-                    )),
-
-                )
-            ),
-
-        );
-
+                    ]),
+                    new fieldListGroups('options:groups', [
+                        'title' => LANG_WD_USERS_ONLINE_GROUPS
+                    ]),
+                    new fieldListGroups('options:groups_hide', [
+                        'title' => LANG_WD_USERS_ONLINE_NO_GROUPS
+                    ])
+                ]
+            ]
+        ];
     }
 
 }
