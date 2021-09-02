@@ -1,10 +1,9 @@
-<?php $is_first = true; ?>
 <div id="comments_widget" class="tabs-menu icms-comments__tabs">
     <span id="comments"></span>
     <ul class="nav nav-tabs <?php echo $target_controller.'_'.$target_subject; ?>_comments_tab position-relative">
         <?php foreach ($comment_systems as $key => $comment_system) { ?>
             <li class="nav-item">
-                <a href="#tab-<?php echo $comment_system['name']; ?>" class="nav-link <?php if($is_first){ ?>active<?php } ?>" data-toggle="tab" role="tab">
+                <a href="#tab-<?php echo $comment_system['name']; ?>" class="nav-link <?php if(!$key){ ?>active<?php } ?>" data-toggle="tab" role="tab">
                     <?php echo $comment_system['title']; ?>
                 </a>
                 <?php if(!empty($comment_system['icon'])){ ?>
@@ -13,16 +12,13 @@
                     </a>
                 <?php } ?>
             </li>
-            <?php $is_first = false; ?>
         <?php } ?>
     </ul>
-    <?php $is_first = true; ?>
     <div class="tab-content">
         <?php foreach ($comment_systems as $key => $comment_system) { ?>
-            <div id="tab-<?php echo $comment_system['name']; ?>" class="tab-pane<?php if($is_first){ ?> show active<?php } ?> <?php echo $target_controller.'_'.$target_subject; ?>_comments" role="tablist">
+            <div id="tab-<?php echo $comment_system['name']; ?>" class="tab-pane<?php if(!$key){ ?> show active<?php } ?> <?php echo $target_controller.'_'.$target_subject; ?>_comments" role="tablist">
                 <?php echo $comment_system['html']; ?>
             </div>
-            <?php $is_first = false; ?>
         <?php } ?>
     </div>
 </div>
