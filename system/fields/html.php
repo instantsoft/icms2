@@ -66,7 +66,7 @@ class fieldHtml extends cmsFormField {
             )),
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
-				'extended_option' => true
+		'extended_option' => true
             )),
             new fieldCheckbox('parse_patterns', array(
                 'title' => LANG_PARSER_PARSE_PATTERNS,
@@ -79,28 +79,28 @@ class fieldHtml extends cmsFormField {
             new fieldNumber('teaser_len', array(
                 'title' => LANG_PARSER_HTML_TEASER_LEN,
                 'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
-				'extended_option' => true
+		'extended_option' => true
             )),
             new fieldString('teaser_postfix', array(
                 'title'           => LANG_PARSER_HTML_TEASER_POSTFIX,
                 'visible_depend'  => array('options:teaser_len' => array('hide' => array(''))),
                 'extended_option' => true
-                    )),
+            )),
             new fieldList('teaser_type', array(
-                'title'           => LANG_PARSER_HTML_TEASER_TYPE,
-                'items'           => array(
+                'title' => LANG_PARSER_HTML_TEASER_TYPE,
+                'items' => array(
                     ''  => LANG_PARSER_HTML_TEASER_TYPE_NULL,
                     's' => LANG_PARSER_HTML_TEASER_TYPE_S,
                     'w' => LANG_PARSER_HTML_TEASER_TYPE_W
                 ),
                 'visible_depend'  => array('options:teaser_len' => array('hide' => array(''))),
-                'extended_option' => true,
+                'extended_option' => true
             )),
             new fieldCheckbox('show_show_more', array(
                 'title' => LANG_PARSER_SHOW_SHOW_MORE,
                 'default' => false,
                 'visible_depend' => array('options:teaser_len' => array('hide' => array(''))),
-				'extended_option' => true
+		'extended_option' => true
             )),
             new fieldCheckbox('in_fulltext_search', array(
                 'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
@@ -157,10 +157,10 @@ class fieldHtml extends cmsFormField {
 
         if ($max_len){
 
-            $teaser_postfix = $this->getOption('teaser_postfix','');
-            $teaser_type = $this->getOption('teaser_type','s');
+            $teaser_postfix = $this->getOption('teaser_postfix', '');
+            $teaser_type = $this->getOption('teaser_type', 's');
 
-            $value = string_short($value, $max_len,$teaser_postfix,$teaser_type);
+            $value = string_short($value, $max_len, $teaser_postfix, $teaser_type);
 
             if($this->getOption('show_show_more') && !empty($this->item['ctype']['name']) && !empty($this->item['slug'])){
                 $value .= '<span class="d-block mt-2"><a class="read-more btn btn-outline-info btn-sm" href="'.href_to($this->item['ctype']['name'], $this->item['slug'].'.html').'">'.LANG_MORE.'</a></span>';
