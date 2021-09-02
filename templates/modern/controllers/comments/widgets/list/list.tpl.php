@@ -36,7 +36,7 @@
                 </h4>
 
                 <?php if ($show_text) { ?>
-                    <div class="icms-comment-html__widget">
+                    <div class="icms-comment-html__widget text-break">
                         <?php if (!empty($entry['disallow_clean_content'])) { ?>
                             <?php echo $entry['content_html']; ?>
                         <?php } else { ?>

@@ -11,7 +11,7 @@
         )
     ), $errors);
 ?>
-<script type="text/javascript">
+<script>
     $(function() {
         $('#type').on('change', function (){
             if($(this).val() == 'message'){

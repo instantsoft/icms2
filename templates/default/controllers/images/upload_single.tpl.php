@@ -34,7 +34,7 @@
         </div>
     <?php } ?>
 
-    <script type="text/javascript">
+    <script>
 
         <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR'); ?>
 

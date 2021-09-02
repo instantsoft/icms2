@@ -36,7 +36,7 @@ function grid_forms($controller) {
         $columns['hash'] = array(
             'title'  => LANG_FORMS_CP_FORMS_EMBED,
             'handler' => function ($v, $row){
-                return html_input('text', '', '<script type="text/javascript" src="'.href_to_abs('forms', 'framejs', $v).'"></script>', ['onclick' => '$(this).select();']);
+                return html_input('text', '', '<script src="'.href_to_abs('forms', 'framejs', $v).'"></script>', ['onclick' => '$(this).select();']);
             }
         );
     }

@@ -115,7 +115,7 @@ $this->addTplJSName('comments');
 <?php $this->block('comments_list_after'); ?>
 
 <?php ob_start(); ?>
-    <script type="text/javascript">
+    <script>
         <?php echo $this->getLangJS('LANG_SEND', 'LANG_SAVE', 'LANG_COMMENT_DELETED', 'LANG_COMMENT_DELETE_CONFIRM', 'LANG_MODERATION_REFUSE_REASON'); ?>
         <?php if ($is_highlight_new){ ?>icms.comments.showFirstSelected();<?php } ?>
         icms.comments.init({

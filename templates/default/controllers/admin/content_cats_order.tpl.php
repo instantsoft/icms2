@@ -46,7 +46,7 @@
         <?php echo html_submit(LANG_SAVE); ?>
     </form>
 
-    <script type="text/javascript">
+    <script>
         $("#ordertree").dynatree({
             dnd: {
                 onDragStart: function(node) {

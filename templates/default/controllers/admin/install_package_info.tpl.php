@@ -138,7 +138,7 @@
                         <?php echo html_array_to_list($manifest['contents']); ?>
                     </div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(function(){
                             $("#tree").dynatree({
                                 expand: true

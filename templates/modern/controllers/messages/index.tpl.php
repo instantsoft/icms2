@@ -80,7 +80,7 @@
     </div>
 
     <?php ob_start(); ?>
-    <script type="text/javascript">
+    <script>
         <?php if(!$is_modal){ ?>
             icms.messages.is_modal = false;
         <?php } ?>

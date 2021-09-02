@@ -8,7 +8,7 @@
 <?php echo html_input(($field->getOption('control_type')=='swatches' ? 'hidden' : 'text'), $field->element_name, $value, array('id'=>$field->id, 'autocomplete' => 'off')); ?>
 
 <?php ob_start(); ?>
-<script type="text/javascript">
+<script>
     $(function(){
         var minicolors_options = <?php echo json_encode($field->data['minicolors_options']); ?>;
         <?php if($field->getOption('control_type')=='swatches'){ ?>

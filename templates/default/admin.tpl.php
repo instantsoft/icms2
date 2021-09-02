@@ -122,7 +122,7 @@
             <?php $this->renderAsset('ui/debug', array('core' => cmsCore::getInstance())); ?>
         </div>
     <?php } ?>
-    <script type="text/javascript">
+    <script>
         $(function(){
         <?php if(empty($this->options['disable_help_anim'])){ ?>
             setTimeout(function(){

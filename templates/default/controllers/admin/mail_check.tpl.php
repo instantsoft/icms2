@@ -8,7 +8,7 @@
     ), $errors); ?>
 </div>
 
-<script type="text/javascript">
+<script>
 
     function checkSuccess(form_data, result){
         icms.modal.alert(result.text, result.type);

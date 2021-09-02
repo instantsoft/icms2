@@ -238,7 +238,7 @@ class cmsWysiwygTinymce {
 
         ob_start(); ?>
 
-        <script type="text/javascript">
+        <script>
             <?php if($dom_id){ ?>
                 tiny_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options); ?>;
                 $(function(){
@@ -269,7 +269,7 @@ class cmsWysiwygTinymce {
 
         ob_start(); ?>
 
-        <script type="text/javascript">
+        <script>
             var tiny_global_options = {};
             function init_tinymce (dom_id){
                 var tinymce_options = {};

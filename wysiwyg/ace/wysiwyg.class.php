@@ -39,7 +39,7 @@ class cmsWysiwygAce {
 
         ob_start(); ?>
 
-        <script type="text/javascript">
+        <script>
             <?php if($dom_id){ ?>
                 ace_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options); ?>;
                 $(function(){
@@ -66,7 +66,7 @@ class cmsWysiwygAce {
 
         ob_start(); ?>
 
-        <script type="text/javascript">
+        <script>
             var ace_global_options = {};
             function init_ace (dom_id){
                 var aceconfig = {};

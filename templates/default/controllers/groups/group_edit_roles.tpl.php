@@ -22,7 +22,7 @@
 
 </div>
 
-<script type="text/javascript">
+<script>
     $(function(){
         icms.groups.url_submit = '<?php echo $this->href_to($group['slug'], array('edit', 'roles')); ?>';
         icms.groups.url_delete = '<?php echo $this->href_to($group['slug'], array('edit', 'role_delete')); ?>';

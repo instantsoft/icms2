@@ -167,7 +167,7 @@ class cmsWysiwygMarkitup {
 
         ob_start(); ?>
 
-        <script type="text/javascript">
+        <script>
             <?php if($dom_id){ ?>
                 markitup_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options['set']); ?>;
                 $(function(){
@@ -202,7 +202,7 @@ class cmsWysiwygMarkitup {
 
         ob_start(); ?>
 
-        <script type="text/javascript">
+        <script>
             var markitup_global_options = {};
             function init_markitup (dom_id){
                 var mconfig = {};

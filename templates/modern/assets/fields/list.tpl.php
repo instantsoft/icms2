@@ -51,7 +51,7 @@
 
 ?>
 <?php ob_start(); ?>
-<script type="text/javascript">
+<script>
     <?php if ($field->data['parent']) { ?>
         $('#<?php echo str_replace(':', '_', $field->data['parent']['list']); ?>').on('change', function(){
             icms.forms.updateChildList('<?php echo $field->id; ?>', '<?php echo $field->data['parent']['url']; ?>', $(this).val(), <?php if (!is_array($value)) { ?>"<?php html($value); ?>"<?php } else { ?><?php echo json_encode($value); ?><?php } ?>, <?php if (!empty($field->data['parent']['filter_field_name'])) { ?>"<?php html($field->data['parent']['filter_field_name']); ?>"<?php } else { ?>$(this).attr('name')<?php } ?>);

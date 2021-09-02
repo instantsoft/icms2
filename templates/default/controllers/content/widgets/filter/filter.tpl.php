@@ -38,7 +38,7 @@
 	</div>
 </div>
 <?php ob_start(); ?>
-<script type="text/javascript">
+<script>
     $(function (){
         icms.forms.initFilterForm('#<?php echo $form_id; ?>');
     });

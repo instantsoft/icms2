@@ -29,7 +29,7 @@ $this->addTplCSSNameFromContext('jquery-chosen');
     </div>
 
 </div>
-<script type="text/javascript">
+<script>
     $(function(){
         $('#geo_window .list > select').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', width: '100%', search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>'});
         <?php if (!$city_id){?>

@@ -48,10 +48,10 @@
     <?php echo $attributes['append_html']; ?>
 
     <div class="buttons <?php if (!$this->controller->request->isAjax()){ ?>mt-3 mt-md-4<?php } ?>">
-        <?php if ($attributes['submit']['show']) { ?>
+        <?php if ($attributes['submit']['show']) { unset($attributes['submit']['show']); ?>
             <?php echo html_submit($attributes['submit']['title'], 'submit', $attributes['submit']); ?>
         <?php } ?>
-        <?php if ($attributes['cancel']['show']) { echo html_button($attributes['cancel']['title'], 'cancel', "location.href='{$attributes['cancel']['href']}'", array('class'=>'btn-secondary button-cancel')); } ?>
+        <?php if ($attributes['cancel']['show']) { echo html_button($attributes['cancel']['title'], 'cancel', "location.href='{$attributes['cancel']['href']}'", ['class'=>'btn-secondary button-cancel']); } ?>
         <?php if(!empty($attributes['buttons'])){ ?>
 
             <?php $many_buttons = count($attributes['buttons']) > 1; ?>

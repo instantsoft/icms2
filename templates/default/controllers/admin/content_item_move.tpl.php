@@ -11,7 +11,7 @@
 
     ?>
 </div>
-<script type="text/javascript">
+<script>
     icms.modal.setCallback('open', function (){
         setTimeout(function(){ $('.nyroModalCont').css('overflow', 'visible'); }, 300);
     });

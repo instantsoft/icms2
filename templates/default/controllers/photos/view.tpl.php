@@ -182,7 +182,7 @@
     <?php echo $photo['comments_widget']; ?>
 <?php } ?>
 
-<script type="text/javascript">
+<script>
     icms.photos.init = true;
     icms.photos.mode = 'photo';
     $(function(){

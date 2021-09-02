@@ -34,7 +34,7 @@ $this->addTplCSSName('jquery-ui');
 
 </div>
 <?php ob_start(); ?>
-<script type="text/javascript">
+<script>
 
     <?php
         $list = array();

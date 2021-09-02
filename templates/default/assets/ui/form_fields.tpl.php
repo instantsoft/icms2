@@ -120,7 +120,7 @@
 <?php } ?>
 
 <?php ob_start(); ?>
-<script type="text/javascript">
+<script>
     initMultyTabs('.field_tabbed');
     <?php if($visible_depend){ foreach($visible_depend as $field){ ?>
         icms.forms.addVisibleDepend('<?php echo $attributes['form_id']; ?>', '<?php echo $field->name; ?>', <?php echo json_encode($field->visible_depend); ?>);

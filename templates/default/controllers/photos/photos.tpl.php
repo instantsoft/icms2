@@ -44,7 +44,7 @@
 
     <?php } ?>
     <?php if((isset($has_next) || isset($page) || empty($disable_flex)) || !empty($item['photos_url_params'])){ ?>
-    <script type="text/javascript">
+    <script>
         <?php if(isset($has_next) || isset($page) || empty($disable_flex)){ ?>
             <?php if(isset($has_next)){ ?>
                 <?php if($has_next){ ?>

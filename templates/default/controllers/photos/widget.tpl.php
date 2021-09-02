@@ -95,7 +95,7 @@
 
             <div id="album-photos-uploader"></div>
 
-            <script type="text/javascript">
+            <script>
                 <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR'); ?>
                 icms.photos.createUploader('<?php echo $this->href_to('upload'); ?><?php echo $id ? '/' . $id : ''; ?>', function(){
                     var _album_id = $('#album_id').val();

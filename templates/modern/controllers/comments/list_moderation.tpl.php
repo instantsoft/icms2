@@ -24,7 +24,7 @@ $this->addTplJSName([
         <?php echo html_pagebar($page, $perpage, $total, $page_url); ?>
     <?php } ?>
 <?php ob_start(); ?>
-<script type="text/javascript">
+<script>
     <?php echo $this->getLangJS('LANG_SEND', 'LANG_SAVE', 'LANG_COMMENT_DELETED', 'LANG_COMMENT_DELETE_CONFIRM', 'LANG_MODERATION_REFUSE_REASON'); ?>
     icms.comments.is_moderation_list = true;
     icms.comments.init({

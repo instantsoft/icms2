@@ -32,7 +32,7 @@
         </div>
     </fieldset>
 </form>
-<script type="text/javascript">
+<script>
     $(function(){
         $("#tree").dynatree({
             minExpandLevel: 5,

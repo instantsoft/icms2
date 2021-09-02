@@ -1,19 +1,16 @@
 <?php
-
+/**
+ * Модель для работы с пользователями
+ */
 class modelUsers extends cmsModel {
 
-//============================================================================//
-//========================    ПОЛЬЗОВАТЕЛИ   =================================//
-//============================================================================//
-
-    public function getUsersCount(){
+    public function getUsersCount($reset = false) {
 
         $this->useCache('users.list');
 
         if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
 
-        return $this->getCount('{users}');
-
+        return $this->getCount('{users}', 'id', $reset);
     }
 
 //============================================================================//

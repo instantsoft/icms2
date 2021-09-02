@@ -37,12 +37,12 @@
     </div>
 
 <?php } ?>
-<script type="text/javascript">
+<script>
     icms.messages.setMsgLastDate('<?php echo $last_date; ?>');
 </script>
 <?php if(!empty($is_notify)) { ?>
 
-<script type="text/javascript">
+<script>
     icms.messages.desktopNotification(
         "<?php html(sprintf(LANG_PM_DESKTOP_NOTIFY_NEW, $message['user']['nickname'])); ?>", {
             tag: "icms_msg<?php echo $message['user']['id']; ?>",

@@ -20,7 +20,7 @@ if($field->context === 'filter' && $in_filter_as && $in_filter_as !== 'input'){ 
     </div>
 <?php } ?>
 <?php if($field->getOption('show_symbol_count')){ ob_start(); ?>
-<script type="text/javascript">
+<script>
 $(function(){
     icms.forms.initSymbolCount('<?php echo $field->id; ?>', <?php echo intval($field->getOption('max_length', 0)); ?>, <?php echo intval($field->getOption('min_length', 0)); ?>);
 });
@@ -31,7 +31,7 @@ $(function(){
         $this->addTplCSSNameFromContext('jquery-ui');
         
         ob_start(); ?>
-    <script type="text/javascript">
+    <script>
         initAutocomplete('<?php echo $field->id; ?>', <?php echo (!empty($field->data['autocomplete']['multiple']) ? 'true' : 'false') ?>, '<?php echo $field->data['autocomplete']['url']; ?>', <?php echo (!empty($field->data['autocomplete']['data']) ? json_encode($field->data['autocomplete']['data']) : 'false') ?>, '<?php echo $field->data['autocomplete']['multiple_separator'] ?>');
     </script>
     <?php $this->addBottom(ob_get_clean()); ?>

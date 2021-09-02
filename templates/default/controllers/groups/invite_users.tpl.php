@@ -17,7 +17,7 @@
 
 <div id="ivite_users_list"><?php echo $profiles_list_html; ?></div>
 
-<script type="text/javascript">
+<script>
     function inviteFormSuccess (current_user, result){
         $(current_user).addClass('invite_sended');
         $(current_user).find('.list_actions_menu').hide();

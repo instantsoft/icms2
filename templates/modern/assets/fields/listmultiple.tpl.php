@@ -13,7 +13,7 @@
 </div>
 
 <?php if($field->getProperty('show_all')){ ob_start(); ?>
-<script type="text/javascript">
+<script>
     $(function() {
         $('#<?php echo $field->id; ?> input').on('click', function (){
             var v = $(this).val();

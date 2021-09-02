@@ -42,7 +42,7 @@ $this->addBreadcrumb($page_title);
     </span>
 </a>
 
-<script type="text/javascript">
+<script>
     icms.photos.initial_page = <?php echo $page; ?>;
     icms.photos.init = true;
     icms.photos.mode = 'album';
@@ -50,7 +50,7 @@ $this->addBreadcrumb($page_title);
 
 <?php } ?>
 
-<script type="text/javascript">
+<script>
     <?php echo $this->getLangJS('LANG_PHOTOS_DELETE_PHOTO_CONFIRM'); ?>
     icms.photos.row_height = '<?php echo $row_height; ?>';
     $(function(){

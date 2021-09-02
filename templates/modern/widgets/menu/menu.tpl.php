@@ -25,7 +25,7 @@
                     <?php } ?>
                 </<?php if($core->uri) { ?>a<?php } else { ?>span<?php } ?>>
             <?php } ?>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#target-<?php echo $widget->options['menu']; ?>">
+            <button class="navbar-toggler" type="button" aria-label="<?php echo LANG_MENU; ?>" data-toggle="collapse" data-target="#target-<?php echo $widget->options['menu']; ?>">
                 <span class="navbar-toggler-icon"></span>
             </button>
         <?php } ?>

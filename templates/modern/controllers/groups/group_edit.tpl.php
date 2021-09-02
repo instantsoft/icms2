@@ -24,7 +24,7 @@
     </div>
 <?php } ?>
 <?php ob_start(); ?>
-<script type="text/javascript">
+<script>
     $(function (){
         $('select[id ^= "content_policy_"]').each(function (){
             var ctype_name = $(this).attr('name').replace(/content_policy\[(.*)\]/g, '$1');

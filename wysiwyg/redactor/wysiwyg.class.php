@@ -88,7 +88,7 @@ class cmsWysiwygRedactor {
 
         ob_start(); ?>
 
-        <script type="text/javascript">
+        <script>
             <?php if($dom_id){ ?>
                 redactor_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options); ?>;
                 $(function(){
@@ -135,7 +135,7 @@ class cmsWysiwygRedactor {
 
         ob_start(); ?>
 
-        <script type="text/javascript">
+        <script>
             var redactor_global_options = {};
             function init_redactor (dom_id){
                 var imperavi_options = {};

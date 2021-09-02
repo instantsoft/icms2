@@ -165,7 +165,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(function(){
 
         $('.cp_toolbar .delete_filter a').hide();

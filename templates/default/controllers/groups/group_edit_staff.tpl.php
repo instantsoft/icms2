@@ -35,7 +35,7 @@
 
 </div>
 
-<script type="text/javascript">
+<script>
 
     <?php
         $list = array();

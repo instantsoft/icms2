@@ -7,7 +7,7 @@
     ), $errors);
 ?>
 </div>
-<script type="text/javascript">
+<script>
     icms.modal.setCallback('close', function(){
         icms.forms.form_changed = false;
     });

@@ -41,6 +41,9 @@
                         <a class="dropdown-item" href="#" onclick="return icms.messages.deleteContact(<?php echo $contact['id']; ?>);">
                             <?php echo LANG_PM_DELETE_CONTACT; ?>
                         </a>
+                        <a class="dropdown-item d-block d-sm-none" href="#" onclick="return icms.modal.close();">
+                            <?php echo LANG_CLOSE; ?>
+                        </a>
                     </div>
                 </div>
             </div>

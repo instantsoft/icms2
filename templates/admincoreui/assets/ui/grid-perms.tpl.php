@@ -73,7 +73,7 @@
 
 </form>
 <?php ob_start(); ?>
-<script type="text/javascript">
+<script>
     <?php echo $this->getLangJS('LANG_SUBMIT_NOT_SAVE'); ?>
     $(function (){
         icms.forms.initUnsaveNotice();

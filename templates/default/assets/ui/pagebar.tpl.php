@@ -7,7 +7,7 @@
         </span>
         <div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>
     </a>
-    <script type="text/javascript">
+    <script>
         $(function(){
             new icms.pagebar('#<?php echo $elemet_id; ?>', <?php echo $page; ?>, <?php if($has_next){ echo 'true'; } else { echo 'false'; } ?>, <?php if(!empty($is_modal)){ echo 'true'; } else { echo 'false'; } ?>);
         });

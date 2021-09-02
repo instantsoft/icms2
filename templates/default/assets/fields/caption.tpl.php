@@ -1,7 +1,7 @@
 <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 <?php echo html_input('text', $field->element_name, $value, array('id'=>$field->id, 'required'=>(array_search(array('required'), $field->getRules()) !== false))); ?>
 <?php if($field->getOption('show_symbol_count')){ ob_start(); ?>
-<script type="text/javascript">
+<script>
 $(function(){
     icms.forms.initSymbolCount('<?php echo $field->id; ?>', <?php echo intval($field->getOption('max_length', 0)); ?>, <?php echo intval($field->getOption('min_length', 0)); ?>);
 });

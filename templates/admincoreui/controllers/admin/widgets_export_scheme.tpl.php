@@ -4,7 +4,7 @@ if($is_rows){
         'action' => $this->href_to('widgets', ['export_scheme', $from_template]),
         'method' => 'ajax'
     ), $errors); ?>
-<script type="text/javascript">
+<script>
     function successExport(form_data, result){
         icms.modal.close();
         var file = new File([result.yaml], result.filename, {type: "application/x-yaml;charset=utf-8"});

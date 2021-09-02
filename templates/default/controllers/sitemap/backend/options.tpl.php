@@ -36,7 +36,7 @@
     ), $errors);
 ?>
 
-<script type="text/javascript">
+<script>
     $(function(){
         $('#sitemap_info').appendTo('#fset_params');
     });

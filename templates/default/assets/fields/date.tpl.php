@@ -14,7 +14,7 @@
 <?php } ?>
 
     <a class="ajaxlink" onclick="return parser_current_time_<?php echo $field->id; ?>(this);" href="#"><?php echo LANG_PARSER_CURRENT_TIME; ?></a>
-<script type="text/javascript">
+<script>
     function parser_current_time_<?php echo $field->id; ?>(a){
         var now = new Date();
         var p = $(a).parent();

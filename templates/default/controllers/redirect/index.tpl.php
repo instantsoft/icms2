@@ -15,7 +15,7 @@
     <p class="redirect">
         <?php echo LANG_REDIRECT_HINT3; ?> <b><span id="timer"></span> <?php echo LANG_SECOND10; ?></b>
     </p>
-    <script type="text/javascript">
+    <script>
         window.opener = null;
         $(function () {
             var timer    = $('#timer');

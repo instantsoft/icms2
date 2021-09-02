@@ -15,7 +15,7 @@
 <?php if (!$request->isAjax()) { ?>
     <div class="fullscreen_click"></div>
 <?php } ?>
-<script type="text/javascript">
+<script>
     <?php if(!empty($photos_url_params)){ ?>
         $(function(){
             $('.photo_navigation').each(function (){

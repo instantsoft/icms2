@@ -5,7 +5,11 @@
         <?php foreach($items as $item){ ?>
             <div class="item media mb-3 align-items-center">
                 <a href="<?php echo href_to_profile($item['user']); ?>" class="icms-user-avatar mr-3 <?php if (!empty($item['user']['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
-                    <?php echo html_avatar_image($item['user']['avatar'], $fields['avatar']['options']['size_teaser'], $item['user']['nickname'], $item['user']['is_deleted']); ?>
+                    <?php if($item['user']['avatar']){ ?>
+                        <?php echo html_avatar_image($item['user']['avatar'], $fields['avatar']['options']['size_teaser'], $item['user']['nickname'], $item['user']['is_deleted']); ?>
+                    <?php } else { ?>
+                        <?php echo html_avatar_image_empty($item['user']['nickname'], 'avatar__inlist'); ?>
+                    <?php } ?>
                 </a>
                 <div class="media-body text-truncate">
                     <span>

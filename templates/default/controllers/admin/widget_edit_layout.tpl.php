@@ -25,7 +25,7 @@
     <div>
         <?php $this->body(); ?>
     </div>
-    <script type="text/javascript">
+    <script>
         function widgetUpdated(widget, result){
             window.parent.location.reload();
         }

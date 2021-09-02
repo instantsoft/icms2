@@ -5,7 +5,7 @@
         'method' => 'ajax'
     ), $errors); ?>
 </div>
-<script type="text/javascript">
+<script>
     function leftTimeSuccess (form_data, result){
         if(result.trash_left_time){
             $('#moderator-'+result.id+' .trash_left_time_num').html(result.trash_left_time);

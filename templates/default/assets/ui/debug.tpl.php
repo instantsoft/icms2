@@ -37,7 +37,7 @@ $points_tab = cmsDebugging::getPointsTargets();
     <?php } ?>
 
 </div>
-<script type="text/javascript">
+<script>
     $(function (){
         initTabs('#debug_widget');
     });

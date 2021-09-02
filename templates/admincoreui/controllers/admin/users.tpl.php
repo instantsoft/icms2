@@ -122,7 +122,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(function(){
         $(document).on('click', '.datagrid .filter_ip', function (){
             $('#filter_ip').val($(this).text()).trigger('input');

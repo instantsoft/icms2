@@ -74,7 +74,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
         $(function(){
             $("#datatree").dynatree({
                 onPostInit: function(isReloading, isError){

@@ -7,7 +7,7 @@
     ), $errors);
 ?>
 
-<script type="text/javascript">
+<script>
 
     var filter_options_el = $('#fset_visibility > .field').length === 1 ? '#tab-visibility' : '#f_is_in_filter, #tab-filter_access';
 

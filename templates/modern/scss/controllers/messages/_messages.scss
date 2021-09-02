@@ -68,6 +68,24 @@
         height: calc(100vh - #{$modal-dialog-margin-y-sm-up * 2} - #{$modal-header-padding-y * 2} - #{$modal-title-line-height * $h4-font-size});
     }
 }
+@include media-breakpoint-down(sm) {
+    .icms-messages {
+        &.modal-messages {
+            height: 100vh;
+        }
+    }
+    .modal-dialog-icms-messages {
+        .modal-header {
+            display: none;
+        }
+        .modal-content {
+            border: none;
+            border-radius: 0;
+        }
+        margin: 0;
+        width: 100%;
+    }
+}
 .bg-gray {
     background-color: $gray-200;
 }

@@ -112,7 +112,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(function(){
 
         is_loaded = false;

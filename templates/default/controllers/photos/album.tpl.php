@@ -23,7 +23,7 @@
     <div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>
 </a>
 
-<script type="text/javascript">
+<script>
     icms.photos.initial_page = <?php echo $page; ?>;
     icms.photos.init = true;
     icms.photos.mode = 'album';
@@ -31,7 +31,7 @@
 
 <?php } ?>
 
-<script type="text/javascript">
+<script>
     <?php echo $this->getLangJS('LANG_PHOTOS_DELETE_PHOTO_CONFIRM'); ?>
     icms.photos.row_height = '<?php echo $row_height; ?>';
     $(function(){

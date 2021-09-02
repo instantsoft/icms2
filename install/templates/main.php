@@ -5,9 +5,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link type="text/css" rel="stylesheet" href="css/sweetalert2.min.css">
     <link type="text/css" rel="stylesheet" href="css/styles.css">
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/install.js"></script>
-    <script type="text/javascript" src="js/sweetalert2.all.min.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/install.js"></script>
+    <script src="js/sweetalert2.all.min.js"></script>
 </head>
 <body>
 

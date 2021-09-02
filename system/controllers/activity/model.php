@@ -103,7 +103,7 @@ class modelActivity extends cmsModel {
         $this->select('u.nickname', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
         $this->select('u.slug', 'user_slug');
-        $this->join('{users}', 'u', 'u.id = i.user_id AND u.is_deleted IS NULL');
+        $this->joinLeft('{users}', 'u', 'u.id = i.user_id AND u.is_deleted IS NULL');
 
         $this->is_joined_user = true;
 
@@ -128,7 +128,7 @@ class modelActivity extends cmsModel {
         $this->joinUserNotDeleted();
 
         $this->select('t.description', 'description');
-        $this->join('activity_types', 't', 't.id = i.type_id');
+        $this->joinLeft('activity_types', 't', 't.id = i.type_id');
 
         $this->joinSessionsOnline();
 

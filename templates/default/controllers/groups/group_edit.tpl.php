@@ -23,7 +23,7 @@
         <?php echo LANG_MODERATION_NOTICE; ?>
     </div>
 <?php } ?>
-<script type="text/javascript">
+<script>
     $(function (){
         $('select[id ^= "content_policy_"]').each(function (){
             console.log($(this).attr('name'));

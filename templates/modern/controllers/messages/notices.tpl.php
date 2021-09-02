@@ -39,6 +39,6 @@
     </div>
 
 </div>
-<script type="text/javascript">
+<script>
     <?php echo $this->getLangJS('LANG_YES', 'LANG_NO', 'LANG_PM_CLEAR_NOTICE_CONFIRM');?>
 </script>

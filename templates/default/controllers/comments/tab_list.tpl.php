@@ -18,7 +18,7 @@
 
 </div>
 <?php ob_start(); ?>
-<script type="text/javascript">
+<script>
     $(function (){
         initTabs('#comments_widget');
     });

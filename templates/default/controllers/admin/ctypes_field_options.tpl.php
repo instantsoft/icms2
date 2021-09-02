@@ -46,7 +46,7 @@ if($options) {
         </div>
     <?php } ?>
 <?php } ?>
-<script type="text/javascript">
+<script>
     var id_name = $('#fset_visibility > .field').length === 1 ? '#tab-visibility' : '#f_is_in_filter, #tab-filter_access';
 
     <?php if(!$is_can_in_filter){ ?>

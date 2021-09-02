@@ -10,7 +10,7 @@
         </div>
     </form>
 </div>
-<script type="text/javascript">
+<script>
     $(function (){
         $('#comments_edit_form form').on('submit', function (){
             return icms.forms.submitAjax(this);

@@ -39,7 +39,7 @@
 
 <input class="button btn btn-primary" style="display: none;" name="skip" value="<?php echo LANG_INSTALL; ?>" type="button" id="skip">
 
-<script type="text/javascript">
+<script>
     $(function() {
         $('form > .buttons').prepend($('#skip'));
         $('#is_skip').on('click', function (){

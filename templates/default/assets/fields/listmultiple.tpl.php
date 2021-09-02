@@ -3,7 +3,7 @@
 
 <?php if($field->getProperty('show_all')){ ?>
 
-    <script type="text/javascript">
+    <script>
         $(function() {
             $('#<?php echo $field->id; ?> input').on('click', function (){
                 v = $(this).val();

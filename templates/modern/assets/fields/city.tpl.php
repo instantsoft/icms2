@@ -13,7 +13,7 @@
         <?php echo html_select($field->element_name, $field->data['items'], $value, $field->data['dom_attr']); ?>
     </div>
     <?php ob_start(); ?>
-    <script type="text/javascript">
+    <script>
         <?php if($field->data['location_group']){ ?>
             icms.geo.addToGroup('location_group_<?php echo $field->data['location_group']; ?>', '<?php echo $field->data['location_type']; ?>');
         <?php } ?>

@@ -21,7 +21,7 @@
     </a>
 </div>
 <?php ob_start(); ?>
-<script type="text/javascript">
+<script>
     function parser_current_time_<?php echo $field->id; ?>(a){
         var now = new Date();
         var p = $(a).parent();

@@ -35,7 +35,7 @@
             </div>
             <?php } ?>
         </fieldset>
-        <script type="text/javascript">
+        <script>
             $(function(){
                 $('#album_id').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', width: '100%', disable_search_threshold: 8, placeholder_text_single: '<?php echo LANG_SELECT; ?>', allow_single_deselect: true, search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>'});
             });

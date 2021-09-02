@@ -66,7 +66,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
 
                                     <?php if (!empty($filter_attributes['multiple'])) { ?>
                                         <?php ob_start(); ?>
-                                        <script type="text/javascript">
+                                        <script>
                                             $('#filter_<?php echo $name; ?>').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', placeholder_text_single: '<?php echo LANG_SELECT; ?>', placeholder_text_multiple: '<?php echo LANG_SELECT_MULTIPLE; ?>', disable_search_threshold: 8, width: '100%', allow_single_deselect: true, search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>', search_contains: true, hide_results_on_select: false});
                                         </script>
                                         <?php $this->addBottom(ob_get_clean()); ?>

@@ -32,7 +32,7 @@
 </head>
 <body id="widgets_layout" class="m-3" onload="top.postMessage($('html').height(), '*');" onresize="top.postMessage($('html').height(), '*');">
     <?php $this->body(); ?>
-    <script type="text/javascript">
+    <script>
         function widgetUpdated(widget, result){
             window.parent.location.reload();
         }

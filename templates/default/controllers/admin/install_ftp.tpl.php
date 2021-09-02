@@ -46,7 +46,7 @@
 
 <?php echo html_button(LANG_INSTALL, 'skip', '', array('style'=>'display: none;','id'=>'skip')); ?>
 
-<script type="text/javascript">
+<script>
     $(function() {
         $('form > .buttons').prepend($('#skip'));
         $('#is_skip').on('click', function (){
