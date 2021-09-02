@@ -81,6 +81,21 @@ class fieldHtml extends cmsFormField {
                 'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
 				'extended_option' => true
             )),
+            new fieldString('teaser_postfix', array(
+                'title'           => LANG_PARSER_HTML_TEASER_POSTFIX,
+                'visible_depend'  => array('options:teaser_len' => array('hide' => array(''))),
+                'extended_option' => true
+                    )),
+            new fieldList('teaser_type', array(
+                'title'           => LANG_PARSER_HTML_TEASER_TYPE,
+                'items'           => array(
+                    ''  => LANG_PARSER_HTML_TEASER_TYPE_NULL,
+                    's' => LANG_PARSER_HTML_TEASER_TYPE_S,
+                    'w' => LANG_PARSER_HTML_TEASER_TYPE_W
+                ),
+                'visible_depend'  => array('options:teaser_len' => array('hide' => array(''))),
+                'extended_option' => true,
+            )),
             new fieldCheckbox('show_show_more', array(
                 'title' => LANG_PARSER_SHOW_SHOW_MORE,
                 'default' => false,

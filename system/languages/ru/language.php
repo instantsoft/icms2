@@ -140,6 +140,12 @@
     define('LANG_PARSER_HTML_TEASER_LEN',    'Обрезать текст при просмотре списка');
     define('LANG_PARSER_SHOW_SHOW_MORE',     'Показывать кнопку "Подробнее"');
     define('LANG_PARSER_HTML_TEASER_LEN_HINT','Текст будет обрезан до указанной длины, форматирование будет удалено');
+    define('LANG_PARSER_HTML_TEASER_POSTFIX', 'Добавлять текст к полученной строке');
+    define('LANG_PARSER_HTML_TEASER_TYPE',    'Тип обрезки');
+    define('LANG_PARSER_HTML_TEASER_TYPE_NULL','Обрезать в любом месте');
+    define('LANG_PARSER_HTML_TEASER_TYPE_S', 'По последнему предложению');
+    define('LANG_PARSER_HTML_TEASER_TYPE_W', 'По последнему слову');
+    define('LANG_PARSER_HTML_TEASER_LEN_HINT','Текст будет обрезан до указанной длины, форматирование будет удалено');
     define('LANG_PARSER_BBCODE',             'Текст: BB-code');
     define('LANG_PARSER_LIST',               'Список');
     define('LANG_PARSER_LIST_FILTER_HINT',   'Номер варианта');

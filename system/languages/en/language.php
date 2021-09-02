@@ -140,6 +140,11 @@
     define('LANG_PARSER_BUILD_REDIRECT_LINK', 'External links via a redirect if sanitize input');
     define('LANG_PARSER_HTML_TEASER_LEN',    'Truncate text length in list view');
     define('LANG_PARSER_HTML_TEASER_LEN_HINT','The text will be truncated to a specified length, the formatting will be removed');
+    define('LANG_PARSER_HTML_TEASER_POSTFIX', 'Add text to the received line');
+    define('LANG_PARSER_HTML_TEASER_TYPE',    'Trim type');
+    define('LANG_PARSER_HTML_TEASER_TYPE_NULL','Cut anywhere');
+    define('LANG_PARSER_HTML_TEASER_TYPE_S', 'The last sentence');
+    define('LANG_PARSER_HTML_TEASER_TYPE_W', 'The latest word');
     define('LANG_PARSER_SHOW_SHOW_MORE',     'Show "More" button');
     define('LANG_PARSER_BBCODE',             'Textarea with BB-code');
     define('LANG_PARSER_LIST',               'List');
