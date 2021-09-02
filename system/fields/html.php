@@ -157,7 +157,10 @@ class fieldHtml extends cmsFormField {
 
         if ($max_len){
 
-            $value = string_short($value, $max_len);
+            $teaser_postfix = $this->getOption('teaser_postfix','');
+            $teaser_type = $this->getOption('teaser_type','s');
+
+            $value = string_short($value, $max_len,$teaser_postfix,$teaser_type);
 
             if($this->getOption('show_show_more') && !empty($this->item['ctype']['name']) && !empty($this->item['slug'])){
                 $value .= '<span class="d-block mt-2"><a class="read-more btn btn-outline-info btn-sm" href="'.href_to($this->item['ctype']['name'], $this->item['slug'].'.html').'">'.LANG_MORE.'</a></span>';
