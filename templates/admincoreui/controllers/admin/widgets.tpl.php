@@ -140,7 +140,12 @@
                                             <ul class="mt-3 px-2 list-unstyled collapse <?php echo !$controller_name ? 'show' : ''; ?>" id="w-<?php echo $controller_name; ?>" data-parent="#accordion">
                                                 <?php foreach($widgets as $widget){ ?>
                                                 <li rel="new" data-id="<?php echo $widget['id']; ?>">
-                                                        <span class="title"><?php echo $widget['title']; ?></span>
+                                                        <span class="title">
+                                                            <?php echo $widget['title']; ?>
+                                                            <?php if($widget['is_external']){ ?>
+                                                                <sup><?php echo $widget['version']; ?></sup>
+                                                            <?php } ?>
+                                                        </span>
                                                         <?php if($widget['is_external']){ ?>
                                                             <span class="actions float-md-right d-flex">
                                                                 <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>">

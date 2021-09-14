@@ -454,6 +454,7 @@
     define('LANG_CP_WIDGET_REMOVE_SUCCESS',     'Виджет успешно удалён');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Страница &laquo;%s&raquo; создана');
     define('LANG_CP_WIDGET_PAGE_URLS',          'Фильтрация URL');
+    define('LANG_CP_WIDGET_PAGE_BODY_CSS',      'CSS классы для тега body страницы');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Положительные маски');
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Отрицательные маски');
     define('LANG_CP_WIDGETS_UNUSED',            'Неиспользуемые виджеты');

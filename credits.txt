@@ -133,3 +133,11 @@ Third-party plugins, libraries and resources included in InstantCMS:
     Free Bootstrap Admin Template
         by Łukasz Holeczek, woothu, xidedix
         https://coreui.io/
+
+    Inputmask
+        by Robin Herbots
+        https://github.com/RobinHerbots/Inputmask
+
+    List.js
+        by Jonny Strömberg @javve
+        https://listjs.com/

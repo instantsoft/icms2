@@ -2817,7 +2817,7 @@ class cmsTemplate {
 
                 if(in_array($file_name, $excluded)){ continue; }
 
-                $file_path = $template_instance->getTemplateFileName($path.'/'.$file_name);
+                $file_path = $template_instance->getTemplateFileName($path.'/'.$file_name, true);
                 if(!$file_path){ continue; }
 
                 // Ищем название шаблона внутри файла
@@ -3016,6 +3016,18 @@ class cmsTemplate {
             // Есть ли поддержка динамической схемы
             if (!empty($this->manifest['properties']['is_dynamic_layout'])) {
                 $rows = cmsCore::getModel('widgets')->getLayoutRows($this->name);
+            }
+
+            // CSS классы для тега body
+            $body_classes = [];
+
+            $matched_pages = $core->getMatchedPages();
+            if($matched_pages && $matched_pages != [0, 1]){
+                foreach ($matched_pages as $matched_page) {
+                    if(!empty($matched_page['body_css'])){
+                        $body_classes[] = $matched_page['body_css'];
+                    }
+                }
             }
 
             ob_start();

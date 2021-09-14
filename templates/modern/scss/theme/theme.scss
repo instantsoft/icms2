@@ -468,6 +468,18 @@ code {
     display: block;
     white-space: pre-wrap;
 }
+.sort {
+    &.asc::after {
+        content: "\2191";
+    }
+    &.desc::after {
+        content: "\2193";
+    }
+    &::after {
+        padding-left: $spacer/2;
+    }
+}
+
 // Селекторы для скрытия текста меню, оставляя одну иконку
 @each $breakpoint in map-keys($grid-breakpoints) {
   @include media-breakpoint-up($breakpoint) {

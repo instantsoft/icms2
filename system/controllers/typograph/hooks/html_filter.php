@@ -58,12 +58,12 @@ class onTypographHtmlFilter extends cmsAction {
             'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
             'pre', 'code', 'blockquote', 'picture',
             'video', 'source', 'audio', 'youtube', 'facebook', 'figure', 'figcaption',
-            'object', 'param', 'embed', 'iframe', 'spoiler', 'cite', 'footer'
+            'iframe', 'spoiler', 'cite', 'footer', 'address'
         ]);
 
         // Устанавливаем коротие теги. (не имеющие закрывающего тега)
         $jevix->cfgSetTagShort([
-            'br', 'img', 'hr', 'embed', 'input', 'source'
+            'br', 'img', 'hr', 'input', 'source'
         ]);
 
         // Устанавливаем преформатированные теги. (в них все будет заменятся на HTML сущности)
@@ -77,20 +77,18 @@ class onTypographHtmlFilter extends cmsAction {
         ]);
 
         $jevix->cfgSetTagIsEmpty([
-            'param', 'embed', 'a', 'iframe', 'div'
+            'a', 'iframe', 'div'
         ]);
 
         // Устанавливаем разрешённые параметры тегов. Также можно устанавливать допустимые значения этих параметров.
+        $jevix->cfgAllowTagParams('address', ['class' => '#text']);
         $jevix->cfgAllowTagParams('a', ['href' => '#link', 'name' => '#text', 'target' => '#text', 'class' => '#text']);
         $jevix->cfgAllowTagParams('img', ['src', 'style' => '#text', 'alt' => '#text', 'title' => '#text', 'align' => ['right', 'left', 'center'], 'width' => '#int', 'height' => '#int', 'hspace' => '#int', 'vspace' => '#int', 'class' => '#text']);
         $jevix->cfgAllowTagParams('span', ['style' => '#text']);
         $jevix->cfgAllowTagParams('input', ['tabindex' => '#text', 'type' => '#text', 'id' => '#text']);
         $jevix->cfgAllowTagParams('label', ['class' => '#text', 'for' => '#text']);
         $jevix->cfgAllowTagParams('footer', ['class' => '#text']);
-        $jevix->cfgAllowTagParams('object', ['width' => '#int', 'height' => '#int', 'data' => ['#domain' => ['youtube.com', 'rutube.ru', 'vimeo.com', 'vk.com']], 'type' => '#text']);
-        $jevix->cfgAllowTagParams('param', ['name' => '#text', 'value' => '#text']);
-        $jevix->cfgAllowTagParams('embed', ['src' => ['#domain' => ['youtube.com', 'rutube.ru', 'vimeo.com', 'vk.com']], 'type' => '#text', 'allowscriptaccess' => '#text', 'allowfullscreen' => '#text', 'width' => '#int', 'height' => '#int', 'flashvars' => '#text', 'wmode' => '#text']);
-        $jevix->cfgAllowTagParams('iframe', ['width' => '#int', 'height' => '#int', 'style' => '#text', 'frameborder' => '#int', 'allowfullscreen' => '#text', 'src' => ['#domain' => ['youtube.com', 'rutube.ru', 'vimeo.com', 'vk.com', 'my.mail.ru', 'facebook.com', parse_url($this->cms_config->host, PHP_URL_HOST)]]]);
+        $jevix->cfgAllowTagParams('iframe', ['width' => '#int', 'height' => '#int', 'style' => '#text', 'frameborder' => '#int', 'allowfullscreen' => '#text', 'src' => ['#domain' => ['youtube.com', 'yandex.ru', 'rutube.ru', 'vimeo.com', 'vk.com', 'my.mail.ru', 'facebook.com', parse_url($this->cms_config->host, PHP_URL_HOST)]]]);
         $jevix->cfgAllowTagParams('table', ['width' => '#int', 'height' => '#int', 'cellpadding' => '#int', 'cellspacing' => '#int', 'border' => '#int', 'style' => '#text', 'align' => '#text', 'valign' => '#text']);
         $jevix->cfgAllowTagParams('td', ['width' => '#int', 'height' => '#int', 'style' => '#text', 'align' => '#text', 'valign' => '#text', 'colspan' => '#int', 'rowspan' => '#int']);
         $jevix->cfgAllowTagParams('th', ['width' => '#int', 'height' => '#int', 'style' => '#text', 'align' => '#text', 'valign' => '#text', 'colspan' => '#int', 'rowspan' => '#int']);

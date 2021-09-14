@@ -13,3 +13,6 @@ define('LANG_WD_T_SESSION_TYPE2', 'Via ToastrJS');
 define('LANG_WD_T_BTEMPLATE', 'Output Template');
 define('LANG_WD_T_BTEMPLATE_HINT', 'Template file in assets/ui/ dir. The file should start with "breadcrumbs"');
 define('LANG_WD_T_STRIP_LAST', 'Hide the last element of the chain');
+define('LANG_WD_T_LOGO_FILE',  'Logo file (for large resolutions)');
+define('LANG_WD_T_LOGO_FILE_SMALL',  'Logo file (For small resolutions)');
+define('LANG_WD_T_LOGO_FILE_HINT',  'From the images directory. Not specified, used from the template settings.');

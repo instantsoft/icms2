@@ -2091,7 +2091,15 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function increment($table, $field, $step=1){
+    /**
+     * Изменяет числовое поле в таблице на величину $step
+     *
+     * @param string $table Имя таблицы
+     * @param string $field Имя поля
+     * @param type $step Шаг изменения
+     * @return boolean
+     */
+    public function increment($table, $field, $step = 1) {
 
         $sign = $step > 0 ? '+' : '-';
         $step = abs($step);
@@ -2100,18 +2108,33 @@ class cmsModel {
                 SET i.{$field} = i.{$field} {$sign} {$step}
                 ";
 
-        if ($this->where){ $sql .= 'WHERE '.$this->where; }
+        if ($this->where) {
+            $sql .= 'WHERE ' . $this->where;
+        }
 
         $this->resetFilters();
 
-        return $this->db->query($sql, false, true);
-
+        return $this->db->query($sql, false, true) ? true : false;
     }
 
-    public function decrement($table, $field, $step=1){
+    /**
+     * Изменяет числовое поле в таблице на величину $step с противоположенным знаком
+     *
+     * @param string $table Имя таблицы
+     * @param string $field Имя поля
+     * @param type $step Шаг изменения
+     * @return boolean
+     */
+    public function decrement($table, $field, $step = 1) {
         return $this->increment($table, $field, $step * -1);
     }
 
+    /**
+     * Удаляет известные данные о контроллере $name в таблицах БД
+     *
+     * @param string $name Имя контроллера
+     * @return boolean
+     */
     public function deleteController($name) {
 
 		if(is_numeric($name)){
@@ -2119,6 +2142,7 @@ class cmsModel {
             $name = $controller['name'];
 		}
 
+        $this->filterEqual('controller', $name)->deleteFiltered('{users}_tabs');
         $this->filterEqual('listener', $name)->deleteFiltered('events');
 
         cmsCache::getInstance()->clean('events');
@@ -2139,12 +2163,11 @@ class cmsModel {
 
     public function fieldsAfterStore($item, $fields, $action = 'add') {
 
-        foreach($fields as $field){
+        foreach ($fields as $field) {
             $field['handler']->afterStore($item, $this, $action);
         }
 
         return $this;
-
     }
 
     /**
@@ -2197,26 +2220,23 @@ class cmsModel {
 
         $array = [];
 
-        if(cmsConfig::get('native_yaml')){
+        if (cmsConfig::get('native_yaml')) {
 
-            if(!empty($input_array)){
+            if (!empty($input_array)) {
                 $array = $input_array;
             }
 
             return yaml_emit($array, YAML_UTF8_ENCODING);
         }
 
-        if(!empty($input_array)){
-
+        if (!empty($input_array)) {
             foreach ($input_array as $key => $value) {
-                $_k = str_replace(array('[',']'), '', $key); // был фатальный баг, если в ключах эти символы
+                $_k = str_replace(['[', ']'], '', $key); // был фатальный баг, если в ключах эти символы
                 $array[$_k] = $value;
             }
-
         }
 
         return Spyc::YAMLDump($array, $indent, $word_wrap);
-
     }
 
     /**
@@ -2226,19 +2246,18 @@ class cmsModel {
      */
     public static function yamlToArray($yaml) {
 
-        if(!$yaml){ return array(); }
+        if (!$yaml) { return []; }
 
-        if(is_array($yaml)){ return $yaml; }
+        if (is_array($yaml)) { return $yaml; }
 
-        if($yaml === "---\n- 0\n"){ return array(); }
-        if($yaml === "---\n- \"0\"\n...\n"){ return array(); }
+        if ($yaml === "---\n- 0\n") { return []; }
+        if ($yaml === "---\n- \"0\"\n...\n") { return []; }
 
-        if(cmsConfig::get('native_yaml')){
+        if (cmsConfig::get('native_yaml')) {
             return yaml_parse($yaml);
         }
 
         return Spyc::YAMLLoadString($yaml);
-
     }
 
     /**
@@ -2247,7 +2266,7 @@ class cmsModel {
      * @return string
      */
     public static function arrayToString($input_array) {
-        if(!is_array($input_array)){
+        if (!is_array($input_array)) {
             return null;
         }
         return json_encode($input_array);
@@ -2259,8 +2278,8 @@ class cmsModel {
      * @return array
      */
     public static function stringToArray($string) {
-        if(!$string){ return array(); }
-        return (array)json_decode($string, true);
+        if (!$string) { return []; }
+        return (array) json_decode($string, true);
     }
 
     /**
@@ -2272,7 +2291,7 @@ class cmsModel {
         self::$cached[$key] = $data;
     }
     public static function getCachedResult($key) {
-        if(isset(self::$cached[$key])){
+        if (isset(self::$cached[$key])) {
             return self::$cached[$key];
         }
         return null;

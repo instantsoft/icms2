@@ -1891,6 +1891,7 @@ CREATE TABLE `{#}widgets_pages` (
   `url_mask_not` text COMMENT 'Отрицательная маска',
   `groups` text COMMENT 'Группы доступа',
   `countries` text COMMENT 'Страны доступа',
+  `body_css` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `controller` (`controller`),
   KEY `name` (`name`)

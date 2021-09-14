@@ -11,6 +11,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{users}_contacts` CHANGE `messages` `new_messages` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Кол-во новых сообщений';");
     }
 
+    if(!$core->db->isFieldExists('widgets_pages', 'body_css')){
+        $core->db->query("ALTER TABLE `{#}widgets_pages` ADD `body_css` VARCHAR(100) NULL DEFAULT NULL;");
+    }
+
     $widgets_bind = [];
     $wbinds = $admin->model->orderBy('i.page_id, i.position, i.ordering')->
                     get('widgets_bind_pages') ?: [];

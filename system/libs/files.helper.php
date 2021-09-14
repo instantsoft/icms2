@@ -307,12 +307,17 @@ function file_get_contents_from_url($url, $timeout = 5, $json_decode = false, $p
         }
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, false);
         curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
         $data = curl_exec($curl);
         curl_close($curl);
+
+        if ($data === false) {
+            return null;
+        }
+
     } else {
         $data = @file_get_contents($url);
     }

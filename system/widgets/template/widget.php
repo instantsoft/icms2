@@ -52,27 +52,40 @@ class widgetTemplate extends cmsWidget {
             }
         } elseif($type === 'logo') {
 
-            $logos['logo'] = $template->getTemplateFilePath('images/logo.svg');
-            $logos['small_logo'] = $template->getTemplateFilePath('images/small_logo.svg');
+            $logo_wd = $this->getOption('logo', []);
 
-            // Растр
-            $r_logo_file = $template->getOption('logo');
-            if ($r_logo_file){
-                $logos['logo'] = $config->upload_root . $r_logo_file['original'];
+            if(empty($logo_wd['file'])){
+
+                $logos['logo'] = $template->getTemplateFilePath('images/logo.svg');
+                $logos['small_logo'] = $template->getTemplateFilePath('images/small_logo.svg');
+
+                // Растр
+                $r_logo_file = $template->getOption('logo');
+                if ($r_logo_file){
+                    $logos['logo'] = $config->upload_root . $r_logo_file['original'];
+                }
+                $r_logo_small_file = $template->getOption('logo_small');
+                if ($r_logo_small_file){
+                    $logos['small_logo'] = $config->upload_root . $r_logo_small_file['original'];
+                }
+                // SVG
+                $logo_svg_file = $template->getOption('logo_svg');
+                if ($logo_svg_file){
+                    $logos['logo'] = $config->upload_root . $logo_svg_file['path'];
+                }
+                $logo_small_svg_file = $template->getOption('logo_small_svg');
+                if ($logo_small_svg_file){
+                    $logos['small_logo'] = $config->upload_root . $logo_small_svg_file['path'];
+                }
+            } else {
+
+                $logos['logo'] = $template->getTemplateFilePath('images/'.$logo_wd['file']);
+
+                if(!empty($logo_wd['file_small'])){
+                    $logos['small_logo'] = $template->getTemplateFilePath('images/'.$logo_wd['file_small']);
+                }
             }
-            $r_logo_small_file = $template->getOption('logo_small');
-            if ($r_logo_small_file){
-                $logos['small_logo'] = $config->upload_root . $r_logo_small_file['original'];
-            }
-            // SVG
-            $logo_svg_file = $template->getOption('logo_svg');
-            if ($logo_svg_file){
-                $logos['logo'] = $config->upload_root . $logo_svg_file['path'];
-            }
-            $logo_small_svg_file = $template->getOption('logo_small_svg');
-            if ($logo_small_svg_file){
-                $logos['small_logo'] = $config->upload_root . $logo_small_svg_file['path'];
-            }
+
         } elseif($type === 'lang_select') {
             if(!$config->is_user_change_lang){
                 return false;

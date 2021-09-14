@@ -8,6 +8,7 @@ class formAdminWidgetsPage extends cmsForm {
         return array(
             'title' => array(
                 'type' => 'fieldset',
+                'title' => LANG_CP_BASIC,
                 'childs' => array(
                     new fieldString('title', array(
                         'title' => LANG_TITLE,
@@ -16,6 +17,12 @@ class formAdminWidgetsPage extends cmsForm {
                             array('max_length', 64)
                         )
                     )),
+                    new fieldString('body_css', array(
+                        'title' => LANG_CP_WIDGET_PAGE_BODY_CSS,
+                        'rules' => array(
+                            array('max_length', 100)
+                        )
+                    ))
                 )
             ),
             'urls' => array(

@@ -49,6 +49,8 @@
     define('LANG_SORTING_ADD',               'New rule');
     define('LANG_SORTING_ASC',               'Ascending');
     define('LANG_SORTING_DESC',              'Descending');
+    define('LANG_SORTING_BYORDER',           'By order');
+    define('LANG_SORTING_BYTIME',            'By execution time');
     define('LANG_PHOTO',                     'Image');
     define('LANG_PHOTOS',                    'Images');
     define('LANG_COMMENTS',                  'Comments');
@@ -130,6 +132,9 @@
     define('LANG_PARSER_TEXT_MAX_LEN',       'Maximum length');
     define('LANG_PARSER_TEXT_MIN_LEN',       'Minimum length');
     define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Show characters count');
+    define('LANG_PARSER_USE_INPUTMASK',      'Use the input mask');
+    define('LANG_PARSER_INPUTMASK',          'Input mask');
+    define('LANG_PARSER_INPUTMASK_HINT',     '9 - numeric, a - alphabetical, * - alphanumeric. Read more in the <a target="_blank" href="https://docs.instantcms.ru/manual/ctypes/fields/types#строковое-поле">documentation</a>');
     define('LANG_PARSER_IS_STRIP_TAGS',      'Strip all HTML tags on save');
     define('LANG_PARSER_HTML',               'HTML text');
     define('LANG_PARSER_HTML_EDITOR',        'WYSIWYG editor');

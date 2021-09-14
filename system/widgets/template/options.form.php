@@ -34,6 +34,34 @@ class formWidgetTemplateOptions extends cmsForm {
                         'visible_depend' => array('options:type' => array('show' => array('smessages')))
                     )),
 
+                    new fieldList('options:logo:file', array(
+                        'title' => LANG_WD_T_LOGO_FILE,
+                        'hint'  => LANG_WD_T_LOGO_FILE_HINT,
+                        'generator' => function($item) use ($template_name) {
+
+                            $files = cmsCore::getFilesList(cmsTemplate::TEMPLATE_BASE_PATH.$template_name.'/images', '*logo*.*');
+
+                            $files = array_combine($files, $files);
+
+                            return ['' => ''] + $files;
+                        },
+                        'visible_depend' => array('options:type' => array('show' => array('logo')))
+                    )),
+
+                    new fieldList('options:logo:file_small', array(
+                        'title' => LANG_WD_T_LOGO_FILE_SMALL,
+                        'hint'  => LANG_WD_T_LOGO_FILE_HINT,
+                        'generator' => function($item) use ($template_name) {
+
+                            $files = cmsCore::getFilesList(cmsTemplate::TEMPLATE_BASE_PATH.$template_name.'/images', '*logo*.*');
+
+                            $files = array_combine($files, $files);
+
+                            return ['' => ''] + $files;
+                        },
+                        'visible_depend' => array('options:type' => array('show' => array('logo')))
+                    )),
+
                     new fieldList('options:breadcrumbs:template', array(
                         'title' => LANG_WD_T_BTEMPLATE,
                         'hint'  => LANG_WD_T_BTEMPLATE_HINT,

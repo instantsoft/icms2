@@ -36,7 +36,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
                 <tr>
                     <?php foreach($columns as $name=>$column){ ?>
                         <?php if ($name=='id' && !$options['show_id']){ $column['class'] = (isset($column['class']) ? $column['class'] : '').' d-none'; } ?>
-                        <th rel="<?php echo $name; ?>" class="<?php if(!empty($column['class'])){ echo $column['class']; } ?> <?php if($options['is_sortable']){ ?>sortable<?php } ?>">
+                        <th rel="<?php echo $name; ?>" class="<?php if(!empty($column['class'])){ echo $column['class']; } ?><?php if($options['is_sortable']){ ?> sortable sorting<?php } ?>">
                             <?php echo isset($column['title']) ? $column['title'] : ''; ?>
                         </th>
                     <?php } ?>

@@ -31,7 +31,7 @@
         <?php } ?>
     <?php } ?>
     </head>
-    <body id="<?php echo $device_type; ?>_device_type" data-device="<?php echo $device_type; ?>" class="d-flex flex-column h-100">
+    <body id="<?php echo $device_type; ?>_device_type" data-device="<?php echo $device_type; ?>" class="d-flex flex-column h-100<?php if(!empty($body_classes)) { ?> <?php echo implode(' ', $body_classes); ?><?php } ?>">
         <?php $this->renderLayoutChild('scheme', ['rows' => $rows]); ?>
         <?php if (!empty($this->options['show_top_btn'])){ ?>
             <a class="btn btn-secondary btn-lg" href="#<?php echo $device_type; ?>_device_type" id="scroll-top">
@@ -48,12 +48,12 @@
                 </div>
             </div>
         <?php } ?>
+        <?php if ($config->debug && cmsUser::isAdmin()){ ?>
+            <?php $this->renderAsset('ui/debug', ['core' => $core]); ?>
+        <?php } ?>
         <script><?php echo $this->getLangJS('LANG_LOADING', 'LANG_ALL'); ?></script>
         <?php $this->printJavascriptTags(); ?>
         <?php $this->bottom(); ?>
         <?php $this->onDemandPrint(); ?>
-        <?php if ($config->debug && cmsUser::isAdmin()){ ?>
-            <?php $this->renderAsset('ui/debug', ['core' => $core]); ?>
-        <?php } ?>
     </body>
 </html>

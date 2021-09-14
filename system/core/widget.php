@@ -55,7 +55,16 @@ class cmsWidget {
     }
 
     public function getOption($key, $default = false){
-        return array_key_exists($key, $this->options) ? $this->options[$key] : $default;
+
+        $is_array = strpos($key, ':');
+
+        if ($is_array === false){
+            $value = array_key_exists($key, $this->options) ? $this->options[$key] : null;
+        } else {
+            $value = array_value_recursive($key, $this->options);
+        }
+
+        return $value !== null ? $value : $default;
     }
 
     public function getOptions(){
