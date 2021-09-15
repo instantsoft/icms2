@@ -239,7 +239,7 @@ class cmsConfig {
         $cfg_file = PATH . self::CONFIG_DIR . $cfg_file;
 
         if (!is_readable($cfg_file)) {
-            return false;
+            return [];
         }
 
         return include $cfg_file;

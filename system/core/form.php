@@ -24,7 +24,7 @@ class cmsForm {
      *
      * @var array
      */
-    private $params    = [];
+    private $params = [];
 
     /**
      * Структура формы
@@ -227,7 +227,6 @@ class cmsForm {
                     $childs[] = $field;
 
                     continue;
-
                 }
 
                 $_childs = []; $first = true;
@@ -269,17 +268,14 @@ class cmsForm {
                     $_childs[$lang] = $_field;
 
                     $first = false;
-
                 }
 
                 $childs[] = $_childs;
-
             }
 
             $structure[$fid]['childs'] = $childs;
 
         }
-
 
         return $structure;
     }
@@ -833,8 +829,8 @@ class cmsForm {
         //
         if ($is_check_csrf){
             $csrf_token = $controller->request->get('csrf_token', '');
-            if ( !self::validateCSRFToken( $csrf_token ) ){
-                return true;
+            if (!self::validateCSRFToken( $csrf_token )){
+                return ['csrf_token' => ERR_VALIDATE_INVALID];
             }
         }
 
@@ -895,7 +891,6 @@ class cmsForm {
                             }
 
                             continue;
-
                         }
 
                         // каждое правило это массив
@@ -916,9 +911,9 @@ class cmsForm {
                         if (method_exists($this, $validate_function)) {
                             $result = call_user_func_array([$this, $validate_function], $rule);
                         } elseif (method_exists($field, $validate_function)){
-                            $result = call_user_func_array(array($field, $validate_function), $rule);
+                            $result = call_user_func_array([$field, $validate_function], $rule);
                         } else {
-                            $result = call_user_func_array(array($controller, $validate_function), $rule);
+                            $result = call_user_func_array([$controller, $validate_function], $rule);
                         }
 
                         // если получилось false, то дальше не проверяем, т.к.
@@ -927,7 +922,6 @@ class cmsForm {
                             $errors[$name] = $result;
                             break;
                         }
-
                     }
 
                 }
@@ -935,8 +929,6 @@ class cmsForm {
             }
 
         }
-
-        if (!count($errors)) { return false; }
 
         return $errors;
     }
@@ -957,7 +949,6 @@ class cmsForm {
         }
 
         return self::generateCSRFToken();
-
     }
 
     /**
@@ -978,7 +969,6 @@ class cmsForm {
         cmsUser::sessionSet('csrf_token', $token);
 
         return $token;
-
     }
 
     /**
@@ -1032,10 +1022,10 @@ class cmsForm {
                 $current = $field['fieldset'];
                 $index   += 1;
 
-                $fieldsets[$index] = array(
+                $fieldsets[$index] = [
                     'title'  => $current,
                     'fields' => []
-                );
+                ];
             }
 
             $fieldsets[$index]['fields'][] = $field;
@@ -1084,7 +1074,7 @@ class cmsForm {
      * @param string $form_name Название формы
      * @param array $params Параметры, передаваемые в метод init формы
      * @param object $controller Объект контроллера контекста
-     * @return boolean|form_class
+     * @return boolean|string|form_class instanceof cmsForm
      */
     public static function getForm($form_file, $form_name, $params = false, $controller = null) {
 
@@ -1106,7 +1096,7 @@ class cmsForm {
 
         if ($params) {
             $form->setParams($params);
-            $form->setStructure(call_user_func_array(array($form, 'init'), $params));
+            $form->setStructure(call_user_func_array([$form, 'init'], $params));
         } else {
             $form->setStructure($form->init());
         }
