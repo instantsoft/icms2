@@ -1619,23 +1619,25 @@ class modelContent extends cmsModel {
         $hide_except_title = (!empty($ctype['options']['privacy_type']) && $ctype['options']['privacy_type'] == 'show_title');
 
         // Сначала проверяем настройки типа контента
-        if (!empty($ctype['options']['privacy_type']) && in_array($ctype['options']['privacy_type'], array('show_title', 'show_all'), true)) {
+        if (!empty($ctype['options']['privacy_type']) &&
+                in_array($ctype['options']['privacy_type'], array('show_title', 'show_all'), true)) {
+
             $this->disablePrivacyFilter();
-            if($ctype['options']['privacy_type'] != 'show_title'){
+            if ($ctype['options']['privacy_type'] != 'show_title') {
                 $hide_except_title = false;
             }
         }
 
         // А потом, если разрешено правами доступа, отключаем фильтр приватности
         if ($allow_view_all) {
-            $this->disablePrivacyFilter(); $hide_except_title = false;
+            $this->disablePrivacyFilter();
+            $hide_except_title = false;
         }
 
         return $hide_except_title;
-
     }
 
-    public function getContentItemsCount($ctype_name){
+    public function getContentItemsCount($ctype_name) {
 
         $table_name = $this->table_prefix . $ctype_name;
 
@@ -1648,17 +1650,17 @@ class modelContent extends cmsModel {
         $this->useCache("content.list.{$ctype_name}");
 
         return $this->getCount($table_name);
-
     }
 
-    public function getContentItemsForSitemap($ctype_name, $fields = array()){
+    public function getContentItemsForSitemap($ctype_name, $fields = array()) {
 
         $table_name = $this->table_prefix . $ctype_name;
 
         $this->selectOnly('slug');
         $this->select('date_last_modified');
         $this->select('title');
-        if($fields){
+
+        if ($fields) {
             foreach ($fields as $field) {
                 $this->select($field);
             }
@@ -1670,22 +1672,20 @@ class modelContent extends cmsModel {
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
         if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
 
-        if (!$this->order_by){ $this->orderBy('date_pub', 'desc')->forceIndex('date_pub'); }
+        if (!$this->order_by) {
+            $this->orderBy('date_pub', 'desc')->forceIndex('date_pub');
+        }
 
         return $this->get($table_name, false, false);
-
     }
 
-    public function getContentItems($ctype_name, $callback = null){
+    public function getContentItems($ctype_name, $callback = null) {
 
         $table_name = $this->table_prefix . $ctype_name;
 
-        $this->select('u.nickname', 'user_nickname');
-        $this->select('u.slug', 'user_slug');
-        $this->select('u.avatar', 'user_avatar');
-        $this->select('u.groups', 'user_groups');
+        $this->joinUser();
+
         $this->select('f.title', 'folder_title');
-        $this->join('{users}', 'u', 'u.id = i.user_id');
         $this->joinLeft('content_folders', 'f', 'f.id = i.folder_id');
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
@@ -1693,46 +1693,45 @@ class modelContent extends cmsModel {
         if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
 
-        if (!$this->order_by){ $this->orderBy('date_pub', 'desc')->forceIndex('date_pub'); }
+        if (!$this->order_by) {
+            $this->orderBy('date_pub', 'desc')->forceIndex('date_pub');
+        }
 
-        $this->useCache('content.list.'.$ctype_name);
+        $this->useCache('content.list.' . $ctype_name);
 
         $user = cmsUser::getInstance();
 
-        return $this->get($table_name, function($item, $model) use ($user, $callback, $ctype_name){
+        return $this->get($table_name, function ($item, $model) use ($user, $callback, $ctype_name) {
 
-            $item['user'] = array(
-                'id'        => $item['user_id'],
-                'slug'      => $item['user_slug'],
-                'nickname'  => $item['user_nickname'],
-                'avatar'    => $item['user_avatar'],
-                'groups'    => $item['user_groups'],
-                'is_friend' => $user->isFriend($item['user_id'])
-            );
+            $item['user'] = [
+                'id'              => $item['user_id'],
+                'slug'            => $item['user_slug'],
+                'nickname'        => $item['user_nickname'],
+                'avatar'          => $item['user_avatar'],
+                'groups'          => $item['user_groups'],
+                'privacy_options' => cmsModel::yamlToArray($item['user_privacy_options']),
+                'is_friend'       => $user->isFriend($item['user_id'])
+            ];
 
-            if (is_callable($callback)){
+            if (is_callable($callback)) {
                 $item = $callback($item, $model, $ctype_name, $user);
             }
 
             return $item;
-
         });
-
     }
 
 //============================================================================//
 //============================================================================//
 
-    public function getContentItem($ctype_name, $id, $by_field = 'id'){
+    public function getContentItem($ctype_name, $id, $by_field = 'id') {
 
-        if(is_numeric($ctype_name)){
+        if (is_numeric($ctype_name)) {
 
             $ctype = $this->getContentType($ctype_name);
-
-            if(!$ctype){ return false; }
+            if (!$ctype) { return false; }
 
             $ctype_name = $ctype['name'];
-
         }
 
         $table_name = $this->table_prefix . $ctype_name;
@@ -1744,32 +1743,29 @@ class modelContent extends cmsModel {
 
         $this->useCache("content.item.{$ctype_name}");
 
-        return $this->getItemByField($table_name, $by_field, $id, function($item, $model) use($ctype_name){
+        return $this->getItemByField($table_name, $by_field, $id, function ($item, $model) use ($ctype_name) {
 
-            $item['user'] = array(
-                'id'       => $item['user_id'],
-                'groups'   => $item['user_groups'],
-                'slug'     => $item['user_slug'],
-                'nickname' => $item['user_nickname'],
-                'avatar'   => $item['user_avatar']
-            );
+            $item['user'] = [
+                'id'              => $item['user_id'],
+                'groups'          => $item['user_groups'],
+                'slug'            => $item['user_slug'],
+                'nickname'        => $item['user_nickname'],
+                'privacy_options' => cmsModel::yamlToArray($item['user_privacy_options']),
+                'avatar'          => $item['user_avatar']
+            ];
 
             $item['is_draft'] = false;
 
-            if (!$item['is_approved']){
+            if (!$item['is_approved']) {
                 $item['is_draft'] = $model->isDraftContentItem($ctype_name, $item);
             }
 
             return $item;
-
         }, $by_field);
-
     }
 
-    public function getContentItemBySLUG($ctype_name, $slug){
-
+    public function getContentItemBySLUG($ctype_name, $slug) {
         return $this->getContentItem($ctype_name, $slug, 'slug');
-
     }
 
 //============================================================================//

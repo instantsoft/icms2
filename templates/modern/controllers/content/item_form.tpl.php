@@ -64,7 +64,7 @@
                 'name' => 'to_draft',
                 'attributes' => [
                     'type' => 'submit',
-                    'class' => 'to_draft'
+                    'class' => 'to_draft btn-warning'
                 ]
             ]
         ],

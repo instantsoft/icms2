@@ -184,7 +184,7 @@ class onRendererMiddlewareScss extends cmsAction {
                 $_vars[$key] = $value;
             }
 
-            $scss->setVariables($_vars);
+            $scss->addVariables($_vars);
         }
 
         $result = false;

@@ -16,7 +16,7 @@ class formGeoOptions extends cmsForm {
                     )),
                     new fieldList('auto_detect_provider', array(
                         'title' => LANG_GEO_AUTO_DETECT_PROVIDER,
-                        'default' => 'ipgeobase',
+                        'default' => 'geoiplookup',
                         'generator' => function ($item){
 
                             $items = array();

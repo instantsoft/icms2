@@ -562,7 +562,7 @@ class content extends cmsFrontend {
                 'href' => href_to_profile($item['user']),
                 'html' => $item['user']['nickname']
             ];
-            if (!empty($item['folder_title'])){
+            if (!empty($item['folder_title']) && $this->cms_user->isPrivacyAllowed($item['user'], 'view_user_'.$ctype['name'])){
                 $bar['folder'] = [
                     'css'  => 'bi_folder',
                     'icon' => 'folder',

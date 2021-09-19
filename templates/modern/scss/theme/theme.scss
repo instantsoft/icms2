@@ -25,6 +25,19 @@
 // Кастомный SCSS
 @import "custom";
 
+.icms-header {
+    &__top {
+        background-color: darken($purple, 10%);
+        color: $white;
+    }
+    &__middle {
+        background-color: $purple;
+        color: $white;
+    }
+    &__bottom {
+
+    }
+}
 .clickable {
     cursor: pointer;
 }
