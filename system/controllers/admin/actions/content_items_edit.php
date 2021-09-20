@@ -186,6 +186,10 @@ class actionAdminContentItemsEdit extends cmsAction {
 
                         foreach ($items as $item_id) {
 
+                            $_items[$item_id]['ctype_name'] = $ctype['name'];
+                            $_items[$item_id]['ctype_id']   = $ctype['id'];
+                            $_items[$item_id]['ctype_data'] = $ctype;
+
                             $content_fields = $data['content_fields'];
 
                             if($fields_is_add){
