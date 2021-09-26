@@ -110,7 +110,7 @@ class cmsDatabase {
     }
 
     public function __get($name) {
-        if ($name == 'nestedSets') {
+        if ($name === 'nestedSets') {
             $this->nestedSets = new cmsNestedsets($this);
             return $this->nestedSets;
         }
@@ -520,7 +520,7 @@ class cmsDatabase {
         // если это поле даты и оно не установлено,
         // то используем текущее время
 		if ($is_date_field && ($value === false)) { $value = 'NULL'; }  else
-        if ($is_date_field && ($value == '' || is_null($value))) { $value = 'CURRENT_TIMESTAMP'; }  else
+        if ($is_date_field && ($value === '' || is_null($value))) { $value = 'CURRENT_TIMESTAMP'; }  else
 
         // если нужно шифровать
         if ($is_enc_field) {
@@ -867,7 +867,7 @@ class cmsDatabase {
         foreach ($structure as $name=>$field){
 
             $fcount++;
-            $sep = ($fcount == $ftotal) ? "\n" : ",\n";
+            $sep = ($fcount === $ftotal) ? "\n" : ",\n";
 
             $default  = (!isset($field['default']) ? 'NULL' : "NOT NULL DEFAULT '{$field['default']}'");
             $unsigned = (!isset($field['unsigned']) ? '' : 'UNSIGNED');

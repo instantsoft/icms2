@@ -35,6 +35,18 @@
         background-color: transparent;
         padding-left: 0;
         padding-right: 0;
+        position: relative;
+        &:before {
+            background: $gray-600;
+            bottom: 0;
+            content: "";
+            display: block;
+            height: 1px;
+            left: 0;
+            margin: 0 0 -1px;
+            position: absolute;
+            width: $spacer*3;
+        }
     }
     > .card-body, > .icms-widgets > .card-body {
         padding-bottom: 0;

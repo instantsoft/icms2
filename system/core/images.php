@@ -322,7 +322,7 @@ class cmsImages {
             $image_type = $this->source_type;
         }
 
-        $quality = is_numeric($quality) ? (int)abs($quality) : null;
+        $quality = is_numeric($quality) ? abs(intval($quality)) : null;
 
         switch ($image_type) {
             case IMAGETYPE_GIF:

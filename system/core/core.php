@@ -394,20 +394,21 @@ class cmsCore {
 
     }
 
-    public static function getControllerNameByAlias($controller_alias){
+    public static function getControllerNameByAlias($controller_alias) {
 
-        $config_mapping      = cmsConfig::getControllersMapping();
+        $config_mapping = cmsConfig::getControllersMapping();
         $controllers_mapping = cmsController::getControllersMapping();
 
         $mapping = array_merge($controllers_mapping, $config_mapping);
         if (!$mapping) { return false; }
 
-        foreach($mapping as $name=>$alias){
-            if ($alias == $controller_alias) { return $name; }
+        foreach ($mapping as $name => $alias) {
+            if ($alias === $controller_alias) {
+                return $name;
+            }
         }
 
         return false;
-
     }
 
     public static function getControllerAliasByName($controller_name){

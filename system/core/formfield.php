@@ -262,7 +262,7 @@ class cmsFormField {
     public function setOptions($options){
         if (is_array($options)){
             foreach($options as $option=>$value){
-				if ($option == 'id') {
+				if ($option === 'id') {
                     $this->field_id = $value;
                     continue;
                 }

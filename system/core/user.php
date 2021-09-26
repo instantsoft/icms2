@@ -840,12 +840,11 @@ class cmsUser {
 
         if (!isset($options[$option])){ return true; }
 
-        if ($options[$option] == 'anyone'){ return true; }
+        if ($options[$option] === 'anyone'){ return true; }
 
-        if ($options[$option] == 'friends' && $this->isFriend($profile['id'])){ return true; }
+        if ($options[$option] === 'friends' && $this->isFriend($profile['id'])){ return true; }
 
         return false;
-
     }
 
 //============================================================================//

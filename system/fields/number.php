@@ -375,31 +375,31 @@ class fieldNumber extends cmsFormField {
 
     }
 
-    public function store($value, $is_submitted, $old_value = null){
+    public function store($value, $is_submitted, $old_value = null) {
 
-        if (!is_array($value)){
+        if (!is_array($value)) {
 
-            $value = str_replace(',', '.', trim($value));
+            $value = floatval(str_replace(',', '.', trim($value)));
 
-            if(!$this->getOption('save_zero') && !$value){ return null; }
+            if (!$this->getOption('save_zero') && !$value) {
+                return null;
+            }
 
             return $this->getOption('is_abs') ? abs($value) : $value;
 
-        } elseif(!empty($value['from']) || !empty($value['to'])) {
+        } elseif (!empty($value['from']) || !empty($value['to'])) {
 
-            if (!empty($value['from'])){
+            if (!empty($value['from'])) {
                 $value['from'] = $this->store($value['from'], $is_submitted, $old_value);
             }
-            if (!empty($value['to'])){
+            if (!empty($value['to'])) {
                 $value['to'] = $this->store($value['to'], $is_submitted, $old_value);
             }
 
             return $value;
-
         }
 
         return null;
-
     }
 
     public function storeFilter($value){

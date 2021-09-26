@@ -128,7 +128,7 @@
         <?php } elseif(!empty($entry['hide_controls'])) { ?>
             <?php echo $entry['content_html']; ?>
         <?php } else { ?>
-            <div class="icms-comment-html text-break<?php if($dim_negative && $entry['rating'] < 0){ ?> bad<?php echo ($entry['rating'] < -6 ? 6 : abs($entry['rating'])) ?> bad<?php } ?>">
+        <div class="icms-comment-html text-break<?php if($dim_negative && $entry['rating'] < 0){ ?> bad<?php echo ($entry['rating'] < -6 ? 6 : abs(intval($entry['rating']))) ?> bad<?php } ?>">
                 <?php echo $entry['content_html']; ?>
             </div>
         <?php } ?>

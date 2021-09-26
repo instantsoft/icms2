@@ -84,7 +84,8 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgAllowTagParams('address', ['class' => '#text']);
         $jevix->cfgAllowTagParams('a', ['href' => '#link', 'name' => '#text', 'target' => '#text', 'class' => '#text']);
         $jevix->cfgAllowTagParams('img', ['src', 'style' => '#text', 'alt' => '#text', 'title' => '#text', 'align' => ['right', 'left', 'center'], 'width' => '#int', 'height' => '#int', 'hspace' => '#int', 'vspace' => '#int', 'class' => '#text']);
-        $jevix->cfgAllowTagParams('span', ['style' => '#text']);
+        $jevix->cfgAllowTagParams('span', ['style' => '#text', 'class' => '#text']);
+        $jevix->cfgAllowTagParams('em', ['class' => '#text']);
         $jevix->cfgAllowTagParams('input', ['tabindex' => '#text', 'type' => '#text', 'id' => '#text']);
         $jevix->cfgAllowTagParams('label', ['class' => '#text', 'for' => '#text']);
         $jevix->cfgAllowTagParams('footer', ['class' => '#text']);
@@ -92,7 +93,7 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgAllowTagParams('table', ['width' => '#int', 'height' => '#int', 'cellpadding' => '#int', 'cellspacing' => '#int', 'border' => '#int', 'style' => '#text', 'align' => '#text', 'valign' => '#text']);
         $jevix->cfgAllowTagParams('td', ['width' => '#int', 'height' => '#int', 'style' => '#text', 'align' => '#text', 'valign' => '#text', 'colspan' => '#int', 'rowspan' => '#int']);
         $jevix->cfgAllowTagParams('th', ['width' => '#int', 'height' => '#int', 'style' => '#text', 'align' => '#text', 'valign' => '#text', 'colspan' => '#int', 'rowspan' => '#int']);
-        $jevix->cfgAllowTagParams('p', ['style' => '#text']);
+        $jevix->cfgAllowTagParams('p', ['style' => '#text', 'class' => '#text']);
         $jevix->cfgAllowTagParams('div', ['style' => '#text', 'class' => '#text']);
         $jevix->cfgAllowTagParams('spoiler', ['title' => '#text']);
         $jevix->cfgAllowTagParams('code', ['type' => '#text']);

@@ -963,7 +963,6 @@ class admin extends cmsFrontend {
             // Заголовок виджета
             $form->addField($title_fieldset_id, new fieldString('title', array(
                 'title' => LANG_TITLE,
-                'is_clean_disable' => true,
                 'rules' => array(
                     array('required'),
                     array('min_length', 3),

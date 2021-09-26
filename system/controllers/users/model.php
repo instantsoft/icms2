@@ -1206,60 +1206,58 @@ class modelUsers extends cmsModel {
 //==============================    СТАТУСЫ   ================================//
 //============================================================================//
 
-    public function getUserStatus($id){
+    public function getUserStatus($id) {
 
         if (!$id) { return false; }
 
         $this->useCache('users.status');
 
         return $this->getItemById('{users}_statuses', $id);
-
     }
 
-    public function addUserStatus($status){
+    public function addUserStatus($status) {
 
         $id = $this->insert('{users}_statuses', $status);
 
-        $this->update('{users}', $status['user_id'], array(
+        $this->update('{users}', $status['user_id'], [
             'status_text' => $status['content'],
-            'status_id' => $id
-        ), true);
+            'status_id'   => $id
+        ], true);
 
         cmsCache::getInstance()->clean('users.status');
         cmsCache::getInstance()->clean('users.list');
-        cmsCache::getInstance()->clean('users.user.'.$status['user_id']);
+        cmsCache::getInstance()->clean('users.user.' . $status['user_id']);
 
         return $id;
-
     }
 
-    public function clearUserStatus($user_id){
+    public function clearUserStatus($user_id) {
 
         cmsCache::getInstance()->clean('users.status');
         cmsCache::getInstance()->clean('users.list');
-        cmsCache::getInstance()->clean('users.user.'.$user_id);
+        cmsCache::getInstance()->clean('users.user.' . $user_id);
 
         $this->filterEqual('user_id', $user_id)->deleteFiltered('{users}_statuses');
 
-        return $this->update('{users}', $user_id, array(
+        return $this->update('{users}', $user_id, [
             'status_text' => null,
-            'status_id' => null
-        ), true);
-
+            'status_id'   => null
+        ], true);
     }
 
-    public function increaseUserStatusRepliesCount($status_id, $is_increment = true){
+    public function increaseUserStatusRepliesCount($status_id, $is_increment = true) {
 
         cmsCache::getInstance()->clean('users.status');
 
         $this->filterEqual('id', $status_id);
 
-        if($is_increment){
-            $this->increment('{users}_statuses', 'replies_count');
+        if ($is_increment) {
+            $result = $this->increment('{users}_statuses', 'replies_count');
         } else {
-            $this->decrement('{users}_statuses', 'replies_count');
+            $result = $this->decrement('{users}_statuses', 'replies_count');
         }
 
+        return $result;
     }
 
 //============================================================================//
@@ -1268,17 +1266,14 @@ class modelUsers extends cmsModel {
 
     public function isUserCanVoteKarma($user_id, $profile_id, $voting_days = 1) {
 
+        $this->selectOnly('id');
         $this->filterEqual('user_id', $user_id);
         $this->filterEqual('profile_id', $profile_id);
         $this->filterDateYounger('date_pub', $voting_days);
 
         $this->useCache('users.karma');
 
-        $votes_count = $this->getCount('{users}_karma');
-
-        $this->resetFilters();
-
-        return $votes_count > 0 ? false : true;
+        return $this->getItem('{users}_karma') ? false : true;
     }
 
     public function addKarmaVote($vote) {
@@ -1299,11 +1294,8 @@ class modelUsers extends cmsModel {
 
         $this->useCache('users.karma');
 
-        $count = $this->filterEqual('profile_id', $profile_id)->getCount('{users}_karma');
-
-        $this->resetFilters();
-
-        return $count;
+        return $this->filterEqual('profile_id', $profile_id)->
+                getCount('{users}_karma', 'id', true);
     }
 
     public function getKarmaLog($profile_id){
@@ -1320,12 +1312,12 @@ class modelUsers extends cmsModel {
 
         return $this->get('{users}_karma', function($item, $model){
 
-            $item['user'] = array(
+            $item['user'] = [
                 'id'       => $item['user_id'],
                 'nickname' => $item['user_nickname'],
                 'slug'     => $item['user_slug'],
                 'avatar'   => $item['user_avatar']
-            );
+            ];
 
             return $item;
         });
@@ -1337,6 +1329,8 @@ class modelUsers extends cmsModel {
     public function updateUserRating($user_id, $score) {
 
         $this->filterEqual('id', $user_id);
+
+        $score = intval($score);
 
         if ($score > 0) {
             $this->increment('{users}', 'rating', abs($score));

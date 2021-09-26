@@ -573,7 +573,7 @@ class cmsModel {
         // предполагается, что язык в настройках -
         // основной язык и основные тексты хранятся
         // в ячейках без постфикса
-        if ($this->lang == $this->default_lang) {
+        if ($this->lang === $this->default_lang) {
             return $item;
         }
 
@@ -1200,7 +1200,7 @@ class cmsModel {
 
     public function selectTranslatedField($field, $table, $as = false){
 
-        if ($this->lang == $this->default_lang) {
+        if ($this->lang === $this->default_lang) {
             return $this->select($field, $as);
         }
 
@@ -1678,49 +1678,55 @@ class cmsModel {
 
 //============================================================================//
 //============================================================================//
-
-    public function getCount($table_name, $by_field = 'id', $reset = false){
+    /**
+     * Возвращает количество записей по условиям
+     *
+     * @param string $table_name Имя таблицы
+     * @param string $by_field Поле подсчёта
+     * @param boolean $reset Флаг сброса условий фильтрации
+     * @return integer
+     */
+    public function getCount($table_name, $by_field = 'id', $reset = false) {
 
         $sql = "SELECT {$this->straight_join} COUNT({$this->distinct} i.{$by_field} ) as count
                 FROM {#}{$table_name} i
                 {$this->index_action}";
 
-        if ($this->join){ $sql .= $this->join; }
+        if ($this->join) { $sql .= $this->join; }
 
-        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
+        if ($this->where) { $sql .= 'WHERE ' . $this->where . PHP_EOL; }
 
-        if ($this->group_by){ $sql .= 'GROUP BY '.$this->group_by.PHP_EOL; }
+        if ($this->group_by) { $sql .= 'GROUP BY ' . $this->group_by . PHP_EOL; }
 
-        if($reset){
+        if ($reset) {
             $this->resetFilters();
         }
 
         // если указан ключ кеша для этого запроса
         // то пробуем получить результаты из кеша
-        if ($this->cache_key){
+        if ($this->cache_key) {
 
             $cache_key = $this->cache_key . '.' . md5($sql);
             $cache = cmsCache::getInstance();
 
-            if (false !== ($result = $cache->get($cache_key))){
+            if (false !== ($result = $cache->get($cache_key))) {
                 $this->stopCache();
                 return $result;
             }
-
         }
 
         $result = $this->db->query($sql);
 
-        if (!$this->db->numRows($result)){
+        if (!$this->db->numRows($result)) {
             $count = 0;
         } else {
-            $item = $this->db->fetchAssoc($result);
-            $count = (int)$item['count'];
+            $item  = $this->db->fetchAssoc($result);
+            $count = intval($item['count']);
         }
 
         // если указан ключ кеша для этого запроса
         // то сохраняем результаты в кеше
-        if ($this->cache_key){
+        if ($this->cache_key) {
             $cache->set($cache_key, $count);
             $this->stopCache();
         }
@@ -1728,7 +1734,6 @@ class cmsModel {
         $this->db->freeResult($result);
 
         return $count;
-
     }
 
 //============================================================================//
@@ -2101,6 +2106,8 @@ class cmsModel {
      * @return boolean
      */
     public function increment($table, $field, $step = 1) {
+
+        $step = intval($step);
 
         $sign = $step > 0 ? '+' : '-';
         $step = abs($step);

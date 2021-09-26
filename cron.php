@@ -22,7 +22,7 @@ $model = cmsCore::getModel('admin');
 
 // id задачи
 // id передаётся вторым параметром, первым передаётся имя домена
-$task_id = isset($argv[2]) ? (int)$argv[2] : 0;
+$task_id = isset($argv[2]) ? intval($argv[2]) : 0;
 
 // если id задачи передано, запускаем только её
 if($task_id){
@@ -30,7 +30,7 @@ if($task_id){
     $task = $model->getSchedulerTask($task_id);
 
     if($task){
-        $tasks = array($task['id'] => $task);
+        $tasks = [$task['id'] => $task];
     }
 
 } else {
@@ -44,7 +44,7 @@ if($task_id){
 if (empty($tasks)) { exit; }
 
 // Коллекция контроллеров
-$controllers = array();
+$controllers = [];
 
 //
 // Выполняем задачи по списку

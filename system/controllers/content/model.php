@@ -488,7 +488,7 @@ class modelContent extends cmsModel {
                     $update_cache_sql = "ALTER TABLE `{#}{$content_table_name}` CHANGE `{$old_cfield_name}` `{$new_cfield_name}` {$field_handler->getCacheSQL()}";
 
                     // изменилось только имя поля
-                    if($field_handler->is_denormalization && $field_old['type'] == $field['type']){
+                    if($field_handler->is_denormalization && $field_old['type'] === $field['type']){
 
                         $this->db->query($update_cache_sql);
 
@@ -607,7 +607,7 @@ class modelContent extends cmsModel {
 
         foreach ($fields as $field) {
 
-            $is_text = $field['handler']->getOption('in_fulltext_search') || $field['name'] == $add_field;
+            $is_text = $field['handler']->getOption('in_fulltext_search') || $field['name'] === $add_field;
             if(!$is_text){ continue; }
 
             $index_fields[] = $field['name'];
@@ -874,7 +874,7 @@ class modelContent extends cmsModel {
 
                 $item_table = $this->table_prefix . $relation['child_ctype_name'];
 
-                if ($item_table == 'users') { $item_table = '{users}'; }
+                if ($item_table === 'users') { $item_table = '{users}'; }
 
                 $success = $this->update($item_table, $relation['child_item_id'], [
                     'parent_' . $relation['parent_ctype_name'] . '_id' => $ids
@@ -928,7 +928,7 @@ class modelContent extends cmsModel {
 
         $parent_ctype_table = $this->table_prefix . $parent_ctype['name'];
 
-        if ($parent_ctype_table == 'users') {
+        if ($parent_ctype_table === 'users') {
             $parent_ctype_table = '{users}';
         }
 
@@ -1616,7 +1616,7 @@ class modelContent extends cmsModel {
 
     public function applyPrivacyFilter($ctype, $allow_view_all = false) {
 
-        $hide_except_title = (!empty($ctype['options']['privacy_type']) && $ctype['options']['privacy_type'] == 'show_title');
+        $hide_except_title = (!empty($ctype['options']['privacy_type']) && $ctype['options']['privacy_type'] === 'show_title');
 
         // Сначала проверяем настройки типа контента
         if (!empty($ctype['options']['privacy_type']) &&

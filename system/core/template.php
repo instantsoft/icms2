@@ -669,7 +669,7 @@ class cmsTemplate {
                 $url_len = mb_strlen($url);
 
                 //полное совпадение ссылки и адреса?
-                if ($current_url == $url){
+                if ($current_url === $url){
                     $active_ids[] = $id;
                     $is_strict = true; // не используется нигде
                 } else {

@@ -30,7 +30,7 @@ Try it out for yourself in our [online demo](https://demo.instantcms.ru/)
 * PHP 5.5+ (PHP 7, PHP 8 supported too)
 * GD, iconv, mbstring, simplexml, json and filter PHP extension
 * Mysql 5.0 or above, MariaDB and its support in PHP
-* Apache + mod_rewrite + (MultiViews option disabled)
+* Apache + mod_rewrite or Nginx + converted .htaccess rules
 
 ## Install InstantCMS ##
 

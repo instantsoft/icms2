@@ -840,8 +840,8 @@ class content extends cmsFrontend {
 
 			$slug_field_rules = array( array('required'), array('slug') );
 
-			if ($action == 'add'){ $slug_field_rules[] = array('unique', $this->model->table_prefix . $ctype['name'], 'slug'); }
-			if ($action == 'edit'){ $slug_field_rules[] = array('unique_exclude', $this->model->table_prefix . $ctype['name'], 'slug', $item_id); }
+			if ($action === 'add'){ $slug_field_rules[] = array('unique', $this->model->table_prefix . $ctype['name'], 'slug'); }
+			if ($action === 'edit'){ $slug_field_rules[] = array('unique_exclude', $this->model->table_prefix . $ctype['name'], 'slug', $item_id); }
 
             $fieldset_id = $form->addFieldset( LANG_SLUG );
             $form->addField($fieldset_id, new fieldString('slug', array(
@@ -985,8 +985,8 @@ class content extends cmsFrontend {
 				if ($pub_max_days){
 					$days = array();
                     $rules = array();
-                    if ($action == 'add'){ $rules[] = array('required'); $min = 1; }
-                    if ($action == 'edit'){ $min = 0; }
+                    if ($action === 'add'){ $rules[] = array('required'); $min = 1; }
+                    if ($action === 'edit'){ $min = 0; }
                     $rules[] = array('number');
                     $rules[] = array('min', $min);
                     $rules[] = array('max', $pub_max_days);
@@ -1000,8 +1000,8 @@ class content extends cmsFrontend {
                     )));
 				} else {
                     $rules = array();
-                    if ($action == 'add'){ $rules[] = array('required'); $min = 1; }
-                    if ($action == 'edit'){ $min = 0; }
+                    if ($action === 'add'){ $rules[] = array('required'); $min = 1; }
+                    if ($action === 'edit'){ $min = 0; }
                     $rules[] = array('min', $min);
                     $rules[] = array('max', 65535);
 					$form->addField($pub_fieldset_id, new fieldNumber('pub_days', array(

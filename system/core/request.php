@@ -71,7 +71,7 @@ class cmsRequest {
      */
     private function detectContext(){
         if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-            $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+            $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
             return cmsRequest::CTX_AJAX;
         } else {
             return cmsRequest::CTX_STANDARD;
