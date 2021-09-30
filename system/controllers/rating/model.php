@@ -16,7 +16,7 @@ class modelRating extends cmsModel {
             return $item['rating'];
         });
 
-        return $rating ? $rating : 0;
+        return $rating ? floatval($rating) : 0;
     }
 
     public function getUserVotesTargets($data, $user, $allow_guest_vote = false) {

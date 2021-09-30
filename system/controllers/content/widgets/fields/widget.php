@@ -18,7 +18,7 @@ class widgetContentFields extends cmsWidget {
         $show_info_block   = $this->getOption('show_info_block');
         $image_field       = $this->getOption('image_field');
         $image_preset      = $this->getOption('image_preset');
-        $fields_names      = array_filter($this->getOption('fields'));
+        $fields_names      = array_filter($this->getOption('fields', []));
         $image_is_parallax = $this->getOption('image_is_parallax');
 
         if (!$fields_names && !$image_field) {
@@ -29,7 +29,9 @@ class widgetContentFields extends cmsWidget {
 
         if ($fields_names) {
             foreach ($fields_names as $name) {
-                $widget_fields[$name] = $fields[$name];
+                if(isset($fields[$name])){
+                    $widget_fields[$name] = $fields[$name];
+                }
             }
         }
 

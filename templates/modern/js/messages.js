@@ -7,6 +7,7 @@ icms.messages = (function ($) {
 
     var pm_window = $('#pm_window');
 
+    this.sound_enabled = false;
     this.is_modal = true;
     this.contactId = null;
     this.msg_ids = [];
@@ -14,6 +15,20 @@ icms.messages = (function ($) {
     this.options = {
         isRefresh: false,
         refreshInterval: 15000
+    };
+
+    this.playSound = function(sound) {
+        if(!this.sound_enabled){
+            return;
+        }
+        if(sound) {
+            try {
+                var audio = new Audio($(pm_window).data('audio-base-url')+sound+'.mp3');
+                audio.play();
+            } catch (e) {
+                console.log(e);
+            }
+        }
     };
 
     this.desktopNotification = function (title, params){
@@ -169,6 +184,8 @@ icms.messages = (function ($) {
     };
 
     this.selectContact = function(id){
+
+        this.sound_enabled = true;
 
         if(Notification) {
             Notification.requestPermission(function (permission){});
@@ -331,6 +348,7 @@ icms.messages = (function ($) {
             }
 
             if (result.html){
+                self.playSound('new_message');
                 $('#pm_chat', pm_window).append(result.html);
                 $('#pm_chat .message .content .date-new', pm_window).removeClass('date-new highlight_new').addClass('date');
                 self.scrollChat();

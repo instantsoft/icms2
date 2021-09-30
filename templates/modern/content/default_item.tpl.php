@@ -21,7 +21,7 @@
     <?php $this->menu('item-menu', true, 'nav nav-tabs my-3'); ?>
 <?php } ?>
 
-<div class="content_item <?php echo $ctype['name']; ?>_item clearfix my-3">
+<div class="content_item <?php echo $ctype['name']; ?>_item clearfix text-break my-3">
     <?php if($fields_fieldsets) { ?>
         <div class="icms-content-fields">
         <?php foreach ($fields_fieldsets as $fieldset_id => $fieldset) { ?>

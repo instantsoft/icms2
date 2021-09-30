@@ -129,7 +129,7 @@ class cmsPaginator {
             }
         } else {
 
-            $num_adjacents = intval(floor(($this->max_show_pages - 3) / 2));
+            $num_adjacents = floor(($this->max_show_pages - 3) / 2);
 
             if ($this->current_page + $num_adjacents > $this->pages_count) {
                 $sliding_start = $this->pages_count - $this->max_show_pages + 2;

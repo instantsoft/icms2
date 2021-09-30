@@ -127,7 +127,7 @@ class actionRatingVote extends cmsAction {
         if($average_rating){
             $rating = round($this->model->getTargetAverageRating($vote), 0, PHP_ROUND_HALF_DOWN);
         } else {
-            $rating = (int)$target['rating'] + $vote['score'];
+            $rating = intval($target['rating'] + $vote['score']);
         }
 
         // Обновляем суммарный рейтинг цели

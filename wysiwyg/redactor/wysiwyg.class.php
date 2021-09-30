@@ -123,10 +123,10 @@ class cmsWysiwygRedactor {
             foreach($this->options['plugins'] as $plugin){
                 $template->addJSFromContext('wysiwyg/redactor/files/plugins/'.$plugin.'/'.$plugin.'.js');
             }
-        }
 
-        if (in_array('clips', $this->options['plugins'])){
-            $this->options['clipsUrl'] = href_to('wysiwyg/redactor/files/plugins/clips/index.html');
+            if (in_array('clips', $this->options['plugins'])){
+                $this->options['clipsUrl'] = href_to('wysiwyg/redactor/files/plugins/clips/index.html');
+            }
         }
 
         if($this->lang !== 'en'){

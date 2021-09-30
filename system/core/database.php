@@ -519,7 +519,7 @@ class cmsDatabase {
 
         // если это поле даты и оно не установлено,
         // то используем текущее время
-		if ($is_date_field && ($value === false)) { $value = 'NULL'; }  else
+		if ($is_date_field && ($value === false || $value === 0)) { $value = 'NULL'; }  else
         if ($is_date_field && ($value === '' || is_null($value))) { $value = 'CURRENT_TIMESTAMP'; }  else
 
         // если нужно шифровать

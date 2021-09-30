@@ -24,6 +24,7 @@
 <?php $this->addBottom(ob_get_clean()); ?>
 
 <div id="pm_window" class="icms-messages<?php if($is_modal){ ?> modal-messages<?php } else { ?> mb-3 mb-lg-4<?php } ?>"
+     data-audio-base-url="<?php echo $this->getTemplateFilePath('audio'); ?>/"
      data-contact-url="<?php echo $this->href_to('contact'); ?>"
      data-refresh-url="<?php echo $this->href_to('refresh'); ?>"
      data-show-older-url="<?php echo $this->href_to('show_older'); ?>"

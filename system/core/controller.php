@@ -1286,7 +1286,7 @@ class cmsController {
 
         if (empty($value)) { $value = 0; }
 
-        if (!in_array(gettype($value), array('integer', 'string', 'double')) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)) {
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)) {
             return ERR_VALIDATE_NUMBER;
         }
 
@@ -1301,7 +1301,7 @@ class cmsController {
 
         if (empty($value)) { $value = 0; }
 
-        if (!in_array(gettype($value), array('integer', 'string', 'double')) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)) {
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)) {
             return ERR_VALIDATE_NUMBER;
         }
 
@@ -1322,7 +1322,7 @@ class cmsController {
      */
     public function validate_minfloat($min, $value) {
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), array('integer', 'string', 'double')) || !preg_match('/^([\-]?)([0-9\.,]+)$/i', $value)) {
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match('/^([\-]?)([0-9\.,]+)$/i', $value)) {
             return ERR_VALIDATE_NUMBER;
         }
         $value = bc_format(str_replace(',', '.', $value));
@@ -1342,7 +1342,7 @@ class cmsController {
      */
     public function validate_maxfloat($max, $value) {
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), array('integer', 'string', 'double')) || !preg_match('/^([\-]?)([0-9\.,]+)$/i', $value)) {
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match('/^([\-]?)([0-9\.,]+)$/i', $value)) {
             return ERR_VALIDATE_NUMBER;
         }
         $value = bc_format(str_replace(',', '.', $value));
@@ -1364,7 +1364,6 @@ class cmsController {
         if (mb_strlen($value) < $length) { return sprintf(ERR_VALIDATE_MIN_LENGTH, $length); }
 
         return true;
-
     }
 
     public function validate_max_length($length, $value){
@@ -1378,7 +1377,6 @@ class cmsController {
         if (mb_strlen($value) > $length) { return sprintf(ERR_VALIDATE_MAX_LENGTH, $length); }
 
         return true;
-
     }
 
     public function validate_array_key($array, $value){
@@ -1465,13 +1463,13 @@ class cmsController {
 
     public function validate_digits($value){
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), array('integer','string')) || !preg_match("/^([0-9]+)$/i", $value)){ return ERR_VALIDATE_DIGITS; }
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([0-9]+)$/i", $value)){ return ERR_VALIDATE_DIGITS; }
         return true;
     }
 
     public function validate_number($value){
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), array('integer','string','double')) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)){ return ERR_VALIDATE_NUMBER; }
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)){ return ERR_VALIDATE_NUMBER; }
         return true;
     }
 
@@ -1493,13 +1491,13 @@ class cmsController {
 
     public function validate_regexp($regexp, $value){
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), array('integer','string','double')) || !preg_match($regexp, $value)){ return ERR_VALIDATE_REGEXP; }
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match($regexp, $value)){ return ERR_VALIDATE_REGEXP; }
         return true;
     }
 
     public function validate_unique($table_name, $field_name, $value){
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), array('integer','string','double'))) { return ERR_VALIDATE_INVALID; }
+        if (!in_array(gettype($value), ['integer', 'string', 'double'])) { return ERR_VALIDATE_INVALID; }
         $result = $this->cms_core->db->isFieldUnique($table_name, $field_name, $value);
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
         return true;
@@ -1507,7 +1505,7 @@ class cmsController {
 
     public function validate_unique_exclude($table_name, $field_name, $exclude_row_id, $value){
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), array('integer','string','double'))) { return ERR_VALIDATE_INVALID; }
+        if (!in_array(gettype($value), ['integer', 'string', 'double'])) { return ERR_VALIDATE_INVALID; }
         $result = $this->cms_core->db->isFieldUnique($table_name, $field_name, $value, $exclude_row_id);
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
         return true;
@@ -1515,7 +1513,7 @@ class cmsController {
 
     public function validate_unique_ctype_field($ctype_name, $value){
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), array('integer','string'))) { return ERR_VALIDATE_INVALID; }
+        if (!in_array(gettype($value), ['integer', 'string'])) { return ERR_VALIDATE_INVALID; }
         $content_model = cmsCore::getModel('content');
         $table_name = $content_model->table_prefix . $ctype_name;
         if ($content_model->db->isFieldExists($table_name, $value)) { return ERR_VALIDATE_UNIQUE; }
@@ -1524,7 +1522,7 @@ class cmsController {
 
     public function validate_unique_ctype_dataset($ctype_id, $exclude_row_id = null, $value = null){
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), array('integer','string'))) { return ERR_VALIDATE_INVALID; }
+        if (!in_array(gettype($value), ['integer', 'string'])) { return ERR_VALIDATE_INVALID; }
         $value = $this->cms_core->db->escape($value);
         if(is_numeric($ctype_id)){
             $where = "ctype_id='{$ctype_id}' AND name='{$value}'";
@@ -1552,7 +1550,6 @@ class cmsController {
         }
 
         return ERR_VALIDATE_INVALID;
-
     }
 
     public function validate_date_range($value){
@@ -1593,11 +1590,9 @@ class cmsController {
             }
 
             return true;
-
         }
 
         return ERR_VALIDATE_INVALID;
-
     }
 
 }

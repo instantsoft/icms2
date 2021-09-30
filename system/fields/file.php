@@ -186,7 +186,7 @@ class fieldFile extends cmsFormField {
 
         $this->data['attributes']['class']    = 'custom-file-input';
         $this->data['attributes']['id']       = $this->id;
-        $this->data['attributes']['required'] = (array_search(['required'], $this->getRules()) !== false);
+        $this->data['attributes']['required'] = !$value && (array_search(['required'], $this->getRules()) !== false);
 
         $this->data['allowed_extensions'] = $this->getOption('extensions');
         $this->data['max_size_mb']        = $this->getOption('max_size_mb');
