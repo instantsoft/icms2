@@ -12,14 +12,14 @@
         'jquery-ui',
         'style'
     ]); ?>
-    <?php $this->addMainTplJSName('vendors/jquery/js/jquery.min', true); ?>
+    <?php $this->addMainTplJSName('jquery', true); ?>
     <?php $this->addMainTplJSName([
         'jquery-cookie',
         'jquery-ui',
         'jquery-ui.touch-punch',
         'i18n/jquery-ui/'.cmsCore::getLanguageName(),
         'vendors/popper.js/js/popper.min',
-        'vendors/bootstrap/js/bootstrap.min',
+        'vendors/bootstrap/bootstrap.min',
         'vendors/perfect-scrollbar/js/perfect-scrollbar.min',
         'vendors/@coreui/coreui/js/coreui.min',
         'vendors/toastr/toastr.min',
@@ -27,6 +27,9 @@
         'modal',
         'admin-core'
     ]); ?>
+    <?php if ($config->debug){ ?>
+        <?php $this->addMainTplJSName(['vendors/list.min']); ?>
+    <?php } ?>
     <?php $this->onDemandTplJSName([
         'vendors/photoswipe/photoswipe.min',
         'vendors/introjs/intro.min',

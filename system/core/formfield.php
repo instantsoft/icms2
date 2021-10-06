@@ -313,10 +313,9 @@ class cmsFormField {
         $keys = explode(':', $name);
         $this->element_name = count($keys) > 1 ? array_shift($keys) . '[' . implode('][', $keys) . ']' : $name;
 
-        $this->id = str_replace(array(':', '|'), '_', $name);
+        $this->id = str_replace([':', '|'], '_', $name);
 
         return $this;
-
     }
 
     /**

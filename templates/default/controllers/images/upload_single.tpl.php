@@ -5,7 +5,10 @@
     ]);
     $this->addTplCSSFromContext('controllers/images/styles');
 ?>
-<div id="widget_image_<?php echo $dom_id; ?>" class="widget_image_single" data-delete_url="<?php echo $delete_url; ?>">
+<div id="widget_image_<?php echo $dom_id; ?>"
+     class="widget_image_single"
+     data-field_name="<?php echo $name; ?>"
+     data-delete_url="<?php echo $delete_url; ?>">
 
     <div class="data" style="display:none">
         <?php if ($is_image_exists) { ?>
@@ -35,10 +38,9 @@
     <?php } ?>
 
     <script>
-
         <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR'); ?>
 
-        $(document).ready(function(){
+        $(function(){
             icms.images.upload('<?php echo $dom_id; ?>', '<?php echo $upload_url; ?>');
             <?php if($allow_import_link){ ?>
                 $('#widget_image_<?php echo $dom_id; ?> .image_link a').on('click', function (){
@@ -50,7 +52,5 @@
                 });
             <?php } ?>
         });
-
     </script>
-
 </div>

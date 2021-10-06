@@ -23,3 +23,5 @@ INSERT INTO `{#}widgets_bind_pages` (`id`, `bind_id`, `template`, `is_enabled`, 
 (76, 70, 'modern', 1, 0, 'pos_10', 1),
 (82, 76, 'modern', 1, 0, 'pos_31', 0),
 (83, 77, 'modern', 1, 0, 'pos_31', 1);
+
+UPDATE `{#}menu_items` SET `menu_id` = '6', `options` = '---\r\ntarget: _self\r\nclass: messages messages-counter ajax-modal\r\nicon: envelope\r\nhide_title: 1\r\n' WHERE `id` = 14;

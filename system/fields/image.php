@@ -222,6 +222,7 @@ class fieldImage extends cmsFormField {
             $this->data['paths'] = is_array($value) ? $value : cmsModel::yamlToArray($value);
         }
 
+        $this->data['id'] = $this->id;
         $this->data['sizes'] = $this->getOption('sizes');
         $this->data['allow_import_link'] = $this->getOption('allow_import_link');
 

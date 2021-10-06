@@ -4,19 +4,20 @@ class cmsBackend extends cmsController {
 
     public $maintained_ctype = false;
 
-    protected $backend_menu = array();
-    protected $backend_sub_menu = array();
+    protected $backend_menu = [];
+    protected $backend_sub_menu = [];
 
-    public $queue = array(
-        'queues'           => array(),
+    public $queue = [
+        'queues'           => [],
         'queue_name'       => '',
         'use_queue_action' => false
-    );
+    ];
 
     protected $useDefaultModerationAction = false;
+
     protected $useModerationTrash = false;
 
-    public function __construct( cmsRequest $request){
+    public function __construct(cmsRequest $request) {
 
         $this->name = str_replace('backend', '', strtolower(get_called_class()));
 
@@ -26,30 +27,31 @@ class cmsBackend extends cmsController {
 
         // Устанавливаем корень для URL внутри бэкенда
         $admin_controller_url = 'admin';
-        $controller_alias = cmsCore::getControllerAliasByName($admin_controller_url);
-        if ($controller_alias) { $admin_controller_url = $controller_alias; }
-        $this->setRootURL($admin_controller_url.'/controllers/edit/'.$this->name);
+        $controller_alias     = cmsCore::getControllerAliasByName($admin_controller_url);
+        if ($controller_alias) {
+            $admin_controller_url = $controller_alias;
+        }
+        $this->setRootURL($admin_controller_url . '/controllers/edit/' . $this->name);
 
-        if(!empty($this->queue['use_queue_action'])){
-            $this->backend_menu[] = array(
+        if (!empty($this->queue['use_queue_action'])) {
+            $this->backend_menu[] = [
                 'title' => sprintf(LANG_CP_QUEUE_TITLE, $this->queue['queue_name']),
                 'url'   => href_to($this->root_url, 'queue')
-            );
+            ];
         }
 
-        if(!empty($this->useDefaultModerationAction)){
-            $this->backend_menu[] = array(
+        if (!empty($this->useDefaultModerationAction)) {
+            $this->backend_menu[] = [
                 'title' => LANG_MODERATORS,
                 'url'   => href_to($this->root_url, 'moderators')
-            );
+            ];
         }
-
     }
 
     public function setCurrentAction($action_name) {
 
         $this->current_action = $action_name;
-        $this->current_template_name = 'backend/'.$action_name;
+        $this->current_template_name = 'backend/' . $action_name;
 
         return $this;
     }
@@ -57,16 +59,16 @@ class cmsBackend extends cmsController {
 //============================================================================//
 //============================================================================//
 
-    public function getBackendSubMenu(){
+    public function getBackendSubMenu() {
         return $this->backend_sub_menu;
     }
 
-    public function getBackendMenu(){
+    public function getBackendMenu() {
         return $this->backend_menu;
     }
 
-    public function getOptionsToolbar(){
-        return array();
+    public function getOptionsToolbar() {
+        return [];
     }
 
 //============================================================================//
@@ -75,45 +77,49 @@ class cmsBackend extends cmsController {
 //============================================================================//
 //============================================================================//
 
-//============================================================================//
-//=========                Скрытие/показ записей                     =========//
-//============================================================================//
+    /**
+     * Экшен скрытия/показа записей
+     *
+     * @param integer $item_id ID записи в таблице
+     * @param string $table Название таблицы
+     * @param string $field Название поля
+     * @param boolean $zero_as_null Нулевое значение сохранять как null
+     * @return void
+     */
+    public function actionToggleItem($item_id = 0, $table = '', $field = 'is_pub', $zero_as_null = false) {
 
-    public function actionToggleItem($item_id = false, $table = false, $field = 'is_pub', $zero_as_null = false) {
+        if (!$item_id || !$table || !is_numeric($item_id) || $this->validate_regexp("/^([a-z0-9\_{}]*)$/", urldecode($table)) !== true) {
+            return $this->cms_template->renderJSON([
+                'error' => true
+            ]);
+        }
 
-        if (!$item_id || !$table || !is_numeric($item_id) || $this->validate_regexp("/^([a-z0-9\_{}]*)$/", urldecode($table)) !== true){
-			return $this->cms_template->renderJSON(array(
-				'error' => true
-			));
-		}
-
-		if (!$this->model->db->isTableExists($table)){
-			return $this->cms_template->renderJSON(array(
-				'error' => true
-			));
-		}
+        if (!$this->model->db->isTableExists($table)) {
+            return $this->cms_template->renderJSON([
+                'error' => true
+            ]);
+        }
 
         $i = $this->model->getItemByField($table, 'id', $item_id);
 
-		if (!$i || !array_key_exists($field, $i)){
-			return $this->cms_template->renderJSON(array(
-				'error' => true
-			));
-		}
+        if (!$i || !array_key_exists($field, $i)) {
+            return $this->cms_template->renderJSON([
+                'error' => true
+            ]);
+        }
 
         $i[$field] = $i[$field] ? ($zero_as_null ? null : 0) : 1;
 
-		$this->model->update($table, $item_id, array(
-			$field => $i[$field]
-		));
+        $this->model->update($table, $item_id, [
+            $field => $i[$field]
+        ]);
 
-        $this->processCallback('actiontoggle_'.$table.'_'.$field, array($i));
+        $this->processCallback('actiontoggle_' . $table . '_' . $field, [$i]);
 
-		return $this->cms_template->renderJSON(array(
-			'error' => false,
-			'is_on' => intval($i[$field])
-		));
-
+        return $this->cms_template->renderJSON([
+            'error' => false,
+            'is_on' => intval($i[$field])
+        ]);
     }
 
 //============================================================================//
@@ -122,82 +128,90 @@ class cmsBackend extends cmsController {
 
     public function addControllerSeoOptions($form) {
 
-        if($this->useSeoOptions){
-            $form->addFieldset(LANG_ROOT_SEO, 'seo_basic', array(
-                'childs' => array(
-                    new fieldText('seo_desc', array(
+        if ($this->useSeoOptions) {
+
+            $form->addFieldset(LANG_ROOT_SEO, 'seo_basic', [
+                'childs' => [
+                    new fieldText('seo_desc', [
                         'title' => LANG_SEO_DESC,
                         'hint'  => LANG_SEO_DESC_HINT,
                         'is_strip_tags' => true,
-                        'options'=>array(
-                            'max_length'        => 256,
+                        'options' => [
+                            'max_length' => 256,
                             'show_symbol_count' => true
-                        )
-                    ))
-                )
-            ));
+                        ]
+                    ])
+                ]
+            ]);
 
             if (!$this->cms_config->disable_metakeys) {
                 $form->addFieldToBeginning('seo_basic',
-                    new fieldString('seo_keys', array(
+                    new fieldString('seo_keys', [
                         'title'   => LANG_SEO_KEYS,
                         'hint'    => LANG_SEO_KEYS_HINT,
-                        'options' => array(
-                            'max_length'        => 256,
+                        'options' => [
+                            'max_length' => 256,
                             'show_symbol_count' => true
-                        )
-                    ))
+                        ]
+                    ])
                 );
             }
         }
 
-        if($this->useItemSeoOptions){
+        if ($this->useItemSeoOptions) {
 
             $meta_item_fields = [];
-            if(method_exists($this, 'getMetaItemFields')){
+            if (method_exists($this, 'getMetaItemFields')) {
                 $meta_item_fields = $this->getMetaItemFields();
             }
 
-            $form->addFieldset(LANG_CP_SEOMETA, 'seo_items', array(
-                'childs' => array(
-                    new fieldString('tag_title', array(
+            $form->addFieldset(LANG_CP_SEOMETA, 'seo_items', [
+                'childs' => [
+                    new fieldString('tag_title', [
                         'title' => LANG_CP_SEOMETA_ITEM_TITLE,
-                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : '')
-                    )),
-                    new fieldString('tag_desc', array(
+                        'patterns_hint' => ($meta_item_fields ? ['patterns' => $meta_item_fields] : '')
+                    ]),
+                    new fieldString('tag_desc', [
                         'title' => LANG_CP_SEOMETA_ITEM_DESC,
-                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : '')
-                    )),
-                    new fieldString('tag_h1', array(
+                        'patterns_hint' => ($meta_item_fields ? ['patterns' => $meta_item_fields] : '')
+                    ]),
+                    new fieldString('tag_h1', [
                         'title' => LANG_CP_SEOMETA_ITEM_H1,
-                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : '')
-                    ))
-                )
-            ));
-
+                        'patterns_hint' => ($meta_item_fields ? ['patterns' => $meta_item_fields] : '')
+                    ])
+                ]
+            ]);
         }
 
         return $form;
-
     }
 
-    public function actionOptions(){
+    /**
+     * Экшен опций компонента
+     *
+     * @return void
+     */
+    public function actionOptions() {
 
-        if (empty($this->useDefaultOptionsAction)){ cmsCore::error404(); }
+        if (empty($this->useDefaultOptionsAction)) {
+            cmsCore::error404();
+        }
 
         $options = cmsController::loadOptions($this->name);
 
         $form = $this->getForm('options', [$options]);
-        if (!$form) { cmsCore::error404(); }
+        if (!$form) {
+            cmsCore::error404();
+        }
 
         $form = $this->addControllerSeoOptions($form);
 
-        if ($this->request->has('submit')){
+        if ($this->request->has('submit')) {
 
-            $options = array_merge( $options, $form->parse($this->request, true) );
+            $options = array_merge($options, $form->parse($this->request, true, $options));
             $errors  = $form->validate($this, $options);
 
-            if (!$errors){
+            if (!$errors) {
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
@@ -205,42 +219,34 @@ class cmsBackend extends cmsController {
 
                 cmsController::saveOptions($this->name, $options);
 
-                $this->processCallback(__FUNCTION__, array($options));
+                $this->processCallback(__FUNCTION__, [$options]);
 
                 cmsEventsManager::hook("controller_{$this->name}_after_save_options", $options);
 
                 $this->redirectToAction('options');
-
             }
 
-            if ($errors){
-
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
-
         }
 
-        $template_params = array(
+        $template_params = [
             'toolbar' => $this->getOptionsToolbar(),
             'options' => $options,
             'form'    => $form,
             'errors'  => isset($errors) ? $errors : false
-        );
+        ];
 
         // если задан шаблон опций в контроллере
-        if($this->cms_template->getTemplateFileName('controllers/'.$this->name.'/backend/options', true)){
-
+        if ($this->cms_template->getTemplateFileName('controllers/' . $this->name . '/backend/options', true)) {
             return $this->cms_template->render('backend/options', $template_params);
-
         } else {
 
             $default_admin_tpl = $this->cms_template->getTemplateFileName('controllers/admin/controllers_options');
 
             return $this->cms_template->processRender($default_admin_tpl, $template_params);
-
         }
-
     }
 
 //============================================================================//

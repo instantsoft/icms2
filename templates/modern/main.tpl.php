@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?php echo cmsCore::getLanguageName(); ?>" class="h-100">
+<html lang="<?php echo cmsCore::getLanguageName(); ?>" class="min-vh-100">
     <head>
         <title><?php $this->title(); ?></title>
         <meta charset="utf-8" />
@@ -31,7 +31,7 @@
         <?php } ?>
     <?php } ?>
     </head>
-    <body id="<?php echo $device_type; ?>_device_type" data-device="<?php echo $device_type; ?>" class="d-flex flex-column h-100<?php if(!empty($body_classes)) { ?> <?php echo implode(' ', $body_classes); ?><?php } ?>">
+    <body id="<?php echo $device_type; ?>_device_type" data-device="<?php echo $device_type; ?>" class="d-flex flex-column min-vh-100<?php if(!empty($body_classes)) { ?> <?php echo implode(' ', $body_classes); ?><?php } ?>">
         <?php $this->renderLayoutChild('scheme', ['rows' => $rows]); ?>
         <?php if (!empty($this->options['show_top_btn'])){ ?>
             <a class="btn btn-secondary btn-lg" href="#<?php echo $device_type; ?>_device_type" id="scroll-top">

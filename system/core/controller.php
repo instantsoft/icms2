@@ -1136,57 +1136,56 @@ class cmsController {
      * @param string $url
      * @param integer $code
      */
-    public function redirect($url, $code=303){
+    public function redirect($url, $code = 303) {
+
+        $url = str_replace("\r\n", '', $url);
 
         list($url, $code) = cmsEventsManager::hook('redirect', [$url, $code]);
 
-        if ($this->request->isAjax()){
+        if ($this->request->isAjax()) {
 
-            $this->cms_template->renderAsset('ui/redirect_continue', array(
-                'redirect_url' => href_to($url)
-            ), $this->request);
+            $this->cms_template->renderAsset('ui/redirect_continue', [
+                'redirect_url' => $url
+            ], $this->request);
 
         } else {
 
-            if ($code == 301){
-                header('HTTP/1.1 301 Moved Permanently');
-            } else {
-                header('HTTP/1.1 303 See Other');
-            }
-            header('Location: '.$url);
-
+            header('Location: ' . $url, true, $code);
         }
 
         $this->halt();
-
     }
 
     /**
      * Редирект на главную страницу
      */
-    public function redirectToHome(){
+    public function redirectToHome() {
         $this->redirect(href_to_home());
     }
 
-
     /**
      * Редирект на другой контроллер
+     *
      * @param string $controller
      * @param string $action
      * @param array $params
      * @param array $query
+     * @param integer $code
      */
-    public function redirectTo($controller, $action='', $params=array(), $query=array(), $code=303){
+    public function redirectTo($controller, $action = '', $params = [], $query = [], $code = 303) {
 
         $href_lang = cmsCore::getLanguageHrefPrefix();
 
-        $location = $this->cms_config->root .($href_lang ? $href_lang.'/' : ''). $controller . ($action ? '/'.$action : '');
+        $location = $this->cms_config->root . ($href_lang ? $href_lang . '/' : '') . $controller . ($action ? '/' . $action : '');
 
-        if ($params){ $location .= '/' . implode('/', $params); }
-        if ($query){ $location .= '?' . http_build_query($query, '', '&'); }
+        if ($params) {
+            $location .= '/' . implode('/', $params);
+        }
+        if ($query) {
+            $location .= '?' . http_build_query($query, '', '&');
+        }
 
         $this->redirect($location, $code);
-
     }
 
     /**
@@ -1195,23 +1194,27 @@ class cmsController {
      * @param array $params
      * @param array $query
      */
-    public function redirectToAction($action='', $params=array(), $query=array()){
+    public function redirectToAction($action = '', $params = [], $query = []) {
 
-        if (!$action || $action=='index') {
+        if (!$action || $action == 'index') {
             $location = href_to($this->root_url);
         } else {
             $location = href_to($this->root_url, $action);
         }
 
-		if ($params){
-			if (is_array($params)) { $location .= '/' . implode('/', $params); }
-			else { $location .= '/' . $params; }
-		}
+        if ($params) {
+            if (is_array($params)) {
+                $location .= '/' . implode('/', $params);
+            } else {
+                $location .= '/' . $params;
+            }
+        }
 
-        if ($query){ $location .= '?' . http_build_query($query); }
+        if ($query) {
+            $location .= '?' . http_build_query($query);
+        }
 
         $this->redirect($location);
-
     }
 
     /**
@@ -1222,26 +1225,24 @@ class cmsController {
 
         $back_url = $this->cms_config->root;
 
-        if(!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'http') === 0){
+        if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'http') === 0) {
 
             $refer = $_SERVER['HTTP_REFERER'];
 
-            if(strpos($refer, $this->cms_config->protocol.$_SERVER['HTTP_HOST']) === 0) {
+            if (strpos($refer, $this->cms_config->protocol . $_SERVER['HTTP_HOST']) === 0) {
                 $back_url = $refer;
             }
-
         }
 
         return $back_url;
-
     }
 
     /**
      * Редирект на предыдущий URL
      */
-    public function redirectBack(){
+    public function redirectBack() {
         $url = $this->getBackURL();
-        header('Location: '.$url);
+        header('Location: ' . $url);
         $this->halt();
     }
 

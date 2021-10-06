@@ -237,6 +237,7 @@ class fieldImages extends cmsFormField {
             $this->data['images'] = is_array($value) ? $value : cmsModel::yamlToArray($value);
         }
 
+        $this->data['id'] = $this->id;
         $this->data['sizes'] = $this->getOption('sizes');
         $this->data['allow_import_link'] = $this->getOption('allow_import_link');
         $this->data['max_photos'] = $this->getOption('max_photos');

@@ -292,20 +292,20 @@ function html_image_src($image, $size_preset='small', $is_add_host=false, $is_re
 /**
  * Возвращает код wysiwyg редатора
  *
- * @param string $field_id id элемента
+ * @param string $field_name Имя элемента
  * @param string $content Текст редактора
  * @param string $wysiwyg Имя редактора
  * @param array $config Параметры редактора
  * @return string HTML код
  */
-function html_wysiwyg($field_id, $content = '', $wysiwyg = false, $config = []) {
+function html_wysiwyg($field_name, $content = '', $wysiwyg = false, $config = []) {
 
-    $dom_id = str_replace(['[',']'], ['_', ''], $field_id);
+    $dom_id = str_replace(['[',']'], ['_', ''], $field_name);
 
     if (!$wysiwyg) {
 
         if ($wysiwyg === null) {
-            return '<textarea class="textarea form-control" rows="5" id="' . $dom_id . '" name="' . $field_id . '">' . html($content, false) . '</textarea>';
+            return '<textarea class="textarea form-control" rows="5" id="' . $dom_id . '" name="' . $field_name . '">' . html($content, false) . '</textarea>';
         }
 
         $wysiwyg = cmsConfig::get('default_editor');
@@ -314,12 +314,12 @@ function html_wysiwyg($field_id, $content = '', $wysiwyg = false, $config = []) 
     $connector = 'wysiwyg/' . $wysiwyg . '/wysiwyg.class.php';
 
     if (!cmsCore::includeFile($connector)) {
-        return '<textarea class="error_wysiwyg" id="' . $dom_id . '" name="' . $field_id . '">' . html($content, false) . '</textarea>';
+        return '<textarea class="error_wysiwyg" id="' . $dom_id . '" name="' . $field_name . '">' . html($content, false) . '</textarea>';
     }
 
     cmsCore::loadControllerLanguage($wysiwyg);
 
-    list($field_id, $content, $wysiwyg, $config) = cmsEventsManager::hook(['display_wysiwyg_editor', 'display_' . $wysiwyg . '_wysiwyg_editor'], [$field_id, $content, $wysiwyg, $config]);
+    list($field_name, $content, $wysiwyg, $config) = cmsEventsManager::hook(['display_wysiwyg_editor', 'display_' . $wysiwyg . '_wysiwyg_editor'], [$field_name, $content, $wysiwyg, $config]);
 
     $class_name = 'cmsWysiwyg' . ucfirst($wysiwyg);
 
@@ -327,7 +327,7 @@ function html_wysiwyg($field_id, $content = '', $wysiwyg = false, $config = []) 
 
     // $config передаём для совместимости
     ob_start();
-    $editor->displayEditor($field_id, $content, $config);
+    $editor->displayEditor($field_name, $content, $config);
 
     return ob_get_clean();
 }
@@ -336,13 +336,13 @@ function html_wysiwyg($field_id, $content = '', $wysiwyg = false, $config = []) 
  * Редактор markitup
  * функция совместимости
  *
- * @param string $field_id
+ * @param string $field_name
  * @param string $content
  * @param array $options
  * @return string
  */
-function html_editor($field_id, $content = '', $options = array()) {
-    return html_wysiwyg($field_id, $content, 'markitup', $options);
+function html_editor($field_name, $content = '', $options = []) {
+    return html_wysiwyg($field_name, $content, 'markitup', $options);
 }
 
 function html_select_range($name, $start, $end, $step, $add_lead_zero=false, $selected='', $attributes=array()){

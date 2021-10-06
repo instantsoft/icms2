@@ -34,8 +34,7 @@ icms.images = (function ($) {
 
         $('.data', widget).html('');
 
-        var _input_name = field_name.replace(/_l_/g, '[');
-        _input_name = _input_name.replace(/_r_/g, ']');
+        var _input_name = $(widget).data('field_name');
 
         for(var path in result.paths){
             preview_img_src = preview_img_src || result.paths[path].url;
@@ -71,8 +70,7 @@ icms.images = (function ($) {
 
         var image_data = {};
 
-        var _input_name = field_name.replace(/_l_/g, '[');
-        _input_name = _input_name.replace(/_r_/g, ']');
+        var _input_name = $(widget).data('field_name');
 
         for(var path in result.paths){
             preview_img_src = preview_img_src || result.paths[path].url;
@@ -196,8 +194,7 @@ icms.images = (function ($) {
 
     this.initSortable = function (field_name){
         var widget = $('#widget_image_'+field_name);
-        var _input_name = field_name.replace(/_l_/g, '[');
-        _input_name = _input_name.replace(/_r_/g, ']');
+        var _input_name = $(widget).data('field_name');
         $('.previews_list', widget).sortable({
             items: '.preview',
             cursor: 'move',

@@ -42,7 +42,7 @@
                         if(!isset($icon_params[1])){ array_unshift($icon_params, 'solid'); }
                         html_svg_icon($icon_params[0], $icon_params[1]);
                     } ?>
-                    <?php if (!empty($item['title'])) { ?>
+                    <?php if (!empty($item['title']) && empty($item['options']['hide_title'])) { ?>
                         <span class="nav-item-text"><?php echo $item['title']; ?></span>
                     <?php } ?>
                     <?php if (isset($item['counter']) && $item['counter']){ ?>

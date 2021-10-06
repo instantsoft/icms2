@@ -373,6 +373,7 @@
     define('LANG_CP_MENU_ITEM_ACTION',          'Действие пункта меню');
     define('LANG_CP_MENU_ITEM_ACTION_URL',      'Открыть ссылку');
     define('LANG_CP_MENU_ITEM_ACTION_URL_HINT', 'Для внутренних ссылок начальный слэш не указывается<br/>Внешние ссылки должны начинаться с http://<br/>Можно указывать <a href="https://docs.instantcms.ru/manual/menu/special" target="_blank">специальные ссылки</a>');
+    define('LANG_CP_MENU_ITEM_HIDE_TITLE',      'Показывать только иконку, без заголовка');
     define('LANG_CP_MENU_ITEM_ICON',            'Имя иконки');
     define('LANG_CP_MENU_ITEM_ACTION_TARGET',   'Открывать ссылку');
     define('LANG_CP_MENU_ITEM_TARGET_SELF',     'В текущем окне');

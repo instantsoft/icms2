@@ -23,14 +23,24 @@ class actionUsersProfileContent extends cmsAction {
             $folder_id = false;
         }
 
+        // Валидация набора
+        if($dataset && $this->validate_sysname($dataset) !== true){
+            return cmsCore::error404();
+        }
+
+        // Валидация id папки
+        if($folder_id && $this->validate_alphanumeric($folder_id) !== true){
+            return cmsCore::error404();
+        }
+
         $this->controller_content->setListContext('profile_content');
 
         // Получаем список наборов
-        $datasets = $this->controller_content->getCtypeDatasets($ctype, array(
+        $datasets = $this->controller_content->getCtypeDatasets($ctype, [
             'cat_id' => 0
-        ));
+        ]);
 
-        $folders = array();
+        $folders = [];
 
         if ($ctype['is_folders']){
 
@@ -41,20 +51,23 @@ class actionUsersProfileContent extends cmsAction {
                     $this->controller_content->model->filterEqual('folder_id', $folder_id);
                 }
             }
-
         }
 
         $this->controller_content->model->filterEqual('user_id', $profile['id']);
 
-        list($folders, $this->controller_content->model, $profile, $original_folder_id) = cmsEventsManager::hook("user_content_{$ctype['name']}_folders", array(
+        list($folders, $this->controller_content->model, $profile, $original_folder_id) = cmsEventsManager::hook("user_content_{$ctype['name']}_folders", [
             $folders,
             $this->controller_content->model,
             $profile,
             $original_folder_id
-        ));
+        ]);
+
+        if ($folders && $folder_id && !array_key_exists($folder_id, $folders)){
+            return cmsCore::error404();
+        }
 
         // Если есть наборы, применяем фильтры текущего
-        $current_dataset = array();
+        $current_dataset = [];
         if ($datasets){
 
             $keys = array_keys($datasets);
@@ -75,7 +88,7 @@ class actionUsersProfileContent extends cmsAction {
                 // если набор всего один, например для изменения сортировки по умолчанию,
                 // не показываем его на сайте
                 if(count($datasets) == 1){
-                    $current_dataset = array(); $datasets = false;
+                    $current_dataset = []; $datasets = false;
                 }
 
             } else {
@@ -83,13 +96,12 @@ class actionUsersProfileContent extends cmsAction {
                 if($dataset && $folder_id === false && $original_folder_id === false){
                     return cmsCore::error404();
                 }
-
             }
 
         }
 
         if ($folders){
-            $folders = array('0' => array('id' => '0', 'title' => LANG_ALL)) + $folders;
+            $folders = ['0' => ['id' => '0', 'title' => LANG_ALL]] + $folders;
         }
 
         if ($this->cms_user->id != $profile['id'] && !$this->cms_user->is_admin){
@@ -102,12 +114,12 @@ class actionUsersProfileContent extends cmsAction {
 			$this->controller_content->model->disablePrivacyFilter();
         }
 
-        list($ctype, $profile) = cmsEventsManager::hook('content_before_profile', array($ctype, $profile));
+        list($ctype, $profile) = cmsEventsManager::hook('content_before_profile', [$ctype, $profile]);
 
         if ($folder_id){
-            $page_url = href_to_profile($profile, array('content', $ctype_name, $folder_id));
+            $page_url = href_to_profile($profile, ['content', $ctype_name, $folder_id]);
         } else {
-            $page_url = href_to_profile($profile, array('content', $ctype_name));
+            $page_url = href_to_profile($profile, ['content', $ctype_name]);
         }
 
         // кешируем
@@ -122,22 +134,22 @@ class actionUsersProfileContent extends cmsAction {
             $list_header .= ' · '.$current_dataset['title'];
         }
 
-        $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], array(), $current_dataset, array(
-            array(
+        $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', [$ctype['name'], [], $current_dataset, [
+            [
                 'field'     => 'user_id',
                 'condition' => 'eq',
                 'value'     => $profile['id']
-            ),
-            array(
+            ],
+            [
                 'field'     => 'folder_id',
                 'condition' => 'eq',
                 'value'     => $folder_id
-            )
-        )));
+            ]
+        ]]);
 
         $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
 
-        return $this->cms_template->render('profile_content', array(
+        return $this->cms_template->render('profile_content', [
             'filter_titles'   => $this->controller_content->getFilterTitles(),
             'fields'          => $fields,
             'user'            => $this->cms_user,
@@ -154,8 +166,7 @@ class actionUsersProfileContent extends cmsAction {
             'list_header_h1'  => $list_header_h1,
             'list_header'     => $list_header,
             'html'            => $list_html
-        ));
-
+        ]);
     }
 
 }

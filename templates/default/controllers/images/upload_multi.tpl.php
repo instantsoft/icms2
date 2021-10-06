@@ -8,7 +8,10 @@
     $this->addTplCSSFromContext('controllers/images/styles');
 ?>
 
-<div id="widget_image_<?php echo $dom_id; ?>" class="widget_image_multi" data-delete_url="<?php echo $delete_url; ?>">
+<div id="widget_image_<?php echo $dom_id; ?>"
+     class="widget_image_multi"
+     data-field_name="<?php echo $name; ?>"
+     data-delete_url="<?php echo $delete_url; ?>">
 
     <div class="data" style="display:none">
         <?php if ($images){ ?>

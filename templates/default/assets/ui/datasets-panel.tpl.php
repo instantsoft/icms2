@@ -12,7 +12,7 @@
                 <?php if ($ds_selected){ ?>
                     <div><?php echo $set['title']; ?></div>
                 <?php } else { ?>
-                    <a href="<?php echo $ds_url.($active_filters_query ? '?'.$active_filters_query : ''); ?>">
+                    <a href="<?php html($ds_url.($active_filters_query ? '?'.$active_filters_query : '')); ?>">
                         <?php echo $set['title']; ?>
                     </a>
                 <?php } ?>
