@@ -7,11 +7,11 @@ class actionAuthLogin extends cmsAction {
 
         $is_site_offline = !cmsConfig::get('is_site_on');
 
-        $back_url = $this->request->get('back', '');
+        $back_url = $this->getRequestBackUrl();
 
         $ajax_page_redirect = false;
 
-        $data = array();
+        $data = [];
 
         // Авторизованных редиректим сразу
         if ($this->cms_user->is_logged && !$this->cms_user->is_admin) {
@@ -166,7 +166,6 @@ class actionAuthLogin extends cmsAction {
             'back_url'   => $back_url,
             'hooks_html' => cmsEventsManager::hookAll('login_form_html')
         ]);
-
     }
 
     private function addCapchaField($form) {
@@ -184,7 +183,6 @@ class actionAuthLogin extends cmsAction {
         $this->is_added_capcha_field = true;
 
         return $form;
-
     }
 
 }

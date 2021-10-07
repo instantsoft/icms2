@@ -94,17 +94,17 @@ function href_to_profile($user, $params = false, $is_abs = false){
 /**
  * Возвращает ссылку на указанное действие контроллера
  * с добавлением пути от корня сайта
- * @param string $controller
- * @param string $action
- * @param array|string|integer $params Параметры, массив
+ * @param string $controller Имя контроллера
+ * @param string $action Имя экшена
+ * @param array|string|integer $params Параметры экшена
+ * @param array $query Параметры строки запроса
  * @return string
  */
-function href_to($controller, $action = '', $params = false){
+function href_to($controller, $action = '', $params = false, $query = []){
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
-	return cmsConfig::get('root') .($lang_href ? $lang_href.'/' : ''). href_to_rel($controller, $action, $params);
-
+	return cmsConfig::get('root') .($lang_href ? $lang_href.'/' : ''). href_to_rel($controller, $action, $params, $query);
 }
 
 /**
@@ -115,12 +115,11 @@ function href_to($controller, $action = '', $params = false){
  * @param array|string|integer $params Параметры, массив
  * @return string
  */
-function href_to_abs($controller, $action = '', $params = false){
+function href_to_abs($controller, $action = '', $params = false, $query = []){
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
-	return cmsConfig::get('host') . '/' .($lang_href ? $lang_href.'/' : ''). href_to_rel($controller, $action, $params);
-
+	return cmsConfig::get('host') . '/' .($lang_href ? $lang_href.'/' : ''). href_to_rel($controller, $action, $params, $query);
 }
 
 /**
@@ -129,9 +128,10 @@ function href_to_abs($controller, $action = '', $params = false){
  * @param string $controller
  * @param string $action
  * @param array|string|integer $params Параметры, массив
+ * @param array $query Параметры строки запроса
  * @return string
  */
-function href_to_rel($controller, $action = '', $params = false){
+function href_to_rel($controller, $action = '', $params = false, $query = []){
 
     $controller = trim($controller, '/ ');
 
@@ -157,8 +157,13 @@ function href_to_rel($controller, $action = '', $params = false){
         }
     }
 
-    return trim($href, '/');
+    $href = trim($href, '/');
 
+    if ($query) {
+        $href .= '?' . http_build_query($query, '', '&');
+    }
+
+    return $href;
 }
 
 /**

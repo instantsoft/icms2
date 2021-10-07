@@ -21,7 +21,7 @@ class actionPhotosSetCover extends cmsAction{
 
         cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
-        $back_url = $this->request->get('back', '');
+        $back_url = $this->getRequestBackUrl();
 
         if ($back_url){
             $this->redirect($back_url);

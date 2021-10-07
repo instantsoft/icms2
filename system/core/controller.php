@@ -1133,11 +1133,14 @@ class cmsController {
 
     /**
      * Редирект на указанный адрес
-     * @param string $url
-     * @param integer $code
+     *
+     * @param string $url URL для редиректа
+     * @param integer $code HTTP код
      */
     public function redirect($url, $code = 303) {
 
+        // Не должно быть, иначе нотис
+        // CWE-113
         $url = str_replace("\r\n", '', $url);
 
         list($url, $code) = cmsEventsManager::hook('redirect', [$url, $code]);
@@ -1166,55 +1169,33 @@ class cmsController {
     /**
      * Редирект на другой контроллер
      *
-     * @param string $controller
-     * @param string $action
-     * @param array $params
-     * @param array $query
-     * @param integer $code
+     * @param string $controller Имя контроллера
+     * @param string $action Имя экшена
+     * @param array|string $params Дополнительные параметры
+     * @param array $query Параметры строки запроса
+     * @param integer $code Код редиректа
      */
     public function redirectTo($controller, $action = '', $params = [], $query = [], $code = 303) {
 
-        $href_lang = cmsCore::getLanguageHrefPrefix();
-
-        $location = $this->cms_config->root . ($href_lang ? $href_lang . '/' : '') . $controller . ($action ? '/' . $action : '');
-
-        if ($params) {
-            $location .= '/' . implode('/', $params);
+        if($action === 'index'){
+            $action = '';
         }
-        if ($query) {
-            $location .= '?' . http_build_query($query, '', '&');
-        }
+
+        $location = href_to($controller, $action, $params, $query);
 
         $this->redirect($location, $code);
     }
 
     /**
      * Редирект на собственный экшен
-     * @param string $action
-     * @param array $params
-     * @param array $query
+     * текущего контроллера
+     *
+     * @param string $action Имя экшена
+     * @param array|string $params Дополнительные параметры
+     * @param array $query Параметры строки запроса
      */
     public function redirectToAction($action = '', $params = [], $query = []) {
-
-        if (!$action || $action == 'index') {
-            $location = href_to($this->root_url);
-        } else {
-            $location = href_to($this->root_url, $action);
-        }
-
-        if ($params) {
-            if (is_array($params)) {
-                $location .= '/' . implode('/', $params);
-            } else {
-                $location .= '/' . $params;
-            }
-        }
-
-        if ($query) {
-            $location .= '?' . http_build_query($query);
-        }
-
-        $this->redirect($location);
+        $this->redirectTo($this->root_url, $action, $params, $query);
     }
 
     /**
@@ -1223,13 +1204,14 @@ class cmsController {
      */
     public function getBackURL() {
 
-        $back_url = $this->cms_config->root;
+        $back_url = href_to_home();
 
         if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'http') === 0) {
 
             $refer = $_SERVER['HTTP_REFERER'];
 
-            if (strpos($refer, $this->cms_config->protocol . $_SERVER['HTTP_HOST']) === 0) {
+            if (strpos($refer, $this->cms_config->protocol . $_SERVER['HTTP_HOST']) === 0 &&
+                    strpos($refer, '"') === false && strpos($refer, "'") === false) {
                 $back_url = $refer;
             }
         }
@@ -1238,12 +1220,30 @@ class cmsController {
     }
 
     /**
+     * Возвращает значение параметра back из запроса
+     * Очищает и валидирует
+     *
+     * @param string $default URL, если параметр пустой
+     * @return string
+     */
+    public function getRequestBackUrl($default = '') {
+
+        $back_url = trim(strip_tags($this->request->get('back', '')));
+
+        // Первый символ должен быть слэш
+        if ($back_url && strpos($back_url, '/') !== 0) {
+            $back_url = '';
+        }
+
+        return $back_url ? $back_url : $default;
+    }
+
+    /**
      * Редирект на предыдущий URL
+     * по HTTP_REFERER
      */
     public function redirectBack() {
-        $url = $this->getBackURL();
-        header('Location: ' . $url);
-        $this->halt();
+        return $this->redirect($this->getBackURL());
     }
 
 //============================================================================//
@@ -1253,23 +1253,21 @@ class cmsController {
      * Возвращает список субъектов к которым применяются права пользователей
      * @return array
      */
-    public function getPermissionsSubjects(){
-        return array(
-            array(
-                'name' => $this->name,
+    public function getPermissionsSubjects() {
+        return [
+            [
+                'name'  => $this->name,
                 'title' => $this->title
-            )
-        );
+            ]
+        ];
     }
 
-    public function getContentTypeForModeration($name){
-
-        return array(
+    public function getContentTypeForModeration($name) {
+        return [
             'id'    => null,
             'name'  => $this->name,
             'title' => $this->title
-        );
-
+        ];
     }
 
 //============================================================================//

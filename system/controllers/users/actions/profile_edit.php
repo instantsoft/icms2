@@ -16,7 +16,7 @@ class actionUsersProfileEdit extends cmsAction {
             return;
         }
 
-        $back_url = $this->request->get('back', '');
+        $back_url = $this->getRequestBackUrl();
 
         // проверяем наличие доступа
         if (!$this->is_own_profile && !$this->cms_user->is_admin) {

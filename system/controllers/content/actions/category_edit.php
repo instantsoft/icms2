@@ -28,7 +28,7 @@ class actionContentCategoryEdit extends cmsAction {
         list($ctype, $form, $category) = cmsEventsManager::hook('content_cat_edit_form', array($ctype, $form, $category), null, $this->request);
         list($form, $category) = cmsEventsManager::hook("content_{$ctype['name']}_cat_form", array($form, $category));
 
-        $back_url = $this->request->get('back', '');
+        $back_url = $this->getRequestBackUrl();
 
         if ($this->request->has('submit')){
 
@@ -82,15 +82,14 @@ class actionContentCategoryEdit extends cmsAction {
             $category['slug_key'] = lang_slug($category['title']);
         }
 
-        return $this->cms_template->render('category_form', array(
+        return $this->cms_template->render('category_form', [
             'do'       => 'edit',
             'ctype'    => $ctype,
             'category' => $category,
             'form'     => $form,
             'back_url' => $back_url,
             'errors'   => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }

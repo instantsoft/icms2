@@ -4,7 +4,9 @@ class actionAdminUsersEdit extends cmsAction {
 
     public function run($id = false) {
 
-        if (!$id) { cmsCore::error404(); }
+        if (!$id) {
+            return cmsCore::error404();
+        }
 
         $user = $this->model_users->getUser($id);
 
@@ -14,7 +16,7 @@ class actionAdminUsersEdit extends cmsAction {
 
         $old_email = $user['email'];
 
-        $form = $this->getForm('user', array('edit'));
+        $form = $this->getForm('user', ['edit']);
 
         if ($this->request->has('submit')) {
 
@@ -31,22 +33,21 @@ class actionAdminUsersEdit extends cmsAction {
 
             if (!$errors) {
 
-                if($user['email'] && $old_email != $user['email']){
+                if ($user['email'] && $old_email != $user['email']) {
 
-                    cmsUser::setUPS('users.change_email_'.md5($user['email']), [
+                    cmsUser::setUPS('users.change_email_' . md5($user['email']), [
                         'accepted'  => 1,
                         'email'     => $old_email,
                         'timestamp' => time(),
                         'hash'      => string_random()
                     ]);
 
-                    cmsUser::setUPS('users.change_email_'.md5($old_email), [
+                    cmsUser::setUPS('users.change_email_' . md5($old_email), [
                         'accepted'  => 1,
                         'email'     => $user['email'],
                         'timestamp' => time(),
                         'hash'      => string_random()
                     ]);
-
                 }
 
                 $result = $this->model_users->updateUser($id, $user);
@@ -55,7 +56,7 @@ class actionAdminUsersEdit extends cmsAction {
 
                     cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                    $back_url = $this->request->get('back');
+                    $back_url = $this->getRequestBackUrl();
 
                     if ($back_url) {
                         $this->redirect($back_url);
@@ -66,22 +67,19 @@ class actionAdminUsersEdit extends cmsAction {
                 } else {
                     $errors = $result['errors'];
                 }
-
             }
 
             if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
-        return $this->cms_template->render('user', array(
+        return $this->cms_template->render('user', [
             'do'     => 'edit',
             'user'   => $user,
             'form'   => $form,
             'errors' => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }

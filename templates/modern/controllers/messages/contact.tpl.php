@@ -27,7 +27,7 @@
                     </small>
                 </span>
             </a>
-            <div class="actions ml-auto">
+            <div class="actions d-flex align-items-center ml-auto">
                 <div class="dropdown">
                     <button class="btn" type="button" data-toggle="dropdown">
                         <?php html_svg_icon('solid', 'ellipsis-v'); ?>
@@ -41,11 +41,11 @@
                         <a class="dropdown-item" href="#" onclick="return icms.messages.deleteContact(<?php echo $contact['id']; ?>);">
                             <?php echo LANG_PM_DELETE_CONTACT; ?>
                         </a>
-                        <a class="dropdown-item d-block d-sm-none" href="#" onclick="return icms.modal.close();">
-                            <?php echo LANG_CLOSE; ?>
-                        </a>
                     </div>
                 </div>
+                <button type="button" class="btn d-block d-sm-none" title="<?php echo LANG_CLOSE; ?>" onclick="return icms.modal.close();">
+                    <?php html_svg_icon('solid', 'times'); ?>
+                </button>
             </div>
         </div>
         <div class="icms-messages-toolbar__action d-none w-100 align-items-center px-2 px-lg-0">

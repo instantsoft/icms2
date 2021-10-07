@@ -21,7 +21,7 @@ class actionAdminContentCatsAdd extends cmsAction {
         // Парсим форму и получаем поля записи
         $category = $form->parse($this->request, $is_submitted);
 
-        $back_url = $this->request->get('back', '');
+        $back_url = $this->getRequestBackUrl();
 
         if (!$is_submitted && $parent_id) {
             $category['parent_id'] = $parent_id;

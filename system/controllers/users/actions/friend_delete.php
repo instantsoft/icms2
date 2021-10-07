@@ -32,7 +32,7 @@ class actionUsersFriendDelete extends cmsAction {
 
                 $this->sendNoticeDeleted($friend);
 
-                $back_url = $this->request->get('back', '');
+                $back_url = $this->getRequestBackUrl();
 
                 if ($back_url){
                     $this->redirect($back_url);

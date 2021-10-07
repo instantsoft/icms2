@@ -2,20 +2,24 @@
 
 class actionAdminCtypesFiltersEnable extends cmsAction {
 
-    public function run($ctype_id){
+    public function run($ctype_id) {
 
-        if (!$ctype_id) { cmsCore::error404(); }
+        if (!$ctype_id) {
+            return cmsCore::error404();
+        }
 
         $ctype = $this->model_content->getContentType($ctype_id);
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
 
-        $back_url = $this->request->get('back', '');
+        $back_url = $this->getRequestBackUrl();
 
         $table_exists = $this->model_content->isFiltersTableExists($ctype['name']);
 
-        if(!$table_exists){
+        if (!$table_exists) {
 
-            $table_name = $this->model_content->getContentTypeTableName($ctype['name']).'_filters';
+            $table_name = $this->model_content->getContentTypeTableName($ctype['name']) . '_filters';
 
             $sql = "CREATE TABLE `{#}{$table_name}` (
                     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -31,20 +35,18 @@ class actionAdminCtypesFiltersEnable extends cmsAction {
                     PRIMARY KEY (`id`),
                     KEY `slug` (`slug`),
                     KEY `hash` (`hash`)
-                ) ENGINE={$this->cms_config->db_engine} DEFAULT CHARSET=utf8;";
+                ) ENGINE={$this->cms_config->db_engine} DEFAULT CHARSET={$this->cms_config->db_charset};";
 
             $this->model_content->db->query($sql);
 
             cmsUser::addSessionMessage(LANG_CP_FILTER_TABLE_SUCCESS, 'success');
-
         }
 
-        if ($back_url){
+        if ($back_url) {
             $this->redirect($back_url);
         } else {
             $this->redirectBack();
         }
-
     }
 
 }

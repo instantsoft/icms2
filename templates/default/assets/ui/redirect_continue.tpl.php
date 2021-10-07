@@ -8,7 +8,7 @@
              <?php } ?>
         </div>
     <?php } ?>
-    <form id="redirect_form" action="<?php echo $redirect_url; ?>" method="post">
+    <form id="redirect_form" action="<?php html($redirect_url); ?>" method="post">
         <?php echo html_submit(LANG_CONTINUE); ?>
     </form>
 </div>

@@ -36,7 +36,7 @@
             <?php if ($item['disabled']) { ?>
                 <span class="nav-link disabled"><?php html($item['title']); ?></span>
             <?php } else { ?>
-                <a <?php if (!empty($item['title'])) {?>title="<?php echo html($item['title']); ?>"<?php } ?> class="<?php echo implode(' ', $css_aclasses); ?>" href="<?php echo !empty($item['url']) ? htmlspecialchars($item['url']) : 'javascript:void(0)'; ?>" <?php echo html_attr_str($item['attributes']); ?>>
+                <a <?php if (!empty($item['title'])) {?>title="<?php echo html($item['title']); ?>"<?php } ?> class="<?php echo implode(' ', $css_aclasses); ?>" href="<?php echo !empty($item['url']) ? html($item['url'], false) : 'javascript:void(0)'; ?>" <?php echo html_attr_str($item['attributes']); ?>>
                     <?php if (!empty($item['options']['icon'])) {
                         $icon_params = explode(':', $item['options']['icon']);
                         if(!isset($icon_params[1])){ array_unshift($icon_params, 'solid'); }

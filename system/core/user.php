@@ -416,9 +416,11 @@ class cmsUser {
         return self::getInstance()->is_admin;
     }
 
-    public static function goLogin($back_url=''){
-        if (!$back_url){ $back_url = $_SERVER['REQUEST_URI']; }
-        header('Location:' . href_to('auth', 'login') . "?back=" . $back_url);
+    public static function goLogin($back_url = '') {
+        if (!$back_url) {
+            $back_url = str_replace("\r\n", '', $_SERVER['REQUEST_URI']);
+        }
+        header('Location:' . href_to('auth', 'login') . '?' . http_build_query(['back' => $back_url]));
         exit;
     }
 

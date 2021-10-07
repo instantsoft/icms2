@@ -31,7 +31,7 @@ class actionContentItemTrashRemove extends cmsAction {
 
         cmsUser::addSessionMessage(LANG_ITEM_RESTORE_SUCCESS, 'success');
 
-        $back_url = $this->request->get('back', '');
+        $back_url = $this->getRequestBackUrl();
 
         if ($back_url){
             $this->redirect($back_url);

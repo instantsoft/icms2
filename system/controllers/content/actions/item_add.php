@@ -4,7 +4,7 @@ class actionContentItemAdd extends cmsAction {
 
     public function run(){
 
-        $back_url = $this->request->get('back', '');
+        $back_url = $this->getRequestBackUrl();
 
         // Получаем название типа контента
         $ctype_name = $this->request->get('ctype_name', '');

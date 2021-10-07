@@ -43,10 +43,10 @@ class auth extends cmsFrontend {
 
         if ($back_url != $this->cms_config->root) {
 
-            $h    = get_headers($this->getBackURL(), true);
-            $code = substr($h[0], 9, 3);
+            $h    = get_headers($back_url, true);
+            $code = intval(substr($h[0], 9, 3));
 
-            if ((int) $code < 400) {
+            if ($code < 400) {
                 $this->redirect($back_url);
             }
         }

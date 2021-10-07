@@ -54,7 +54,7 @@ class actionContentItemTrashPut extends cmsAction {
 
         }
 
-        $back_url = $this->request->get('back', '');
+        $back_url = $this->getRequestBackUrl();
 
         if ($back_url){
             $this->redirect($back_url);

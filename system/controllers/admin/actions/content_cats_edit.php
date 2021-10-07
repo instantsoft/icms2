@@ -5,23 +5,20 @@ class actionAdminContentCatsEdit extends cmsAction {
     public function run($ctype_id = false, $category_id = false) {
 
         if (!$ctype_id) {
-            $this->redirectBack();
+            return $this->redirectBack();
         }
         if (!$category_id) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $ctype = $this->model_backend_content->getContentType($ctype_id);
-
-        $back_url = $this->request->get('back', '');
-
-        if (!$back_url) {
-            $back_url = href_to($this->name, 'content');
+        if (!$ctype) {
+            return cmsCore::error404();
         }
 
-        $url = href_to($ctype['name'], 'editcat', $category_id) . '?back=' . $back_url;
+        $back_url = $this->getRequestBackUrl(href_to($this->name, 'content'));
 
-        $this->redirect($url);
+        $this->redirectTo($ctype['name'], 'editcat', $category_id, ['back' => $back_url]);
     }
 
 }

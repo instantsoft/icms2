@@ -14,7 +14,7 @@
     </div>
 
     <div class="alert alert-warning mt-4" role="alert">
-        <div class="alert-heading h4"><?php printf(LANG_REDIRECT_HINT1, $host, $sitename, $url, $original_url); ?></div>
+        <div class="alert-heading h4"><?php printf(LANG_REDIRECT_HINT1, $host, $sitename, html($url, false), html($original_url, false)); ?></div>
         <p class="my-2"><?php printf(LANG_REDIRECT_HINT2, parse_url($original_url, PHP_URL_HOST)); ?></p>
         <p><?php echo LANG_REDIRECT_HINT3; ?> <b><span id="timer"></span> <?php echo LANG_SECOND10; ?></b></p>
         <hr>
@@ -55,7 +55,7 @@
     <div class="alert alert-danger mt-4" role="alert">
         <p><?php echo LANG_REDIRECT_SUSPICIOUS_LINK_1; ?></p>
         <?php if(!$is_domain_in_black_list){ ?>
-            <p><?php printf(LANG_REDIRECT_SUSPICIOUS_LINK_2, $url); ?></p>
+            <p><?php printf(LANG_REDIRECT_SUSPICIOUS_LINK_2, html($url, false)); ?></p>
         <?php } ?>
         <hr>
         <p class="mb-0">

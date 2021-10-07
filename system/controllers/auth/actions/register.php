@@ -193,9 +193,7 @@ class actionAuthRegister extends cmsAction {
                                 cmsEventsManager::hook('auth_login', $logged_id);
 
                             }
-
                         }
-
 					}
 
                     $back_url = cmsUser::sessionGet('auth_back_url') ?
@@ -217,21 +215,19 @@ class actionAuthRegister extends cmsAction {
             if ($errors){
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
         // запоминаем откуда пришли на регистрацию
-        $back_url = $this->request->get('back', '');
-        if(empty($errors) && ($back_url || $this->options['first_auth_redirect'] == 'none')){
-            cmsUser::sessionSet('auth_back_url', ($back_url ? $back_url :$this->getBackURL()));
+        $back_url = $this->getRequestBackUrl();
+        if (empty($errors) && ($back_url || $this->options['first_auth_redirect'] == 'none')) {
+            cmsUser::sessionSet('auth_back_url', ($back_url ? $back_url : $this->getBackURL()));
         }
 
-        return $this->cms_template->render('registration', array(
-            'user'         => $user,
-            'form'         => $form,
-            'errors'       => isset($errors) ? $errors : false
-        ));
-
+        return $this->cms_template->render('registration', [
+            'user'   => $user,
+            'form'   => $form,
+            'errors' => isset($errors) ? $errors : false
+        ]);
     }
 
 }
