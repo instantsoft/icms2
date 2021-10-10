@@ -2,19 +2,23 @@
 
 class actionAdminLoadIcmsNews extends cmsAction {
 
-    private $news_link = array(
-        'icms'       => 'https://instantcms.ru/rss/content/2/feed.rss',
-        'icms_blogs' => 'https://instantcms.ru/rss/blogs/all/feed.rss',
+    private $news_link = [
+        'icms'       => 'https://instantcms.ru/rss/feed/pages?category=2',
+        'icms_blogs' => 'https://instantcms.ru/rss/feed/blogs',
         'icms_docs'  => 'https://docs.instantcms.ru/feed.php'
-    );
+    ];
 
     private $news_count = 10;
 
-    public function run($target){
+    public function run($target) {
 
-        if (!$this->request->isAjax()) { cmsCore::error404(); }
+        if (!$this->request->isAjax()) {
+            cmsCore::error404();
+        }
 
-        if (!$target || !in_array($target, array_keys($this->news_link))) { cmsCore::error404(); }
+        if (!$target || !in_array($target, array_keys($this->news_link))) {
+            cmsCore::error404();
+        }
 
         cmsCore::loadLib('lastrss.class');
 
@@ -26,32 +30,32 @@ class actionAdminLoadIcmsNews extends cmsAction {
         $rss->cp          = 'UTF-8';
         $rss->items_limit = $this->news_count;
 
-        $items = array();
+        $items = [];
 
         $res = $rss->get($this->news_link[$target]);
 
-        if(!empty($res['items'])){
+        if (!empty($res['items'])) {
             foreach ($res['items'] as $item) {
 
                 $item['target_title'] = empty($res['title']) ?
-                    (empty($res['image_title']) ? '' : $res['image_title']) :
-                    $res['title'];
+                        (empty($res['image_title']) ? '' : $res['image_title']) :
+                        $res['title'];
 
                 $item['target_description'] = empty($res['description']) ?
-                    (empty($res['image_description']) ? '' : $res['image_description']) :
-                    $res['description'];
+                        (empty($res['image_description']) ? '' : $res['image_description']) :
+                        $res['description'];
 
                 $items[] = $item;
-
             }
         }
 
-        if(!$items){ $this->halt(LANG_NO_ITEMS); }
+        if (!$items) {
+            $this->halt(LANG_NO_ITEMS);
+        }
 
-        $this->cms_template->renderPlain('index_news_data', array(
+        $this->cms_template->renderPlain('index_news_data', [
             'items' => $items
-        ));
-
+        ]);
     }
 
 }

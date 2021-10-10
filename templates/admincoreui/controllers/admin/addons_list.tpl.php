@@ -135,8 +135,8 @@
         });
         $('#addons_toolbar .addons_dataset a').on('click', function(e){
             current_ds_id = $(this).data('id');
-            $('#addons_toolbar a').removeClass('active');
-            $(this).addClass('active');
+            $('#addons_toolbar a').removeClass('active').addClass('disabled');
+            $(this).addClass('active').closest('li').addClass('is-busy text-primary');
             current_page = 1;
             loadAddons();
             return false;
@@ -183,6 +183,7 @@
         }
         $('#addons_count .spinner').show();
         $('#addons_count strong').hide();
+        $('#is_paid input').prop('disabled', true);
         $.post('<?php echo $this->href_to('addons_list'); ?>', {
             dataset_id: current_ds_id,
             cat_id: current_cat_id,
@@ -190,10 +191,12 @@
             title: addon_title,
             page: current_page
         }, function(result){
+            $('#is_paid input').prop('disabled', false);
             $('#show_more .spinner').hide();
             $('#show_more span').show();
             $('#addons_count strong').show();
             $('#addons_count .spinner').hide();
+            $('#addons_toolbar .addons_dataset').removeClass('is-busy text-primary').find('a').removeClass('disabled');
             if(!is_append){
                 $('#addons_list').html(result);
             } else {

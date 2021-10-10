@@ -67,7 +67,7 @@
     </div>
 
     <?php if (!$profile['is_deleted']){ ?>
-        <div id="user_profile_rates" class="rates bg-<?php if($profile['karma'] > 0) { ?>success<?php } else { ?>secondary<?php } ?> text-white rounded px-1 px-lg-2 py-1 py-lg-1 mr-2"
+        <div id="user_profile_rates" class="rates bg-<?php if($profile['karma'] > 0) { ?>success<?php } else { ?>secondary<?php } ?> text-white rounded px-1 px-lg-2 py-1 py-lg-1"
              data-url="<?php echo $this->href_to('karma_vote', $profile['id']); ?>"
              data-log-url="<?php echo $this->href_to('karma_log', $profile['id']); ?>"
              data-is-comment="<?php echo $this->controller->options['is_karma_comments']; ?>">
@@ -93,16 +93,17 @@
                 <?php $this->addBottom(ob_get_clean()); ?>
             <?php } ?>
         </div>
-        <div id="user_profile_ratings" class="bg-primary rounded px-1 px-lg-2 py-1 py-lg-1 text-white">
-            <div class="d-flex justify-content-center align-items-center">
-                <b class="value mx-2">
-                    <?php echo $profile['rating']; ?>
-                </b>
+        <?php if (cmsController::enabled('rating')) { ?>
+            <div id="user_profile_ratings" class="bg-primary rounded px-1 px-lg-2 py-1 py-lg-1 text-white ml-2">
+                <div class="d-flex justify-content-center align-items-center">
+                    <b class="value mx-2">
+                        <?php echo $profile['rating']; ?>
+                    </b>
+                </div>
+                <small class="user_ratings_hint d-block text-center "><?php echo LANG_RATING; ?></small>
             </div>
-            <small class="user_ratings_hint d-block text-center "><?php echo LANG_RATING; ?></small>
-        </div>
+        <?php } ?>
     <?php } ?>
-
 </div>
 <?php if ($this->controller->options['is_status'] && $profile['id'] == $user->id) { ?>
     <?php ob_start(); ?>
