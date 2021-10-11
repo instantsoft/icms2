@@ -53,7 +53,7 @@ function install_package(){
             'date_delete', 'from_id', 'to_id'
         ]
     ];
-    $add_table_uq_indexes = [
+    $add_table_indexes = [
         '{users}_contacts' => [
             'user_id' => ['user_id', 'date_last_msg']
         ],
@@ -69,10 +69,10 @@ function install_package(){
             }
         }
     }
-    if($add_table_uq_indexes){
-        foreach ($add_table_uq_indexes as $table=>$indexes) {
+    if($add_table_indexes){
+        foreach ($add_table_indexes as $table=>$indexes) {
             foreach ($indexes as $index_name => $fields) {
-                $core->db->addIndex($table, $fields, $index_name, 'UNIQUE');
+                $core->db->addIndex($table, $fields, $index_name);
             }
         }
     }
