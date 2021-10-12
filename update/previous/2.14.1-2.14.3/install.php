@@ -1,22 +1,66 @@
 <?php
 /**
- * 2.14.3 => 2.15.0
+ * 2.14.2 => 2.14.3
  */
 function install_package(){
 
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    if(!$core->db->isFieldExists('{users}_contacts', 'new_messages')){
+        $core->db->query("ALTER TABLE `{users}_contacts` CHANGE `messages` `new_messages` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Кол-во новых сообщений';");
+    }
+
+    if(!$core->db->isFieldExists('widgets_pages', 'body_css')){
+        $core->db->query("ALTER TABLE `{#}widgets_pages` ADD `body_css` VARCHAR(100) NULL DEFAULT NULL;");
+    }
+
+    $widgets_bind = [];
+    $wbinds = $admin->model->orderBy('i.page_id, i.position, i.ordering')->
+                    get('widgets_bind_pages') ?: [];
+    foreach ($wbinds as $wbind) {
+        $widgets_bind[$wbind['template']][$wbind['position']][] = $wbind;
+    }
+    foreach ($widgets_bind as $tpl => $positions) {
+        foreach ($positions as $wbs) {
+            foreach ($wbs as $ordering => $wb) {
+                $admin->model->update('widgets_bind_pages', $wb['id'], [
+                    'ordering' => $ordering
+                ]);
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
+
+    add_perms([
+        'comments' => [
+            'times'
+        ]
+    ], 'number');
 
     ////////////////////////////////////////////////////////////////////////////
     ///////////////// Индексы //////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    $remove_table_indexes = [];
-    $add_table_indexes = [];
+    $remove_table_indexes = [
+        '{users}_contacts' => [
+            'user_id'
+        ],
+        '{users}_messages' => [
+            'date_delete', 'from_id', 'to_id'
+        ]
+    ];
+    $add_table_indexes = [
+        '{users}_contacts' => [
+            'user_id' => ['user_id', 'date_last_msg']
+        ],
+        '{users}_messages' => [
+            'to_id' => ['to_id', 'from_id', 'is_deleted']
+        ]
+    ];
 
     if($remove_table_indexes){
         foreach ($remove_table_indexes as $table=>$indexes) {

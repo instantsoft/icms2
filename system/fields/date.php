@@ -123,7 +123,11 @@ class fieldDate extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value = null) {
 
-        if (!$value) { return 0; }
+        // Если ячейка в БД начинается на date_, то cmsDatabase в prepareValue
+        // null будет CURRENT_TIMESTAMP
+        $default_null = strpos($this->name, 'date_') === 0 ? 0 : null;
+
+        if (!$value) { return $default_null; }
 
         if (!is_array($value) || !empty($value['date'])) {
 
@@ -147,7 +151,7 @@ class fieldDate extends cmsFormField {
             return $value;
         }
 
-        return 0;
+        return $default_null;
     }
 
     public function storeFilter($value) {

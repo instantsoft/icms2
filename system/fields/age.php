@@ -168,8 +168,12 @@ class fieldAge extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value = null) {
 
+        // Если ячейка в БД начинается на date_, то cmsDatabase в prepareValue
+        // null будет CURRENT_TIMESTAMP
+        $default_null = strpos($this->name, 'date_') === 0 ? 0 : null;
+
         if (!$value) {
-            return 0;
+            return $default_null;
         }
 
         if (!is_array($value)) {
@@ -184,7 +188,7 @@ class fieldAge extends cmsFormField {
             ];
         }
 
-        return 0;
+        return $default_null;
     }
 
     public function storeFilter($value) {
