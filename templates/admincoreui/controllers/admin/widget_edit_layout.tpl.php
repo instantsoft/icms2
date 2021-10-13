@@ -13,14 +13,14 @@
         'jquery-ui',
         'style'
     ]); ?>
-    <?php $this->addMainTplJSName('vendors/jquery/js/jquery.min', true); ?>
+    <?php $this->addMainTplJSName('jquery', true); ?>
     <?php $this->addMainTplJSName([
         'jquery-cookie',
         'jquery-ui',
         'jquery-ui.touch-punch',
         'i18n/jquery-ui/'.cmsCore::getLanguageName(),
         'vendors/popper.js/js/popper.min',
-        'vendors/bootstrap/js/bootstrap.min',
+        'vendors/bootstrap/bootstrap.min',
         'vendors/perfect-scrollbar/js/perfect-scrollbar.min',
         'vendors/@coreui/coreui/js/coreui.min',
         'vendors/toastr/toastr.min',
