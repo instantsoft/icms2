@@ -1688,7 +1688,13 @@ class cmsModel {
      */
     public function getCount($table_name, $by_field = 'id', $reset = false) {
 
-        $sql = "SELECT {$this->straight_join} COUNT({$this->distinct} i.{$by_field} ) as count
+        if(!$by_field){
+            $select = "{$this->distinct} 1";
+        } else {
+            $select = "COUNT({$this->distinct} i.{$by_field} ) as `count`";
+        }
+
+        $sql = "SELECT {$this->straight_join} {$select}
                 FROM {#}{$table_name} i
                 {$this->index_action}";
 
@@ -1717,11 +1723,20 @@ class cmsModel {
 
         $result = $this->db->query($sql);
 
-        if (!$this->db->numRows($result)) {
-            $count = 0;
+        $num_rows = $this->db->numRows($result);
+
+        if(!$by_field){
+
+            $count = $num_rows;
+
         } else {
-            $item  = $this->db->fetchAssoc($result);
-            $count = intval($item['count']);
+
+            if (!$num_rows) {
+                $count = 0;
+            } else {
+                $item  = $this->db->fetchAssoc($result);
+                $count = intval($item['count']);
+            }
         }
 
         // если указан ключ кеша для этого запроса

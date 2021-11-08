@@ -66,7 +66,7 @@ class fieldHtml extends cmsFormField {
             )),
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
-		'extended_option' => true
+                'extended_option' => true
             )),
             new fieldCheckbox('parse_patterns', array(
                 'title' => LANG_PARSER_PARSE_PATTERNS,
@@ -79,7 +79,7 @@ class fieldHtml extends cmsFormField {
             new fieldNumber('teaser_len', array(
                 'title' => LANG_PARSER_HTML_TEASER_LEN,
                 'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
-		'extended_option' => true
+                'extended_option' => true
             )),
             new fieldString('teaser_postfix', array(
                 'title'           => LANG_PARSER_HTML_TEASER_POSTFIX,
@@ -100,7 +100,7 @@ class fieldHtml extends cmsFormField {
                 'title' => LANG_PARSER_SHOW_SHOW_MORE,
                 'default' => false,
                 'visible_depend' => array('options:teaser_len' => array('hide' => array(''))),
-		'extended_option' => true
+                'extended_option' => true
             )),
             new fieldCheckbox('in_fulltext_search', array(
                 'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
@@ -126,7 +126,6 @@ class fieldHtml extends cmsFormField {
     public function afterParse($value, $item){
 
         if ($this->getOption('parse_patterns')){
-            $value = string_replace_svg_icons($value);
             $value = string_replace_keys_values_extended($value, $item);
         }
 
@@ -142,6 +141,7 @@ class fieldHtml extends cmsFormField {
                 'build_smiles'        => $this->getOption('editor') == 'markitup', // пока что только так
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ));
+            $value = string_replace_svg_icons($value);
         }
 
         return $value;
@@ -173,12 +173,13 @@ class fieldHtml extends cmsFormField {
                 'build_smiles'        => $this->getOption('editor') == 'markitup', // пока что только так
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ));
-        } else if ($this->getOption('parse_patterns') && !empty($this->item)){
+        }
+
+        if ($this->getOption('parse_patterns') && !empty($this->item)){
             $value = string_replace_keys_values_extended($value, $this->item);
         }
 
         return $value;
-
     }
 
     public function applyFilter($model, $value) {

@@ -307,6 +307,11 @@ blockquote, .bb_quote {
         right: 5px;
         line-height: 1;
     }
+    p {
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
 }
 .spoiler {
     > input {

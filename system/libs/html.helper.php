@@ -421,8 +421,7 @@ function html_spellcount($num, $one, $two = false, $many = false, $zero_text = L
 		return $zero_text.' '.$many;
 	}
 
-    return $num.' '.html_spellcount_only($num, $one, $two, $many);
-
+    return nf($num, 0, ' ').' '.html_spellcount_only($num, $one, $two, $many);
 }
 
 function html_spellcount_only($num, $one, $two = false, $many = false) {
@@ -446,7 +445,6 @@ function html_spellcount_only($num, $one, $two = false, $many = false) {
     }
 
     return $one;
-
 }
 
 /**
@@ -468,6 +466,21 @@ function html_file_size($bytes, $round=false){
 
     return $output;
 
+}
+
+function html_views_format($num){
+
+    if(!$num) { return '0'; }
+
+    if($num >= 1000000){
+        return nf($num/1000000, 2, ' ').'M';
+    }
+
+    if($num >= 1000){
+        return nf($num/1000, 2, ' ').'K';
+    }
+
+    return (string)$num;
 }
 
 /**
@@ -509,7 +522,7 @@ function html_minify($html){
     return preg_replace($search, $replace, $html);
 }
 
-function nf($number, $decimals=2, $thousands_sep=''){
+function nf($number, $decimals = 2, $thousands_sep = '') {
     if (!$number) { return 0; }
-    return number_format((double)str_replace(',', '.', $number), $decimals, '.', $thousands_sep);
+    return number_format((double) str_replace(',', '.', $number), $decimals, '.', $thousands_sep);
 }

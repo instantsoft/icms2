@@ -55,6 +55,8 @@ define('LANG_REG_CFG_REG_AUTO_AUTH', 'Login after registration');
 define('LANG_REG_CFG_VERIFY_EXPIRATION', 'Delete unverified accounts after, hours');
 define('LANG_REG_CFG_VERIFY_LOCK_REASON', 'E-mail verification required');
 define('LANG_REG_CFG_DEF_GROUP_ID', 'Add new users to groups');
+define('LANG_REG_CFG_SEND_GREETMSG', 'Send notification after registration');
+define('LANG_REG_CFG_GREETMSG', 'Notification text');
 define('LANG_REG_INCORRECT_EMAIL', 'E-mail address is incorrect');
 define('LANG_REG_EMAIL_EXISTS', 'This e-mail address is already registered');
 define('LANG_REG_PASS_NOT_EQUAL', 'Passwords do not match');

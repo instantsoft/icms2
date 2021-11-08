@@ -1,17 +1,20 @@
 <?php
+
 class actionAuthVerify extends cmsAction {
 
-    public function run($pass_token = null){
+    public function run($pass_token = null) {
 
-        if (!$this->options['is_reg_enabled']){
+        if (!$this->options['is_reg_enabled']) {
             cmsCore::error404();
         }
 
-        if (empty($this->options['verify_email'])){
+        if (empty($this->options['verify_email'])) {
             cmsCore::error404();
         }
 
-        if ($this->cms_user->is_logged && !$this->cms_user->is_admin) { $this->redirectToHome(); }
+        if ($this->cms_user->is_logged && !$this->cms_user->is_admin) {
+            $this->redirectToHome();
+        }
 
         $users_model = cmsCore::getModel('users');
 
@@ -19,19 +22,18 @@ class actionAuthVerify extends cmsAction {
 
         $reg_user = [];
 
-        if($reg_email && $this->validate_email($reg_email) === true){
+        if ($reg_email && $this->validate_email($reg_email) === true) {
 
             $reg_user = $users_model->filterNotNull('pass_token')->
                     filterEqual('is_locked', 1)->
                     getUserByEmail($reg_email);
 
-            if($reg_user){
+            if ($reg_user) {
 
                 $reg_user['resubmit_extime'] = modelAuth::RESUBMIT_TIME - (time() - strtotime($reg_user['date_token']));
-                if($reg_user['resubmit_extime'] < 0){
+                if ($reg_user['resubmit_extime'] < 0) {
                     $reg_user['resubmit_extime'] = 0;
                 }
-
             }
 
         } else {
@@ -39,27 +41,26 @@ class actionAuthVerify extends cmsAction {
             $reg_email = false;
         }
 
-        $form = $this->getForm('verify', array($reg_user));
+        $form = $this->getForm('verify', [$reg_user]);
 
-        $data = array('reg_token' => $pass_token);
+        $data = ['reg_token' => $pass_token];
 
-        if ($this->request->has('submit')){
+        if ($this->request->has('submit')) {
 
             $data = $form->parse($this->request, true);
 
             $errors = $form->validate($this, $data);
 
-            if (!$errors){
+            if (!$errors) {
 
                 $user = $users_model->getUserByPassToken($data['reg_token']);
 
                 if (!$user) {
                     $errors['reg_token'] = LANG_VERIFY_EMAIL_ERROR;
                 }
-
             }
 
-            if (!$errors){
+            if (!$errors) {
 
                 cmsUser::unsetCookie('reg_email');
 
@@ -70,7 +71,7 @@ class actionAuthVerify extends cmsAction {
                 cmsUser::addSessionMessage($this->options['reg_auto_auth'] ? LANG_REG_SUCCESS_VERIFIED_AND_AUTH : LANG_REG_SUCCESS_VERIFIED, 'success');
 
                 // авторизуем пользователя автоматически
-                if ($this->options['reg_auto_auth']){
+                if ($this->options['reg_auto_auth']) {
 
                     $user = cmsEventsManager::hook('user_login', $user);
 
@@ -79,26 +80,24 @@ class actionAuthVerify extends cmsAction {
                     $users_model->updateUserIp($user['id']);
 
                     cmsEventsManager::hook('auth_login', $user['id']);
-
                 }
 
-                $this->redirect($this->getAuthRedirectUrl($this->options['first_auth_redirect']));
+                $this->sendGreetMsg($user);
 
+                $this->redirect($this->getAuthRedirectUrl($this->options['first_auth_redirect']));
             }
 
-            if ($errors){
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
         return $this->cms_template->render([
             'reg_email' => $reg_email,
-            'data'   => $data,
-            'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'data'      => $data,
+            'form'      => $form,
+            'errors'    => isset($errors) ? $errors : false
         ]);
-
     }
 
 }

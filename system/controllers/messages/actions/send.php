@@ -77,8 +77,11 @@ class actionMessagesSend extends cmsAction {
             ]);
         }
 
+        // Есть ли уже сообщения в диалоге
+        $messages = $this->model->limit(1)->getMessages($this->cms_user->id, $contact_id);
+
         // Контакт принимает сообщения от этого пользователя?
-        if (!$this->cms_user->isPrivacyAllowed($contact, 'messages_pm')) {
+        if (!$this->cms_user->isPrivacyAllowed($contact, 'messages_pm') && !$messages) {
             return $this->cms_template->renderJSON([
                 'error'   => true,
                 'message' => LANG_PM_CONTACT_IS_PRIVATE

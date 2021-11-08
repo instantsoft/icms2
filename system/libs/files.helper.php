@@ -276,50 +276,48 @@ function files_get_upload_dir($user_id = 0) {
  */
 function file_get_contents_from_url($url, $timeout = 5, $json_decode = false, $params = []) {
 
-    if (function_exists('curl_init')) {
+    if (!function_exists('curl_init')) {
+        return null;
+    }
 
-        $curl = curl_init();
+    $curl = curl_init();
 
-        if (strpos($url, 'https') === 0) {
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        $headers = ['User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 OPR/68.0.3618.173'];
-        if (!empty($params['cookie'])) {
+    if (strpos($url, 'https') === 0) {
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    }
+    $headers = ['User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 OPR/68.0.3618.173'];
+    if (!empty($params['cookie'])) {
 
-            $cookie = [];
-            foreach ($params['cookie'] as $k => $v) {
-                $cookie[] = $k . '=' . $v;
-            }
-
-            $headers[] = 'Cookie: ' . implode('; ', $cookie);
-            unset($params['cookie']);
-        }
-        if (!empty($params['proxy'])) {
-            curl_setopt($curl, CURLOPT_PROXY, $params['proxy']['host'] . ':' . $params['proxy']['port']);
-            curl_setopt($curl, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
-            unset($params['proxy']);
-        }
-        if (!empty($params)) {
-            foreach ($params as $key => $value) {
-                $headers[] = $key . ': ' . $value;
-            }
-        }
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HEADER, false);
-        curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
-        $data = curl_exec($curl);
-        curl_close($curl);
-
-        if ($data === false) {
-            return null;
+        $cookie = [];
+        foreach ($params['cookie'] as $k => $v) {
+            $cookie[] = $k . '=' . $v;
         }
 
-    } else {
-        $data = @file_get_contents($url);
+        $headers[] = 'Cookie: ' . implode('; ', $cookie);
+        unset($params['cookie']);
+    }
+    if (!empty($params['proxy'])) {
+        curl_setopt($curl, CURLOPT_PROXY, $params['proxy']['host'] . ':' . $params['proxy']['port']);
+        curl_setopt($curl, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+        unset($params['proxy']);
+    }
+    if (!empty($params)) {
+        foreach ($params as $key => $value) {
+            $headers[] = $key . ': ' . $value;
+        }
+    }
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+    $data = curl_exec($curl);
+    curl_close($curl);
+
+    if ($data === false) {
+        return null;
     }
 
     if ($json_decode) {

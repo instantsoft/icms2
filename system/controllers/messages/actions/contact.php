@@ -39,7 +39,7 @@ class actionMessagesContact extends cmsAction {
             'user'          => $this->cms_user,
             'editor_params' => $editor_params,
             'is_me_ignored' => $this->model->isContactIgnored($contact_id, $this->cms_user->id),
-            'is_private'    => !$this->cms_user->isPrivacyAllowed($contact, 'messages_pm'),
+            'is_private'    => !$this->cms_user->isPrivacyAllowed($contact, 'messages_pm') && !$messages,
             'contact'       => $contact,
             'has_older'     => $has_older,
             'messages'      => $messages

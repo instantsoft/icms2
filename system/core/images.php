@@ -21,6 +21,7 @@ class cmsImages {
     public $interlace         = 1;
     public $source_type;
 
+    protected $source_file_path;
     protected $source_image;
     protected $original_w;
     protected $original_h;
@@ -267,8 +268,9 @@ class cmsImages {
             throw new Exception('Could not load image');
         }
 
-        return $this->resize($this->getSourceWidth(), $this->getSourceHeight());
+        $this->source_file_path = $filename;
 
+        return $this->resize($this->getSourceWidth(), $this->getSourceHeight());
     }
 
     public function imageCreateJpegfromExif($filename) {
@@ -303,7 +305,44 @@ class cmsImages {
         }
 
         return $img;
+    }
 
+    public function saveGif($filename, $quality = null, $permissions = null, $exact_size = false) {
+
+        $im = new Imagick($this->source_file_path);
+
+        if (!empty($exact_size) && is_array($exact_size)) {
+
+            $width = $exact_size[0];
+            $height = $exact_size[1];
+
+        } else {
+
+            $width = $this->getDestWidth();
+            $height = $this->getDestHeight();
+        }
+
+        $im = $im->coalesceImages();
+
+        foreach ($im as $frame) {
+
+            $frame->cropImage($width, $height, $this->source_x, $this->source_y);
+
+            $frame->thumbnailImage($width, $height);
+
+            $frame->setImagePage($width, $height, 0, 0);
+        }
+
+        $im = $im->deconstructImages();
+
+        if ($im->writeImages($filename, true) && $permissions) {
+            chmod($filename, $permissions);
+        }
+
+        $im->clear();
+        $im->destroy();
+
+        return $this;
     }
 
     /**
@@ -326,6 +365,10 @@ class cmsImages {
 
         switch ($image_type) {
             case IMAGETYPE_GIF:
+
+                if (extension_loaded('imagick')) {
+                    return $this->saveGif($filename, $quality, $permissions, $exact_size);
+                }
 
                 if (!empty($exact_size) && is_array($exact_size)) {
                     $dest_image = imagecreatetruecolor($exact_size[0], $exact_size[1]);
@@ -377,10 +420,13 @@ class cmsImages {
 
                 }
 
+                imagealphablending($dest_image, false);
+                imagesavealpha($dest_image, true);
+
                 break;
             case IMAGETYPE_PNG:
 
-                if (!$this->quality_truecolor && !imageistruecolor($this->source_image)) {
+                if (!$this->quality_truecolor || !imageistruecolor($this->source_image)) {
 
                     if (!empty($exact_size) && is_array($exact_size)) {
                         $dest_image = imagecreate($exact_size[0], $exact_size[1]);
@@ -495,7 +541,6 @@ class cmsImages {
         imagedestroy($dest_image);
 
         return $this;
-
     }
 
     /**
@@ -651,21 +696,21 @@ class cmsImages {
         if($this->getSourceHeight() < $this->getSourceWidth()){
 
             $height = $max_height;
-            $width  = $height / $ratio;
+            $width  = round($height / $ratio);
 
             if ($width > $max_width) {
                 $width  = $max_width;
-                $height = $width * $ratio;
+                $height = round($width * $ratio);
             }
 
         } elseif($this->getSourceHeight() > $this->getSourceWidth()){
 
             $width  = $max_width;
-            $height = $width * $ratio;
+            $height = round($width * $ratio);
 
             if ($height > $max_height) {
                 $height = $max_height;
-                $width  = $height / $ratio;
+                $width  = round($height / $ratio);
             }
 
         } else {
@@ -673,7 +718,6 @@ class cmsImages {
         }
 
         return $this->resize($width, $height, $allow_enlarge);
-
     }
 
     /**

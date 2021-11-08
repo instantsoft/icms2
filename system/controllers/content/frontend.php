@@ -549,8 +549,8 @@ class content extends cmsFrontend {
             $bar['hits'] = [
                 'css'   => 'bi_hits',
                 'icon'  => 'eye',
-                'html'  => $item['hits_count'],
-                'title' => LANG_HITS
+                'html'  => html_views_format($item['hits_count']),
+                'title' => html_spellcount($item['hits_count'], LANG_HITS_SPELL)
             ];
         }
 

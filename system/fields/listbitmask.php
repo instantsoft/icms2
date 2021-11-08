@@ -36,6 +36,19 @@ class fieldListBitmask extends cmsFormField {
         ];
     }
 
+    public function setOptions($options){
+
+        parent::setOptions($options);
+
+        if (empty($this->items)){
+            $this->items = $this->getListItems();
+        }
+
+        if ($this->hasDefaultValue() && strpos($this->default, "\n") !== false){
+            $this->default = null;
+        }
+    }
+
     public function getFilterInput($value) {
 
         if (!$this->show_filter_input_title) {
@@ -49,16 +62,14 @@ class fieldListBitmask extends cmsFormField {
 
         if (!$value) { return ''; }
 
-        $items = $this->getListItems();
-
         $string = '';
 
-        if ($items) {
+        if ($this->items) {
 
             $pos  = 0;
             $list = [];
 
-            foreach ($items as $key => $item) {
+            foreach ($this->items as $key => $item) {
 
                 if (!is_array($value)) {
 
@@ -87,15 +98,13 @@ class fieldListBitmask extends cmsFormField {
 
         if (!$value) { return LANG_NO; }
 
-        $items = $this->getListItems();
-
         $html = '';
 
-        if ($items) {
+        if ($this->items) {
             $is_autolink = $this->getOption('is_autolink');
             $pos         = 0;
             $html        .= '<ul class="' . $this->getOption('list_class') . ' list-unstyled">';
-            foreach ($items as $key => $item) {
+            foreach ($this->items as $key => $item) {
                 if (substr($value, $pos, 1) == 1) {
                     if ($is_autolink) {
                         $html .= '<li class="list-inline-item"><a class="listbitmask_autolink ' . $this->item['ctype_name'] . '_listbitmask_autolink" href="' . href_to($this->item['ctype_name']) . '?' . $this->name . '%5B%5D=' . urlencode($key) . '">' . html($item, false) . '</a></li>';
@@ -120,11 +129,10 @@ class fieldListBitmask extends cmsFormField {
             return '';
         }
 
-        $items = $this->getListItems();
         $value = $return_as_array ? [] : '';
 
-        if ($items) {
-            foreach ($items as $key => $title) {
+        if ($this->items) {
+            foreach ($this->items as $key => $title) {
                 if ($return_as_array) {
                     if (in_array($key, $values)) {
                         $value[] = $key;
@@ -171,7 +179,7 @@ class fieldListBitmask extends cmsFormField {
 
     public function getInput($value) {
 
-        $this->data['items'] = $this->getListItems();
+        $this->data['items'] = $this->items;
         $this->data['selected'] = [];
 
         if ($value) {

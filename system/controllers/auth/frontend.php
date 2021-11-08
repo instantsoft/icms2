@@ -81,6 +81,23 @@ class auth extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
+    public function sendGreetMsg($user) {
+
+        if(empty($this->options['send_greetmsg'])){
+            return;
+        }
+
+        if(empty($this->options['greetmsg'])){
+            return;
+        }
+
+        $this->model_messages->addNotice([$user['id']], [
+            'content' => $this->options['greetmsg']
+        ]);
+
+        return;
+    }
+
     public function getAuthRedirectUrl($value) {
 
         $url = href_to_home();

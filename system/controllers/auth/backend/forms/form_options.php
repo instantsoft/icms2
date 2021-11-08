@@ -76,8 +76,16 @@ class formAuthOptions extends cmsForm {
                             array('required'),
                             array('min', 1)
                         )
-                    ))
+                    )),
 
+                    new fieldCheckbox('send_greetmsg', array(
+                        'title' => LANG_REG_CFG_SEND_GREETMSG
+                    )),
+
+                    new fieldHtml('greetmsg', array(
+                        'title' => LANG_REG_CFG_GREETMSG,
+                        'visible_depend' => array('send_greetmsg' => array('show' => array('1')))
+                    ))
                 )
             ),
 
