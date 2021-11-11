@@ -134,6 +134,10 @@ class cmsWysiwygMarkitup {
             'upload_url'   => href_to('images', 'upload_with_preset', ['inline_upload_file', 'wysiwyg_markitup'])
         ];
 
+        if(isset($config['id'])){
+            $this->options['id'] = $config['id'];
+        }
+
         if(!empty($config['set'])){
             $this->options['set'] = array_replace_recursive($this->options['set'], $config['set']);
         }
@@ -148,18 +152,18 @@ class cmsWysiwygMarkitup {
 
     }
 
-    public function displayEditor($field_id, $content = '', $config = []) {
+    public function displayEditor($field_name, $content = '', $config = []) {
 
         $this->loadRedactor();
 
-        $dom_id = str_replace(array('[',']'), array('_', ''), $field_id);
+        $dom_id = isset($this->options['id']) ? $this->options['id'] : 'wysiwyg-' . uniqid();
 
         if($dom_id){
             if(!empty($this->options['wysiwyg_toolbar'])){
                 echo '<div data-field_id="'.$dom_id.'" id="wysiwyg_toolbar_'.$dom_id.'" class="wysiwyg_toolbar_wrap">'.$this->options['wysiwyg_toolbar'].'</div>';
                 unset($this->options['wysiwyg_toolbar']);
             }
-            echo html_textarea($field_id, $content, [
+            echo html_textarea($field_name, $content, [
                 'id' => $dom_id,
                 'class' => 'markitup_redactor'
             ]);
@@ -179,7 +183,6 @@ class cmsWysiwygMarkitup {
         </script>
 
         <?php cmsTemplate::getInstance()->addBottom(ob_get_clean());
-
     }
 
     private function loadRedactor() {
@@ -224,7 +227,6 @@ class cmsWysiwygMarkitup {
         <?php $template->addBottom(ob_get_clean());
 
         self::$redactor_loaded = true;
-
     }
 
 }

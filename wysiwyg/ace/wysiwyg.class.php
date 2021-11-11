@@ -23,18 +23,18 @@ class cmsWysiwygAce {
         $this->options = array_replace_recursive($this->options, $config);
     }
 
-	public function displayEditor($field_id, $content = '', $config = []){
+	public function displayEditor($field_name, $content = '', $config = []){
 
         $this->loadRedactor();
 
-        $dom_id = str_replace(array('[',']'), array('_', ''), $field_id);
+        $dom_id = isset($this->options['id']) ? $this->options['id'] : 'wysiwyg-' . uniqid(); unset($this->options['id']);
 
         if($dom_id){
             if(!empty($this->options['wysiwyg_toolbar'])){
                 echo '<div data-field_id="'.$dom_id.'" id="wysiwyg_toolbar_'.$dom_id.'" class="wysiwyg_toolbar_wrap">'.$this->options['wysiwyg_toolbar'].'</div>';
                 unset($this->options['wysiwyg_toolbar']);
             }
-            echo html_textarea($field_id, $content, array('id' => $dom_id));
+            echo html_textarea($field_name, $content, ['id' => $dom_id]);
         }
 
         ob_start(); ?>
@@ -51,7 +51,6 @@ class cmsWysiwygAce {
         </script>
 
        <?php cmsTemplate::getInstance()->addBottom(ob_get_clean());
-
 	}
 
     private function loadRedactor() {
@@ -107,7 +106,6 @@ class cmsWysiwygAce {
         <?php $template->addBottom(ob_get_clean());
 
         self::$redactor_loaded = true;
-
     }
 
 }

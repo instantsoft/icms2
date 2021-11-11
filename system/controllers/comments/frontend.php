@@ -96,6 +96,8 @@ class comments extends cmsFrontend {
             'presets' => $this->options['editor_presets']
         ]);
 
+        $editor_params['options']['id'] = 'content';
+
         // Контекст использования
         $editor_params['options']['upload_params'] = [
             'target_controller' => 'comments',

@@ -80,6 +80,7 @@ class actionUsersProfileEdit extends cmsAction {
         if (cmsUser::isAllowed('users', 'change_slug')) {
             $fieldset_id = $form->addFieldset(LANG_USERS_SLUG);
             $form->addField($fieldset_id, new fieldString('slug', [
+                'hint'  => ERR_VALIDATE_SLUGS,
                 'prefix'  => href_to_abs('users') . '/',
                 'options' => [
                     'min_length' => 2,

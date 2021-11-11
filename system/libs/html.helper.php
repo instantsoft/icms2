@@ -305,7 +305,7 @@ function html_image_src($image, $size_preset='small', $is_add_host=false, $is_re
  */
 function html_wysiwyg($field_name, $content = '', $wysiwyg = false, $config = []) {
 
-    $dom_id = str_replace(['[',']'], ['_', ''], $field_name);
+    $dom_id = !empty($config['id']) ? $config['id'] : str_replace(['[',']'], ['_', ''], $field_name);
 
     if (!$wysiwyg) {
 

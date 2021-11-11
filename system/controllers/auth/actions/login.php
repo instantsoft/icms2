@@ -147,7 +147,7 @@ class actionAuthLogin extends cmsAction {
 
         }
 
-        if ($back_url && !$is_submit){
+        if ($back_url && !$is_submit && empty($this->options['is_site_only_auth_users'])){
             cmsUser::addSessionMessage(LANG_LOGIN_REQUIRED, 'error');
         }
 

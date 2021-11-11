@@ -76,7 +76,7 @@ class cmsWysiwygRedactor {
 
         $this->loadRedactor();
 
-        $dom_id = !empty($this->options['id']) ? $this->options['id'] : 'wysiwyg-' . uniqid();
+        $dom_id = isset($this->options['id']) ? $this->options['id'] : 'wysiwyg-' . uniqid(); unset($this->options['id']);
 
         if($field_name && $dom_id){
             if(!empty($this->options['wysiwyg_toolbar'])){

@@ -46,6 +46,8 @@ class wall extends cmsFrontend {
             'presets' => $this->options['editor_presets']
         ]);
 
+        $editor_params['options']['id'] = 'content';
+
         return $this->cms_template->renderInternal($this, 'list', array(
             'title'           => $title,
             'editor_params'   => $editor_params,

@@ -72,11 +72,11 @@ class actionAdminSettingsSysInfo extends cmsAction {
         if (!$headers) { return false; }
 
         if(isset($headers['Server'])){
+            if(is_array($headers['Server'])){ $headers['Server'] = reset($headers['Server']); }
             return strpos(strtolower($headers['Server']), 'nginx') !== false;
         }
 
         return false;
-
     }
 
 }

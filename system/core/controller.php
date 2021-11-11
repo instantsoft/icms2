@@ -6,6 +6,7 @@
  * @property \cmsCore $cms_core
  * @property \cmsTemplate $cms_template
  * @property \cmsUser $cms_user
+ * @property \cmsRequest $request
  */
 class cmsController {
 

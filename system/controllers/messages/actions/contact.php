@@ -35,6 +35,8 @@ class actionMessagesContact extends cmsAction {
             'presets' => $this->options['editor_presets']
         ]);
 
+        $editor_params['options']['id'] = 'content';
+
         $this->cms_template->render('contact', [
             'user'          => $this->cms_user,
             'editor_params' => $editor_params,
