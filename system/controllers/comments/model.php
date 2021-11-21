@@ -299,6 +299,18 @@ class modelComments extends cmsModel {
         return $this->increment('comments', 'ordering');
     }
 
+    public function joinCommentsRating($user_id) {
+
+        if($user_id){
+
+            $this->select('r.score', 'is_rated');
+
+            $this->joinLeft('comments_rating', 'r', "r.comment_id = i.id AND r.user_id='{$user_id}'");
+        }
+
+        return $this;
+    }
+
     public function getCommentsCount($reset = false) {
 
         if (!$this->approved_filter_disabled) {
@@ -310,14 +322,9 @@ class modelComments extends cmsModel {
         return $this->getCount('comments', 'id', $reset);
     }
 
-    public function getComments($callback = null) {
-
-        $user = cmsUser::getInstance();
-
-        $this->select('r.score', 'is_rated');
+    public function getComments($actions = false) {
 
         $this->joinUserLeft()->joinSessionsOnline();
-        $this->joinLeft('comments_rating', 'r', "r.comment_id = i.id AND r.user_id='{$user->id}'");
 
         if (!$this->order_by) {
             $this->orderBy('ordering');
@@ -329,7 +336,9 @@ class modelComments extends cmsModel {
 
         $this->useCache('comments.list');
 
-        return $this->get('comments', function ($item, $model) use ($callback) {
+        return $this->get('comments', function ($item, $model) use ($actions) {
+
+            $item['is_rated'] = array_key_exists('is_rated', $item) ? $item['is_rated'] : null;
 
             $item['author_ip'] = string_bintoip($item['author_ip']);
 
@@ -341,8 +350,39 @@ class modelComments extends cmsModel {
                 'avatar'    => $item['user_avatar']
             ];
 
-            if (is_callable($callback)) {
-                $item = $callback($item, $model);
+            $item['actions'] = [];
+
+            if (is_array($actions)) {
+                foreach ($actions as $key => $action) {
+
+                    if (isset($action['handler'])) {
+                        $is_active = $action['handler']($item);
+                    } else {
+                        $is_active = true;
+                    }
+
+                    if (!$is_active) { continue; }
+
+                    if (empty($action['href'])) { continue; }
+
+                    if (isset($action['handler_class'])) {
+                        $action['class'] = $action['handler_class']($item);
+                    }
+
+                    foreach ($item as $cell_id => $cell_value) {
+
+                        if (is_array($cell_value) || is_object($cell_value)) {
+                            continue;
+                        }
+
+                        foreach (['href', 'title', 'hint', 'onclick'] as $replaceable_key) {
+                            if(isset($action[$replaceable_key])){
+                                $action[$replaceable_key] = str_replace('{' . $cell_id . '}', $cell_value, $action[$replaceable_key]);
+                            }
+                        }
+                    }
+                    $item['actions'][$key] = $action;
+                }
             }
 
             return $item;

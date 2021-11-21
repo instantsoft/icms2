@@ -18,6 +18,12 @@ class actionContentItemDelete extends cmsAction {
         $is_moderator = $this->cms_user->is_admin || $this->controller_moderation->model->userIsContentModerator($ctype['name'], $this->cms_user->id);
         if (!$item['is_approved'] && !$is_moderator && !$item['is_draft']) { cmsCore::error404(); }
 
+        // Не вышло ли время для удаления
+        if (cmsUser::isPermittedLimitReached($ctype['name'], 'delete_times', ((time() - strtotime($item['date_pub']))/60))){
+            cmsUser::addSessionMessage(LANG_CONTENT_PERMS_TIME_UP_DELETE, 'error');
+            $this->redirectTo($ctype['name'], $item['slug'] . '.html');
+        }
+
         // в случае отклонения неодобренной записи
         if ($this->request->isAjax() && !$item['is_approved'] && !$item['is_draft']){
 

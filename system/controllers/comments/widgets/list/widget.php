@@ -1,13 +1,14 @@
 <?php
+
 class widgetCommentsList extends cmsWidget {
 
     public $is_cacheable = false;
 
-    public function run(){
+    public function run() {
 
         $controller_options = cmsController::loadOptions('comments');
 
-        if(!empty($controller_options['disable_icms_comments'])){
+        if (!empty($controller_options['disable_icms_comments'])) {
             return false;
         }
 
@@ -26,7 +27,7 @@ class widgetCommentsList extends cmsWidget {
 
         cmsEventsManager::hook('comments_list_filter', $model);
 
-        if($show_list){
+        if ($show_list) {
 
             $show_controllers = $show_targets = [];
 
@@ -39,16 +40,17 @@ class widgetCommentsList extends cmsWidget {
         }
 
         $items = $model->filterIsNull('is_deleted')->limit($limit)->getComments();
-        if (!$items) { return false; }
+        if (!$items) {
+            return false;
+        }
 
         $items = cmsEventsManager::hook('comments_before_list', $items);
 
-        return array(
+        return [
             'show_avatars' => $show_avatars,
             'show_text'    => $show_text,
             'items'        => $items
-        );
-
+        ];
     }
 
 }

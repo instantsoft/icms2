@@ -300,8 +300,14 @@ class actionContentItemAdd extends cmsAction {
 
         $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
 
+        $perms_notices = [
+            'edit_times' => cmsUser::getPermissionValue($ctype['name'], 'edit_times'),
+            'delete_times' => cmsUser::getPermissionValue($ctype['name'], 'delete_times')
+        ];
+
         return $this->cms_template->render('item_form', [
             'do'               => 'add',
+            'perms_notices'    => array_filter($perms_notices),
             'base_url'         => $base_url,
             'page_title'       => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
             'cancel_url'       => ($back_url ? $back_url : ($ctype['options']['list_on'] ? href_to($ctype['name']) : $this->getBackURL())),

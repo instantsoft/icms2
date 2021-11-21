@@ -18,6 +18,12 @@ class actionContentItemTrashPut extends cmsAction {
         if (!cmsUser::isAllowed($ctype['name'], 'move_to_trash')) { cmsCore::error404(); }
         if (!cmsUser::isAllowed($ctype['name'], 'move_to_trash', 'all') && $item['user_id'] != $this->cms_user->id) { cmsCore::error404(); }
 
+        // Не вышло ли время для удаления
+        if (cmsUser::isPermittedLimitReached($ctype['name'], 'delete_times', ((time() - strtotime($item['date_pub']))/60))){
+            cmsUser::addSessionMessage(LANG_CONTENT_PERMS_TIME_UP_DELETE, 'error');
+            $this->redirectTo($ctype['name'], $item['slug'] . '.html');
+        }
+
         $back_action = '';
 
         if ($ctype['is_cats'] && $item['category_id']){

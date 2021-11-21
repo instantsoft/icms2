@@ -1,14 +1,8 @@
 <?php
 	$limit_nesting = !empty($this->controller->options['limit_nesting']) ? $this->controller->options['limit_nesting'] : 0;
 	$dim_negative = !empty($this->controller->options['dim_negative']);
-	$is_guests_allowed = !empty($this->controller->options['is_guests']);
-    $is_can_add = ($user->is_logged && cmsUser::isAllowed('comments', 'add')) || (!$user->is_logged && $is_guests_allowed);
     $is_highlight_new = isset($is_highlight_new) ? $is_highlight_new : false;
     if (!isset($is_can_rate)) { $is_can_rate = false; }
-    $is_edit_all = cmsUser::isAllowed('comments', 'edit', 'all');
-    $is_edit_own = cmsUser::isAllowed('comments', 'edit', 'own');
-    $is_delete_all = cmsUser::isAllowed('comments', 'delete', 'all');
-    $is_delete_own = cmsUser::isAllowed('comments', 'delete', 'own');
 ?>
 
 <?php foreach($comments as $entry){
@@ -19,16 +13,6 @@
 
     if ($is_show_target){
         $target_url = rel_to_href($entry['target_url']) . "#comment_{$entry['id']}";
-    }
-
-    if (cmsUser::isPermittedLimitReached('comments', 'times', ((time() - strtotime($entry['date_pub']))/60))){
-        $is_edit_own = false;
-        $is_delete_own = false;
-    }
-
-    if ($is_controls || !empty($is_moderator)){
-        $is_can_edit = $is_edit_all || ($is_edit_own && $entry['user']['id'] == $user->id);
-        $is_can_delete = $is_delete_all || ($is_delete_own && $entry['user']['id'] == $user->id);
     }
 
     $is_selected = $is_highlight_new && (strtotime($entry['date_pub']) > strtotime($user->date_log));
@@ -135,26 +119,14 @@
 
         <?php if (!$entry['is_deleted'] && empty($entry['hide_controls']) && ($is_controls || !empty($is_moderator))){ ?>
             <div class="icms-comment-controls mt-1">
-                <?php if ($no_approved_class){ ?>
-                    <a href="#approve" class="btn btn-outline-success btn-sm border-0 mr-1 approve hide_approved" onclick="return icms.comments.approve(<?php echo $entry['id']; ?>)">
-                        <?php html_svg_icon('solid', 'check'); ?>
-                        <?php echo LANG_COMMENTS_APPROVE; ?>
-                    </a>
-                <?php } ?>
-                <?php if ($is_can_add && empty($is_moderator)){ ?>
-                    <a href="#reply" class="btn btn-link btn-sm border-0 mr-1 reply <?php echo $no_approved_class; ?>" onclick="return icms.comments.add(<?php echo $entry['id']; ?>)">
-                        <?php html_svg_icon('solid', 'reply'); ?>
-                        <?php echo LANG_REPLY; ?>
-                    </a>
-                <?php } ?>
-                <?php if ($is_can_edit && empty($is_moderator)){ ?>
-                    <a href="#edit" class="btn btn-outline-secondary btn-sm border-0 edit" title="<?php echo LANG_EDIT; ?>" onclick="return icms.comments.edit(<?php echo $entry['id']; ?>)">
-                        <?php html_svg_icon('solid', 'edit'); ?>
-                    </a>
-                <?php } ?>
-                <?php if ($is_can_delete){ ?>
-                    <a href="#delete" class="btn btn-outline-danger btn-sm border-0" onclick="return icms.comments.remove(<?php echo $entry['id']; ?>, <?php if($entry['is_approved']){ ?>false<?php } else { ?>true<?php } ?>)" title="<?php echo $entry['is_approved'] ? LANG_DELETE : LANG_DECLINE; ?>">
-                        <?php html_svg_icon('solid', 'trash'); ?>
+                <?php foreach($entry['actions'] as $action){ ?>
+                    <a href="<?php echo $action['href']; ?>" class="btn btn-sm border-0<?php if (!empty($action['class'])){ ?> <?php echo $action['class']; ?><?php } ?>"<?php if (!empty($action['onclick'])) { ?> onclick="<?php echo $action['onclick']; ?>"<?php } ?><?php if (!empty($action['hint'])) { ?> title="<?php html($action['hint']); ?>"<?php } ?>>
+                        <?php if (!empty($action['icon'])){ ?>
+                            <?php html_svg_icon('solid', $action['icon']); ?>
+                        <?php } ?>
+                        <?php if (!empty($action['title'])){ ?>
+                            <?php echo $action['title']; ?>
+                        <?php } ?>
                     </a>
                 <?php } ?>
                 <?php if ($entry['parent_id']){ ?>

@@ -23,6 +23,10 @@
     define('LANG_RULE_CONTENT_BIND_TO_PARENT','Привязка дочерних записей');
     define('LANG_RULE_CONTENT_BIND_OFF_PARENT','Отвязка дочерних записей');
     define('LANG_RULE_CONTENT_EDIT',         'Редактирование записей');
+    define('LANG_RULE_CONTENT_EDIT_TIMES',   'Время на редактирование записей');
+    define('LANG_RULE_CONTENT_EDIT_TIMES_HINT',   'В минутах. Если не указано - неограниченно. Доступно, если редактирование записей разрешено.');
+    define('LANG_RULE_CONTENT_DELETE_TIMES',   'Время на удаление записей');
+    define('LANG_RULE_CONTENT_DELETE_TIMES_HINT',   'В минутах. Если не указано - неограниченно. Доступно, если удаление записей разрешено.');
     define('LANG_RULE_CONTENT_DELETE',       'Удаление записей');
     define('LANG_RULE_CONTENT_RESTORE',      'Восстановление записей из корзины');
     define('LANG_RULE_CONTENT_MOVE_TO_TRASH', 'Удаление записей в корзину');
@@ -70,3 +74,9 @@
     define('LANG_CONTENT_CONTEXT_LT_FORM_FIELD', 'В связях, в поле');
     define('LANG_CONTENT_NOTIFY_END_DATE',  'Уведомлять о скором окончании публикации ваших %s');
     define('LANG_CONTENT_SHOW_FILTER_COUNT',  'предложение|предложения|предложений');
+    define('LANG_CONTENT_PERMS_TIME_HINT',  'После публикации вам будет доступно:');
+    define('LANG_CONTENT_PERMS_TIME_HINT_EDIT',  'для редактирования');
+    define('LANG_CONTENT_PERMS_TIME_HINT_DELETE',  'для удаления');
+    define('LANG_CONTENT_PERMS_TIME_HINT1',  'Спустя указанное время эти действия станут недоступными.');
+    define('LANG_CONTENT_PERMS_TIME_UP_EDIT',  'Время для редактирования вышло');
+    define('LANG_CONTENT_PERMS_TIME_UP_DELETE',  'Время для удаления вышло');

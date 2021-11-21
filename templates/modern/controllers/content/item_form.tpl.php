@@ -80,6 +80,25 @@
     ], $errors);
 ?>
 
+<?php if ($perms_notices) { ?>
+    <div class="alert alert-info mt-3 mb-0">
+        <p><?php echo LANG_CONTENT_PERMS_TIME_HINT; ?></p>
+        <ul>
+            <?php if (!empty($perms_notices['edit_times'])) { ?>
+            <li>
+                <?php echo html_minutes_format($perms_notices['edit_times']); ?> <?php echo LANG_CONTENT_PERMS_TIME_HINT_EDIT; ?>;
+            </li>
+            <?php } ?>
+            <?php if (!empty($perms_notices['delete_times'])) { ?>
+            <li>
+                <?php echo html_minutes_format($perms_notices['delete_times']); ?> <?php echo LANG_CONTENT_PERMS_TIME_HINT_DELETE; ?>;
+            </li>
+            <?php } ?>
+        </ul>
+        <p class="mb-0"><?php echo LANG_CONTENT_PERMS_TIME_HINT1; ?></p>
+    </div>
+<?php } ?>
+
 <?php ob_start(); ?>
 <script>
 $(function(){

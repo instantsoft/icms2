@@ -2,5 +2,4 @@
 
 class rss extends cmsFrontend {
 
-
 }

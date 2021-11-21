@@ -484,24 +484,24 @@ class actionContentItemView extends cmsAction {
         $tool_buttons = [];
 
         if (!$item['is_approved'] && !$item['is_draft'] && $is_moderator){
-            $tool_buttons['accept'] = array(
+            $tool_buttons['accept'] = [
                 'title'   => LANG_MODERATION_APPROVE,
                 'options' => ['class' => 'accept', 'icon' => 'check-double'],
                 'url'     => href_to($ctype['name'], 'approve', $item['id'])
-            );
-            $tool_buttons['return_for_revision'] = array(
+            ];
+            $tool_buttons['return_for_revision'] = [
                 'title'   => LANG_MODERATION_RETURN_FOR_REVISION,
                 'options' => ['class' => 'return_for_revision ajax-modal', 'icon' => 'retweet'],
                 'url'     => href_to($ctype['name'], 'return_for_revision', $item['id'])
-            );
+            ];
         }
 
         if (!$item['is_approved'] && !$item['is_draft'] && !$this->viewed_moderators && $item['user_id'] == $this->cms_user->id){
-            $tool_buttons['return'] = array(
+            $tool_buttons['return'] = [
                 'title'   => LANG_MODERATION_RETURN,
                 'options' => ['class' => 'return', 'confirm' => LANG_CONTENT_RETURN_CONFIRM, 'icon' => 'undo'],
                 'url'     => href_to($ctype['name'], 'return', $item['id'])
-            );
+            ];
         }
 
         if ($item['is_approved'] || $item['is_draft'] || $is_moderator){
@@ -509,11 +509,11 @@ class actionContentItemView extends cmsAction {
             if (!empty($childs['to_add'])){
                 foreach($childs['to_add'] as $relation){
 
-                    $tool_buttons['add_'.$relation['child_ctype_name']] = array(
+                    $tool_buttons['add_'.$relation['child_ctype_name']] = [
                         'title'   => sprintf(LANG_CONTENT_ADD_ITEM, $relation['child_labels']['create']),
                         'options' => ['class' => 'add', 'icon' => 'plus-circle'],
                         'url'     => href_to($relation['child_ctype_name'], 'add') . "?parent_{$ctype['name']}_id={$item['id']}".($item['parent_type']=='group' ? '&group_id='.$item['parent_id'] : '')
-                    );
+                    ];
 
                 }
             }
@@ -521,11 +521,11 @@ class actionContentItemView extends cmsAction {
             if (!empty($childs['to_bind'])){
                 foreach($childs['to_bind'] as $relation){
 
-                    $tool_buttons['bind_'.$relation['child_ctype_name']] = array(
+                    $tool_buttons['bind_'.$relation['child_ctype_name']] = [
                         'title'   => sprintf(LANG_CONTENT_BIND_ITEM, $relation['child_labels']['create']),
                         'options' => ['class' => 'newspaper_add ajax-modal', 'icon' => 'link'],
-                        'url'     => href_to($ctype['name'], 'bind_form', array($relation['child_ctype_name'], $item['id']))
-                    );
+                        'url'     => href_to($ctype['name'], 'bind_form', [$relation['child_ctype_name'], $item['id']])
+                    ];
 
                 }
             }
@@ -533,11 +533,11 @@ class actionContentItemView extends cmsAction {
             if (!empty($childs['to_unbind'])){
                 foreach($childs['to_unbind'] as $relation){
 
-                    $tool_buttons['unbind_'.$relation['child_ctype_name']] = array(
+                    $tool_buttons['unbind_'.$relation['child_ctype_name']] = [
                         'title'   => sprintf(LANG_CONTENT_UNBIND_ITEM, $relation['child_labels']['create']),
                         'options' => ['class' => 'newspaper_delete ajax-modal', 'icon' => 'unlink'],
-                        'url'     => href_to($ctype['name'], 'bind_form', array($relation['child_ctype_name'], $item['id'], 'unbind'))
-                    );
+                        'url'     => href_to($ctype['name'], 'bind_form', [$relation['child_ctype_name'], $item['id'], 'unbind'])
+                    ];
 
                 }
             }
@@ -548,17 +548,18 @@ class actionContentItemView extends cmsAction {
             }
 
             if ($allow_edit){
-
-                $tool_buttons['edit'] = array(
-                    'title'   => sprintf(LANG_CONTENT_EDIT_ITEM, $ctype['labels']['create']),
-                    'options' => ['class' => 'edit', 'icon' => 'pencil-alt'],
-                    'url'     => href_to($ctype['name'], 'edit', $item['id'])
-                );
-
+                if(!cmsUser::isPermittedLimitReached($ctype['name'], 'edit_times', ((time() - strtotime($item['date_pub']))/60))){
+                    $tool_buttons['edit'] = [
+                        'title'   => sprintf(LANG_CONTENT_EDIT_ITEM, $ctype['labels']['create']),
+                        'options' => ['class' => 'edit', 'icon' => 'pencil-alt'],
+                        'url'     => href_to($ctype['name'], 'edit', $item['id'])
+                    ];
+                }
             }
 
             $allow_delete = (cmsUser::isAllowed($ctype['name'], 'delete', 'all') ||
                 (cmsUser::isAllowed($ctype['name'], 'delete', 'own') && $item['user_id'] == $this->cms_user->id));
+            $delete_limit_reached = cmsUser::isPermittedLimitReached($ctype['name'], 'delete_times', ((time() - strtotime($item['date_pub']))/60));
 
             if ($allow_delete){
                 if ($item['is_approved'] || $item['is_draft']){
@@ -571,19 +572,21 @@ class actionContentItemView extends cmsAction {
                         $back_url = '';
                     }
 
-                    $tool_buttons['delete'] = array(
-                        'title'   => sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create']),
-                        'options' => ['class' => 'delete', 'icon' => 'minus-circle', 'confirm' => sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])],
-                        'url'     => href_to($ctype['name'], 'delete', $item['id']).'?csrf_token='.cmsForm::getCSRFToken().'&back='.$back_url
-                    );
+                    if(!$delete_limit_reached){
+                        $tool_buttons['delete'] = [
+                            'title'   => sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create']),
+                            'options' => ['class' => 'delete', 'icon' => 'minus-circle', 'confirm' => sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])],
+                            'url'     => href_to($ctype['name'], 'delete', $item['id']).'?csrf_token='.cmsForm::getCSRFToken().'&back='.$back_url
+                        ];
+                    }
 
                 } else {
 
-                    $tool_buttons['refuse'] = array(
+                    $tool_buttons['refuse'] = [
                         'title'   => sprintf(LANG_MODERATION_REFUSE, $ctype['labels']['create']),
                         'options' => ['class' => 'delete ajax-modal', 'icon' => 'minus-square'],
                         'url'     => href_to($ctype['name'], 'delete', $item['id']).'?csrf_token='.cmsForm::getCSRFToken()
-                    );
+                    ];
 
                 }
 
@@ -591,16 +594,16 @@ class actionContentItemView extends cmsAction {
 
         }
 
-        if ($item['is_approved'] && !$item['is_deleted']){
+        if ($item['is_approved'] && !$item['is_deleted'] && !$delete_limit_reached){
 
             if (cmsUser::isAllowed($ctype['name'], 'move_to_trash', 'all') ||
             (cmsUser::isAllowed($ctype['name'], 'move_to_trash', 'own') && $item['user_id'] == $this->cms_user->id)){
 
-                $tool_buttons['basket_put'] = array(
+                $tool_buttons['basket_put'] = [
                     'title'   => ($allow_delete ? LANG_BASKET_DELETE : sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create'])),
                     'options' => ['class' => 'basket_put', 'icon' => 'trash-alt', 'confirm' => sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])],
                     'url'     => href_to($ctype['name'], 'trash_put', $item['id'])
-                );
+                ];
 
             }
 
@@ -611,28 +614,27 @@ class actionContentItemView extends cmsAction {
             if (cmsUser::isAllowed($ctype['name'], 'restore', 'all') ||
             (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $item['user_id'] == $this->cms_user->id)){
 
-                $tool_buttons['basket_remove'] = array(
+                $tool_buttons['basket_remove'] = [
                     'title'   => LANG_RESTORE,
                     'options' => ['class' => 'basket_remove', 'icon' => 'trash-restore'],
                     'url'     => href_to($ctype['name'], 'trash_remove', $item['id'])
-                );
+                ];
 
             }
 
         }
 
-        $buttons_hook = cmsEventsManager::hook('ctype_item_tool_buttons', array(
-            'params'  => array($ctype, $item, $is_moderator, $childs),
+        $buttons_hook = cmsEventsManager::hook('ctype_item_tool_buttons', [
+            'params'  => [$ctype, $item, $is_moderator, $childs],
             'buttons' => $tool_buttons
-        ));
+        ]);
 
-        $buttons_hook = cmsEventsManager::hook($ctype['name'].'_ctype_item_tool_buttons', array(
-            'params'  => array($ctype, $item, $is_moderator, $childs),
+        $buttons_hook = cmsEventsManager::hook($ctype['name'].'_ctype_item_tool_buttons', [
+            'params'  => [$ctype, $item, $is_moderator, $childs],
             'buttons' => $buttons_hook['buttons']
-        ));
+        ]);
 
         return $buttons_hook['buttons'];
-
     }
 
     private function getItemAndCtype() {

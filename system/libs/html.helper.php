@@ -483,6 +483,21 @@ function html_views_format($num){
     return (string)$num;
 }
 
+function html_minutes_format($minutes){
+
+    if(!$minutes) { return ''; }
+
+    if($minutes >= 60){
+
+        $hours = floor($minutes / 60);
+        $min = $minutes - ($hours * 60);
+
+        return html_spellcount($hours, LANG_HOUR1, LANG_HOUR2, LANG_HOUR10).($min ? ' '.html_spellcount($min, LANG_MINUTE1, LANG_MINUTE2, LANG_MINUTE10) : '');
+    }
+
+    return html_spellcount($minutes, LANG_MINUTE1, LANG_MINUTE2, LANG_MINUTE10);
+}
+
 /**
  * Возвращает склеенный в одну строку массив строк
  * @param array $array

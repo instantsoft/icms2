@@ -39,9 +39,13 @@ icms.comments = (function ($) {
     };
 
     this.initRefreshBtn = function(){
+        var comments = $('#comments');
+        if($(comments).length === 0){
+            return;
+        }
         var win = $(window);
         var refresh_btn = $('#icms-refresh-id');
-        var comments_top = $('#comments').offset().top;
+        var comments_top = $(comments).offset().top;
         win.on('scroll', function (){
             if (win.scrollTop() > comments_top) {
                 refresh_btn.removeClass('d-none');

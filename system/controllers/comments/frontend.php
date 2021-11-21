@@ -61,7 +61,8 @@ class comments extends cmsFrontend {
                 $this->target_subject,
                 $this->target_id
             )->getCommentsCount();
-        $comments = $this->model->getComments();
+        $comments = $this->model->joinCommentsRating($this->cms_user->id)->
+                getComments($this->getCommentActions());
 
         $comments = cmsEventsManager::hook('comments_before_list', $comments);
         list($comments, $comments_count) = cmsEventsManager::hook('comments_before_list_this', [$comments, $comments_count, $this]);
@@ -248,17 +249,17 @@ class comments extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function renderCommentsList($page_url, $dataset_name=false){
+    public function renderCommentsList($page_url, $dataset_name = false) {
 
-        $page = $this->request->get('page', 1);
+        $page    = $this->request->get('page', 1);
         $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
 
         // Фильтр приватности
-        if ((!$dataset_name || $dataset_name == 'all') && !cmsUser::isAllowed('comments', 'view_all')){
+        if ((!$dataset_name || $dataset_name == 'all') && !cmsUser::isAllowed('comments', 'view_all')) {
             $this->model->filterPrivacy();
         }
 
-        if(!$this->model->order_by){
+        if (!$this->model->order_by) {
             $this->model->orderBy('date_pub', 'desc');
         }
 
@@ -278,14 +279,16 @@ class comments extends cmsFrontend {
         $items = $this->model->getComments();
 
         // если запрос через URL
-        if($this->request->isStandard()){
-            if(!$items && $page > 1){ cmsCore::error404(); }
+        if ($this->request->isStandard()) {
+            if (!$items && $page > 1) {
+                cmsCore::error404();
+            }
         }
 
         $items = cmsEventsManager::hook('comments_before_list', $items);
 
-        return $this->cms_template->renderInternal($this, 'list_index', array(
-            'filters'        => array(),
+        return $this->cms_template->renderInternal($this, 'list_index', [
+            'filters'        => [],
             'dataset_name'   => $dataset_name,
             'page_url'       => $page_url,
             'page'           => $page,
@@ -294,77 +297,171 @@ class comments extends cmsFrontend {
             'items'          => $items,
             'user'           => $this->cms_user,
             'target_user_id' => $this->target_user_id,
-        ));
-
+        ]);
     }
 
-    public function getDatasets(){
+    public function getDatasets() {
 
-        $datasets = array();
+        $datasets = [];
 
         // Все (новые)
-        $datasets['all'] = array(
-            'name' => 'all',
+        $datasets['all'] = [
+            'name'  => 'all',
             'title' => LANG_COMMENTS_DS_ALL,
-        );
+        ];
 
         // Мои друзья
-        if ($this->cms_user->is_logged){
-            $datasets['friends'] = array(
-                'name' => 'friends',
-                'title' => LANG_COMMENTS_DS_FRIENDS,
-                'filter' => function($model){
+        if ($this->cms_user->is_logged) {
+            $datasets['friends'] = [
+                'name'   => 'friends',
+                'title'  => LANG_COMMENTS_DS_FRIENDS,
+                'filter' => function ($model) {
                     return $model->filterFriends(cmsUser::getInstance()->id);
                 }
-            );
+            ];
         }
 
         // Только мои
-        if ($this->cms_user->is_logged){
-            $datasets['my'] = array(
-                'name' => 'my',
-                'title' => LANG_COMMENTS_DS_MY,
-                'filter' => function($model){
+        if ($this->cms_user->is_logged) {
+            $datasets['my'] = [
+                'name'   => 'my',
+                'title'  => LANG_COMMENTS_DS_MY,
+                'filter' => function ($model) {
                     $model->filterEqual('user_id', cmsUser::getInstance()->id);
                     return $model->disableApprovedFilter();
                 }
-            );
+            ];
         }
 
         return cmsEventsManager::hook('comments_datasets', $datasets);
-
     }
 
     public function isApproved($comment) {
 
         // модерация для гостей
-        if (!empty($comment['author_name'])){
+        if (!empty($comment['author_name'])) {
             return empty($this->options['is_guests_moderate']);
         }
 
         $is_approved = cmsUser::isAllowed('comments', 'add_approved');
 
-        if(!$is_approved && $this->controller_moderation->model->userIsContentModerator($this->name, $this->cms_user->id)){
+        if (!$is_approved && $this->controller_moderation->model->userIsContentModerator($this->name, $this->cms_user->id)) {
             $is_approved = true;
         }
 
-        $is_approved_by_hook = cmsEventsManager::hook('comments_is_approved', array(
+        $is_approved_by_hook = cmsEventsManager::hook('comments_is_approved', [
             'is_approved' => $is_approved,
             'comment'     => $comment
-        ));
+        ]);
 
         return $is_approved_by_hook['is_approved'];
-
     }
 
     public function notifyModerators($comment) {
 
-        $comment['page_url'] = href_to_abs($comment['target_url']) . '#comment_'.$comment['id'];
-        $comment['url'] = $comment['target_url'].'#comment_'.$comment['id'];
-        $comment['title'] = $comment['target_title'];
+        $comment['page_url'] = href_to_abs($comment['target_url']) . '#comment_' . $comment['id'];
+        $comment['url']      = $comment['target_url'] . '#comment_' . $comment['id'];
+        $comment['title']    = $comment['target_title'];
 
         return $this->controller_moderation->requestModeration($this->name, $comment, true, sprintf(LANG_COMMENTS_MODERATE_NOTIFY, $comment['content_html']));
+    }
 
+    public function getCommentActions($params = []) {
+
+        $is_can_add = ($this->cms_user->is_logged && cmsUser::isAllowed('comments', 'add')) ||
+                (!$this->cms_user->is_logged && !empty($this->options['is_guests']));
+
+        $perms = [
+            'actions_times' => cmsUser::getPermissionValue('comments', 'times'),
+            'is_edit_all'   => cmsUser::isAllowed('comments', 'edit', 'all'),
+            'is_edit_own'   => cmsUser::isAllowed('comments', 'edit', 'own'),
+            'is_delete_all' => cmsUser::isAllowed('comments', 'delete', 'all'),
+            'is_delete_own' => cmsUser::isAllowed('comments', 'delete', 'own')
+        ];
+
+        $actions = [
+            [
+                'title'   => LANG_COMMENTS_APPROVE,
+                'icon'    => 'check',
+                'href'    => '#approve',
+                'class'   => 'btn-outline-success mr-1 approve hide_approved',
+                'onclick' => 'return icms.comments.approve({id})',
+                'handler' => function($comment){
+                    return !$comment['is_approved'];
+                }
+            ],
+            [
+                'title'   => LANG_REPLY,
+                'icon'    => 'reply',
+                'href'    => '#reply',
+                'onclick' => 'return icms.comments.add({id})',
+                'handler' => function($comment) use($is_can_add, $params) {
+                    return $is_can_add && empty($params['is_moderator']);
+                },
+                'handler_class' => function($comment){
+                    $class = 'btn-link reply mr-1';
+                    if(!$comment['is_approved']){
+                        $class .= ' no_approved';
+                    }
+                    return $class;
+                }
+            ],
+            [
+                'hint'    => LANG_EDIT,
+                'icon'    => 'edit',
+                'href'    => '#edit',
+                'class'   => 'btn-outline-secondary edit',
+                'onclick' => 'return icms.comments.edit({id})',
+                'handler' => function($comment) use($perms, $params) {
+
+                    if ($perms['actions_times'] && ((time() - strtotime($comment['date_pub']))/60 >= $perms['actions_times'])){
+                        $perms['is_edit_own'] = false;
+                    }
+
+                    $is_can_edit = $perms['is_edit_all'] || ($perms['is_edit_own'] && $comment['user']['id'] == $this->cms_user->id);
+
+                    return $is_can_edit && empty($params['is_moderator']);
+                }
+            ],
+            [
+                'hint'    => LANG_DELETE,
+                'icon'    => 'trash',
+                'href'    => '#delete',
+                'class'   => 'btn-outline-danger',
+                'onclick' => 'return icms.comments.remove({id}, false)',
+                'handler' => function($comment) use($perms) {
+
+                    if ($perms['actions_times'] && ((time() - strtotime($comment['date_pub']))/60 >= $perms['actions_times'])){
+                        $perms['is_delete_own'] = false;
+                    }
+
+                    $is_can_delete = $perms['is_delete_all'] || ($perms['is_delete_own'] && $comment['user']['id'] == $this->cms_user->id);
+
+                    return $is_can_delete && $comment['is_approved'];
+                }
+            ],
+            [
+                'hint'    => LANG_DECLINE,
+                'icon'    => 'trash',
+                'href'    => '#delete',
+                'class'   => 'btn-outline-danger',
+                'onclick' => 'return icms.comments.remove({id}, true)',
+                'handler' => function($comment) use($perms) {
+
+                    if ($perms['actions_times'] && ((time() - strtotime($comment['date_pub']))/60 >= $perms['actions_times'])){
+                        $perms['is_delete_own'] = false;
+                    }
+
+                    $is_can_delete = $perms['is_delete_all'] || ($perms['is_delete_own'] && $comment['user']['id'] == $this->cms_user->id);
+
+                    return $is_can_delete && !$comment['is_approved'];
+                }
+            ]
+        ];
+
+        list($params, $actions) = cmsEventsManager::hook('comments_item_actions', [$params, $actions]);
+
+        return $actions;
     }
 
 }

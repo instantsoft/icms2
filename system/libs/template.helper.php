@@ -12,7 +12,7 @@ function html_svg_icon($file, $name, $size = 16, $print = true){
     if(!isset($template_path)){
         $template_path = cmsTemplate::getInstance()->getTemplateFilePath('images/icons/', true);
     }
-	$icon = '<svg class="icms-svg-icon w-'.$size.'" fill="currentColor"><use xlink:href="'.$template_path.$file.'.svg#'.$name.'"></use></svg>';
+	$icon = '<svg class="icms-svg-icon w-'.$size.'" fill="currentColor"><use href="'.$template_path.$file.'.svg#'.$name.'"></use></svg>';
     if($print){
         echo $icon;
     } else {

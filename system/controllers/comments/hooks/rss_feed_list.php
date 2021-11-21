@@ -46,15 +46,12 @@ class onCommentsRssFeedList extends cmsAction {
             }
         }
 
-        $comments = $this->model->getComments(function ($item, $model) {
+        $comments = $this->model->getComments() ?: [];
 
-            $item['target_title'] = sprintf(LANG_COMMENTS_RSS_TITLE, $item['target_title']);
-            $item['page_url']     = href_to_abs($item['target_url']) . '#comment_' . $item['id'];
-
-            return $item;
-        });
-
-        $comments = cmsEventsManager::hook('comments_before_list', $comments);
+        foreach ($comments as $key => $comment) {
+            $comments[$key]['target_title'] = sprintf(LANG_COMMENTS_RSS_TITLE, $comment['target_title']);
+            $comments[$key]['page_url']     = href_to_abs($comment['target_url']) . '#comment_' . $comment['id'];
+        }
 
         $feed['items'] = $comments;
 

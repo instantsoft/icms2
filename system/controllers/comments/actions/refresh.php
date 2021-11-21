@@ -80,7 +80,7 @@ class actionCommentsRefresh extends cmsAction {
             ]);
         }
 
-        $comments = $this->model->getComments();
+        $comments = $this->model->joinCommentsRating($this->cms_user->id)->getComments($this->getCommentActions());
 
         // Получаем модель целевого контроллера
         $target_model = cmsCore::getModel($target_controller);

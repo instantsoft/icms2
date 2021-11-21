@@ -23,6 +23,10 @@
     define('LANG_RULE_CONTENT_BIND_TO_PARENT','Bind child entries to parent');
     define('LANG_RULE_CONTENT_BIND_OFF_PARENT','Unbind child entries from parent');
     define('LANG_RULE_CONTENT_EDIT',         'Editing entries');
+    define('LANG_RULE_CONTENT_EDIT_TIMES',   'Time to edit entries');
+    define('LANG_RULE_CONTENT_EDIT_TIMES_HINT',   'In minutes. If not specified - unlimited. Available if editing of entries is allowed.');
+    define('LANG_RULE_CONTENT_DELETE_TIMES',   'Time to deleting entries');
+    define('LANG_RULE_CONTENT_DELETE_TIMES_HINT',   'In minutes. If not specified - unlimited. Available if deleting entries is allowed.');
     define('LANG_RULE_CONTENT_DELETE',       'Deleting entries');
     define('LANG_RULE_CONTENT_MOVE_TO_TRASH', 'Deleting entries to trash');
     define('LANG_RULE_CONTENT_TRASH_LEFT_TIME', 'Trash items lifetime, hours');
@@ -70,3 +74,9 @@
     define('LANG_CONTENT_CONTEXT_LT_FORM_FIELD', 'In relations, in field');
     define('LANG_CONTENT_NOTIFY_END_DATE',  'Notify the imminent publication end date of your %s');
     define('LANG_CONTENT_SHOW_FILTER_COUNT',  'offer|offers|offers');
+    define('LANG_CONTENT_PERMS_TIME_HINT',  'After publication you will have access to:');
+    define('LANG_CONTENT_PERMS_TIME_HINT_EDIT',  'for editing');
+    define('LANG_CONTENT_PERMS_TIME_HINT_DELETE',  'for removing');
+    define('LANG_CONTENT_PERMS_TIME_HINT1',  'After the specified time, these actions will become unavailable.');
+    define('LANG_CONTENT_PERMS_TIME_UP_EDIT',  'The time for editing is over');
+    define('LANG_CONTENT_PERMS_TIME_UP_DELETE',  'Time for deletion is over');

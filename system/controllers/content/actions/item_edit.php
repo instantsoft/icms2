@@ -67,6 +67,12 @@ class actionContentItemEdit extends cmsAction {
             }
         }
 
+        // Не вышло ли время для редактирования
+        if (cmsUser::isPermittedLimitReached($ctype['name'], 'edit_times', ((time() - strtotime($item['date_pub']))/60))){
+            cmsUser::addSessionMessage(LANG_CONTENT_PERMS_TIME_UP_EDIT, 'error');
+            $this->redirectTo($ctype['name'], $item['slug'] . '.html');
+        }
+
         // Получаем родительский тип, если он задан
         if ($this->request->has('parent_type')) {
             $parent['ctype'] = $this->model->getContentTypeByName($this->request->get('parent_type', ''));
@@ -287,6 +293,7 @@ class actionContentItemEdit extends cmsAction {
 
         return $this->cms_template->render('item_form', [
             'do'                => 'edit',
+            'perms_notices'     => [],
             'base_url'          => $base_url,
             'page_title'        => $item['title'],
             'cancel_url'        => ($back_url ? $back_url : ($ctype['options']['item_on'] ? href_to($ctype['name'], $item['slug'] . '.html') : false)),
