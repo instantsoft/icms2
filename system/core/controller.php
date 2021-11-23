@@ -225,68 +225,117 @@ class cmsController {
 //============================================================================//
 
     /**
-     * Загружает и возвращает опции текущего контроллера,
+     * Загружает и возвращает опции текущего контроллера
+     *
      * @return array
      */
-    public function getOptions(){
-
-        return (array)self::loadOptions($this->name);
-
+    public function getOptions() {
+        return self::loadOptions($this->name);
     }
-    public function setOption($key, $val){
-        $this->options[$key] = $val; return $this;
+
+    /**
+     * Устанавливает опцию контроллера
+     *
+     * @param string $key
+     * @param mixed $val
+     * @return $this
+     */
+    public function setOption($key, $val) {
+        $this->options[$key] = $val;
+        return $this;
     }
-    public function getOption($key){
-        if(!$this->useOptions){ return null; }
+
+    /**
+     * Возвращает значение опции контроллера
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function getOption($key) {
+        if (!$this->useOptions) {
+            return null;
+        }
         return isset($this->options[$key]) ? $this->options[$key] : null;
     }
 
     /**
      * Проверяет включен ли текущий контроллер
+     *
      * @return boolean
      */
     public function isEnabled() {
         return $this->isControllerEnabled($this->name);
     }
 
+    /**
+     * Проверяет, установлен ли контроллер записью в БД
+     *
+     * @param string $name Имя контроллера
+     * @return boolean
+     */
     public function isControllerInstalled($name) {
         return isset(self::$controllers[$name]);
     }
 
+    /**
+     * Проверяет, есть ли у контроллера псевдоним
+     * если есть, возвращает его
+     *
+     * @return mixed
+     */
     public function hasSlug() {
         return !empty(self::$controllers[$this->name]['slug']) ? self::$controllers[$this->name]['slug'] : false;
     }
 
+    /**
+     * Проверяет, включен ли контроллер
+     *
+     * @param string $name Имя контроллера
+     * @return boolean
+     */
     public function isControllerEnabled($name) {
 
         // проверяем только те, которые зарегистрированы в базе
-        if (isset(self::$controllers[$name]['is_enabled'])){
+        if (isset(self::$controllers[$name]['is_enabled'])) {
             return self::$controllers[$name]['is_enabled'];
         }
 
         return true;
-
     }
 
+    /**
+     * Проверяет, включен ли контроллер
+     *
+     * @param string $name Имя контроллера
+     * @return boolean
+     */
     public static function enabled($name) {
         self::loadControllers();
-        if (isset(self::$controllers[$name]['is_enabled'])){
+        if (isset(self::$controllers[$name]['is_enabled'])) {
             return self::$controllers[$name]['is_enabled'];
         }
         return true;
     }
 
+    /**
+     * Загружает и возвращает массив соответствий
+     * имён контроллеров и их псевдонимов
+     *
+     * @return array
+     */
     public static function getControllersMapping() {
 
-        if (self::$mapping !== null) { return self::$mapping; }
+        if (self::$mapping !== null) {
+            return self::$mapping;
+        }
 
-        self::$mapping = array();
+        self::$mapping = [];
 
         self::loadControllers();
 
-        if(self::$controllers){
+        if (self::$controllers) {
             foreach (self::$controllers as $controller) {
-                if(!empty($controller['slug'])){
+                if (!empty($controller['slug'])) {
                     self::$mapping[$controller['name']] = $controller['slug'];
                 }
             }
@@ -295,61 +344,71 @@ class cmsController {
         return self::$mapping;
     }
 
+    /**
+     * Загружает данные всех контроллеров
+     *
+     * @return boolean
+     */
     private static function loadControllers() {
 
-        if(!isset(self::$controllers)){
+        if (!isset(self::$controllers)) {
 
             $model = new cmsModel();
 
-            $model->selectList(array(
+            $model->selectList([
                 'i.id'         => 'id',
                 'i.is_enabled' => 'is_enabled',
                 'i.options'    => 'options',
                 'i.name'       => 'name',
                 'i.slug'       => 'slug'
-            ), true);
+            ], true);
 
             self::$controllers = $model->useCache('controllers')->get('controllers', function ($item, $model) {
                 $item['options'] = cmsModel::yamlToArray($item['options']);
                 return $item;
-            }, 'name');
+            }, 'name') ?: [];
 
+            return true;
         }
 
+        return false;
     }
+
     /**
      * Загружает опции контроллера
-     * @param string $controller_name
+     *
+     * @param string $controller_name Имя контроллера
      * @return array
      */
-    public static function loadOptions($controller_name){
+    public static function loadOptions($controller_name) {
+
         self::loadControllers();
-        if (isset(self::$controllers[$controller_name]['options'])){
-            return self::$controllers[$controller_name]['options'];
+
+        if (isset(self::$controllers[$controller_name]['options'])) {
+            return (array)self::$controllers[$controller_name]['options'];
         }
 
-        return array();
-
+        return [];
     }
 
     /**
      * Сохраняет опции контроллера
-     * @param string $controller_name
-     * @param array $options
+     *
+     * @param string $controller_name Имя контроллера
+     * @param array $options Массив опция для сохранения
      * @return boolean
      */
-    static function saveOptions($controller_name, $options){
+    public static function saveOptions($controller_name, $options) {
 
         $model = new cmsModel();
 
         $model->filterEqual('name', $controller_name);
 
-        $model->updateFiltered('controllers', array('options' => $options));
+        $result = $model->updateFiltered('controllers', ['options' => $options]);
 
         cmsCache::getInstance()->clean('controllers');
 
-        return true;
-
+        return $result;
     }
 
 //============================================================================//

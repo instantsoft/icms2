@@ -2,19 +2,20 @@
 
 class onWallUserNotifyTypes extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        $users_options = cmsCore::getController('users')->getOptions();
+        $users_options = cmsController::loadOptions('users');
 
-        if (!$users_options['is_wall']) { return false; }
+        if (empty($users_options['is_wall'])) {
+            return false;
+        }
 
-        return array(
-            'users_wall_write' => array(
-                'title' => LANG_WALL_NOTIFY_NEW,
-                'options' => array('', 'email')
-            ),
-        );
-
+        return [
+            'users_wall_write' => [
+                'title'   => LANG_WALL_NOTIFY_NEW,
+                'options' => ['', 'email']
+            ]
+        ];
     }
 
 }

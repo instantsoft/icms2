@@ -2,22 +2,19 @@
 
 class onWallAdminDashboardChart extends cmsAction {
 
-	public function run(){
+    public function run() {
 
-        $data = array(
+        return [
             'id' => 'wall',
-            'title' => LANG_WALL,
-            'sections' => array(
-                'msg' => array(
+            'title'    => LANG_WALL,
+            'sections' => [
+                'msg' => [
                     'title' => LANG_WALL_ENTRIES,
                     'table' => 'wall_entries',
-                    'key' => 'date_pub'
-                ),
-            )
-        );
-
-        return $data;
-
+                    'key'   => 'date_pub'
+                ]
+            ]
+        ];
     }
 
 }

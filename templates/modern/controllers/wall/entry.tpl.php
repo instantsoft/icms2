@@ -7,20 +7,12 @@
 ?>
 
 <?php foreach($entries as $entry){ ?>
-
 <?php
 
     $count++;
 
-    $is_can_add = !empty($permissions['reply']) && $entry['parent_id'] == 0;
-    $is_can_edit = ($entry['user']['id']==$user->id) || $user->is_admin;
-    $is_can_delete = ($entry['user']['id']==$user->id) || $permissions['delete'];
-
-    if (empty($entry['replies_count'])){ $entry['replies_count'] = 0; }
-
     $is_hidden = ($max_entries && ($count > $max_entries) && ($page == 1));
     $author_url = href_to_profile($entry['user']);
-
 ?>
 
 <div id="entry_<?php echo $entry['id']; ?>" class="entry media my-4"<?php if($is_hidden){ ?> style="display:none"<?php } ?> data-replies="<?php echo $entry['replies_count']; ?>">
@@ -53,20 +45,14 @@
             <?php echo $entry['content_html']; ?>
         </div>
         <div class="links mt-2">
-            <?php if ($is_can_add){ ?>
-                <a href="#wall-reply" class="btn btn-outline-secondary btn-sm border-0 mr-1 reply" onclick="return icms.wall.add(<?php echo $entry['id']; ?>)">
-                    <?php html_svg_icon('solid', 'reply'); ?>
-                    <?php echo LANG_REPLY; ?>
-                </a>
-            <?php } ?>
-            <?php if ($is_can_edit){ ?>
-                <a href="#wall-edit" class="btn btn-outline-secondary btn-sm border-0 edit" onclick="return icms.wall.edit(<?php echo $entry['id']; ?>)" title="<?php echo LANG_EDIT; ?>">
-                    <?php html_svg_icon('solid', 'edit'); ?>
-                </a>
-            <?php } ?>
-            <?php if ($is_can_delete){ ?>
-                <a href="#wall-delete" class="btn btn-outline-danger btn-sm border-0 delete" onclick="return icms.wall.remove(<?php echo $entry['id']; ?>)" title="<?php echo LANG_DELETE; ?>">
-                    <?php html_svg_icon('solid', 'trash'); ?>
+            <?php foreach($entry['actions'] as $action){ ?>
+                <a href="<?php echo $action['href']; ?>" class="btn btn-sm border-0<?php if (!empty($action['class'])){ ?> <?php echo $action['class']; ?><?php } ?>"<?php if (!empty($action['onclick'])) { ?> onclick="<?php echo $action['onclick']; ?>"<?php } ?><?php if (!empty($action['hint'])) { ?> title="<?php html($action['hint']); ?>"<?php } ?>>
+                    <?php if (!empty($action['icon'])){ ?>
+                        <?php html_svg_icon('solid', $action['icon']); ?>
+                    <?php } ?>
+                    <?php if (!empty($action['title'])){ ?>
+                        <?php echo $action['title']; ?>
+                    <?php } ?>
                 </a>
             <?php } ?>
         </div>

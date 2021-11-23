@@ -2,28 +2,26 @@
 
 class onWallUserPrivacyTypes extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        $users_options = cmsCore::getController('users')->getOptions();
+        $users_options = cmsController::loadOptions('users');
 
         $types = [];
 
         if ($users_options['is_wall']) {
 
-            $types['users_profile_wall'] = array(
+            $types['users_profile_wall'] = [
                 'title'   => LANG_USERS_PRIVACY_PROFILE_WALL,
-                'options' => array('', 'anyone', 'friends')
-            );
+                'options' => ['', 'anyone', 'friends']
+            ];
 
-            $types['users_profile_wall_reply'] = array(
+            $types['users_profile_wall_reply'] = [
                 'title'   => LANG_USERS_PRIVACY_PROFILE_WALL_REPLY,
-                'options' => array('', 'anyone', 'friends')
-            );
-
+                'options' => ['', 'anyone', 'friends']
+            ];
         }
 
         return $types;
-
     }
 
 }

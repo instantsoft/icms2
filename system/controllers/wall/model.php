@@ -2,15 +2,14 @@
 
 class modelWall extends cmsModel {
 
-    public function getEntriesCount(){
+    public function getEntriesCount() {
 
         $this->useCache('wall.count');
 
         return $this->getCount('wall_entries');
-
     }
 
-    public function getEntries($user){
+    public function getEntries( cmsUser $user, $actions = false) {
 
         $this->useCache('wall.entries');
 
@@ -21,73 +20,77 @@ class modelWall extends cmsModel {
 
         $this->joinSessionsOnline();
 
-        return $this->get('wall_entries', function($item, $model) use($user) {
+        return $this->get('wall_entries', function ($item, $model) use ($user, $actions) {
 
-            $item['user'] = array(
+            if (empty($item['replies_count'])){ $item['replies_count'] = 0; }
+
+            $item['user'] = [
                 'id'        => $item['user_id'],
                 'slug'      => $item['user_slug'],
                 'nickname'  => $item['user_nickname'],
                 'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
-            );
+            ];
 
             $item['is_new'] = (strtotime($item['date_pub']) > strtotime($user->date_log));
 
+            $item['actions'] = [];
+
+            if (is_array($actions)) {
+                foreach ($actions as $key => $action) {
+
+                    if (isset($action['handler'])) {
+                        $is_active = $action['handler']($item);
+                    } else {
+                        $is_active = true;
+                    }
+
+                    if (!$is_active) { continue; }
+
+                    if (empty($action['href'])) { continue; }
+
+                    if (isset($action['handler_class'])) {
+                        $action['class'] = $action['handler_class']($item);
+                    }
+
+                    foreach ($item as $cell_id => $cell_value) {
+
+                        if (is_array($cell_value) || is_object($cell_value)) {
+                            continue;
+                        }
+
+                        foreach (['href', 'title', 'hint', 'onclick'] as $replaceable_key) {
+                            if(isset($action[$replaceable_key])){
+                                $action[$replaceable_key] = str_replace('{' . $cell_id . '}', $cell_value, $action[$replaceable_key]);
+                            }
+                        }
+                    }
+                    $item['actions'][$key] = $action;
+                }
+            }
+
             return $item;
-
         });
-
     }
 
-    public function getReplies($parent_id){
+    public function getEntry($id) {
 
-        $this->useCache('wall.entries');
+        return $this->joinUser()->joinSessionsOnline()->
+                getItemById('wall_entries', $id, function ($item, $model) {
 
-        $this->joinUser()->joinSessionsOnline()->
-                filterEqual('parent_id', $parent_id)->
-                orderBy('date_pub', 'asc');
-
-        return $this->get('wall_entries', function($item, $model){
-
-            $item['user'] = array(
+            $item['user'] = [
                 'id'        => $item['user_id'],
                 'slug'      => $item['user_slug'],
                 'nickname'  => $item['user_nickname'],
                 'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
-            );
-
-            $item['replies_count'] = 0;
+            ];
 
             return $item;
-
         });
-
     }
 
-    public function getEntry($id){
-
-        $entry = $this->
-                    joinUser()->joinSessionsOnline()->
-                    getItemById('wall_entries', $id, function($item, $model){
-
-                        $item['user'] = array(
-                            'id'        => $item['user_id'],
-                            'slug'      => $item['user_slug'],
-                            'nickname'  => $item['user_nickname'],
-                            'is_online' => $item['is_online'],
-                            'avatar'    => $item['user_avatar']
-                        );
-
-                        return $item;
-
-                    });
-
-        return $entry;
-
-    }
-
-    public function getEntryPageNumber($id, $target, $perpage){
+    public function getEntryPageNumber($id, $target, $perpage) {
 
         $this->selectOnly('id')->limit(false)->
                 filterEqual('profile_id', $target['profile_id'])->
@@ -98,29 +101,29 @@ class modelWall extends cmsModel {
 
         $index = 0;
 
-        if($entries){
-            foreach ($entries as $e){
+        if ($entries) {
+            foreach ($entries as $e) {
                 $index++;
-                if ($e['id'] == $id){ break; }
+                if ($e['id'] == $id) {
+                    break;
+                }
             }
         }
 
-        if (!$index) { return 1; }
+        if (!$index) {
+            return 1;
+        }
 
         return ceil($index / $perpage);
-
     }
 
-//============================================================================//
-//============================================================================//
-
-    public function addEntry($entry){
+    public function addEntry($entry) {
 
         // для записей-ответов ставим дату у родителя
-        if(!empty($entry['parent_id'])){
-            $this->update('wall_entries', $entry['parent_id'], array(
+        if (!empty($entry['parent_id'])) {
+            $this->update('wall_entries', $entry['parent_id'], [
                 'date_last_reply' => null
-            ));
+            ]);
         }
 
         $entry['date_last_reply'] = null;
@@ -131,38 +134,35 @@ class modelWall extends cmsModel {
         cmsCache::getInstance()->clean('wall.count');
 
         return $id;
-
     }
 
-    public function updateEntryStatusId($id, $status_id){
+    public function updateEntryStatusId($id, $status_id) {
 
-        $result = $this->update('wall_entries', $id, array(
-            'status_id'=>$status_id,
-        ));
+        $result = $this->update('wall_entries', $id, [
+            'status_id' => $status_id
+        ]);
 
         cmsCache::getInstance()->clean('wall.entries');
         cmsCache::getInstance()->clean('wall.count');
 
         return $result;
-
     }
 
-    public function updateEntryContent($id, $content, $content_html){
+    public function updateEntryContent($id, $content, $content_html) {
 
-        $result = $this->update('wall_entries', $id, array(
+        $result = $this->update('wall_entries', $id, [
             'date_last_modified' => null,
             'content'            => $content,
             'content_html'       => $content_html
-        ));
+        ]);
 
         cmsCache::getInstance()->clean('wall.entries');
         cmsCache::getInstance()->clean('wall.count');
 
         return $result;
-
     }
 
-    public function deleteEntry($id){
+    public function deleteEntry($id) {
 
         $this->delete('wall_entries', $id);
 
@@ -172,17 +172,15 @@ class modelWall extends cmsModel {
         cmsCache::getInstance()->clean('wall.count');
 
         return true;
-
     }
 
-    public function deleteUserEntries($user_id){
+    public function deleteUserEntries($user_id) {
 
         $this->delete('wall_entries', $user_id, 'user_id');
         $this->delete('wall_entries', $user_id, 'profile_id');
 
         cmsCache::getInstance()->clean('wall.entries');
         cmsCache::getInstance()->clean('wall.count');
-
     }
 
 }

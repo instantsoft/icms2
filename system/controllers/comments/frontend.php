@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelComments $model
+ */
 class comments extends cmsFrontend {
 
     public $target_controller;
