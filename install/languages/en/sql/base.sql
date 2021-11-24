@@ -1059,7 +1059,9 @@ CREATE TABLE `{#}images_presets` (
   `quality` tinyint(1) unsigned DEFAULT '90',
   `gamma_correct` tinyint(1) unsigned DEFAULT NULL,
   `crop_position` tinyint(1) unsigned DEFAULT '2',
-  `allow_enlarge` tinyint(1) UNSIGNED DEFAULT NULL,
+  `allow_enlarge` tinyint(1) unsigned DEFAULT NULL,
+  `gif_to_gif` tinyint(1) unsigned DEFAULT '1',
+  `convert_format` char(4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Presets for image conversion';

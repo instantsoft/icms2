@@ -7,6 +7,14 @@ function install_package(){
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    if(!$core->db->isFieldExists('images_presets', 'convert_format')){
+        $core->db->query("ALTER TABLE `{#}images_presets` ADD `convert_format` CHAR(4) NULL DEFAULT NULL;");
+    }
+
+    if(!$core->db->isFieldExists('images_presets', 'gif_to_gif')){
+        $core->db->query("ALTER TABLE `{#}images_presets` ADD `gif_to_gif` TINYINT(1) UNSIGNED NULL DEFAULT '1';");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

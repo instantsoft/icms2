@@ -19,6 +19,7 @@ class cmsImages {
     public $quality_truecolor = true;
     public $gamma_correct     = false;
     public $interlace         = 1;
+    public $gif_to_gif        = false;
     public $source_type;
 
     protected $source_file_path;
@@ -56,8 +57,24 @@ class cmsImages {
      */
     public function resizeByPreset($preset, $file_name = null, $user_id = null) {
 
-        $dest_ext  = $this->getSourceExt();
-        $dest_dir  = files_get_upload_dir($user_id === null ? cmsUser::get('id') : $user_id);
+        $image_type = $this->source_type;
+        $dest_ext   = $this->getSourceExt();
+        $dest_dir   = files_get_upload_dir($user_id === null ? cmsUser::get('id') : $user_id);
+
+
+        if(!empty($preset['convert_format'])){
+
+            $image_type = $this->getImageType($preset['convert_format']);
+            $dest_ext = $preset['convert_format'];
+
+            if(!empty($preset['gif_to_gif']) && $this->source_type == IMAGETYPE_GIF){
+                $this->gif_to_gif = true;
+                $image_type = $this->source_type;
+                $dest_ext   = $this->getSourceExt();
+            }
+        } else {
+            $this->gif_to_gif = true;
+        }
 
         if($file_name){
             $dest_name = files_sanitize_name($file_name.' '.$preset['name']);
@@ -165,12 +182,11 @@ class cmsImages {
 
         $this->gamma(!empty($preset['gamma_correct']));
 
-        $this->save($dest_file, null, $preset['quality']);
+        $this->save($dest_file, $image_type, $preset['quality']);
 
         $this->filters = [];
 
         return str_replace(cmsConfig::get('upload_path'), '', $dest_file);
-
     }
 
     /**
@@ -189,6 +205,21 @@ class cmsImages {
                 return 'webp';
             default:
                 return '';
+        }
+    }
+
+    public function getImageType($ext) {
+        switch ($ext) {
+            case 'gif':
+                return IMAGETYPE_GIF;
+            case 'jpg':
+                return IMAGETYPE_JPEG;
+            case 'png':
+                return IMAGETYPE_PNG;
+            case 'webp':
+                return IMAGETYPE_WEBP;
+            default:
+                return 'jpg';
         }
     }
 
@@ -366,7 +397,7 @@ class cmsImages {
         switch ($image_type) {
             case IMAGETYPE_GIF:
 
-                if (extension_loaded('imagick')) {
+                if ($this->gif_to_gif && extension_loaded('imagick')) {
                     return $this->saveGif($filename, $quality, $permissions, $exact_size);
                 }
 
