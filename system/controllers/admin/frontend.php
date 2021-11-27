@@ -700,6 +700,9 @@ class admin extends cmsFrontend {
 
         foreach ($controllers as $controller_name) {
 
+            $ctrl_file = $this->cms_config->root_path . 'system/controllers/'.$controller_name.'/frontend.php';
+            if(!is_readable($ctrl_file)){ continue; }
+
             $hooks = cmsCore::getFilesList('system/controllers/' . $controller_name . '/hooks', '*.php', true, true);
             if (!$hooks) { continue; }
 
