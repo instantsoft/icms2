@@ -117,7 +117,7 @@
             </div>
         <?php } ?>
 
-        <?php if (!$entry['is_deleted'] && empty($entry['hide_controls']) && ($is_controls || !empty($is_moderator))){ ?>
+        <?php if (!$entry['is_deleted'] && empty($entry['hide_controls']) && !empty($entry['actions'])){ ?>
             <div class="icms-comment-controls mt-1">
                 <?php foreach($entry['actions'] as $action){ ?>
                     <a href="<?php echo $action['href']; ?>" class="btn btn-sm border-0<?php if (!empty($action['class'])){ ?> <?php echo $action['class']; ?><?php } ?>"<?php if (!empty($action['onclick'])) { ?> onclick="<?php echo $action['onclick']; ?>"<?php } ?><?php if (!empty($action['hint'])) { ?> title="<?php html($action['hint']); ?>"<?php } ?>>
@@ -129,10 +129,12 @@
                         <?php } ?>
                     </a>
                 <?php } ?>
-                <?php if ($entry['parent_id']){ ?>
-                    <a href="#up" class="btn btn-sm border-0 scroll-up ml-2" onclick="return icms.comments.up(<?php echo $entry['parent_id']; ?>, <?php echo $entry['id']; ?>)" title="<?php html( LANG_COMMENT_SHOW_PARENT ); ?>">&uarr;</a>
+                <?php if ($is_controls){ ?>
+                    <?php if ($entry['parent_id']){ ?>
+                        <a href="#up" class="btn btn-sm border-0 scroll-up ml-2" onclick="return icms.comments.up(<?php echo $entry['parent_id']; ?>, <?php echo $entry['id']; ?>)" title="<?php html( LANG_COMMENT_SHOW_PARENT ); ?>">&uarr;</a>
+                    <?php } ?>
+                    <a href="#down" class="btn btn-sm border-0 d-none scroll-down" onclick="return icms.comments.down(this)" title="<?php echo html( LANG_COMMENT_SHOW_CHILD ); ?>">&darr;</a>
                 <?php } ?>
-                <a href="#down" class="btn btn-sm border-0 d-none scroll-down" onclick="return icms.comments.down(this)" title="<?php echo html( LANG_COMMENT_SHOW_CHILD ); ?>">&darr;</a>
             </div>
         <?php } ?>
 
