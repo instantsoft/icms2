@@ -398,7 +398,7 @@ class cmsDatabase {
 
         if($quiet || $this->query_quiet === true) {
 
-            error_log(sprintf(ERR_DATABASE_QUERY, $this->error()));
+            error_log(defined('ERR_DATABASE_QUERY') ? sprintf(ERR_DATABASE_QUERY, $this->error()) : $this->error());
 
             return false;
         }

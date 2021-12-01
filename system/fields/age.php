@@ -13,6 +13,9 @@ class fieldAge extends cmsFormField {
                 'title' => LANG_PARSER_AGE_DATE_TITLE,
                 'rules' => [['required']]
             ]),
+            new fieldCheckbox('show_date', [
+                'title' => LANG_PARSER_DATE_SHOW_DATE
+            ]),
             new fieldCheckbox('show_y', [
                 'title' => LANG_YEARS,
                 'extended_option' => true
@@ -74,6 +77,11 @@ class fieldAge extends cmsFormField {
     }
 
     public function parse($value) {
+
+        if($this->getOption('show_date')){
+            return html($this->getDiff($value), false).' ('. html_date($value).')';
+        }
+
         return html($this->getDiff($value), false);
     }
 

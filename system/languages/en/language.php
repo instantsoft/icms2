@@ -175,6 +175,7 @@
     define('LANG_PARSER_AGE_FROM_DATE_HINT', 'If not specified, the count will be conducted from the current time');
     define('LANG_PARSER_DATE',               'Date');
     define('LANG_PARSER_DATE_FILTER_HINT',   'YYYY-MM-DD');
+    define('LANG_PARSER_DATE_SHOW_DATE',     'Show date');
     define('LANG_PARSER_DATE_SHOW_TIME',     'Show time');
     define('LANG_PARSER_USER',               'User');
     define('LANG_PARSER_USER_FILTER_HINT',   'User ID');

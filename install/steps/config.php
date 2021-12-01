@@ -87,7 +87,7 @@ function create_config($path, $file){
         'is_check_updates'		=> $_SESSION['install']['site']['is_check_updates'],
         'detect_ip_key'		    => 'REMOTE_ADDR',
         'allow_ips'		        => '',
-        'default_editor'		=> 'redactor',
+        'default_editor'		=> 3,
         'show_breadcrumbs'		=> 1,
         'check_spoofing_type'   => 0,
         'production_time'       => time(),

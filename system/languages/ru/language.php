@@ -174,6 +174,7 @@
     define('LANG_PARSER_AGE_FROM_DATE_HINT', 'Если не указано, отсчет будет вестись от текущего значения времени');
     define('LANG_PARSER_DATE',               'Дата');
     define('LANG_PARSER_DATE_FILTER_HINT',   'ГГГГ-ММ-ДД');
+    define('LANG_PARSER_DATE_SHOW_DATE',     'Показывать дату');
     define('LANG_PARSER_DATE_SHOW_TIME',     'Показывать время');
     define('LANG_PARSER_USER',               'Пользователь');
     define('LANG_PARSER_USER_FILTER_HINT',   'ID пользователя');
