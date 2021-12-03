@@ -49,6 +49,7 @@
     define('LANG_USERS_EMAIL_VERIFY', 'An email has been sent to <b>%s</b>. Follow the link from the letter to activate the mail change');
     define('LANG_USERS_OPT_WALL_ENABLED',   'Enable profile wall');
     define('LANG_USERS_OPT_STATUSES_ENABLED',   'Enable profile status');
+    define('LANG_USERS_OPT_KARMA_ENABLED',   'Enable a reputation assessment');
     define('LANG_USERS_OPT_KARMA_COMMENTS', 'Explain reputation vote');
     define('LANG_USERS_OPT_KARMA_TIME',     'Reputation voting period, days');
     define('LANG_USERS_OPT_KARMA_TIME_HINT','A user will be able to vote for another user\'s reputation only once in a specified period');

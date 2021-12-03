@@ -4,20 +4,10 @@
         $this->addBreadcrumb(LANG_USERS, href_to('users'));
     }
     $this->addBreadcrumb($profile['nickname'], href_to_profile($profile));
-    $this->addBreadcrumb($list_header, href_to_profile($profile, array('content', $ctype['name'])));
+    $this->addBreadcrumb($list_header, href_to_profile($profile, ['content', $ctype['name']]));
 
     if ($folders && $folder_id && isset($folders[$folder_id])){
-
         $this->addBreadcrumb($folders[$folder_id]['title']);
-
-        $this->setPageTitle($list_header, implode(', ', $filter_titles), $folders[$folder_id]['title'], $profile['nickname']);
-        $this->setPageDescription($profile['nickname'].' — '.$list_header.' '.$folders[$folder_id]['title']);
-
-    } else {
-
-        $this->setPageTitle($list_header, implode(', ', $filter_titles), $profile['nickname']);
-        $this->setPageDescription($profile['nickname'].' — '.$list_header);
-
     }
 
     if (cmsUser::isAllowed($ctype['name'], 'add')) {

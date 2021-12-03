@@ -68,6 +68,8 @@ function install_package(){
         }
     }
 
+    save_controller_options(['users']);
+
     return true;
 }
 

@@ -17,13 +17,13 @@
         ]); ?>
         <?php $this->head(); ?>
     </head>
-    <body class="icms-forms__embed_layout <?php echo $device_type; ?>_device_type embed-form" onload="top.postMessage($('html').height(), '*');">
+    <body class="icms-forms__embed_layout <?php echo $device_type; ?>_device_type embed-form" onload="top.postMessage(JSON.stringify({id: 'embed-form-<?php echo $form_data['hash']; ?>', height: $('html').height()}), '*');">
         <?php $this->body(); ?>
         <?php $this->bottom(); ?>
         <script>
             $(function(){
                 icms.events.on('icms_forms_submitajax', function (result){
-                    top.postMessage($('html').height(), '*');
+                    top.postMessage(JSON.stringify({id: 'embed-form-<?php echo $form_data['hash']; ?>', height: $('html').height()}), '*');
                 });
             });
         </script>

@@ -19,13 +19,13 @@
         ]); ?>
         <?php $this->printCssTags(); ?>
     </head>
-    <body class="h-100 w-100 overflow-hidden <?php echo $device_type; ?>_device_type embed-form" onload="top.postMessage($('html').height(), '*');">
+    <body class="h-100 w-100 overflow-hidden <?php echo $device_type; ?>_device_type embed-form" onload="top.postMessage(JSON.stringify({id: 'embed-form-<?php echo $form_data['hash']; ?>', height: $('html').height()}), '*');">
         <?php $this->body(); ?>
         <?php $this->printJavascriptTags(); ?>
         <?php $this->bottom(); ?>
         <script>
             icms.events.on('icms_forms_submitajax', function (result){
-                top.postMessage($('html').height(), '*');
+                top.postMessage(JSON.stringify({id: 'embed-form-<?php echo $form_data['hash']; ?>', height: $('html').height()}), '*');
             });
         </script>
     </body>

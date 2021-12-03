@@ -4,6 +4,12 @@ class onUsersUserTabInfo extends cmsAction {
 
     public function run($profile, $tab_name) {
 
+        if ($tab_name == 'karma') {
+            if (!$this->options['is_karma']) {
+                return false;
+            }
+        }
+
         if ($tab_name == 'friends') {
 
             if (empty($this->options['is_friends_on'])) {

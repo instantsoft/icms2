@@ -149,8 +149,21 @@ class actionUsersProfileContent extends cmsAction {
 
         $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
 
+        $filter_titles = $this->controller_content->getFilterTitles();
+
+        if ($folders && $original_folder_id && isset($folders[$original_folder_id])){
+
+            $this->cms_template->setPageTitle($list_header, implode(', ', $filter_titles), $folders[$original_folder_id]['title'], $profile['nickname']);
+            $this->cms_template->setPageDescription($profile['nickname'].' — '.$list_header.' '.$folders[$original_folder_id]['title']);
+
+        } else {
+
+            $this->cms_template->setPageTitle($list_header, implode(', ', $filter_titles), $profile['nickname']);
+            $this->cms_template->setPageDescription($profile['nickname'].' — '.$list_header);
+        }
+
         return $this->cms_template->render('profile_content', [
-            'filter_titles'   => $this->controller_content->getFilterTitles(),
+            'filter_titles'   => $filter_titles,
             'fields'          => $fields,
             'user'            => $this->cms_user,
             'toolbar_html'    => $toolbar_html,

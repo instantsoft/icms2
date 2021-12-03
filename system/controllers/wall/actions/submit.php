@@ -7,7 +7,7 @@ class actionWallSubmit extends cmsAction {
     public function run() {
 
         if (!$this->request->isAjax()) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $action = $this->request->get('action', '');
@@ -136,12 +136,13 @@ class actionWallSubmit extends cmsAction {
             if ($entry_id) {
 
                 // Получаем и рендерим добавленную запись
-                $entry = $this->model->getEntry($entry_id);
+                $entries = $this->model->filterEqual('id', $entry_id)->
+                        getEntries($this->cms_user, $this->getWallEntryActions($permissions));
 
-                $entry['content_html'] = cmsEventsManager::hook('parse_text', $entry['content_html']);
+                $entries = cmsEventsManager::hook('wall_before_list', $entries);
 
                 $entry_html = $this->cms_template->renderInternal($this, 'entry', [
-                    'entries'     => array($entry),
+                    'entries'     => $entries,
                     'user'        => $this->cms_user,
                     'permissions' => $permissions
                 ]);
@@ -150,26 +151,27 @@ class actionWallSubmit extends cmsAction {
                 $controller->runHook('wall_after_add', [
                     'profile_type' => $profile_type,
                     'profile_id'   => $profile_id,
-                    'entry'        => $entry,
+                    'entry'        => reset($entries),
                     'wall_model'   => $this->model
                 ]);
             }
         }
 
         // Формируем и возвращаем результат
-        $result = [
+        return $this->cms_template->renderJSON([
             'error'     => $entry_id ? false : true,
             'message'   => $entry_id ? LANG_WALL_ENTRY_SUCCESS : LANG_WALL_ENTRY_ERROR,
             'id'        => $entry_id,
             'parent_id' => isset($entry['parent_id']) ? $entry['parent_id'] : 0,
             'html'      => isset($entry_html) ? $entry_html : false
-        ];
-
-        return $this->cms_template->renderJSON($result);
+        ]);
     }
 
     private function error($message = LANG_WALL_ENTRY_ERROR) {
-        return $this->cms_template->renderJSON(array('error' => true, 'message' => $message));
+        return $this->cms_template->renderJSON([
+            'error'   => true,
+            'message' => $message
+        ]);
     }
 
 }

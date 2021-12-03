@@ -14,12 +14,15 @@ class actionFormsEmbed extends cmsAction {
             return cmsCore::error404();
         }
 
+        list($form, $form_data) = $_form_data;
+
         // Здесь виджеты не нужны
         $this->cms_template->widgets_rendered = true;
 
         $this->cms_template->setLayout('controllers/forms/embed_layout');
-
-        list($form, $form_data) = $_form_data;
+        $this->cms_template->setLayoutParams([
+            'form_data' => $form_data
+        ]);
 
         $submited_data = $this->getSavedUserFormData($form_data['id']);
 

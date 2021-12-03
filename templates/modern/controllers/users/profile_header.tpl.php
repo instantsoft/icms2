@@ -67,32 +67,34 @@
     </div>
 
     <?php if (!$profile['is_deleted']){ ?>
-        <div id="user_profile_rates" class="rates bg-<?php if($profile['karma'] > 0) { ?>success<?php } else { ?>secondary<?php } ?> text-white rounded px-1 px-lg-2 py-1 py-lg-1"
-             data-url="<?php echo $this->href_to('karma_vote', $profile['id']); ?>"
-             data-log-url="<?php echo $this->href_to('karma_log', $profile['id']); ?>"
-             data-is-comment="<?php echo $this->controller->options['is_karma_comments']; ?>">
-            <div class="d-flex justify-content-center align-items-center">
-                <?php if ($profile['is_can_vote_karma']){ ?>
-                    <a href="#vote-up" onclick="return icms.users.karmaUp()" class="thumb thumb_up text-primary" title="<?php echo LANG_KARMA_UP; ?>" data-toggle="tooltip" data-placement="top">
-                        <?php html_svg_icon('solid', 'thumbs-up'); ?>
-                    </a>
-                <?php } ?>
-                <b class="value mx-2">
-                    <?php echo html_signed_num($profile['karma']); ?>
-                </b>
-                <?php if ($profile['is_can_vote_karma']){ ?>
-                    <a href="#vote-down" onclick="return icms.users.karmaDown()" class="thumb thumb_down text-danger" title="<?php echo LANG_KARMA_DOWN; ?>" data-toggle="tooltip" data-placement="top">
-                        <?php html_svg_icon('solid', 'thumbs-down'); ?>
-                    </a>
+        <?php if ($this->controller->options['is_karma']) { ?>
+            <div id="user_profile_rates" class="rates bg-<?php if($profile['karma'] > 0) { ?>success<?php } else { ?>secondary<?php } ?> text-white rounded px-1 px-lg-2 py-1 py-lg-1"
+                 data-url="<?php echo $this->href_to('karma_vote', $profile['id']); ?>"
+                 data-log-url="<?php echo $this->href_to('karma_log', $profile['id']); ?>"
+                 data-is-comment="<?php echo $this->controller->options['is_karma_comments']; ?>">
+                <div class="d-flex justify-content-center align-items-center">
+                    <?php if ($profile['is_can_vote_karma']){ ?>
+                        <a href="#vote-up" onclick="return icms.users.karmaUp()" class="thumb thumb_up text-primary" title="<?php echo LANG_KARMA_UP; ?>" data-toggle="tooltip" data-placement="top">
+                            <?php html_svg_icon('solid', 'thumbs-up'); ?>
+                        </a>
+                    <?php } ?>
+                    <b class="value mx-2">
+                        <?php echo html_signed_num($profile['karma']); ?>
+                    </b>
+                    <?php if ($profile['is_can_vote_karma']){ ?>
+                        <a href="#vote-down" onclick="return icms.users.karmaDown()" class="thumb thumb_down text-danger" title="<?php echo LANG_KARMA_DOWN; ?>" data-toggle="tooltip" data-placement="top">
+                            <?php html_svg_icon('solid', 'thumbs-down'); ?>
+                        </a>
+                    <?php } ?>
+                </div>
+                <small class="user_ratings_hint d-block text-center"><?php echo LANG_KARMA; ?></small>
+                <?php if ($this->controller->options['is_karma_comments']) { ?>
+                    <?php ob_start(); ?>
+                        <script><?php echo $this->getLangJS('LANG_USERS_KARMA_COMMENT'); ?></script>
+                    <?php $this->addBottom(ob_get_clean()); ?>
                 <?php } ?>
             </div>
-            <small class="user_ratings_hint d-block text-center"><?php echo LANG_KARMA; ?></small>
-            <?php if ($this->controller->options['is_karma_comments']) { ?>
-                <?php ob_start(); ?>
-                    <script><?php echo $this->getLangJS('LANG_USERS_KARMA_COMMENT'); ?></script>
-                <?php $this->addBottom(ob_get_clean()); ?>
-            <?php } ?>
-        </div>
+        <?php } ?>
         <?php if (cmsController::enabled('rating')) { ?>
             <div id="user_profile_ratings" class="bg-primary rounded px-1 px-lg-2 py-1 py-lg-1 text-white ml-2">
                 <div class="d-flex justify-content-center align-items-center">

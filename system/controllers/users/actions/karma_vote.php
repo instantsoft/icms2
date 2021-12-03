@@ -12,6 +12,10 @@ class actionUsersKarmaVote extends cmsAction {
             return cmsCore::error404();
         }
 
+        if (!$this->options['is_karma']) {
+            return cmsCore::error404();
+        }
+
         $direction = $this->request->get('direction', '');
         $comment   = $this->request->get('comment', '');
 

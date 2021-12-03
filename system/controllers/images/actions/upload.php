@@ -43,7 +43,7 @@ class actionImagesUpload extends cmsAction {
         // Переданные пресеты
 		$sizes = $this->request->get('sizes', '');
         // Желаемое имя файла
-		$file_name = $this->request->get('file_name', '');
+		$file_name = str_replace('.', '', $this->request->get('file_name', ''));
 
 		if (!empty($sizes) && preg_match('/([a-z0-9_,]+)$/i', $sizes)){
 			$sizes = explode(',', $sizes);

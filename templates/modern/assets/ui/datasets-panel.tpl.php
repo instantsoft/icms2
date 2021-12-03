@@ -7,7 +7,7 @@
         <?php $ds_counter = 0; ?>
         <?php foreach($datasets as $set){ ?>
             <?php $ds_selected = ($dataset_name == $set['name'] || (!$dataset_name && $ds_counter==0)); ?>
-            <li class="nav-item<?php if ($ds_selected){ ?> is-active<?php } ?> <?php echo $set['name'].(!empty($set['target_controller']) ? '_'.$set['target_controller'] : ''); ?>">
+            <li class="nav-item<?php if ($ds_selected){ ?> is-active<?php } ?> nav-item__<?php echo $set['name'].(!empty($set['target_controller']) ? '_'.$set['target_controller'] : ''); ?>">
 
                 <?php $ds_url = sprintf($base_ds_url, ($ds_counter > 0 ? $ds_prefix.$set['name'] : '')); ?>
 

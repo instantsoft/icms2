@@ -49,6 +49,7 @@
     define('LANG_USERS_EMAIL_VERIFY', 'На адрес <b>%s</b> отправлено письмо. Перейдите по ссылке из письма чтобы активировать смену почты');
     define('LANG_USERS_OPT_WALL_ENABLED',   'Включить стену профиля');
     define('LANG_USERS_OPT_STATUSES_ENABLED',   'Включить статус профиля');
+    define('LANG_USERS_OPT_KARMA_ENABLED',   'Включить оценку репутации');
     define('LANG_USERS_OPT_KARMA_COMMENTS', 'Спрашивать пояснение при оценке репутации');
     define('LANG_USERS_OPT_KARMA_TIME',     'Период голосования за репутацию, дней');
     define('LANG_USERS_OPT_KARMA_TIME_HINT','Пользователь сможет оценивать репутацию другого пользователя только один раз в указанный период');

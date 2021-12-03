@@ -100,13 +100,20 @@ class formUsersOptions extends cmsForm {
                         'visible_depend' => array('is_friends_on' => array('show' => array('1')))
                     )),
 
+                    new fieldCheckbox('is_karma', array(
+                        'title' => LANG_USERS_OPT_KARMA_ENABLED,
+                        'default' => true
+                    )),
+
                     new fieldCheckbox('is_karma_comments', array(
                         'title' => LANG_USERS_OPT_KARMA_COMMENTS,
+                        'visible_depend' => array('is_karma' => array('show' => array('1')))
                     )),
 
                     new fieldNumber('karma_time', array(
                         'title' => LANG_USERS_OPT_KARMA_TIME,
                         'hint' => LANG_USERS_OPT_KARMA_TIME_HINT,
+                        'visible_depend' => array('is_karma' => array('show' => array('1'))),
                         'default' => 30
                     ))
 

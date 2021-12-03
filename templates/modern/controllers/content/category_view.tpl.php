@@ -82,14 +82,14 @@ if (!$is_frontpage){
 <?php $this->addToBlock('before_body', ob_get_clean(), true); ?>
 
 <?php if ($datasets && !$is_hide_items){
-    $this->renderAsset('ui/datasets-panel', array(
+    $this->renderAsset('ui/datasets-panel', [
         'datasets'        => $datasets,
         'dataset_name'    => $dataset,
         'current_dataset' => $current_dataset,
-        'wrap_class'      => $show_h1 ? null : 'mb-3 mb-md-4',
+        'wrap_class'      => ($show_h1 ? 'my-3 my-md-4' : 'mb-3 mb-md-4').' content_datasets_'.$ctype['name'],
         'ds_prefix'       => '-',
         'base_ds_url'     => rel_to_href($base_ds_url)
-    ));
+    ]);
 } ?>
 
 <?php if (!empty($category['description'])){?>
