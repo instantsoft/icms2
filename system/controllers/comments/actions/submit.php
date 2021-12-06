@@ -311,10 +311,10 @@ class actionCommentsSubmit extends cmsAction {
         $comments = $this->model->filterEqual('id', $comment_id)->
                 getComments($this->getCommentActions());
 
-        $comments = cmsEventsManager::hook('comments_before_list', $comments);
-
         // Добавленный комментарий
         $comment = reset($comments);
+
+        $comment['content_html'] = cmsEventsManager::hook('parse_text', $comment['content_html']);
 
         // Уведомление модерации
         if (!$comment['is_approved']) {
@@ -367,7 +367,7 @@ class actionCommentsSubmit extends cmsAction {
             'parent_id' => isset($comment['parent_id']) ? $comment['parent_id'] : 0,
             'level'     => isset($comment['level']) ? $comment['level'] : 0,
             'html'      => $this->cms_template->render($template_name, [
-                'comments'       => $comments,
+                'comments'       => [$comment],
                 'target_user_id' => $this->target_user_id,
                 'user'           => $this->cms_user,
                 'is_levels'      => true,

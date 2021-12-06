@@ -1,0 +1,53 @@
+<?php
+
+class formWidgetContentAuthorOptions extends cmsForm {
+
+    public function init($options = false) {
+
+        return [
+            [
+                'type' => 'fieldset',
+                'title' => LANG_OPTIONS,
+                'childs' => [
+                    new fieldList('options:show_fields', [
+                        'title' => LANG_WD_CON_AUTHOR_SHOW_FIELDS,
+                        'is_chosen_multiple' => true,
+                        'generator' => function($item) {
+
+                            $model = cmsCore::getModel('content');
+                            $model->setTablePrefix('');
+                            $model->orderBy('ordering');
+                            $fields = $model->getContentFields('{users}');
+
+                            $items = [];
+
+                            if ($fields) {
+                                foreach ($fields as $field) {
+                                    $items[$field['name']] = $field['title'];
+                                }
+                            }
+
+                            return $items;
+                        },
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldCheckbox('options:show_user_items_link', [
+                        'title' => LANG_WD_CON_AUTHOR_SHOW_USER_ITEMS_LINK
+                    ]),
+                    new fieldCheckbox('options:show_user_groups', [
+                        'title' => LANG_WD_CON_AUTHOR_SHOW_USER_GROUPS
+                    ]),
+                    new fieldCheckbox('options:show_date_log', [
+                        'title' => LANG_WD_CON_AUTHOR_SHOW_DATE_LOG
+                    ]),
+                    new fieldCheckbox('options:show_date_reg', [
+                        'title' => LANG_WD_CON_AUTHOR_SHOW_DATE_REG
+                    ])
+                ]
+            ]
+        ];
+    }
+
+}

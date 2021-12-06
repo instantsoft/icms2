@@ -1842,7 +1842,8 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (19, 'auth', 'register', 'Registration form', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (20, NULL, 'template', 'Template Elements', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (21, 'content', 'fields', 'Content Fields', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(22, 'forms', 'form', 'Form', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
+(22, 'forms', 'form', 'Form', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(23, 'content', 'author', 'Author of the entry', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (

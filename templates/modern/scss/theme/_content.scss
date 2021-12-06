@@ -160,29 +160,6 @@
         margin-right: 0;
     }
 }
-.icms-content-header {
-    position: relative;
-    &:before {
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        left: 0;
-        top: 0;
-        display: block;
-        background-color: rgba(0, 0, 0, 0.55);
-    }
-    > .icms-content-header__banner {
-        background-color: $gray-300;
-        color: $white;
-        &.parallax-window {
-            background: transparent;
-        }
-    }
-    h1 {
-        margin: 0;
-    }
-}
 .icms-btn-tag:before {
     content: '#';
     margin-right: $spacer*0.1;
@@ -211,8 +188,62 @@
         }
     }
 }
-.icms-content-fields {
-    &__group_title {
-        margin: $spacer 0;
+.icms-content {
+    &-header {
+        position: relative;
+        &:before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            display: block;
+            background-color: rgba(0, 0, 0, 0.55);
+        }
+        > .icms-content-header__banner {
+            background-color: $gray-300;
+            color: $white;
+            &.parallax-window {
+                background: transparent;
+            }
+        }
+        h1 {
+            margin: 0;
+        }
+        .bi_rating {
+            font-size: 130%;
+            .arrow {
+                .disabled {
+                    color: $gray-500 !important;
+                }
+            }
+        }
+    }
+    &-fields {
+        &__group_title {
+            margin: $spacer 0;
+        }
+    }
+    &__author {
+        &-avatar {
+            display: flex;
+            text-decoration: none;
+            color: $black;
+            &:hover {
+                text-decoration: none;
+                color: $gray-800;
+            }
+            &-nickname {
+                writing-mode: vertical-lr;
+                padding: $spacer*0.5;
+                text-align: center;
+                transform: rotate(180deg);
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                max-height: 240px;
+                overflow: hidden;
+            }
+        }
     }
 }

@@ -15,6 +15,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}images_presets` ADD `gif_to_gif` TINYINT(1) UNSIGNED NULL DEFAULT '1';");
     }
 
+    if(!$core->db->getRowsCount('widgets', "`controller` = 'content' AND `name` = 'author'")){
+        $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`, `files`) VALUES ('content', 'author', 'Автор записи', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL, NULL);");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

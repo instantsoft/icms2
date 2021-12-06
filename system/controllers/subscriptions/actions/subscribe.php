@@ -228,37 +228,40 @@ class actionSubscriptionsSubscribe extends cmsAction {
 
     private function validateParams($params) {
 
-        if(!$params){ return true; }
+        if (!$params) { return true; }
 
         $names = array_keys($params);
 
-        if(count($names) > 3){
+        if (count($names) > 3) {
             return false;
         }
 
         foreach ($names as $name) {
-            if(!in_array($name, array('field_filters', 'filters', 'dataset'))){
+            if (!in_array($name, ['field_filters', 'filters', 'dataset'])) {
                 return false;
             }
         }
 
-        if(!empty($params['filters'])){
+        if (!empty($params['filters'])) {
             foreach ($params['filters'] as $filter) {
-                if(count($filter) != 3){
+                if (isset($filter['callback'])) {
                     return false;
                 }
-                if(empty($filter['field']) || empty($filter['condition']) || !isset($filter['value'])){
+                if (count($filter) != 3) {
                     return false;
                 }
-                if($this->validate_sysname($filter['field']) !== true){
+                if (empty($filter['field']) || empty($filter['condition']) || !isset($filter['value'])) {
                     return false;
                 }
-                if($this->validate_sysname($filter['condition']) !== true){
+                if ($this->validate_sysname($filter['field']) !== true) {
                     return false;
                 }
-                if(is_array($filter['value'])){
+                if ($this->validate_sysname($filter['condition']) !== true) {
+                    return false;
+                }
+                if (is_array($filter['value'])) {
                     foreach ($filter['value'] as $vkey => $vvalue) {
-                        if($this->validate_sysname($vkey) !== true){
+                        if ($this->validate_sysname($vkey) !== true) {
                             return false;
                         }
                     }
@@ -266,24 +269,23 @@ class actionSubscriptionsSubscribe extends cmsAction {
             }
         }
 
-        if(!empty($params['field_filters'])){
+        if (!empty($params['field_filters'])) {
             foreach ($params['field_filters'] as $field => $value) {
-                if($this->validate_sysname($field) !== true){
+                if ($this->validate_sysname($field) !== true) {
                     return false;
                 }
             }
         }
 
-        if(!empty($params['dataset'])){
+        if (!empty($params['dataset'])) {
             foreach ($params['dataset'] as $field => $value) {
-                if($this->validate_sysname($field) !== true){
+                if ($this->validate_sysname($field) !== true) {
                     return false;
                 }
             }
         }
 
         return true;
-
     }
 
 }

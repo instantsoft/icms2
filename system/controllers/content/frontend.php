@@ -40,58 +40,57 @@ class content extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function getMenuAddItems($menu_item_id, $full_string = false){
+    public function getMenuAddItems($menu_item_id, $full_string = false) {
 
-        $result = array('url' => '#', 'items' => false);
+        $result = ['url' => '#', 'items' => false];
 
         $ctypes = $this->model->getContentTypes();
         if (!$ctypes) { return $result; }
 
-        foreach($ctypes as $ctype){
+        foreach ($ctypes as $ctype) {
 
-            if (!cmsUser::isAllowed($ctype['name'], 'add')) { continue; }
-
-            if (!empty($ctype['labels']['create'])){
-
-                $result['items'][] = array(
-                    'id'           => 'content_add' . $ctype['id'],
-                    'parent_id'    => $menu_item_id,
-                    'title'        => $full_string? sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']) : string_ucfirst($ctype['labels']['create']),
-                    'childs_count' => 0,
-                    'url'          => href_to($ctype['name'], 'add')
-                );
-
+            if (!cmsUser::isAllowed($ctype['name'], 'add')) {
+                continue;
             }
 
+            if (!empty($ctype['labels']['create'])) {
+                $result['items'][] = [
+                    'id'           => 'content_add' . $ctype['id'],
+                    'parent_id'    => $menu_item_id,
+                    'title'        => $full_string ? sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']) : string_ucfirst($ctype['labels']['create']),
+                    'childs_count' => 0,
+                    'options'      => ['icon' => 'plus-circle'],
+                    'url'          => href_to($ctype['name'], 'add')
+                ];
+            }
         }
 
         return $result;
-
     }
 
-    public function getMenuPrivateItems($menu_item_id){
+    public function getMenuPrivateItems($menu_item_id) {
 
-        $result = array('url' => '#', 'items' => false);
+        $result = ['url' => '#', 'items' => false];
 
         $ctypes = $this->model->getContentTypes();
         if (!$ctypes) { return false; }
 
-        foreach($ctypes as $ctype){
+        foreach ($ctypes as $ctype) {
 
-            if (!$ctype['options']['list_on']) { continue; }
+            if (!$ctype['options']['list_on']) {
+                continue;
+            }
 
-            $result['items'][] = array(
+            $result['items'][] = [
                 'id'           => 'private_list' . $ctype['id'],
                 'parent_id'    => $menu_item_id,
                 'title'        => sprintf(LANG_CONTENT_PRIVATE_FRIEND_ITEMS, mb_strtolower($ctype['title'])),
                 'childs_count' => 0,
                 'url'          => href_to($ctype['name'], 'from_friends')
-            );
-
+            ];
         }
 
         return $result;
-
     }
 
     public function getMenuCategoriesItems($menu_item_id, $ctype){

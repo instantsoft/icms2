@@ -162,6 +162,9 @@ class actionUsersProfileContent extends cmsAction {
             $this->cms_template->setPageDescription($profile['nickname'].' — '.$list_header);
         }
 
+        cmsModel::cacheResult('current_user_profile', $profile);
+        cmsModel::cacheResult('current_user_fields', $fields);
+
         return $this->cms_template->render('profile_content', [
             'filter_titles'   => $filter_titles,
             'fields'          => $fields,

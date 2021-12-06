@@ -4,7 +4,7 @@ class cmsQueue {
 
     protected static $max_attempts = 4;
     protected static $max_run_jobs = 50;
-    protected static $table = 'jobs';
+    protected static $table        = 'jobs';
 
     /**
      * Добавляет задачу в очередь
@@ -15,13 +15,11 @@ class cmsQueue {
      * @return integer
      */
     public static function pushOn($queue, $data, $priority = 1) {
-
-        return static::pushToDatabase(array(
+        return static::pushToDatabase([
             'payload'  => $data,
             'queue'    => $queue,
             'priority' => $priority
-        ));
-
+        ]);
     }
 
     /**
@@ -33,14 +31,12 @@ class cmsQueue {
      * @return integer
      */
     public static function pushOnLater($date, $queue, $data, $priority = 1) {
-
-        return static::pushToDatabase(array(
+        return static::pushToDatabase([
             'payload'      => $data,
             'queue'        => $queue,
             'date_started' => date('Y-m-d H:i:s', (is_numeric($date) ? (time() + $date) : strtotime($date))),
             'priority'     => $priority
-        ));
-
+        ]);
     }
 
     public static function getMaxAttempts() {
@@ -62,106 +58,114 @@ class cmsQueue {
         $data['payload'] = json_encode($data['payload']);
 
         return $model->insert(static::$table, $data);
-
     }
 
     public static function runJobs($queue = null) {
 
         $model = new cmsModel();
 
-        $model->orderByList(array(
-            array('by' => 'date_started', 'to' => 'asc'),
-            array('by' => 'priority', 'to' => 'desc'),
-            array('by' => 'date_created', 'to' => 'asc')
-        ));
+        $model->orderByList([
+            ['by' => 'date_started', 'to' => 'asc'],
+            ['by' => 'priority', 'to' => 'desc'],
+            ['by' => 'date_created', 'to' => 'asc']
+        ]);
 
         $model->limit(static::$max_run_jobs);
 
-        if($queue){
+        if ($queue) {
             $model->filterEqual('queue', $queue);
         }
 
-        $jobs = $model->
-                filterIsNull('is_locked')->
-                filterLtEqual('attempts', static::$max_attempts)->
-                filterStart()->
+        $model->startTransaction();
+
+        $json_decode_errors = [];
+
+        $jobs = $model->forUpdate()->filterIsNull('is_locked')->
+                    filterLtEqual('attempts', static::$max_attempts)->
+                    filterStart()->
                     filterIsNull('date_started')->
                     filterOr()->
                     filterLtEqual('date_started', date('Y-m-d H:i:s'))->
-                filterEnd()->get(static::$table, function ($item, $model){
+                    filterEnd()->get(static::$table, function ($item, $model) use(&$json_decode_errors) {
 
-                    $item['payload'] = json_decode($item['payload'], true);
+            $item['payload'] = json_decode($item['payload'], true);
 
-                    if(!isset($item['payload']['params'])){
-                        $item['payload']['params'] = array();
-                    }
+            if($item['payload'] === null){
+                $json_decode_errors[$item['id']] = json_last_error_msg();
+            } else if (!isset($item['payload']['params'])) {
+                $item['payload']['params'] = [];
+            }
 
-                    array_unshift($item['payload']['params'], ($item['attempts'] + 1));
+            array_unshift($item['payload']['params'], ($item['attempts'] + 1));
 
-                    return $item;
+            return $item;
+        });
 
-                });
+        if (!$jobs) {
 
-        if(!$jobs){
+            $model->endTransaction(true);
+
             return false;
         }
 
         // помечаем полученные задания как запущенные
-        $model->filterIn('id', array_keys($jobs))->updateFiltered(static::$table, array(
+        $model->filterIn('id', array_keys($jobs))->updateFiltered(static::$table, [
             'is_locked'    => 1,
             'date_started' => '',
-            'attempts' => function ($db){
+            'attempts'     => function ($db) {
                 return '`attempts` + 1';
             }
-        ), true);
+        ], true);
+
+        // Если ошибки JSON
+        foreach ($json_decode_errors as $id => $json_last_error_msg) {
+            static::setJobError($jobs[$id], $json_last_error_msg);
+        }
+
+        $model->endTransaction(true);
 
         foreach ($jobs as $job) {
 
             $result = static::runJob($job);
 
             // если задание выполнено успешно, удаляем его
-            if($result === true){
+            if ($result === true) {
                 static::deleteJob($job);
             } else
             // в случае если передали false, то нам нужен повторный запуск
-            if($result === false) {
+            if ($result === false) {
                 static::unlockJob($job);
             }
             // иначе пишем ошибку, неразблокируя задачу
             else {
                 static::setJobError($job, $result);
             }
-
         }
 
         return true;
-
     }
 
     public static function runJob($job) {
 
-        $controller = cmsCore::getControllerInstance($job['payload']['controller']);
+        $controller = cmsCore::getController($job['payload']['controller']);
 
         try {
 
             $result = true;
 
-            if(isset($job['payload']['hook'])){
+            if (isset($job['payload']['hook'])) {
                 $result = $controller->runHook($job['payload']['hook'], $job['payload']['params']);
             }
 
-            if(isset($job['payload']['action'])){
+            if (isset($job['payload']['action'])) {
                 $result = $controller->runAction($job['payload']['action'], $job['payload']['params']);
             }
-
         } catch (Exception $e) {
 
             $result = $e->getMessage();
-
         }
 
         return $result;
-
     }
 
     public static function deleteJob($job) {
@@ -169,31 +173,27 @@ class cmsQueue {
         $model = new cmsModel();
 
         return $model->delete(static::$table, $job['id']);
-
     }
 
     public static function setJobError($job, $error_text) {
 
         $model = new cmsModel();
 
-        return $model->update(static::$table, $job['id'], array('last_error' => $error_text), true);
-
+        return $model->update(static::$table, $job['id'], ['last_error' => $error_text], true);
     }
 
     public static function unlockJob($job) {
 
         $model = new cmsModel();
 
-        return $model->update(static::$table, $job['id'], array('is_locked' => null), true);
-
+        return $model->update(static::$table, $job['id'], ['is_locked' => null], true);
     }
 
     public static function restartJob($job) {
 
         $model = new cmsModel();
 
-        return $model->update(static::$table, $job['id'], array('is_locked' => null, 'last_error' => null, 'attempts' => 0), true);
-
+        return $model->update(static::$table, $job['id'], ['is_locked' => null, 'last_error' => null, 'attempts' => 0], true);
     }
 
 }

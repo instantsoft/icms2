@@ -786,7 +786,7 @@ icms.pagebar = function(id, initial_page, has_next, is_modal){
             return false;
         }
 
-        $(link).addClass('show_spinner');
+        $(link).addClass('is-busy');
 
         page += 1;
 
@@ -797,7 +797,7 @@ icms.pagebar = function(id, initial_page, has_next, is_modal){
 
             var first_page_url = $(link).data('first-page-url');
 
-            $(link).removeClass('show_spinner');
+            $(link).removeClass('is-busy');
 
             if (!data.html) { return; }
 
