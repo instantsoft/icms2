@@ -26,17 +26,23 @@ class backendForms extends cmsBackend {
         );
     }
 
-    public function getBackendMenu(){
-        return array(
-            array(
+    public function getBackendMenu() {
+        return [
+            [
                 'title' => LANG_FORMS_CP_FORMS,
-                'url' => href_to($this->root_url)
-            ),
-            array(
+                'url'   => href_to($this->root_url),
+                'options' => [
+                    'icon' => 'list'
+                ]
+            ],
+            [
                 'title' => LANG_OPTIONS,
-                'url' => href_to($this->root_url, 'options')
-            )
-        );
+                'url'   => href_to($this->root_url, 'options'),
+                'options' => [
+                    'icon' => 'cog'
+                ]
+            ]
+        ];
     }
 
     public function getFormMenu($do = 'add', $id = null){

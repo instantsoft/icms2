@@ -1,4 +1,4 @@
-toastr.options = {progressBar: true, preventDuplicates: true, timeOut: 3000, newestOnTop: true, closeButton: true, hideDuration: 600};
+toastr.options = {progressBar: true, preventDuplicates: true, timeOut: 12000, newestOnTop: true, closeButton: true, hideDuration: 400};
 var icms = icms || {};
 icms.admin = (function ($) {
 
@@ -15,6 +15,30 @@ icms.admin = (function ($) {
                 scrollTop: 0
             }, 200);
             return false;
+        });
+
+        $('.icms-icon-select').each(function (){
+            $(this).on('click', function (){
+
+                var link = $(this);
+
+                link.addClass('is-busy');
+
+                icms.modal.openAjax($(this).data('href'), {}, function () {
+                    link.removeClass('is-busy');
+
+                    $('.icon-select').one('click', function (){
+
+                        $(link).closest('.field').find('input').val($(this).data('name')).trigger('input');
+
+                        icms.modal.close();
+                        return false;
+                    });
+
+                }, link.text());
+
+                return false;
+            });
         });
 
         $('.need-scrollbar').each(function (){
@@ -128,7 +152,18 @@ icms.admin = (function ($) {
         window.location.href = link.attr('href');
 
         return false;
+    };
 
+    this.copyToBuffer = function (text) {
+
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("Copy");
+        textArea.remove();
+
+        toastr.success('Скопировано в буфер обмена');
     };
 
     this.loadIntroJs = function (){

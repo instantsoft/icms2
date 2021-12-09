@@ -36,14 +36,20 @@ class cmsBackend extends cmsController {
         if (!empty($this->queue['use_queue_action'])) {
             $this->backend_menu[] = [
                 'title' => sprintf(LANG_CP_QUEUE_TITLE, $this->queue['queue_name']),
-                'url'   => href_to($this->root_url, 'queue')
+                'url'   => href_to($this->root_url, 'queue'),
+                'options' => [
+                    'icon' => 'recycle'
+                ]
             ];
         }
 
         if (!empty($this->useDefaultModerationAction)) {
             $this->backend_menu[] = [
                 'title' => LANG_MODERATORS,
-                'url'   => href_to($this->root_url, 'moderators')
+                'url'   => href_to($this->root_url, 'moderators'),
+                'options' => [
+                    'icon' => 'user-shield'
+                ]
             ];
         }
     }

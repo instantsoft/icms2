@@ -1221,3 +1221,34 @@ td > .spinner > div {
     height: 35px;
     margin: 0 10px;
 }
+.nav-link>.counter.badge {
+    color: #fff;
+    background-color: #20a8d8;
+}
+.nav-link {
+    transition: all .15s linear;
+}
+.nav-pills .nav-link {
+    display: flex;
+    align-items: center;
+}
+.nav-pills .nav-link>.icms-svg-icon {
+    font-size: 120%;
+    margin: 0 0.35rem 0 0;
+}
+.app-header .nav-link>.icms-svg-icon {
+    font-size: 140%;
+}
+.desktop_device_type .icms-menu-hovered .dropdown:hover>.dropdown-menu {
+    display: block;
+    animation-name: slideIn;
+    animation-duration: 0.2s;
+    animation-fill-mode: both;
+    margin: 0;
+}
+.nav-tabs .nav-link {
+    border-top: 2px solid transparent;
+}
+.nav-tabs .nav-link.active:focus, .nav-tabs .nav-link.active {
+    border-top-color: #20a8d8;
+}

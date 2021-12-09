@@ -1,3 +1,9 @@
+<?php
+/**
+ * Основной макет шаблона
+ * https://docs.instantcms.ru/dev/templates/layouts
+ */
+?>
 <!DOCTYPE html>
 <html lang="<?php echo cmsCore::getLanguageName(); ?>" class="min-vh-100">
     <head>

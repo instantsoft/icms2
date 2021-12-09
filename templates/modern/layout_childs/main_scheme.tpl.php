@@ -1,3 +1,9 @@
+<?php
+/**
+ * Ряды и колонки к макету шаблона
+ * https://docs.instantcms.ru/dev/templates/layouts
+ */
+?>
 <?php foreach ($rows as $row) { ?>
     <?php if(!$this->hasWidgetsOn($row['positions'])){ ?>
         <?php continue; ?>

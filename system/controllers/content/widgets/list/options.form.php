@@ -177,6 +177,10 @@ class formWidgetContentListOptions extends cmsForm {
                         'title' => LANG_CP_WO_AUTO_GROUP,
                         'hint'  => LANG_CP_WO_AUTO_GROUP_HINT
                     )),
+                    new fieldCheckbox('options:auto_user', array(
+                        'title' => LANG_WD_CONTENT_AUTO_USER,
+                        'hint'  => LANG_WD_CONTENT_AUTO_USER_HINT
+                    )),
                     new fieldNumber('options:limit', array(
                         'title'   => LANG_LIST_LIMIT,
                         'default' => 10,

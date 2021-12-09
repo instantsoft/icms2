@@ -375,6 +375,7 @@
     define('LANG_CP_MENU_ITEM_ACTION_URL_HINT', 'Для внутренних ссылок начальный слэш не указывается<br/>Внешние ссылки должны начинаться с http://<br/>Можно указывать <a href="https://docs.instantcms.ru/manual/menu/special" target="_blank">специальные ссылки</a>');
     define('LANG_CP_MENU_ITEM_HIDE_TITLE',      'Показывать только иконку, без заголовка');
     define('LANG_CP_MENU_ITEM_ICON',            'Имя иконки');
+    define('LANG_CP_ICON_SELECT',               'Выбрать иконку');
     define('LANG_CP_MENU_ITEM_ACTION_TARGET',   'Открывать ссылку');
     define('LANG_CP_MENU_ITEM_TARGET_SELF',     'В текущем окне');
     define('LANG_CP_MENU_ITEM_TARGET_BLANK',    'В новом окне');
@@ -882,3 +883,5 @@
     define('LANG_CP_FIELD_READING',       'Чтение');
     define('LANG_CP_FIELD_EDITING',       'Изменение');
     define('LANG_WD_CONTENT_FILTER_DETECT', 'Определять автоматически');
+    define('LANG_CP_TEMPLATE_NO_ICONS_SELECT', 'Шаблон не поддерживает выбор иконок.');
+    define('LANG_CP_TEMPLATE_ICONS', 'Список иконок шаблона');

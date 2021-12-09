@@ -188,6 +188,7 @@
     define('LANG_PARSER_IMAGE_SPELL',        'image|image|images');
     define('LANG_PARSER_IMAGE_DELETE',       'Delete the image from the server?');
     define('LANG_PARSER_IMAGES',             'Multiple images');
+    define('LANG_PARSER_IMAGE_DEFAULT',      'Default image');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Allow import from link');
     define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Emphasize first image in entry');
     define('LANG_PARSER_IMAGE_MAX_COUNT',    'The maximum images count');

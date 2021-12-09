@@ -3120,3 +3120,9 @@ input[type=radio]:checked ~ label{
 .scrollbar-macosx > .scroll-element.scroll-y .scroll-element_size { top: -4px; }
 .scrollbar-macosx > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_size { left: -11px; }
 .scrollbar-macosx > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_size { top: -11px; }
+#f_options_icon .input-prefix-suffix .suffix {
+    display: none;
+}
+#f_options_icon .input-prefix-suffix .input {
+    width: 100% !important;
+}

@@ -16,32 +16,29 @@ class admin extends cmsFrontend {
 
 	public function routeAction($action_name) {
 
-        if($this->request->isStandard()){
+        if ($this->request->isStandard()) {
 
-            $result = cmsEventsManager::hook('admin_confirm_login', array(
+            $result = cmsEventsManager::hook('admin_confirm_login', [
                 'allow'     => true,
                 'form'      => null,
                 'errors'    => null,
                 'pagetitle' => null,
                 'title'     => null,
                 'hint'      => null
-            ));
+            ]);
 
-            if (!$result['allow']){
+            if (!$result['allow']) {
 
                 unset($result['allow']);
 
                 $this->current_params = $result;
 
                 return 'confirm_login';
-
             }
-
         }
 
-		return $action_name;
-
-	}
+        return $action_name;
+    }
 
     protected function validateParamsCount($class, $method_name, $params) {
         // проверка на кол-во параметров в контроллере admin отключена
@@ -52,48 +49,50 @@ class admin extends cmsFrontend {
 
         parent::before($action_name);
 
-        if(!$this->request->isInternal()){
+        if (!$this->request->isInternal()) {
 
             cmsModel::globalLocalizedOff();
 
-            if (!$this->cms_user->is_logged) { cmsCore::errorForbidden('', true); }
+            if (!$this->cms_user->is_logged) {
+                cmsCore::errorForbidden('', true);
+            }
 
-            if (!$this->cms_user->is_admin) { cmsCore::error404(); }
+            if (!$this->cms_user->is_admin) {
+                cmsCore::error404();
+            }
 
-            if(!$this->isAllowByIp()){ cmsCore::errorForbidden(LANG_ADMIN_ACCESS_DENIED_BY_IP); }
+            if (!$this->isAllowByIp()) {
+                cmsCore::errorForbidden(LANG_ADMIN_ACCESS_DENIED_BY_IP);
+            }
 
             $this->install_folder_exists = file_exists($this->cms_config->root_path . 'install/');
 
-            if($this->request->isStandard()){
+            if ($this->request->isStandard()) {
 
                 $this->cms_template->setLayout('admin');
 
                 $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu($this->cms_template->name === 'admincoreui'));
 
-                $this->cms_template->setLayoutParams(array(
-                    'user' => $this->cms_user,
-                    'current_lang' => cmsCore::getLanguageName(),
-                    'langs' => cmsCore::getLanguages(),
-                    'hide_sidebar' => cmsUser::getCookie('hide_sidebar', 'integer'),
+                $this->cms_template->setLayoutParams([
+                    'user'          => $this->cms_user,
+                    'current_lang'  => cmsCore::getLanguageName(),
+                    'langs'         => cmsCore::getLanguages(),
+                    'hide_sidebar'  => cmsUser::getCookie('hide_sidebar', 'integer'),
                     'close_sidebar' => cmsUser::getCookie('close_sidebar', 'integer'),
-                    'su'   => $this->getSystemUtilization(),
-                    'update' => ($this->cms_config->is_check_updates ? $this->cms_updater->checkUpdate(true) : array()),
+                    'su'            => $this->getSystemUtilization(),
+                    'update'        => ($this->cms_config->is_check_updates ? $this->cms_updater->checkUpdate(true) : array()),
                     'notices_count' => cmsCore::getModel('messages')->getNoticesCount($this->cms_user->id)
-                ));
-
+                ]);
             }
-
         }
-
     }
 
     private function isAllowByIp() {
 
         $allow_ips = cmsConfig::get('allow_ips');
-        if(!$allow_ips){ return true; }
+        if (!$allow_ips) { return true; }
 
         return string_in_mask_list(cmsUser::getIp(), $allow_ips);
-
     }
 
     function getSystemUtilization() {
@@ -173,22 +172,22 @@ class admin extends cmsFrontend {
 
     public function buildDatasetFieldsList($controller_name, $fields) {
 
-        $fields_list = array();
+        $fields_list = [];
 
-        foreach($fields as $field){
+        foreach ($fields as $field) {
 
-            if((!$field['handler']->allow_index || $field['handler']->filter_type === false) && $field['type'] != 'parent'){ continue; }
+            if ((!$field['handler']->allow_index || $field['handler']->filter_type === false) && $field['type'] !== 'parent') {
+                continue;
+            }
 
-            $fields_list[] = array(
+            $fields_list[] = [
                 'value' => $field['name'],
                 'type'  => $field['handler']->filter_type,
                 'title' => $field['title']
-            );
-
+            ];
         }
 
-        return cmsEventsManager::hook('admin_'.$controller_name.'_dataset_fields_list', $fields_list);
-
+        return cmsEventsManager::hook('admin_' . $controller_name . '_dataset_fields_list', $fields_list);
     }
 
     public function getAdminMenu($show_submenu = false){
@@ -207,73 +206,73 @@ class admin extends cmsFrontend {
             'title' => LANG_CP_SECTION_CONTENT,
             'url' => href_to($this->name, 'content'),
             'counter' => ($ctypes && $show_submenu && $ctype_new_count) ? '+'.$ctype_new_count : null,
-            'options' => array(
+            'options' => [
                 'class' => 'item-content',
-                'icon'  => 'nav-icon icon-docs'
-            )
+                'icon'  => 'file-alt'
+            ]
         ];
 
         $menu[] = [
             'title' => LANG_CP_SECTION_CTYPES,
             'url' => href_to($this->name, 'ctypes'),
-            'options' => array(
+            'options' => [
                 'class' => 'item-ctypes',
-                'icon'  => 'nav-icon icon-equalizer'
-            )
+                'icon'  => 'sliders-h'
+            ]
         ];
 
         $menu[] = [
             'title' => LANG_CP_SECTION_MENU,
             'url' => href_to($this->name, 'menu'),
-            'options' => array(
+            'options' => [
                 'class' => 'item-menu',
-                'icon'  => 'nav-icon icon-menu'
-            )
+                'icon'  => 'bars'
+            ]
         ];
 
         $menu[] = [
             'title' => LANG_CP_SECTION_WIDGETS,
             'url' => href_to($this->name, 'widgets'),
-            'options' => array(
+            'options' => [
                 'class' => 'item-widgets',
-                'icon'  => 'nav-icon icon-grid'
-            )
+                'icon'  => 'th-large'
+            ]
         ];
 
         $menu[] = [
             'title' => LANG_CP_SECTION_CONTROLLERS,
             'url' => href_to($this->name, 'controllers'),
-            'options' => array(
+            'options' => [
                 'class' => 'item-controllers',
-                'icon'  => 'nav-icon icon-layers'
-            )
+                'icon'  => 'layer-group'
+            ]
         ];
 
         $menu[] = [
             'title' => LANG_CP_OFICIAL_ADDONS,
             'url' => href_to($this->name, 'addons_list'),
-            'options' => array(
+            'options' => [
                 'class' => 'item-addons',
-                'icon'  => 'nav-icon icon-puzzle'
-            )
+                'icon'  => 'puzzle-piece'
+            ]
         ];
 
         $menu[] = [
             'title' => LANG_CP_SECTION_USERS,
             'url' => href_to($this->name, 'users'),
-            'options' => array(
+            'options' => [
                 'class' => 'item-users',
-                'icon'  => 'nav-icon icon-people'
-            )
+                'icon'  => 'users-cog'
+            ]
         ];
 
         $menu[] = [
             'title' => LANG_CP_SECTION_SETTINGS,
             'url' => href_to($this->name, 'settings'),
-            'options' => array(
+            'options' => [
                 'class' => 'item-settings',
-                'icon'  => 'nav-icon icon-settings'
-            )
+                'icon'  => 'cog'
+            ]
         ];
 
         return cmsEventsManager::hook('adminpanel_menu', $menu);
@@ -282,87 +281,82 @@ class admin extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function getCtypeMenu($do='add', $id=null){
+    public function getCtypeMenu($do = 'add', $id = null) {
 
-        $ctype_menu = array(
-
-            array(
+        $ctype_menu = [
+            [
                 'title' => LANG_CP_CTYPE_SETTINGS,
-                'url' => href_to($this->name, 'ctypes', ($do == 'add' ? array('add') : array('edit', $id)))
-            ),
-            array(
-                'title' => LANG_CP_CTYPE_LABELS,
-                'url' => href_to($this->name, 'ctypes', array('labels', $id)),
-                'disabled' => ($do == 'add')
-            ),
-            array(
-                'title' => LANG_CP_CTYPE_FIELDS,
-                'url' => href_to($this->name, 'ctypes', array('fields', $id)),
-                'disabled' => ($do == 'add')
-            ),
-            array(
-                'title' => LANG_CP_CTYPE_PROPS,
-                'url' => href_to($this->name, 'ctypes', array('props', $id)),
-                'disabled' => ($do == 'add')
-            ),
-            array(
-                'title' => LANG_CP_CTYPE_PERMISSIONS,
-                'url' => href_to($this->name, 'ctypes', array('perms', $id)),
-                'disabled' => ($do == 'add')
-            ),
-            array(
-                'title' => LANG_CP_CTYPE_DATASETS,
-                'url' => href_to($this->name, 'ctypes', array('datasets', $id)),
-                'disabled' => ($do == 'add')
-            ),
-            array(
-                'title' => LANG_CP_CTYPE_FILTERS,
-                'url' => href_to($this->name, 'ctypes', array('filters', $id)),
-                'disabled' => ($do == 'add')
-            ),
-            array(
-                'title' => LANG_MODERATORS,
-                'url' => href_to($this->name, 'ctypes', array('moderators', $id)),
-                'disabled' => ($do == 'add')
-            ),
-            array(
-                'title' => LANG_CP_CTYPE_RELATIONS,
-                'url' => href_to($this->name, 'ctypes', array('relations', $id)),
-                'disabled' => ($do == 'add')
-            ),
-        );
+                'url'   => href_to($this->name, 'ctypes', ($do == 'add' ? ['add'] : ['edit', $id]))
+            ],
+            [
+                'title'    => LANG_CP_CTYPE_LABELS,
+                'url'      => href_to($this->name, 'ctypes', ['labels', $id]),
+                'disabled' => ($do === 'add')
+            ],
+            [
+                'title'    => LANG_CP_CTYPE_FIELDS,
+                'url'      => href_to($this->name, 'ctypes', ['fields', $id]),
+                'disabled' => ($do === 'add')
+            ],
+            [
+                'title'    => LANG_CP_CTYPE_PROPS,
+                'url'      => href_to($this->name, 'ctypes', ['props', $id]),
+                'disabled' => ($do === 'add')
+            ],
+            [
+                'title'    => LANG_CP_CTYPE_PERMISSIONS,
+                'url'      => href_to($this->name, 'ctypes', ['perms', $id]),
+                'disabled' => ($do === 'add')
+            ],
+            [
+                'title'    => LANG_CP_CTYPE_DATASETS,
+                'url'      => href_to($this->name, 'ctypes', ['datasets', $id]),
+                'disabled' => ($do === 'add')
+            ],
+            [
+                'title'    => LANG_CP_CTYPE_FILTERS,
+                'url'      => href_to($this->name, 'ctypes', ['filters', $id]),
+                'disabled' => ($do === 'add')
+            ],
+            [
+                'title'    => LANG_MODERATORS,
+                'url'      => href_to($this->name, 'ctypes', ['moderators', $id]),
+                'disabled' => ($do === 'add')
+            ],
+            [
+                'title'    => LANG_CP_CTYPE_RELATIONS,
+                'url'      => href_to($this->name, 'ctypes', ['relations', $id]),
+                'disabled' => ($do === 'add')
+            ]
+        ];
 
-        list($ctype_menu, $do, $id) = cmsEventsManager::hook('admin_ctype_menu', array($ctype_menu, $do, $id));
+        list($ctype_menu, $do, $id) = cmsEventsManager::hook('admin_ctype_menu', [$ctype_menu, $do, $id]);
 
-        if($do != 'add'){
+        if ($do !== 'add') {
 
             $ctype = $this->model_backend_content->getContentType($id);
 
-            if($ctype){
+            if ($ctype) {
 
                 // проверяем, есть ли нативный контроллер и есть ли у него опции
-                if(cmsCore::isControllerExists($ctype['name'])){
-                    if(cmsCore::getController($ctype['name'])->options){
-                        $ctype_menu[] = array(
-                            'title' => LANG_CP_CONTROLLERS_OPTIONS,
-                            'url'   => href_to($this->name, 'controllers', array('edit', $ctype['name'], 'options')),
-                            'options' => array(
-                                'icon'  => 'nav-icon icon-settings'
-                            )
-                        );
+                if (cmsCore::isControllerExists($ctype['name'])) {
+                    if (cmsCore::getController($ctype['name'])->options) {
+                        $ctype_menu[] = [
+                            'title'   => LANG_CP_CONTROLLERS_OPTIONS,
+                            'url'     => href_to($this->name, 'controllers', ['edit', $ctype['name'], 'options']),
+                            'options' => [
+                                'icon' => 'cogs'
+                            ]
+                        ];
                     }
                 }
 
-                list($ctype_menu, $ctype) = cmsEventsManager::hook('admin_'.$ctype['name'].'_ctype_menu', array($ctype_menu, $ctype));
-
+                list($ctype_menu, $ctype) = cmsEventsManager::hook('admin_' . $ctype['name'] . '_ctype_menu', [$ctype_menu, $ctype]);
             }
-
         }
 
         return $ctype_menu;
-
     }
-
 
     public function addCtypeWidgetsPages($ctype){
 
@@ -432,35 +426,42 @@ class admin extends cmsFrontend {
         $menu[] = [
             'title'   => LANG_BASIC_OPTIONS,
             'url'     => href_to($this->name, 'settings'),
-            'level'   => 2,
             'options' => [
-                'icon' => 'nav-icon icon-globe'
+                'icon' => 'tools'
             ]
         ];
         $menu[] = [
             'title'   => LANG_CP_SCHEDULER,
             'url'     => href_to($this->name, 'settings', ['scheduler']),
-            'level'   => 2,
             'options' => [
-                'icon' => 'nav-icon icon-clock'
+                'icon' => 'clock'
             ]
         ];
         if($template->hasOptions()){
             $menu[] = [
                 'title'   => LANG_CP_SETTINGS_TEMPLATE_OPTIONS,
                 'url'     => href_to($this->name, 'settings', ['theme', $this->cms_config->template]),
-                'level'   => 2,
+                'childs_count' => 1,
                 'options' => [
-                    'icon' => 'nav-icon icon-settings'
+                    'icon' => 'palette'
                 ]
             ];
+            if(file_exists($template->path . '/icon_list.php')){
+                $menu[] = [
+                    'title'   => LANG_CP_TEMPLATE_ICONS,
+                    'level' => 2,
+                    'url'     => href_to($this->name, 'settings', ['theme', $this->cms_config->template, 'icon_list']),
+                    'options' => [
+                        'icon' => 'icons'
+                    ]
+                ];
+            }
         }
         $menu[] = [
             'title'   => LANG_CP_CHECK_NESTED,
             'url'     => href_to($this->name, 'settings', ['check_nested']),
-            'level'   => 2,
             'options' => [
-                'icon' => 'nav-icon icon-organization'
+                'icon' => 'tree'
             ]
         ];
 
@@ -469,59 +470,57 @@ class admin extends cmsFrontend {
 
     public function getUserGroupsMenu($action = 'view', $id = 0) {
 
-        return cmsEventsManager::hook('admin_user_groups_menu', array(
-            array(
-                'title' => LANG_CONFIG,
-                'url' => $action != 'add' ? href_to($this->name, 'users', array('group_edit', $id)) : href_to($this->name, 'users', 'group_add'),
-                'options' => array(
-                    'icon'  => 'nav-icon icon-globe'
-                )
-            ),
-            array(
-                'title' => LANG_PERMISSIONS,
-                'disabled' => $action == 'add' ? true : null,
-                'url' => href_to($this->name, 'users', array('group_perms', $id)),
-                'options' => array(
-                    'icon'  => 'nav-icon icon-key'
-                )
-            )
-        ));
-
+        return cmsEventsManager::hook('admin_user_groups_menu', [
+            [
+                'title'   => LANG_CONFIG,
+                'url'     => $action !== 'add' ? href_to($this->name, 'users', ['group_edit', $id]) : href_to($this->name, 'users', 'group_add'),
+                'options' => [
+                    'icon' => 'users-cog'
+                ]
+            ],
+            [
+                'title'    => LANG_PERMISSIONS,
+                'disabled' => $action === 'add' ? true : null,
+                'url'      => href_to($this->name, 'users', ['group_perms', $id]),
+                'options'  => [
+                    'icon' => 'key'
+                ]
+            ]
+        ]);
     }
 
     public function getAddonsMenu() {
 
-        return cmsEventsManager::hook('admin_addons_menu', array(
-            array(
-                'title' => LANG_CP_OFICIAL_ADDONS,
-                'url' => href_to($this->name, 'addons_list'),
-                'options' => array(
-                    'icon'  => 'icon-puzzle'
-                )
-            ),
-            array(
-                'title' => LANG_CP_INSTALL_PACKAGE,
-                'url'   => href_to($this->name, 'install'),
-                'options' => array(
-                    'icon'  => 'icon-cloud-upload'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SECTION_CONTROLLERS,
-                'url'   => href_to($this->name, 'controllers'),
-                'options' => array(
-                    'icon'  => 'icon-layers'
-                )
-            ),
-            array(
-                'title' => LANG_EVENTS_MANAGEMENT,
-                'url'   => href_to($this->name, 'controllers', 'events'),
-                'options' => array(
-                    'icon'  => 'icon-bag'
-                )
-            )
-        ));
-
+        return cmsEventsManager::hook('admin_addons_menu', [
+            [
+                'title'   => LANG_CP_OFICIAL_ADDONS,
+                'url'     => href_to($this->name, 'addons_list'),
+                'options' => [
+                    'icon' => 'puzzle-piece'
+                ]
+            ],
+            [
+                'title'   => LANG_CP_INSTALL_PACKAGE,
+                'url'     => href_to($this->name, 'install'),
+                'options' => [
+                    'icon' => 'upload'
+                ]
+            ],
+            [
+                'title'   => LANG_CP_SECTION_CONTROLLERS,
+                'url'     => href_to($this->name, 'controllers'),
+                'options' => [
+                    'icon' => 'layer-group'
+                ]
+            ],
+            [
+                'title'   => LANG_EVENTS_MANAGEMENT,
+                'url'     => href_to($this->name, 'controllers', 'events'),
+                'options' => [
+                    'icon' => 'business-time'
+                ]
+            ]
+        ]);
     }
 
 //============================================================================//

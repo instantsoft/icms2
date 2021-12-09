@@ -353,6 +353,7 @@
     define('LANG_CP_MENU_ITEM_ACTION_URL',      'Open URL');
     define('LANG_CP_MENU_ITEM_ACTION_URL_HINT', 'Internal links should come without a leading slash<br/>External links should start with http://<br/>You can enter <a href="https://docs.instantcms.ru/en/manual/menu/special" target="_blank">Special Links</a>');
     define('LANG_CP_MENU_ITEM_HIDE_TITLE',      'Show icon only, without title');
+    define('LANG_CP_ICON_SELECT',               'Select an icon');
     define('LANG_CP_MENU_ITEM_ICON',            'Icon name');
     define('LANG_CP_MENU_ITEM_ACTION_TARGET',   'Open link in');
     define('LANG_CP_MENU_ITEM_TARGET_SELF',     'Current window');
@@ -839,3 +840,5 @@
     define('LANG_CP_FIELD_READING',       'Reading');
     define('LANG_CP_FIELD_EDITING',       'Editing');
     define('LANG_WD_CONTENT_FILTER_DETECT', 'Autodetect');
+    define('LANG_CP_TEMPLATE_NO_ICONS_SELECT', 'The template does not support icon selection.');
+    define('LANG_CP_TEMPLATE_ICONS', 'List of template icons');

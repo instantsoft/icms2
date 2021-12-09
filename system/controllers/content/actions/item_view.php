@@ -148,7 +148,7 @@ class actionContentItemView extends cmsAction {
 
         // Парсим значения полей
         foreach ($fields as $name => $field) {
-            $fields[$name]['html'] = $field['handler']->setItem($item)->parse($item[$name]);
+            $fields[$name]['html'] = $field['handler']->setItem($item)->parse(isset($item[$name]) ? $item[$name] : null);
             $item_parsed[$name] = $fields[$name]['html'];
         }
         // Для каких необходимо, обрабатываем дополнительно
@@ -372,7 +372,7 @@ class actionContentItemView extends cmsAction {
             // Позиция поля "На позиции в специальном виджете"
             if (!empty($field['options']['is_in_item_pos']) && !in_array('page', $field['options']['is_in_item_pos'])) { return false; }
 
-            if ((empty($item[$field['name']]) || empty($field['html'])) && $item[$field['name']] !== '0') { return false; }
+            if (mb_strlen($field['html']) === 0) { return false; }
 
             // проверяем что группа пользователя имеет доступ к чтению этого поля
             if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="min-vh-100">
 <head>
 	<title><?php $this->title(); ?></title>
     <meta charset="utf-8">
@@ -41,7 +41,7 @@
     <?php $this->head(false); ?>
 </head>
 <?php $messages = cmsUser::getSessionMessages(); ?>
-<body class="icms-cpanel app header-fixed sidebar-fixed <?php if(!$close_sidebar){ ?>sidebar-lg-show<?php } ?> <?php if($hide_sidebar){ ?> brand-minimized sidebar-minimized<?php } ?> <?php echo $device_type; ?>_device_type">
+<body class="icms-cpanel app header-fixed sidebar-fixed <?php if(!$close_sidebar){ ?>sidebar-lg-show<?php } ?> <?php if($hide_sidebar){ ?> brand-minimized sidebar-minimized<?php } ?> <?php echo $device_type; ?>_device_type" data-device="<?php echo $device_type; ?>">
     <header class="app-header navbar shadow-sm" id="cp_header">
         <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show">
             <span class="navbar-toggler-icon"></span>
@@ -94,8 +94,8 @@
                 </li>
             <?php } ?>
             <li class="nav-item d-sm-down-none">
-                <a data-toggle="dropdown" id="notices_counter" class="nav-link d-flex justify-content-center" href="<?php echo href_to('admin', 'messages_notices'); ?>" title="<?php echo LANG_ADMIN_NOTICES; ?>" data-toggle="tooltip" data-placement="left">
-                    <i class="icon-bell font-xl"></i>
+                <a data-toggle="dropdown" id="notices_counter" class="nav-link d-flex justify-content-center text-light" href="<?php echo href_to('admin', 'messages_notices'); ?>" title="<?php echo LANG_ADMIN_NOTICES; ?>" data-toggle="tooltip" data-placement="left">
+                    <?php html_svg_icon('solid', 'bell'); ?>
                     <?php if($notices_count){ ?>
                         <span class="badge badge-pill badge-danger"><?php echo $notices_count; ?></span>
                     <?php } ?>
@@ -109,13 +109,13 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link d-flex justify-content-center" href="<?php echo href_to_home(); ?>" target="_blank" title="<?php echo LANG_CP_BACK_TO_SITE; ?>" data-toggle="tooltip" data-placement="bottom">
-                    <i class="icon-share-alt icons font-xl"></i>
+                <a class="nav-link d-flex justify-content-center text-light" href="<?php echo href_to_home(); ?>" target="_blank" title="<?php echo LANG_CP_BACK_TO_SITE; ?>" data-toggle="tooltip" data-placement="bottom">
+                    <?php html_svg_icon('solid', 'share-square'); ?>
                 </a>
             </li>
             <li class="nav-item d-md-down-none">
-                <a class="nav-link d-flex justify-content-center" href="<?php echo LANG_HELP_URL; ?>" target="_blank" title="<?php echo LANG_HELP; ?>" data-toggle="tooltip" data-placement="bottom">
-                    <i class="icon-question icons font-xl"></i>
+                <a class="nav-link d-flex justify-content-center text-light" href="<?php echo LANG_HELP_URL; ?>" target="_blank" title="<?php echo LANG_HELP; ?>" data-toggle="tooltip" data-placement="bottom">
+                    <?php html_svg_icon('solid', 'question-circle'); ?>
                 </a>
             </li>
             <li class="nav-item dropdown">
@@ -147,10 +147,9 @@
         <div class="sidebar" id="cp_left_sidebar">
             <nav class="sidebar-nav">
                 <?php $this->menu('cp_main', true, '', 0, true); ?>
-                <div class="nav-title">
+                <div class="nav-title mt-3">
                     <a class="ajax-modal text-white" href="<?php echo href_to('admin', 'settings', ['sys_info']); ?>" title="<?php echo LANG_CP_DASHBOARD_SYSINFO; ?>">
-                        <?php echo LANG_CP_SU; ?>
-                        <i class="ml-2 icon-info icons"></i>
+                        <?php echo LANG_CP_SU; ?> <?php html_svg_icon('solid', 'info-circle'); ?>
                     </a>
                 </div>
                 <?php foreach ($su as $sukey => $su_item) { ?>
@@ -174,7 +173,7 @@
             <?php if($this->hasMenu('admin_toolbar')){ ?>
                 <nav class="bg-white mt-n4 border-bottom mb-4" id="admin_toolbar">
                     <div class="container-fluid py-2">
-                        <?php $this->menu('admin_toolbar', true, 'nav-pills'); ?>
+                        <?php $this->menu('admin_toolbar', true, 'nav nav-pills icms-menu-hovered'); ?>
                     </div>
                 </nav>
             <?php } ?>
@@ -217,10 +216,10 @@
         </div>
     </footer>
     <?php if ($config->debug){ ?>
-        <?php $this->renderAsset('ui/debug', array('core' => cmsCore::getInstance(), 'hide_short_info' => true)); ?>
+        <?php $this->renderAsset('ui/debug', ['core' => cmsCore::getInstance(), 'hide_short_info' => true]); ?>
     <?php } ?>
     <script>
-        <?php echo $this->getLangJS('LANG_BACK', 'LANG_NEXT', 'LANG_SKIP', 'LANG_DONE'); ?>
+        <?php echo $this->getLangJS('LANG_BACK', 'LANG_NEXT', 'LANG_SKIP', 'LANG_DONE', 'LANG_LOADING', 'LANG_ALL'); ?>
         $(function(){
         <?php if($this->controller->install_folder_exists){ ?>
             toastr.error('<?php echo LANG_CP_INSTALL_FOLDER_EXISTS; ?>');

@@ -50,6 +50,14 @@ class widgetContentList extends cmsWidget {
             $shown_fields_options = $show_fields_options[$ctype['id']];
         }
 
+        // Сортировка полей, если задана
+        foreach ($fields as $name => $field) {
+            if(!empty($shown_fields_options[$name]['ordering'])){
+                $fields[$name]['ordering'] = $shown_fields_options[$name]['ordering'];
+            }
+        }
+        array_order_by($fields, 'ordering');
+
         // Получаем категорию, если задана
 		if ($cat_id){
 			$category = $model->getCategory($ctype['name'], $cat_id);
@@ -175,6 +183,15 @@ class widgetContentList extends cmsWidget {
 
         }
 
+        // мы на странице записи
+        if($this->getOption('auto_user') && !empty($current_ctype_item['user_id'])){
+
+            $this->disableCache();
+
+            $model->filterEqual('user_id', $current_ctype_item['user_id']);
+            $model->filterNotEqual('id', $current_ctype_item['id']);
+        }
+
         // выключаем формирование рейтинга в хуках
         $ctype['is_rating'] = 0;
 
@@ -233,7 +250,7 @@ class widgetContentList extends cmsWidget {
                         'title'     => $field['title']
                     ];
 
-                    if (!isset($item[$field['name']]) && !$item[$field['name']] && $item[$field['name']] !== '0') {
+                    if (!array_key_exists($field['name'], $item)) {
                         continue;
                     }
 
@@ -246,7 +263,7 @@ class widgetContentList extends cmsWidget {
                     }
 
                     $field_html = $field['handler']->setItem($item)->parseTeaser($item[$field['name']]);
-                    if (!$field_html) { continue; }
+                    if (mb_strlen($field_html) === 0) { continue; }
 
                     $current_field_data['html'] = $field_html;
                     $current_field_data['options'] = $field['options'];
@@ -264,10 +281,10 @@ class widgetContentList extends cmsWidget {
             $ctype['is_comments'] = 0;
         }
 
-        list($ctype, $items) = cmsEventsManager::hook('content_before_list', array($ctype, $items));
-        list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));
+        list($ctype, $items) = cmsEventsManager::hook('content_before_list', [$ctype, $items]);
+        list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", [$ctype, $items]);
 
-        return array(
+        return [
             'fields'            => $fields,
             'ctype'             => $ctype,
             'hide_except_title' => $hide_except_title,
@@ -276,8 +293,7 @@ class widgetContentList extends cmsWidget {
             'teaser_field'      => $teaser_field,
             'is_show_details'   => $is_show_details,
             'items'             => $items
-        );
-
+        ];
     }
 
     private function getItemInfoBar($ctype, $item, $fields, $shown_fields) {

@@ -460,12 +460,12 @@ class content extends cmsFrontend {
 
                     $item['fields_names'][] = $current_field_data;
 
-                    if (!isset($item[$field['name']]) && !$item[$field['name']] && $item[$field['name']] !== '0') {
+                    if (!array_key_exists($field['name'], $item)) {
                         continue;
                     }
 
                     $field_html = $field['handler']->setItem($item)->parseTeaser($item[$field['name']]);
-                    if (!$field_html) { continue; }
+                    if (mb_strlen($field_html) === 0) { continue; }
 
                     $current_field_data['html'] = $field_html;
                     $current_field_data['options'] = $field['options'];

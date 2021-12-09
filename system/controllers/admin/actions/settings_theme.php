@@ -2,7 +2,18 @@
 
 class actionAdminSettingsTheme extends cmsAction {
 
-    public function run($template_name){
+    public function run($template_name, $do = false){
+
+        $tpls = cmsCore::getTemplates();
+        if (!in_array($template_name, $tpls)) {
+            return cmsCore::error404();
+        }
+
+        // если нужно, передаем управление другому экшену
+        if ($do) {
+            $this->runExternalAction('settings_theme_' . $do, [$template_name] + array_slice($this->params, 2));
+            return;
+        }
 
         $template = new cmsTemplate($template_name);
 

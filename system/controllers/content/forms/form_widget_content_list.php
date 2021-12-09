@@ -66,6 +66,12 @@ class formContentWidgetContentList extends cmsForm {
                 'visible_depend' => [$name => array('show' => array('1'))],
                 'default' => ''
             ));
+            $childs[] = new fieldNumber('options:show_fields_options:'.$ctype['id'].':'.$field['name'].':ordering', array(
+                'title'   => LANG_ORDER,
+                'options' => ['save_zero' => false],
+                'visible_depend' => [$name => array('show' => array('1'))],
+                'default' => ''
+            ));
         }
 
         $childs[] = new fieldCheckbox("options:show_fields:{$ctype['id']}:category", array(

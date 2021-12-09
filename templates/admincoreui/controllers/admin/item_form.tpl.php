@@ -7,7 +7,6 @@
 
     if(!empty($show_save_button) || !isset($show_save_button)){
         $this->addToolButton(array(
-            'class' => 'save',
             'icon'  => 'save',
             'title' => $button_save_text,
             'href'  => "javascript:icms.forms.submit()"
@@ -16,7 +15,6 @@
 
     if(!$hide_draft_btn){
         $this->addToolButton(array(
-            'class' => 'save_draft',
             'icon'  => 'bookmark',
             'title' => $button_draft_text,
             'href'  => "javascript:icms.forms.submit('.button.to_draft')"
@@ -25,7 +23,6 @@
 
     if ($cancel_url){
         $this->addToolButton(array(
-            'class' => 'cancel',
             'icon'  => 'window-close',
             'title' => LANG_CANCEL,
             'href'  => $cancel_url
@@ -42,7 +39,7 @@
                 'name' => 'to_draft',
                 'attributes' => array(
                     'type' => 'submit',
-                    'class' => 'to_draft'
+                    'class' => 'to_draft btn-warning'
                 )
             )
         ),

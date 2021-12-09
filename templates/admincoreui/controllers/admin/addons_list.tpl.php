@@ -19,22 +19,22 @@
 
 <?php
 
-	$this->addToolButton(array(
+	$this->addToolButton([
         'class' => 'menu d-xl-none',
 		'data'  => [
             'toggle' =>'quickview',
             'toggle-element' => '#left-quickview'
         ],
 		'title' => LANG_CATEGORIES
-	));
+	]);
 
     foreach ($datasets as $dataset) {
-        $this->addToolButton(array(
+        $this->addToolButton([
             'class' => 'addons_dataset'.($dataset_id == $dataset['id'] ? ' active' : ''),
             'title' => $dataset['title'],
-            'data'  => array('id' => $dataset['id']),
+            'data'  => ['id' => $dataset['id']],
             'href'  => '#'
-        ));
+        ]);
     }
 
 ?>
@@ -136,7 +136,7 @@
         $('#addons_toolbar .addons_dataset a').on('click', function(e){
             current_ds_id = $(this).data('id');
             $('#addons_toolbar a').removeClass('active').addClass('disabled');
-            $(this).addClass('active').closest('li').addClass('is-busy text-primary');
+            $(this).css('transition', 'none').addClass('active').closest('li').addClass('is-busy text-primary');
             current_page = 1;
             loadAddons();
             return false;

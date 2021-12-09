@@ -77,7 +77,8 @@ class formAdminMenuItem extends cmsForm {
                         'title' => LANG_CSS_CLASS,
                     )),
                     new fieldString('options:icon', array(
-                        'title' => LANG_CP_MENU_ITEM_ICON
+                        'title' => LANG_CP_MENU_ITEM_ICON,
+                        'suffix' => '<a href="#" class="icms-icon-select" data-href="'.href_to('admin', 'settings', ['theme', cmsConfig::get('template'), 'icon_list']).'"><span>'.LANG_CP_ICON_SELECT.'</span></a>',
                     )),
                     new fieldCheckbox('options:hide_title', array(
                         'title' => LANG_CP_MENU_ITEM_HIDE_TITLE,

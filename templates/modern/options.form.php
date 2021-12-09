@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Опции шаблона
+ * https://docs.instantcms.ru/dev/templates/options
+ */
 class formModernTemplateOptions extends cmsForm {
 
     public $is_tabbed = true;

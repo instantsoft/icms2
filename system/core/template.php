@@ -460,7 +460,7 @@ class cmsTemplate {
         if (!$this->isToolbar()) {
             return;
         }
-        $this->menu('toolbar', false, 'nav-pills', 0, false, $template_name);
+        $this->menu('toolbar', false, 'nav nav-pills', 0, false, $template_name);
     }
 
     /**
@@ -638,7 +638,7 @@ class cmsTemplate {
 
             if (!isset($item['url']) &&  !empty($item['controller'])) {
                 if (!isset($item['action'])) { $item['action'] = ''; }
-                if (!isset($item['params'])) { $item['params'] = array(); }
+                if (!isset($item['params'])) { $item['params'] = []; }
                 $item['url'] = href_to($item['controller'], $item['action'], $item['params']);
                 $menu[$id]['url'] = $item['url'];
             }
@@ -671,20 +671,15 @@ class cmsTemplate {
                 //полное совпадение ссылки и адреса?
                 if ($current_url === $url){
                     $active_ids[] = $id;
-                    $is_strict = true; // не используется нигде
                 } else {
 
                     //частичное совпадение ссылки и адреса (по началу строки)?
                     $url_first_parts = [mb_substr($current_ourl, 0, $url_len), mb_substr($current_url, 0, $url_len)];
                     if (in_array($url, $url_first_parts)){
                         $active_ids[] = $id;
-                        $is_strict = false;  // не используется нигде
                     }
-
                 }
-
             }
-
         }
 
         if ($max_items && $first_level_limit){
@@ -699,19 +694,19 @@ class cmsTemplate {
 
             $item_more_id = 10000;
 
-            $item_more = array(
-                $item_more_id => array(
+            $item_more = [
+                $item_more_id => [
                     'id'           => $item_more_id,
                     'title'        => LANG_MENU_MORE,
                     'childs_count' => ($first_level_count - $max_items),
                     'level'        => 1,
                     'disabled'     => false,
                     'attributes'   => [],
-                    'options'      => array(
+                    'options'      => [
                         'class' => 'more'
-                    )
-                )
-            );
+                    ]
+                ]
+            ];
 
             foreach($more_items as $id=>$item){
                 if ($item['level']==1){
@@ -725,7 +720,7 @@ class cmsTemplate {
         }
 
         if (!$is_allow_multiple_active && (count($active_ids)>1)){
-            $active_ids = array($active_ids[count($active_ids)-1]);
+            $active_ids = [$active_ids[count($active_ids)-1]];
         }
 
         $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template, $menu_title);

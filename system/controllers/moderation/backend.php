@@ -4,21 +4,27 @@ class backendModeration extends cmsBackend {
 
     public $useDefaultOptionsAction = true;
 
-    public function actionIndex(){
+    public function actionIndex() {
         $this->redirectToAction('options');
     }
 
     public function getBackendMenu() {
-        return array(
-            array(
+        return [
+            [
                 'title' => LANG_OPTIONS,
-                'url'   => href_to($this->root_url, 'options')
-            ),
-            array(
+                'url'   => href_to($this->root_url, 'options'),
+                'options' => [
+                    'icon' => 'cog'
+                ]
+            ],
+            [
                 'title' => LANG_MODERATION_LOGS,
-                'url'   => href_to($this->root_url, 'logs')
-            ),
-        );
+                'url'   => href_to($this->root_url, 'logs'),
+                'options' => [
+                    'icon' => 'clipboard-list'
+                ]
+            ]
+        ];
     }
 
 }
