@@ -724,7 +724,7 @@ class cmsTemplate {
         }
 	
 	//OV:: добавим в селекторы списка меню его системное имя
-	$css_class = $menu_name.'-menu ' . $css_class;
+	$css_class = $css_class.' menu-'.$menu_name;
 
         $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template, $menu_title);
     }
