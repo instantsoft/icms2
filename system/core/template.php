@@ -722,6 +722,9 @@ class cmsTemplate {
         if (!$is_allow_multiple_active && (count($active_ids)>1)){
             $active_ids = [$active_ids[count($active_ids)-1]];
         }
+	
+	//OV:: добавим в селекторы списка меню его системное имя
+	$css_class = $menu_name.'-menu ' . $css_class;
 
         $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template, $menu_title);
     }
