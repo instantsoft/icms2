@@ -21,7 +21,7 @@
         'url'   => LANG_HELP_URL_EVENTS,
         'options' => [
             'target' => '_blank',
-            'icon' => 'icon-question'
+            'icon' => 'question-circle'
         ]
     ]);
 

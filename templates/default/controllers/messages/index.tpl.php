@@ -65,7 +65,11 @@
             <?php } ?>
             icms.messages.options.refreshInterval = <?php echo $refresh_time; ?>;
             icms.messages.initUserSearch();
-            icms.messages.selectContact(<?php echo $first_id; ?>);
+            <?php if($select_contact_id){ ?>
+                icms.messages.selectContact(<?php echo $select_contact_id; ?>);
+            <?php } else { ?>
+                icms.messages.selectContact(<?php echo $first_id; ?>);
+            <?php } ?>
             icms.messages.bindMyMsg();
             <?php if($is_modal){ ?>
                 var resize_func = function(){

@@ -22,7 +22,7 @@ $this->addMenuItem('breadcrumb-menu', [
     'url'   => LANG_HELP_URL_CONTENT_CATS,
     'options' => [
         'target' => '_blank',
-        'icon' => 'icon-question'
+        'icon' => 'question-circle'
     ]
 ]);
 

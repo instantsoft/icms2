@@ -1,15 +1,17 @@
-<?php $listed = array(); ?>
-<nav id="breadcrumb" aria-label="breadcrumb">
+<?php $listed = []; $count = count($breadcrumbs); ?>
+<nav id="breadcrumb text-truncate flex-nowrap position-relative flex-fill">
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="<?php echo $options['home_url']; ?>" title="<?php echo LANG_HOME; ?>">
-                <?php if (!$breadcrumbs) { ?>
-                    <i class="icon-speedometer icons"></i>
+            <?php if (!$breadcrumbs) { ?>
+                <span class="text-muted">
+                    <?php html_svg_icon('solid', 'tachometer-alt'); ?>
                     <?php echo LANG_ADMIN_CONTROLLER; ?>
-                <?php } else { ?>
-                    <i class="icon-home icons"></i>
-                <?php } ?>
-            </a>
+                </span>
+            <?php } else { ?>
+                <a href="<?php echo $options['home_url']; ?>" title="<?php echo LANG_HOME; ?>">
+                    <?php html_svg_icon('solid', 'home'); ?>
+                </a>
+            <?php } ?>
         </li>
         <?php if ($breadcrumbs) { ?>
 
@@ -17,11 +19,13 @@
 
                 <?php if (in_array($item['href'], $listed)){ continue; } ?>
 
-                <li class="breadcrumb-item<?php if (isset($item['is_last'])){ ?> active<?php } ?>">
+                <li class="breadcrumb-item<?php if (isset($item['is_last'])){ ?> active<?php if($count > 3) { ?> d-none d-lg-inline-block<?php } ?><?php } ?>">
                     <?php if (!isset($item['is_last'])){ ?>
-                        <a href="<?php html($item['href']); ?>" itemprop="url"><span itemprop="title"><?php html($item['title']); ?></span></a>
+                        <a href="<?php html($item['href']); ?>">
+                            <span><?php html($item['title']); ?></span>
+                        </a>
                     <?php } else { ?>
-                        <?php html($item['title']); ?>
+                        <span><?php html($item['title']); ?></span>
                     <?php } ?>
                 </li>
 
@@ -35,9 +39,11 @@
                 <div class="btn-group" role="group">
                     <?php foreach($this->menus['breadcrumb-menu'] as $item){ ?>
                         <a <?php if (isset($item['options']['title'])) { ?>title="<?php html($item['options']['title']); ?>"<?php } ?> <?php if (isset($item['options']['target'])) { ?>target="<?php echo $item['options']['target']; ?>"<?php } ?> class="btn<?php if (!empty($item['options']['class'])) { ?> <?php echo $item['options']['class']; ?><?php } ?>" href="<?php html($item['url']); ?>">
-                            <?php if (!empty($item['options']['icon'])) { ?>
-                                <i class="<?php echo $item['options']['icon']; ?>"></i>
-                            <?php } ?>
+                            <?php if (!empty($item['options']['icon'])) {
+                                $icon_params = explode(':', $item['options']['icon']);
+                                if(!isset($icon_params[1])){ array_unshift($icon_params, 'solid'); }
+                                html_svg_icon($icon_params[0], $icon_params[1]);
+                            } ?>
                             <?php html($item['title']); ?>
                         </a>
                     <?php } ?>

@@ -11,7 +11,7 @@
         'options' => [
             'title' => LANG_CONFIG,
             'class' => 'ajax-modal',
-            'icon'  => 'icon-settings'
+            'icon'  => 'sliders-h'
         ]
     ]);
 ?>
@@ -30,10 +30,12 @@
                     <?php if(!empty($dashboard_block['actions'])){ ?>
                         <div class="card-header-actions">
                             <?php foreach ($dashboard_block['actions'] as $act) { ?>
-                                <a class="card-header-action" href="<?php echo $act['url']; ?>">
-                                    <?php if(!empty($act['icon'])){ ?>
-                                        <i class="<?php echo $act['icon']; ?>"></i>
-                                    <?php } ?>
+                                <a class="card-header-action" href="<?php echo $act['url']; ?>"<?php if(!empty($act['hint'])){ ?> title="<?php html($act['hint']); ?>"<?php } ?>>
+                                    <?php if(!empty($act['icon'])){
+                                        $icon_params = explode(':', $act['icon']);
+                                        if(!isset($icon_params[1])){ array_unshift($icon_params, 'solid'); }
+                                        html_svg_icon($icon_params[0], $icon_params[1]);
+                                    } ?>
                                     <?php if(!empty($act['title'])){ ?>
                                         <?php echo $act['title']; ?>
                                     <?php } ?>

@@ -11,7 +11,7 @@
         'url'   => LANG_HELP_URL_SETTINGS_GLOBAL,
         'options' => [
             'target' => '_blank',
-            'icon' => 'icon-question'
+            'icon' => 'question-circle'
         ]
     ]);
 

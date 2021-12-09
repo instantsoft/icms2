@@ -119,7 +119,7 @@
                 </a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link icms-user-avatar" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link icms-user-avatar ml-3 mr-4 d-flex align-items-center" data-toggle="dropdown" href="#">
                     <?php if($user->avatar){ ?>
                         <img class="img-avatar" src="<?php echo html_avatar_image_src($user->avatar, 'micro'); ?>" alt="<?php html($user->nickname); ?>">
                     <?php } else { ?>

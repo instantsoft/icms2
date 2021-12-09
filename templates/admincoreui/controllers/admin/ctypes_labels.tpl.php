@@ -24,7 +24,7 @@
         'url'   => LANG_HELP_URL_CTYPES_LABELS,
         'options' => [
             'target' => '_blank',
-            'icon' => 'icon-question'
+            'icon' => 'question-circle'
         ]
     ]);
 

@@ -217,7 +217,7 @@ class admin extends cmsFrontend {
             'url' => href_to($this->name, 'ctypes'),
             'options' => [
                 'class' => 'item-ctypes',
-                'icon'  => 'sliders-h'
+                'icon'  => 'pencil-ruler'
             ]
         ];
 

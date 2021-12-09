@@ -89,12 +89,11 @@ class actionAdminControllersEdit extends cmsAction {
 
             $this->cms_template->addMenuItem('breadcrumb-menu', [
                 'title' => LANG_CONTENT_TYPE.' «'.$ctype['title'].'»',
-                'url'   => $this->cms_template->href_to('ctypes', array('edit', $ctype['id'])),
-                'options' => array(
-                    'icon'  => 'icon-settings'
-                )
+                'url'   => $this->cms_template->href_to('ctypes', ['edit', $ctype['id']]),
+                'options' => [
+                    'icon'  => 'retweet'
+                ]
             ]);
-
         }
 
         $help_href_const = 'LANG_HELP_URL_COM_'.strtoupper($backend_controller->name);
@@ -104,7 +103,7 @@ class actionAdminControllersEdit extends cmsAction {
                 'url'   => constant($help_href_const),
                 'options' => [
                     'target' => '_blank',
-                    'icon' => 'icon-question'
+                    'icon' => 'question-circle'
                 ]
             ]);
         }

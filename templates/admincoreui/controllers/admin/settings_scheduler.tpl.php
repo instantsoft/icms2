@@ -18,7 +18,7 @@
         'url'   => LANG_HELP_URL_SETTINGS_SCHEDULER,
         'options' => [
             'target' => '_blank',
-            'icon' => 'icon-question'
+            'icon' => 'question-circle'
         ]
     ]);
 

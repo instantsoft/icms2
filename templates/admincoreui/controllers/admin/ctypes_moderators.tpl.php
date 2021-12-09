@@ -14,7 +14,7 @@
         'title' => LANG_MODERATORATION_OPTIONS,
         'url'   => href_to('admin', 'controllers', array('edit', 'moderation', 'options')),
         'options' => [
-            'icon' => 'icon-settings'
+            'icon' => 'cog'
         ]
     ]);
 
@@ -23,7 +23,7 @@
         'url'   => LANG_HELP_URL_CTYPES_MODERATORS,
         'options' => [
             'target' => '_blank',
-            'icon' => 'icon-question'
+            'icon' => 'question-circle'
         ]
     ]);
 

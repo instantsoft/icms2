@@ -2,58 +2,69 @@
 
 function grid_presets($controller){
 
-    $options = array(
+    $options = [
         'is_sortable'   => false,
-        'is_filter'     => false,
+        'is_filter'     => true,
         'is_pagination' => false,
         'is_draggable'  => false,
         'show_id'       => false
-    );
+    ];
 
-    $columns = array(
-        'id' => array(
+    $columns = [
+        'id' => [
             'title' => 'id',
-            'width' => 30,
-        ),
-        'wysiwyg_name' => array(
-            'title' => LANG_PARSER_HTML_EDITOR,
-            'width' => 150,
+            'width' => 30
+        ],
+        'wysiwyg_name' => [
+            'title'   => LANG_PARSER_HTML_EDITOR,
+            'width'   => 150,
+            'filter'  => 'like',
+            'filter_select' => array(
+                'items' => function($name){
+                    $items = ['' => ''];
+                    $editors = cmsCore::getWysiwygs();
+                    foreach($editors as $editor){
+                        $items[$editor] = $editor;
+                    }
+                    return $items;
+                }
+            ),
             'handler' => function ($v, $row){
                 return ucfirst($v);
             }
-        ),
-        'title' => array(
-            'title' => LANG_WW_PRESET_TITLE,
-            'href' => href_to($controller->root_url, 'presets_edit', array('{id}')),
-            'editable' => array(
+        ],
+        'title' => [
+            'title'  => LANG_WW_PRESET_TITLE,
+            'filter' => 'like',
+            'href'   => href_to($controller->root_url, 'presets_edit', ['{id}']),
+            'editable' => [
                 'table' => 'wysiwygs_presets'
-            )
-        )
-    );
+            ]
+        ]
+    ];
 
-    $actions = array(
-        array(
+    $actions = [
+        [
             'title' => LANG_COPY,
             'class' => 'copy',
-            'href'  => href_to($controller->root_url, 'presets_add', array('{id}', 1)),
-        ),
-        array(
+            'href'  => href_to($controller->root_url, 'presets_add', ['{id}', 1]),
+        ],
+        [
             'title' => LANG_EDIT,
             'class' => 'edit',
-            'href' => href_to($controller->root_url, 'presets_edit', array('{id}')),
-        ),
-        array(
+            'href' => href_to($controller->root_url, 'presets_edit', ['{id}']),
+        ],
+        [
             'title' => LANG_DELETE,
             'class' => 'delete',
-            'href' => href_to($controller->root_url, 'presets_delete', array('{id}')),
+            'href' => href_to($controller->root_url, 'presets_delete', ['{id}']),
             'confirm' => LANG_WW_PRESET_DELETE_CONFIRM
-        )
-    );
+        ]
+    ];
 
-    return array(
+    return [
         'options' => $options,
         'columns' => $columns,
         'actions' => $actions
-    );
-
+    ];
 }

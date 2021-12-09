@@ -8,7 +8,9 @@
 </div>
 <h4 class="mb-3"><?php echo LANG_CP_DASHBOARD_PREMIUM; ?></h4>
 <div class="mb-3">
-    <i class="icon-wallet icons font-2xl float-left mr-3 mt-2"></i>
+    <i class="float-left mr-3 mt-2 h3">
+        <?php html_svg_icon('solid', 'wallet'); ?>
+    </i>
     <h5 class="mb-1">
         <a class="text-white" href="https://instantcms.ru/blogs/instantsoft/biling-dlja-instantcms-2.html" target="_blank">
             <?php echo LANG_CP_DASHBOARD_BILLING; ?>
@@ -17,7 +19,9 @@
     <p class="m-0 text-light"><?php echo LANG_CP_DASHBOARD_BILLING_HINT; ?></p>
 </div>
 <div class="mb-3">
-    <i class="icon-social-youtube icons font-2xl float-left mr-3 mt-2"></i>
+    <i class="float-left mr-3 mt-2 h3">
+        <?php html_svg_icon('solid', 'play-circle'); ?>
+    </i>
     <h5 class="mb-1">
         <a class="text-white" href="https://instantvideo.ru/software/instantvideo2.html" target="_blank">
             InstantVideo
@@ -26,7 +30,9 @@
     <p class="m-0 text-light"><?php echo LANG_CP_DASHBOARD_INVIDEO_HINT; ?></p>
 </div>
 <div>
-    <i class="icon-map icons font-2xl float-left mr-3 mt-2"></i>
+    <i class="float-left mr-3 mt-2 h3">
+        <?php html_svg_icon('solid', 'map-marked-alt'); ?>
+    </i>
     <h5 class="mb-1">
         <a class="text-white" href="https://instantcms.ru/blogs/instantsoft/instantmaps-dlja-instantcms-2.html" target="_blank">
             InstantMaps

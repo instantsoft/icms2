@@ -16,7 +16,7 @@
             'title' => LANG_CP_USER_PMAILING,
             'url' => $this->href_to('controllers', array('edit', 'messages', 'pmailing')),
             'options' => [
-                'icon' => 'icon-envelope-letter'
+                'icon' => 'envelope-open-text'
             ]
         ]);
     }
@@ -25,7 +25,7 @@
         'title' => LANG_CONFIG,
         'url' => $this->href_to('controllers', array('edit', 'users')),
         'options' => [
-            'icon' => 'icon-settings'
+            'icon' => 'cog'
         ]
     ]);
 
@@ -34,7 +34,7 @@
         'url'   => LANG_HELP_URL_USERS,
         'options' => [
             'target' => '_blank',
-            'icon' => 'icon-question'
+            'icon' => 'question-circle'
         ]
     ]);
 

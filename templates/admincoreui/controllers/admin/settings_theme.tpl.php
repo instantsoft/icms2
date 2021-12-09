@@ -30,7 +30,7 @@
             'url'   => $manifest['author']['help'],
             'options' => [
                 'target' => '_blank',
-                'icon' => 'icon-question'
+                'icon' => 'question-circle'
             ]
         ]);
     }

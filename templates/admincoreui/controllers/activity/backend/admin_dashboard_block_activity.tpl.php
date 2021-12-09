@@ -1,14 +1,18 @@
 <?php if ($items){ ?>
 <ul class="list-unstyled need-scrollbar m-0" id="activity_list">
     <?php foreach ($items as $item) { ?>
+    <?php $url = href_to_profile($item['user']); ?>
     <li class="media my-3">
+        <a href="<?php echo $url; ?>" class="icms-user-avatar mr-2 mr-md-3 small <?php if (!empty($item['user']['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
+            <?php if($item['user']['avatar']){ ?>
+                <?php echo html_avatar_image($item['user']['avatar'], 'micro', $item['user']['nickname']); ?>
+            <?php } else { ?>
+                <?php echo html_avatar_image_empty($item['user']['nickname'], 'avatar__mini'); ?>
+            <?php } ?>
+        </a>
         <div class="media-body">
-            <div class="avatar float-left mr-2">
-                <img class="img-avatar" src="<?php echo html_avatar_image_src($item['user']['avatar'], 'micro'); ?>" alt="<?php echo html($item['user']['nickname']); ?>">
-                <span class="avatar-status badge-<?php if (!empty($item['user']['is_online'])){ ?>success<?php } else { ?>danger<?php } ?>"></span>
-            </div>
             <h5 class="mt-0 mb-1">
-                <a href="<?php echo href_to('users', $item['user']['id']); ?>">
+                <a href="<?php echo $url; ?>">
                     <?php html($item['user']['nickname']); ?>
                 </a>
             </h5>

@@ -21,7 +21,7 @@
         </div>
         <div class="col">
             <button id="toggle-type" class="d-none d-md-block btn <?php if($defaults['type'] == 'line'){ ?>btn-primary<?php } else { ?>btn-outline-secondary<?php } ?> float-right" type="button">
-                <i class="icon-graph"></i>
+                <?php html_svg_icon('solid', 'chart-area'); ?>
             </button>
             <div id="menu-period" class="btn-group btn-group-toggle float-sm-right mr-3">
                 <label class="btn btn-outline-secondary<?php if ($defaults['period'] == 7) { ?> active<?php } ?>">

@@ -18,7 +18,7 @@
         'url'   => LANG_HELP_URL_WIDGETS_PAGES,
         'options' => [
             'target' => '_blank',
-            'icon' => 'icon-question'
+            'icon' => 'question-circle'
         ]
     ]);
 

@@ -9,7 +9,7 @@
         'url'   => LANG_HELP_URL_INSTALL,
         'options' => [
             'target' => '_blank',
-            'icon' => 'icon-question'
+            'icon' => 'question-circle'
         ]
     ]);
 

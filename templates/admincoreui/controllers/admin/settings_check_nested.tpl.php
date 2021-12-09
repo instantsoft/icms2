@@ -12,7 +12,7 @@ $this->addMenuItem('breadcrumb-menu', [
     'url'   => LANG_HELP_URL_CHECK_NESTED,
     'options' => [
         'target' => '_blank',
-        'icon' => 'icon-question'
+        'icon' => 'question-circle'
     ]
 ]);
 ?>

@@ -58,7 +58,7 @@
         'url'   => LANG_HELP_URL_CTYPES_PROPS,
         'options' => [
             'target' => '_blank',
-            'icon' => 'icon-question'
+            'icon' => 'question-circle'
         ]
     ]);
 
