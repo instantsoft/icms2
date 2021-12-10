@@ -584,7 +584,7 @@ class cmsTemplate {
      * @param string $template Название файла шаблона меню в assets/ui/
      * @param string $menu_title Название(подпись) меню
      */
-    public function menu($menu_name, $detect_active_id = true, $css_class = 'menu', $max_items = 0, $is_allow_multiple_active = false, $template = 'menu', $menu_title = '') {
+    public function menu($menu_name, $detect_active_id = true, $css_class = 'menu nav', $max_items = 0, $is_allow_multiple_active = false, $template = 'menu', $menu_title = '') {
 
         if (!$this->hasMenu($menu_name)) {
             return;
@@ -722,9 +722,12 @@ class cmsTemplate {
         if (!$is_allow_multiple_active && (count($active_ids)>1)){
             $active_ids = [$active_ids[count($active_ids)-1]];
         }
-	
-	// добавим в селекторы списка меню его системное имя
-	$css_class = $css_class.' menu-'.$menu_name;
+
+        if($css_class){
+            $css_class .= ' menu-'.$menu_name;
+        } else {
+            $css_class = 'nav menu menu-'.$menu_name;
+        }
 
         $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template, $menu_title);
     }
