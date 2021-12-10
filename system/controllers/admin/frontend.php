@@ -438,15 +438,18 @@ class admin extends cmsFrontend {
             ]
         ];
         if($template->hasOptions()){
+
+            $is_icon_list_exists = $template->hasIconList();
+
             $menu[] = [
                 'title'   => LANG_CP_SETTINGS_TEMPLATE_OPTIONS,
                 'url'     => href_to($this->name, 'settings', ['theme', $this->cms_config->template]),
-                'childs_count' => 1,
+                'childs_count' => $is_icon_list_exists ? 1 : null,
                 'options' => [
                     'icon' => 'palette'
                 ]
             ];
-            if(file_exists($template->path . '/icon_list.php')){
+            if($is_icon_list_exists){
                 $menu[] = [
                     'title'   => LANG_CP_TEMPLATE_ICONS,
                     'level' => 2,

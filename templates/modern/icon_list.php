@@ -2,15 +2,32 @@
 /**
  * Массив иконок шаблона
  * Для удобного просмотра и выбора, например в меню
+ *
+ * $this - контекст cmsTemplate, где это объект шаблона,
+ * для которого ищем иконки
+ *
+ * Наличие в шаблоне директории /images/icons/ говорит о том, что
+ * именно здесь мы ищем файлы спрайтов иконок
+ *
+ * Наследование шаблонов работает. В данном случае с шаблонами,
+ * наследуемыми от modern, этот файл копировать в свой шаблон нет необходимости
  */
 
 $list = [];
 
-$files = glob(dirname(__FILE__).'/images/icons/*.svg');
+$template_icons_path = $this->getTplFilePath('images/icons/');
+
+$files = glob($template_icons_path.'*.svg');
 
 if (!$files) {
     return $list;
 }
+
+$template_path = str_replace(
+        $this->site_config->root_path,
+        $this->site_config->root,
+        $template_icons_path
+    );
 
 foreach ($files as $file_path) {
 
@@ -39,7 +56,7 @@ foreach ($list as $file_name => $names) {
         $icon_list[$file_name][] = [
             'title' => $name,
             'name'  => $file_name.':'.$name,
-            'html'  => html_svg_icon($file_name, $name, 16, false)
+            'html'  => '<svg class="icms-svg-icon w-16" fill="currentColor"><use href="'.$template_path.$file_name.'.svg#'.$name.'"></use></svg>'
         ];
     }
 }

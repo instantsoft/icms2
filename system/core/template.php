@@ -3161,6 +3161,25 @@ class cmsTemplate {
         return [];
     }
 
+    public function getIconListFilePath(){
+        return $this->getTplFilePath('icon_list.php', true);
+    }
+
+    public function hasIconList(){
+        return file_exists($this->getIconListFilePath());
+    }
+
+    public function getIconList(){
+
+        $file_path = $this->getIconListFilePath();
+
+        if(!file_exists($file_path)){
+            return [];
+        }
+
+        return include $file_path;
+    }
+
     public function hasOptions(){
         if (isset($this->manifest['properties'])) {
             return !empty($this->manifest['properties']['has_options']);

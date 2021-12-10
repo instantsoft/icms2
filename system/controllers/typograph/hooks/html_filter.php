@@ -2,6 +2,7 @@
 
 class onTypographHtmlFilter extends cmsAction {
 
+    private $no_redirect_list = [];
     private $build_redirect_link = true;
     private $is_auto_br = true;
 
@@ -31,6 +32,16 @@ class onTypographHtmlFilter extends cmsAction {
 
         if (!cmsController::enabled('redirect')) {
             $this->build_redirect_link = false;
+        }
+
+        if($this->build_redirect_link) {
+
+            $redirect_options = cmsController::loadOptions('redirect');
+
+            if(!empty($redirect_options['no_redirect_list'])){
+                $no_redirect_list = explode("\n", $redirect_options['no_redirect_list']);
+                $this->no_redirect_list = array_map(function($val){ return trim($val); }, $no_redirect_list);
+            }
         }
 
         $text = $this->getJevix()->parse($text, $errors);
@@ -173,7 +184,21 @@ class onTypographHtmlFilter extends cmsAction {
             $params['target'] = '_blank';
 
             if ($this->build_redirect_link) {
-                $params['href'] = href_to('redirect') . '?url=' . urlencode($params['href']);
+
+                $build_redirect_link = true;
+
+                if($this->no_redirect_list) {
+
+                    $host = parse_url($params['href'], PHP_URL_HOST);
+
+                    if(in_array($host, $this->no_redirect_list, true)){
+                        $build_redirect_link = false;
+                    }
+                }
+
+                if($build_redirect_link) {
+                    $params['href'] = href_to('redirect') . '?url=' . urlencode($params['href']);
+                }
             }
         }
 
