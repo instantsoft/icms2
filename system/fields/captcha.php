@@ -4,17 +4,18 @@ class fieldCaptcha extends cmsFormField {
 
     public $title     = LANG_CAPTCHA_CODE;
     public $is_public = true;
+
     public $excluded_controllers = ['content', 'users', 'groups'];
 
     public function getRules() {
 
-        $this->rules[] = array('captcha');
+        $this->rules[] = ['captcha'];
 
         return $this->rules;
     }
 
     public function parse($value) {
-        return null;
+        return '';
     }
 
     public function getInput($value) {

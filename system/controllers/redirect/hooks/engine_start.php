@@ -27,6 +27,7 @@ class onRedirectEngineStart extends cmsAction {
                     //чтобы сохранить параметры из $this->cms_core->uri в новом адресе
                     foreach ($matches as $key => $value) {
                         if (!$key) { continue; }
+                        if (!$value) { $value = ''; }
                         if (mb_strstr($rule['target'], '{' . $key . '}')) {
                             $rule['target'] = str_replace('{' . $key . '}', $value, $rule['target']);
                         }

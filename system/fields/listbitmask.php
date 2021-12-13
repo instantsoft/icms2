@@ -73,7 +73,7 @@ class fieldListBitmask extends cmsFormField {
 
                 if (!is_array($value)) {
 
-                    if (substr($value, $pos, 1) == 1) {
+                    if (substr($value, $pos, 1) === '1') {
                         $list[] = $item;
                     }
                     $pos++;
@@ -105,7 +105,7 @@ class fieldListBitmask extends cmsFormField {
             $pos         = 0;
             $html        .= '<ul class="' . $this->getOption('list_class') . ' list-unstyled">';
             foreach ($this->items as $key => $item) {
-                if (substr($value, $pos, 1) == 1) {
+                if (substr($value, $pos, 1) === '1') {
                     if ($is_autolink) {
                         $html .= '<li class="list-inline-item"><a class="listbitmask_autolink ' . $this->item['ctype_name'] . '_listbitmask_autolink" href="' . href_to($this->item['ctype_name']) . '?' . $this->name . '%5B%5D=' . urlencode($key) . '">' . html($item, false) . '</a></li>';
                     } else {
@@ -186,7 +186,7 @@ class fieldListBitmask extends cmsFormField {
             if (!is_array($value)) {
                 $pos = 0;
                 foreach ($this->data['items'] as $key => $title) {
-                    if (mb_substr($value, $pos, 1) == 1) {
+                    if (substr($value, $pos, 1) === '1') {
                         $this->data['selected'][] = is_numeric($key) ? intval($key) : $key;
                     }
                     $pos++;
@@ -214,7 +214,7 @@ class fieldListBitmask extends cmsFormField {
             return $item[$field_old['name']];
         });
 
-        if (!$items || trim($field_old['values']) == trim($field['values'])) {
+        if (!$items || trim($field_old['values']) === trim($field['values'])) {
             return parent::hookAfterUpdate($content_table_name, $field, $field_old, $model);
         }
 
@@ -235,7 +235,7 @@ class fieldListBitmask extends cmsFormField {
             $pos = 0;
 
             foreach ($old_rows as $key => $value) {
-                if (substr($item_value, $pos, 1) == 1) {
+                if (substr($item_value, $pos, 1) === '1') {
                     $old_item_values[] = $key;
                 }
                 $pos++;

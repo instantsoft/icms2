@@ -79,11 +79,13 @@ class fieldHtml extends cmsFormField {
             new fieldNumber('teaser_len', array(
                 'title' => LANG_PARSER_HTML_TEASER_LEN,
                 'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
+                'default' => 0,
                 'extended_option' => true
             )),
             new fieldString('teaser_postfix', array(
                 'title'           => LANG_PARSER_HTML_TEASER_POSTFIX,
                 'visible_depend'  => array('options:teaser_len' => array('hide' => array(''))),
+                'default' => '',
                 'extended_option' => true
             )),
             new fieldList('teaser_type', array(
@@ -116,6 +118,10 @@ class fieldHtml extends cmsFormField {
 
     public function getStringValue($value){
 
+        if (!$value){
+            return '';
+        }
+
         if ($this->getOption('parse_patterns') && !empty($this->item)){
             $value = string_replace_keys_values_extended($value, $this->item);
         }
@@ -124,6 +130,10 @@ class fieldHtml extends cmsFormField {
     }
 
     public function afterParse($value, $item){
+
+        if (!$value){
+            return '';
+        }
 
         if ($this->getOption('parse_patterns')){
             $value = string_replace_keys_values_extended($value, $item);
@@ -134,13 +144,17 @@ class fieldHtml extends cmsFormField {
 
     public function parse($value){
 
+        if (!$value){
+            return '';
+        }
+
         if ($this->getOption('is_html_filter')){
-            $value = cmsEventsManager::hook('html_filter', array(
+            $value = cmsEventsManager::hook('html_filter', [
                 'text'                => $value,
                 'is_auto_br'          => $this->getOption('editor') == 'markitup',
                 'build_smiles'        => $this->getOption('editor') == 'markitup', // пока что только так
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
-            ));
+            ]);
             $value = string_replace_svg_icons($value);
         }
 
@@ -149,11 +163,15 @@ class fieldHtml extends cmsFormField {
 
     public function parseTeaser($value) {
 
+        if (!$value){
+            return '';
+        }
+
         if (!empty($this->item['is_private_item'])) {
             return '<p class="private_field_hint text-muted">'.$this->item['private_item_hint'].'</p>';
         }
 
-        $max_len = $this->getOption('teaser_len');
+        $max_len = $this->getOption('teaser_len', 0);
 
         if ($max_len){
 
@@ -167,12 +185,12 @@ class fieldHtml extends cmsFormField {
             }
 
         } else if ($this->getOption('is_html_filter')){
-            $value = cmsEventsManager::hook('html_filter', array(
+            $value = cmsEventsManager::hook('html_filter', [
                 'text'                => $value,
                 'is_auto_br'          => false,
                 'build_smiles'        => $this->getOption('editor') == 'markitup', // пока что только так
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
-            ));
+            ]);
         }
 
         if ($this->getOption('parse_patterns') && !empty($this->item)){
@@ -196,7 +214,7 @@ class fieldHtml extends cmsFormField {
                 foreach($paths as $path){
 
                     $model->filterEqual('path', $path)->filterIsNull('target_id');
-                    $model->updateFiltered('uploaded_files', array('target_id' => $item['id']), true);
+                    $model->updateFiltered('uploaded_files', ['target_id' => $item['id']], true);
 
                 }
             }

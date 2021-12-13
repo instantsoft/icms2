@@ -73,7 +73,7 @@ class fieldFile extends cmsFormField {
     }
 
     public function getStringValue($value) {
-        return null;
+        return '';
     }
 
     public function getDownloadURL($file) {

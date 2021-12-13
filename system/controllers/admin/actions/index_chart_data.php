@@ -99,7 +99,7 @@ class actionAdminIndexChartData extends cmsAction {
             }
         }
 
-        $this->cms_template->renderJSON(array(
+        $this->cms_template->renderJSON([
             // это совместимость
             'labels' => array_keys($old_result),
             'values' => array_values($old_result),
@@ -108,8 +108,7 @@ class actionAdminIndexChartData extends cmsAction {
                 'chart_data' => $chart_data,
                 'footer'     => $footer_result
             ]
-        ));
-
+        ]);
     }
 
     private function getDsParams($source, $result) {
@@ -143,7 +142,6 @@ class actionAdminIndexChartData extends cmsAction {
         $data = $this->model->get($source['table'], false, false);
 
         return $data ? $data : [];
-
     }
 
     private function getFooterData($source){
@@ -151,7 +149,6 @@ class actionAdminIndexChartData extends cmsAction {
         $this->model->applyDatasetFilters($source, true);
 
         return $this->model->getCount($source['table'], 'id', true);
-
     }
 
 }

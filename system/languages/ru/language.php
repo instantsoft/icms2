@@ -50,6 +50,8 @@
     define('LANG_SORTING_DESC',              'По убыванию');
     define('LANG_SORTING_BYORDER',           'По порядку');
     define('LANG_SORTING_BYTIME',            'По времени выполнения');
+    define('LANG_SORTING_BYDATE',            'По дате');
+    define('LANG_SORTING_BYREL',             'По релевантности');
     define('LANG_PHOTO',                     'Изображение');
     define('LANG_PHOTOS',                    'Фотографии');
     define('LANG_COMMENTS',                  'Комментарии');

@@ -32,6 +32,14 @@ class cmsModel {
     const SERIALIZABLE = 'SERIALIZABLE';
 
     /**
+     * Булевы операторы, которых быть не должно при fulltext search
+     * https://dev.mysql.com/doc/refman/8.0/en/fulltext-boolean.html
+     *
+     * @var array
+     */
+    protected $special_chars = ['+', '-', '>','<', '(', ')', '~', '*', '"', '@'];
+
+    /**
      * Префикс по умолчанию таблиц контента
      */
     const DEFAULT_TABLE_PREFIX = 'con_';
@@ -45,6 +53,10 @@ class cmsModel {
      * @var string
      */
     public $table_prefix = self::DEFAULT_TABLE_PREFIX;
+
+    /**
+     * Постфикс таблиц категорий контента
+     */
     public $table_category_postfix = self::DEFAULT_TABLE_CATEGORY_POSTFIX;
 
     //условия для выборок
@@ -810,52 +822,79 @@ class cmsModel {
         return $this;
     }
 
-    public function filterRelated($field, $value, $lang = false){
+    /**
+     * Фильтр по релевантности, используя fulltext search
+     * В таблице должен быть полнотекстовый индекс на $field
+     *
+     * @param string $field Имя ячейки таблицы
+     * @param string $value Значение, к которому нужно найти релевантные записи
+     * @param string $lang Язык, используемый для стопслов
+     * @return $this
+     */
+    public function filterRelated($field, $value, $lang = false) {
 
-        if(mb_strlen($value) <= 3){
-            return $this->filterLike($field, $this->db->escape($value).'%');
+        // Реально передали не более 3х символов
+        if (mb_strlen($value) <= 3) {
+            return $this->filterLike($field, $value . '%');
         }
 
-        $query = array();
+        $value = trim(strip_tags(mb_strtolower($value)));
+        $value = trim(preg_replace('/[' . preg_quote(implode('', $this->special_chars)) . ']+/', ' ', $value));
 
-        $words = explode(' ', str_replace(array('"','\'','+','*','-','%',')','(','.',',','!','?'), ' ', $value));
+        // После очистки осталось не более 3х символов
+        // MySQL не умеет искать в полнотекстовогом индексе по 3м и менее символам
+        if (mb_strlen($value) <= 3) {
+            return $this->filterLike($field, $value . '%');
+        }
+
+        $query = [];
+
+        $words = preg_split('/[\s,]+/', $value);
 
         $stopwords = string_get_stopwords($lang ? $lang : cmsConfig::get('language'));
 
-        foreach($words as $word){
+        foreach ($words as $word) {
 
-            $word = mb_strtolower(trim($word));
-
-            if (mb_strlen($word)<3 || is_numeric($word)) { continue; }
-            if($stopwords && in_array($word, $stopwords)){ continue; }
-            if (mb_strlen($word)==3) { $query[] = $this->db->escape($word); continue; }
-
-            if (mb_strlen($word) >= 12) {
-                $word = mb_substr($word, 0, mb_strlen($word) - 3).'*';
-            } else if (mb_strlen($word) >= 10) {
-                $word = mb_substr($word, 0, mb_strlen($word) - 2).'*';
-            } else if (mb_strlen($word) >= 6) {
-                $word = mb_substr($word, 0, mb_strlen($word) - 1).'*';
+            if (mb_strlen($word) < 3 || is_numeric($word)) {
+                continue;
             }
 
-            $query[] = $this->db->escape($word);
+            if ($stopwords && in_array($word, $stopwords, true)) {
+                continue;
+            }
+            if (mb_strlen($word) === 3) {
+                $query[] = $word;
+                continue;
+            }
 
+            if (mb_strlen($word) >= 12) {
+                $word = mb_substr($word, 0, mb_strlen($word) - 3);
+            } else if (mb_strlen($word) >= 10) {
+                $word = mb_substr($word, 0, mb_strlen($word) - 2);
+            } else if (mb_strlen($word) >= 6) {
+                $word = mb_substr($word, 0, mb_strlen($word) - 1);
+            }
+
+            $query[] = $word . '*';
         }
 
-        if (empty($query)) {
+        if (!$query) {
+
             $ft_query = '\"' . $this->db->escape($value) . '\"';
         } else {
 
-            usort($query, function ($a, $b){
-                return mb_strlen($b)-mb_strlen($a);
+            usort($query, function ($a, $b) {
+                return mb_strlen($b) - mb_strlen($a);
             });
             $query = array_slice($query, 0, 5);
 
-            $ft_query  = '>\"' . $this->db->escape($value).'\" <(';
-            $ft_query .= implode(' ', $query).')';
+            $ft_query .= '>\"' . $this->db->escape($value) . '\" <(';
+            $ft_query .= '+' . implode(' +', $this->db->escape($query)) . ')';
         }
 
-        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false) {
+            $field = 'i.' . $field;
+        }
 
         $search_param = "MATCH({$field}) AGAINST ('{$ft_query}' IN BOOLEAN MODE)";
 
@@ -1154,15 +1193,36 @@ class cmsModel {
 
     }
 
-    public function selectList($fields, $is_this_only = false, $translated_table = false){
-        if($is_this_only){ $this->select = array(); }
-        foreach($fields as $field => $alias){
-            if($translated_table){
+    /**
+     * Выборка по списку полей
+     *
+     * @param array $fields Массив полей
+     * @param boolean $is_this_only Выборка только перечисленных
+     * @param boolean $translated_table Выборка с учётом мультиязычности
+     * @return $this
+     */
+    public function selectList($fields, $is_this_only = false, $translated_table = false) {
+
+        if ($is_this_only) {
+            $this->select = [];
+        }
+
+        foreach ($fields as $field => $alias) {
+
+            if(is_numeric($field)){
+                $field = $alias;
+                $alias = false;
+            }
+
+            if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+
+            if ($translated_table) {
                 $this->selectTranslatedField($field, $translated_table, $alias);
             } else {
                 $this->select($field, $alias);
             }
         }
+
         return $this;
     }
 
@@ -1176,9 +1236,10 @@ class cmsModel {
      */
     public function selectAesDecrypt($field, $as = false, $key = '') {
 
-        $a = $as ? $as : str_replace('enc_', '', $field);
+        $as = $as ? $as : str_replace('enc_', '', $field);
 
         $this->encoded_fields[] = $as ? $as : $field;
+
         if ($key) {
             if (is_callable($key) && ($key instanceof Closure)) {
                 $key = $key($this);
@@ -1189,37 +1250,62 @@ class cmsModel {
         } else {
             $field = "AES_DECRYPT(`{$field}`, @aeskey)";
         }
-        $this->select[] = $as ? $field . ' as ' . $as : $field;
+
+        return $this->select($field, $as);
+    }
+
+    /**
+     * Добавляет поле к выборке
+     *
+     * @param string $field Имя поля, желательно с префиксом таблицы (например, i.title)
+     * @param string $as Псевдоним при выборке
+     * @return $this
+     */
+    public function select($field, $as = false) {
+
+        $this->select[] = $as ? $field . ' as `' . $as . '`' : $field;
+
         return $this;
     }
 
-    public function select($field, $as=false){
-        $this->select[] = $as ? $field.' as `'.$as.'`' : $field;
-        return $this;
-    }
-
-    public function selectTranslatedField($field, $table, $as = false){
+    /**
+     * Добавляет поле к выборке, пытаясь найти его
+     * с постфиксом языка
+     *
+     * @param string $field Имя поля
+     * @param string $table Таблица, откуда выбирается это поле
+     * @param string $as Псевдоним при выборке
+     * @return $this
+     */
+    public function selectTranslatedField($field, $table, $as = false) {
 
         if ($this->lang === $this->default_lang) {
             return $this->select($field, $as);
         }
 
-        $field_name = $field.'_'.$this->lang;
+        $field_name = $field . '_' . $this->lang;
 
         $select_name = (strpos($field, '.') === false ? $field : ltrim(strrchr($field, '.'), '.'));
 
-        if(!$this->db->isFieldExists($table, $select_name)){
+        if (!$this->db->isFieldExists($table, $select_name)) {
             $field_name = $field;
         }
 
         return $this->select($field_name, $select_name);
-
     }
 
-    public function selectOnly($field, $as=false){
-        $this->select = array();
-        $this->select[] = $as ? $field.' as `'.$as.'`' : $field;
-        return $this;
+    /**
+     * Выбор из таблицы только указанного поля
+     *
+     * @param string $field Имя поля
+     * @param string $as Псевдоним при выборке
+     * @return $this
+     */
+    public function selectOnly($field, $as = false) {
+
+        $this->select = [];
+
+        return $this->select($field, $as);
     }
 
     public function joinQuery($query, $as, $on, $join_type = self::INNER_JOIN){
@@ -1375,6 +1461,11 @@ class cmsModel {
 
     public function useIndex($index_name, $for='') {
         return $this->indexHint($index_name, 'USE', $for);
+    }
+
+    public function orderByRaw($order_by){
+        $this->order_by = $order_by;
+        return $this;
     }
 
     public function orderBy($field, $direction='', $is_force_index_by_field = false){
@@ -1756,13 +1847,17 @@ class cmsModel {
 
     /**
      * Возвращает записи из базы, применяя все наложенные ранее фильтры
+     *
+     * @param string $table_name Имя таблицы
+     * @param callable $item_callback Коллбэк функция
+     * @param string $key_field Имя ячейки массива из БД, значение которой станет ключём в результирующем массиве
      * @return array
      */
-    public function get($table_name, $item_callback=false, $key_field='id'){
+    public function get($table_name, $item_callback = false, $key_field = 'id') {
 
         $this->table = $table_name;
 
-        $items = $_items = array();
+        $items = $_items = [];
 
         $sql = $this->getSQL();
 
@@ -1773,7 +1868,7 @@ class cmsModel {
 
         // если указан ключ кеша для этого запроса
         // то пробуем получить результаты из кеша
-        if ($this->cache_key){
+        if ($this->cache_key) {
 
             $cache_key = $this->cache_key . '.' . md5($sql);
 
@@ -1781,86 +1876,89 @@ class cmsModel {
 
             $_items = $cache->get($cache_key);
 
-            if ($_items !== false){
+            if ($_items !== false) {
 
                 $this->stopCache();
 
                 // обрабатываем коллбэком
-                if (is_callable($item_callback)){
+                if (is_callable($item_callback)) {
 
                     foreach ($_items as $key => $item) {
 
                         $item = call_user_func_array($item_callback, array($item, $this));
-                        if ($item === false){ continue; }
+                        if ($item === false) {
+                            continue;
+                        }
 
-                        if($this->localized){
+                        if ($this->localized) {
                             $item = $this->replaceTranslatedField($item, $table_name);
                         }
 
                         $items[$key] = $item;
-
                     }
-
                 } else {
                     return $_items;
                 }
 
                 return $items;
-
+            } else {
+                $_items = [];
             }
-
         }
 
         $result = $this->db->query($sql);
 
         // если запрос ничего не вернул, возвращаем ложь
-        if (!$this->db->numRows($result)){ return false; }
+        if (!$this->db->numRows($result)) {
+            return false;
+        }
 
         // перебираем все вернувшиеся строки
-        while($item = $this->db->fetchAssoc($result)){
+        while ($item = $this->db->fetchAssoc($result)) {
 
             $key = ($key_field && isset($item[$key_field])) ? $item[$key_field] : false;
 
             // для кеша формируем массив без обработки коллбэком
-            if ($this->cache_key){
-                if ($key){
+            if ($this->cache_key) {
+                if ($key) {
                     $_items[$key] = $item;
                 } else {
                     $_items[] = $item;
                 }
             }
 
-            if($encoded_fields){
+            if ($encoded_fields) {
                 foreach ($encoded_fields as $efield) {
                     $item[$efield] = base64_decode($item[$efield]);
-                    unset($item['enc_'.$efield]);
+                    unset($item['enc_' . $efield]);
                 }
             }
 
             // если задан коллбек для обработки строк,
             // то пропускаем строку через него
-            if (is_callable($item_callback)){
-                $item = call_user_func_array($item_callback, array($item, $this));
-                if ($item === false){ continue; }
+            if (is_callable($item_callback)) {
+                $item = call_user_func_array($item_callback, [$item, $this]);
+                if ($item === false) {
+                    continue;
+                }
             }
 
-            if($this->localized){
+            if ($this->localized) {
                 $item = $this->replaceTranslatedField($item, $table_name);
             }
 
             // добавляем обработанную строку в результирующий массив
-            if ($key){
+            if ($key) {
                 $items[$key] = $item;
             } else {
                 $items[] = $item;
             }
-
         }
 
         // если указан ключ кеша для этого запроса
         // то сохраняем результаты в кеше
         // сохраняем не обработанный коллбэком массив
-        if ($this->cache_key){
+        if ($this->cache_key) {
             $cache->set($cache_key, $_items);
             $this->stopCache();
         }
@@ -1869,7 +1967,6 @@ class cmsModel {
 
         // возвращаем строки
         return $items;
-
     }
 
 //============================================================================//

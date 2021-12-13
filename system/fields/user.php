@@ -14,6 +14,9 @@ class fieldUser extends cmsFormField {
     }
 
     public function parse($value) {
+        if (!$value) {
+            return '';
+        }
         if (is_array($value)) {
             return '<a href="' . href_to_profile($value) . '">' . htmlspecialchars($value['nickname']) . '</a>';
         }
@@ -21,6 +24,9 @@ class fieldUser extends cmsFormField {
     }
 
     public function getStringValue($value) {
+        if (!$value) {
+            return '';
+        }
         if (is_array($value)) {
             return htmlspecialchars($value['nickname']);
         }

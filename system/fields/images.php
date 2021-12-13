@@ -100,7 +100,7 @@ class fieldImages extends cmsFormField {
 
     }
 
-    public function getStringValue($value){ return null; }
+    public function getStringValue($value){ return ''; }
 
     public function store($value, $is_submitted, $old_value=null){
 
@@ -116,7 +116,7 @@ class fieldImages extends cmsFormField {
             }
         }
 
-        $result = array();
+        $result = [];
 
         if (is_array($value)){
             foreach ($value as $paths){ $result[] = $paths; }
@@ -129,17 +129,17 @@ class fieldImages extends cmsFormField {
             $this->delete($result); return null;
         }
 
-        $results = array();
+        $results = [];
 
         $upload_path = cmsConfig::get('upload_path');
 
         foreach($result as $key => $image){
 
-            $images = array();
+            $images = [];
 
             foreach($image as $size => $image_rel_path){
 
-                $image_rel_path = str_replace(array('"', "'", ' ', '#'), '', html_entity_decode($image_rel_path));
+                $image_rel_path = str_replace(['"', "'", ' ', '#'], '', html_entity_decode($image_rel_path));
 
                 if(!is_file($upload_path.$image_rel_path)){
                     continue;
@@ -176,7 +176,6 @@ class fieldImages extends cmsFormField {
         }
 
         return $results;
-
     }
 
     public function getFiles($value){

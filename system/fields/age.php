@@ -54,7 +54,7 @@ class fieldAge extends cmsFormField {
 
     public function getRules() {
 
-        if ($this->context == 'filter') {
+        if ($this->context === 'filter') {
             $this->rules[] = ['age_range'];
         } else {
             $this->rules[] = ['date'];
@@ -65,7 +65,7 @@ class fieldAge extends cmsFormField {
 
     public function getDefaultVarType($is_filter = false) {
 
-        if ($this->context == 'filter') {
+        if ($this->context === 'filter') {
             $is_filter = true;
         }
 
@@ -77,6 +77,10 @@ class fieldAge extends cmsFormField {
     }
 
     public function parse($value) {
+
+        if (!$value){
+            return '';
+        }
 
         if($this->getOption('show_date')){
             return html($this->getDiff($value), false).' ('. html_date($value).')';

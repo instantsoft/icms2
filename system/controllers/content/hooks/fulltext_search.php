@@ -2,7 +2,7 @@
 
 class onContentFulltextSearch extends cmsAction {
 
-    public function run($search_controller){
+    public function run($search_controller) {
 
         $allowed_types = $search_controller->getOption('types');
 
@@ -10,23 +10,26 @@ class onContentFulltextSearch extends cmsAction {
 
         $sources = array_collection_to_list($ctypes, 'name', 'title');
 
-        foreach($sources as $name=>$title){
+        foreach ($sources as $name => $title) {
             $sources[$name] = $title;
         }
 
         // по каким полям поиск
-        $match_fields = array();
+        $match_fields = [];
         // какие поля получать
-        $select_fields = array();
+        $select_fields = [];
         // из каких таблиц выборка
-        $table_names = array();
+        $table_names= [];
         // какие поля точно нужны
-        $default_fields = array('id', 'slug', 'date_pub');
+        $default_fields = ['id', 'slug', 'date_pub'];
         // Фильтрация
-        $filters = array();
-        $_ctypes = array();
+        $filters = [];
+        $_ctypes = [];
 
-        foreach($ctypes as $ctype){
+        // Поле изображения
+        $images_field = [];
+
+        foreach ($ctypes as $ctype) {
 
             // выключено?
             if ($allowed_types &&
@@ -40,81 +43,84 @@ class onContentFulltextSearch extends cmsAction {
 
             $select_fields[$ctype['name']] = $default_fields;
 
-            foreach($fields as $field){
+            foreach ($fields as $field) {
 
                 // в настройках полей должно быть включено их участие в индексе
                 $is_text = $field['handler']->getOption('in_fulltext_search');
 
-                if ($is_text && !$field['is_private'] && (!$field['groups_read'] || $this->cms_user->isInGroups($field['groups_read']))){
+                if ($is_text && !$field['is_private'] && (!$field['groups_read'] || $this->cms_user->isInGroups($field['groups_read']))) {
 
                     $match_fields[$ctype['name']][]  = $field['name'];
                     $select_fields[$ctype['name']][] = $field['name'];
-
                 }
 
-                if (!isset($select_fields[$ctype['name']]['image']) && $field['type'] == 'image' &&
-                        !$field['is_private'] &&
-                        (!$field['groups_read'] || $this->cms_user->isInGroups($field['groups_read']))){
-                    $select_fields[$ctype['name']]['image'] = $field['name'];
-                }
+                if (!isset($images_field[$ctype['name']]) && $field['type'] == 'image' &&
+                        !$field['is_private'] && $field['is_in_list'] &&
+                        (!$field['groups_read'] || $this->cms_user->isInGroups($field['groups_read']))) {
+                    $select_fields[$ctype['name']][] = $field['name'];
 
+                    $images_field[$ctype['name']] = $field;
+                }
             }
 
-            $filters[$ctype['name']] = array(
-                array(
+            $filters[$ctype['name']] = [
+                [
                     'condition' => '=',
                     'value'     => 1,
                     'field'     => 'is_pub'
-                ),
-                array(
+                ],
+                [
                     'condition' => '=',
                     'value'     => 1,
                     'field'     => 'is_approved'
-                ),
-                array(
+                ],
+                [
                     'condition' => 'IS',
                     'value'     => NULL,
                     'field'     => 'is_deleted'
-                ),
-                array(
+                ],
+                [
                     'condition' => 'IS',
                     'value'     => NULL,
                     'field'     => 'is_parent_hidden'
-                )
-            );
+                ]
+            ];
 
             $_ctypes[$ctype['name']] = $ctype;
-
         }
 
-        return array(
+        return [
             'name'          => $this->name,
             'sources'       => $sources,
             'table_names'   => $table_names,
             'match_fields'  => $match_fields,
             'select_fields' => $select_fields,
             'filters'       => $filters,
-            'item_callback' => function($item, $model, $sources_name, $match_fields, $select_fields) use ($_ctypes){
+            'item_callback' => function ($item, $model, $sources_name, $match_fields, $select_fields) use ($_ctypes, $images_field) {
 
-                $fields = array();
+                $fields = [];
 
                 foreach ($match_fields as $match_field) {
-                    if($match_field == 'title'){ continue; }
+                    if ($match_field == 'title') {
+                        continue;
+                    }
                     $fields[$match_field] = $item[$match_field];
                 }
 
-                return array_merge($item, array(
+                $item['ctype'] = [
+                    'name' => $sources_name
+                ];
+
+                return array_merge($item, [
                     'url'      => href_to($sources_name, $item['slug'] . '.html'),
                     'ctype'    => $_ctypes[$sources_name],
                     'title'    => $item['title'],
                     'fields'   => $fields,
                     'date_pub' => $item['date_pub'],
-                    'image'    => (!empty($select_fields['image']) ? html_image($item[$select_fields['image']], 'small', strip_tags($item['title'])) : ''),
-                ));
-
+                    'image'    => !empty($images_field[$sources_name]) ? $images_field[$sources_name]['handler']->setItem($item)->parseTeaser($item[$images_field[$sources_name]['name']]) : ''
+                ]);
             }
-        );
-
+        ];
     }
 
 }

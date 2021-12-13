@@ -74,41 +74,51 @@ class fieldList extends cmsFormField {
         return $this->rules;
     }
 
-    public function getStringValue($value){
+    public function getStringValue($value) {
+
+        if (!$value) {
+            return '';
+        }
 
         $items = $this->getListItems();
-        $item  = array();
+        $item  = [];
 
-        if(!is_array($value)){
-            $value = array($value);
+        if (!is_array($value)) {
+            $value = [$value];
         }
 
         foreach ($value as $val) {
-            if (isset($items[$val])) { $item[] = $items[$val]; }
+            if (isset($items[$val])) {
+                $item[] = $items[$val];
+            }
         }
 
         return implode(', ', $item);
-
     }
 
-    public function parse($value){
+    public function parse($value) {
+
+        if (!$value){
+            return '';
+        }
 
         $items = $this->getListItems();
         $item  = '';
 
-        if (isset($items[$value])) { $item = $items[$value]; }
+        if (isset($items[$value])) {
+            $item = $items[$value];
+        }
 
-        if ($this->getOption('is_autolink')){
-            return '<a class="list_autolink '.$this->item['ctype_name'].'_list_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($value).'">'.html($item, false).'</a>';
+        if ($this->getOption('is_autolink')) {
+            return '<a class="list_autolink ' . $this->item['ctype_name'] . '_list_autolink" href="' . href_to($this->item['ctype_name']) . '?' . $this->name . '=' . urlencode($value) . '">' . html($item, false) . '</a>';
         }
 
         return html($item, false);
-
     }
 
     public function getListValuesItems(){
 
-        $items = array();
+        $items = [];
 
         if (isset($this->value_items)){
 
@@ -122,12 +132,11 @@ class fieldList extends cmsFormField {
         }
 
         return $items;
-
     }
 
     public function getDefaultVarType($is_filter = false) {
 
-        if($this->context == 'filter'){
+        if($this->context === 'filter'){
             $is_filter = true;
         }
 
@@ -142,7 +151,6 @@ class fieldList extends cmsFormField {
         }
 
         return parent::getDefaultVarType($is_filter);
-
     }
 
     public function applyFilter($model, $value) {
@@ -253,7 +261,6 @@ class fieldList extends cmsFormField {
         }
 
         return ERR_VALIDATE_INVALID;
-
     }
 
 }

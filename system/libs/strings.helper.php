@@ -467,6 +467,10 @@ function string_replace_user_properties($string) {
  */
 function string_replace_keys_values($string, $data) {
 
+    if (!$string) {
+        return '';
+    }
+
     if (strpos($string, '{') === false) { return $string; }
 
     foreach ($data as $k => $v) {
@@ -495,6 +499,8 @@ function string_replace_keys_values($string, $data) {
  * @param array $data
  */
 function string_replace_keys_values_extended($string, $data){
+
+    if (!$string) { return ''; }
 
     $matches_count = preg_match_all('/{([а-яёa-z]{1}[^}\n]+)}/ui', $string, $matches);
 
@@ -579,7 +585,6 @@ function string_replace_keys_values_extended($string, $data){
     }
 
     return $string;
-
 }
 
 /**
@@ -967,6 +972,7 @@ function string_iptobin($ip) {
  * @return string
  */
 function string_bintoip($str) {
+    if(!$str){ return null; }
     $len = strlen($str);
     if ($len === 16 || $len === 4) {
         return inet_ntop(pack('A' . $len, $str));

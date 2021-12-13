@@ -34,10 +34,13 @@ class fieldParent extends cmsFormField {
 
 	private function setParentContentTypeName(){
 
-		preg_match('/parent_([a-z0-9\-\_]+)_id/i', $this->name, $matches);
+        if($this->name){
 
-        if (!empty($matches[1])){
-            $this->parent_ctype_name = $matches[1];
+            preg_match('/parent_([a-z0-9\-\_]+)_id/i', $this->name, $matches);
+
+            if (!empty($matches[1])){
+                $this->parent_ctype_name = $matches[1];
+            }
         }
 	}
 
@@ -101,7 +104,7 @@ class fieldParent extends cmsFormField {
             return '';
         }
 
-        if ($this->getOption('item_style', 'ctype_list') == 'links_list') {
+        if ($this->getOption('item_style', 'ctype_list') === 'links_list') {
             return $this->parseTeaser($value);
         }
 
@@ -118,10 +121,10 @@ class fieldParent extends cmsFormField {
 		$parent_ctype = $child_ctype = false;
 
 		foreach($ctypes as $ctype){
-			if ($ctype['name'] == $this->parent_ctype_name){
+			if ($ctype['name'] === $this->parent_ctype_name){
 				$parent_ctype = $ctype;
 			}
-			if ($ctype['name'] == $this->item['ctype_name']){
+			if ($ctype['name'] === $this->item['ctype_name']){
 				$child_ctype = $ctype;
 			}
 		}
@@ -174,13 +177,13 @@ class fieldParent extends cmsFormField {
 
 		$perm = cmsUser::getPermissionValue($this->item['ctype_name'], 'bind_to_parent');
 		$is_allowed_to_bind = ($perm && (
-								($perm == 'all_to_all') || ($perm == 'all_to_own') || ($perm == 'all_to_other') ||
-								($perm == 'own_to_all' && $author_id == $auth_user_id) ||
-								($perm == 'own_to_other' && $author_id == $auth_user_id) ||
-								($perm == 'own_to_own' && $author_id == $auth_user_id) ||
-								($perm == 'other_to_own' && $author_id != $auth_user_id) ||
-								($perm == 'other_to_other' && $author_id != $auth_user_id) ||
-								($perm == 'other_to_all' && $author_id != $auth_user_id)
+								($perm === 'all_to_all') || ($perm === 'all_to_own') || ($perm === 'all_to_other') ||
+								($perm === 'own_to_all' && $author_id == $auth_user_id) ||
+								($perm === 'own_to_other' && $author_id == $auth_user_id) ||
+								($perm === 'own_to_own' && $author_id == $auth_user_id) ||
+								($perm === 'other_to_own' && $author_id != $auth_user_id) ||
+								($perm === 'other_to_other' && $author_id != $auth_user_id) ||
+								($perm === 'other_to_all' && $author_id != $auth_user_id)
 							)) || cmsUser::isAdmin();
 
         $allowed_to_unbind_perm = cmsUser::getPermissionValue($this->item['ctype_name'], 'bind_off_parent');
@@ -290,10 +293,10 @@ class fieldParent extends cmsFormField {
 		$parent_ctype = $child_ctype = false;
 
 		foreach($ctypes as $ctype){
-			if ($ctype['name'] == $this->parent_ctype_name){
+			if ($ctype['name'] === $this->parent_ctype_name){
 				$parent_ctype = $ctype;
 			}
-			if ($ctype['name'] == $this->item['ctype_name']){
+			if ($ctype['name'] === $this->item['ctype_name']){
 				$child_ctype = $ctype;
 			}
 		}

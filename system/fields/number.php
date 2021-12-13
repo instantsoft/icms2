@@ -134,20 +134,19 @@ class fieldNumber extends cmsFormField {
 
     public function getRules() {
 
-        if($this->context == 'filter' && $this->getOption('filter_range')){
+        if($this->context === 'filter' && $this->getOption('filter_range')){
 
             // Если в настройках поля в админке указали "только целые числа"
             $rules_number_exists = array_search(['digits'], $this->rules);
             if($rules_number_exists !== false){ unset($this->rules[$rules_number_exists]); }
 
-            $this->rules[] = array('number_range');
+            $this->rules[] = ['number_range'];
 
         } else {
-            $this->rules[] = array('number');
+            $this->rules[] = ['number'];
         }
 
         return parent::getRules();
-
     }
 
     public function getOption($key, $default = null) {
@@ -178,7 +177,6 @@ class fieldNumber extends cmsFormField {
         }
 
         return parent::getOption($key, $default);
-
     }
 
     public function getSQL() {
@@ -186,25 +184,27 @@ class fieldNumber extends cmsFormField {
         $decimal_int = (int)$this->getOption('decimal_int');
         $decimal_s = (int)$this->getOption('decimal_s');
 
-        return str_replace(array(
+        return str_replace([
             '{decimal_m}',
             '{decimal_d}',
             '{unsigned}'
-        ), array(
+        ], [
             ($decimal_int + $decimal_s),
             $decimal_s,
             ($this->getOption('is_abs') ? 'UNSIGNED' : '')
-        ), $this->sql);
-
+        ], $this->sql);
     }
 
     public function parse($value){
+
+        if (!$value){
+            return '';
+        }
 
         $units = $this->getProperty('units')?:$this->getOption('units');
         $prefix = $this->getProperty('prefix')?:$this->getOption('prefix', '');
 
         return $prefix.' '.$this->formatFloatValue($value).$this->getOption('units_sep').$units;
-
     }
 
     public function getStringValue($value){
@@ -226,11 +226,9 @@ class fieldNumber extends cmsFormField {
             }
 
             return $result_string;
-
         }
 
         return $this->formatFloatValue($value).$this->getOption('units_sep').$units;
-
     }
 
     public function hookAfterUpdate($content_table_name, $field, $field_old, $model){
@@ -243,7 +241,7 @@ class fieldNumber extends cmsFormField {
         $old_decimal_s   = empty($field_old['parser']->options['is_ceil']) ? (isset($field_old['parser']->options['decimal_s']) ? $field_old['parser']->options['decimal_s'] : 2) : 0;
         $old_unsigned    = isset($field_old['parser']->options['is_abs']) ? $field_old['parser']->options['is_abs'] : false;
 
-        if($field_old['type'] == $field['type'] && (
+        if($field_old['type'] === $field['type'] && (
                 $new_decimal_int != $old_decimal_int ||
                 $new_decimal_s != $old_decimal_s ||
                 $new_unsigned != $old_unsigned
@@ -266,12 +264,11 @@ class fieldNumber extends cmsFormField {
         }
 
         return parent::hookAfterUpdate($content_table_name, $field, $field_old, $model);
-
     }
 
     public function getDefaultVarType($is_filter = false) {
 
-        if($this->context == 'filter'){
+        if($this->context === 'filter'){
             $is_filter = true;
         }
 
@@ -280,7 +277,6 @@ class fieldNumber extends cmsFormField {
         }
 
         return parent::getDefaultVarType($is_filter);
-
     }
 
     public function getFilterInput($value) {
@@ -336,20 +332,18 @@ class fieldNumber extends cmsFormField {
 
             }
 
-            return cmsTemplate::getInstance()->renderFormField($tpl_name, array(
+            return cmsTemplate::getInstance()->renderFormField($tpl_name, [
                 'field' => $this,
                 'from'  => $from,
                 'to'    => $to
-            ));
+            ]);
 
         } elseif($value && !is_array($value)) {
 
             return parent::getFilterInput($value);
-
         }
 
         return parent::getFilterInput('');
-
     }
 
     public function applyFilter($model, $value) {
@@ -368,22 +362,20 @@ class fieldNumber extends cmsFormField {
             }
 
             return $model;
-
         }
 
         return parent::applyFilter($model, $value);
-
     }
 
     public function store($value, $is_submitted, $old_value = null) {
 
         if (!is_array($value)) {
 
-            $value = floatval(str_replace(',', '.', trim($value)));
-
             if (!$this->getOption('save_zero') && !$value) {
                 return null;
             }
+
+            $value = floatval(str_replace(',', '.', trim($value)));
 
             return $this->getOption('is_abs') ? abs($value) : $value;
 
@@ -412,7 +404,6 @@ class fieldNumber extends cmsFormField {
         $this->data['prefix'] = $this->getProperty('prefix')?:$this->getOption('prefix', '');
 
         return parent::getInput(!empty($this->options['is_digits']) ? (int)$value : $value);
-
     }
 
     private function formatFloatValue($value){
@@ -427,7 +418,6 @@ class fieldNumber extends cmsFormField {
         }
 
         return $value;
-
     }
 
     public function validate_number_range($value){
@@ -463,7 +453,6 @@ class fieldNumber extends cmsFormField {
         }
 
         return true;
-
     }
 
 }

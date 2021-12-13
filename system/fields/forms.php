@@ -58,9 +58,9 @@ class fieldForms extends cmsFormField {
         ]);
     }
 
-    public function parseTeaser($value){ return null; }
+    public function parseTeaser($value){ return ''; }
 
-    public function getStringValue($value) { return null; }
+    public function getStringValue($value) { return ''; }
 
     public function applyFilter($model, $value) {
         return $model->filterNotNull($this->name);

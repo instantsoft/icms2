@@ -62,25 +62,28 @@ class fieldText extends cmsFormField {
 
     public function getRules() {
 
-        if ($this->getOption('min_length')){
-            $this->rules[] = array('min_length', $this->getOption('min_length'));
+        if ($this->getOption('min_length')) {
+            $this->rules[] = ['min_length', $this->getOption('min_length')];
         }
 
-        if ($this->getOption('max_length')){
-            $this->rules[] = array('max_length', $this->getOption('max_length'));
+        if ($this->getOption('max_length')) {
+            $this->rules[] = ['max_length', $this->getOption('max_length')];
         }
 
         return $this->rules;
-
     }
 
     public function parseTeaser($value) {
+
+        if (!$value) {
+            return '';
+        }
 
         if (!empty($this->item['is_private_item'])) {
             return '<p class="private_field_hint text-muted">'.$this->item['private_item_hint'].'</p>';
         }
 
-        $max_len = $this->getOption('teaser_len');
+        $max_len = $this->getOption('teaser_len', 0);
 
         if ($max_len){
 
@@ -98,22 +101,32 @@ class fieldText extends cmsFormField {
 
     public function parse($value){
 
+        if (!$value) {
+            return '';
+        }
+
         if ($this->getOption('is_html_filter')){
-            return cmsEventsManager::hook('html_filter', array(
+
+            return cmsEventsManager::hook('html_filter', [
                 'text'                => $value,
                 'is_auto_br'          => true,
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
-            ));
+            ]);
+
         } else {
+
             if($this->getProperty('is_strip_tags') === true || $this->getOption('is_strip_tags')){
                 return nl2br($value);
             }
             return nl2br(html($value, false));
         }
-
     }
 
     public function afterParse($value, $item){
+
+        if (!$value){
+            return '';
+        }
 
         if ($this->getOption('parse_patterns')){
             $value = string_replace_keys_values_extended($value, $item);
@@ -124,6 +137,10 @@ class fieldText extends cmsFormField {
 
     public function getStringValue($value){
 
+        if (!$value) {
+            return '';
+        }
+
         if ($this->getOption('parse_patterns') && !empty($this->item)){
             $value = string_replace_keys_values_extended($value, $this->item);
         }
@@ -131,8 +148,11 @@ class fieldText extends cmsFormField {
         return trim(strip_tags($value));
     }
 
-    public function store($value, $is_submitted, $old_value=null){
-        if($this->getProperty('is_strip_tags') === true || $this->getOption('is_strip_tags')){
+    public function store($value, $is_submitted, $old_value = null) {
+        if (!$value) {
+            return '';
+        }
+        if ($this->getProperty('is_strip_tags') === true || $this->getOption('is_strip_tags')) {
             return trim(strip_tags($value));
         }
         return parent::store($value, $is_submitted, $old_value);
@@ -151,10 +171,9 @@ class fieldText extends cmsFormField {
         $this->data['attributes']               = $this->getProperty('attributes')?:[];
         $this->data['attributes']['rows']       = $this->getOption('size')?:$this->getProperty('size');
         $this->data['attributes']['id']         = $this->id;
-        $this->data['attributes']['required']   = (array_search(array('required'), $this->getRules()) !== false);
+        $this->data['attributes']['required']   = (array_search(['required'], $this->getRules()) !== false);
 
         return parent::getInput($value);
-
     }
 
 }

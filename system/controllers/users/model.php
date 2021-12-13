@@ -70,6 +70,7 @@ class modelUsers extends cmsModel {
                     foreach($user as $cell_id => $cell_value){
 
                         if (is_array($cell_value) || is_object($cell_value)) { continue; }
+                        if (!$cell_value) { $cell_value = ''; }
 
                         $action['href']  = str_replace('{'.$cell_id.'}', $cell_value, $action['href']);
                         $action['title'] = str_replace('{'.$cell_id.'}', $cell_value, $action['title']);

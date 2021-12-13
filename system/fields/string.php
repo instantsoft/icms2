@@ -70,11 +70,15 @@ class fieldString extends cmsFormField {
 
     public function parseTeaser($value) {
 
+        if (!$value) {
+            return '';
+        }
+
         if (!empty($this->item['is_private_item'])) {
             return '<p class="private_field_hint text-muted">' . $this->item['private_item_hint'] . '</p>';
         }
 
-        $max_len = $this->getOption('teaser_len');
+        $max_len = $this->getOption('teaser_len', 0);
 
         if ($max_len) {
             $value = string_short($value, $max_len);
@@ -85,6 +89,10 @@ class fieldString extends cmsFormField {
     }
 
     public function parse($value) {
+
+        if (!$value) {
+            return '';
+        }
 
         if ($this->getOption('is_autolink')) {
             return html_search_bar($value, href_to($this->item['ctype_name']) . '?' . $this->name . '=', 'string_autolink ' . $this->item['ctype_name'] . '_string_autolink');
@@ -119,6 +127,7 @@ class fieldString extends cmsFormField {
     }
 
     public function store($value, $is_submitted, $old_value = null) {
+        if (!$value) { return ''; }
         if ($this->getProperty('is_clean_disable') === true) {
             return trim($value);
         }

@@ -1,4 +1,5 @@
 <?php
+    $this->addTplJSNameFromContext('search');
 
     $this->setPageTitle(LANG_SEARCH_TITLE);
 
@@ -9,22 +10,23 @@
 
     $content_menu = [];
 
-    $uri_query = http_build_query(array(
+    $uri_query = http_build_query([
+        'order_by' => $order_by,
         'q'    => $query,
         'type' => $type,
         'date' => $date
-    ));
+    ]);
 
     if ($results){
 
         foreach($results as $result){
 
-            $content_menu[] = array(
+            $content_menu[] = [
                 'title'    => $result['title'],
                 'url'      => $this->href_to($result['name']) . '?' . $uri_query,
                 'url_mask' => $this->href_to($result['name']),
                 'counter'  => $result['count']
-            );
+            ];
 
             if($result['items']){
                 $search_data = $result;
@@ -38,7 +40,6 @@
         $this->addMenuItems('results_tabs', $content_menu);
 
         $this->setPageTitle($query, $target_title, mb_strtolower(LANG_SEARCH_TITLE));
-
     }
 
 ?>
@@ -51,27 +52,44 @@
     <?php } ?>
 </h1>
 
-<div id="search_form" class="my-3 my-md-4">
-    <form action="<?php echo href_to('search'); ?>" method="get">
-        <div class="form-group input-group">
-            <?php echo html_input('text', 'q', $query, ['placeholder' => LANG_SEARCH_QUERY_INPUT, 'class' => 'w-50']); ?>
-            <?php echo html_select('type', array(
-                'words' => LANG_SEARCH_TYPE_WORDS,
-                'exact' => LANG_SEARCH_TYPE_EXACT,
-            ), $type); ?>
-            <?php echo html_select('date', array(
-                'all' => LANG_SEARCH_DATES_ALL,
-                'w' => LANG_SEARCH_DATES_W,
-                'm' => LANG_SEARCH_DATES_M,
-                'y' => LANG_SEARCH_DATES_Y,
-            ), $date); ?>
+<div class="my-3 my-md-4 bg-light p-3 rounded border border-light shadow">
+    <form action="<?php echo href_to('search'); ?>" method="get" id="icms-search-form">
+        <div class="form-group input-group input-group-lg">
+            <?php echo html_input('search', 'q', $query, ['placeholder' => LANG_SEARCH_QUERY_INPUT, 'class' => 'w-50']); ?>
+            <div class="input-group-append">
+                <button value="" class="button btn button-submit btn-primary" name="submit" type="submit">
+                    <?php html_svg_icon('solid', 'search'); ?>
+                    <span class="d-none d-lg-inline-block"><?php echo LANG_FIND; ?></span>
+                </button>
+            </div>
         </div>
-        <?php echo html_submit(LANG_FIND); ?>
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                <?php echo html_select('type', [
+                    'words' => LANG_SEARCH_TYPE_WORDS,
+                    'exact' => LANG_SEARCH_TYPE_EXACT
+                ], $type); ?>
+            </div>
+            <div class="col-auto">
+                <?php echo html_select('date', [
+                    'all' => LANG_SEARCH_DATES_ALL,
+                    'w' => LANG_SEARCH_DATES_W,
+                    'm' => LANG_SEARCH_DATES_M,
+                    'y' => LANG_SEARCH_DATES_Y
+                ], $date); ?>
+            </div>
+            <div class="col-auto">
+                <?php echo html_select('order_by', [
+                    'fsort' => LANG_SORTING_BYREL,
+                    'date_pub' => LANG_SORTING_BYDATE
+                ], $order_by); ?>
+            </div>
+        </div>
     </form>
 </div>
 
 <?php if ($query && empty($search_data)){ ?>
-    <p id="search_no_results" class="alert alert-info">
+    <p class="alert alert-info">
         <?php echo LANG_SEARCH_NO_RESULTS; ?>
     </p>
 <?php } ?>
@@ -82,27 +100,27 @@
 
     <div id="search_results_list" class="mb-3 mb-md-4">
         <?php foreach($search_data['items'] as $item){ ?>
-            <div class="item media mb-3">
-                <?php if(!empty($item['image'])){ ?>
-                    <div class="mr-3">
-                        <a href="<?php echo $item['url']; ?>" target="_blank">
-                            <?php echo $item['image']; ?>
-                        </a>
-                    </div>
-                <?php } ?>
+            <div class="item media mb-3 mb-md-4 mb-lg-5">
                 <div class="media-body">
-                    <h5 class="mt-0">
+                    <h3 class="mt-0">
                         <a href="<?php echo $item['url']; ?>" target="_blank">
                             <?php echo $item['title']; ?>
                         </a>
-                    </h5>
+                    </h3>
+                    <?php if(!empty($item['image'])){ ?>
+                        <div class="mb-3">
+                            <a href="<?php echo $item['url']; ?>" target="_blank">
+                                <?php echo $item['image']; ?>
+                            </a>
+                        </div>
+                    <?php } ?>
                     <?php foreach($item['fields'] as $field=>$value){ ?>
                         <?php if (!$value) { continue; } ?>
                         <div class="field search_field_<?php echo $field; ?> mb-2">
-                            <?php echo ((mb_strlen($value) > 280) ? string_short($value, 280) : $value); ?>
+                            <?php echo $value; ?>
                         </div>
                     <?php } ?>
-                    <div class="text-muted">
+                    <div class="text-muted small">
                         <?php html_svg_icon('solid', 'calendar-alt'); ?>
                         <?php echo html_date_time($item['date_pub']); ?>
                     </div>

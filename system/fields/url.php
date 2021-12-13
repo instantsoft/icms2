@@ -42,6 +42,10 @@ class fieldUrl extends cmsFormField {
 
     public function getStringValue($value){
 
+        if (!$value) {
+            return '';
+        }
+
         if ($this->getOption('title') && strpos( $value, '|') !== false){
 
             $result = explode('|', $value);
@@ -54,9 +58,13 @@ class fieldUrl extends cmsFormField {
         return $value;
     }
 
-    public function parse($value){
+    public function parse($value) {
 
-        if (!$this->getOption('title') && strpos( $value, '|') === false){
+        if (!$value) {
+            return '';
+        }
+
+        if (!$this->getOption('title') && strpos($value, '|') === false) {
 
             $href = $value;
 
@@ -66,43 +74,43 @@ class fieldUrl extends cmsFormField {
 
             $href = trim($result[0]);
 
-            if(!empty($result[1])){
+            if (!empty($result[1])) {
                 $value = trim($result[1]);
             }
-
         }
 
-        if ($this->getOption('auto_http')){
-            if (!preg_match('/^([a-z]+):\/\/(.+)$/i', $href)) { $href = 'http://' . $href; }
+        if ($this->getOption('auto_http')) {
+            if (!preg_match('/^([a-z]+):\/\/(.+)$/i', $href)) {
+                $href = 'http://' . $href;
+            }
         }
 
-        if ($this->getOption('redirect') && cmsController::enabled('redirect')){
-            $href = href_to('redirect').'?url='.urlencode($href);
+        if ($this->getOption('redirect') && cmsController::enabled('redirect')) {
+            $href = href_to('redirect') . '?url=' . urlencode($href);
         }
 
-        $nofollow = $class = '';
+        $nofollow = $class    = '';
 
-        if ($this->getOption('nofollow')){
+        if ($this->getOption('nofollow')) {
             $nofollow = ' nofollow';
         }
 
-        if ($this->getOption('css_class')){
-            $class = ' class="'.$this->getOption('css_class').'"';
+        if ($this->getOption('css_class')) {
+            $class = ' class="' . $this->getOption('css_class') . '"';
         }
 
-        return '<a rel="noopener'.$nofollow.'" target="_blank" '.$class.' href="'.htmlspecialchars($href).'">'.htmlspecialchars($value).'</a>';
-
+        return '<a rel="noopener' . $nofollow . '" target="_blank" ' . $class . ' href="' . html($href, false) . '">' . html($value, false) . '</a>';
     }
 
     public function applyFilter($model, $value) {
         return $model->filterLike($this->name, "%{$value}%");
     }
 
-    public function store($value, $is_submitted, $old_value=null){
+    public function store($value, $is_submitted, $old_value = null) {
         return strip_tags($value);
     }
 
-    public function storeFilter($value){
+    public function storeFilter($value) {
         return $this->store($value, false);
     }
 

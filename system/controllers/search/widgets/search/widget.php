@@ -1,10 +1,10 @@
 <?php
+
 class widgetSearchSearch extends cmsWidget {
 
-    public function run(){
+    public function run() {
 
-        return array();
-
+        return [];
     }
 
 }

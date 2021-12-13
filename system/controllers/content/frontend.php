@@ -15,34 +15,34 @@ class content extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function route($uri){
+    public function route($uri) {
 
         $action_name = $this->parseRoute($this->cms_core->uri);
 
-        if (!$action_name) { cmsCore::error404(); }
+        if (!$action_name) {
+            return cmsCore::error404();
+        }
 
         $this->runAction($action_name);
-
     }
 
-	public function parseRoute($uri){
+    public function parseRoute($uri) {
 
-		$action_name = parent::parseRoute($uri);
+        $action_name = parent::parseRoute($uri);
 
-		if (!$action_name && $this->cms_config->ctype_default){
-			$action_name = parent::parseRoute($this->cms_config->ctype_default[0] . '/' . $uri);
-		}
+        if (!$action_name && $this->cms_config->ctype_default) {
+            $action_name = parent::parseRoute($this->cms_config->ctype_default[0] . '/' . $uri);
+        }
 
-		return $action_name;
-
-	}
+        return $action_name;
+    }
 
 //============================================================================//
 //============================================================================//
 
     public function getMenuAddItems($menu_item_id, $full_string = false) {
 
-        $result = ['url' => '#', 'items' => false];
+        $result = ['url' => '#', 'items' => []];
 
         $ctypes = $this->model->getContentTypes();
         if (!$ctypes) { return $result; }
@@ -70,7 +70,7 @@ class content extends cmsFrontend {
 
     public function getMenuPrivateItems($menu_item_id) {
 
-        $result = ['url' => '#', 'items' => false];
+        $result = ['url' => '#', 'items' => []];
 
         $ctypes = $this->model->getContentTypes();
         if (!$ctypes) { return false; }
@@ -95,7 +95,7 @@ class content extends cmsFrontend {
 
     public function getMenuCategoriesItems($menu_item_id, $ctype){
 
-        $result = array('url' => href_to($ctype['name']), 'items' => false);
+        $result = ['url' => href_to($ctype['name']), 'items' => []];
 
         if (!$ctype['is_cats']) { return $result; }
 
@@ -124,13 +124,13 @@ class content extends cmsFrontend {
                 }
             }
 
-            $result['items'][$cat['id']] = array(
+            $result['items'][$cat['id']] = [
                 'id'           => $item_id,
                 'parent_id'    => ($cat['parent_id'] == 1 ? $menu_item_id : $parent_id),
                 'title'        => $cat['title'],
                 'childs_count' => 0,
                 'url'          => href_to($base_url, $cat['slug'])
-            );
+            ];
 
         }
 
@@ -143,7 +143,6 @@ class content extends cmsFrontend {
         }
 
         return $result;
-
     }
 
 //============================================================================//

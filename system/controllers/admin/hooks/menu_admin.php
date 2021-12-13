@@ -7,7 +7,7 @@ class onAdminMenuAdmin extends cmsAction {
         $action       = $item['action'];
         $menu_item_id = $item['menu_item_id'];
 
-        $result = ['url' => href_to($this->name), 'items' => false];
+        $result = ['url' => href_to($this->name), 'items' => []];
 
         if ($action != 'menu') {
             return $result;

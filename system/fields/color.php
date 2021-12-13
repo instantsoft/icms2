@@ -9,35 +9,34 @@ class fieldColor extends cmsFormField {
     public $var_type    = 'string';
 
     public function getOptions() {
-        return array(
-            new fieldList('control_type', array(
+        return [
+            new fieldList('control_type', [
                 'title'   => LANG_PARSER_COLOR_CT,
                 'default' => 'hue',
-                'items'   => array(
+                'items'   => [
                     'hue'        => LANG_PARSER_COLOR_CT_HUE,
                     'saturation' => LANG_PARSER_COLOR_CT_SATURATION,
                     'brightness' => LANG_PARSER_COLOR_CT_BRIGHTNESS,
                     'wheel'      => LANG_PARSER_COLOR_CT_WHEEL,
                     'swatches'   => LANG_PARSER_COLOR_CT_SWATCHES
-                )
-            )),
-            new fieldCheckbox('opacity', array(
+                ]
+            ]),
+            new fieldCheckbox('opacity', [
                 'title'   => LANG_PARSER_COLOR_OPACITY,
                 'default' => false
-            )),
-            new fieldString('swatches', array(
+            ]),
+            new fieldString('swatches', [
                 'title'   => LANG_PARSER_COLOR_CT_SWATCHES_OPT,
                 'default' => '#fff, #000, #f00, #0f0, #00f, #ff0, #0ff'
-            ))
-        );
+            ])
+        ];
     }
 
     public function getRules() {
 
-        $this->rules[] = array('color');
+        $this->rules[] = ['color'];
 
         return $this->rules;
-
     }
 
     public function parse($value) {
@@ -45,7 +44,7 @@ class fieldColor extends cmsFormField {
     }
 
     public function getStringValue($value) {
-        return $value;
+        return $value ? $value : '';
     }
 
     public function applyFilter($model, $value) {
@@ -69,16 +68,15 @@ class fieldColor extends cmsFormField {
 
         $this->data['minicolors_options'] = [
             'swatches' => $swatches,
-            'control' => $this->getOption('control_type', 'hue')
+            'control'  => $this->getOption('control_type', 'hue')
         ];
 
-        if($this->getOption('opacity')){
-            $this->data['minicolors_options']['format'] = 'rgb';
+        if ($this->getOption('opacity')) {
+            $this->data['minicolors_options']['format']  = 'rgb';
             $this->data['minicolors_options']['opacity'] = true;
         }
 
         return parent::getInput($value);
-
     }
 
 }

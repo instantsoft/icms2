@@ -5,16 +5,18 @@
  * @param string $string Строка
  * @param boolean $print Печатать результат или возвращать, по умолчанию true
  */
-function html($string, $print = true){
+function html($string, $print = true) {
+
+    if (!$string) { return ''; }
 
     $string = htmlentities($string, ENT_QUOTES | ENT_HTML401, 'UTF-8');
 
-    if($print){
-        echo $string; return;
+    if ($print) {
+        echo $string;
+        return;
     }
 
     return $string;
-
 }
 
 /**

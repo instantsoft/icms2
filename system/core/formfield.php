@@ -92,7 +92,7 @@ class cmsFormField {
      * Массив правил валидации
      * @var array
      */
-    public $rules = array();
+    public $rules = [];
     /**
      * Значение поля из массива конвертировать в json
      * @var boolean
@@ -102,7 +102,7 @@ class cmsFormField {
      * Массив опций поля
      * @var array
      */
-    public $options = array();
+    public $options = [];
     protected $default_options_loaded = false;
 
     /**
@@ -117,15 +117,15 @@ class cmsFormField {
      * Массив для данных в шаблоне
      * @var array
      */
-    public $data = array();
+    public $data = [];
 
-    public $visible_depend = array();
+    public $visible_depend = [];
 
     /**
      * Исключение поля в контроллерах
      * @var array
      */
-    public $excluded_controllers = array();
+    public $excluded_controllers = [];
 
     public $context = null;
     public $context_params = [];
@@ -162,17 +162,18 @@ class cmsFormField {
      * @param string $name Имя поля
      * @param array $options Массив опций
      */
-	public function __construct($name, $options=false){
+	public function __construct($name, $options = false) {
 
-        $this->setName($name);
+        if($name){
+            $this->setName($name);
+        }
 
         $this->field_type = substr(mb_strtolower(get_called_class()), 5);
         $this->class = $this->field_type;
 
-        if ($options){
+        if ($options) {
             $this->setOptions($options);
         }
-
     }
 
     /**
@@ -198,7 +199,7 @@ class cmsFormField {
      *
      * @return array
      */
-    public function getOptions() { return array(); }
+    public function getOptions() { return []; }
 
     public function getOptionsExtended() {
 
@@ -225,17 +226,22 @@ class cmsFormField {
      */
     public function getOption($key, $default = null) {
 
-        if(array_key_exists($key, $this->options)){
+        if (array_key_exists($key, $this->options)) {
+
+            if(!$this->options[$key] && $default !== null){
+                return $default;
+            }
+
             return $this->options[$key];
         }
 
-        if($this->default_options_loaded !== true){
+        if ($this->default_options_loaded !== true) {
 
             $options = $this->getOptions();
 
-            $field_options = array();
+            $field_options = [];
 
-            foreach($options as $field){
+            foreach ($options as $field) {
                 $field_options[$field->getName()] = $field->getDefaultValue();
             }
 
@@ -243,14 +249,11 @@ class cmsFormField {
 
             $this->default_options_loaded = true;
 
+            return $this->getOption($key, $default);
+
+        } else {
+            return $default;
         }
-
-        if(array_key_exists($key, $this->options)){
-            return $this->options[$key];
-        }
-
-        return $default;
-
     }
 
     /**
@@ -350,11 +353,11 @@ class cmsFormField {
 
         $max_length = $this->getOption('max_length');
 
-        if($max_length){
-            return str_replace('{max_length}', $max_length, $this->sql);
+        if ($max_length) {
+            return str_replace('{max_length}', (string)$max_length, $this->sql);
         }
-        return $this->sql;
 
+        return $this->sql;
     }
 
     /**
@@ -380,20 +383,19 @@ class cmsFormField {
      * @param bool $is_filter Указывает, что нам нужен тип при использовании в фильтре
      * @return string|null
      */
-    public function getDefaultVarType($is_filter=false) {
+    public function getDefaultVarType($is_filter = false) {
 
-        if(is_string($this->var_type)){
+        if (is_string($this->var_type)) {
             return $this->var_type;
         }
 
         $default_value = $this->getDefaultValue();
 
-        if($default_value === null){
+        if ($default_value === null) {
             return null;
         }
 
         return gettype($default_value);
-
     }
 
     /**
@@ -403,10 +405,10 @@ class cmsFormField {
      */
     public function getInput($value) {
         $this->title = $this->element_title;
-        return cmsTemplate::getInstance()->renderFormField($this->class, array(
+        return cmsTemplate::getInstance()->renderFormField($this->class, [
             'field' => $this,
             'value' => $value
-        ));
+        ]);
     }
 
     /**
@@ -421,7 +423,7 @@ class cmsFormField {
         }
 
         // при фильтрации все поля необязательны
-        $required_key = array_search(array('required'), $this->getRules());
+        $required_key = array_search(['required'], $this->getRules());
         if($required_key !== false){
             unset($this->rules[$required_key]);
         }

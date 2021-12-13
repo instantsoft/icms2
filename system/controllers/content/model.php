@@ -362,13 +362,15 @@ class modelContent extends cmsModel {
         if ($fields) {
             foreach ($fields as $name => $field) {
 
+                $field_property = $field;
+
                 $field_class = 'field' . string_to_camel('_', $field['type']);
 
                 $field['handler'] = new $field_class($field['name']);
 
                 $field['handler_title'] = $field['handler']->getTitle();
 
-                $field_property = $field; unset($field_property['type']);
+                unset($field_property['type']);
 
                 $field['handler']->setOptions($field_property);
 

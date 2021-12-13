@@ -58,6 +58,7 @@ class modelWall extends cmsModel {
                         if (is_array($cell_value) || is_object($cell_value)) {
                             continue;
                         }
+                        if (!$cell_value) { $cell_value = ''; }
 
                         foreach (['href', 'title', 'hint', 'onclick'] as $replaceable_key) {
                             if(isset($action[$replaceable_key])){

@@ -183,7 +183,7 @@ class modelMenu extends cmsModel {
                 continue;
             }
 
-            $hook_result = ['items' => false];
+            $hook_result = ['items' => []];
 
             if ($item['title'] && $parse_hooks) {
                 if (strpos($item['title'], '{user.') !== false) {
@@ -228,7 +228,7 @@ class modelMenu extends cmsModel {
                             $item['title'] = $hook_result['title'];
                         }
 
-                        if (isset($hook_result['items']) && is_array($hook_result['items'])) {
+                        if (!empty($hook_result['items'])) {
                             $item['childs_count'] = count($hook_result['items']);
                         }
 
@@ -249,7 +249,7 @@ class modelMenu extends cmsModel {
             $items[$item['id']] = $item;
 
             // получаем дополнительные пункты меню
-            if (isset($hook_result['items']) && is_array($hook_result['items'])) {
+            if (!empty($hook_result['items'])) {
                 foreach ($hook_result['items'] as $i) {
                     $i['menu_id']    = $item['menu_id'];
                     $i['options']    = isset($i['options']) ? $i['options'] : [];

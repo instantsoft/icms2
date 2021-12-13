@@ -24,7 +24,7 @@ class fieldDate extends cmsFormField {
 
     public function getRules() {
 
-        if ($this->context == 'filter' && $this->getOption('filter_range')) {
+        if ($this->context === 'filter' && $this->getOption('filter_range')) {
             $this->rules[] = ['date_range'];
         } else {
             $this->rules[] = ['date'];
@@ -34,7 +34,7 @@ class fieldDate extends cmsFormField {
     }
 
     public function parse($value) {
-        return $value ? html_date($value, $this->getOption('show_time')) : null;
+        return $value ? html_date($value, $this->getOption('show_time')) : '';
     }
 
     public function getStringValue($value) {
@@ -110,7 +110,7 @@ class fieldDate extends cmsFormField {
 
     public function getDefaultVarType($is_filter = false) {
 
-        if ($this->context == 'filter') {
+        if ($this->context === 'filter') {
             $is_filter = true;
         }
 

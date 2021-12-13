@@ -2,10 +2,10 @@
 
 class fieldImage extends cmsFormField {
 
-    public $title         = LANG_PARSER_IMAGE;
-    public $sql           = 'text';
-    public $allow_index   = false;
-    public $var_type      = 'array';
+    public $title       = LANG_PARSER_IMAGE;
+    public $sql         = 'text';
+    public $allow_index = false;
+    public $var_type    = 'array';
 
     protected $teaser_url = '';
 
@@ -121,7 +121,7 @@ class fieldImage extends cmsFormField {
         return $img_func($paths, $presets, (empty($this->item['title']) ? $this->name : $this->item['title']));
     }
 
-    public function getStringValue($value){ return null; }
+    public function getStringValue($value){ return ''; }
 
     public function store($value, $is_submitted, $old_value=null){
 

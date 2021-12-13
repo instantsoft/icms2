@@ -1,46 +1,143 @@
 <?php
 
-class modelSearch extends cmsModel{
+class modelSearch extends cmsModel {
 
-    protected $query;
-    protected $original_query;
-    protected $type;
-    protected $date_interval;
+    /**
+     * Подготовленный массив слов запроса
+     *
+     * @var array
+     */
+    protected $query = [];
+
+    /**
+     * Оригинальная фраза запроса
+     *
+     * @var string
+     */
+    protected $original_query = '';
+
+    /**
+     * Массив полей, в которых нужно искать
+     *
+     * @var array
+     */
+    protected $match_fields = [];
+
+    /**
+     * Массив полей, в которых надо подсветить слова запроса
+     *
+     * @var array
+     */
+    protected $highlight_fields = [];
+
+    /**
+     * Подготовленная строка полей поиска
+     *
+     * @var string
+     */
+    protected $match_fields_str = '';
+
+    /**
+     * Тип поиска: words, exact
+     *
+     * @var string
+     */
+    protected $type = 'words';
+
+    /**
+     * Флаг поиска по трём символам
+     *
+     * @var boolean
+     */
     protected $three_symbol_search = false;
 
-    public function setQuery($query){
+    /**
+     * Устанавливает тип поиска
+     *
+     * @param string $type
+     * @return $this
+     */
+    public function setSearchType($type) {
 
-        $query = strip_tags(mb_strtolower(trim(urldecode($query))));
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает поля для поиска
+     *
+     * @param array $match_fields_list
+     * @return $this
+     */
+    public function setMatchFields($match_fields_list) {
+
+        $this->highlight_fields = $match_fields_list;
+        $this->match_fields = $match_fields_list;
+        $this->match_fields_str = 'i.' . implode(', i.', $match_fields_list);
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает поля, в которых надо подсветить слова запроса
+     *
+     * @param array $highlight_fields
+     * @return $this
+     */
+    public function setHighlightFields($highlight_fields) {
+
+        $this->highlight_fields = $highlight_fields;
+
+        return $this;
+    }
+
+    /**
+     * Подготавливается поисковый запрос
+     *
+     * @param string $query
+     * @return boolean
+     */
+    public function setQuery($query) {
+
+        $query = trim(strip_tags(mb_strtolower(urldecode($query))));
+
+        $query = trim(preg_replace('/['.preg_quote(implode('', $this->special_chars)).']+/', ' ', $query));
 
         $this->original_query = $query;
 
-        $this->query = array();
+        $this->query = [];
 
         $stopwords = string_get_stopwords(cmsCore::getLanguageName());
 
-        if (mb_strlen($query) == 3) {
+        if (mb_strlen($query) === 3) {
 
-            if(!$stopwords || ($stopwords && !in_array($query, $stopwords))){
+            if (!$stopwords || ($stopwords && !in_array($query, $stopwords, true))) {
 
                 $this->three_symbol_search = true;
 
                 $this->query[] = $query;
 
                 return true;
-
             }
 
             return false;
-
         }
 
-        $words = explode(' ', $query);
+        $words = preg_split('/[\s,]+/', $query);
 
-        foreach($words as $word){
+        foreach ($words as $word) {
 
-            if (mb_strlen($word)<3) { continue; }
-            if($stopwords && in_array($word, $stopwords)){ continue; }
-            if (mb_strlen($word)==3) { $this->query[] = $this->db->escape($word); continue; }
+            if (mb_strlen($word) < 3) {
+                continue;
+            }
+            if ($stopwords && in_array($word, $stopwords, true)) {
+                continue;
+            }
+            if (mb_strlen($word) === 3) {
+                $this->query[] = $word;
+                continue;
+            }
 
             if (mb_strlen($word) >= 12) {
                 $word = mb_substr($word, 0, mb_strlen($word) - 4);
@@ -52,219 +149,210 @@ class modelSearch extends cmsModel{
                 $word = mb_substr($word, 0, mb_strlen($word) - 1);
             }
 
-            $this->query[] = $this->db->escape($word) . '*';
-
+            $this->query[] = $word . '*';
         }
 
-        if (empty($this->query)) { return false; }
-
-        return true;
-
-    }
-
-    public function setSearchType($type){
-        $this->type = $type;
-    }
-
-    public function setDateInterval($date){
-        $this->date_interval = $date;
-    }
-
-    public function getFullTextQuery(){
-
-        $ft_query = '';
-
-        switch ($this->type){
-
-            case 'words':
-
-                if ($this->three_symbol_search) {
-
-                    $ft_query .= '%'.$this->db->escape($this->original_query).'%';
-
-                } else {
-
-                    $ft_query .= '>\"' . $this->db->escape($this->original_query).'\" <(';
-                    $ft_query .= '+' . implode(' +', $this->query).')';
-
-                }
-
-                break;
-
-            case 'exact':
-
-                if ($this->three_symbol_search) {
-
-                    $ft_query .= $this->db->escape($this->original_query);
-
-                } else {
-
-                    $ft_query .= '\"' . $this->db->escape($this->original_query) . '\"';
-
-                }
-
-                break;
-
-        }
-
-        return $ft_query;
-
-    }
-
-    public function getSearchSQL($table_name, $match_fields, $select_fields, $filters){
-
-        $match_fields  = '`'.implode('`, `', $match_fields).'`';
-        $select_fields = array_map(function($v){
-            if(is_numeric($v)){
-                return $v;
-            }
-            return '`'.$v.'`';
-        }, $select_fields);
-        $select_fields = implode(', ', $select_fields);
-
-        $query = $this->getFullTextQuery();
-
-        $filter_sql = '';
-
-        if ($this->date_interval != 'all'){
-
-            switch ($this->date_interval){
-                case 'w':
-                    $filter_sql .= "DATEDIFF(NOW(), date_pub) <= 7 AND ";
-                    break;
-                case 'm':
-                    $filter_sql .= "DATE_SUB(NOW(), INTERVAL 1 MONTH) < date_pub AND ";
-                    break;
-                case 'y':
-                    $filter_sql .= "DATE_SUB(NOW(), INTERVAL 1 YEAR) < date_pub AND ";
-                    break;
-            }
-
-        }
-
-        if($filters){
-            $_filter_sql = array();
-            foreach ($filters as $filter) {
-                $filter['value'] = $this->db->prepareValue($filter['field'], $filter['value']);
-                $_filter_sql[] = "`{$filter['field']}` {$filter['condition']} {$filter['value']}";
-            }
-            $filter_sql .= implode(' AND ', $_filter_sql).' AND ';
-        }
-
-        if ($this->three_symbol_search) {
-
-            $sql = "SELECT {$select_fields}
-                    FROM {#}{$table_name}
-                    WHERE {$filter_sql} CONCAT({$match_fields}) LIKE '{$query}'
-                    ";
-
-        } else {
-
-            if($select_fields == 1){
-
-                $sql = "SELECT {$select_fields}
-                        FROM {#}{$table_name}
-                        WHERE {$filter_sql} MATCH({$match_fields}) AGAINST ('{$query}' IN BOOLEAN MODE)
-                        ";
-
-            } else {
-
-                $sql = "SELECT {$select_fields}, MATCH({$match_fields}) AGAINST ('{$query}' IN BOOLEAN MODE) as fsort
-                        FROM {#}{$table_name}
-                        WHERE {$filter_sql} MATCH({$match_fields}) AGAINST ('{$query}' IN BOOLEAN MODE)
-                        ORDER BY fsort desc
-                        ";
-
-            }
-
-        }
-
-        return $sql;
-
-    }
-
-    public function getSearchResultsCount($table_name, $match_fields, $filters){
-
-        $sql = $this->getSearchSQL($table_name, $match_fields, array('1'), $filters);
-
-        $sql_result = $this->db->query($sql);
-
-        return $this->db->numRows($sql_result);
-
-    }
-
-    public function getSearchResults($table_name, $match_fields, $select_fields, $filters, $item_callback=false, $sources_name = ''){
-
-        $sql = $this->getSearchSQL($table_name, $match_fields, $select_fields, $filters);
-
-        if ($this->limit){ $sql .= " LIMIT {$this->limit}"; }
-
-        $sql_result = $this->db->query($sql);
-
-        if (!$this->db->numRows($sql_result)){
+        if (empty($this->query)) {
             return false;
         }
 
-        $items = array();
+        return true;
+    }
 
-        while ($item = $this->db->fetchAssoc($sql_result)){
+    /**
+     * Фильтр по периоду
+     *
+     * @param string $date_interval
+     * @return $this
+     */
+    public function filterDateInterval($date_interval) {
 
-            foreach($match_fields as $field_name){
+        switch ($date_interval) {
+            case 'w':
+                return $this->filterDateYounger('date_pub', 7);
+            case 'm':
+                return $this->filterDateYounger('date_pub', 1, 'MONTH');
+            case 'y':
+                return $this->filterDateYounger('date_pub', 1, 'YEAR');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Фильтр по дополнительным параметрам от контроллеров
+     *
+     * @param array $filters
+     * @return $this
+     */
+    public function filterSearch($filters) {
+
+        if (!empty($filters['filters'])) {
+
+            $this->applyDatasetFilters($filters, true);
+
+            unset($filters['filters']);
+        }
+
+        foreach ($filters as $filter) {
+
+            $filter['value'] = $this->db->prepareValue($filter['field'], $filter['value']);
+
+            if (strpos($filter['field'], '.') === false){ $filter['field'] = 'i.' . $filter['field']; }
+
+            $this->filter("{$filter['field']} {$filter['condition']} {$filter['value']}");
+        }
+
+        return $this;
+    }
+
+    /**
+     * Фильтр по поисковому запросу
+     *
+     * @return $this
+     */
+    public function filterQuery() {
+
+        $this->select = [];
+
+        if ($this->three_symbol_search) {
+
+            $query = $this->db->escape($this->original_query);
+
+            if($this->type === 'words'){
+                $query .= '%';
+            }
+
+            return $this->filter("CONCAT({$this->match_fields_str}) LIKE '{$query}");
+        }
+
+        $query = '\"' . $this->db->escape($this->original_query) . '\"';
+
+        if($this->type === 'words'){
+
+            $query = '>\"' . $this->db->escape($this->original_query) . '\" <(';
+            $query .= '+' . implode(' +', $this->db->escape($this->query)) . ')';
+        }
+
+        $search_param = "MATCH({$this->match_fields_str}) AGAINST ('{$query}' IN BOOLEAN MODE)";
+
+        $this->select($search_param, 'fsort');
+
+        return $this->filter($search_param);
+    }
+
+    /**
+     * Присоединяем другие таблицы
+     *
+     * @param array $joins
+     * @return $this
+     */
+    public function applyJoins($joins) {
+
+        foreach ($joins as $method => $args) {
+            call_user_func_array([$this, $method], $args);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Возвращает результат поиска
+     *
+     * @param string $table_name
+     * @return array
+     */
+    public function getSearchResults($table_name) {
+
+        return $this->get($table_name, function($item, $model) {
+
+            foreach ($this->highlight_fields as $field_name) {
                 $item[$field_name] = $this->getHighlightedText($item[$field_name]);
             }
 
-            if (is_callable($item_callback)){
-                $item = call_user_func_array($item_callback, array($item, $this, $sources_name, $match_fields, $select_fields));
-                if ($item === false){ continue; }
-            }
+            return $item;
 
-            $items[] = $item;
-
-        }
-
-        return $items;
-
+        }, false) ?: [];
     }
 
-    public function getHighlightedText($text){
+    /**
+     * Находит искомые слова в тексте и подсвечивает их
+     *
+     * @param string $text
+     * @return string
+     */
+    public function getHighlightedText($text) {
 
-        $text = str_replace(array("\n", '<br>', '<br/>'), ' ', $text);
+        if(!$text){ return ''; }
+
+        $text = str_replace('>', '> ', $text);
         $text = strip_tags($text);
-        $text = preg_replace('/\s+/u', ' ', $text);
+        $text = preg_replace('#\s\s+#u', ' ', $text);
 
-        $found_words = array();
-        $found_sentences = array();
+        $found_words     = [];
+        $found_sentences = [];
+        $found_sentences_counts = [];
 
-        foreach ($this->query as $word){
+        foreach ($this->query as $word) {
 
             $word = preg_quote(rtrim($word, '*'));
 
-            if (preg_match("/\b({$word}\w+)\b/iu", $text, $matches)){
+            if (preg_match("/\b({$word}\w+)\b/iu", $text, $matches)) {
                 $found_words[] = $matches[0];
             }
-
         }
 
-        $sentences = explode('.', $text);
-        $sentences = array_map(function($s){ return trim($s); }, $sentences);
+        if(mb_strlen($text) > 250){
+            $sentences = explode('.', $text);
+        } else {
+            $sentences = [$text];
+        }
 
-        foreach($sentences as $sentence){
+        $sentences = array_map(function ($s) {
+            return trim($s);
+        }, $sentences);
+
+        foreach ($sentences as $sentence) {
+
             $is_found = false;
-            foreach($found_words as $word){
-                if (mb_strpos(mb_strtolower($sentence), mb_strtolower($word)) !== false){
-                    $sentence = str_replace($word, '<em>'.$word.'</em>', $sentence);
+
+            $count = 0;
+
+            $sentence_lower = mb_strtolower($sentence);
+
+            foreach ($found_words as $word) {
+
+                $wcount = substr_count($sentence_lower, mb_strtolower($word));
+
+                if ($wcount) {
+                    $sentence = str_replace($word, '<em>' . $word . '</em>', $sentence);
                     $is_found = true;
                 }
+
+                $count += $wcount;
             }
-            if ($is_found) { $found_sentences[] = $sentence; }
+
+            if ($is_found) {
+                $found_sentences[] = $sentence;
+                $found_sentences_counts[] = $count;
+            }
         }
 
-        if (!$found_sentences) { return $text; }
+        if (!$found_sentences) {
+            return string_short($text, 250);
+        }
 
-        $found_sentences = implode('... ', $found_sentences);
+        // Сортируем и оставляем только 3 предложения
+        arsort($found_sentences_counts);
+        $found_sentences_counts = array_slice($found_sentences_counts, 0, 3);
 
-        return $found_sentences.'...';
+        $text_list = [];
 
+        foreach ($found_sentences_counts as $key => $value) {
+            $text_list[] = $found_sentences[$key];
+        }
+
+        return implode('. ', $text_list);
     }
 
 }

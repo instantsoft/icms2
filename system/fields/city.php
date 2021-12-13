@@ -12,46 +12,49 @@ class fieldCity extends cmsFormField {
     public $var_type    = 'integer';
     public $is_denormalization = true;
 
-    public function getOptions(){
+    public function getOptions() {
 
-        return array(
-            new fieldList('location_type', array(
+        return [
+            new fieldList('location_type', [
                 'title'   => LANG_PARSER_CITY_LOCATION_TYPE,
                 'default' => 'cities',
-                'items'   => array(
+                'items'   => [
                     'countries' => LANG_COUNTRY,
                     'regions'   => LANG_REGION,
                     'cities'    => LANG_CITY
-                )
-            )),
-            new fieldCheckbox('auto_detect', array(
-                'title'   => LANG_PARSER_CITY_AUTO_DETECT,
-                'visible_depend' => array('options:location_type' => array('show' => array('countries')))
-            )),
-            new fieldString('location_group', array(
+                ]
+            ]),
+            new fieldCheckbox('auto_detect', [
+                'title'          => LANG_PARSER_CITY_AUTO_DETECT,
+                'visible_depend' => ['options:location_type' => ['show' => ['countries']]]
+            ]),
+            new fieldString('location_group', [
                 'title' => LANG_PARSER_CITY_LOCATION_GROUP,
                 'hint'  => LANG_PARSER_CITY_LOCATION_GROUP_HINT,
-                'rules' => array(
-                    array('sysname'),
-                    array('max_length', 20)
-                )
-            )),
-            new fieldString('output_string', array(
-                'title' => LANG_PARSER_CITY_OUTPUT_STRING,
-                'hint'  => LANG_PARSER_CITY_OUTPUT_STRING_HINT,
-				'extended_option' => true
-            )),
-            new fieldCheckbox('is_autolink', array(
-                'title' => LANG_PARSER_LIST_IS_AUTOLINK,
-                'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
-                'default' => false,
-				'extended_option' => true
-            ))
-        );
-
+                'rules' => [
+                    ['sysname'],
+                    ['max_length', 20]
+                ]
+            ]),
+            new fieldString('output_string', [
+                'title'           => LANG_PARSER_CITY_OUTPUT_STRING,
+                'hint'            => LANG_PARSER_CITY_OUTPUT_STRING_HINT,
+                'extended_option' => true
+            ]),
+            new fieldCheckbox('is_autolink', [
+                'title'           => LANG_PARSER_LIST_IS_AUTOLINK,
+                'hint'            => LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
+                'default'         => false,
+                'extended_option' => true
+            ])
+        ];
     }
 
     public function parse($value){
+
+        if (!$value){
+            return '';
+        }
 
         $output_string = $this->getOption('output_string');
 
@@ -79,9 +82,7 @@ class fieldCity extends cmsFormField {
     }
 
     public function storeCachedValue($value){
-
         return $this->getLocationTypeValue($value, $this->getOption('location_type'));
-
     }
 
     private function getLocationTypeValue($id, $location_type){
@@ -99,33 +100,30 @@ class fieldCity extends cmsFormField {
         }
 
         return null;
-
     }
 
-    public function getListItems(){
+    public function getListItems() {
 
         $model = cmsCore::getModel('geo');
 
-        $items = array();
+        $items = [];
 
         $location_group = $this->getOption('location_group');
         $location_type  = $this->getOption('location_type');
 
-        if($location_type == 'countries'){
+        if ($location_type === 'countries') {
 
-            $items = array('0'=>'') + $model->getCountries();
+            $items = ['0' => ''] + $model->getCountries();
 
-        } elseif(!$location_group &&  $location_type == 'regions'){
+        } elseif (!$location_group && $location_type === 'regions') {
 
-            $items = array('0'=>'') + $model->getRegions();
-
+            $items = ['0' => ''] + $model->getRegions();
         }
 
         return $items;
-
     }
 
-    public function getInput($value){
+    public function getInput($value) {
 
         $location_group = $this->getOption('location_group');
         $location_type  = $this->getOption('location_type');
@@ -133,44 +131,42 @@ class fieldCity extends cmsFormField {
         $this->data['items'] = $this->getListItems();
 
         // автоопределение
-        if($this->getOption('auto_detect') && $value === null && $location_type == 'countries'){
+        if ($this->getOption('auto_detect') && $value === null && $location_type === 'countries') {
 
             $geo = cmsCore::getController('geo')->getGeoByIp();
 
-            if(!empty($geo['city']['country_id'])){
+            if (!empty($geo['city']['country_id'])) {
                 $value = $geo['city']['country_id'];
             }
-            if(!empty($geo['country']['id']) && !$value){
+
+            if (!empty($geo['country']['id']) && !$value) {
                 $value = $geo['country']['id'];
             }
-
         }
 
         // если поля не объединены и это поле выбора города
-        if(!$location_group && $location_type == 'cities'){
+        if (!$location_group && $location_type === 'cities') {
 
             $city_name = $this->getLocationTypeValue($value, $location_type);
 
-            $value = array(
+            $value = [
                 'id'   => $value,
                 'name' => $city_name
-            );
-
+            ];
         }
 
         $this->data['location_group'] = $location_group;
         $this->data['location_type']  = $location_type;
 
-        $this->data['dom_attr'] = array(
+        $this->data['dom_attr'] = [
             'id'             => $this->id,
             'data-selected'  => (is_array($value) ? $value['id'] : $value),
             'data-type'      => $location_type,
-            'data-child'     => ($location_type == 'countries' ? 'regions' : 'cities'),
+            'data-child'     => ($location_type === 'countries' ? 'regions' : 'cities'),
             'data-items-url' => href_to('geo', 'get_items')
-        );
+        ];
 
         return parent::getInput($value);
-
     }
 
     public function applyFilter($model, $value) {

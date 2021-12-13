@@ -335,10 +335,18 @@ class cmsDatabase {
     /**
      * Подготавливает строку перед запросом
      *
-     * @param string $string
-     * @return string
+     * @param string|array $string
+     * @return string|array
      */
     public function escape($string) {
+
+        if(is_array($string)){
+            foreach ($string as $key => $value) {
+                $string[$key] = $this->escape($value);
+            }
+            return $string;
+        }
+
         return $this->mysqli->real_escape_string($string);
     }
 

@@ -51,6 +51,8 @@
     define('LANG_SORTING_DESC',              'Descending');
     define('LANG_SORTING_BYORDER',           'By order');
     define('LANG_SORTING_BYTIME',            'By execution time');
+    define('LANG_SORTING_BYDATE',            'By date');
+    define('LANG_SORTING_BYREL',             'By relevance');
     define('LANG_PHOTO',                     'Image');
     define('LANG_PHOTOS',                    'Images');
     define('LANG_COMMENTS',                  'Comments');
