@@ -108,6 +108,6 @@ function create_admin($nickname, $email, $pass_hash){
 
     $mysqli->query($sql);
 
-    setcookie('icms[auth]', $auth_data['auth_token'], time()+300, '/', null, false, true);
+    setcookie('icms[auth]', $auth_data['auth_token'], time()+300, '/', '', false, true);
 
 }

@@ -514,6 +514,18 @@ class cmsDatabase {
         return $fields;
     }
 
+    public function getSqlVariableValue($value) {
+
+        $value = $this->escape($value);
+
+        $result = $this->query("show variables like '{$value}'");
+
+        $data = $this->fetchAssoc($result);
+        $this->freeResult($result);
+
+        return isset($data['Value']) ? $data['Value'] : null;
+    }
+
 //============================================================================//
 //============================================================================//
 

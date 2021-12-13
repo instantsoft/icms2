@@ -93,6 +93,15 @@ class modelSearch extends cmsModel {
     }
 
     /**
+     * Истина, если поиск по трём символам
+     *
+     * @return boolean
+     */
+    public function isThreeSymbolSearch() {
+        return $this->three_symbol_search;
+    }
+
+    /**
      * Подготавливается поисковый запрос
      *
      * @param string $query
@@ -114,7 +123,13 @@ class modelSearch extends cmsModel {
 
             if (!$stopwords || ($stopwords && !in_array($query, $stopwords, true))) {
 
-                $this->three_symbol_search = true;
+                // Узнаём минимальное кол-во символов для поиска
+                // ft_min_word_len для MyISAM, если у вас таблицы InnoDB, то замените на innodb_ft_min_token_size
+                $var_value = $this->db->getSqlVariableValue('ft_min_word_len');
+
+                if($var_value < 3){
+                    $this->three_symbol_search = true;
+                }
 
                 $this->query[] = $query;
 
@@ -223,7 +238,7 @@ class modelSearch extends cmsModel {
                 $query .= '%';
             }
 
-            return $this->filter("CONCAT({$this->match_fields_str}) LIKE '{$query}");
+            return $this->filter("CONCAT({$this->match_fields_str}) LIKE '{$query}'");
         }
 
         $query = '\"' . $this->db->escape($this->original_query) . '\"';

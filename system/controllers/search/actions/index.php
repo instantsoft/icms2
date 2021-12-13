@@ -103,6 +103,10 @@ class actionSearchIndex extends cmsAction {
                                 $this->model->setHighlightFields($search_controller['highlight_fields'][$sources_name]);
                             }
 
+                            // Если по трём символам, то сортировка принудительно по дате
+                            if($this->model->isThreeSymbolSearch()){
+                                $order_by = 'date_pub';
+                            }
                             // Сортировка
                             $this->model->orderByRaw(($order_by === 'date_pub' ? 'i.' : '').$order_by.' desc');
 

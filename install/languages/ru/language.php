@@ -32,7 +32,7 @@
     define('LANG_LICENSE_TRANSLATION',      'Перевод');
 
     define('LANG_PHP_VERSION',              'Версия интерпретатора');
-    define('LANG_PHP_VERSION_REQ',          'Требуется PHP 5.5 или выше');
+    define('LANG_PHP_VERSION_REQ',          'Требуется PHP 5.6 или выше');
     define('LANG_PHP_VERSION_DESC',         'Установленная версия');
 	define('LANG_PHP_VARIABLES',            'Опции настройки PHP');
 	define('LANG_PHP_VARIABLES_HINT',       'Серым цветом указано требуемое значение');

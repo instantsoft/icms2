@@ -520,9 +520,9 @@ class cmsUser {
      * @param int $time Время жизни, в секундах
      * @param string $path Путь на сервере
      * @param bool $http_only Куки недоступны для скриптов
-     * @param string $domain Домен действия. null - только текущий
+     * @param string $domain Домен действия. пусто - только текущий
      * */
-    public static function setCookie($key, $value, $time = 3600, $path = '/', $http_only = true, $domain = null) {
+    public static function setCookie($key, $value, $time = 3600, $path = '/', $http_only = true, $domain = '') {
 
         $cookie_domain = cmsConfig::get('cookie_domain');
 
