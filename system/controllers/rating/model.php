@@ -91,14 +91,15 @@ class modelRating extends cmsModel {
             $guest_nickname = LANG_GUEST;
 
             if($item['ip']) {
-
                 $item['ip'] = string_bintoip($item['ip']);
+                if($item['ip']){
 
-                // формируем номер гостя
-                $_okets4 = explode('.', $item['ip']);
-                $_okets6 = explode(':', $item['ip']);
+                    // формируем номер гостя
+                    $_okets4 = explode('.', $item['ip']);
+                    $_okets6 = explode(':', $item['ip']);
 
-                $guest_nickname .= ' №' . array_sum(array_merge($_okets4, $_okets6));
+                    $guest_nickname .= ' №' . array_sum(array_merge($_okets4, $_okets6));
+                }
             }
 
             $item['user'] = [

@@ -126,8 +126,8 @@ icms.menu = (function ($) {
             variableWidth: false,
             responsive: [
                 {breakpoint: 1024, settings: "unslick"},
-                {breakpoint: 650, settings: {slidesToShow: 3, slidesToScroll: 2}},
-                {breakpoint: 320, settings: {slidesToShow: 2, slidesToScroll: 1}}
+                {breakpoint: 650, settings: {slidesToShow: 3, slidesToScroll: 3}},
+                {breakpoint: 320, settings: {slidesToShow: 2, slidesToScroll: 2}}
             ]
         }, (params ? params : {})));
     };

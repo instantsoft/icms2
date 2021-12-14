@@ -39,7 +39,7 @@
 <?php ob_start(); ?>
 <script>
 if(typeof dsslick === 'undefined'){
-    var dsslick = icms.menu.initSwipe('.dataset-pills', {initialSlide: $('.dataset-pills > li.is-active').index()});
+    var dsslick = icms.menu.initSwipe('.dataset-pills', {variableWidth: true, initialSlide: $('.dataset-pills > li.is-active').index()});
 }
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

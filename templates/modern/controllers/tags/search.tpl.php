@@ -19,6 +19,6 @@
 <?php echo $html; ?>
 <?php ob_start(); ?>
 <script>
-    icms.menu.initSwipe('.tags-search__pills', {initialSlide: $('.tags-search__pills > li.is-active').index()});
+    icms.menu.initSwipe('.tags-search__pills', {variableWidth: true, initialSlide: $('.tags-search__pills > li.is-active').index()});
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

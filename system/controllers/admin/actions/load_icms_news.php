@@ -3,8 +3,8 @@
 class actionAdminLoadIcmsNews extends cmsAction {
 
     private $news_link = [
-        'icms'       => 'https://instantcms.ru/rss/feed/pages?category=2',
-        'icms_blogs' => 'https://instantcms.ru/rss/feed/blogs',
+        'icms'       => 'https://api.instantcms.ru/rss/feed/pages?category=2',
+        'icms_blogs' => 'https://api.instantcms.ru/rss/feed/blogs',
         'icms_docs'  => 'https://docs.instantcms.ru/feed.php'
     ];
 

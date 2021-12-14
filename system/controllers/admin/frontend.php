@@ -2,7 +2,7 @@
 class admin extends cmsFrontend {
 
     const addons_api_key   = '8e13cb202f8bdc27dc765e0448e50d11';
-    const addons_api_point = 'https://addons.instantcms.ru/api/method/';
+    const addons_api_point = 'https://api.instantcms.ru/api/method/';
 
     public $disallow_mapping_redirect = true;
 
