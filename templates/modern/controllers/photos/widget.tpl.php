@@ -87,12 +87,12 @@
                 </div>
             </div>
 
-            <?php
-            if($editor_params['editor']){
-                // подключаем редактор, но не инициализируем
-                echo html_wysiwyg('', '', $editor_params['editor'], $editor_params['options']);
-            }
-            ?>
+            <?php if($editor_params['editor']){ ?>
+                <div style="display:none">
+                    <?php // подключаем редактор, но не инициализируем
+                    echo html_wysiwyg('', '', $editor_params['editor'], $editor_params['options']); ?>
+                </div>
+            <?php } ?>
 
             <div class="widget_image_multi widget_image_multi_styled form-group" id="album-photos-uploader"></div>
 

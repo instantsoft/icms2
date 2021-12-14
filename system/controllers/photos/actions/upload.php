@@ -91,6 +91,7 @@ class actionPhotosUpload extends cmsAction {
             'editor'  => $this->options['editor'],
             'presets' => $this->options['editor_presets']
         ]);
+        $editor_params['options']['id'] = false;
 
         if ($this->request->has('submit')) {
 

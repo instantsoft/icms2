@@ -88,18 +88,25 @@ class modelRating extends cmsModel {
 
         return $this->get('rating_log', function ($item, $model) {
 
-            $item['ip'] = string_bintoip($item['ip']);
+            $guest_nickname = LANG_GUEST;
 
-            // формируем номер гостя
-            $_okets4 = explode('.', $item['ip']);
-            $_okets6 = explode(':', $item['ip']);
+            if($item['ip']) {
 
-            $item['user'] = array(
+                $item['ip'] = string_bintoip($item['ip']);
+
+                // формируем номер гостя
+                $_okets4 = explode('.', $item['ip']);
+                $_okets6 = explode(':', $item['ip']);
+
+                $guest_nickname .= ' №' . array_sum(array_merge($_okets4, $_okets6));
+            }
+
+            $item['user'] = [
                 'id'       => $item['user_id'],
                 'slug'     => $item['user_slug'],
-                'nickname' => (!empty($item['user_nickname']) ? $item['user_nickname'] : LANG_GUEST . ' №' . array_sum(array_merge($_okets4, $_okets6))),
+                'nickname' => (!empty($item['user_nickname']) ? $item['user_nickname'] : $guest_nickname),
                 'avatar'   => $item['user_avatar']
-            );
+            ];
 
             return $item;
         });

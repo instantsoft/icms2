@@ -214,7 +214,7 @@ class cmsWysiwygMarkitup {
                 } else if(markitup_global_options.hasOwnProperty('default')) {
                     mconfig = markitup_global_options.default;
                 }
-                if(mconfig.markupSet[9] && mconfig.markupSet[9].beforeInsert === true){
+                if(9 in mconfig.markupSet && mconfig.markupSet[9].beforeInsert === true){
                     mconfig.markupSet[9].beforeInsert = function(markItUp) { InlineUpload.display(markItUp); };
                 }
                 if(mconfig.markupSet[14] && mconfig.markupSet[14].beforeInsert === true){

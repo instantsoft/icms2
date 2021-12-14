@@ -97,11 +97,11 @@
                     <div class="px-4 py-3">
                         <div class="form-group">
                             <label class="text-nowrap"><?php echo LANG_PHOTOS_SIZE_W; ?>, <?php echo mb_strtolower(LANG_PHOTOS_MORE_THAN); ?></label>
-                            <input type="text" name="width" value="<?php html($item['filter_values']['width']); ?>" placeholder="px" class="form-control">
+                            <input type="text" name="width" autocomplete="off" value="<?php html($item['filter_values']['width']); ?>" placeholder="px" class="form-control">
                         </div>
                         <div class="form-group">
                             <label class="text-nowrap"><?php echo LANG_PHOTOS_SIZE_H; ?>, <?php echo mb_strtolower(LANG_PHOTOS_MORE_THAN); ?></label>
-                            <input type="text" name="height" value="<?php html($item['filter_values']['height']); ?>" placeholder="px" class="form-control">
+                            <input type="text" name="height" autocomplete="off" value="<?php html($item['filter_values']['height']); ?>" placeholder="px" class="form-control">
                         </div>
                         <button type="submit" class="btn btn-primary"><?php echo LANG_FIND; ?></button>
                     </div>

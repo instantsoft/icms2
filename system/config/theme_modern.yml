@@ -82,4 +82,7 @@ custom_scss:
   danger:
   light:
   dark:
-vars: null
+vars:
+  - 
+    name: dropdown-item-padding-x
+    value: 1rem

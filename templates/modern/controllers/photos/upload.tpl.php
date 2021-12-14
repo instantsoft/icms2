@@ -20,7 +20,7 @@
 
 <h1><?php echo $title; ?></h1>
 
-<form action="" method="post">
+<form action="" method="post" class="mt-3 mt-md-4">
 
     <?php if(empty($is_edit)){ ?>
         <fieldset>
