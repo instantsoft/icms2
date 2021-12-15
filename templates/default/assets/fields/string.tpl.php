@@ -19,6 +19,14 @@ if($field->context === 'filter' && $in_filter_as && $in_filter_as !== 'input'){ 
         <?php if(isset($field->suffix)) { ?><span class="suffix"><?php echo $field->suffix; ?></span><?php } ?>
     </div>
 <?php } ?>
+<?php if($field->getOption('use_inputmask') && $field->getOption('inputmask_str')){ ob_start(); ?>
+    <?php $this->addTplJSNameFromContext('vendors/jquery.inputmask.min'); ?>
+    <script>
+    $(function(){
+        $('#<?php echo $field->id; ?>').inputmask("<?php html($field->getOption('inputmask_str')); ?>");
+    });
+    </script>
+<?php $this->addBottom(ob_get_clean()); } ?>
 <?php if($field->getOption('show_symbol_count')){ ob_start(); ?>
 <script>
 $(function(){
@@ -29,7 +37,7 @@ $(function(){
 <?php if($field->data['autocomplete']){
         $this->addTplJSNameFromContext('jquery-ui');
         $this->addTplCSSNameFromContext('jquery-ui');
-        
+
         ob_start(); ?>
     <script>
         initAutocomplete('<?php echo $field->id; ?>', <?php echo (!empty($field->data['autocomplete']['multiple']) ? 'true' : 'false') ?>, '<?php echo $field->data['autocomplete']['url']; ?>', <?php echo (!empty($field->data['autocomplete']['data']) ? json_encode($field->data['autocomplete']['data']) : 'false') ?>, '<?php echo $field->data['autocomplete']['multiple_separator'] ?>');

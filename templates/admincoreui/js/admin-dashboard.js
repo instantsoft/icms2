@@ -1,12 +1,12 @@
 $(function(){
 
-    var ctx, chart, controller, section, period, dataUrl, type;
+    var ctx, chart, controller, section, interval, dataUrl, type;
     var chart_data = {};
 
     function initChart(){
 
         ctx = $("#chart-canvas");
-        period = $('#chart').data('period');
+        interval = $('#chart').data('interval');
         dataUrl = $('#chart').data('url');
         type = $('#chart').data('type');
 
@@ -21,19 +21,21 @@ $(function(){
 
         }).triggerHandler('change');
 
-        $('#menu-period input').on('click', function(e){
+        $('#menu-period button').on('click', function(e){
 
             e.preventDefault();
 
             var $link = $(this);
 
-            period = $link.data('period');
+            interval = $link.data('interval');
 
-            $('#menu-period label').removeClass('active')
-            $(this).closest('label').addClass('active');
+            $('#menu-period button').removeClass('active is-busy');
+            $(this).addClass('is-busy');
 
-            loadChartData();
-
+            loadChartData(function (){
+                $($link).addClass('active');
+                $($link).removeClass('is-busy');
+            });
         });
 
         $('#toggle-type').on('click', function(e){
@@ -46,21 +48,18 @@ $(function(){
 
             $(this).toggleClass('btn-primary btn-outline-secondary');
 
-            loadChartData();
-
+            renderChart();
         });
 
     };
 
-    function loadChartData(){
+    function loadChartData(callback){
+
+        callback = callback || function(){};
 
         $('#chart-spinner').show();
 
-        $.cookie('icms[dashboard_chart]', JSON.stringify({
-            c: controller, s: section, p: period, t: type
-        }));
-
-        $.post(dataUrl, {id: controller, section: section, period: period}, function(result){
+        $.post(dataUrl, {id: controller, section: section, interval: interval}, function(result){
 
             chart_data = result.result.chart_data;
 
@@ -81,14 +80,19 @@ $(function(){
                 $('#chart-footer').hide();
             }
 
+            callback();
+
             renderChart();
 
         }, 'json');
-
-
     };
 
     function renderChart(){
+
+        $.cookie('icms[dashboard_chart]', JSON.stringify({
+            c: controller, s: section, i: interval, t: type
+        }));
+
         if (chart) { chart.destroy(); }
         var progress = $('#chart-spinner');
         chart = new Chart(ctx, {
@@ -118,7 +122,7 @@ $(function(){
                             beginAtZero: true
                         }
                     }]
-                },
+                }
             },
             data: chart_data
         });

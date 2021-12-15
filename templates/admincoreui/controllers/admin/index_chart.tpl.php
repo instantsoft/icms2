@@ -1,4 +1,4 @@
-<div id="chart" data-url="<?php echo $this->href_to('index_chart_data'); ?>" data-period="<?php html($defaults['period']); ?>" data-type="<?php html($defaults['type']); ?>">
+<div id="chart" data-url="<?php echo $this->href_to('index_chart_data'); ?>" data-interval="<?php html($defaults['interval']); ?>" data-type="<?php html($defaults['type']); ?>">
     <div class="row mb-3">
         <div class="col-auto form-inline">
             <div class="form-group">
@@ -24,15 +24,15 @@
                 <?php html_svg_icon('solid', 'chart-area'); ?>
             </button>
             <div id="menu-period" class="btn-group btn-group-toggle float-sm-right mr-3">
-                <label class="btn btn-outline-secondary<?php if ($defaults['period'] == 7) { ?> active<?php } ?>">
-                    <input type="radio" name="period" autocomplete="off"  <?php if ($defaults['period'] == 7) { ?> checked=""<?php } ?> data-period="7" /> <?php echo LANG_WEEK; ?>
-                </label>
-                <label class="btn btn-outline-secondary<?php if ($defaults['period'] == 30) { ?> active<?php } ?>">
-                    <input type="radio" name="period" autocomplete="off" <?php if ($defaults['period'] == 30) { ?> checked=""<?php } ?> data-period="30" /> <?php echo LANG_MONTH; ?>
-                </label>
-                <label class="btn btn-outline-secondary<?php if ($defaults['period'] == 365) { ?> active<?php } ?>">
-                    <input type="radio" name="period" autocomplete="off" <?php if ($defaults['period'] == 365) { ?> checked=""<?php } ?> data-period="365" /> <?php echo LANG_YEAR; ?>
-                </label>
+                <button class="btn btn-outline-secondary<?php if ($defaults['interval'] === '1:WEEK') { ?> active<?php } ?>" data-interval="1:WEEK">
+                    <span><?php echo LANG_WEEK; ?></span>
+                </button>
+                <button class="btn btn-outline-secondary<?php if ($defaults['interval'] === '1:MONTH') { ?> active<?php } ?>" data-interval="1:MONTH">
+                    <span><?php echo LANG_MONTH; ?></span>
+                </button>
+                <button class="btn btn-outline-secondary<?php if ($defaults['interval'] === '1:YEAR') { ?> active<?php } ?>" data-interval="1:YEAR">
+                    <span><?php echo LANG_YEAR; ?></span>
+                </button>
             </div>
         </div>
     </div>
