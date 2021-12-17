@@ -1,6 +1,6 @@
 <?php $listed = []; $count = count($breadcrumbs); ?>
-<nav id="breadcrumb text-truncate flex-nowrap position-relative flex-fill">
-    <ol class="breadcrumb">
+<nav id="breadcrumb">
+    <ol class="breadcrumb text-truncate flex-nowrap position-relative flex-fill">
         <li class="breadcrumb-item">
             <?php if (!$breadcrumbs) { ?>
                 <span class="text-muted">

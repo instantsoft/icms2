@@ -336,6 +336,8 @@ class modelContent extends cmsModel {
             $item['filter_view'] = cmsModel::yamlToArray($item['filter_view']);
             $item['default']     = $item['values'];
 
+            $item = $model->formatFieldVisibleDepend($item);
+
             $rules = [];
             if ($item['options']['is_required']) { $rules[] = ['required']; }
             if ($item['options']['is_digits']) { $rules[] = ['digits']; }
@@ -379,6 +381,23 @@ class modelContent extends cmsModel {
         }
 
         return $fields;
+    }
+
+    private function formatFieldVisibleDepend($field) {
+
+        if(empty($field['options']['visible_depend'])){
+            return $field;
+        }
+
+        $field['visible_depend'] = [];
+
+        foreach ($field['options']['visible_depend'] as $vd) {
+            $field['visible_depend'][$vd['field']] = [$vd['action'] => explode(',', ''.$vd['value'])];
+        }
+
+        unset($field['options']['visible_depend']);
+
+        return $field;
     }
 
     public function getRequiredContentFields($ctype_name){

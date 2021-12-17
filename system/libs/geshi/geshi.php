@@ -611,7 +611,7 @@ class GeSHi {
      */
     public function get_language_name() {
         if (GESHI_ERROR_NO_SUCH_LANG == $this->error) {
-            return $this->language_data['LANG_NAME'] . ' (Unknown Language)';
+            return $this->language . ' (Unknown Language)';
         }
         return $this->language_data['LANG_NAME'];
     }
@@ -669,6 +669,8 @@ class GeSHi {
         }
 
         $this->language = $language;
+
+        $this->language_data['LANGUAGE_NAME'] = $language;
 
         //Check if we can read the desired file
         if (!is_readable($file_name)) {
@@ -4326,7 +4328,7 @@ class GeSHi {
      * @return string Safe CSS class name
      */
     protected function _genCSSName($name) {
-        return (is_numeric($name[0]) ? '_' : '') . $name;
+        return (($name && is_numeric($name[0])) ? '_' : '') . $name;
     }
 
     /**

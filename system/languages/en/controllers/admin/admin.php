@@ -278,6 +278,11 @@
     define('LANG_CP_FIELD_WRAP_ATYPE',          'Auto');
     define('LANG_CP_FIELD_WRAP_WIDTH',          'Field width');
     define('LANG_CP_FIELD_WRAP_WIDTH_HINT',     'Not Set - automatic width. Used in conjunction with the unit of measurement, such as 200px, 60%, etc.');
+    define('LANG_CP_FIELD_VISIBLE_DEPEND',      'Dependence to show the field in the form');
+    define('LANG_CP_FIELD_VISIBLE_DEPEND_HINT', 'The values can be specified separated by commas.');
+    define('LANG_CP_FIELD_VISIBLE_DEPEND_F',    'The field depends on');
+    define('LANG_CP_FIELD_VISIBLE_DEPEND_SHOW', 'Show the current field if the selected one is equal to');
+    define('LANG_CP_FIELD_VISIBLE_DEPEND_HIDE', 'Hide the current field if the value of the selected one is equal to');
     define('LANG_CP_PROPS_NO_CATS',             'Content type &laquo;%s&raquo; has no categories.');
     define('LANG_CP_PROPS_NO_CATS_ADD',         '<a href="%s">Create Categories</a> to add properties.');
     define('LANG_CP_PROPS_ADD',                 'Create Property');

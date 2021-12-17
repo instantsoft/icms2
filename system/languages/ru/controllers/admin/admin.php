@@ -294,7 +294,11 @@
     define('LANG_CP_FIELD_WRAP_ATYPE',         'Авто');
     define('LANG_CP_FIELD_WRAP_WIDTH',         'Ширина блока поля');
     define('LANG_CP_FIELD_WRAP_WIDTH_HINT',    'Не указано - автоматическая ширина. Указывайте вместе с единицей измерения, например 200px, 60% и т.п.');
-
+    define('LANG_CP_FIELD_VISIBLE_DEPEND',      'Зависимость показа поля в форме');
+    define('LANG_CP_FIELD_VISIBLE_DEPEND_HINT', 'Значения можно указывать через запятую.');
+    define('LANG_CP_FIELD_VISIBLE_DEPEND_F',    'Поле, от которого зависит');
+    define('LANG_CP_FIELD_VISIBLE_DEPEND_SHOW', 'Показать текущее поле если значение выбранного равно');
+    define('LANG_CP_FIELD_VISIBLE_DEPEND_HIDE', 'Скрыть текущее поле если значение выбранного равно');
     define('LANG_CP_PROPS_NO_CATS',             'Тип контента &laquo;%s&raquo; не содержит категорий.');
     define('LANG_CP_PROPS_NO_CATS_ADD',         '<a href="%s">Создайте категории</a> чтобы добавлять свойства.');
     define('LANG_CP_PROPS_ADD',                 'Создать свойство');

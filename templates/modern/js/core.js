@@ -620,25 +620,38 @@ icms.forms = (function ($) {
     this.VDListenersInitialized = [];
     this.VDRules = {from:{},depends:{}};
     this.addVisibleDepend = function(form_id, field_id, rules){
-        if(typeof this.VDRules.depends[form_id+'-'+field_id] === 'undefined'){ /* здесь все зависимости поля field_name */
-            this.VDRules.depends[form_id+'-'+field_id] = rules; /* array('is_cats' => array('show' => array('1'))) */
-        }else{
+        /* здесь все зависимости поля field_id */
+        if(typeof this.VDRules.depends[form_id+'-'+field_id] === 'undefined'){
+            /* array('is_cats' => array('show' => array('1'))) */
+            this.VDRules.depends[form_id+'-'+field_id] = rules;
+        } else {
             $.extend(this.VDRules.depends[form_id+'-'+field_id], rules);
         }
         for(var f in rules){if(rules.hasOwnProperty(f)){
             if(typeof this.VDRules.from[form_id+'-'+f] === 'undefined'){this.VDRules.from[form_id+'-'+f] = {};}
-            if(typeof this.VDRules.from[form_id+'-'+f][field_id] === 'undefined'){ /* здесь все, кто зависит от поля f */
-                this.VDRules.from[form_id+'-'+f][field_id] = rules[f]; /* array('show' => array('1')) */
-            }else{
+            /* здесь все, кто зависит от поля f */
+            if(typeof this.VDRules.from[form_id+'-'+f][field_id] === 'undefined'){
+                /* array('show' => array('1')) */
+                this.VDRules.from[form_id+'-'+f][field_id] = rules[f];
+            } else {
                 $.extend(this.VDRules.from[form_id+'-'+f][field_id], rules[f]);
             }
             if(typeof this.VDListeners[form_id+'-'+f] === 'undefined'){
                 this.VDListeners[form_id+'-'+f] = '#'+form_id+' [name="'+this.inputNameToElName(f)+'"]';
-                $('#'+form_id+' [name="'+this.inputNameToElName(f)+'"]').on('change input', function (){
-                    for(var field in _this.VDRules.from[form_id+'-'+f]){if(_this.VDRules.from[form_id+'-'+f].hasOwnProperty(field)){ /* перебор тех, кто зависит от этого поля f */
-                        var display = null; /* если не будет show */
+                let field_obj = $(this.VDListeners[form_id+'-'+f]);
+                let field_event = field_obj.attr('type') === 'text' ? 'input' : 'change';
+                field_obj.on(field_event, function (){
 
-                        for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){ /* перебор тех, от кого зависит поле field */
+                    let name = $(this).attr('name');
+
+                    /* перебор тех, кто зависит от этого поля name */
+                    for(var field in _this.VDRules.from[form_id+'-'+name]){if(_this.VDRules.from[form_id+'-'+name].hasOwnProperty(field)){
+
+                        /* если не будет show */
+                        var display = null;
+
+                        /* перебор тех, от кого зависит поле field */
+                        for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){
                             if(typeof _this.VDRules.depends[form_id+'-'+field][_from]['show'] !== 'undefined'){
                                 display = _this.VDisDisplay(_this.getInputVal('#'+form_id+' [name="'+_this.inputNameToElName(_from)+'"]'), _this.VDRules.depends[form_id+'-'+field][_from]['show']);
                                 if(display === true){ break; }
@@ -647,8 +660,10 @@ icms.forms = (function ($) {
 
                         if(display === null){display = true;}
 
-                        if(display){ /* скрытие сильнее показа */
-                            for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){ /* перебор тех, от кого зависит поле field */
+                        /* скрытие сильнее показа */
+                        if(display){
+                            /* перебор тех, от кого зависит поле field */
+                            for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){
                                 if(typeof _this.VDRules.depends[form_id+'-'+field][_from]['hide'] !== 'undefined'){
                                     display = !_this.VDisDisplay(_this.getInputVal('#'+form_id+' [name="'+_this.inputNameToElName(_from)+'"]'), _this.VDRules.depends[form_id+'-'+field][_from]['hide']);
                                     if(display === false){ break; }
@@ -661,7 +676,6 @@ icms.forms = (function ($) {
                         } else {
                             $('#f_'+_this.inputNameToId(field)).addClass('hide_field').prev('.field_tabbed').addClass('hide_field');
                         }
-
                     }}
                 });
             }

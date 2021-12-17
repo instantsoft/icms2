@@ -92,6 +92,7 @@
 
     //PARSERS
     define('LANG_PARSER_PREFIX',             'Префикс');
+    define('LANG_PARSER_LIST_ADD_EMPTY',     'Добавить в начале предустановленных значений пустое значение');
     define('LANG_PARSER_LIST_IS_AUTOLINK',     'Автоссылка');
     define('LANG_PARSER_LIST_IS_AUTOLINK_HINT', 'Включение этой опции разбивает (по запятой) значение поля на отдельные слова и каждое делает ссылкой. ');
     define('LANG_PARSER_LIST_IS_AUTOLINK_FILTER', 'Должен быть включен показ поля в фильтре.');

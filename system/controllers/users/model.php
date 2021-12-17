@@ -178,9 +178,12 @@ class modelUsers extends cmsModel {
         $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
         $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
         $user['ctype_name']      = 'users';
-        $user['inviter'] = [];
+        $user['inviter'] = [
+            'id' => $user['inviter_id']
+        ];
         if (!empty($user['inviter_nickname'])) {
             $user['inviter'] = [
+                'id'         => $user['inviter_id'],
                 'nickname'   => $user['inviter_nickname'],
                 'slug'       => $user['inviter_slug'],
                 'is_deleted' => $user['inviter_is_deleted'],

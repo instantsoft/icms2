@@ -94,6 +94,7 @@
     //PARSERS
     define('LANG_PARSER_PREFIX',             'Prefix');
     define('LANG_PARSER_LIST_IS_AUTOLINK',     'AutoLink');
+    define('LANG_PARSER_LIST_ADD_EMPTY',     'Add a blank value at the beginning of the preset values');
     define('LANG_PARSER_LIST_IS_AUTOLINK_HINT', 'Enabling this option breaks (by comma) the field value into separate words and each makes a reference. ');
     define('LANG_PARSER_LIST_IS_AUTOLINK_FILTER', 'Option "Show in filter" should be enabled.');
     define('LANG_PARSER_BITMASK_CHECKBOX_MULTIPLE', 'Multi-selection by checkboxes');

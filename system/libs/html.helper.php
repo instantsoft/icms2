@@ -7,7 +7,8 @@
  */
 function html($string, $print = true) {
 
-    if (!$string) { return ''; }
+    // Должна быть строка
+    $string = ''.$string;
 
     $string = htmlentities($string, ENT_QUOTES | ENT_HTML401, 'UTF-8');
 
@@ -25,19 +26,20 @@ function html($string, $print = true) {
  * @param integer $max_length Максимальное кол-во символов, по умолчанию false
  * @return string
  */
-function html_clean($string, $max_length = false){
+function html_clean($string, $max_length = false) {
+
+    $string = ''.$string;
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами
-    $string = str_replace(array("\n", "\r", '<br>', '<br/>'), ' ', $string);
+    $string = str_replace(["\n", "\r", '<br>', '<br/>'], ' ', $string);
     $string = strip_tags($string);
 
-    if (is_int($max_length)){
+    if (is_int($max_length)) {
         $string = html_strip($string, $max_length);
     }
 
     return $string;
-
 }
 
 /**
@@ -46,13 +48,16 @@ function html_clean($string, $max_length = false){
  * @param integer $max_length Кол-во символов, которые нужно оставить от начала строки
  * @return string
  */
-function html_strip($string, $max_length){
-	$length = mb_strlen($string);
-	if ($length > $max_length) {
-		$string = mb_substr($string, 0, $max_length);
-		$string .= '...';
-	}
-	return $string;
+function html_strip($string, $max_length) {
+
+    $length = mb_strlen($string);
+
+    if ($length > $max_length) {
+        $string = mb_substr($string, 0, $max_length);
+        $string .= '...';
+    }
+
+    return $string;
 }
 
 /**
@@ -61,12 +66,11 @@ function html_strip($string, $max_length){
  * @param boolean $is_abs
  * @return string
  */
-function rel_to_href($rel_link, $is_abs = false){
+function rel_to_href($rel_link, $is_abs = false) {
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
-	return ($is_abs ? cmsConfig::get('host') . '/' : cmsConfig::get('root')) .($lang_href ? $lang_href.'/' : '').$rel_link;
-
+    return ($is_abs ? cmsConfig::get('host') . '/' : cmsConfig::get('root')) . ($lang_href ? $lang_href . '/' : '') . $rel_link;
 }
 
 /**
@@ -388,11 +392,11 @@ function html_signed_num($number){
  */
 function html_signed_class($number){
     if ($number > 0){
-        return "positive text-success";
+        return 'positive text-success';
     } else if ($number < 0){
-        return "negative text-danger";
+        return 'negative text-danger';
     } else {
-        return "zero text-muted";
+        return 'zero text-muted';
     }
 }
 
@@ -428,21 +432,19 @@ function html_spellcount($num, $one, $two = false, $many = false, $zero_text = L
 
 function html_spellcount_only($num, $one, $two = false, $many = false) {
 
-    if (!$two && !$many){
+    if (!$two && !$many) {
         list($one, $two, $many) = explode('|', $one);
     }
 
-	if (strpos($num, '.') !== false){
-		return $two;
-	}
-
-    if ($num%10 == 1 && $num%100 != 11){
-        return $one;
-    }
-    elseif($num%10 >= 2 && $num%10 <= 4 && ($num%100 < 10 || $num%100 >= 20)){
+    if (strpos($num, '.') !== false) {
         return $two;
     }
-    else{
+
+    if ($num % 10 == 1 && $num % 100 != 11) {
+        return $one;
+    } elseif ($num % 10 >= 2 && $num % 10 <= 4 && ($num % 100 < 10 || $num % 100 >= 20)) {
+        return $two;
+    } else {
         return $many;
     }
 
@@ -451,23 +453,25 @@ function html_spellcount_only($num, $one, $two = false, $many = false) {
 
 /**
  * Возвращает отформатированный размер файла с единицей измерения
- * @param int $bytes
- * @param bool $round
+ *
+ * @param integer $bytes
+ * @param boolean $round
  * @return string
  */
-function html_file_size($bytes, $round=false){
+function html_file_size($bytes, $round = false) {
 
-    if(empty($bytes)) { return 0; }
+    if (empty($bytes)) {
+        return 0;
+    }
 
-    $s = array(LANG_B, LANG_KB, LANG_MB, LANG_GB, LANG_TB, LANG_PB);
-    $e = floor(log($bytes)/log(1024));
+    $s = [LANG_B, LANG_KB, LANG_MB, LANG_GB, LANG_TB, LANG_PB];
+    $e = floor(log($bytes) / log(1024));
 
     $pattern = $round ? '%d' : '%.2f';
 
-    $output = sprintf($pattern.' '.$s[$e], ($bytes/pow(1024, floor($e))));
+    $output = sprintf($pattern . ' ' . $s[$e], ($bytes / pow(1024, floor($e))));
 
     return $output;
-
 }
 
 function html_views_format($num){
@@ -505,16 +509,15 @@ function html_minutes_format($minutes){
  * @param array $array
  * @return string
  */
-function html_each($array){
+function html_each($array) {
 
     $result = '';
 
-    if (is_array($array)){
+    if (is_array($array)) {
         $result = implode('', $array);
     }
 
     return $result;
-
 }
 
 /**
@@ -522,21 +525,16 @@ function html_each($array){
  * @param string $html
  * @return string
  */
-function html_minify($html){
-
-    $search = array(
+function html_minify($html) {
+    return preg_replace([
         '/\>[^\S ]+/us',
         '/[^\S ]+\</us',
         '/(\s)+/us'
-    );
-
-    $replace = array(
+    ], [
         '>',
         '<',
         '\\1'
-    );
-
-    return preg_replace($search, $replace, $html);
+    ], $html);
 }
 
 function nf($number, $decimals = 2, $thousands_sep = '') {
