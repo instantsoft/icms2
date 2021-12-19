@@ -1333,11 +1333,8 @@ class cmsController {
 //============================================================================//
 //============================================================================//
 
-    public function validate_required($value, $disable_empty = true) {
-        if ($value === '0' && !$disable_empty) {
-            return true;
-        }
-        if (empty($value)) { return ERR_VALIDATE_REQUIRED; }
+    public function validate_required($value) {
+        if (mb_strlen(strval($value)) === 0) { return ERR_VALIDATE_REQUIRED; }
         return true;
     }
 
@@ -1345,7 +1342,7 @@ class cmsController {
 
         if (empty($value)) { $value = 0; }
 
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)) {
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", strval($value))) {
             return ERR_VALIDATE_NUMBER;
         }
 
@@ -1360,7 +1357,7 @@ class cmsController {
 
         if (empty($value)) { $value = 0; }
 
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)) {
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", strval($value))) {
             return ERR_VALIDATE_NUMBER;
         }
 
@@ -1381,7 +1378,7 @@ class cmsController {
      */
     public function validate_minfloat($min, $value) {
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match('/^([\-]?)([0-9\.,]+)$/i', $value)) {
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match('/^([\-]?)([0-9\.,]+)$/i', strval($value))) {
             return ERR_VALIDATE_NUMBER;
         }
         $value = bc_format(str_replace(',', '.', $value));
@@ -1401,7 +1398,7 @@ class cmsController {
      */
     public function validate_maxfloat($max, $value) {
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match('/^([\-]?)([0-9\.,]+)$/i', $value)) {
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match('/^([\-]?)([0-9\.,]+)$/i', strval($value))) {
             return ERR_VALIDATE_NUMBER;
         }
         $value = bc_format(str_replace(',', '.', $value));
@@ -1522,13 +1519,13 @@ class cmsController {
 
     public function validate_digits($value){
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([0-9]+)$/i", $value)){ return ERR_VALIDATE_DIGITS; }
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([0-9]+)$/i", strval($value))){ return ERR_VALIDATE_DIGITS; }
         return true;
     }
 
     public function validate_number($value){
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)){ return ERR_VALIDATE_NUMBER; }
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", strval($value))){ return ERR_VALIDATE_NUMBER; }
         return true;
     }
 
@@ -1550,7 +1547,7 @@ class cmsController {
 
     public function validate_regexp($regexp, $value){
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match($regexp, $value)){ return ERR_VALIDATE_REGEXP; }
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match($regexp, strval($value))){ return ERR_VALIDATE_REGEXP; }
         return true;
     }
 

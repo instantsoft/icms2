@@ -49,7 +49,8 @@ class formSearchOptions extends cmsForm {
                     new fieldNumber('perpage', [
                         'default' => 15,
                         'rules'   => [
-                            ['required']
+                            ['required'],
+                            ['min', 1]
                         ]
                     ])
                 ]

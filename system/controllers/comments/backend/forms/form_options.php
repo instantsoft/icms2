@@ -150,15 +150,19 @@ class formCommentsOptions extends cmsForm {
                     new fieldNumber('limit_nesting', array(
                         'title'   => LANG_COMMENTS_LIMIT_NESTING,
                         'default' => 5,
-                        'rules'   => array(array('required'))
+                        'rules'   => [
+                            ['required'],
+                            ['min', 1]
+                        ]
                     )),
 
                     new fieldNumber('limit', array(
                         'title' => LANG_LIST_LIMIT,
                         'default' => 15,
-                        'rules' => array(
-                            array('required')
-                        )
+                        'rules' => [
+                            ['required'],
+                            ['min', 1]
+                        ]
                     ))
 
                 )

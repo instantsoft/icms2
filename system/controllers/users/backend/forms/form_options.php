@@ -28,9 +28,10 @@ class formUsersOptions extends cmsForm {
                     new fieldNumber('limit', array(
                         'title' => LANG_LIST_LIMIT,
                         'default' => 15,
-                        'rules' => array(
-                            array('required')
-                        )
+                        'rules' => [
+                            ['required'],
+                            ['min', 1]
+                        ]
                     )),
                     new fieldListGroups('list_allowed', array(
                         'title' => LANG_USERS_OPT_LIST_ALLOWED,

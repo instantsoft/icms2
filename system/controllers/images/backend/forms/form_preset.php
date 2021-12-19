@@ -83,6 +83,7 @@ class formImagesPreset extends cmsForm {
                         'units'   => '%',
                         'default' => '87',
                         'rules'   => [
+                            ['required'],
                             ['digits'],
                             ['min', 1],
                             ['max', 100]

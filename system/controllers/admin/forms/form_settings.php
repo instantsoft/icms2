@@ -449,9 +449,10 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_SESSION_MAXLIFETIME,
                         'default' => ini_get('session.gc_maxlifetime')/60,
                         'units' => LANG_MINUTES,
-                        'rules' => array(
-                            array('required'),
-                        )
+                        'rules' => [
+                            ['required'],
+                            ['min', 1]
+                        ]
                     )),
 
                     new fieldString('cookie_domain', array(

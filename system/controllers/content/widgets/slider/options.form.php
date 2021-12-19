@@ -148,9 +148,10 @@ class formWidgetContentSliderOptions extends cmsForm {
                     new fieldNumber('options:limit', array(
                         'title'   => LANG_LIST_LIMIT,
                         'default' => 4,
-                        'rules'   => array(
-                            array('required')
-                        )
+                        'rules'   => [
+                            ['required'],
+                            ['min', 1]
+                        ]
                     ))
                 )
             )

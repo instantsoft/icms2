@@ -84,10 +84,10 @@ class formMessagesOptions extends cmsForm {
                     new fieldNumber('limit', array(
                         'title'   => LANG_PM_LIMIT,
                         'default' => 5,
-                        'rules' => array(
-                            array('required'),
-                            array('min', 1)
-                        ),
+                        'rules' => [
+                            ['required'],
+                            ['min', 1]
+                        ],
                         'visible_depend' => array('is_enable_pm' => array('show' => array('1')))
                     )),
 

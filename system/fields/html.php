@@ -79,7 +79,6 @@ class fieldHtml extends cmsFormField {
             new fieldNumber('teaser_len', array(
                 'title' => LANG_PARSER_HTML_TEASER_LEN,
                 'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
-                'default' => 0,
                 'extended_option' => true
             )),
             new fieldString('teaser_postfix', array(

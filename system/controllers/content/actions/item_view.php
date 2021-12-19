@@ -38,13 +38,13 @@ class actionContentItemView extends cmsAction {
                 // ставим флаг, что модератор уже смотрит, после этого изъять из модерации нельзя
                 if ($is_moderator){
 
-                    cmsUser::setUPS($this->getUniqueKey(array($ctype['name'], 'moderation', $item['id'])), time());
+                    cmsUser::setUPS($this->getUniqueKey([$ctype['name'], 'moderation', $item['id']]), time());
 
                     $item_view_notice = LANG_MODERATION_NOTICE_MODER;
 
                 }
 
-                $this->viewed_moderators = cmsUser::getSetUPS($this->getUniqueKey(array($ctype['name'], 'moderation', $item['id'])));
+                $this->viewed_moderators = cmsUser::getSetUPS($this->getUniqueKey([$ctype['name'], 'moderation', $item['id']]));
 
                 if(isset($this->viewed_moderators[$this->cms_user->id])){ unset($this->viewed_moderators[$this->cms_user->id]); }
 
@@ -97,18 +97,17 @@ class actionContentItemView extends cmsAction {
             if (!$is_moderator && !$allow_restore){ return cmsCore::error404(); }
 
             cmsUser::addSessionMessage(LANG_CONTENT_ITEM_IN_TRASH, 'info');
-
         }
 
         // Проверяем ограничения доступа из других контроллеров
         if ($item['is_parent_hidden'] || $item['is_private']){
 
-            $is_parent_viewable_result = cmsEventsManager::hook('content_view_hidden', array(
+            $is_parent_viewable_result = cmsEventsManager::hook('content_view_hidden', [
                 'viewable'     => true,
                 'item'         => $item,
                 'is_moderator' => $is_moderator,
                 'ctype'        => $ctype
-            ));
+            ]);
 
             if (!$is_parent_viewable_result['viewable']){
 
@@ -158,14 +157,14 @@ class actionContentItemView extends cmsAction {
         }
 
         // формируем связи (дочерние списки)
-        $childs = array(
+        $childs = [
             'relations' => $this->model->getContentTypeChilds($ctype['id']),
-            'to_add'    => array(),
-            'to_bind'   => array(),
-            'to_unbind' => array(),
-            'tabs'      => array(),
-            'items'     => array()
-        );
+            'to_add'    => [],
+            'to_bind'   => [],
+            'to_unbind' => [],
+            'tabs'      => [],
+            'items'     => []
+        ];
 
         if ($childs['relations']){
 
@@ -173,22 +172,22 @@ class actionContentItemView extends cmsAction {
 
                 // пропускаем все не контентные связи
                 // их должен обработать хук content_before_childs
-                if($relation['target_controller'] != 'content'){
+                if($relation['target_controller'] !== 'content'){
                     continue;
                 }
 
                 $perm = cmsUser::getPermissionValue($relation['child_ctype_name'], 'add_to_parent');
                 $is_allowed_to_add = ($perm &&
-                        ($perm == 'to_all' ||
-                        ($perm == 'to_own' && $item['user_id'] == $this->cms_user->id) ||
-                        ($perm == 'to_other' && $item['user_id'] != $this->cms_user->id)
+                        ($perm === 'to_all' ||
+                        ($perm === 'to_own' && $item['user_id'] == $this->cms_user->id) ||
+                        ($perm === 'to_other' && $item['user_id'] != $this->cms_user->id)
                 )) || $this->cms_user->is_admin;
 
                 $perm = cmsUser::getPermissionValue($relation['child_ctype_name'], 'bind_to_parent');
                 $is_allowed_to_bind = ($perm && (
-                    ($perm == 'all_to_all' || $perm == 'own_to_all' || $perm == 'other_to_all') ||
-                    (($perm == 'all_to_own' || $perm == 'own_to_own' || $perm == 'other_to_own') && ($item['user_id'] == $this->cms_user->id)) ||
-                    (($perm == 'all_to_other' || $perm == 'own_to_other' || $perm == 'other_to_other') && ($item['user_id'] != $this->cms_user->id))
+                    ($perm === 'all_to_all' || $perm === 'own_to_all' || $perm === 'other_to_all') ||
+                    (($perm === 'all_to_own' || $perm === 'own_to_own' || $perm === 'other_to_own') && ($item['user_id'] == $this->cms_user->id)) ||
+                    (($perm === 'all_to_other' || $perm === 'own_to_other' || $perm === 'other_to_other') && ($item['user_id'] != $this->cms_user->id))
                 )) || $this->cms_user->is_admin;
 
                 $is_allowed_to_unbind = cmsUser::isAllowed($relation['child_ctype_name'], 'bind_off_parent');
@@ -219,19 +218,18 @@ class actionContentItemView extends cmsAction {
 
                 $is_hide_empty = $relation['options']['is_hide_empty'];
 
-                if (($count || !$is_hide_empty) && $relation['layout'] == 'tab'){
+                if (($count || !$is_hide_empty) && $relation['layout'] === 'tab'){
 
-                    $childs['tabs'][$relation['child_ctype_name']] = array(
+                    $childs['tabs'][$relation['child_ctype_name']] = [
                         'title'       => $relation['title'],
                         'url'         => href_to($ctype['name'], $item['slug'].'/view-'.$relation['child_ctype_name']),
                         'counter'     => $count,
                         'relation_id' => $relation['id'],
                         'ordering'    => $relation['ordering']
-                    );
-
+                    ];
                 }
 
-                if (!$this->request->has('child_ctype_name') && ($count || !$is_hide_empty) && $relation['layout'] == 'list'){
+                if (!$this->request->has('child_ctype_name') && ($count || !$is_hide_empty) && $relation['layout'] === 'list'){
 
                     if (!empty($relation['options']['limit'])){
                         $child_ctype['options']['limit'] = $relation['options']['limit'];
@@ -241,7 +239,6 @@ class actionContentItemView extends cmsAction {
                         $child_ctype['options']['list_show_filter'] = false;
                     }
 
-
                     if (!empty($relation['options']['dataset_id'])){
 
                         $dataset = cmsCore::getModel('content')->getContentDataset($relation['options']['dataset_id']);
@@ -249,26 +246,22 @@ class actionContentItemView extends cmsAction {
                         if ($dataset){
                             $this->model->applyDatasetFilters($dataset);
                         }
-
                     }
 
-                    $childs['lists'][] = array(
+                    $childs['lists'][] = [
                         'title'       => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
                         'ctype_name'  => $relation['child_ctype_name'],
                         'html'        => $this->setListContext('item_view_relation_list')->
                             renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'] . '.html')),
                         'relation_id' => $relation['id'],
                         'ordering'    => $relation['ordering']
-                    );
-
+                    ];
                 }
 
                 $this->model->resetFilters();
-
             }
 
-            list($ctype, $childs, $item) = cmsEventsManager::hook('content_before_childs', array($ctype, $childs, $item));
-
+            list($ctype, $childs, $item) = cmsEventsManager::hook('content_before_childs', [$ctype, $childs, $item]);
         }
 
         array_order_by($childs['tabs'], 'ordering');
@@ -279,33 +272,41 @@ class actionContentItemView extends cmsAction {
 
             $child_ctype_name = $this->request->get('child_ctype_name', '');
 
-            // если связь с контроллером, а не с типом контента
-            if ($this->isControllerInstalled($child_ctype_name) && $this->isControllerEnabled($child_ctype_name)){
+            $parts = explode('-', $child_ctype_name);
+            $child_controller_name = $parts[0];
+            $child_target = isset($parts[1]) ? $parts[1] : '';
 
-                $child_controller = cmsCore::getController($child_ctype_name, $this->request);
+            // если связь с контроллером, а не с типом контента
+            if ($this->isControllerInstalled($child_controller_name) && $this->isControllerEnabled($child_controller_name)){
+
+                $child_controller = cmsCore::getController($child_controller_name, $this->request);
 
                 if($child_controller->isActionExists('item_childs_view')){
 
-                    return $child_controller->runAction('item_childs_view', array(
-                        'ctype'   => $ctype,
-                        'item'    => $item,
-                        'childs'  => $childs,
+                    // разблокируем вызов
+                    $child_controller->lock_explicit_call = false;
+
+                    return $child_controller->runAction('item_childs_view', [
+                        'ctype'              => $ctype,
+                        'item'               => $item,
+                        'childs'             => $childs,
                         'content_controller' => $this,
-                        'fields'  => $fields
-                    ));
-
+                        'fields'             => $fields,
+                        'child_target'       => $child_target
+                    ]);
                 }
-
             }
 
-            return $this->runExternalAction('item_childs_view', array(
+            // разблокируем вызов
+            $this->lock_explicit_call = false;
+
+            return $this->runExternalAction('item_childs_view', [
                 'ctype'            => $ctype,
                 'item'             => $item,
                 'child_ctype_name' => $child_ctype_name,
                 'childs'           => $childs,
                 'fields'           => $fields
-            ));
-
+            ]);
         }
 
         // Получаем поля-свойства
@@ -333,7 +334,6 @@ class actionContentItemView extends cmsAction {
                     $prop_field = $props_fields[$prop['id']];
 
                     $props[$key]['html'] = $prop_field->setItem($item)->parse($props_values[$prop['id']]);
-
                 }
 
                 $props_fieldsets = cmsForm::mapFieldsToFieldsets($props, function($field, $user) use($props_values) {
@@ -342,7 +342,6 @@ class actionContentItemView extends cmsAction {
                     }
                     return true;
                 });
-
             }
 
         }
@@ -355,8 +354,8 @@ class actionContentItemView extends cmsAction {
         // формируем инфобар
         $item['info_bar'] = $this->getItemInfoBar($ctype, $item, $fields);
 
-        list($ctype, $item, $fields) = cmsEventsManager::hook('content_before_item', array($ctype, $item, $fields));
-        list($ctype, $item, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_before_item", array($ctype, $item, $fields));
+        list($ctype, $item, $fields) = cmsEventsManager::hook('content_before_item', [$ctype, $item, $fields]);
+        list($ctype, $item, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_before_item", [$ctype, $item, $fields]);
 
         // счетчик просмотров увеличивается, если включен в настройках,
         // не запрещён в записи (флаг disable_increment_hits, который может быть определён ранее в хуках)
@@ -367,7 +366,7 @@ class actionContentItemView extends cmsAction {
 
         $fields_fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($item) {
 
-            if (!$field['is_in_item'] || $field['is_system'] || $field['name'] == 'title') { return false; }
+            if (!$field['is_in_item'] || $field['is_system'] || $field['name'] === 'title') { return false; }
 
             // Позиция поля "На позиции в специальном виджете"
             if (!empty($field['options']['is_in_item_pos']) && !in_array('page', $field['options']['is_in_item_pos'])) { return false; }
@@ -454,15 +453,15 @@ class actionContentItemView extends cmsAction {
 
         if (!empty($childs['tabs'])){
 
-            $this->cms_template->addMenuItem('item-menu', array(
+            $this->cms_template->addMenuItem('item-menu', [
                 'title' => !empty($ctype['labels']['relations_tab_title']) ? $ctype['labels']['relations_tab_title'] : string_ucfirst($ctype['labels']['one']),
                 'url'   => href_to($ctype['name'], $item['slug'] . '.html')
-            ));
+            ]);
 
             $this->cms_template->addMenuItems('item-menu', $childs['tabs']);
         }
 
-        return $this->cms_template->render('item_view', array(
+        return $this->cms_template->render('item_view', [
             'item_seo'         => $item_seo,
             'ctype'            => $ctype,
             'fields'           => $fields,
@@ -475,8 +474,7 @@ class actionContentItemView extends cmsAction {
             'is_moderator'     => $is_moderator,
             'user'             => $this->cms_user,
             'childs'           => $childs
-        ));
-
+        ]);
     }
 
     private function getToolButtons($ctype, $item, $is_moderator, $childs) {

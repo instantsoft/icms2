@@ -204,4 +204,12 @@ class fieldFile extends cmsFormField {
         return $this->validate_error;
     }
 
+    public function validate_required($value) {
+        if (is_string($this->validate_error)) {
+            return $this->validate_error;
+        }
+        if (empty($value)) { return ERR_VALIDATE_REQUIRED; }
+        return true;
+    }
+
 }

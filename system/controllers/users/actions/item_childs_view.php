@@ -2,7 +2,9 @@
 
 class actionUsersItemChildsView extends cmsAction {
 
-    public function run($ctype, $item, $childs, $content_controller, $fields){
+    public $lock_explicit_call = true;
+
+    public function run($ctype, $item, $childs, $content_controller, $fields, $child_target){
 
         if(!empty($childs['tabs'][$this->name]['relation_id'])){
             $relation = $childs['relations'][$childs['tabs'][$this->name]['relation_id']];

@@ -830,7 +830,7 @@ class modelContent extends cmsModel {
         $this->select('c.labels', 'child_labels');
         $this->select('c.name', 'child_ctype_name');
 
-        $this->joinLeft('content_types', 'c', 'c.id = i.child_ctype_id');
+        $this->joinLeft('content_types', 'c', "c.id = i.child_ctype_id AND i.target_controller = 'content'");
 
         $this->filterEqual('ctype_id', $ctype_id);
 

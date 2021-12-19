@@ -642,7 +642,7 @@ icms.forms = (function ($) {
                 let field_event = field_obj.attr('type') === 'text' ? 'input' : 'change';
                 field_obj.on(field_event, function (){
 
-                    let name = $(this).attr('name');
+                    let name = $(this).attr('name').replace(/\[/g, ':').replace(/\]/g, '');
 
                     /* перебор тех, кто зависит от этого поля name */
                     for(var field in _this.VDRules.from[form_id+'-'+name]){if(_this.VDRules.from[form_id+'-'+name].hasOwnProperty(field)){

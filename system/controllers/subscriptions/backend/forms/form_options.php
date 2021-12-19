@@ -35,7 +35,11 @@ class formSubscriptionsOptions extends cmsForm {
 
                     new fieldNumber('limit', array(
                         'title'   => LANG_SBSCR_LIMIT,
-                        'default' => 20
+                        'default' => 20,
+                        'rules'   => [
+                            ['required'],
+                            ['min', 1]
+                        ]
                     ))
 
                 )

@@ -19,10 +19,11 @@ class fieldNumber extends cmsFormField {
             new fieldNumber('decimal_int', array(
                 'title'   => LANG_PARSER_NUMBER_DECIMAL_INT,
                 'default' => 7,
-                'rules' => array(
-                    array('required'),
-                    array('max', 35)
-                ),
+                'rules' => [
+                    ['required'],
+                    ['min', 1],
+                    ['max', 35]
+                ],
                 'options'=>array(
                     'is_abs'=> true,
                     'is_ceil'=> true,

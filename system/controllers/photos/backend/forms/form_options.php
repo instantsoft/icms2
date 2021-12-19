@@ -118,9 +118,10 @@ class formPhotosOptions extends cmsForm {
                     new fieldNumber('limit', array(
                         'title'   => LANG_LIST_LIMIT,
                         'default' => 16,
-                        'rules'   => array(
-                            array('required')
-                        )
+                        'rules'   => [
+                            ['required'],
+                            ['min', 1]
+                        ]
                     )),
 
                     new fieldNumber('related_limit', array(

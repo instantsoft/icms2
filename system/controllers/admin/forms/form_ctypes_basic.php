@@ -237,9 +237,10 @@ class formAdminCtypesBasic extends cmsForm {
                     new fieldNumber('options:limit', array(
                         'title' => LANG_LIST_LIMIT,
                         'default' => 15,
-                        'rules' => array(
-                            array('required')
-                        )
+                        'rules' => [
+                            ['required'],
+                            ['min', 1]
+                        ]
                     )),
                     new fieldList('options:list_style', array(
                         'title' => LANG_CP_LISTVIEW_STYLE,

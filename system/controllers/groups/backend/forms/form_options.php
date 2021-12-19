@@ -40,9 +40,10 @@ class formGroupsOptions extends cmsForm {
 
                     new fieldNumber('limit', array(
                         'default' => 15,
-                        'rules' => array(
-                            array('required')
-                        )
+                        'rules' => [
+                            ['required'],
+                            ['min', 1]
+                        ]
                     ))
 
                 )

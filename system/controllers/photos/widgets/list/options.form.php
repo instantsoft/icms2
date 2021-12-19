@@ -88,9 +88,10 @@ class formWidgetPhotosListOptions extends cmsForm {
                     new fieldNumber('options:limit', array(
                         'title' => LANG_LIST_LIMIT,
                         'default' => 10,
-                        'rules' => array(
-                            array('required')
-                        )
+                        'rules' => [
+                            ['required'],
+                            ['min', 1]
+                        ]
                     ))
 
                 )

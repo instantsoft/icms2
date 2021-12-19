@@ -96,7 +96,11 @@ class formAdminCtypesRelation extends cmsForm {
 
                     new fieldNumber('options:limit', array(
                         'title' => LANG_CP_RELATION_LAYOUT_LIMIT,
-                        'hint' => LANG_CP_RELATION_LAYOUT_LIMIT_HINT
+                        'hint' => LANG_CP_RELATION_LAYOUT_LIMIT_HINT,
+                        'rules'   => [
+                            ['required'],
+                            ['min', 1]
+                        ]
                     )),
 
                     new fieldCheckbox('options:is_hide_empty', array(

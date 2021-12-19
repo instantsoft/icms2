@@ -2,6 +2,8 @@
 
 class actionContentItemChildsView extends cmsAction {
 
+    public $lock_explicit_call = true;
+
     public function run($ctype, $item, $child_ctype_name, $childs, $fields){
 
         $child_ctype = $this->model->getContentTypeByName($child_ctype_name);

@@ -14,17 +14,19 @@ class formWallOptions extends cmsForm {
                     new fieldNumber('limit', array(
                         'title' => LANG_LIST_LIMIT,
                         'default' => 15,
-                        'rules' => array(
-                            array('required')
-                        )
+                        'rules' => [
+                            ['required'],
+                            ['min', 1]
+                        ]
                     )),
 
                     new fieldNumber('show_entries', array(
                         'title' => LANG_WALL_SHOW_ENTRIES,
                         'default' => 5,
-                        'rules' => array(
-                            array('required')
-                        )
+                        'rules' => [
+                            ['required'],
+                            ['min', 1]
+                        ]
                     )),
 
                     new fieldList('order_by', array(
