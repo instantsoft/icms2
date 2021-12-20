@@ -20,3 +20,11 @@ define('LANG_SBSCR_PM_NOTIFY', 'Update in your subscription list «<a href="%s">
 define('LANG_SBSCR_UNSUBSCRIBE_SUCCESS', 'You successfully unsubscribed from the subscription');
 define('LANG_SBSCR_CTYPE_ON', 'Enable Subscriptions');
 define('LANG_SBSCR_CTYPE_RECURSIVE_CATEGORIES', 'Include nested categories');
+define('LANG_SBSCR_NOTIFY_TEXT', 'Notification template on the site');
+define('LANG_SBSCR_NOTIFY_TEXT_HINT', 'If not specified, generic will be used. Example text: <b class="text-danger">'. htmlspecialchars(LANG_SBSCR_PM_NOTIFY).'</b>. %s will be replaced by notification values.');
+define('LANG_SBSCR_LETTER_TPL', 'Email notification template');
+define('LANG_SBSCR_LETTER_TPL_HINT', 'If not specified, generic will be used. Example of template text system/languages/en/letters/subscribe_new_item.txt');
+define('LANG_SBSCR_LIST_TITLE', 'Subscription list title');
+define('LANG_SBSCR_LIST_URL', 'Subscription list URL');
+define('LANG_SBSCR_UNSUBSCRIBE_URL', 'Unsubscribe URL');
+define('LANG_SBSCR_SUBJECTS_URLS', 'List of links to new subscription entries');

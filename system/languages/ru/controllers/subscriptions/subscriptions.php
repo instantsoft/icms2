@@ -20,3 +20,11 @@ define('LANG_SBSCR_PM_NOTIFY', 'Обновление в вашем списке 
 define('LANG_SBSCR_UNSUBSCRIBE_SUCCESS', 'Вы успешно отписались от подписки');
 define('LANG_SBSCR_CTYPE_ON', 'Включить подписки');
 define('LANG_SBSCR_CTYPE_RECURSIVE_CATEGORIES', 'Учитывать вложенные категории');
+define('LANG_SBSCR_NOTIFY_TEXT', 'Шаблон уведомления на сайте');
+define('LANG_SBSCR_NOTIFY_TEXT_HINT', 'Если не указан, будет использоваться общий. Пример текста: <b class="text-danger">'. htmlspecialchars(LANG_SBSCR_PM_NOTIFY).'</b>. %s будут заменены значениями.');
+define('LANG_SBSCR_LETTER_TPL', 'Шаблон email уведомлений');
+define('LANG_SBSCR_LETTER_TPL_HINT', 'Если не указан, будет использоваться общий. Пример текста шаблона system/languages/ru/letters/subscribe_new_item.txt');
+define('LANG_SBSCR_LIST_TITLE', 'Заголовок списка подписки');
+define('LANG_SBSCR_LIST_URL', 'URL списка подписки');
+define('LANG_SBSCR_UNSUBSCRIBE_URL', 'URL отписки');
+define('LANG_SBSCR_SUBJECTS_URLS', 'Список ссылок на новые записи подписки');

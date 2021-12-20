@@ -108,7 +108,7 @@
                     </div>
                 </div>
             </li>
-            <li class="nav-item">
+            <li class="nav-item d-sm-down-none">
                 <a class="nav-link d-flex justify-content-center text-light" href="<?php echo href_to_home(); ?>" target="_blank" title="<?php echo LANG_CP_BACK_TO_SITE; ?>" data-toggle="tooltip" data-placement="bottom">
                     <?php html_svg_icon('solid', 'share-square'); ?>
                 </a>

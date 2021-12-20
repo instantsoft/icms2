@@ -257,6 +257,12 @@ class fieldHtml extends cmsFormField {
             'presets' => $this->getOption('editor_presets', [])
         ]);
 
+        if(empty($this->data['options']['id'])){
+            $this->data['options']['id'] = $this->id.'-' . uniqid();
+        }
+
+        $this->id = $this->data['options']['id'];
+
         return parent::getInput($value);
     }
 

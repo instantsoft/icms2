@@ -453,7 +453,7 @@ class Jevix{
 	}
 
 	protected function &strToArray($str){
-		$chars = null;
+		$chars = [];
 		preg_match_all('/./su', $str, $chars);
 		return $chars[0];
 	}
@@ -520,25 +520,25 @@ class Jevix{
 	 * Сохранить текущее состояние
 	 *
 	 */
-	protected function saveState(){
-		$state = array(
-			'pos'   => $this->curPos,
-			'ch'    => $this->curCh,
-			'ord'   => $this->curChOrd,
-			'class' => $this->curChClass,
-		);
+	protected function saveState() {
 
-		$this->states[] = $state;
-		return count($this->states)-1;
-	}
+        $this->states[] = [
+            'pos'   => $this->curPos,
+            'ch'    => $this->curCh,
+            'ord'   => $this->curChOrd,
+            'class' => $this->curChClass,
+        ];
 
-	/**
+        return count($this->states) - 1;
+    }
+
+    /**
 	 * Восстановить
 	 *
 	 */
 	protected function restoreState($index = null){
 		if(!count($this->states)) { throw new Exception('Конец стека'); }
-		if($index == null){
+		if($index === null){
 			$state = array_pop($this->states);
 		} else {
 			if(!isset($this->states[$index])) { throw new Exception('Неверный индекс стека'); }
@@ -559,17 +559,20 @@ class Jevix{
 	 * @param string $ch
 	 * @return boolean
 	 */
-	protected function matchCh($ch, $skipSpaces = false){
-		if($this->curCh == $ch) {
-			$this->getCh();
-			if($skipSpaces) { $this->skipSpaces(); }
-			return true;
-		}
+	protected function matchCh($ch, $skipSpaces = false) {
 
-		return false;
-	}
+        if ($this->curCh === $ch) {
+            $this->getCh();
+            if ($skipSpaces) {
+                $this->skipSpaces();
+            }
+            return true;
+        }
 
-	/**
+        return false;
+    }
+
+    /**
 	 * Проверяет точное вхождение символа указанного класса в текущей позиции
 	 * Если символ соответствует указанному классу автомат сдвигается на следующий
 	 *
@@ -594,25 +597,26 @@ class Jevix{
 	 * @param string $str
 	 * @return boolean
 	 */
-	protected function matchStr($str, $skipSpaces = false){
-		$this->saveState();
-		$len = mb_strlen($str);
-		$test = '';
-		while($len-- && $this->curChClass){
-			$test.=$this->curCh;
-			$this->getCh();
-		}
+	protected function matchStr($str, $skipSpaces = false) {
+        $this->saveState();
+        $len  = mb_strlen($str);
+        $test = '';
+        while ($len-- && $this->curChClass) {
+            $test .= $this->curCh;
+            $this->getCh();
+        }
+        if ($test === $str) {
+            if ($skipSpaces) {
+                $this->skipSpaces();
+            }
+            return true;
+        } else {
+            $this->restoreState();
+            return false;
+        }
+    }
 
-		if($test == $str) {
-			if($skipSpaces) { $this->skipSpaces(); }
-			return true;
-		} else {
-			$this->restoreState();
-			return false;
-		}
-	}
-
-	/**
+    /**
 	 * Пропуск текста до нахождения указанного символа
 	 *
 	 * @param string $ch сиимвол
@@ -778,7 +782,7 @@ class Jevix{
 
 	protected function preformatted(&$content = '', $insideTag = null){
 		while($this->curChClass){
-			if($this->curCh == '<'){
+			if($this->curCh === '<'){
 				$tag = '';
 				$this->saveState();
 				// Пытаемся найти закрывающийся тег
@@ -795,7 +799,7 @@ class Jevix{
 
 	protected function callback(&$content = '', $insideTag = null){
 		while($this->curChClass){
-			if($this->curCh == '<'){
+			if($this->curCh === '<'){
 				$tag = '';
 				$this->saveState();
 				// Пытаемся найти закрывающийся тег
@@ -827,7 +831,7 @@ class Jevix{
 		}
 		$name=mb_strtolower($name);
 		// Пробуем получить список атрибутов тега
-		if($this->curCh != '>' && $this->curCh != '/') { $this->tagParams($params); }
+		if($this->curCh !== '>' && $this->curCh !== '/') { $this->tagParams($params); }
 
 		// Короткая запись тега
 		$short = !empty($this->tagsRules[$name][self::TR_TAG_SHORT]);
@@ -869,7 +873,7 @@ class Jevix{
 
 		if(!$this->matchCh('=', true)){
 			// Стремная штука - параметр без значения <input type="checkbox" checked>, <td nowrap class=b>
-			if(($this->curCh=='>' || ($this->curChClass & self::LAT) == self::LAT)){
+			if(($this->curCh==='>' || ($this->curChClass & self::LAT) == self::LAT)){
 				$value = $name;
 				return true;
 			} else {
@@ -903,12 +907,12 @@ class Jevix{
 				// Экранируем символы HTML которые не могут быть в параметрах
 				$value.=isset($this->entities1[$this->curCh]) ? $this->entities1[$this->curCh] : $this->curCh;
 				// Символ ескейпа <a href="javascript::alert(\"hello\")">
-				if($this->curCh == '\\') { $escape = true; }
+				if($this->curCh === '\\') { $escape = true; }
 				$this->getCh();
 			}
 		} else {
 			// долбаный параметр без кавычек. получаем его пока не пробел и не > и не конец
-			while($this->curChClass && !($this->curChClass & self::SPACE) && $this->curCh != '>'){
+			while($this->curChClass && !($this->curChClass & self::SPACE) && $this->curCh !== '>'){
 				// Экранируем символы HTML которые не могут быть в параметрах
 				$value.=isset($this->entities1[$this->curCh]) ? $this->entities1[$this->curCh] : $this->curCh;
 				$this->getCh();
@@ -971,7 +975,7 @@ class Jevix{
 		foreach($params as $param=>$value){
 			$param = mb_strtolower($param);
 			$value = trim($value);
-			if($value == '') { continue; }
+			if(!$value) { continue; }
 
 			// Атрибут тега разрешён? Какие возможны значения? Получаем список правил
 			$paramAllowedValues = isset($tagRules[self::TR_PARAM_ALLOWED][$param]) ? $tagRules[self::TR_PARAM_ALLOWED][$param] : false;
@@ -1083,8 +1087,8 @@ class Jevix{
 		}
 
 		// Пустой некороткий тег удаляем кроме исключений
-		if (!isset($tagRules[self::TR_TAG_IS_EMPTY]) or !$tagRules[self::TR_TAG_IS_EMPTY]) {
-			if(!$short && $content == '') { return ''; }
+		if (empty($tagRules[self::TR_TAG_IS_EMPTY])) {
+			if(!$short && !preg_replace('#\s++#u', '', $content)) { return ''; }
 		}
 
 		// Проверка на допустимые комбинации
@@ -1141,7 +1145,7 @@ class Jevix{
 
 			// Параметры
 			foreach($resParams as $param => $value) {
-				if ($value != '') {
+				if ($value) {
 					$text.=' '.$param.'="'.$value.'"';
 				}
 			}
@@ -1177,26 +1181,26 @@ class Jevix{
 			}
 
 			// <Тег> кекст </Тег>
-			if($this->curCh == '<' && $this->tag($tag, $params, $text, $shortTag)){
+			if($this->curCh === '<' && $this->tag($tag, $params, $text, $shortTag)){
 				// Преобразуем тег в текст
 				$tagText = $this->makeTag($tag, $params, $text, $shortTag, $parentTag);
 				$content.=$tagText;
 				// Пропускаем пробелы после <br> и запрещённых тегов, которые вырезаются парсером
-				if ($tag=='br') {
+				if ($tag==='br') {
 					$this->skipNL();
 				} elseif (isset($this->tagsRules[$tag]) and isset($this->tagsRules[$tag][self::TR_TAG_BLOCK_TYPE])) {
 					$count=0;
 					$this->skipNL($count,2);
-				} elseif ($tagText == ''){
+				} elseif (!$tagText){
 					$this->skipSpaces();
 				}
 
 			// Коментарий <!-- -->
-			} elseif($this->curCh == '<' && $this->comment()){
+			} elseif($this->curCh === '<' && $this->comment()){
 				continue;
 
 			// Конец тега или символ <
-			} elseif($this->curCh == '<') {
+			} elseif($this->curCh === '<') {
 				// Если встречается <, но это не тег
 				// то это либо закрывающийся тег либо знак <
 				$this->saveState();
@@ -1254,12 +1258,12 @@ class Jevix{
 	}
 
     protected function dash(&$dash) {
-        if ($this->curCh != '-') { return false; }
+        if ($this->curCh !== '-') { return false; }
         $dash = '';
         $this->saveState();
         $this->getCh();
         // Несколько подряд
-        while ($this->curCh == '-') {
+        while ($this->curCh === '-') {
             $this->getCh();
         }
         /*
@@ -1287,20 +1291,20 @@ class Jevix{
 		$this->getCh();
 
 		// Проверяем ... и !!! и ?.. и !..
-		if($punctuation == '.' && $this->curCh == '.'){
-			while($this->curCh == '.') { $this->getCh(); }
+		if($punctuation === '.' && $this->curCh === '.'){
+			while($this->curCh === '.') { $this->getCh(); }
 			$punctuation = $this->dotes;
-		} elseif($punctuation == '!' && $this->curCh == '!'){
-			while($this->curCh == '!') { $this->getCh(); }
+		} elseif($punctuation === '!' && $this->curCh === '!'){
+			while($this->curCh === '!') { $this->getCh(); }
 			$punctuation = '!!!';
-		} elseif (($punctuation == '?' || $punctuation == '!') && $this->curCh == '.'){
-			while($this->curCh == '.') { $this->getCh(); }
+		} elseif (($punctuation === '?' || $punctuation === '!') && $this->curCh === '.'){
+			while($this->curCh === '.') { $this->getCh(); }
 			$punctuation.= '..';
 		}
 
 		// Далее идёт слово - добавляем пробел
 		if($this->curChClass & self::RUS) {
-			if($punctuation != '.') { $punctuation.= ' '; }
+			if($punctuation !== '.') { $punctuation.= ' '; }
 			return true;
 		// Далее идёт пробел, перенос строки, конец текста
 		} elseif(($this->curChClass & self::SPACE) || ($this->curChClass & self::NL) || !$this->curChClass){
@@ -1392,7 +1396,7 @@ class Jevix{
 
 		// Первый символ может быть <, это значит что tag() вернул false
 		// и < к тагу не относится
-		while(($this->curCh != '<') && $this->curChClass){
+		while(($this->curCh !== '<') && $this->curChClass){
 			$brCount = 0;
 			$spCount = 0;
 			$quote = null;
@@ -1403,16 +1407,16 @@ class Jevix{
 			$this->skipSpaces($spCount);
 
 			// автопреобразование сущностей...
-			if (!$spCount && $this->curCh == '&' && $this->htmlEntity($entity)){
+			if (!$spCount && $this->curCh === '&' && $this->htmlEntity($entity)){
 				$text.= isset($this->entities2[$entity]) ? $this->entities2[$entity] : $entity;
 			} elseif ($typoEnabled && ($this->curChClass & self::PUNCTUATUON) && $this->punctuation($punctuation)){
 				// Автопунктуация выключена
 				// Если встретилась пунктуация - добавляем ее
 				// Сохраняем пробел перед точкой если класс следующий символ - латиница
-				if($spCount && $punctuation == '.' && ($this->curChClass & self::LAT)) { $punctuation = ' '.$punctuation; }
+				if($spCount && $punctuation === '.' && ($this->curChClass & self::LAT)) { $punctuation = ' '.$punctuation; }
 				$text.=$punctuation;
 				$newWord = true;
-			} elseif ($typoEnabled && ($spCount || $newLine) && $this->curCh == '-' && $this->dash($dash)){
+			} elseif ($typoEnabled && ($spCount || $newLine) && $this->curCh === '-' && $this->dash($dash)){
 				// Тире
 				$text.=$dash;
 				$newWord = true;
@@ -1448,7 +1452,7 @@ class Jevix{
 				$newLine = true;
 				$newWord = true;
 				// !!!Добавление слова
-			} elseif ($newWord && $this->isAutoLinkMode && ($this->curChClass & self::LAT) && $this->openedTag!='a' && $this->url($url, $href)){
+			} elseif ($newWord && $this->isAutoLinkMode && ($this->curChClass & self::LAT) && $this->openedTag!=='a' && $this->url($url, $href)){
 				// URL
 				$text.= $this->makeTag('a' , array('href' => $href), $url, false);
 			} elseif($this->curChClass & self::PRINATABLE){

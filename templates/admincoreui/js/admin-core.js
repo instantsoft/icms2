@@ -54,7 +54,7 @@ icms.admin = (function ($) {
         $('body').on('click', '.pattern_fields > ', function (){
             var spacer = $(this).closest('.hint').data('spacer') || false;
             var spacer_stop = $(this).closest('.hint').data('spacer_stop') || false;
-            var id = $(this).closest('.field').attr('id').replace(/f_/, '');
+            var id = $(this).closest('.icms-forms-pattern__fields').data('for_id');
             if (typeof(icms.forms.wysiwygs_insert_pool.add[id]) === 'function') {
                 icms.forms.wysiwygs_insert_pool.add[id](id, $(this).text()); return false;
             }

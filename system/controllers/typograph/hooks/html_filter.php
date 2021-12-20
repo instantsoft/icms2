@@ -72,15 +72,20 @@ class onTypographHtmlFilter extends cmsAction {
             'iframe', 'spoiler', 'cite', 'footer', 'address'
         ]);
 
+        // После тега не нужно добавлять дополнительный <br/>
+        $jevix->cfgSetTagBlockType([
+            'p', 'li'
+        ]);
+
         // Устанавливаем коротие теги. (не имеющие закрывающего тега)
         $jevix->cfgSetTagShort([
             'br', 'img', 'hr', 'input', 'source'
         ]);
 
         // Устанавливаем преформатированные теги. (в них все будет заменятся на HTML сущности)
-        $jevix->cfgSetTagPreformatted(array(
+        $jevix->cfgSetTagPreformatted([
             'pre', 'code'
-        ));
+        ]);
 
         // Устанавливаем теги, которые необходимо вырезать из текста вместе с контентом.
         $jevix->cfgSetTagCutWithContent([
@@ -205,7 +210,7 @@ class onTypographHtmlFilter extends cmsAction {
         $tag_string = '<a';
 
         foreach ($params as $param => $value) {
-            if ($value != '') {
+            if ($value) {
                 $tag_string .= ' ' . $param . '="' . $value . '"';
             }
         }
@@ -243,7 +248,7 @@ class onTypographHtmlFilter extends cmsAction {
             if (in_array($param, ['height'])) {
                 continue;
             }
-            if ($value != '') {
+            if ($value) {
                 $tag_string .= ' ' . $param . '="' . $value . '"';
             }
         }
