@@ -54,7 +54,7 @@
  * @author Klaus Hartl/klaus.hartl@stilbuero.de
  */
 jQuery.cookie = function(name, value, options) {
-    if (typeof value != 'undefined') { // name and value given, set cookie
+    if (typeof value !== 'undefined') { // name and value given, set cookie
         options = options || {};
         if (value === null) {
             value = '';
@@ -62,9 +62,9 @@ jQuery.cookie = function(name, value, options) {
             options.expires = -1;
         }
         var expires = '';
-        if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString)) {
+        if (options.expires && (typeof options.expires === 'number' || options.expires.toUTCString)) {
             var date;
-            if (typeof options.expires == 'number') {
+            if (typeof options.expires === 'number') {
                 date = new Date();
                 date.setTime(date.getTime() + (options.expires * 24 * 60 * 60 * 1000));
             } else {
@@ -78,7 +78,7 @@ jQuery.cookie = function(name, value, options) {
         var path = options.path ? '; path=' + (options.path) : '';
         var domain = options.domain ? '; domain=' + (options.domain) : '';
         var secure = options.secure ? '; secure' : '';
-        document.cookie = [name, '=', encodeURIComponent(value), expires, path, domain, secure].join('');
+        document.cookie = [name, '=', encodeURIComponent(value), expires, path, domain, secure, '; SameSite=Lax'].join('');
     } else { // only name given, get cookie
         var cookieValue = null;
         if (document.cookie && document.cookie != '') {

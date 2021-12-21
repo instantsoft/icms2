@@ -2410,12 +2410,18 @@ class cmsTemplate {
             $form_tpl_file = $attributes['form_tpl_file'];
         }
 
+        $cookie_tab_key = $form->getName();
+
+        $active_tab = cmsUser::getCookie($cookie_tab_key);
+
         $this->renderAsset('ui/'.$form_tpl_file, [
             'form_tpl_file' => $form_tpl_file,
             'form'          => $form,
             'data'          => $data,
             'attributes'    => $attributes,
-            'errors'        => $errors
+            'errors'        => $errors,
+            'cookie_tab_key'=> $cookie_tab_key,
+            'active_tab'    => $active_tab
         ]);
     }
 

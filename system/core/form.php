@@ -56,8 +56,23 @@ class cmsForm {
      */
     protected $data = [];
 
-//============================================================================//
-//============================================================================//
+    /**
+     * Имя формы
+     * @var string
+     */
+    protected $name = '';
+
+    public function __construct() {
+        $this->name = strtolower(get_called_class());
+    }
+
+    /**
+     * Возвращает имя формы
+     * @return string
+     */
+    public function getName() {
+        return $this->name;
+    }
 
     /**
      * Устанавливает массив параметров формы, которые передются
@@ -106,7 +121,12 @@ class cmsForm {
      * @return \cmsForm
      */
     public function setContext($controller_obj){
-        $this->controller = $controller_obj; return $this;
+
+        $this->controller = $controller_obj;
+
+        $this->name .= '_'.$this->controller->name;
+
+        return $this;
     }
 
     /**

@@ -20,7 +20,8 @@
                 <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
                     <?php if (empty($fieldset['is_empty']) && empty($fieldset['childs'])) { continue; } ?>
                     <li class="nav-item">
-                        <a class="nav-link<?php if(empty($active_tab)){ $active_tab = true; ?> active<?php } ?><?php if(!empty($fieldset['parent']['list'])){ ?> icms-form-tab__demand<?php } ?>" <?php if(!empty($fieldset['parent']['list'])){ ?>data-parent="<?php echo str_replace(':', '_', $fieldset['parent']['list']); ?>" data-parent_url="<?php echo $fieldset['parent']['url']; ?>"<?php } ?> href="#tab-<?php echo $fieldset_id; ?>" data-toggle="tab" role="tab">
+                        <?php if($active_tab === false){ $active_tab = $fieldset_id; } ?>
+                        <a class="nav-link<?php if($active_tab === $fieldset_id){ ?> active<?php } ?><?php if(!empty($fieldset['parent']['list'])){ ?> icms-form-tab__demand<?php } ?>" <?php if(!empty($fieldset['parent']['list'])){ ?>data-parent="<?php echo str_replace(':', '_', $fieldset['parent']['list']); ?>" data-parent_url="<?php echo $fieldset['parent']['url']; ?>"<?php } ?> href="#tab-<?php echo $fieldset_id; ?>" data-toggle="tab" role="tab">
                             <?php echo $fieldset['title']; ?>
                         </a>
                     </li>

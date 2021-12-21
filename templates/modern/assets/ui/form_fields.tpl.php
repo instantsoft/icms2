@@ -1,4 +1,4 @@
-<?php $visible_depend = []; $active_tab = false; ?>
+<?php $visible_depend = []; if(!isset($active_tab)){ $active_tab = false; } ?>
 
 <?php foreach($form->getFormStructure($data) as $fieldset_id => $fieldset){ ?>
 
@@ -9,7 +9,8 @@
 
 <?php if (empty($fieldset['is_empty']) && empty($fieldset['childs'])) { continue; } ?>
     <?php if(empty($attributes['only_fields'])){ ?>
-        <div id="tab-<?php echo $fieldset_id; ?>" class="tab-pane<?php if(!$active_tab){ $active_tab = true; ?> active<?php } ?>" role="tabpanel">
+        <?php if($active_tab === false){ $active_tab = $fieldset_id; } ?>
+        <div id="tab-<?php echo $fieldset_id; ?>" class="tab-pane<?php if($active_tab == $fieldset_id){ ?> active<?php } ?>">
     <?php } ?>
     <fieldset id="fset_<?php echo $fieldset_id; ?>" class="<?php if (!empty($fieldset['is_collapsed'])){ ?>is_collapsed <?php if (!empty($fieldset['collapse_open'])){ ?>do_expand<?php } else { ?>is_collapse<?php } ?><?php } ?><?php if (isset($fieldset['class'])){ ?><?php echo $fieldset['class']; ?><?php } ?>"
     <?php if (isset($fieldset['is_hidden'])){ ?>style="display:none"<?php } ?>>

@@ -16,11 +16,12 @@
     <div class="<?php if($form->is_tabbed){ ?>tabs-menu mb-3 <?php } else { ?><?php if(count($form->getStructure()) > 1) { ?> without-tabs <?php } ?> card mb-0 rounded-0 <?php } ?>form-tabs">
 
         <?php if($form->is_tabbed){ ?>
-            <ul class="nav nav-tabs flex-wrap" role="tablist">
+            <ul class="nav nav-tabs flex-wrap">
                 <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
                     <?php if (empty($fieldset['is_empty']) && empty($fieldset['childs'])) { continue; } ?>
                     <li class="nav-item">
-                        <a class="nav-link<?php if(empty($active_tab)){ $active_tab = true; ?> active<?php } ?><?php if(!empty($fieldset['parent']['list'])){ ?> icms-form-tab__demand<?php } ?>" <?php if(!empty($fieldset['parent']['list'])){ ?>data-parent="<?php echo str_replace(':', '_', $fieldset['parent']['list']); ?>" data-parent_url="<?php echo $fieldset['parent']['url']; ?>"<?php } ?> href="#tab-<?php echo $fieldset_id; ?>" data-toggle="tab" role="tab">
+                        <?php if($active_tab === false){ $active_tab = $fieldset_id; } ?>
+                        <a class="nav-link<?php if($active_tab == $fieldset_id){ ?> active<?php } ?><?php if(!empty($fieldset['parent']['list'])){ ?> icms-form-tab__demand<?php } ?>" <?php if(!empty($fieldset['parent']['list'])){ ?>data-parent="<?php echo str_replace(':', '_', $fieldset['parent']['list']); ?>" data-parent_url="<?php echo $fieldset['parent']['url']; ?>"<?php } ?> href="#tab-<?php echo $fieldset_id; ?>" data-toggle="tab" data-fieldset_id="<?php echo $fieldset_id; ?>">
                             <?php echo $fieldset['title']; ?>
                         </a>
                     </li>
@@ -80,6 +81,11 @@
         });
     <?php } ?>
         icms.forms.initFieldsetChildList('<?php echo $attributes['form_id']; ?>');
+    <?php if ($form->is_tabbed){ ?>
+        $('#<?php echo $attributes['form_id']; ?> a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+            $.cookie('icms[<?php echo $cookie_tab_key; ?>]', $(this).data('fieldset_id'));
+        });
+    <?php } ?>
     });
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>
