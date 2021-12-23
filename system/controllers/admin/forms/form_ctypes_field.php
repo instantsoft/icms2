@@ -216,6 +216,10 @@ class formAdminCtypesField extends cmsForm {
                         'title'   => LANG_CP_FIELD_WRAP_WIDTH,
                         'hint'    => LANG_CP_FIELD_WRAP_WIDTH_HINT,
                         'default' => ''
+                    ]),
+                    new fieldString('options:wrap_style', [
+                        'title'   => LANG_CP_FIELD_WRAP_STYLE,
+                        'default' => ''
                     ])
                 ]
             ],

@@ -36,7 +36,7 @@
             <?php if (!empty($fieldset['fields'])) { ?>
                 <?php foreach ($fieldset['fields'] as $field) { ?>
 
-                    <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_type']; ?>_field" <?php if($field['options']['wrap_width']){ ?> style="width: <?php echo $field['options']['wrap_width']; ?>;"<?php } ?>>
+                    <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_type']; ?>_field <?php echo $field['options']['wrap_style']; ?>" <?php if($field['options']['wrap_width']){ ?> style="width: <?php echo $field['options']['wrap_width']; ?>;"<?php } ?>>
                         <?php if ($field['options']['label_in_item'] != 'none') { ?>
                             <div class="field_label title_<?php echo $field['options']['label_in_item']; ?>">
                                 <?php echo string_replace_svg_icons($field['title']).($field['options']['label_in_item']=='left' ? ': ' : ''); ?>

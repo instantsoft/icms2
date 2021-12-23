@@ -159,6 +159,13 @@ class cmsFormField {
     public $field_type;
 
     /**
+     * Название субъекта использования поля
+     * Задаётся полю при рендере опций поля в админке
+     * @var string
+     */
+    public $subject_name;
+
+    /**
      * @param string $name Имя поля
      * @param array $options Массив опций
      */
@@ -452,6 +459,16 @@ class cmsFormField {
      * @return mixed
      */
     public function afterParse($value, $item){ return $value; }
+
+    /**
+     * Выполняет некие действия над массивом записи
+     * после всех обработок
+     *
+     * @param array $item
+     * @param array $fields
+     * @return array
+     */
+    public function hookItem($item, $fields){ return $item; }
 
     /**
      * Если значение вашего поля предполагает тип, отличный от типа «string» или же

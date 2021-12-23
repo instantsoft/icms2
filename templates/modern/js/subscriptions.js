@@ -45,11 +45,11 @@ icms.subscriptions = (function ($) {
     };
 
     this.showLoader = function (){
-        $(self.active_link).addClass('disabled');
+        $(self.active_link).addClass('disabled is-busy');
     };
 
     this.hideLoader = function (){
-        $(self.active_link).removeClass('disabled');
+        $(self.active_link).removeClass('disabled is-busy');
     };
 
     this.setResult = function (data){

@@ -233,6 +233,7 @@ class modelContent extends cmsModel {
             'label_in_item'         => 'none',
             'wrap_type'             => 'auto',
             'wrap_width'            => '',
+            'wrap_style'            => '',
             'profile_value'         => '',
             'is_in_item_pos'        => ['page']
         ];
@@ -658,33 +659,37 @@ class modelContent extends cmsModel {
         return $result;
 	}
 
-    public function deleteContentField($ctype_name_or_id, $id, $by_field='id', $isForced = false){
+    public function deleteContentField($ctype_name_or_id, $id, $by_field = 'id', $is_forced = false) {
 
-        if (is_numeric($ctype_name_or_id)){
-            $ctype = $this->getContentType($ctype_name_or_id);
+        if (is_numeric($ctype_name_or_id)) {
+            $ctype      = $this->getContentType($ctype_name_or_id);
             $ctype_name = $ctype['name'];
         } else {
             $ctype_name = $ctype_name_or_id;
         }
 
         $field = $this->getContentField($ctype_name, $id, $by_field);
-        if ($field['is_fixed'] && !$isForced) { return false; }
+        if ($field['is_fixed'] && !$is_forced) {
+            return false;
+        }
 
-        cmsEventsManager::hook('ctype_field_before_delete', array($field, $ctype_name, $this));
+        cmsEventsManager::hook('ctype_field_before_delete', [$field, $ctype_name, $this]);
 
         $content_table_name = $this->table_prefix . $ctype_name;
-        $fields_table_name = $this->table_prefix . $ctype_name . '_fields';
+        $fields_table_name  = $this->table_prefix . $ctype_name . '_fields';
 
         $this->delete($fields_table_name, $id, $by_field);
         $this->reorder($fields_table_name);
 
         cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
 
-        $this->db->dropTableField($content_table_name, $field['name']);
+        if (!$field['parser']->is_virtual) {
+            $this->db->dropTableField($content_table_name, $field['name']);
+        }
 
         $field['parser']->hookAfterRemove($content_table_name, $field, $this);
 
-        if($field['parser']->is_denormalization){
+        if ($field['parser']->is_denormalization) {
             $this->db->dropTableField($content_table_name, $field['parser']->getDenormalName());
         }
 

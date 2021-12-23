@@ -129,6 +129,25 @@
         position: relative;
     }
 }
+.icms-content-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 90%;
+    color: $gray-600;
+    &__item {
+        margin-right: $spacer*0.5;
+        @include media-breakpoint-up(lg) {
+            margin-right: $spacer;
+        }
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+    a {
+        color: inherit;
+    }
+}
 .first_type_images, .second_type_images, .hover_image {
     position: relative;
     display: inline-block;

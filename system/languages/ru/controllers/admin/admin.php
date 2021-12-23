@@ -286,7 +286,7 @@
     define('LANG_CP_FIELD_GROUPS_READ',         'Доступ для чтения');
     define('LANG_CP_FIELD_GROUPS_EDIT',         'Доступ для изменения');
     define('LANG_CP_FIELD_GROUPS_ADD',          'Доступ для создания');
-    define('LANG_CP_FIELD_WRAP',               'Обтекание');
+    define('LANG_CP_FIELD_WRAP',               'Обтекание и CSS');
     define('LANG_CP_FIELD_WRAP_TYPE',          'Тип');
     define('LANG_CP_FIELD_WRAP_LTYPE',         'Следующее поле справа от текущего');
     define('LANG_CP_FIELD_WRAP_RTYPE',         'Следующее поле слева от текущего');
@@ -294,6 +294,7 @@
     define('LANG_CP_FIELD_WRAP_ATYPE',         'Авто');
     define('LANG_CP_FIELD_WRAP_WIDTH',         'Ширина блока поля');
     define('LANG_CP_FIELD_WRAP_WIDTH_HINT',    'Не указано - автоматическая ширина. Указывайте вместе с единицей измерения, например 200px, 60% и т.п.');
+    define('LANG_CP_FIELD_WRAP_STYLE',         'CSS класс обёртки поля');
     define('LANG_CP_FIELD_VISIBLE_DEPEND',      'Зависимость показа поля в форме');
     define('LANG_CP_FIELD_VISIBLE_DEPEND_HINT', 'Значения можно указывать через запятую.');
     define('LANG_CP_FIELD_VISIBLE_DEPEND_F',    'Поле, от которого зависит');
@@ -889,3 +890,4 @@
     define('LANG_WD_CONTENT_FILTER_DETECT', 'Определять автоматически');
     define('LANG_CP_TEMPLATE_NO_ICONS_SELECT', 'Шаблон не поддерживает выбор иконок.');
     define('LANG_CP_TEMPLATE_ICONS', 'Список иконок шаблона');
+    define('LANG_CP_COMPILE_TIME', 'Время компиляции %s сек.');

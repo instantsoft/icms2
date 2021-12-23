@@ -3035,6 +3035,8 @@ class cmsTemplate {
                         $body_classes[] = $matched_page['body_css'];
                     }
                 }
+            } else {
+                $body_classes[] = 'icms-frontpage';
             }
 
             ob_start();

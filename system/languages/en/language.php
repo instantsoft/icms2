@@ -236,6 +236,10 @@
     define('LANG_OR', 'or');
     define('LANG_BEGIN_TYPING', 'Start typing or select from the list');
     define('LANG_PARSER_FORMS',              'Forms');
+    define('LANG_PARSER_TOOLBAR',            'Toolbar');
+    define('LANG_PARSER_TOOLBAR_FL_TITLE',   'Output fields');
+    define('LANG_PARSER_TOOLBAR_FL_HINT',    'The icon can be specified with a colon, for example solid:user, where solid is the name of the sprite\'s svg file in templates/template/images/icons. If you specify something else through the second colon, it will be the name of the CSS class of the container, for example solid:user:btn.');
+    define('LANG_PARSER_TOOLBAR_FL_SEL',     'Select the field and specify the icon, if necessary');
 
     //USERS
     define('LANG_USER',                      'User');

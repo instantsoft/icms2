@@ -423,6 +423,12 @@ class content extends cmsFrontend {
                     $item['private_item_hint'] = LANG_PRIVACY_PRIVATE_HINT;
                 }
 
+                // Флаг, что эту запись пользователь не видел с последнего визита
+                $item['is_new'] = (strtotime($item['date_pub']) > strtotime($this->cms_user->date_log));
+
+                // формируем инфобар
+                $item['info_bar'] = $this->getItemInfoBar($ctype, $item, $fields, 'list');
+
                 // строим поля списка
                 foreach($fields as $field){
 
@@ -460,7 +466,13 @@ class content extends cmsFrontend {
                     $item['fields_names'][] = $current_field_data;
 
                     if (!array_key_exists($field['name'], $item)) {
-                        continue;
+
+                        // Виртуальное поле. В таблице ячейки может не быть.
+                        if($field['handler']->is_virtual){
+                            $item[$field['name']] = '';
+                        } else {
+                            continue;
+                        }
                     }
 
                     $field_html = $field['handler']->setItem($item)->parseTeaser($item[$field['name']]);
@@ -472,13 +484,11 @@ class content extends cmsFrontend {
                     $item['fields'][$field['name']] = $current_field_data;
                 }
 
-                $item['is_new'] = (strtotime($item['date_pub']) > strtotime($this->cms_user->date_log));
-
-                // формируем инфобар
-                $item['info_bar'] = $this->getItemInfoBar($ctype, $item, $fields, 'list');
+                foreach($item['fields'] as $name => $field){
+                    $item = $fields[$name]['handler']->hookItem($item, $item['fields']);
+                }
 
                 $items[$key] = $item;
-
             }
         }
 

@@ -2,26 +2,33 @@
 
 class actionGroupsFieldsEdit extends cmsAction {
 
-    public function run($field_id){
+    public function run($field_id) {
 
-        if (!$field_id) { cmsCore::error404(); }
+        if (!$field_id) {
+            return cmsCore::error404();
+        }
 
         $content_model = cmsCore::getModel('content');
 
         $content_model->setTablePrefix('');
 
-        $form = $this->getForm('field', array('edit'));
+        $form = $this->getForm('field', ['edit']);
         $form = cmsEventsManager::hook('group_field_form', $form);
 
         $field = $content_model->getContentField('groups', $field_id);
+        if (!$field) {
+            return cmsCore::error404();
+        }
 
         // скроем поле "Системное имя" для фиксированных полей
-        if ($field['is_fixed']) { $form->hideField('basic', 'name'); }
+        if ($field['is_fixed']) {
+            $form->hideField('basic', 'name');
+        }
 
         // Скроем для системных и фиксированных полей тип поля
         if ($field['is_system'] || $field['is_fixed_type']) {
             // Для валидации списка меняем на все доступные поля
-            $form->setFieldProperty('type', 'type', 'generator', function() {
+            $form->setFieldProperty('type', 'type', 'generator', function () {
                 return cmsForm::getAvailableFormFields(false, 'content');
             });
             $form->hideField('type', 'type');
@@ -34,33 +41,38 @@ class actionGroupsFieldsEdit extends cmsAction {
             $form->removeFieldset('values');
         }
 
-        if ($this->request->has('submit')){
+        if ($this->request->has('submit')) {
 
             // добавляем поля настроек типа поля в общую форму
             // чтобы они были обработаны парсером и валидатором
             // вместе с остальными полями
-            $field_type = $this->request->get('type', '');
-            $field_class = 'field' . string_to_camel('_', $field_type);
-            $field_object = new $field_class(null, null);
-            $field_options = $field_object->getOptions();
+            $field_type                 = $this->request->get('type', '');
+            $field_class                = 'field' . string_to_camel('_', $field_type);
+            $field_object               = new $field_class(null, null);
+            $field_object->subject_name = 'groups';
+            $field_options              = $field_object->getOptions();
             $form->addFieldsetAfter('type', LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
-            foreach($field_options as $option_field){
+            foreach ($field_options as $option_field) {
                 $option_field->setName("options:{$option_field->name}");
                 $form->addField('field_settings', $option_field);
             }
 
-            $defaults = $field['is_fixed_type'] ? array('type'=>$field['type']) : array();
+            $defaults = $field['is_fixed_type'] ? ['type' => $field['type']] : [];
 
-            $field = array_merge($defaults, $form->parse($this->request, true));
-            $errors = $form->validate($this,  $field);
+            $field  = array_merge($defaults, $form->parse($this->request, true));
+            $errors = $form->validate($this, $field);
 
-            if (!$errors){
+            if (!$errors) {
 
                 // если не выбрана группа, обнуляем поле группы
-                if (!$field['fieldset']) { $field['fieldset'] = null; }
+                if (!$field['fieldset']) {
+                    $field['fieldset'] = null;
+                }
 
                 // если создается новая группа, то выбираем ее
-                if ($field['new_fieldset']) { $field['fieldset'] = $field['new_fieldset']; }
+                if ($field['new_fieldset']) {
+                    $field['fieldset'] = $field['new_fieldset'];
+                }
                 unset($field['new_fieldset']);
 
                 // сохраняем поле
@@ -69,23 +81,19 @@ class actionGroupsFieldsEdit extends cmsAction {
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
                 $this->redirectToAction('fields');
-
             }
 
-            if ($errors){
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
-        return $this->cms_template->render('backend/field', array(
+        return $this->cms_template->render('backend/field', [
             'do'     => 'edit',
             'field'  => $field,
             'form'   => $form,
             'errors' => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }
-

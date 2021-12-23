@@ -142,17 +142,15 @@ class actionContentItemView extends cmsAction {
         // Получаем поля для данного типа контента
         $fields = $this->model->getContentFields($ctype['name']);
 
-        // Запоминаем копию записи для заполнения отпарсенных полей
-        $item_parsed = $item;
-
         // Парсим значения полей
         foreach ($fields as $name => $field) {
-            $fields[$name]['html'] = $field['handler']->setItem($item)->parse(isset($item[$name]) ? $item[$name] : null);
-            $item_parsed[$name] = $fields[$name]['html'];
+            $fields[$name]['html'] = $field['handler']->setItem($item)->parse(isset($item[$name]) ? $item[$name] : '');
         }
+
         // Для каких необходимо, обрабатываем дополнительно
+        $item_parsed = array_column($fields, 'html', 'name');
         foreach ($fields as $name => $field) {
-            $fields[$name]['string_value'] = $field['handler']->setItem($item_parsed)->getStringValue($item[$name]);
+            $fields[$name]['string_value'] = $field['handler']->setItem($item_parsed)->getStringValue(isset($item[$name]) ? $item[$name] : '');
             $fields[$name]['html'] = $field['handler']->afterParse($fields[$name]['html'], $item_parsed);
         }
 
@@ -364,27 +362,41 @@ class actionContentItemView extends cmsAction {
 			$this->model->incrementHitsCounter($ctype['name'], $item['id']);
 		}
 
-        $fields_fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($item) {
+        // строим поля записи
+        $item['fields'] = [];
 
-            if (!$field['is_in_item'] || $field['is_system'] || $field['name'] === 'title') { return false; }
+        foreach($fields as $field){
+
+            if (!$field['is_in_item'] || $field['is_system'] || $field['name'] === 'title') {
+                continue;
+            }
 
             // Позиция поля "На позиции в специальном виджете"
-            if (!empty($field['options']['is_in_item_pos']) && !in_array('page', $field['options']['is_in_item_pos'])) { return false; }
+            if (!empty($field['options']['is_in_item_pos']) && !in_array('page', $field['options']['is_in_item_pos'])) {
+                continue;
+            }
 
-            if (mb_strlen($field['html']) === 0) { return false; }
+            if (mb_strlen($field['html']) === 0) {
+                continue;
+            }
 
             // проверяем что группа пользователя имеет доступ к чтению этого поля
-            if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
+            if ($field['groups_read'] && !$this->cms_user->isInGroups($field['groups_read'])) {
                 // если группа пользователя не имеет доступ к чтению этого поля,
                 // проверяем на доступ к нему для авторов
-                if (!empty($item['user_id']) && !empty($field['options']['author_access'])){
-                    if (!in_array('is_read', $field['options']['author_access'])){ return false; }
-                    if ($item['user_id'] == $user->id){ return true; }
-                }
-                return false;
+                if (empty($item['user_id']) || empty($field['options']['author_access'])){ continue; }
+                if (!in_array('is_read', $field['options']['author_access'])){ continue; }
+                if ($item['user_id'] != $this->cms_user->id){ continue; }
             }
-            return true;
-        });
+
+            $item['fields'][$field['name']] = $field;
+        }
+
+        foreach($item['fields'] as $name => $field){
+            $item = $fields[$name]['handler']->hookItem($item, $item['fields']);
+        }
+
+        $fields_fieldsets = cmsForm::mapFieldsToFieldsets($item['fields']);
 
         // кешируем запись для получения ее в виджетах
         cmsModel::cacheResult('current_ctype', $ctype);

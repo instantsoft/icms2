@@ -72,45 +72,49 @@
                         $visible_depend[] = $field;
                     }
 
+                    if ($field->is_hidden || $field->getOption('is_hidden')) {
+
+                        echo html_input('hidden', $field->element_name, $value, ['id' => $field->id]);
+
+                        continue;
+                    }
+
+                    $input_html = $field->{$field->display_input}($value);
+                    if(!$input_html){
+                        continue;
+                    }
+
                 ?>
 
-                <?php if (!$field->is_hidden && !$field->getOption('is_hidden')) { ?>
+                <div id="<?php echo 'f_'.$field->id; ?>" class="form-group <?php echo implode(' ', $field->classes); ?>" <?php if (isset($field->rel)) { ?>rel="<?php echo $field->rel; ?>"<?php } ?> <?php if ($field->styles) { ?>style="<?php echo implode(';', $field->styles); ?>"<?php } ?>>
 
-                    <div id="<?php echo 'f_'.$field->id; ?>" class="form-group <?php echo implode(' ', $field->classes); ?>" <?php if (isset($field->rel)) { ?>rel="<?php echo $field->rel; ?>"<?php } ?> <?php if ($field->styles) { ?>style="<?php echo implode(';', $field->styles); ?>"<?php } ?>>
+                    <?php echo $input_html; ?>
 
-                        <?php echo $field->{$field->display_input}($value); ?>
-
-                        <?php if(!empty($field->hint) || !empty($field->patterns_hint['patterns']) || $error) { ?>
-                            <div class="d-flex justify-content-between icms-forms-hint">
-                            <?php if(!empty($field->hint) || !empty($field->patterns_hint['patterns'])) { ?>
-                                <div class="hint form-text text-muted small mt-1"<?php
-                                    if(!empty($field->patterns_hint['patterns'])){
-                                        echo ' data-spacer="'.(isset($field->patterns_hint['spacer']) ? $field->patterns_hint['spacer'] : ' ').'"';
-                                        echo ' data-spacer_stop="'.htmlspecialchars(json_encode(!empty($field->patterns_hint['spacer_stop']) ? $field->patterns_hint['spacer_stop'] : [','=>2,'.'=>2,':'=>2,';'=>2,'!'=>2,'?'=>2,'-'=>3,'|'=>3,'—'=>3])).'"';
-                                    }
-                                ?>>
-                                    <?php if(!empty($field->hint)) { echo $field->hint; } ?>
-                                    <?php if(!empty($field->patterns_hint['patterns'])){ ?>
-                                        <span class="pattern_fields_panel_hint">
-                                            <?php echo isset($field->patterns_hint['text_panel']) ? $field->patterns_hint['text_panel'] : LANG_CP_SEOMETA_HINT_PANEL; ?>
-                                        </span>
-                                        <span class="icms-forms-pattern__fields<?php if(empty($field->patterns_hint['always_show'])){ ?> pattern_fields_panel<?php } ?>" data-for_id="<?php echo $field->id; ?>">
-                                            <?php echo sprintf((!empty($field->patterns_hint['text_pattern']) ? $field->patterns_hint['text_pattern'] : LANG_CP_SEOMETA_HINT_PATTERN.LANG_CP_SEOMETA_HINT_PATTERN_DOC), implode(' ', $field->patterns_hint['pattern_fields'])); ?>
-                                            <?php echo !empty($field->patterns_hint['text_help']) ? $field->patterns_hint['text_help'] : ''; ?>
-                                        </span>
-                                    <?php } ?>
-                                </div>
-                            <?php } ?>
-                            <?php if ($error){ ?><div class="invalid-feedback w-auto ml-auto"><?php echo $error; ?></div><?php } ?>
+                    <?php if(!empty($field->hint) || !empty($field->patterns_hint['patterns']) || $error) { ?>
+                        <div class="d-flex justify-content-between icms-forms-hint">
+                        <?php if(!empty($field->hint) || !empty($field->patterns_hint['patterns'])) { ?>
+                            <div class="hint form-text text-muted small mt-1"<?php
+                                if(!empty($field->patterns_hint['patterns'])){
+                                    echo ' data-spacer="'.(isset($field->patterns_hint['spacer']) ? $field->patterns_hint['spacer'] : ' ').'"';
+                                    echo ' data-spacer_stop="'.htmlspecialchars(json_encode(!empty($field->patterns_hint['spacer_stop']) ? $field->patterns_hint['spacer_stop'] : [','=>2,'.'=>2,':'=>2,';'=>2,'!'=>2,'?'=>2,'-'=>3,'|'=>3,'—'=>3])).'"';
+                                }
+                            ?>>
+                                <?php if(!empty($field->hint)) { echo $field->hint; } ?>
+                                <?php if(!empty($field->patterns_hint['patterns'])){ ?>
+                                    <span class="pattern_fields_panel_hint">
+                                        <?php echo isset($field->patterns_hint['text_panel']) ? $field->patterns_hint['text_panel'] : LANG_CP_SEOMETA_HINT_PANEL; ?>
+                                    </span>
+                                    <span class="icms-forms-pattern__fields<?php if(empty($field->patterns_hint['always_show'])){ ?> pattern_fields_panel<?php } ?>" data-for_id="<?php echo $field->id; ?>">
+                                        <?php echo sprintf((!empty($field->patterns_hint['text_pattern']) ? $field->patterns_hint['text_pattern'] : LANG_CP_SEOMETA_HINT_PATTERN.LANG_CP_SEOMETA_HINT_PATTERN_DOC), implode(' ', $field->patterns_hint['pattern_fields'])); ?>
+                                        <?php echo !empty($field->patterns_hint['text_help']) ? $field->patterns_hint['text_help'] : ''; ?>
+                                    </span>
+                                <?php } ?>
                             </div>
                         <?php } ?>
-                    </div>
-
-                <?php } else { ?>
-
-                    <?php echo html_input('hidden', $field->element_name, $value, array('id' => $field->id)); ?>
-
-                <?php } ?>
+                        <?php if ($error){ ?><div class="invalid-feedback w-auto ml-auto"><?php echo $error; ?></div><?php } ?>
+                        </div>
+                    <?php } ?>
+                </div>
 
             <?php }
 

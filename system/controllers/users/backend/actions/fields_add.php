@@ -2,27 +2,28 @@
 
 class actionUsersFieldsAdd extends cmsAction {
 
-    public function run(){
+    public function run() {
 
         $content_model = cmsCore::getModel('content');
         $content_model->setTablePrefix('');
 
-        $form = $this->getForm('field', array('add'));
+        $form = $this->getForm('field', ['add']);
         $form = cmsEventsManager::hook('user_field_form', $form);
 
-        $field = array('ctype_id' => 'users');
+        $field = ['ctype_id' => 'users'];
 
-        if ($this->request->has('submit')){
+        if ($this->request->has('submit')) {
 
             // добавляем поля настроек типа поля в общую форму
             // чтобы они были обработаны парсером и валидатором
             // вместе с остальными полями
-            $field_type = $this->request->get('type');
-            $field_class = "field" . string_to_camel('_', $field_type);
-            $field_object = new $field_class(null, null);
-            $field_options = $field_object->getOptions();
+            $field_type                 = $this->request->get('type');
+            $field_class                = 'field' . string_to_camel('_', $field_type);
+            $field_object               = new $field_class(null, null);
+            $field_object->subject_name = '{users}';
+            $field_options              = $field_object->getOptions();
             $form->addFieldsetAfter('type', LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
-            foreach($field_options as $option_field){
+            foreach ($field_options as $option_field) {
                 $option_field->setName("options:{$option_field->name}");
                 $form->addField('field_settings', $option_field);
             }
@@ -31,39 +32,42 @@ class actionUsersFieldsAdd extends cmsAction {
 
             $errors = $form->validate($this, $field);
 
-            if (!$errors){
+            if (!$errors) {
 
                 $field['ctype_id'] = null;
 
                 // если не выбрана группа, обнуляем поле группы
-                if (!$field['fieldset']) { $field['fieldset'] = null; }
+                if (!$field['fieldset']) {
+                    $field['fieldset'] = null;
+                }
 
                 // если создается новая группа, то выбираем ее
-                if ($field['new_fieldset']) { $field['fieldset'] = $field['new_fieldset']; }
+                if ($field['new_fieldset']) {
+                    $field['fieldset'] = $field['new_fieldset'];
+                }
                 unset($field['new_fieldset']);
 
                 // сохраняем поле
-                $field_id = $content_model->addContentField('{users}', $field);
+                $field_id = $content_model->addContentField('{users}', $field, $field_object->is_virtual);
 
-                if ($field_id){ cmsUser::addSessionMessage(sprintf(LANG_CP_FIELD_CREATED, $field['title']), 'success'); }
+                if ($field_id) {
+                    cmsUser::addSessionMessage(sprintf(LANG_CP_FIELD_CREATED, $field['title']), 'success');
+                }
 
                 $this->redirectToAction('fields');
-
             }
 
-            if ($errors){
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
-        return $this->cms_template->render('backend/field', array(
+        return $this->cms_template->render('backend/field', [
             'do'     => 'add',
             'field'  => $field,
             'form'   => $form,
             'errors' => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }

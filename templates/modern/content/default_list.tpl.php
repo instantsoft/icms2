@@ -34,7 +34,7 @@
         <div class="content_list_item <?php echo $ctype['name']; ?>_list_item clearfix">
             <div class="icms-content-fields">
             <?php foreach($item['fields'] as $field){ ?>
-                <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $fields[$field['name']]['options']['wrap_type']; ?>_field" <?php if($fields[$field['name']]['options']['wrap_width']){ ?> style="width: <?php echo $fields[$field['name']]['options']['wrap_width']; ?>;"<?php } ?>>
+                <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $fields[$field['name']]['options']['wrap_type']; ?>_field <?php echo $fields[$field['name']]['options']['wrap_style']; ?>" <?php if($fields[$field['name']]['options']['wrap_width']){ ?> style="width: <?php echo $fields[$field['name']]['options']['wrap_width']; ?>;"<?php } ?>>
 
                     <?php if ($field['label_pos'] != 'none'){ ?>
                         <div class="title_<?php echo $field['label_pos']; ?>">

@@ -270,7 +270,7 @@
     define('LANG_CP_FIELD_GROUPS_READ',         'Read access');
     define('LANG_CP_FIELD_GROUPS_EDIT',         'Write access');
     define('LANG_CP_FIELD_GROUPS_ADD',          'Add access');
-    define('LANG_CP_FIELD_WRAP',                'Flow');
+    define('LANG_CP_FIELD_WRAP',                'Flow and CSS');
     define('LANG_CP_FIELD_WRAP_TYPE',           'Type');
     define('LANG_CP_FIELD_WRAP_LTYPE',          'The next field to the right of the current');
     define('LANG_CP_FIELD_WRAP_RTYPE',          'The next field to the left of the current');
@@ -278,6 +278,7 @@
     define('LANG_CP_FIELD_WRAP_ATYPE',          'Auto');
     define('LANG_CP_FIELD_WRAP_WIDTH',          'Field width');
     define('LANG_CP_FIELD_WRAP_WIDTH_HINT',     'Not Set - automatic width. Used in conjunction with the unit of measurement, such as 200px, 60%, etc.');
+    define('LANG_CP_FIELD_WRAP_STYLE',          'CSS field wrapper class');
     define('LANG_CP_FIELD_VISIBLE_DEPEND',      'Dependence to show the field in the form');
     define('LANG_CP_FIELD_VISIBLE_DEPEND_HINT', 'The values can be specified separated by commas.');
     define('LANG_CP_FIELD_VISIBLE_DEPEND_F',    'The field depends on');
@@ -847,3 +848,4 @@
     define('LANG_WD_CONTENT_FILTER_DETECT', 'Autodetect');
     define('LANG_CP_TEMPLATE_NO_ICONS_SELECT', 'The template does not support icon selection.');
     define('LANG_CP_TEMPLATE_ICONS', 'List of template icons');
+    define('LANG_CP_COMPILE_TIME', 'Compile time %s sec.');

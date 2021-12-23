@@ -8,6 +8,8 @@ class onRendererMiddlewareScss extends cmsAction {
 
     public function run($template_name, $options) {
 
+        $start_time = microtime(true);
+
         // Путь к CSS файлам
         $css_dir = cmsTemplate::TEMPLATE_BASE_PATH . $template_name.'/css/';
         $css_dir_path = $this->cms_config->root_path . $css_dir;
@@ -146,6 +148,10 @@ class onRendererMiddlewareScss extends cmsAction {
                 }
             }
         }
+
+        $end_time = microtime(true) - $start_time;
+
+        cmsUser::addSessionMessage(sprintf(LANG_CP_COMPILE_TIME, nf($end_time, 2)), 'info');
 
         return $options;
     }

@@ -235,6 +235,10 @@
     define('LANG_OR', 'или');
     define('LANG_BEGIN_TYPING', 'Начните вводить или выберите из списка');
     define('LANG_PARSER_FORMS',              'Формы');
+    define('LANG_PARSER_TOOLBAR',            'Тулбар');
+    define('LANG_PARSER_TOOLBAR_FL_TITLE',   'Поля для вывода');
+    define('LANG_PARSER_TOOLBAR_FL_HINT',    'Иконку можно указывать через двоеточие, например solid:user, где solid нзвание svg файла спрайта в директории templates/шаблон/images/icons. Если через второе двоеточие будет что-то еще указано, то это уже будет названии CSS класса контейнера, например solid:user:btn.');
+    define('LANG_PARSER_TOOLBAR_FL_SEL',     'Выберите поле и укажите иконку, если необходимо');
 
     //USERS
     define('LANG_USER',                      'Пользователь');

@@ -41,7 +41,7 @@
                 <div class="icms-content-fields">
                 <?php foreach($item['fields'] as $field){ ?>
 
-                    <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
+                    <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_style']; ?>">
 
                         <?php if ($field['label_pos'] != 'none'){ ?>
                             <div class="title_<?php echo $field['label_pos']; ?>">
