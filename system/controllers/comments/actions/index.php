@@ -47,7 +47,18 @@ class actionCommentsIndex extends cmsAction{
             $rss_link = href_to('rss', 'feed', 'comments');
         }
 
-        return $this->cms_template->render('index', array(
+        if ($this->cms_user->is_admin){
+            $this->cms_template->addToolButton([
+                'class' => 'page_gear',
+                'icon'  => 'wrench',
+                'title' => LANG_OPTIONS,
+                'href'  => href_to('admin', 'controllers', ['edit', $this->name, 'options'])
+            ]);
+        }
+
+        $this->cms_template->addHead('<link rel="canonical" href="'.href_to_abs($this->name).'"/>');
+
+        return $this->cms_template->render('index', [
             'page_title'      => ($dataset_name != 'all' ? LANG_COMMENTS . ' - ' . $dataset['title'] : LANG_COMMENTS),
             'base_ds_url'     => href_to($this->name).'%s',
             'rss_link'        => $rss_link,
@@ -56,8 +67,7 @@ class actionCommentsIndex extends cmsAction{
             'dataset'         => $dataset,
             'user'            => $this->cms_user,
             'items_list_html' => $items_list_html
-        ), $this->request);
-
+        ], $this->request);
     }
 
 }

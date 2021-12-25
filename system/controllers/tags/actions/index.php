@@ -34,7 +34,7 @@ class actionTagsIndex extends cmsAction {
             cmsCore::error404();
         }
 
-        $menu_items = cmsEventsManager::hookAll('tags_search_subjects', array($tag, $targets));
+        $menu_items = cmsEventsManager::hookAll('tags_search_subjects', [$tag, $targets]);
         if (!$menu_items) { cmsCore::error404(); }
 
         // субъект по умолчанию - первый из списка
@@ -66,7 +66,7 @@ class actionTagsIndex extends cmsAction {
         // результат поиска получаем только по переданному контроллеру
         $controller = cmsCore::getController($target_controller, $this->request);
 
-        $list_html = $controller->runHook('tags_search', array($target_subject, $tag, $page_url));
+        $list_html = $controller->runHook('tags_search', [$target_subject, $tag, $page_url]);
         if (!$list_html) { cmsCore::error404(); }
 
         foreach ($menu_items as $menu_item) {
@@ -78,10 +78,10 @@ class actionTagsIndex extends cmsAction {
         $seo_desc  = $seo_title;
         $seo_h1    = $seo_title;
 
-        $seo_data = array(
+        $seo_data = [
             'tag'         => $tag['tag'],
             'ctype_title' => isset($menu_items[$target_controller][$target]['title']) ? $menu_items[$target_controller][$target]['title'] : null
-        );
+        ];
 
         $seo_title_pattern = $tag['tag_title'] ? $tag['tag_title'] : $this->options['seo_title_pattern'];
         $seo_desc_pattern  = $tag['tag_desc'] ? $tag['tag_desc'] : $this->options['seo_desc_pattern'];
@@ -100,36 +100,45 @@ class actionTagsIndex extends cmsAction {
         }
 
         if ($this->cms_user->is_admin){
-            $this->cms_template->addToolButton(array(
+            $this->cms_template->addToolButton([
                 'class' => 'edit',
                 'icon'  => 'edit',
                 'title' => LANG_TAGS_TAG_EDIT,
-                'href'  => href_to('admin', 'controllers', array('edit', 'tags', 'edit', $tag['id']))
-            ));
-            $this->cms_template->addToolButton(array(
+                'href'  => href_to('admin', 'controllers', ['edit', 'tags', 'edit', $tag['id']])
+            ]);
+            $this->cms_template->addToolButton([
                 'class' => 'page_gear',
                 'icon'  => 'wrench',
                 'title' => LANG_TAGS_SETTINGS,
-                'href'  => href_to('admin', 'controllers', array('edit', 'tags'))
-            ));
+                'href'  => href_to('admin', 'controllers', ['edit', 'tags'])
+            ]);
         }
 
         $this->cms_template->addHead('<link rel="canonical" href="'.href_to_abs($this->name, $target, urlencode($tag_name)).'"/>');
 
-        return $this->cms_template->render('search', array(
+        return $this->cms_template->render('search', [
             'seo_title'  => $seo_title,
             'seo_keys'   => $seo_keys,
             'seo_desc'   => $seo_desc,
             'seo_h1'     => $seo_h1,
             'html'       => $list_html
-        ));
-
+        ]);
     }
 
     private function displayTags() {
 
-        return $this->cms_template->render('tags', $this->getTagsWidgetParams($this->options));
+        if ($this->cms_user->is_admin){
+            $this->cms_template->addToolButton([
+                'class' => 'page_gear',
+                'icon'  => 'wrench',
+                'title' => LANG_TAGS_SETTINGS,
+                'href'  => href_to('admin', 'controllers', ['edit', 'tags'])
+            ]);
+        }
 
+        $this->cms_template->addHead('<link rel="canonical" href="'.href_to_abs($this->name).'"/>');
+
+        return $this->cms_template->render('tags', $this->getTagsWidgetParams($this->options));
     }
 
 }

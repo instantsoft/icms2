@@ -25,6 +25,12 @@
 // Кастомный SCSS
 @import "custom";
 
+::selection {
+    background: $blue;
+    color: $white;
+    text-shadow: none;
+}
+
 .icms-header {
     &__top {
         background-color: darken($purple, 10%);
