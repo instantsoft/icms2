@@ -94,9 +94,9 @@ if($ctype['options']['list_show_filter']) {
             <?php } ?>
 
             <?php if (!empty($item['info_bar'])){ ?>
-                <div class="info_bar p-0 bg-transparent border-0 d-flex text-muted mt-auto">
+                <div class="info_bar p-0 bg-transparent border-0 mt-auto">
                     <?php foreach($item['info_bar'] as $bar){ ?>
-                        <div class="mr-3 bar_item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
+                        <div class="bar_item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
                             <?php if (!empty($bar['icon'])){ ?>
                                 <?php html_svg_icon('solid', $bar['icon']); ?>
                             <?php } ?>

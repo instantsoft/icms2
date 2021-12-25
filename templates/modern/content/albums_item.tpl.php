@@ -25,7 +25,7 @@
             <?php unset($item['info_bar']['user']); ?>
         <?php } ?>
         <?php foreach($item['info_bar'] as $bar){ ?>
-            <div class="bar_item mr-3 text-truncate <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
+            <div class="bar_item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
                 <?php if (!empty($bar['icon'])){ ?>
                     <?php html_svg_icon('solid', $bar['icon']); ?>
                 <?php } ?>
@@ -37,7 +37,7 @@
             </div>
         <?php } ?>
         <?php if ($item['parent_id'] && !empty($ctype['is_in_groups'])){ ?>
-            <div class="bar_item text-truncate">
+            <div class="bar_item">
                 <a href="<?php echo rel_to_href($item['parent_url']); ?>">
                     <?php html_svg_icon('solid', 'user-friends'); ?>
                     <?php html($item['parent_title']); ?>

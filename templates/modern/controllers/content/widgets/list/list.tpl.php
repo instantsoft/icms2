@@ -50,9 +50,9 @@
             </div>
 
             <?php if (!empty($item['info_bar'])){ ?>
-                <div class="info_bar mt-2 d-flex p-0 bg-transparent border-0 text-muted">
+                <div class="info_bar mt-2 p-0 bg-transparent border-0">
                     <?php foreach($item['info_bar'] as $bar){ ?>
-                        <div class="mr-2 bar_item text-truncate <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
+                        <div class="mr-2 bar_item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
                             <?php if (!empty($bar['icon'])){ ?>
                                 <?php html_svg_icon('solid', $bar['icon']); ?>
                             <?php } ?>

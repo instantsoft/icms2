@@ -52,7 +52,7 @@
                 </div>
             <?php } ?>
             <?php if (!empty($item['info_bar'])){ $is_small = count($item['info_bar']) > 2; ?>
-                <div class="info_bar d-flex p-0 bg-transparent border-0 text-muted mt-auto">
+                <div class="info_bar p-0 bg-transparent border-0 mt-auto">
                     <?php foreach($item['info_bar'] as $bar){ ?>
                         <div class="mr-2<?php if($is_small){ ?> small<?php } ?> bar_item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
                             <?php if (!empty($bar['icon'])){ ?>

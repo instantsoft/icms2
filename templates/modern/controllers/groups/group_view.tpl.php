@@ -28,12 +28,12 @@
     </div>
 
     <?php if (!empty($group['fields']['cover']) && (empty($group['fields']['cover']['is_in_item']) || !$group['cover'])){ ?>
-        <div class="info_bar d-flex text-muted mt-3 mb-n3">
-            <div class="bar_item mr-3 text-truncate bi_rating" title="<?php echo LANG_RATING; ?>">
+        <div class="info_bar mb-n3">
+            <div class="bar_item bi_rating" title="<?php echo LANG_RATING; ?>">
                 <?php html_svg_icon('solid', 'star'); ?>
                 <?php echo $group['rating']; ?>
             </div>
-            <div class="bar_item bi_date_pub mr-3 text-truncate" title="<?php echo LANG_GROUP_INFO_CREATED_DATE; ?>">
+            <div class="bar_item bi_date_pub" title="<?php echo LANG_GROUP_INFO_CREATED_DATE; ?>">
                 <?php html_svg_icon('solid', 'calendar-alt'); ?>
                 <?php echo string_date_age_max($group['date_pub'], true); ?>
             </div>
@@ -44,7 +44,7 @@
                 </a>
             </div>
             <?php if (!$group['is_approved']){ ?>
-                <div class="bar_item bi_not_approved ml-3 text-truncate">
+                <div class="bar_item bi_not_approved">
                     <?php html_svg_icon('solid', 'user-clock'); ?>
                     <?php echo LANG_CONTENT_NOT_APPROVED; ?>
                 </div>

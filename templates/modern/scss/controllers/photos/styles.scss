@@ -37,6 +37,13 @@
         display: flex !important;
         align-items: center !important;
     }
+    .bar_item {
+        position: relative;
+        margin-right: $spacer;
+        &:last-child {
+            margin-right: 0;
+        }
+    }
 }
 .icms-photo-album__photo {
     > h3 {

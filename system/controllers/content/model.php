@@ -1585,13 +1585,16 @@ class modelContent extends cmsModel {
 
         $ctype = $this->getContentTypeByName($ctype_name);
 
+        $item['ctype'] = $ctype;
+        $item['ctype_name'] = $ctype['name'];
+
         cmsEventsManager::hook('content_before_delete', ['ctype_name' => $ctype_name, 'item' => $item]);
         cmsEventsManager::hook("content_{$ctype_name}_before_delete", $item);
 
         $fields = $this->getContentFields($ctype_name, $id);
 
         foreach ($fields as $field) {
-            $field['handler']->delete($item[$field['name']]);
+            $field['handler']->setItem($item)->delete($item[$field['name']]);
         }
 
         cmsCache::getInstance()->clean('content.list.' . $ctype_name);

@@ -83,14 +83,14 @@
             </span>
         </div>
 
-        <div class="like_buttons info_bar d-flex align-items-center">
+        <div class="like_buttons info_bar">
         <?php if (!empty($photo['rating_widget'])){ ?>
             <div class="bar_item bi_rating">
                 <?php echo $photo['rating_widget']; ?>
             </div>
         <?php } ?>
         <?php if (!empty($ctype['options']['share_code'])){ ?>
-            <div class="ml-3 share">
+            <div class="bar_item share">
                 <?php echo $ctype['options']['share_code']; ?>
             </div>
         <?php } ?>

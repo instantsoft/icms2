@@ -95,9 +95,9 @@
             <?php } ?>
 
             <?php if (!empty($item['info_bar'])){ ?>
-                <div class="info_bar d-flex text-muted mt-3">
+                <div class="info_bar">
                     <?php foreach($item['info_bar'] as $bar){ ?>
-                        <div class="mr-3 bar_item text-truncate <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
+                        <div class="bar_item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
                             <?php if (!empty($bar['icon'])){ ?>
                                 <?php html_svg_icon('solid', $bar['icon']); ?>
                             <?php } ?>

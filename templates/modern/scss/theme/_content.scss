@@ -121,12 +121,21 @@
     padding: ($spacer*0.75) $spacer;
     border-top: 1px solid $gray-200;
     font-size: 90%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    color: $gray-600;
+    margin-top: $spacer;
     @include border-radius(0 0 $border-radius $border-radius);
     a {
         color: inherit;
     }
     .bar_item {
         position: relative;
+        margin-right: $spacer;
+        &:last-child {
+            margin-right: 0;
+        }
     }
 }
 .icms-content-toolbar {

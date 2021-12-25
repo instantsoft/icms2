@@ -148,8 +148,11 @@ class modelGroups extends cmsModel {
         $this->deleteGroupMemberships($group['id']);
         $this->deleteGroupInvites($group['id']);
 
+        $group['ctype'] = [];
+        $group['ctype_name'] = 'groups';
+
         foreach ($group['fields'] as $field) {
-            $field['handler']->delete($group[$field['name']]);
+            $field['handler']->setItem($group)->delete($group[$field['name']]);
         }
 
         $success = $this->delete('groups', $group['id']);

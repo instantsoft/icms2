@@ -490,36 +490,40 @@ class modelUsers extends cmsModel {
      * @param integer|array $user id пользователя или массив данных пользователя
      * @return boolean
      */
-    public function deleteUser($user){
+    public function deleteUser($user) {
 
-        if(is_numeric($user)){
+        if (is_numeric($user)) {
             $user = $this->getUser($user);
-            if(!$user){ return false; }
+            if (!$user) {
+                return false;
+            }
         }
 
         $inCache = cmsCache::getInstance();
-
         $content_model = cmsCore::getModel('content');
-        $content_model->setTablePrefix('');
-        $fields = $content_model->getContentFields('{users}', $user['id']);
 
-        foreach($fields as $field){
-            $field['handler']->delete($user[$field['name']]);
+        $fields = $content_model->setTablePrefix('')->getContentFields('{users}', $user['id']);
+
+        $user['ctype']      = [];
+        $user['ctype_name'] = 'users';
+
+        foreach ($fields as $field) {
+            $field['handler']->setItem($user)->delete($user[$field['name']]);
         }
 
         // уменьшаем счётчики друзей и подписчиков
         $data = $this->getFriendsIds($user['id']);
 
-        if(!empty($data['friends'])){
+        if (!empty($data['friends'])) {
             foreach ($data['friends'] as $friend_id) {
                 $this->filterEqual('id', $friend_id)->decrement('{users}', 'friends_count');
-                $inCache->clean('users.user.'.$friend_id);
+                $inCache->clean('users.user.' . $friend_id);
             }
         }
-        if(!empty($data['subscribes'])){
+        if (!empty($data['subscribes'])) {
             foreach ($data['subscribes'] as $friend_id) {
                 $this->filterEqual('id', $friend_id)->decrement('{users}', 'subscribers_count');
-                $inCache->clean('users.user.'.$friend_id);
+                $inCache->clean('users.user.' . $friend_id);
             }
         }
 
@@ -534,7 +538,7 @@ class modelUsers extends cmsModel {
 
         $inCache->clean('users.list');
         $inCache->clean('users.ups');
-        $inCache->clean('users.user.'.$user['id']);
+        $inCache->clean('users.user.' . $user['id']);
         $inCache->clean('users.status');
 
         $this->filterEqual('child_ctype_id', null);
@@ -544,7 +548,6 @@ class modelUsers extends cmsModel {
         $this->deleteFiltered('content_relations_bind');
 
         return true;
-
     }
 
     public function updateUserIp($id, $ip = false){
