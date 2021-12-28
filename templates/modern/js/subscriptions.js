@@ -85,8 +85,14 @@ icms.subscriptions = (function ($) {
     this.setSubscribe = function (link){
 
         set = function (obj){
+            var show_btn_title = +$(obj).data('show_btn_title');
             var is_subscribe = +$(obj).data('issubscribe');
-            $('span', obj).html($(obj).data('text'+is_subscribe));
+            if(show_btn_title === 1){
+                $('span', obj).html($(obj).data('text'+is_subscribe));
+            } else {
+                $(obj).attr('title', $(obj).data('text'+is_subscribe));
+                $(obj).tooltip('dispose'); $(obj).tooltip();
+            }
             $(obj).attr('href', $(obj).data('link'+is_subscribe));
             if(is_subscribe === 0){
                 $(obj).removeClass('unsubscribe btn-secondary').addClass('subscribe btn-primary');

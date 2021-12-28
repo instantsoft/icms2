@@ -59,12 +59,15 @@ class cmsWidget {
         $is_array = strpos($key, ':');
 
         if ($is_array === false){
-            $value = array_key_exists($key, $this->options) ? $this->options[$key] : null;
+            $value = array_key_exists($key, $this->options) ? $this->options[$key] : $default;
         } else {
             $value = array_value_recursive($key, $this->options);
+            if($value === null){
+                $value = $default;
+            }
         }
 
-        return $value !== null ? $value : $default;
+        return $value;
     }
 
     public function getOptions(){

@@ -10,6 +10,9 @@ class widgetSubscriptionsButton extends cmsWidget {
             return false;
         }
 
+        $show_btn_title = $this->getOption('show_btn_title', true);
+        if($show_btn_title === null){ $show_btn_title = false; }
+
         $buttons = [];
         $current_user_id = cmsUser::get('id');
 
@@ -36,7 +39,7 @@ class widgetSubscriptionsButton extends cmsWidget {
                         'controller' => 'content',
                         'subject'    => $ctype['name'],
                         'params'     => []
-                    ])
+                    ], $show_btn_title)
                 ];
             }
 
@@ -56,7 +59,7 @@ class widgetSubscriptionsButton extends cmsWidget {
                                 ]
                             ]
                         ]
-                    ])
+                    ], $show_btn_title)
                 ];
             }
 
@@ -76,7 +79,7 @@ class widgetSubscriptionsButton extends cmsWidget {
                                 ]
                             ]
                         ]
-                    ])
+                    ], $show_btn_title)
                 ];
 
                 if (!$this->getOption('hide_user') && $item && $current_user_id != $item['user_id']) {
@@ -100,7 +103,7 @@ class widgetSubscriptionsButton extends cmsWidget {
                                     ]
                                 ]
                             ]
-                        ])
+                        ], $show_btn_title)
                     ];
                 }
             }
@@ -118,7 +121,7 @@ class widgetSubscriptionsButton extends cmsWidget {
 
                 $buttons[] = [
                     'title'  => $this->getOption('hide_album_title') ? '' : $album['title'],
-                    'button' => $subscriptions->renderSubscribeButton(array(
+                    'button' => $subscriptions->renderSubscribeButton([
                         'controller' => 'photos',
                         'subject'    => 'album',
                         'params'     => [
@@ -130,7 +133,7 @@ class widgetSubscriptionsButton extends cmsWidget {
                                 ]
                             ]
                         ]
-                    ))
+                    ], $show_btn_title)
                 ];
             }
         }

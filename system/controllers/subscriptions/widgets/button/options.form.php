@@ -4,11 +4,18 @@ class formWidgetSubscriptionsButtonOptions extends cmsForm {
 
     public function init($options = false) {
 
+        cmsCore::loadControllerLanguage('subscriptions');
+
         return [
             [
                 'type' => 'fieldset',
                 'title' => LANG_OPTIONS,
                 'childs' => [
+                    new fieldCheckbox('options:show_btn_title', [
+                        'title'   => LANG_SBSCR_SHOW_BTN_TITLE,
+                        'hint'    => LANG_SBSCR_SHOW_BTN_TITLE_HINT,
+                        'default' => 1
+                    ]),
                     new fieldCheckbox('options:hide_all', [
                         'title' => LANG_SBSCR_WD_HIDE_ALL
                     ]),

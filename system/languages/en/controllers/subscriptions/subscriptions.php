@@ -7,6 +7,8 @@ define('LANG_SBSCR_GUEST_EMAIL_CONFIRMATION', 'Request guest confirmation via e-
 define('LANG_SBSCR_GUEST_EMAIL_CONFIRM_SEND', 'You received an email to confirm your subscription to E-mail');
 define('LANG_SBSCR_GUEST_IS_EXISTS', 'Subscription to this E-mail has already been done before');
 define('LANG_SBSCR_NEED_AUTH', 'Subscriptions are only available to registered users');
+define('LANG_SBSCR_SHOW_BTN_TITLE', 'Show subscribe/unsubscribe on the subscribe button');
+define('LANG_SBSCR_SHOW_BTN_TITLE_HINT', 'If off, one icon will be shown');
 define('LANG_SBSCR_VERIFY_EXP', 'Link confirmation lifetime');
 define('LANG_SBSCR_VERIFY_SUCCESS', 'E-mail address and subscription confirmed');
 define('LANG_SBSCR_ADMIN_EMAIL', 'E-mail addresses for notifications (you can specify several separated by commas) about new lists without names');

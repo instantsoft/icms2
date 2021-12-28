@@ -258,7 +258,7 @@ class fieldHtml extends cmsFormField {
         ]);
 
         if(empty($this->data['options']['id'])){
-            $this->data['options']['id'] = $this->id.'-' . uniqid();
+            $this->data['options']['id'] = $this->id;
         }
 
         $this->id = $this->data['options']['id'];
