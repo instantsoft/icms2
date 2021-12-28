@@ -149,6 +149,13 @@
     define('LANG_PARSER_HTML_TEASER_LEN',    'Truncate text length in list view');
     define('LANG_PARSER_HTML_TEASER_LEN_HINT','The text will be truncated to a specified length, the formatting will be removed');
     define('LANG_PARSER_HTML_TEASER_POSTFIX', 'Add text to the received line');
+    define('LANG_PARSER_HTML_TEASER_CHOICE', 'How do you want to crop the text: by words or by characters?');
+    define('LANG_PARSER_HTML_TEASER_NONE', 'Do not crop');
+    define('LANG_PARSER_HTML_TEASER_SYMBOLS', 'Cropping by characters');
+    define('LANG_PARSER_HTML_TEASER_WORDS', 'Pruning by words');
+    define('LANG_PARSER_HTML_TEASER_QUANTITY_WORDS', 'Number of words displayed');
+    define('LANG_PARSER_HTML_TEASER_QUANTITY_SYMBOLS', 'Number of characters displayed');
+    define('LANG_PARSER_HTML_TEASER_SYMBOLS_HINT', 'Spaces are also counted as characters');
     define('LANG_PARSER_HTML_TEASER_TYPE',    'Trim type');
     define('LANG_PARSER_HTML_TEASER_TYPE_NULL','Cut anywhere');
     define('LANG_PARSER_HTML_TEASER_TYPE_S', 'The last sentence');

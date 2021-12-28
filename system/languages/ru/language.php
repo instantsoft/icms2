@@ -150,6 +150,13 @@
     define('LANG_PARSER_HTML_TEASER_LEN_HINT','Текст будет обрезан до указанной длины, форматирование будет удалено');
     define('LANG_PARSER_HTML_TEASER_POSTFIX', 'Добавлять текст к полученной строке');
     define('LANG_PARSER_HTML_TEASER_TYPE',    'Тип обрезки');
+    define('LANG_PARSER_HTML_TEASER_CHOICE', 'Как Вы хотите обрезать текст: по словам или по символам?');
+    define('LANG_PARSER_HTML_TEASER_NONE', 'Не обрезать');
+    define('LANG_PARSER_HTML_TEASER_SYMBOLS', 'Обрезка по символам');
+    define('LANG_PARSER_HTML_TEASER_WORDS', 'Обрезка по словам');
+    define('LANG_PARSER_HTML_TEASER_QUANTITY_WORDS', 'Количество отображаемых слов');
+    define('LANG_PARSER_HTML_TEASER_QUANTITY_SYMBOLS', 'Количество отображаемых символов');
+    define('LANG_PARSER_HTML_TEASER_SYMBOLS_HINT', 'Пробелы так же учитываются как символы');
     define('LANG_PARSER_HTML_TEASER_TYPE_NULL','Обрезать в любом месте');
     define('LANG_PARSER_HTML_TEASER_TYPE_S', 'По последнему предложению');
     define('LANG_PARSER_HTML_TEASER_TYPE_W', 'По последнему слову');

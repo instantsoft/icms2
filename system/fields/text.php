@@ -37,15 +37,29 @@ class fieldText extends cmsFormField {
                 'title' => LANG_PARSER_BUILD_REDIRECT_LINK,
                 'is_visible' => cmsController::enabled('redirect')
             )),
-            new fieldNumber('teaser_len', array(
+            new fieldList('teaser_len_choice', array(
                 'title' => LANG_PARSER_HTML_TEASER_LEN,
-                'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
-				'extended_option' => true
+                'items'     => [
+                    'none'  => LANG_PARSER_HTML_TEASER_NONE,
+                    'symbols' => LANG_PARSER_HTML_TEASER_SYMBOLS,
+                    'words'  => LANG_PARSER_HTML_TEASER_WORDS
+                ],
+                'hint' => LANG_PARSER_HTML_TEASER_CHOICE
+            )),
+            new fieldNumber('teaser_len_words', array(
+                'title' => LANG_PARSER_HTML_TEASER_QUANTITY_WORDS,
+                'default' => 50,
+                'visible_depend' => ['options:teaser_len_choice' => ['show' => ['words']]]
+            )),
+            new fieldNumber('teaser_len_symbols', array(
+                'title' => LANG_PARSER_HTML_TEASER_QUANTITY_SYMBOLS,
+                'default' => 100,
+                'hint'  => LANG_PARSER_HTML_TEASER_SYMBOLS_HINT,
+                'visible_depend' => ['options:teaser_len_choice' => ['show' => ['symbols']]]
             )),
             new fieldCheckbox('show_show_more', array(
                 'title' => LANG_PARSER_SHOW_SHOW_MORE,
                 'default' => false,
-                'visible_depend' => array('options:teaser_len' => array('hide' => array(''))),
 				'extended_option' => true
             )),
             new fieldCheckbox('in_fulltext_search', array(
@@ -83,17 +97,22 @@ class fieldText extends cmsFormField {
             return '<p class="private_field_hint text-muted">'.$this->item['private_item_hint'].'</p>';
         }
 
-        $max_len = $this->getOption('teaser_len', 0);
-
-        if ($max_len){
-
-            $value = string_short($value, $max_len);
-
-            if($this->getOption('show_show_more') && !empty($this->item['ctype']['name']) && !empty($this->item['slug'])){
-                $value .= '<span class="d-block mt-2"><a class="read-more btn btn-outline-info btn-sm" href="'.href_to($this->item['ctype']['name'], $this->item['slug'].'.html').'">'.LANG_MORE.'</a></span>';
-            }
-
-            return $value;
+        switch($choice) {
+            case 'symbols':
+                $max_len = $this->getOption('teaser_len_symbols');
+                $value = string_short($value, $max_len);
+                return $value."...";
+                break;
+           case 'words':
+                $max_len = $this->getOption('teaser_len_words');
+                //string_short() работает некорректно, либо я не разобрался как он работает ¯\_(ツ)_/¯. Метод лежит в string.helper.php
+                //$value = string_short($value, $max_len, '...', 'w'); 
+                $slice_string = explode(" ", $value);
+                $slice_string = array_slice($slice_string, 0, $max_len);
+                $value = implode(" ", $slice_string);
+                $value .= '...';
+                return $value;
+                break;          
         }
 
         return parent::parseTeaser($value);
