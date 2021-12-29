@@ -128,6 +128,7 @@ class actionContentItemView extends cmsAction {
         }
 
         $item['ctype_name'] = $ctype['name'];
+        $item['ctype'] = $ctype;
 
         if ($ctype['is_cats'] && $item['category_id'] > 1){
 

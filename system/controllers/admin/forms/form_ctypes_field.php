@@ -2,6 +2,8 @@
 
 class formAdminCtypesField extends cmsForm {
 
+    private $reserved_names = ['ctype', 'ctype_name', 'private_item_hint', 'is_private_item', 'fields', 'fields_names', 'is_new', 'info_bar', 'category', 'categories'];
+
     public function init($do, $ctype_name) {
 
         $model = cmsCore::getModel('content');
@@ -18,6 +20,14 @@ class formAdminCtypesField extends cmsForm {
                             ['required'],
                             ['sysname'],
                             ['max_length', 40],
+                            [function($controller, $data, $value) {
+
+                                if(in_array($value, $this->reserved_names)){
+                                    return ERR_VALIDATE_INVALID;
+                                }
+
+                                return true;
+                            }],
                             $do === 'add' ? ['unique_ctype_field', $ctype_name] : false
                         ]
                     ]),

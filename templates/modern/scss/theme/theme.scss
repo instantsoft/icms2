@@ -222,6 +222,29 @@ button.loading {
     width: 1%;
     margin-bottom: 0;
 }
+.icms-form__password-field {
+    > input {
+        padding-right: $input-padding-x*4;
+    }
+    &-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0 $input-padding-x 0 0;
+        font-size: 160%;
+        color: $gray-600;
+        line-height: $input-line-height;
+        border: $input-border-width solid transparent;
+        cursor: pointer;
+        transition: $transition-base;
+        &:hover {
+            color: $gray-800;
+        }
+        &.active {
+            color: $danger;
+        }
+    }
+}
 .icms-profile-avatar__default {
     display: flex;
     justify-content: center;

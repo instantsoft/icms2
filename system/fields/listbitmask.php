@@ -179,7 +179,7 @@ class fieldListBitmask extends cmsFormField {
 
     public function getInput($value) {
 
-        $this->data['items'] = $this->items;
+        $this->data['items'] = array_keys_to_string_type($this->items);
         $this->data['selected'] = [];
 
         if ($value) {
@@ -187,7 +187,7 @@ class fieldListBitmask extends cmsFormField {
                 $pos = 0;
                 foreach ($this->data['items'] as $key => $title) {
                     if (substr($value, $pos, 1) === '1') {
-                        $this->data['selected'][] = is_numeric($key) ? intval($key) : $key;
+                        $this->data['selected'][] = $key;
                     }
                     $pos++;
                     if ($pos + 1 > mb_strlen($value)) {
@@ -197,7 +197,7 @@ class fieldListBitmask extends cmsFormField {
             } else {
 
                 foreach ($value as $k => $v) {
-                    $this->data['selected'][] = is_numeric($v) ? intval($v) : $v;
+                    $this->data['selected'][] = $v;
                 }
             }
         }

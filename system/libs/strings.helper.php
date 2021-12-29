@@ -134,7 +134,7 @@ function string_explode_list($string_list, $index_as_value = false) {
             if (mb_strpos($row, '|')) {
                 list($index, $value) = explode('|', trim($row));
             } else {
-                $index = $index_as_value ? $row : ($count + 1);
+                $index = string($index_as_value ? $row : ($count + 1));
                 $value = $row;
             }
             $items[trim($index)] = trim($value);
@@ -142,6 +142,21 @@ function string_explode_list($string_list, $index_as_value = false) {
     }
 
     return $items;
+}
+
+/**
+ * Приводит ключи массива к строковому типу
+ *
+ * @param array $array Исходный массив
+ * @return array
+ */
+function array_keys_to_string_type($array) {
+
+    $keys        = array_keys($array);
+    $values      = array_values($array);
+    $string_keys = array_map('strval', $keys);
+
+    return array_combine($string_keys, $values);
 }
 
 /**
