@@ -157,7 +157,9 @@
     define('LANG_USERS_WHAT_HAPPENED',          'Что нового, %s?');
     define('LANG_USERS_DELETE_STATUS_CONFIRM',  'Удалить текущий статус?');
 
-    define('LANG_RULE_USERS_VOTE_KARMA',        'Оценка чужой репутации');
+    define('LANG_RULE_USERS_VOTE_KARMA',       'Оценка чужой репутации');
+    define('LANG_RULE_USERS_WALL_ADD',         'Добавление записей на стене');
+    define('LANG_RULE_USERS_WALL_DELETE',      'Удаление записей со стены');
 
     define('LANG_USERS_KARMA_LOG',          'История репутации');
     define('LANG_USERS_KARMA_LOG_EMPTY',    'Пока никто не ставил оценок');

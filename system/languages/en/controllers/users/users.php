@@ -158,6 +158,8 @@
     define('LANG_USERS_DELETE_STATUS_CONFIRM',   'Delete current status?');
 
     define('LANG_RULE_USERS_VOTE_KARMA',        'Voting for reputation');
+    define('LANG_RULE_USERS_WALL_ADD',         'Adding wall entries');
+    define('LANG_RULE_USERS_WALL_DELETE',      'Removing wall entries');
 
     define('LANG_USERS_KARMA_LOG',          'Reputation history');
     define('LANG_USERS_KARMA_LOG_EMPTY',    'No votes yet');

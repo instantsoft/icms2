@@ -98,7 +98,16 @@ class wall extends cmsFrontend {
                 'class'   => 'btn-outline-danger delete',
                 'onclick' => 'return icms.wall.remove({id})',
                 'handler' => function($entry) use($permissions) {
-                    return ($entry['user']['id'] == $this->cms_user->id) || !empty($permissions['delete']);
+
+                    if(isset($permissions['delete'])){
+                        return ($entry['user']['id'] == $this->cms_user->id) || !empty($permissions['delete']);
+                    }
+
+                    if(isset($permissions['delete_handler'])){
+                        return $permissions['delete_handler']($entry);
+                    }
+
+                    return false;
                 }
             ]
         ];

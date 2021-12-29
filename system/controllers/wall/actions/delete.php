@@ -37,7 +37,24 @@ class actionWallDelete extends cmsAction {
             'profile_id'   => $entry['profile_id']
         ]);
 
-        if (!$permissions || !is_array($permissions) || (!$permissions['delete'] && $entry['user']['id'] != $this->cms_user->id)) {
+        if (!$permissions || !is_array($permissions)) {
+            return $this->cms_template->renderJSON([
+                'error'   => true,
+                'message' => LANG_ERROR
+            ]);
+        }
+
+        $is_wall_delete = false;
+
+        if(isset($permissions['delete'])){
+            $is_wall_delete = ($entry['user']['id'] == $this->cms_user->id) || !empty($permissions['delete']);
+        }
+
+        if(isset($permissions['delete_handler'])){
+            $is_wall_delete = $permissions['delete_handler']($entry);
+        }
+
+        if (!$is_wall_delete) {
             return $this->cms_template->renderJSON([
                 'error'   => true,
                 'message' => LANG_ERROR

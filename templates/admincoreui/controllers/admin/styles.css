@@ -1275,3 +1275,18 @@ td > .spinner > div {
 .nav-tabs .nav-link.active:focus, .nav-tabs .nav-link.active {
     border-top-color: #20a8d8;
 }
+.icms-form__password-field-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0 0.75rem 0 0;
+    font-size: 160%;
+    color: #888888;
+    line-height: 1.5;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+.icms-form__password-field>input {
+    padding-right: 3rem;
+}
