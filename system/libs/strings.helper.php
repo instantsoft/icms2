@@ -134,7 +134,7 @@ function string_explode_list($string_list, $index_as_value = false) {
             if (mb_strpos($row, '|')) {
                 list($index, $value) = explode('|', trim($row));
             } else {
-                $index = string($index_as_value ? $row : ($count + 1));
+                $index = (string)($index_as_value ? $row : ($count + 1));
                 $value = $row;
             }
             $items[trim($index)] = trim($value);
