@@ -117,7 +117,7 @@ class fieldHtml extends cmsFormField {
 
     public function getStringValue($value){
 
-        if (!$value){
+        if (is_empty_value($value)) {
             return '';
         }
 
@@ -130,7 +130,7 @@ class fieldHtml extends cmsFormField {
 
     public function afterParse($value, $item){
 
-        if (!$value){
+        if (is_empty_value($value)) {
             return '';
         }
 
@@ -143,7 +143,7 @@ class fieldHtml extends cmsFormField {
 
     public function parse($value){
 
-        if (!$value){
+        if (is_empty_value($value)) {
             return '';
         }
 
@@ -162,7 +162,7 @@ class fieldHtml extends cmsFormField {
 
     public function parseTeaser($value) {
 
-        if (!$value){
+        if (is_empty_value($value)) {
             return '';
         }
 
@@ -224,6 +224,10 @@ class fieldHtml extends cmsFormField {
     }
 
     public function delete($value){
+
+        if (is_empty_value($value)) {
+            return true;
+        }
 
         $paths = string_html_get_images_path($value);
 

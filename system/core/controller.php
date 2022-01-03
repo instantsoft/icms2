@@ -1334,8 +1334,9 @@ class cmsController {
 //============================================================================//
 
     public function validate_required($value) {
-        if (is_array($value) && !$value) { return ERR_VALIDATE_REQUIRED; }
-        if (mb_strlen(strval($value)) === 0) { return ERR_VALIDATE_REQUIRED; }
+        if(is_empty_value($value)){
+            return ERR_VALIDATE_REQUIRED;
+        }
         return true;
     }
 

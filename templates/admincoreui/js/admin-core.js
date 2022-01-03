@@ -17,28 +17,26 @@ icms.admin = (function ($) {
             return false;
         });
 
-        $('.icms-icon-select').each(function (){
-            $(this).on('click', function (){
+        $('#wrapper').on('click', '.icms-icon-select', function (){
 
-                var link = $(this);
+            var link = $(this);
 
-                link.addClass('is-busy');
+            link.addClass('is-busy');
 
-                icms.modal.openAjax($(this).data('href'), {}, function () {
-                    link.removeClass('is-busy');
+            icms.modal.openAjax($(this).data('href'), {}, function () {
+                link.removeClass('is-busy');
 
-                    $('.icon-select').one('click', function (){
+                $('.icon-select').one('click', function (){
 
-                        $(link).closest('.field').find('input').val($(this).data('name')).trigger('input');
+                    $(link).closest('.field').find('input').val($(this).data('name')).trigger('input');
 
-                        icms.modal.close();
-                        return false;
-                    });
+                    icms.modal.close();
+                    return false;
+                });
 
-                }, link.text());
+            }, link.text());
 
-                return false;
-            });
+            return false;
         });
 
         $('.need-scrollbar').each(function (){

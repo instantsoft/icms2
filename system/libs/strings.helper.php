@@ -1030,6 +1030,14 @@ function string_html_get_images_path($text) {
     return $paths;
 }
 
+/**
+ * Проверяет, что значение пустое
+ * @param mixed $value
+ * @return boolean
+ */
+function is_empty_value($value) {
+    return empty($value) && !is_numeric($value);
+}
 //============================================================================//
 
 /**

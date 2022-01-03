@@ -1,15 +1,45 @@
 <?php
 /**
- * 2.15.0 => 2.15.1
+ * 2.14.3 => 2.15.0
  */
 function install_package(){
 
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    if(!$core->db->isFieldExists('images_presets', 'convert_format')){
+        $core->db->query("ALTER TABLE `{#}images_presets` ADD `convert_format` CHAR(4) NULL DEFAULT NULL;");
+    }
+
+    if(!$core->db->isFieldExists('images_presets', 'gif_to_gif')){
+        $core->db->query("ALTER TABLE `{#}images_presets` ADD `gif_to_gif` TINYINT(1) UNSIGNED NULL DEFAULT '1';");
+    }
+
+    if(!$core->db->getRowsCount('widgets', "`controller` = 'content' AND `name` = 'author'")){
+        $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`, `files`) VALUES ('content', 'author', 'Автор записи', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL, NULL);");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
+
+    add_perms([
+        'content' => [
+            'edit_times', 'delete_times'
+        ]
+    ], 'number');
+
+    add_perms([
+        'users' => [
+            'wall_add'
+        ]
+    ], 'flag');
+
+    add_perms([
+        'users' => [
+            'wall_delete'
+        ]
+    ], 'list', 'own,all');
 
     ////////////////////////////////////////////////////////////////////////////
     ///////////////// Индексы //////////////////////////////////////////////////
@@ -54,6 +84,8 @@ function install_package(){
         }
     }
 
+    save_controller_options(['users']);
+
     return true;
 }
 
@@ -92,16 +124,12 @@ function save_controller_options($controllers) {
         $form_name = $controller.'options';
         cmsCore::loadControllerLanguage($controller);
         cmsCore::includeFile('system/controllers/'.$controller.'/model.php');
-        try {
-            $form = cmsForm::getForm($form_file, $form_name, false);
-            if ($form) {
-                $options = $form->parse(new cmsRequest(cmsController::loadOptions($controller)));
-                $model->filterEqual('name', $controller)->updateFiltered('controllers', array(
-                    'options' => $options
-                ));
-            }
-        } catch (Exception $exc) {
-            cmsUser::addSessionMessage('Настройки компонента '.$controller.' сохранились с ошибкой. Пересохраните их самостоятельно в админке.', 'error');
+        $form = cmsForm::getForm($form_file, $form_name, false);
+        if ($form) {
+            $options = $form->parse(new cmsRequest(cmsController::loadOptions($controller)));
+            $model->filterEqual('name', $controller)->updateFiltered('controllers', array(
+                'options' => $options
+            ));
         }
     }
 

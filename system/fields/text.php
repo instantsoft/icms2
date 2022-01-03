@@ -75,7 +75,7 @@ class fieldText extends cmsFormField {
 
     public function parseTeaser($value) {
 
-        if (!$value) {
+        if (is_empty_value($value)) {
             return '';
         }
 
@@ -101,7 +101,7 @@ class fieldText extends cmsFormField {
 
     public function parse($value){
 
-        if (!$value) {
+        if (is_empty_value($value)) {
             return '';
         }
 
@@ -137,7 +137,7 @@ class fieldText extends cmsFormField {
 
     public function getStringValue($value){
 
-        if (!$value) {
+        if (is_empty_value($value)) {
             return '';
         }
 

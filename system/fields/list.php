@@ -51,16 +51,22 @@ class fieldList extends cmsFormField {
             $this->title = false;
         }
 
-        if (!$this->getOption('filter_multiple')) {
+        if (empty($this->options['filter_multiple'])) {
 
             return parent::getFilterInput($value);
         } else {
 
-            $value = is_array($value) ? $value : array();
+            $value = is_array($value) ? $value : [];
 
-            if ($this->getOption('filter_multiple_checkbox')) {
+            if (!empty($this->options['filter_multiple_checkbox'])) {
 
                 $this->setProperty('is_multiple', true);
+
+                // Если уже сформирорвали список, удаляем первое пустое
+                if($this->show_empty_value && isset($this->items)){
+                    unset($this->items['']);
+                }
+
                 $this->setProperty('show_empty_value', false);
             } else {
 
@@ -88,7 +94,7 @@ class fieldList extends cmsFormField {
 
     public function getStringValue($value) {
 
-        if (!$value) {
+        if (is_empty_value($value)) {
             return '';
         }
 
@@ -110,7 +116,7 @@ class fieldList extends cmsFormField {
 
     public function parse($value) {
 
-        if (!$value) {
+        if (is_empty_value($value)) {
             return '';
         }
 

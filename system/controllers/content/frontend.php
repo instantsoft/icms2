@@ -1014,7 +1014,7 @@ class content extends cmsFrontend {
 
                 $pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset(LANG_CONTENT_PUB, 'pub_wrap', ['is_collapsed' => $is_pub_collapsed]);
 
-                $title = $action == 'add' ? LANG_CONTENT_PUB_LONG : LANG_CONTENT_PUB_LONG_EXT;
+                $title = $action === 'add' ? LANG_CONTENT_PUB_LONG : LANG_CONTENT_PUB_LONG_EXT;
 
                 $rules = [];
 
@@ -1042,7 +1042,7 @@ class content extends cmsFrontend {
 
                     $form->addField($pub_fieldset_id, new fieldList('pub_days', [
                         'title'   => $title,
-                        'hint'    => sprintf(LANG_CONTENT_PUB_LONG_NOW, html_date($item['date_pub_end'])),
+                        'hint'    => $action === 'add' ? false : sprintf(LANG_CONTENT_PUB_LONG_NOW, html_date($item['date_pub_end'])),
                         'default' => $pub_max_days,
                         'items'   => $days,
                         'rules'   => $rules

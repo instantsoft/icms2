@@ -60,7 +60,9 @@ class fieldListBitmask extends cmsFormField {
 
     public function getStringValue($value) {
 
-        if (!$value) { return ''; }
+        if (is_empty_value($value)) {
+            return '';
+        }
 
         $string = '';
 
@@ -96,7 +98,9 @@ class fieldListBitmask extends cmsFormField {
 
     public function parse($value) {
 
-        if (!$value) { return LANG_NO; }
+        if (is_empty_value($value)) {
+            return LANG_NO;
+        }
 
         $html = '';
 

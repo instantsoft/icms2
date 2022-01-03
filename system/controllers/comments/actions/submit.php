@@ -309,7 +309,7 @@ class actionCommentsSubmit extends cmsAction {
 
         // Получаем список из одного комментария
         $comments = $this->model->filterEqual('id', $comment_id)->
-                getComments($this->getCommentActions());
+                disableApprovedFilter()->getComments($this->getCommentActions());
 
         // Добавленный комментарий
         $comment = reset($comments);
