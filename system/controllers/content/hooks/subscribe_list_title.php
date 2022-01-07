@@ -29,7 +29,7 @@ class onContentSubscribeListTitle extends cmsAction {
             foreach ($target['params']['filters'] as $key => $filters) {
 
                 // пользователь
-                if($filters['field'] == 'user_id'){
+                if($filters['field'] === 'user_id'){
 
                     $user = $this->model_users->getUser($filters['value']);
 
@@ -38,10 +38,9 @@ class onContentSubscribeListTitle extends cmsAction {
                     }
 
                     continue;
-
                 }
                 // папка
-                if($filters['field'] == 'folder_id'){
+                if($filters['field'] === 'folder_id'){
 
                     $folder = $this->model->getContentFolder($filters['value']);
 
@@ -50,10 +49,9 @@ class onContentSubscribeListTitle extends cmsAction {
                     }
 
                     continue;
-
                 }
                 // группа
-                if($filters['field'] == 'parent_id' && $target['params']['filters'][$key+1]['value'] == 'group'){
+                if($filters['field'] === 'parent_id' && $target['params']['filters'][$key+1]['value'] === 'group'){
 
                     $group = $this->model_groups->getGroup($filters['value']);
 
@@ -62,10 +60,9 @@ class onContentSubscribeListTitle extends cmsAction {
                     }
 
                     continue;
-
                 }
                 // связь
-                if($filters['field'] == 'relation'){
+                if($filters['field'] === 'relation'){
 
                     $item = $this->model->getContentItem($filters['value']['parent_ctype_id'], $filters['value']['parent_item_id']);
 
@@ -91,10 +88,9 @@ class onContentSubscribeListTitle extends cmsAction {
                     }
 
                     continue;
-
                 }
                 // категория
-                if($filters['field'] == 'category_id'){
+                if($filters['field'] === 'category_id'){
 
                     $cat = $this->model->getCategory($ctype['name'], $filters['value']);
 
@@ -107,7 +103,6 @@ class onContentSubscribeListTitle extends cmsAction {
                     }
 
                     continue;
-
                 }
 
                 if(isset($fields[$filters['field']])){
@@ -136,7 +131,9 @@ class onContentSubscribeListTitle extends cmsAction {
                     }
 
                     if(!$result){
-                        $result = $fields[$filters['field']]['handler']->getStringValue($filters['value']);
+                        $result = $fields[$filters['field']]['handler']->
+                                setItem(['ctype_name' => $ctype['name'], 'ctype' => $ctype, 'id' => 0])->
+                                getStringValue($filters['value']);
                     }
 
                     if($result){
@@ -161,7 +158,7 @@ class onContentSubscribeListTitle extends cmsAction {
 
             foreach ($target['params']['field_filters'] as $field_name => $field_value) {
 
-                $matches = array();
+                $matches = [];
 
                 // свойства или поля
                 if(preg_match('/^p([0-9]+)$/i', $field_name, $matches)){
@@ -189,7 +186,7 @@ class onContentSubscribeListTitle extends cmsAction {
 
                 }
 
-                $handler->setItem(array('ctype_name' => $ctype['name'], 'id' => null));
+                $handler->setItem(['ctype_name' => $ctype['name'], 'ctype' => $ctype, 'id' => 0]);
 
                 if($handler->getDefaultVarType(true) !== 'array' && is_array($field_value)){
                     foreach ($field_value as $field_val) {
@@ -208,11 +205,8 @@ class onContentSubscribeListTitle extends cmsAction {
                     if($result){
                         $titles[] = mb_strtolower($field_title.' '.$result);
                     }
-
                 }
-
             }
-
         }
 
         if(!empty($titles)){
@@ -220,7 +214,6 @@ class onContentSubscribeListTitle extends cmsAction {
         }
 
         return $result_title;
-
     }
 
 }

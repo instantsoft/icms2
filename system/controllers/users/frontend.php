@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelUsers $model
+ */
 class users extends cmsFrontend {
 
     protected $useOptions = true;

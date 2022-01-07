@@ -1,5 +1,7 @@
 // Переменные шаблона
 @import "variables";
+// Кастомные переменные
+@import "custom_variables";
 
 // Функции Bootstrap
 // Bootstrap 4.6.0
@@ -22,8 +24,6 @@
 @import "rating";
 // Спиннеры
 @import "spinners";
-// Кастомный SCSS
-@import "custom";
 
 ::selection {
     background: $blue;
@@ -553,3 +553,6 @@ code {
     opacity: 1;
   }
 }
+
+// Кастомный SCSS
+@import "custom";

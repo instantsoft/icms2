@@ -2,7 +2,7 @@
 
 class widgetContentSlider extends cmsWidget {
 
-    public function run(){
+    public function run() {
 
         $cat_id           = $this->getOption('category_id');
         $ctype_id         = $this->getOption('ctype_id');
@@ -18,45 +18,29 @@ class widgetContentSlider extends cmsWidget {
         $model = cmsCore::getModel('content');
 
         $ctype = $model->getContentType($ctype_id);
-        if (!$ctype) { return false; }
+        if (!$ctype) {
+            return false;
+        }
 
-		if ($cat_id){
-			$category = $model->getCategory($ctype['name'], $cat_id);
-		} else {
-			$category = false;
-		}
+        if ($cat_id) {
+            $category = $model->getCategory($ctype['name'], $cat_id);
+        } else {
+            $category = false;
+        }
 
-        if ($dataset_id){
+        if ($dataset_id) {
 
             $dataset = $model->getContentDataset($dataset_id);
 
-            if ($dataset){
+            if ($dataset) {
                 $model->applyDatasetFilters($dataset);
             } else {
                 $dataset_id = false;
             }
-
         }
 
-        $table_name      = $model->getContentCategoryTableName($ctype['name']);
-        $bind_table_name = $table_name . '_bind';
-
-        $model->select('c.title', 'cat_title');
-        $model->select('c.slug', 'cat_slug');
-
-		if ($category){
-
-            $model->joinInner($bind_table_name, 'b FORCE INDEX (item_id)', 'b.item_id = i.id');
-            $model->joinInner($table_name, 'c', 'c.id = b.category_id');
-
-            $model->filterGtEqual('c.ns_left', $category['ns_left']);
-            $model->filterLtEqual('c.ns_right', $category['ns_right']);
-
-            if(!empty($ctype['options']['is_cats_multi'])){
-                $model->distinctSelect();
-            }
-        } else {
-            $model->joinLeft($table_name, 'c', 'c.id = i.category_id');
+        if ($category) {
+            $model->filterCategory($ctype['name'], $category, true, !empty($ctype['options']['is_cats_multi']));
         }
 
         // применяем приватность
@@ -69,16 +53,18 @@ class widgetContentSlider extends cmsWidget {
         // выключаем формирование рейтинга в хуках
         $ctype['is_rating'] = 0;
 
-		list($ctype, $model) = cmsEventsManager::hook('content_list_filter', array($ctype, $model));
-		list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $model));
+        list($ctype, $model) = cmsEventsManager::hook('content_list_filter', [$ctype, $model]);
+        list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", [$ctype, $model]);
 
         $items = $model->limit($limit)->getContentItems($ctype['name']);
-        if (!$items) { return false; }
+        if (!$items) {
+            return false;
+        }
 
-        list($ctype, $items) = cmsEventsManager::hook("content_before_list", array($ctype, $items));
-        list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));
+        list($ctype, $items) = cmsEventsManager::hook("content_before_list", [$ctype, $items]);
+        list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", [$ctype, $items]);
 
-        return array(
+        return [
             'ctype'             => $ctype,
             'teaser_len'        => $teaser_len,
             'hide_except_title' => $hide_except_title,
@@ -88,8 +74,7 @@ class widgetContentSlider extends cmsWidget {
             'big_image_preset'  => $big_image_preset,
             'teaser_field'      => $teaser_fields,
             'items'             => $items
-        );
-
+        ];
     }
 
 }

@@ -198,6 +198,8 @@
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Разворачивать панель фильтра');
     define('LANG_CP_LISTVIEW_STYLE',            'Стиль списка по умолчанию');
     define('LANG_CP_LIST_STYLE_NAMES',          'Названия для стилей списка');
+    define('LANG_CP_LIST_STYLE_OPTIONS',        'Опции списков');
+    define('LANG_CP_LIST_STYLE_OPTIONS_HINT',   'Если шаблон списка поддерживает. В формате JSON. Пример опций по умолчанию в исходном файле шаблона.');
     define('LANG_CP_CONTEXT_LIST_STYLE',        'Стили для других списков');
     define('LANG_CP_CONTEXT_SELECT_LIST',       'Выберите список');
     define('LANG_CP_LISTVIEW_STYLE_HINT',       'Перечислены шаблоны из папки <b>/'.cmsTemplate::TEMPLATE_BASE_PATH.'%s/content</b>. Можно указать несколько шаблонов, при этом появится возможность переключать их пользователям.');

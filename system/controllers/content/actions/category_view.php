@@ -1,15 +1,16 @@
 <?php
-
+/**
+ * @property \modelContent $model
+ */
 class actionContentCategoryView extends cmsAction {
 
     private $is_remapped, $remap_redirect_ctype = false;
 
-    public function __construct($controller, $params = array()) {
+    public function __construct($controller, $params = []) {
 
         parent::__construct($controller, $params);
 
         $this->is_remapped = $this->cms_core->uri_controller_before_remap ? true : false;
-
     }
 
     public function run() {
@@ -17,7 +18,7 @@ class actionContentCategoryView extends cmsAction {
         list($ctype, $category, $slug) = $this->getCategoryAndSlugAndCtype();
 
         // Скрытая категория
-        if(!empty($category['is_hidden'])){
+        if (!empty($category['is_hidden'])) {
             return cmsCore::error404();
         }
 
@@ -37,15 +38,15 @@ class actionContentCategoryView extends cmsAction {
         $items_list_html = '';
 
         // Получаем список наборов
-        $datasets = $this->getCtypeDatasets($ctype, array(
+        $datasets = $this->getCtypeDatasets($ctype, [
             'cat_id' => $category['id']
-        ));
+        ]);
 
         // Если это не главная, но данный контент выводится на главной и сейчас
         // открыта индексная страница контента - редиректим на главную
         if (!$this->request->isAjax() && !$is_frontpage &&
-                $this->cms_config->frontpage == "content:{$ctype['name']}" && $slug == 'index' &&
-                !$dataset && $page == 1 && !$this->list_filter) {
+                $this->cms_config->frontpage === "content:{$ctype['name']}" && $slug === 'index' &&
+                !$dataset && $page === 1 && !$this->list_filter) {
 
             $query = $this->cms_core->uri_query;
             if ($query) {
@@ -57,7 +58,7 @@ class actionContentCategoryView extends cmsAction {
 
         // Если есть наборы, применяем фильтры текущего
         // иначе будем сортировать по дате создания
-        $current_dataset = array();
+        $current_dataset = [];
         if ($datasets) {
 
             if ($dataset && empty($datasets[$dataset])) {
@@ -75,7 +76,7 @@ class actionContentCategoryView extends cmsAction {
             // если набор всего один, например для изменения сортировки по умолчанию,
             // не показываем его на сайте
             if (count($datasets) == 1) {
-                $current_dataset = array();
+                $current_dataset = [];
                 $datasets        = false;
             }
         } elseif ($dataset) {
@@ -85,10 +86,10 @@ class actionContentCategoryView extends cmsAction {
         // Категории включены?
         if ($ctype['is_cats']) {
             // Фильтр по категории
-            if ($slug != 'index') {
+            if ($slug !== 'index') {
                 $this->model->filterCategory($ctype['name'], $category, $ctype['is_cats_recursive'], !empty($ctype['options']['is_cats_multi']));
             } elseif (!$ctype['is_cats_recursive']) {
-                $this->model->filterCategory($ctype['name'], array('id' => 1));
+                $this->model->filterCategory($ctype['name'], ['id' => 1], false, !empty($ctype['options']['is_cats_multi']));
             }
         }
 
@@ -115,7 +116,7 @@ class actionContentCategoryView extends cmsAction {
 
         if ($this->list_filter) {
             if (!$base_url && empty($category['slug'])) {
-                $page_url = str_replace('/'.$ctype['name'], '', $page_url);
+                $page_url = str_replace('/' . $ctype['name'], '', $page_url);
             }
             $page_url = [
                 'base'        => $page_url . '/' . $this->list_filter['slug'],
@@ -135,12 +136,12 @@ class actionContentCategoryView extends cmsAction {
             }
         }
 
-        list($ctype, $category) = cmsEventsManager::hook("content_before_category", array($ctype, $category));
-        list($ctype, $category) = cmsEventsManager::hook("content_{$ctype['name']}_before_category", array($ctype, $category));
+        list($ctype, $category) = cmsEventsManager::hook("content_before_category", [$ctype, $category]);
+        list($ctype, $category) = cmsEventsManager::hook("content_{$ctype['name']}_before_category", [$ctype, $category]);
 
-        $is_hide_items = !empty($ctype['options']['is_empty_root']) && $slug == 'index';
+        $is_hide_items = !empty($ctype['options']['is_empty_root']) && $slug === 'index';
 
-        $list_styles = array();
+        $list_styles = [];
 
         $current_style = '';
         if (!empty($ctype['options']['list_style'])) {
@@ -163,7 +164,7 @@ class actionContentCategoryView extends cmsAction {
                         return trim(strip_tags($cookie));
                     });
 
-                    if($ctype_list_style_preset === 'default'){
+                    if ($ctype_list_style_preset === 'default') {
                         $ctype_list_style_preset = '';
                     }
                 }
@@ -171,7 +172,7 @@ class actionContentCategoryView extends cmsAction {
                 if ($this->cms_user->is_logged) {
                     $ctype_list_style_preset = cmsUser::getUPS($style_key_name);
 
-                    if($ctype_list_style_preset === null){
+                    if ($ctype_list_style_preset === null) {
                         $ctype_list_style_preset = '';
                     }
                 }
@@ -191,7 +192,7 @@ class actionContentCategoryView extends cmsAction {
                     cmsUser::setUPS($style_key_name, $current_style);
                 }
 
-                $style_titles = array();
+                $style_titles = [];
                 if (!empty($ctype['options']['list_style_names'])) {
                     foreach ($ctype['options']['list_style_names'] as $list_style_names) {
                         $style_titles[$list_style_names['name']] = $list_style_names['value'];
@@ -199,12 +200,12 @@ class actionContentCategoryView extends cmsAction {
                 }
 
                 foreach ($ctype['options']['list_style'] as $list_style) {
-                    $list_styles[] = array(
+                    $list_styles[] = [
                         'title' => (isset($style_titles[$list_style]) ? $style_titles[$list_style] : ''),
                         'style' => $list_style,
                         'url'   => (!empty($page_url['base']) ? $page_url['base'] : $page_url) . '?style=' . $list_style,
                         'class' => $list_style . ($current_style === $list_style ? ' active' : ''),
-                    );
+                    ];
                 }
 
                 $ctype['options']['raw_list_style'] = $ctype['options']['list_style'];
@@ -227,7 +228,7 @@ class actionContentCategoryView extends cmsAction {
 
         // Получаем HTML списка записей
         if (!$is_hide_items) {
-            $items_list_html = $this->renderItemsList($ctype, $page_url, false, $category['id'], array(), $dataset);
+            $items_list_html = $this->renderItemsList($ctype, $page_url, false, $category['id'], [], $dataset);
         }
 
         // сбрасываем фильтры если, например, список не запрашивали
@@ -236,10 +237,10 @@ class actionContentCategoryView extends cmsAction {
         $tpl_file = $this->cms_template->getTemplateFileName('controllers/content/category_view_' . $ctype['name'], true) ?
                 'category_view_' . $ctype['name'] : 'category_view';
 
-        $hooks_html = cmsEventsManager::hookAll("content_{$ctype['name']}_items_html", array('category_view', $ctype, $category, $current_dataset));
+        $hooks_html = cmsEventsManager::hookAll("content_{$ctype['name']}_items_html", ['category_view', $ctype, $category, $current_dataset]);
 
-        if(!$is_frontpage){
-            $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], $category, $current_dataset, array()));
+        if (!$is_frontpage) {
+            $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', [$ctype['name'], $category, $current_dataset, []]);
             if ($toolbar_html) {
                 $this->cms_template->addToBlock('before_body', html_each($toolbar_html));
             }
@@ -262,7 +263,7 @@ class actionContentCategoryView extends cmsAction {
 
             if (!empty($category['path'])) {
                 foreach ($category['path'] as $c) {
-                    if(empty($c['is_hidden'])){
+                    if (empty($c['is_hidden'])) {
                         $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
                     }
                 }
@@ -274,11 +275,12 @@ class actionContentCategoryView extends cmsAction {
 
             // Получаем список подкатегорий для текущей
             $current_cat_id = $category['id'] ? $category['id'] : 1;
+
             $subcats = $this->model->filterIsNull('is_hidden')->
                     getSubCategories($ctype['name'], $current_cat_id);
 
             // Формируем параметры, используемые в шаблоне
-            if($subcats){
+            if ($subcats) {
                 $subcats = $this->buildCategoriesTemplateParams($subcats, $ctype, $current_dataset, $dataset, $base_url);
             }
         }
@@ -297,7 +299,7 @@ class actionContentCategoryView extends cmsAction {
             $this->cms_template->addBreadcrumb($this->list_filter['title'], (!empty($page_url['base']) ? $page_url['base'] : $page_url));
         }
 
-        return $this->cms_template->render($tpl_file, array(
+        return $this->cms_template->render($tpl_file, [
             'category_seo'    => (!empty($category_seo) ? $category_seo : []),
             'show_h1'         => $this->cms_template->hasPageH1() && !$this->request->isInternal() && !$is_frontpage,
             'base_ds_url'     => $base_ds_url,
@@ -316,30 +318,31 @@ class actionContentCategoryView extends cmsAction {
             'subcats'         => $subcats,
             'items_list_html' => $items_list_html,
             'user'            => $this->cms_user
-        ), $this->request);
-
+        ], $this->request);
     }
 
     private function buildCategoriesTemplateParams($subcats, $ctype, $current_dataset, $dataset, $base_url) {
+
         foreach ($subcats as $key => $cat) {
 
             $is_ds_view = empty($current_dataset['cats_view']) || in_array($cat['id'], $current_dataset['cats_view']);
             $is_ds_hide = !empty($current_dataset['cats_hide']) && in_array($cat['id'], $current_dataset['cats_hide']);
-            $img_src  = html_image_src($cat['cover'], $ctype['options']['cover_preset'], true);
+            $img_src    = html_image_src($cat['cover'], $ctype['options']['cover_preset'], true);
 
-            $class = ['icms-content-'.$ctype['name'].'__icon'];
-            if($ctype['options']['cover_preset']){
+            $class = ['icms-content-' . $ctype['name'] . '__icon'];
+            if ($ctype['options']['cover_preset']) {
                 $class[] = 'icms-content__has_cover_preset';
-                $class[] = 'icms-content-cover-preset__'.$ctype['options']['cover_preset'];
+                $class[] = 'icms-content-cover-preset__' . $ctype['options']['cover_preset'];
             }
-            $class[] = 'icms-content-cat__'.str_replace('/', '-', $cat['slug']);
+            $class[] = 'icms-content-cat__' . str_replace('/', '-', $cat['slug']);
 
             $subcats[$key]['list_params'] = [
                 'cover_img' => $img_src,
-                'href' => href_to((($dataset && $is_ds_view && !$is_ds_hide) ? $ctype['name'].'-'.$dataset : $base_url), $cat['slug']),
-                'class' => implode(' ', $class)
+                'href'      => href_to((($dataset && $is_ds_view && !$is_ds_hide) ? $ctype['name'] . '-' . $dataset : $base_url), $cat['slug']),
+                'class'     => implode(' ', $class)
             ];
         }
+
         return $subcats;
     }
 
@@ -347,7 +350,7 @@ class actionContentCategoryView extends cmsAction {
 
         $slug = $this->request->get('slug', '');
 
-        $_ctype_name = $this->request->get('ctype_name');
+        $_ctype_name = $this->request->get('ctype_name', '');
 
         if (!$_ctype_name) {
             return cmsCore::error404();
@@ -408,10 +411,10 @@ class actionContentCategoryView extends cmsAction {
 
                     if (!$segments) {
 
-                        $category = array(
+                        $category = [
                             'id'          => false,
                             'description' => (!empty($ctype['description']) ? $ctype['description'] : '')
-                        );
+                        ];
 
                         $slug = 'index';
 
@@ -427,7 +430,7 @@ class actionContentCategoryView extends cmsAction {
                     if ($category) {
 
                         // Категории выключены
-                        if(!$ctype['is_cats']){
+                        if (!$ctype['is_cats']) {
                             $category = false;
                         }
 
@@ -441,7 +444,7 @@ class actionContentCategoryView extends cmsAction {
 
                     $filter_slug = implode('/', $filters_segments);
 
-                    if(!is_numeric($filter_slug)){
+                    if (!is_numeric($filter_slug)) {
                         $filter = $this->model->getContentFilter($ctype, $filter_slug);
                     } else {
                         $filter = false;
@@ -475,11 +478,11 @@ class actionContentCategoryView extends cmsAction {
                 $slug,
                 $ctype,
                 $category
-            ) = cmsEventsManager::hook(['content_get_category_by_slug', "content_{$ctype['name']}_get_category_by_slug"], [
-                $slug,
-                $ctype,
-                $category
-            ], null, $this->request);
+                ) = cmsEventsManager::hook(['content_get_category_by_slug', "content_{$ctype['name']}_get_category_by_slug"], [
+                    $slug,
+                    $ctype,
+                    $category
+                ], null, $this->request);
 
             if (!$category) {
 
@@ -514,13 +517,13 @@ class actionContentCategoryView extends cmsAction {
                     !$this->request->get('dataset', '') &&
                     $this->cms_config->ctype_default &&
                     in_array($ctype['name'], $this->cms_config->ctype_default))) {
-                if(!empty($category['slug'])){
-                    if(!empty($this->list_filter['slug'])){
+                if (!empty($category['slug'])) {
+                    if (!empty($this->list_filter['slug'])) {
                         $this->redirect(href_to($category['slug'], $this->list_filter['slug']), 301);
                     }
                     $this->redirect(href_to($category['slug']), 301);
                 }
-                if(!empty($this->list_filter['slug'])){
+                if (!empty($this->list_filter['slug'])) {
                     $this->redirect(href_to($this->list_filter['slug']), 301);
                 }
             }
@@ -541,7 +544,6 @@ class actionContentCategoryView extends cmsAction {
 
         // ничего не нашли
         return cmsCore::error404();
-
     }
 
     private function getCtypeByAlias($ctype_name) {
@@ -551,20 +553,19 @@ class actionContentCategoryView extends cmsAction {
         if ($mapping) {
             foreach ($mapping as $name => $alias) {
 
-                if($this->is_remapped){
+                if ($this->is_remapped) {
                     break;
                 }
 
-                if ($alias == $ctype_name) {
+                if ($alias === $ctype_name) {
 
                     $this->is_remapped = true;
 
                     $ctype_name = $name;
 
                     break;
-
                 }
-                if ($name == $ctype_name) {
+                if ($name === $ctype_name) {
                     $this->remap_redirect_ctype = $alias;
                 }
             }

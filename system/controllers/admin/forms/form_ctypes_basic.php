@@ -250,6 +250,19 @@ class formAdminCtypesBasic extends cmsForm {
                             return $template->getAvailableContentListStyles();
                         }
                     )),
+                    new fieldList('options:list_style_options', array(
+                        'title'        => LANG_CP_LIST_STYLE_OPTIONS,
+                        'hint'         => LANG_CP_LIST_STYLE_OPTIONS_HINT,
+                        'is_multiple'  => true,
+                        'dynamic_list' => true,
+                        'select_title' => LANG_CP_CONTEXT_SELECT_LIST,
+                        'multiple_keys' => array(
+                            'name' => 'field', 'value' => 'field_value'
+                        ),
+                        'generator' => function($ctype) use ($template){
+                            return $template->getAvailableContentListStyles();
+                        }
+                    )),
                     new fieldList('options:list_style_names', array(
                         'title'        => LANG_CP_LIST_STYLE_NAMES,
                         'is_multiple'  => true,

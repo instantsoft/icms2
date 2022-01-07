@@ -13,7 +13,7 @@ class cmsFormField {
      * Имя поля, как было задано в форме
      * @var string
      */
-    public $name;
+    public $name = '';
     /**
      * Имя поля, как должно быть в HTML теге
      * @var string
@@ -34,7 +34,7 @@ class cmsFormField {
      * Название поля
      * @var string
      */
-    public $title;
+    public $title = '';
     public $element_title = '';
     /**
      * Флаг, указывающий, что поле может быть использовано для создания в полях типов контента, конструкторе форм и т.п.
@@ -45,12 +45,12 @@ class cmsFormField {
      * Последняя часть строки SQL запроса для создания поля в базе данных
      * @var string
      */
-    public $sql;
+    public $sql = '';
     /**
      * Последняя часть строки SQL запроса для создания поля в базе данных, в котором будет храниться кэшированное значение
      * @var string
      */
-    public $cache_sql;
+    public $cache_sql = '';
     /**
      * Флаг, указывающий, что при создании поля в базе данных (например, при добавлении поля в типах контента)
      * необходимо также добавить SQL индекс к этому полю
@@ -146,6 +146,7 @@ class cmsFormField {
 
     /**
      * Формировать поле формы на нескольких языках
+     *
      * @var boolean
      */
     public $multilanguage = false;
@@ -156,14 +157,22 @@ class cmsFormField {
      *
      * @var string
      */
-    public $field_type;
+    public $field_type = '';
 
     /**
      * Название субъекта использования поля
      * Задаётся полю при рендере опций поля в админке
+     *
      * @var string
      */
-    public $subject_name;
+    public $subject_name = '';
+
+    /**
+     * Подключать языковой файл для поля?
+     *
+     * @var boolean
+     */
+    protected $use_language = false;
 
     /**
      * @param string $name Имя поля
@@ -177,6 +186,10 @@ class cmsFormField {
 
         $this->field_type = substr(mb_strtolower(get_called_class()), 5);
         $this->class = $this->field_type;
+
+        if($this->use_language){
+            cmsCore::loadFieldLanguage($this->field_type);
+        }
 
         if ($options) {
             $this->setOptions($options);

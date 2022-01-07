@@ -11,14 +11,14 @@
             <?php foreach($item['fields'] as $field){ ?>
                 <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_type']; ?>_field" <?php if($field['options']['wrap_width']){ ?> style="width: <?php echo $field['options']['wrap_width']; ?>;"<?php } ?>>
 
-                    <?php if ($field['label_pos'] != 'none'){ ?>
+                    <?php if ($field['label_pos'] !== 'none'){ ?>
                         <div class="title_<?php echo $field['label_pos']; ?>">
-                            <?php echo $field['title'] . ($field['label_pos']=='left' ? ': ' : ''); ?>
+                            <?php echo $field['title'] . ($field['label_pos']==='left' ? ': ' : ''); ?>
                         </div>
                     <?php } ?>
 
-                    <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
-                        <h3 class="value">
+                    <?php if ($field['name'] === 'title' && $ctype['options']['item_on']){ ?>
+                        <h3 class="m-0">
                         <?php if ($item['parent_id']){ ?>
                             <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
                             &rarr;

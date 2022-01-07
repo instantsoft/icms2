@@ -111,7 +111,7 @@ class modelSearch extends cmsModel {
 
         $query = trim(strip_tags(mb_strtolower(urldecode($query))));
 
-        $query = trim(preg_replace('/['.preg_quote(implode('', $this->special_chars)).']+/', ' ', $query));
+        $query = trim(preg_replace('#['.preg_quote(implode('', $this->special_chars)).']+#', ' ', $query));
 
         $this->original_query = $query;
 
@@ -312,7 +312,7 @@ class modelSearch extends cmsModel {
 
             $word = preg_quote(rtrim($word, '*'));
 
-            if (preg_match("/\b({$word}\w+)\b/iu", $text, $matches)) {
+            if (preg_match("#\b({$word}\w+)\b#iu", $text, $matches)) {
                 $found_words[] = $matches[0];
             }
         }

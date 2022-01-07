@@ -2,9 +2,10 @@
 /**
  * Template Name: LANG_CP_LISTVIEW_STYLE_TILES
  * Template Type: content
+ * Template Options: {"cols": "2"}
  */
 if($ctype['options']['list_show_filter']) {
-    $this->renderAsset('ui/filter-panel', array(
+    $this->renderAsset('ui/filter-panel', [
         'css_prefix'   => $ctype['name'],
         'page_url'     => $page_url,
         'fields'       => $fields,
@@ -13,7 +14,7 @@ if($ctype['options']['list_show_filter']) {
         'filters'      => $filters,
         'ext_hidden_params' => $ext_hidden_params,
         'is_expanded'  => $ctype['options']['list_expand_filter']
-    ));
+    ]);
 }
 ?>
 <?php if (!$items){ ?>
@@ -26,24 +27,24 @@ if($ctype['options']['list_show_filter']) {
     </p>
 <?php return; } ?>
 
-<div class="content_list tiled <?php echo $ctype['name']; ?>_list mb-n3 mb-md-n4 row">
+<div class="content_list tiled <?php echo $ctype['name']; ?>_list mb-n4 row">
 
     <?php foreach($items as $item){ ?>
 
-        <div class="tile <?php echo $ctype['name']; ?>_list_item col-md-6 col-lg-4 mb-3 mb-md-4">
+        <div class="tile <?php echo $ctype['name']; ?>_list_item col-lg-<?php echo 12/(!empty($list_opt['cols']) ? $list_opt['cols'] : 2); ?> mb-3 mb-md-4">
             <div class="icms-content-fields d-flex flex-column h-100">
             <?php foreach($item['fields'] as $field){ ?>
 
                 <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_style']; ?>">
 
-                    <?php if ($field['label_pos'] != 'none'){ ?>
+                    <?php if ($field['label_pos'] !== 'none'){ ?>
                         <div class="title_<?php echo $field['label_pos']; ?>">
-                            <?php echo string_replace_svg_icons($field['title']) . ($field['label_pos']=='left' ? ': ' : ''); ?>
+                            <?php echo string_replace_svg_icons($field['title']) . ($field['label_pos']==='left' ? ': ' : ''); ?>
                         </div>
                     <?php } ?>
 
-                    <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
-                        <h4 class="value">
+                    <?php if ($field['name'] === 'title' && $ctype['options']['item_on']){ ?>
+                        <h3 class="h4 m-0">
                         <?php if (!empty($this->menus['list_actions_menu'])){ ?>
                             <div class="dropdown ml-2 float-right">
                                 <button class="btn" type="button" data-toggle="dropdown">
@@ -78,7 +79,7 @@ if($ctype['options']['list_show_filter']) {
                                 </span>
                             <?php } ?>
                         <?php } ?>
-                        </h4>
+                        </h3>
                     <?php } else { ?>
                         <div class="value">
                             <?php echo $field['html']; ?>
@@ -89,7 +90,7 @@ if($ctype['options']['list_show_filter']) {
 
             <?php if (!empty($item['show_tags'])){ ?>
                 <div class="tags_bar mb-2">
-                    <?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name'], 'btn btn-outline-secondary btn-sm mr-1 icms-btn-tag', ''); ?>
+                    <?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name'], 'btn btn-outline-secondary btn-sm icms-btn-tag', ''); ?>
                 </div>
             <?php } ?>
 

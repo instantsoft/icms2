@@ -486,9 +486,9 @@ class modelContent extends cmsModel {
 
             $field_handler->hookAfterUpdate($content_table_name, $field, $field_old, $this);
 
-            if (($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type']) || ($new_lenght != $old_lenght)){
+            if (($field_old['name'] !== $field['name']) || ($field_old['type'] !== $field['type']) || ($new_lenght != $old_lenght)){
 
-                if($field_old['type'] != $field['type']){ $this->db->dropIndex($content_table_name, $field_old['name']); }
+                if($field_old['type'] !== $field['type']){ $this->db->dropIndex($content_table_name, $field_old['name']); }
 
                 $sql = "ALTER TABLE `{#}{$content_table_name}` CHANGE `{$field_old['name']}` `{$field['name']}` {$field_handler->getSQL()}";
                 // Пробуем сменить
@@ -501,7 +501,7 @@ class modelContent extends cmsModel {
                     $this->db->query($sql);
                 }
 
-                if(($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type'])){
+                if(($field_old['name'] !== $field['name']) || ($field_old['type'] !== $field['type'])){
 
                     // поля денормализации
                     $old_cfield_name = $field_old['name'].cmsFormField::FIELD_CACHE_POSTFIX;
@@ -516,7 +516,7 @@ class modelContent extends cmsModel {
 
                     }
                     // изменился тип
-                    if($field_old['type'] != $field['type']){
+                    if($field_old['type'] !== $field['type']){
 
                         if($field_old['parser']->is_denormalization && $field_handler->is_denormalization){
 
@@ -604,8 +604,8 @@ class modelContent extends cmsModel {
 
         if ($result){
             $field['id'] = $id;
-            cmsEventsManager::hook('ctype_field_after_update', array($field, $ctype_name, $this));
-            cmsEventsManager::hook('ctype_field_'.str_replace(['{','}'], '', $ctype_name).'_after_update', array($field, $this));
+            cmsEventsManager::hook('ctype_field_after_update', [$field, $ctype_name, $this]);
+            cmsEventsManager::hook('ctype_field_'.str_replace(['{','}'], '', $ctype_name).'_after_update', [$field, $this]);
         }
 
         cmsCache::getInstance()->clean('content.fields.'.$ctype_name);
@@ -1356,7 +1356,7 @@ class modelContent extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getItemSlug($ctype, $item, $fields, $check_slug = true){
+    public function getItemSlug($ctype, $item, $fields, $check_slug = true) {
 
         $slug_len = 100;
 
@@ -1364,33 +1364,36 @@ class modelContent extends cmsModel {
 
         preg_match_all('/{([a-z0-9\_]+)}/i', $pattern, $matches);
 
-        if (!$matches) { return lang_slug($item['id'], false); }
+        if (!$matches) {
+            return lang_slug($item['id'], false);
+        }
+
+        $item['ctype_name'] = $ctype['name'];
+        $item['ctype'] = $ctype;
 
         list($tags, $names) = $matches;
 
-        if (in_array('category', $names)){
+        if (in_array('category', $names)) {
             $category = $this->getCategory($ctype['name'], $item['category_id']);
-            $pattern = str_replace('{category}', $category['slug'], $pattern);
-            unset($names[ array_search('category', $names) ]);
+            $pattern  = str_replace('{category}', $category['slug'], $pattern);
+            unset($names[array_search('category', $names)]);
         }
 
         $pattern = trim($pattern, '/');
 
-        foreach($names as $idx=>$field_name){
-            if (!empty($item[$field_name])){
+        foreach ($names as $idx => $field_name) {
+            if (!empty($item[$field_name])) {
 
                 $value = str_replace('/', '', $item[$field_name]);
 
-                if (isset($fields[$field_name])){
+                if (isset($fields[$field_name])) {
 
-                    $value = $fields[$field_name]['handler']->getStringValue($value);
+                    $value = $fields[$field_name]['handler']->setItem($item)->getStringValue($value);
 
                     $value = lang_slug(trim($value, '/'), false);
-
                 }
 
                 $pattern = str_replace($tags[$idx], $value, $pattern);
-
             }
         }
 
@@ -1398,7 +1401,7 @@ class modelContent extends cmsModel {
 
         $slug = mb_substr($slug, 0, $slug_len);
 
-        if(!$check_slug){
+        if (!$check_slug) {
             return $slug;
         }
 
@@ -1710,12 +1713,14 @@ class modelContent extends cmsModel {
 
     public function getContentItems($ctype_name, $callback = null) {
 
-        $table_name = $this->table_prefix . $ctype_name;
-
         $this->joinUser();
 
         $this->select('f.title', 'folder_title');
         $this->joinLeft('content_folders', 'f', 'f.id = i.folder_id');
+
+        $this->select('cat.title', 'cat_title');
+        $this->select('cat.slug', 'cat_slug');
+        $this->joinLeft($this->getContentCategoryTableName($ctype_name), 'cat', 'cat.id = i.category_id');
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
         if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
@@ -1730,7 +1735,13 @@ class modelContent extends cmsModel {
 
         $user = cmsUser::getInstance();
 
-        return $this->get($table_name, function ($item, $model) use ($user, $callback, $ctype_name) {
+        return $this->get($this->getContentTypeTableName($ctype_name), function ($item, $model) use ($user, $callback, $ctype_name) {
+
+            $item['category'] = [
+                'id'    => $item['category_id'],
+                'slug'  => $item['cat_slug'],
+                'title' => $item['cat_title']
+            ];
 
             $item['user'] = [
                 'id'              => $item['user_id'],

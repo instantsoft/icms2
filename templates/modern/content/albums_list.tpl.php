@@ -2,7 +2,7 @@
 $this->addTplCSSFromContext('controllers/photos/styles');
 
 if( $ctype['options']['list_show_filter'] ) {
-    $this->renderAsset('ui/filter-panel', array(
+    $this->renderAsset('ui/filter-panel', [
         'css_prefix'   => $ctype['name'],
         'page_url'     => $page_url,
         'fields'       => $fields,
@@ -11,7 +11,7 @@ if( $ctype['options']['list_show_filter'] ) {
         'filters'      => $filters,
         'ext_hidden_params' => $ext_hidden_params,
         'is_expanded'  => $ctype['options']['list_expand_filter']
-    ));
+    ]);
 }
 ?>
 
@@ -100,7 +100,7 @@ if( $ctype['options']['list_show_filter'] ) {
             </div>
             <?php foreach($item['fields'] as $field){ ?>
                 <div class="my-2 field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_style']; ?>">
-                    <?php if ($field['label_pos'] != 'none'){ ?>
+                    <?php if ($field['label_pos'] !== 'none'){ ?>
                         <div class="title_<?php echo $field['label_pos']; ?>">
                             <?php echo string_replace_svg_icons($field['title']) . ($field['label_pos']=='left' ? ': ' : ''); ?>
                         </div>
@@ -113,7 +113,7 @@ if( $ctype['options']['list_show_filter'] ) {
 
             <?php if (!empty($item['show_tags'])){ ?>
                 <div class="tags_bar my-2">
-                    <?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name'], 'btn btn-outline-secondary btn-sm mr-1 icms-btn-tag', ''); ?>
+                    <?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name'], 'btn btn-outline-secondary btn-sm icms-btn-tag', ''); ?>
                 </div>
             <?php } ?>
 

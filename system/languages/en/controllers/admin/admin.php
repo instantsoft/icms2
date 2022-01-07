@@ -186,6 +186,8 @@
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Expand filter panel');
     define('LANG_CP_LISTVIEW_STYLE',            'Default list style');
     define('LANG_CP_LIST_STYLE_NAMES',          'Names for list styles');
+    define('LANG_CP_LIST_STYLE_OPTIONS',        'List styles options');
+    define('LANG_CP_LIST_STYLE_OPTIONS_HINT',   'If the list template supports. In JSON format. An example of the default options in the template source file.');
     define('LANG_CP_CONTEXT_LIST_STYLE',        'Styles for other lists');
     define('LANG_CP_CONTEXT_SELECT_LIST',       'Select a list');
     define('LANG_CP_LISTVIEW_STYLE_SLIDER',     'Slider');

@@ -1,4 +1,7 @@
 <?php
+/**
+ * @property \modelContent $model
+ */
 class content extends cmsFrontend {
 
     const perpage = 15;
@@ -10,7 +13,7 @@ class content extends cmsFrontend {
 
     private $check_list_perm = true;
 
-    private $filter_titles = array();
+    private $filter_titles = [];
 
 //============================================================================//
 //============================================================================//
@@ -321,8 +324,8 @@ class content extends cmsFrontend {
             $this->model->limitPage($page, $perpage);
         }
 
-		list($ctype, $this->model) = cmsEventsManager::hook('content_list_filter', array($ctype, $this->model));
-		list($ctype, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $this->model));
+		list($ctype, $this->model) = cmsEventsManager::hook('content_list_filter', [$ctype, $this->model]);
+		list($ctype, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", [$ctype, $this->model]);
 
         // правила доступа на просмотр списка записей
         $check_list_perm_result = $this->checkListPerm($ctype['name']);
@@ -397,8 +400,10 @@ class content extends cmsFrontend {
         }
 
         // если запрос через URL
-        if($this->request->isStandard()){
-            if(!$items && $page > 1){ cmsCore::error404(); }
+        if ($this->request->isStandard()) {
+            if (!$items && $page > 1) {
+                return cmsCore::error404();
+            }
         }
 
         // заполняем поля для шаблона
@@ -476,7 +481,7 @@ class content extends cmsFrontend {
                     }
 
                     $field_html = $field['handler']->setItem($item)->parseTeaser($item[$field['name']]);
-                    if (mb_strlen($field_html) === 0) { continue; }
+                    if (is_empty_value($field_html)) { continue; }
 
                     $current_field_data['html'] = $field_html;
                     $current_field_data['options'] = $field['options'];
@@ -492,8 +497,8 @@ class content extends cmsFrontend {
             }
         }
 
-        list($ctype, $items) = cmsEventsManager::hook('content_before_list', array($ctype, $items));
-        list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));
+        list($ctype, $items) = cmsEventsManager::hook('content_before_list', [$ctype, $items]);
+        list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", [$ctype, $items]);
 
         cmsModel::cacheResult('current_ctype_fields', $fields);
         cmsModel::cacheResult('current_ctype_props', $props);

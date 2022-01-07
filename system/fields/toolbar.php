@@ -3,7 +3,7 @@
 class fieldToolbar extends cmsFormField {
 
     public $title       = LANG_PARSER_TOOLBAR;
-    public $sql         = 'TINYINT(1) UNSIGNED NULL DEFAULT 1';
+    public $sql         = '';
     public $is_virtual  = true;
     public $allow_index = false;
 

@@ -130,7 +130,7 @@
 
     <?php if (!empty($item['show_tags'])){ ?>
         <div class="tags_bar mt-3">
-            <?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name'], 'btn btn-outline-secondary btn-sm mr-1 icms-btn-tag', ''); ?>
+            <?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name'], 'btn btn-outline-secondary btn-sm icms-btn-tag', ''); ?>
         </div>
     <?php } ?>
 

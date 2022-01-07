@@ -4,26 +4,26 @@
  * Template Type: widget
  */
 ?>
-<div class="icms-widget__content_list mb-n3 mb-md-n4 content_list tiled featured row">
+<div class="icms-widget__content_list mb-n3 mb-md-n4 content_list featured row">
     <?php $index = 0; ?>
     <?php foreach($items as $item) { ?>
         <?php
-            $class = $index == 0 ? 'col-md-6 col-lg-12 mb-3 mb-md-4' : 'col-md-6 col-lg-4 mb-3 mb-md-4';
-            $title_tag  = $index == 0 ? 'h4' : 'h5';
+            $class = $index === 0 ? 'col-md-6 col-lg-12 mb-3 mb-md-4' : 'col-md-6 col-lg-4 mb-3 mb-md-4';
+            $title_tag  = $index === 0 ? 'h4' : 'h5';
         ?>
         <div class="<?php echo $class; ?>">
             <div class="icms-content-fields<?php if($index){ ?> d-flex flex-column h-100<?php } ?>">
             <?php foreach($item['fields'] as $field){ ?>
                 <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_type']; ?>_field"<?php if($field['options']['wrap_width']){ ?> style="width: <?php echo $field['options']['wrap_width']; ?>;"<?php } ?>>
 
-                    <?php if ($field['label_pos'] != 'none'){ ?>
+                    <?php if ($field['label_pos'] !== 'none'){ ?>
                         <div class="title_<?php echo $field['label_pos']; ?>">
-                            <?php echo $field['title'] . ($field['label_pos']=='left' ? ': ' : ''); ?>
+                            <?php echo $field['title'] . ($field['label_pos']==='left' ? ': ' : ''); ?>
                         </div>
                     <?php } ?>
 
-                    <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
-                        <<?php echo $title_tag; ?> class="value">
+                    <?php if ($field['name'] === 'title' && $ctype['options']['item_on']){ ?>
+                        <<?php echo $title_tag; ?> class="value m-0">
                         <?php if ($item['parent_id']){ ?>
                             <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
                             &rarr;
@@ -52,7 +52,7 @@
                 </div>
             <?php } ?>
             <?php if (!empty($item['info_bar'])){ $is_small = count($item['info_bar']) > 2; ?>
-                <div class="info_bar p-0 bg-transparent border-0 mt-auto">
+                <div class="info_bar p-0 border-0 mt-auto">
                     <?php foreach($item['info_bar'] as $bar){ ?>
                         <div class="mr-2<?php if($is_small){ ?> small<?php } ?> bar_item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
                             <?php if (!empty($bar['icon'])){ ?>

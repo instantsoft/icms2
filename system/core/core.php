@@ -474,16 +474,15 @@ class cmsCore {
 //============================================================================//
 //============================================================================//
 
-    public static function getWidgetPath($widget_name, $controller_name=false){
+    public static function getWidgetPath($widget_name, $controller_name = false) {
 
-        if ($controller_name){
+        if ($controller_name) {
             $path = "controllers/{$controller_name}/widgets/{$widget_name}";
         } else {
             $path = "widgets/{$widget_name}";
         }
 
         return $path;
-
     }
 
 //============================================================================//
@@ -495,88 +494,94 @@ class cmsCore {
      *
      * @param string $file Относительный путь к файлу
      * @param string $default Язык по умолчанию, если в текущем не найдено
-     * @return boolean
+     * @return boolean|array
      */
     public static function loadLanguage($file = false, $default = 'ru') {
 
-        $lang_dir = 'system/languages/'. self::$language;
+        $lang_dir = 'system/languages/' . self::$language;
 
-        if (!$file){
+        if (!$file) {
 
             // Если файл не указан, то подключаем все php-файлы
             // из папки с текущим языком
             return self::getFilesList($lang_dir, '*.php', true, true);
-
         } else {
 
             // Если файл указан, то подключаем только его
-            $lang_file = $lang_dir .'/'.$file.'.php';
+            $lang_file = $lang_dir . '/' . $file . '.php';
 
             $result = self::includeFile($lang_file);
 
-            if(!$result && $default !== self::$language){
-                $result = self::includeFile('system/languages/'. $default .'/'.$file.'.php');
+            if (!$result && $default !== self::$language) {
+                $result = self::includeFile('system/languages/' . $default . '/' . $file . '.php');
             }
 
             return $result;
-
         }
-
     }
 
     /**
      * Возвращает содержимое текстового файла из папки с текущим языком
-     * @param string $file
+     * @param string $file Относительный путь к файлу
      * @return string
      */
-    public static function getLanguageTextFile($file){
+    public static function getLanguageTextFile($file) {
 
-        $lang_dir = cmsConfig::get('root_path').'system/languages/'.self::$language;
+        $lang_dir = cmsConfig::get('root_path') . 'system/languages/' . self::$language;
 
-        $lang_file = $lang_dir .'/' . $file . '.txt';
+        $lang_file = $lang_dir . '/' . $file . '.txt';
 
-        if (!file_exists($lang_file)) { return false; }
+        if (!file_exists($lang_file)) {
+            return '';
+        }
 
         return file_get_contents($lang_file);
-
     }
 
     /**
      * Подключает языковой файл контроллера
-     * @param string $controller_name
-     * @return bool
+     * @param string $controller_name Имя контроллера
+     * @return boolean
      */
-    public static function loadControllerLanguage($controller_name){
+    public static function loadControllerLanguage($controller_name) {
         return self::loadLanguage("controllers/{$controller_name}/{$controller_name}");
     }
 
     /**
-     * Подключает языковой файл виджета
-     * @param string $widget_name
-     * @param string $controller_name
-     * @return bool
+     * Подключает языковой файл поля
+     * @param string $field_name
+     * @return boolean
      */
-    public static function loadWidgetLanguage($widget_name, $controller_name=false){
+    public static function loadFieldLanguage($field_name) {
+        return self::loadLanguage("fields/{$field_name}/{$field_name}");
+    }
+
+    /**
+     * Подключает языковой файл виджета
+     * @param string $widget_name Имя виджета
+     * @param string $controller_name Контроллер виджета
+     * @return boolean
+     */
+    public static function loadWidgetLanguage($widget_name, $controller_name = false) {
 
         $path = self::getWidgetPath($widget_name, $controller_name);
 
         return self::loadLanguage($path);
-
     }
 
     /**
      * Подключает языковой файл шаблона
-     * @param string|array $template_names
-     * @return bool
+     * @param string|array $template_names Имя шаблона
+     * @return boolean
      */
-    public static function loadTemplateLanguage($template_names){
-        if(!is_array($template_names)){
+    public static function loadTemplateLanguage($template_names) {
+        if (!is_array($template_names)) {
             $template_names = [$template_names];
         }
         $result = false;
         foreach ($template_names as $template_name) {
             $result = self::loadLanguage("templates/{$template_name}");
-            if($result){
+            if ($result) {
                 break;
             }
         }
@@ -589,14 +594,13 @@ class cmsCore {
      * @param string $file
      * @return bool
      */
-    public static function loadAllControllersLanguages(){
+    public static function loadAllControllersLanguages() {
 
         $controllers = self::getDirsList('system/controllers');
 
-        foreach($controllers as $controller_name){
+        foreach ($controllers as $controller_name) {
             self::loadControllerLanguage($controller_name);
         }
-
     }
 
 //============================================================================//
@@ -657,15 +661,14 @@ class cmsCore {
         }
 
         return true;
-
     }
 
     public function getUriData() {
-        return array(
+        return [
             'controller' => $this->uri_controller,
             'action'     => $this->uri_action,
             'params'     => $this->uri_params
-        );
+        ];
     }
 
 //============================================================================//
@@ -874,11 +877,11 @@ class cmsCore {
 
     public static function getWidgetObject($widget) {
 
-        $file = 'system/'.cmsCore::getWidgetPath($widget['name'], $widget['controller']).'/widget.php';
+        $file = 'system/' . cmsCore::getWidgetPath($widget['name'], $widget['controller']) . '/widget.php';
 
         $class = 'widget' .
-                    ($widget['controller'] ? string_to_camel('_', $widget['controller']) : '') .
-                    string_to_camel('_', $widget['name']);
+                ($widget['controller'] ? string_to_camel('_', $widget['controller']) : '') .
+                string_to_camel('_', $widget['name']);
 
         if (!class_exists($class, false)) {
             cmsCore::includeFile($file);
@@ -886,7 +889,6 @@ class cmsCore {
         }
 
         return new $class($widget);
-
     }
 
     public function runWidget($widget){
@@ -903,7 +905,7 @@ class cmsCore {
         }
 
         if ($result === false){
-            $result = call_user_func_array(array($widget_object, 'run'), []);
+            $result = call_user_func_array([$widget_object, 'run'], []);
             if ($result !== false){
                 // Отдельно кешируем имя шаблона виджета, заголовок и враппер, поскольку они могли быть
                 // изменены внутри виджета, а в кеш у нас попадает только тот массив
@@ -924,7 +926,6 @@ class cmsCore {
         if (isset($result['_wd_wrapper'])) { $widget_object->setWrapper($result['_wd_wrapper']); }
 
         return cmsTemplate::getInstance()->renderWidget($widget_object, $result);
-
     }
 
     /**
@@ -1091,6 +1092,14 @@ class cmsCore {
         die(cmsConfig::get('min_html') ? html_minify($html) : $html);
     }
 
+    /**
+     * Обработка запроса If-Modified-Since
+     * Сервер отправит обратно запрошенный ресурс с статусом 200, только если он был изменён после указанной даты
+     * Если запрос не был изменён после указанной даты, ответ будет 304 без какого-либо тела,
+     * заголовок Last-Modified при этом будет содержать дату последней модификации.
+     *
+     * @param string $lastmod Дата
+     */
     public static function respondIfModifiedSince($lastmod) {
 
         $last_modified_unix = strtotime($lastmod);
@@ -1116,11 +1125,9 @@ class cmsCore {
             http_response_code(304);
 
             die();
-
         }
 
         header('Last-Modified: ' . $last_modified);
-
     }
 
 //============================================================================//
@@ -1130,36 +1137,36 @@ class cmsCore {
      * Возвращает массив со списком всех шаблонов
      * @return array
      */
-    public static function getTemplates(){
+    public static function getTemplates() {
 
-        if(self::$templates !== null){
+        if (self::$templates !== null) {
             return self::$templates;
         }
 
-        if(cmsTemplate::TEMPLATE_BASE_PATH){
+        if (cmsTemplate::TEMPLATE_BASE_PATH) {
             return self::$templates = self::getDirsList(cmsTemplate::TEMPLATE_BASE_PATH);
         }
 
         $root_path = cmsConfig::get('root_path');
-        $all_dirs = self::getDirsList('');
-        $result = [];
+        $all_dirs  = self::getDirsList('');
+        $result    = [];
 
-        foreach($all_dirs as $dir){
+        foreach ($all_dirs as $dir) {
             // В папке шаблона в обязательном порядке должны быть как минимум эти файлы
-            if(file_exists($root_path.$dir.'/main.tpl.php') && (file_exists($root_path.$dir.'/scheme.html') || file_exists($root_path.$dir.'/scheme.php'))){
+            if (file_exists($root_path . $dir . '/main.tpl.php') &&
+                    (file_exists($root_path . $dir . '/scheme.html') || file_exists($root_path . $dir . '/scheme.php'))) {
                 $result[] = $dir;
             }
         }
 
         return self::$templates = $result;
-
     }
 
     /**
      * Возвращает массив со списком всех языков
      * @return array
      */
-    public static function getLanguages(){
+    public static function getLanguages() {
 
         $default_lang = cmsConfig::get('language');
 
@@ -1167,36 +1174,30 @@ class cmsCore {
 
         $current_lang_key = array_search(self::$language, $langs);
 
-        if($current_lang_key !== 0){
+        if ($current_lang_key !== 0) {
 
             list($langs[0], $langs[$current_lang_key]) = [$langs[$current_lang_key], $langs[0]];
-
         }
 
-        if($default_lang !== self::$language){
+        if ($default_lang !== self::$language) {
 
             $default_lang_key = array_search($default_lang, $langs);
 
-            if($default_lang_key !== 1){
+            if ($default_lang_key !== 1) {
 
                 list($langs[1], $langs[$default_lang_key]) = [$langs[$default_lang_key], $langs[1]];
-
             }
-
         }
 
         return $langs;
-
     }
 
     /**
      * Возвращает массив со списком всех визуальных редакторов
      * @return array
      */
-    public static function getWysiwygs(){
-
+    public static function getWysiwygs() {
         return self::getDirsList('wysiwyg');
-
     }
 
 //============================================================================//
@@ -1204,41 +1205,45 @@ class cmsCore {
 
     /**
      * Возвращает список директорий внутри указанной
-     * @param string $root_dir
-     * @param bool $asc_sort Сортировать по алфавиту, по умолчанию false
+     * @param string $root_dir Путь к директории, относительно корня установки CMS
+     * @param boolean $asc_sort Сортировать по алфавиту, по умолчанию false
      * @return array
      */
-    public static function getDirsList($root_dir, $asc_sort=false){
+    public static function getDirsList($root_dir, $asc_sort = false) {
 
         $dir = cmsConfig::get('root_path') . $root_dir;
+
         $dir_context = opendir($dir);
 
         $list = [];
 
-        while ($next = readdir($dir_context)){
+        while ($next = readdir($dir_context)) {
 
-            if (in_array($next, array('.', '..'))){ continue; }
-            if (strpos($next, '.') === 0){ continue; }
-            if (!is_dir($dir.'/'.$next)) { continue; }
+            if (in_array($next, ['.', '..'])) {
+                continue;
+            }
+            if (strpos($next, '.') === 0) {
+                continue;
+            }
+            if (!is_dir($dir . '/' . $next)) {
+                continue;
+            }
 
             $list[] = $next;
-
         }
 
-        if($asc_sort){
-            sort($list);
-        }
+        if ($asc_sort) { sort($list); }
 
         return $list;
-
     }
 
     /**
      * Возвращает список файлов из указанной директории по нужной маске
+     *
      * @param string $root_dir Директория
      * @param string $pattern Маска файлов
-     * @param bool $is_strip_ext Отрезать расширения?
-     * @param bool $is_include Подключать каждый файл?
+     * @param boolean $is_strip_ext Отрезать расширения?
+     * @param boolean $is_include Подключать каждый файл?
      * @return array
      */
     public static function getFilesList($root_dir, $pattern = '*.*', $is_strip_ext = false, $is_include = false) {
@@ -1250,7 +1255,7 @@ class cmsCore {
 
         $list = [];
 
-        $files = @glob($pattern);
+        $files = glob($pattern);
 
         if (!$files) { return $list; }
 

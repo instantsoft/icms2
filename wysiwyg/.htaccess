@@ -1,1 +1,10 @@
-Options -Indexes
+<FilesMatch ".+\.ph(ar|p|tml)$">
+    # apache > 2.2
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    # apache <= 2.2
+    <IfModule !mod_authz_core.c>
+        deny from all
+    </IfModule>
+</FilesMatch>
