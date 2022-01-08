@@ -54,6 +54,8 @@ function install_package(){
         }
     }
 
+    compile_scss_if_necessary();
+
     return true;
 }
 
@@ -103,6 +105,29 @@ function save_controller_options($controllers) {
         } catch (Exception $exc) {
             cmsUser::addSessionMessage('Настройки компонента '.$controller.' сохранились с ошибкой. Пересохраните их самостоятельно в админке.', 'error');
         }
+    }
+
+}
+
+function compile_scss_if_necessary() {
+
+    $template_name = cmsConfig::get('template');
+
+    $template = new cmsTemplate($template_name);
+
+    $options = $template->getOptions();
+
+    $manifest = $template->getManifest();
+
+    if($manifest !== null && !empty($manifest['properties']['style_middleware'])){
+
+        $renderer = cmsCore::getController('renderer', new cmsRequest([
+            'middleware' => $manifest['properties']['style_middleware']
+        ]), cmsRequest::CTX_INTERNAL);
+
+        $renderer->cms_template = $template;
+
+        $renderer->render($template_name, $options);
     }
 
 }

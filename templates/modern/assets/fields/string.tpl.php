@@ -60,13 +60,14 @@ if($field->context === 'filter' && $in_filter_as && $in_filter_as !== 'input'){ 
         <script>
             $(function(){
                 $('#<?php echo $field->id; ?>').wrap("<div class='icms-form__password-field position-relative'></div>");
-                $('#f_<?php echo $field->id; ?> .icms-form__password-field').append('<div class="icms-form__password-field-icon"><?php html_svg_icon('solid', 'eye'); ?></div>');
+                $('#f_<?php echo $field->id; ?> .icms-form__password-field').append('<a tabindex="1" href="#" class="icms-form__password-field-icon"><?php html_svg_icon('solid', 'eye'); ?></a>');
                 let password_field_icon = $('#f_<?php echo $field->id; ?> .icms-form__password-field-icon');
                 $(password_field_icon).on('click', function (){
                     $(this).toggleClass('active');
                     let input = $(this).closest('.icms-form__password-field').find('input');
                     let curtype = input.attr('type');
                     input.attr('type', curtype === 'text' ? 'password' : 'text');
+                    return false;
                 });
             });
         </script>

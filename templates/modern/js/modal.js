@@ -16,6 +16,7 @@ icms.modal = (function ($) {
         self.render();
         self.bind('a.ajax-modal');
         self.bind('.ajax-modal > a');
+        $('.ajax-modal').addClass('ajax-modal-ready');
     };
 
     this.render = function (){

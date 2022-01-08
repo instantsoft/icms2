@@ -240,6 +240,11 @@ class formModernTemplateOptions extends cmsForm {
                         'generator' => function($item) {
                             return cmsTemplate::getInstance()->getAvailableTemplatesFiles('assets/ui', 'pagination*.tpl.php', 'modern');
                         }
+                    )),
+
+					new fieldCheckbox('js_print_head', array(
+                        'title'   => LANG_MODERN_JS_PRINT_HEAD,
+                        'default' => false
                     ))
 
                 )

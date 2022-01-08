@@ -3,6 +3,7 @@
  * Основной макет шаблона
  * https://docs.instantcms.ru/dev/templates/layouts
  */
+/** @var cmsTemplate $this */
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo cmsCore::getLanguageName(); ?>" class="min-vh-100">
@@ -16,7 +17,7 @@
         <meta http-equiv="x-dns-prefetch-control" content="on">
 <?php
         $this->addMainTplCSSName(['theme']);
-        if(!empty($this->options['font_type']) && $this->options['font_type'] == 'gfont') {
+        if(!empty($this->options['font_type']) && $this->options['font_type'] === 'gfont') {
             $this->addHead('<link rel="dns-prefetch" href="https://fonts.googleapis.com" />');
             $this->addHead('<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />');
             $this->addHead('<link rel="dns-prefetch" href="https://fonts.gstatic.com" />');
@@ -29,7 +30,7 @@
         $this->onDemandTplCSSName(['photoswipe']);
         $this->addMainTplJSName(['core', 'modal']);
 ?>
-        <?php $this->head(true, false, true); ?>
+        <?php $this->head(true, !empty($this->options['js_print_head']), true); ?>
     <?php if(!empty($this->options['favicon_head_html'])) { ?>
         <?php echo $this->options['favicon_head_html']."\n"; ?>
     <?php } else { ?>
@@ -61,7 +62,9 @@
             <?php $this->renderAsset('ui/debug', ['core' => $core]); ?>
         <?php } ?>
         <script><?php echo $this->getLangJS('LANG_LOADING', 'LANG_ALL'); ?></script>
-        <?php $this->printJavascriptTags(); ?>
+        <?php if(empty($this->options['js_print_head'])) { ?>
+            <?php $this->printJavascriptTags(); ?>
+        <?php } ?>
         <?php $this->bottom(); ?>
         <?php $this->onDemandPrint(); ?>
     </body>

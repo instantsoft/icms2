@@ -33,6 +33,13 @@ function grid_presets($controller){
 				return ($val ? $val : LANG_AUTO) . ' x ' . ($row['height'] ? $row['height'] : LANG_AUTO);
 			}
         ),
+        'convert_format' => array(
+            'title' => LANG_CP_FORMAT,
+			'handler' => function($val, $row){
+				return $val ?: LANG_IMAGES_PRESET_OUT_ASIS;
+			},
+            'width' => 70
+        ),
         'quality' => array(
             'title' => LANG_IMAGES_PRESET_QUALITY,
 			'handler' => function($val, $row){

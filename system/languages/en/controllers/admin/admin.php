@@ -851,3 +851,4 @@
     define('LANG_CP_TEMPLATE_NO_ICONS_SELECT', 'The template does not support icon selection.');
     define('LANG_CP_TEMPLATE_ICONS', 'List of template icons');
     define('LANG_CP_COMPILE_TIME', 'Compile time %s sec.');
+    define('LANG_CP_FORMAT', 'Format');

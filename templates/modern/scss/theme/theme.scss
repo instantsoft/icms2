@@ -223,10 +223,18 @@ button.loading {
     margin-bottom: 0;
 }
 .icms-form__password-field {
+    $blockName: &;
     > input {
         padding-right: $input-padding-x*4;
+
+    }
+    &:focus-within {
+        #{$blockName}-icon {
+            opacity: 1;
+        }
     }
     &-icon {
+        opacity: .1;
         position: absolute;
         top: 0;
         right: 0;
@@ -526,7 +534,13 @@ code {
         padding-left: $spacer/2;
     }
 }
-
+.ajax-modal {
+    transition: $transition-base;
+    pointer-events: none;
+    &-ready {
+        pointer-events: auto;
+    }
+}
 // Селекторы для скрытия текста меню, оставляя одну иконку
 @each $breakpoint in map-keys($grid-breakpoints) {
   @include media-breakpoint-up($breakpoint) {
