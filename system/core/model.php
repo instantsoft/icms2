@@ -888,7 +888,7 @@ class cmsModel {
             });
             $query = array_slice($query, 0, 5);
 
-            $ft_query .= '>\"' . $this->db->escape($value) . '\" <(';
+            $ft_query = '>\"' . $this->db->escape($value) . '\" <(';
             $ft_query .= '+' . implode(' +', $this->db->escape($query)) . ')';
         }
 

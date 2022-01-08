@@ -88,6 +88,14 @@ class actionAdminContentItemsEdit extends cmsAction {
 
         }
 
+        $form_select->addFieldset(LANG_AUTHOR, 'edit_user_id');
+        $form_select->addField('edit_user_id',
+            new fieldCheckbox('fields:user_id', array(
+                    'title' => LANG_CHANGE
+                )
+            )
+        );
+
         // Ловим, какие поля выбрали для изменения
         if ($this->request->has('selected_submit')){
 
@@ -169,6 +177,13 @@ class actionAdminContentItemsEdit extends cmsAction {
                         $form_fields->addField($fid, $field);
 
                     }
+                }
+
+                // Поле смены автора
+                if(!empty($selected_submit['fields']['user_id'])){
+                    $form_fields->addField($fid, new fieldString('content_fields:user_id', [
+                        'title' => LANG_AUTHOR.' (ID)'
+                    ]));
                 }
 
                 // непосредственно меняем для выделенных записей нужные значения

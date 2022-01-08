@@ -543,6 +543,7 @@
     define('LANG_NEXT',                      'Next');
     define('LANG_SKIP',                      'Skip');
     define('LANG_DONE',                      'Done');
+    define('LANG_CHANGE',                    'Change');
 
     //NAVIGATION
     define('LANG_HOME',                      'Home');

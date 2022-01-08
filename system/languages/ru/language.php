@@ -542,6 +542,7 @@
     define('LANG_NEXT',                      'Далее');
     define('LANG_SKIP',                      'Пропустить');
     define('LANG_DONE',                      'Готово');
+    define('LANG_CHANGE',                    'Изменить');
 
     //NAVIGATION
     define('LANG_HOME',                      'Главная');

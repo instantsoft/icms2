@@ -566,32 +566,30 @@ icms.comments = (function ($) {
             score: score
         };
 
-        $.post(this.urls.rate, data);
-
         var rating_block = $('#comment_'+id+' .icms-comment-rating');
         var value_block = $('.value', rating_block);
         var rating = Number($(value_block).html());
 
         rating += score;
 
-        if (rating === 0){
-            value_block.html('');
-        } else {
+        var result_class = 'zero text-muted';
+        if (rating > 0){ result_class = 'positive text-success'; }
+        if (rating < 0){ result_class = 'negative text-danger'; }
+
+        $(rating_block).addClass('is-busy '+result_class);
+
+        $.post(this.urls.rate, data, function(result){
+
             value_block.html( rating > 0 ? '+'+rating : rating );
-        }
 
-        value_block.removeClass('positive text-success')
-                .removeClass('negative text-danger')
-                .removeClass('zero text-muted');
+            $('.icms-comment-rating_btn > *', rating_block).unwrap().wrap('<span class="rate-disabled" />');
+            $(rating_block).removeClass('is-busy '+result_class);
 
-        if (rating > 0){ value_block.addClass('positive text-success'); }
-        if (rating < 0){ value_block.addClass('negative text-danger'); }
-        if (rating === 0){ value_block.addClass('zero text-muted'); }
-
-        $('.icms-comment-rating_btn', rating_block).remove();
+            value_block.removeAttr('class');
+            value_block.addClass(result_class);
+        });
 
         return false;
-
     };
 
     this.error = function(message){

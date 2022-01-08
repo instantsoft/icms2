@@ -1102,70 +1102,75 @@ class content extends cmsFrontend {
 
         $level_offset   = 0;
         $last_header_id = false;
-        $items          = array('' => '');
+        $items          = ['' => ''];
 
         $ctype = $this->model->getContentTypeByName($ctype_name);
-        if(!$ctype){ return $items; }
+        if (!$ctype) { return $items; }
 
         $tree = $this->model->limit(0)->getCategoriesTree($ctype_name);
-        if(!$tree){ return $items; }
+        if (!$tree) { return $items; }
 
-        foreach($tree as $c){
+        foreach ($tree as $c) {
 
-            if(!empty($c['allow_add']) &&  !$this->cms_user->isInGroups($c['allow_add'])){
+            if (!empty($c['allow_add']) && !$this->cms_user->isInGroups($c['allow_add'])) {
                 continue;
             }
 
-            if ($ctype['options']['is_cats_only_last']){
+            if ($ctype['options']['is_cats_only_last']) {
 
-                $dash_pad = $c['ns_level']-1 >= 0 ? str_repeat('-', $c['ns_level']-1) . ' ' : '';
+                $dash_pad = $c['ns_level'] - 1 >= 0 ? str_repeat('-', $c['ns_level'] - 1) . ' ' : '';
 
-                if ($c['ns_right']-$c['ns_left'] == 1){
-                    if ($last_header_id !== false && $last_header_id != $c['parent_id']){
-                        $items['opt'.$c['id']] = array(str_repeat('-', $c['ns_level']-1).' '.$c['title']);
+                if ($c['ns_right'] - $c['ns_left'] == 1) {
+                    if ($last_header_id !== false && $last_header_id != $c['parent_id']) {
+                        $items['opt' . $c['id']] = [str_repeat('-', $c['ns_level'] - 1) . ' ' . $c['title']];
                     }
                     $items[$c['id']] = $dash_pad . $c['title'];
-                } else if ($c['parent_id']>0) {
-                    $items['opt'.$c['id']] = array($dash_pad.$c['title']);
+                } else if ($c['parent_id'] > 0) {
+                    $items['opt' . $c['id']] = [$dash_pad . $c['title']];
                     $last_header_id = $c['id'];
                 }
 
                 continue;
-
             }
 
-            if (!$ctype['options']['is_cats_only_last']){
+            if (!$ctype['options']['is_cats_only_last']) {
 
-                if ($c['parent_id']==0 && !$ctype['options']['is_cats_open_root']){ $level_offset = 1; continue; }
+                if ($c['parent_id'] == 0 && !$ctype['options']['is_cats_open_root']) {
+                    $level_offset = 1;
+                    continue;
+                }
 
-                $items[$c['id']] = str_repeat('-- ', $c['ns_level']-$level_offset).' '.$c['title'];
+                $items[$c['id']] = str_repeat('-- ', $c['ns_level'] - $level_offset) . ' ' . $c['title'];
 
                 continue;
-
             }
-
         }
 
         return $items;
-
     }
 
-    public function getPropsFields($props){
+    public function getPropsFields($props) {
 
-        $fields = array();
+        $fields = [];
 
         if (!is_array($props)) { return $fields; }
 
-        foreach($props as $prop) {
+        foreach ($props as $prop) {
 
-            $prop['rules'] = [];
+            $prop['rules']   = [];
             $prop['default'] = $prop['values'];
 
-            if (!empty($prop['options']['is_required'])) { $prop['rules'][] = [('required')]; }
-            if (!empty($prop['options']['is_filter_multi'])){ $prop['options']['filter_multiple'] = 1; }
-            if (!empty($prop['options']['is_filter_range'])){ $prop['options']['filter_range'] = 1; }
+            if (!empty($prop['options']['is_required'])) {
+                $prop['rules'][] = [('required')];
+            }
+            if (!empty($prop['options']['is_filter_multi'])) {
+                $prop['options']['filter_multiple'] = 1;
+            }
+            if (!empty($prop['options']['is_filter_range'])) {
+                $prop['options']['filter_range'] = 1;
+            }
 
-            switch($prop['type']){
+            switch ($prop['type']) {
                 case 'list_multiple':
                     $prop['type'] = 'listbitmask';
                     break;
@@ -1173,16 +1178,14 @@ class content extends cmsFrontend {
 
             $field_class = 'field' . string_to_camel('_', $prop['type']);
 
-            $field = new $field_class('props:'.$prop['id']);
+            $field = new $field_class('props:' . $prop['id']);
 
             $field->setOptions($prop);
 
             $fields[$prop['id']] = $field;
-
         }
 
         return $fields;
-
     }
 
     public function addFormPropsFields($form, $ctype, $item_cats, $is_submitted = false){

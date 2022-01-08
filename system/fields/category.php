@@ -6,6 +6,8 @@ class fieldCategory extends cmsFormField {
     public $is_virtual           = true;
     public $allow_index          = false;
     public $excluded_controllers = ['forms', 'users', 'groups'];
+    public $filter_type = 'int';
+    public $var_type = 'integer';
 
     private $link_options = null;
 
@@ -99,6 +101,41 @@ class fieldCategory extends cmsFormField {
         }
 
         return $html;
+    }
+
+    public function applyFilter($model, $value) {
+
+        if (empty($this->item['ctype_name'])) {
+            return $model;
+        }
+
+        return $model->filterCategory($this->item['ctype_name'], ['id' => $value]);
+    }
+
+    public function getFilterInput($value){
+
+        if (empty($this->item['ctype_name'])) {
+            return '';
+        }
+
+        if (!$this->show_filter_input_title) {
+            $this->title = false;
+        }
+
+        $this->data['items'] = ['' => ''];
+
+        $tree = cmsCore::getModel('content')->limit(0)->getCategoriesTree($this->item['ctype_name']) ?: [];
+
+        foreach ($tree as $c) {
+            $this->data['items'][$c['id']] = str_repeat('-- ', $c['ns_level']) . ' ' . $c['title'];
+        }
+
+        $this->data['dom_attr'] = ['id' => $this->id];
+
+        return cmsTemplate::getInstance()->renderFormField($this->class . '_filter', [
+            'field' => $this,
+            'value' => $value
+        ]);
     }
 
     public function getInput($value) {
