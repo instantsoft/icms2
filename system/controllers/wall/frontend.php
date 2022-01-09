@@ -15,6 +15,9 @@ class wall extends cmsFrontend {
 
         if ($show_id) {
 
+            $this->model->filterEqual('profile_id', $target['profile_id'])->
+                    filterEqual('profile_type', $target['profile_type']);
+
             $entry = $this->model->getEntry($show_id);
 
             if ($entry) {
