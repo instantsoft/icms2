@@ -1,13 +1,15 @@
 <?php if (!empty($fields['avatar']) || !empty($fields['nickname'])){ ?>
     <a class="icms-content__author-avatar" href="<?php echo href_to_profile($profile); ?>">
         <?php if (!empty($fields['nickname'])){ ?>
-            <span class="h3 border m-0 icms-content__author-avatar-nickname">
+            <span class="h3 border-right m-0 flex-shrink-0 icms-content__author-avatar-nickname">
                 <?php echo $profile['nickname']; ?>
             </span>
         <?php } ?>
         <?php if (!empty($fields['avatar'])){ ?>
             <?php if($profile['avatar']){ ?>
-                <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname']); ?>
+                <div>
+                    <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname']); ?>
+                </div>
             <?php } else { ?>
                 <span class="embed-responsive embed-responsive-4by3">
                     <?php echo html_avatar_image_empty($profile['nickname'], 'embed-responsive-item'); ?>
