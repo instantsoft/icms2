@@ -826,16 +826,20 @@ class cmsModel {
      * Фильтр по релевантности, используя fulltext search
      * В таблице должен быть полнотекстовый индекс на $field
      *
-     * @param string $field Имя ячейки таблицы
+     * @param string|array $field Имя ячейки таблицы или массив ячеек
      * @param string $value Значение, к которому нужно найти релевантные записи
      * @param string $lang Язык, используемый для стопслов
      * @return $this
      */
     public function filterRelated($field, $value, $lang = false) {
 
+        if(!is_array($field)){
+            $field = [$field];
+        }
+
         // Реально передали не более 3х символов
         if (mb_strlen($value) <= 3) {
-            return $this->filterLike($field, $value . '%');
+            return $this->filterLike($field[0], $value . '%');
         }
 
         $value = trim(strip_tags(mb_strtolower($value)));
@@ -844,7 +848,7 @@ class cmsModel {
         // После очистки осталось не более 3х символов
         // MySQL не умеет искать в полнотекстовогом индексе по 3м и менее символам
         if (mb_strlen($value) <= 3) {
-            return $this->filterLike($field, $value . '%');
+            return $this->filterLike($field[0], $value . '%');
         }
 
         $query = [];
@@ -889,14 +893,16 @@ class cmsModel {
             $query = array_slice($query, 0, 5);
 
             $ft_query = '>\"' . $this->db->escape($value) . '\" <(';
-            $ft_query .= '+' . implode(' +', $this->db->escape($query)) . ')';
+            $ft_query .= implode(' ', $this->db->escape($query)) . ')';
         }
 
-        if (strpos($field, '.') === false) {
-            $field = 'i.' . $field;
+        if (strpos($field[0], '.') === false) {
+            $match_fields_str = 'i.' . implode(', i.', $field);
+        } else {
+            $match_fields_str = implode(', ', $field);
         }
 
-        $search_param = "MATCH({$field}) AGAINST ('{$ft_query}' IN BOOLEAN MODE)";
+        $search_param = "MATCH({$match_fields_str}) AGAINST ('{$ft_query}' IN BOOLEAN MODE)";
 
         $this->select($search_param, 'fsort');
 

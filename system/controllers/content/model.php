@@ -1720,6 +1720,7 @@ class modelContent extends cmsModel {
 
         $this->select('cat.title', 'cat_title');
         $this->select('cat.slug', 'cat_slug');
+        $this->select('cat.id', 'category_id');
         $this->joinLeft($this->getContentCategoryTableName($ctype_name), 'cat', 'cat.id = i.category_id');
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
