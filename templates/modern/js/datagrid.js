@@ -16,30 +16,40 @@ icms.datagrid = (function ($) {
 
     this.bind_sortable = function(){
         $('.datagrid th.sortable').off('click').on('click', function(){
-			console.log('click');
             _this.clickHeader($(this).attr('rel'));
         });
     };
     this.bind_filter = function(){
-        $('.datagrid .filter .input, .datagrid .filter .date-input, .datagrid .filter select').off('input').on('input', function () {
-            $('.datagrid .filter .input, .datagrid .filter .date-input, .datagrid .filter select').each(function(){
-                var filter = $(this).attr('rel');
-                $('#datagrid_filter input[name="'+filter+'"]').val($(this).val());
-                if($(this).is('input')){
-                    if($(this).val()){
-                        $(this).parents('td:first').addClass('with_filter');
-                    }else{
-                        $(this).parents('td:first').removeClass('with_filter');
+        var filter = $('.datagrid .filter input, .datagrid .filter select');
+        $(filter).each(function(){
+            let field_event = $.inArray($(this).attr('type'), ['text', 'search']) !== -1 ? 'input' : 'change';
+            $(this).off(field_event).on(field_event, function () {
+                filter.each(function(){
+
+                    var filter = $(this).attr('rel');
+
+                    var value = $(this).val();
+                    if($(this).attr('type') === 'checkbox' && !$(this).is(":checked")){
+                        value = '';
                     }
-                }
+                    $('#datagrid_filter input[name="'+filter+'"]').val(value);
+
+                    if ($(this).is('input')) {
+                        if (value) {
+                            $(this).parents('td:first').addClass('with_filter');
+                        } else {
+                            $(this).parents('td:first').removeClass('with_filter');
+                        }
+                    }
+                });
+                _this.setPage(1);
+                _this.loadRows();
             });
-            _this.setPage(1);
-            _this.loadRows();
-        });
-        $('.datagrid .filter .date-input').each(function(){
-            icms.events.on('icms_datepicker_selected_'+$(this).attr('id'), function(inst){
-                $('#'+$(inst).attr('id')).trigger('input');
-            });
+            if($(this).hasClass('date-input')){
+                icms.events.on('icms_datepicker_selected_'+$(this).attr('id'), function(inst){
+                    $('#'+$(inst).attr('id')).trigger('input');
+                });
+            }
         });
     };
 

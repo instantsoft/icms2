@@ -2161,51 +2161,58 @@ class cmsModel {
      * таблицы со списком записей
      * @param array $grid
      * @param array $filter
-     * @return bool
+     * @return boolean
      */
-    public function applyGridFilter($grid, $filter){
+    public function applyGridFilter($grid, $filter) {
 
         // применяем сортировку
         if (!empty($filter['order_by'])) {
-            if (!empty($grid['columns'][$filter['order_by']]['order_by'])){
+            if (!empty($grid['columns'][$filter['order_by']]['order_by'])) {
                 $filter['order_by'] = $grid['columns'][$filter['order_by']]['order_by'];
             }
             $this->orderBy($filter['order_by'], $filter['order_to']);
         }
 
         // устанавливаем страницу
-        if (!empty($filter['page'])){
-            $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $this->perpage;
-            $this->limitPage((int)$filter['page'], $perpage);
+        if (!empty($filter['page'])) {
+            $perpage = !empty($filter['perpage']) ? (int) $filter['perpage'] : $this->perpage;
+            $this->limitPage((int) $filter['page'], $perpage);
         }
 
         //
         // проходим по каждой колонке таблицы
         // и проверяем не передан ли фильтр для нее
         //
-        foreach($grid['columns'] as $field => $column){
-            if (!empty($column['filter']) && $column['filter'] != 'none' && isset($filter[$field])){
+        foreach ($grid['columns'] as $field => $column) {
+            if (!empty($column['filter']) && $column['filter'] !== 'none' && isset($filter[$field])) {
 
-                if ($filter[$field] || (string)$filter[$field] === '0'){
+                if (!is_empty_value($filter[$field])) {
 
-                    if (!empty($column['filter_by'])){
+                    if (!empty($column['filter_by'])) {
                         $filter_field = $column['filter_by'];
                     } else {
                         $filter_field = $field;
                     }
 
-                    switch ($column['filter']){
-                        case 'in': $this->filterIn($filter_field, explode(',', $filter[$field])); break;
-                        case 'filled': ($filter[$field] ? $this->filterNotNull($filter_field) : $this->filterIsNull($filter_field)); break;
-                        case 'exact': $this->filterEqual($filter_field, $filter[$field]); break;
-                        case 'like': $this->filterLike($filter_field, "%{$filter[$field]}%"); break;
+                    switch ($column['filter']) {
+                        case 'nn': $this->filterNotNull($filter_field);
+                            break;
+                        case 'ni': $this->filterIsNull($filter_field);
+                            break;
+                        case 'in': $this->filterIn($filter_field, explode(',', $filter[$field]));
+                            break;
+                        case 'filled': ($filter[$field] ? $this->filterNotNull($filter_field) : $this->filterIsNull($filter_field));
+                            break;
+                        case 'exact': $this->filterEqual($filter_field, $filter[$field]);
+                            break;
+                        case 'like': $this->filterLike($filter_field, "%{$filter[$field]}%");
+                            break;
                         case 'date':
-							$date = date('Y-m-d', strtotime($filter[$field]));
-							$this->filterLike($filter_field, "%{$date}%"); break;
+                            $date = date('Y-m-d', strtotime($filter[$field]));
+                            $this->filterLike($filter_field, "%{$date}%");
+                            break;
                     }
-
                 }
-
             }
         }
 

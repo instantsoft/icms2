@@ -296,25 +296,25 @@ class modelUsers extends cmsModel {
         return $this->filterEqual('user_id', $user_id)->deleteFiltered('{users}_auth_tokens');
     }
 
-    public function getUserAuthTokens($user_id){
-        return $this->filterEqual('user_id', $user_id)->get('{users}_auth_tokens', function ($item, $model){
-            $item['ip'] = string_bintoip($item['ip']);
-            $item['date_log'] = $item['date_log'] ? $item['date_log'] : $item['date_auth'];
+    public function getUserAuthTokens($user_id) {
+
+        return $this->filterEqual('user_id', $user_id)->get('{users}_auth_tokens', function ($item, $model) {
+
+            $item['ip']          = string_bintoip($item['ip']);
+            $item['ip_location'] = string_ip_to_location($item['ip']);
+            $item['date_log']    = $item['date_log'] ? $item['date_log'] : $item['date_auth'];
             $item['access_type'] = cmsModel::yamlToArray($item['access_type']);
+
             return $item;
         });
     }
 
-    public function getUserByPassToken($pass_token){
-
+    public function getUserByPassToken($pass_token) {
         return $this->filterEqual('pass_token', $pass_token)->getUser();
-
     }
 
-    public function clearUserPassToken($id){
-
+    public function clearUserPassToken($id) {
         return $this->updateUserPassToken($id, null);
-
     }
 
     public function updateUserPassToken($id, $pass_token = null){

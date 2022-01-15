@@ -146,10 +146,19 @@ class actionUsersProfile extends cmsAction {
         }
 
         if($this->cms_user->is_admin && $profile['ip']){
+
+            $text_ip = $profile['ip'];
+
+            $location = string_ip_to_location($profile['ip']);
+
+            if($location){
+                $text_ip .= ' ('. $location .')';
+            }
+
             $fields['ip'] = [
                 'title' => LANG_USERS_PROFILE_LAST_IP,
                 'href'  => href_to('users').'?ip='.$profile['ip'],
-                'text'  => $profile['ip']
+                'text'  => $text_ip
             ];
         }
 

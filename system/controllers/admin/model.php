@@ -54,38 +54,39 @@ class modelAdmin extends cmsModel{
 
     public function getInstalledAddonsIds() {
 
-        $controllers_addons = (array)$this->selectOnly('addon_id')->
-                filterNotNull('addon_id')->
-                get('controllers', function($item, $model){ return $item['addon_id']; }, false);
+        $controllers_addons = $this->selectOnly('addon_id')->
+            filterNotNull('addon_id')->
+            get('controllers', function ($item, $model) {
+                return $item['addon_id'];
+            }, false) ?: [];
 
-        $widgets_addons = (array)$this->selectOnly('addon_id')->
-                filterNotNull('addon_id')->
-                get('widgets', function($item, $model){ return $item['addon_id']; }, false);
+        $widgets_addons = $this->selectOnly('addon_id')->
+            filterNotNull('addon_id')->
+            get('widgets', function ($item, $model) {
+                return $item['addon_id'];
+            }, false) ?: [];
 
         return array_filter(array_merge($widgets_addons, $controllers_addons));
-
     }
 
 //============================================================================//
 //============================    События    =================================//
 //============================================================================//
 
-    public function getEvents(){
+    public function getEvents() {
 
         $this->limit = false;
 
         return $this->get('events');
-
     }
 
-    public function reorderEvents($ids_list){
+    public function reorderEvents($ids_list) {
 
         $this->reorderByList('events', $ids_list);
 
         cmsCache::getInstance()->clean('events');
 
         return true;
-
     }
 
     public function addEvent($listener, $event) {
@@ -99,7 +100,6 @@ class modelAdmin extends cmsModel{
         cmsCache::getInstance()->clean('events');
 
         return $id;
-
     }
 
     public function deleteEvent($listener, $event) {
@@ -111,7 +111,6 @@ class modelAdmin extends cmsModel{
         cmsCache::getInstance()->clean('events');
 
         return true;
-
     }
 
 //============================================================================//

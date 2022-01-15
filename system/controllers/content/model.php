@@ -1597,7 +1597,7 @@ class modelContent extends cmsModel {
         $fields = $this->getContentFields($ctype_name, $id);
 
         foreach ($fields as $field) {
-            $field['handler']->setItem($item)->delete($item[$field['name']]);
+            $field['handler']->setItem($item)->delete(isset($item[$field['name']]) ? $item[$field['name']] : null);
         }
 
         cmsCache::getInstance()->clean('content.list.' . $ctype_name);

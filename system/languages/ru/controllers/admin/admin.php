@@ -563,7 +563,7 @@
     define('LANG_CP_SETTINGS_DISABLE_METAKEYS', 'Отключить тег meta keywords');
 	define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Использовать указанные выше слова и описание только для главной страницы');
 	define('LANG_CP_SETTINGS_META_NO_DEFAULT_HINT',  'Если выключено, эти слова будут отображаться на страницах с не заданными подобными параметрами');
-	define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Добавлять номера страниц в тег title при пагинации');
+	define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Добавлять номера страниц в тег title и meta description при пагинации');
 	define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Добавлять в тег title страницы название сайта');
 	define('LANG_CP_SETTINGS_SET_HEAD_PRELOAD',  'Формировать заголовки HTTP Preload');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');

@@ -181,6 +181,7 @@
     define('LANG_SESS_APP',  'Приложение');
     define('LANG_SESS_NOT_FOUND',  'Нет активных сохранённых сеансов.');
     define('LANG_SESS_DROP',  'завершить');
+    define('LANG_SESS_DROP_CONFIRM',  'Завершить этот сеанс?');
     define('LANG_SESS_IP',  'IP-адрес');
     define('LANG_SESS_LAST_DATE',  'Последняя активность');
     define('LANG_SESS_TYPE',  'Тип доступа');

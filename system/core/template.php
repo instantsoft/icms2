@@ -333,7 +333,16 @@ class cmsTemplate {
                 echo '<meta name="keywords" content="' . html((!empty($this->metakeys_item) ? string_replace_keys_values_extended($this->metakeys, $this->metakeys_item) : $this->metakeys), false) . '">' . "\n\t\t";
             }
             if (!empty($this->metadesc)) {
-                echo '<meta name="description" content="' . html((!empty($this->metadesc_item) ? string_replace_keys_values_extended($this->metadesc, $this->metadesc_item) : $this->metadesc), false) . '">' . "\n\t\t";
+
+                $num_postfix = '';
+                if (!empty($this->site_config->page_num_in_title)) {
+                    $page = cmsCore::getInstance()->request->get('page', 0);
+                    if ($page > 1) {
+                        $num_postfix = ' ' . LANG_PAGE . ' №' . $page;
+                    }
+                }
+
+                echo '<meta name="description" content="' . html((!empty($this->metadesc_item) ? string_replace_keys_values_extended($this->metadesc, $this->metadesc_item) : $this->metadesc), false) . $num_postfix . '">' . "\n\t\t";
             }
         }
 

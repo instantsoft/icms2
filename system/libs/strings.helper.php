@@ -997,6 +997,41 @@ function string_bintoip($str) {
 }
 
 /**
+ * Определяет локацию по ip адресу
+ *
+ * @param string $ip
+ * @param boolean $return_array
+ * @return string|array
+ */
+function string_ip_to_location($ip, $return_array = false) {
+
+    // Старая база
+    // Теоретически можно подключить https://github.com/maxmind/GeoIP2-php
+    if(function_exists('geoip_record_by_name')){
+
+        $location  = [];
+
+        $data = geoip_record_by_name($ip);
+
+        if($return_array && !empty($data['country_code'])){
+            $location['code'] = $data['country_code'];
+        }
+
+        if(!empty($data['country_name'])){
+            $location['country'] = $data['country_name'];
+        }
+
+        if(!empty($data['city'])){
+            $location['city'] = $data['city'];
+        }
+
+        return $return_array ? $location : implode(', ', $location);
+    }
+
+    return $return_array ? [] : '';
+}
+
+/**
  * Получает из HTML текста относительные пути
  * из тегов <img>
  *
