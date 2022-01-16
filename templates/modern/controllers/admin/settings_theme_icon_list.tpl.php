@@ -18,7 +18,7 @@
 <?php return; } ?>
 <?php
 $active_tab = false;
-$this->addMainTplJSName(['vendors/list.min']);
+$this->addTplJSNameFromContext(['vendors/list.min']);
 ?>
 <ul class="nav nav-tabs">
     <?php foreach($icon_list as $tab_name => $list) { ?>

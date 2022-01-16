@@ -1,0 +1,161 @@
+.is_collapse > .field, .is_collapse > .field_tabbed, .hide_field {
+    display: none !important;
+}
+.is_collapsed {
+    transition: $transition-base;
+    > legend:before {
+        content: '+';
+        display: inline-block;
+        margin: 0 $spacer 0 $spacer;
+    }
+    &.do_expand {
+        > legend {
+            cursor: pointer;
+            &:before {
+                content: '';
+                display: none;
+            }
+        }
+    }
+}
+.is_collapse {
+    padding: 0 !important;
+    margin: 0 !important;
+    position: relative;
+    background: $light;
+    height: $spacer*2.4;
+    box-sizing: border-box;
+    line-height: $line-height-base*1.35;
+    cursor: pointer;
+    > legend {
+        padding: 0 !important;
+        margin: 0 !important;
+        position: absolute;
+        top: 0;
+        width: 100% !important;
+        box-sizing: border-box;
+        display: block;
+        left: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+.ft_rmfield {
+    > label {
+        display: block;
+    }
+}
+.icms-form__symbols_count_wrap {
+    > input {
+        padding-right: $input-padding-x*4;
+    }
+    .symbols_count {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: $input-height;
+        padding: $input-padding-y $input-padding-x;
+        @include font-size($input-font-size);
+        color: $gray-600;
+        line-height: $input-line-height;
+        border: $input-border-width solid transparent;
+        .overflowing, .overflowing_min {
+            color: $danger;
+        }
+    }
+}
+.input-group > .icms-form__symbols_count_wrap {
+    &:not(:first-child) > .form-control {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    &:not(:last-child) > .form-control {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    flex: 1 1 auto;
+    width: 1%;
+    margin-bottom: 0;
+}
+.icms-form__password-field {
+    $blockName: &;
+    > input {
+        padding-right: $input-padding-x*4;
+
+    }
+    &:focus-within {
+        #{$blockName}-icon {
+            opacity: 1;
+        }
+    }
+    &-icon {
+        opacity: .1;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0 $input-padding-x 0 0;
+        font-size: 160%;
+        color: $gray-600;
+        line-height: $input-line-height;
+        border: $input-border-width solid transparent;
+        cursor: pointer;
+        transition: $transition-base;
+        &:hover {
+            color: $gray-800;
+        }
+        &.active {
+            color: $danger;
+        }
+    }
+}
+input.loading {
+    padding-left: calc(#{$input-padding-x*2} + 16px);
+    background-position: $input-padding-x center;
+    &.form-control-sm {
+        padding-left: calc(#{$input-padding-x-sm*2} + 16px);
+        background-position: $input-padding-x-sm center;
+    }
+}
+button.loading {
+    background-position: center center;
+}
+/** tinymce iframe */
+.mce-content-body {
+    margin: $spacer;
+}
+form .without-tabs fieldset {
+    padding: $spacer $spacer 0 $spacer;
+    border-radius: $card-border-radius;
+    border: solid 1px $card-border-color;
+    margin-bottom: $spacer;
+    legend {
+        font-size: $h5-font-size;
+        width: auto;
+        padding: 0 $spacer*0.75;
+        margin: 0 0 -($spacer*0.5) 0;
+    }
+}
+.pattern_fields {
+    display: inline-block;
+    margin-bottom: -$spacer*.25;
+    &_panel {
+        display: none;
+    }
+    > a {
+        line-height: 1;
+        text-decoration: none;
+        display: inline-block;
+        white-space: nowrap;
+        vertical-align: baseline;
+        padding: $badge-padding-y $badge-padding-x;
+        @include border-radius($badge-border-radius);
+        @include transition($badge-transition);
+        background-color: $info;
+        color: $white;
+        margin: 0 0 $spacer*.25 0;
+        &:hover {
+            background-color: darken($info, 10%);
+        }
+    }
+}

@@ -188,6 +188,7 @@ icms.datagrid = (function ($) {
         $(document).on('click', '.grid_field_value', function(event){
             if (event.target.nodeName === 'A') { return true; }
             var table = $(this).closest('table');
+            var table_responsive = $(table).closest('.table-responsive');
             var current_tr = $(this).closest('tr');
             $(table).find('tr').not(current_tr).removeClass('current-edit-line');
             $(current_tr).addClass('current-edit-line');
@@ -197,14 +198,16 @@ icms.datagrid = (function ($) {
             if($('.inline_submit', grid_field_edit).length === 0){
                 $(grid_field_edit).append($(current_tr).find('.inline_submit').last().clone(true));
             }
+            table_responsive.css('overflow-x', 'visible');
             var hide_func = function (){
                 $(document).one('click', function(event) {
                     if ($(event.target).closest(grid_field_edit).length > 0) { hide_func(); return; }
                     $(grid_field_edit).hide();
                     if (!$(event.target).hasClass('grid_field_value')) {
+                        table_responsive.css('overflow-x', '');
                         setTimeout(function (){
                             $(current_tr).removeClass('current-edit-line');
-                        }, 500);
+                        }, 200);
                     }
                 });
             };

@@ -68,7 +68,7 @@
             </li>
             <?php if (!$config->is_site_on){ ?>
                 <li class="nav-item px-3" id="site_off_notice">
-                    <span class="btn btn-danger text-white">
+                    <span class="btn btn-warning">
                         <?php html_svg_icon('solid', 'exclamation-triangle'); ?>
                         <?php printf(ERR_SITE_OFFLINE_FULL, href_to('admin', 'settings', 'siteon')); ?>
                     </span>

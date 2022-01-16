@@ -43,27 +43,6 @@ icms.admin = (function ($) {
             new PerfectScrollbar('#'+$(this).attr('id'));
         });
 
-        $('body').on('focus', '.field.ft_string input, .field.ft_text textarea', function (){
-            $('.pattern_fields_panel').hide();
-            $('.pattern_fields_panel_hint').show();
-            $(this).closest('.field').find('.pattern_fields_panel_hint').hide();
-            $(this).closest('.field').find('.pattern_fields_panel').show();
-        });
-        $('body').on('click', '.pattern_fields > ', function (){
-            var spacer = $(this).closest('.hint').data('spacer') || false;
-            var spacer_stop = $(this).closest('.hint').data('spacer_stop') || false;
-            var id = $(this).closest('.icms-forms-pattern__fields').data('for_id');
-            if (typeof(icms.forms.wysiwygs_insert_pool.add[id]) === 'function') {
-                icms.forms.wysiwygs_insert_pool.add[id](id, $(this).text()); return false;
-            }
-            return addTextToPosition($('#'+id), $(this).text(), spacer, spacer_stop);
-        });
-
-        $('.auto_copy_value').on('click', function (){
-            $(this).closest('.input-prefix-suffix').find('input').val($(this).data('value'));
-            return false;
-        });
-
         $('.sidebar-minimizer').on('click', function (){
             var current = $(this).data('current_state');
             if(current == 1){
