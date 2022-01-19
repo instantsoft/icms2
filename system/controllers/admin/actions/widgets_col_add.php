@@ -17,30 +17,27 @@ class actionAdminWidgetsColAdd extends cmsAction {
 
             if (!$errors){
 
-                $this->model_backend_widgets->addLayoutCol($col);
+                $col['id'] = $this->model_backend_widgets->addLayoutCol($col);
 
-                return $this->cms_template->renderJSON(array(
+                return $this->cms_template->renderJSON([
                     'errors' => false,
-                    'redirect_uri' => href_to('admin', 'widgets').'?template_name='.$row['template']
-                ));
-
+                    'redirect_uri' => href_to('admin', 'widgets').'?template_name='.$row['template'].'&scroll_to=col-'.$col['id']
+                ]);
             }
 
             if ($errors){
-                return $this->cms_template->renderJSON(array(
+                return $this->cms_template->renderJSON([
                     'errors' => $errors
-                ));
+                ]);
             }
-
         }
 
-        return $this->cms_template->render('widgets_rows', array(
+        return $this->cms_template->render('widgets_rows', [
             'action' => href_to('admin', 'widgets', ['col_add', $row['id']]),
             'data'   => ['row_id' => $row['id']],
             'form'   => $form,
             'errors' => false
-        ));
-
+        ]);
     }
 
 }

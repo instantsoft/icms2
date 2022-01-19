@@ -101,7 +101,7 @@
                 </small>
             <?php } ?>
             <?php if ($is_controls){ ?>
-                <a data-toggle="tooltip" data-placement="top" href="#comment_<?php echo $entry['id']; ?>" class="text-dark ml-2 mr-4" name="comment_<?php echo $entry['id']; ?>" title="<?php html( LANG_COMMENT_ANCHOR ); ?>">#</a>
+                <a data-toggle="tooltip" data-placement="top" href="#comment_<?php echo $entry['id']; ?>" class="text-dark ml-2 mr-4" title="<?php html( LANG_COMMENT_ANCHOR ); ?>">#</a>
             <?php } ?>
         </h6>
 

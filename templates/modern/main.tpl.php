@@ -14,7 +14,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
         <meta name="generator" content="InstantCMS" />
-        <meta http-equiv="x-dns-prefetch-control" content="on">
 <?php
         $this->addMainTplCSSName(['theme']);
         if(!empty($this->options['font_type']) && $this->options['font_type'] === 'gfont') {

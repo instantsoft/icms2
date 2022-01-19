@@ -359,6 +359,7 @@ class cmsTemplate {
         }
 
         if (!empty($this->site_config->set_head_preload) && $this->head_preload) {
+            header('X-DNS-Prefetch-Control: on');
             header('Link: ' . implode(', ', $this->head_preload));
         }
 

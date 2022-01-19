@@ -222,7 +222,7 @@ function html_avatar_image_empty($title, $class = ''){
 
     $iparams = get_image_block_param_by_title($title);
 
-    return '<div class="icms-profile-avatar__default '.$class.'" style="'.$iparams['style'].'"><svg fill="currentColor" viewBox="0 0 28 21"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle">'.mb_strtoupper(htmlspecialchars(mb_substr($title, 0, 1))).'</text></svg></div>';
+    return '<span class="icms-profile-avatar__default '.$class.'" style="'.$iparams['style'].'"><svg fill="currentColor" viewBox="0 0 28 21"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle">'.mb_strtoupper(htmlspecialchars(mb_substr($title, 0, 1))).'</text></svg></span>';
 }
 
 function get_image_block_param_by_title($title) {
@@ -365,7 +365,7 @@ function html_select($name, $items, $selected = '', $attributes = array()){
                 $sel = ((string) $selected === (string) $value) ? 'selected' : '';
             }
 
-            $html .= "\t".'<option value="'.htmlspecialchars($value).'" '.$sel.'>'.htmlspecialchars($title).'</option>'."\n";
+            $html .= "\t".'<option'.(!$title ? ' label="'.LANG_ALL.'"' : '').' value="'.htmlspecialchars($value).'" '.$sel.'>'.htmlspecialchars($title).'</option>'."\n";
 
         }
     }

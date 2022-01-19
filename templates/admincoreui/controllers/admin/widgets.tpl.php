@@ -3,7 +3,7 @@
     $this->addTplJSName([
         'datatree',
         'admin-widgets',
-        'vendors/filesaver.min',
+        'vendors/filesaver.min'
     ]);
     $this->addTplCSSName('datatree');
 
@@ -242,5 +242,16 @@
     <?php echo $this->getLangJS('LANG_CP_WIDGET_COPY_CONFIRM', 'LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_CP_WIDGET_REMOVE_CONFIRM', 'LANG_CP_PACKAGE_CONTENTS', 'LANG_HIDE', 'LANG_SHOW'); ?>
     $(function(){
         icms.admin.introJsInit({page: 'widgets', steps: <?php echo json_encode($intro_lang); ?>});
+        <?php if($scroll_to) { ?>
+            $(function(){
+                var el = $("#<?php html($scroll_to); ?>").addClass('shadow');
+                $('html, body').animate({
+                    scrollTop: el.offset().top + 150
+                }, 500);
+                setTimeout(function (){
+                    el.removeClass('shadow');
+                }, 5000);
+            });
+        <?php } ?>
     });
 </script>

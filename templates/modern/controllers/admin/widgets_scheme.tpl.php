@@ -2,7 +2,7 @@
 <p class="alert alert-warning mt-4" role="alert"><?php echo LANG_CP_WIDGETS_ROW_NONE; ?></p>
 <?php } ?>
 <?php foreach ($rows as $row) { ?>
-<div class="row no-gutters widgets-layout-scheme align-items-center<?php if($row['parent_id']){ ?> disable-sortable<?php } ?>" data-id="<?php echo $row['id']; ?>">
+<div class="row no-gutters widgets-layout-scheme align-items-center<?php if($row['parent_id']){ ?> disable-sortable<?php } ?>" id="row-<?php echo $row['id']; ?>" data-id="<?php echo $row['id']; ?>">
     <div class="layout-row-title <?php if(!$row['parent_id'] ){ ?>layout-row-parent<?php } ?> col-sm-12 <?php if(!$row['parent_id'] && $rows_titles_pos == 'left'){ ?> col-lg-2<?php } ?> filled p-2 <?php if($rows_titles_pos == 'hide'){ ?>d-none<?php } else { ?>d-flex<?php } ?> justify-content-between">
         {cell:<?php echo $row['title']; ?>}
         <div class="layout-scheme-actions align-items-center">
@@ -45,7 +45,7 @@
                 $col_class = $value;
             }
             ?>
-            <div class="<?php echo $col_class; ?> p-1 bg-white widgets-layout-scheme-col" data-id="<?php echo $col['id']; ?>">
+            <div class="<?php echo $col_class; ?> p-1 bg-white widgets-layout-scheme-col" id="col-<?php echo $col['id']; ?>" data-id="<?php echo $col['id']; ?>">
                 <?php if(!empty($col['rows']['before'])){ ?>
                     <?php $this->renderChild('widgets_scheme', ['rows' => $col['rows']['before'], 'rows_titles_pos' => $rows_titles_pos]); ?>
                 <?php } ?>

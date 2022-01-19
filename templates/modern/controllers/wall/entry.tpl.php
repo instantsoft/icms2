@@ -39,7 +39,7 @@
                     </span>
                 <?php } ?>
             </small>
-            <a data-toggle="tooltip" data-placement="top" href="?wid=<?php echo $entry['id']; ?>" class="text-dark ml-2 mr-4" name="wall_<?php echo $entry['id']; ?>" title="<?php html(LANG_WALL_ENTRY_ANCHOR); ?>">#</a>
+            <a data-toggle="tooltip" data-placement="top" href="?wid=<?php echo $entry['id']; ?>" class="text-dark ml-2 mr-4" title="<?php html(LANG_WALL_ENTRY_ANCHOR); ?>">#</a>
         </h6>
         <div class="icms-wall-html">
             <?php echo $entry['content_html']; ?>
