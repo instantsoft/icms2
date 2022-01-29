@@ -107,12 +107,14 @@ class actionUsersProfile extends cmsAction {
 
     private function getSystemFields($profile) {
 
-        $fields = ['date_reg' =>
-            [
-                'title' => LANG_USERS_PROFILE_REGDATE,
-                'text'  => string_date_age_max($profile['date_reg'], true)
-            ]
-        ];
+        if (!empty($this->options['show_reg_data'])){
+            $fields = ['date_reg' =>
+                [
+                    'title' => LANG_USERS_PROFILE_REGDATE,
+                    'text'  => string_date_age_max($profile['date_reg'], true)
+                ]
+            ];
+        }
 
         if (!empty($this->options['show_user_groups'])){
 

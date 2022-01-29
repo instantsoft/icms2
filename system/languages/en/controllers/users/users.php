@@ -40,6 +40,7 @@
     define('LANG_USERS_OPT_MAX_TABS_HINT',  'Other tabs will be hidden under the «More...» item<br>0 — unlimited number');
     define('LANG_USERS_OPT_AUTH_ONLY',      'Allow to view profiles only to authorized users');
     define('LANG_USERS_OPT_SHOW_USER_GROUPS', 'Show groups the user belongs to');
+    define('LANG_USERS_OPT_SHOW_REG_DATA',    'Show user registration date');
     define('LANG_USERS_OPT_RESTRICTED_SLUGS', 'Restricted profile adresses');
     define('LANG_USERS_OPT_RESTRICTED_SLUGS_HINT', 'One address per line, you can use * as a wildcard');
     define('LANG_USERS_OPT_RESTRICTED_SLUG', 'Profile adress <b>%s</b> is forbidden');
