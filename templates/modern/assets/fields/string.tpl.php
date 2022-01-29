@@ -3,10 +3,10 @@
 $in_filter_as = $field->getOption('in_filter_as');
 if($field->context === 'filter' && $in_filter_as && $in_filter_as !== 'input'){ ?>
 
-    <?php if($in_filter_as === 'select'){ ?>
-        <?php echo html_select($field->element_name, $field->data['items'], $value, array('id'=>$field->id)); ?>
-    <?php }elseif($in_filter_as === 'checkbox'){ ?>
-        <?php echo html_checkbox($field->element_name, !empty($value), 1, array('id'=>$field->id)); ?>
+    <?php if($in_filter_as === 'select') { ?>
+        <?php echo html_select($field->element_name, $field->data['items'], $value, ['id'=>$field->id]); ?>
+    <?php } elseif($in_filter_as === 'checkbox') { ?>
+        <?php echo html_checkbox($field->element_name, !empty($value), 1, ['id'=>$field->id]); ?>
     <?php } ?>
 
 <?php } else { ?>
@@ -52,6 +52,24 @@ if($field->context === 'filter' && $in_filter_as && $in_filter_as !== 'input'){ 
             ob_start(); ?>
         <script>
             initAutocomplete('<?php echo $field->id; ?>', <?php echo (!empty($field->data['autocomplete']['multiple']) ? 'true' : 'false') ?>, '<?php echo $field->data['autocomplete']['url']; ?>', <?php echo (!empty($field->data['autocomplete']['data']) ? json_encode($field->data['autocomplete']['data']) : 'false') ?>, '<?php echo $field->data['autocomplete']['multiple_separator'] ?>');
+        </script>
+        <?php $this->addBottom(ob_get_clean()); ?>
+    <?php } ?>
+    <?php if($field->data['type'] === 'password'){
+            ob_start(); ?>
+        <script>
+            $(function(){
+                $('#<?php echo $field->id; ?>').wrap("<div class='icms-form__password-field position-relative'></div>");
+                $('#f_<?php echo $field->id; ?> .icms-form__password-field').append('<a tabindex="1" href="#" class="icms-form__password-field-icon"><?php html_svg_icon('solid', 'eye'); ?></a>');
+                let password_field_icon = $('#f_<?php echo $field->id; ?> .icms-form__password-field-icon');
+                $(password_field_icon).on('click', function (){
+                    $(this).toggleClass('active');
+                    let input = $(this).closest('.icms-form__password-field').find('input');
+                    let curtype = input.attr('type');
+                    input.attr('type', curtype === 'text' ? 'password' : 'text');
+                    return false;
+                });
+            });
         </script>
         <?php $this->addBottom(ob_get_clean()); ?>
     <?php } ?>

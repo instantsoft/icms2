@@ -64,6 +64,7 @@ font_string: >
   Color Emoji"
 gfont: Roboto
 pagination_template: pagination
+js_print_head: null
 logo: null
 logo_svg: null
 logo_small: null

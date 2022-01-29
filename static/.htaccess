@@ -1,7 +1,9 @@
-<IfModule php7_module>
-php_flag engine 0
+# PHP 7
+<IfModule mod_php7.c>
+    php_flag engine 0
 </IfModule>
- 
-<IfModule php8_module>
-php_flag engine 0
+
+# PHP 8
+<IfModule mod_php.c>
+    php_flag engine 0
 </IfModule>

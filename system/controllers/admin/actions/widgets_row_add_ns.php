@@ -27,30 +27,27 @@ class actionAdminWidgetsRowAddNs extends cmsAction {
                 // Для заполнения дефолтными настройками
                 $default_col = $this->getSchemeColForm('add', $row)->parse(new cmsRequest([]), false);
 
-                $this->model_backend_widgets->addLayoutRow($_row, $default_col);
+                $_row['id'] = $this->model_backend_widgets->addLayoutRow($_row, $default_col);
 
-                return $this->cms_template->renderJSON(array(
+                return $this->cms_template->renderJSON([
                     'errors' => false,
-                    'redirect_uri' => href_to('admin', 'widgets').'?template_name='.$row['template']
-                ));
-
+                    'redirect_uri' => href_to('admin', 'widgets').'?template_name='.$row['template'].'&scroll_to=row-'.$_row['id']
+                ]);
             }
 
             if ($errors){
-                return $this->cms_template->renderJSON(array(
+                return $this->cms_template->renderJSON([
                     'errors' => $errors
-                ));
+                ]);
             }
-
         }
 
-        return $this->cms_template->render('widgets_rows', array(
+        return $this->cms_template->render('widgets_rows', [
             'action' => href_to('admin', 'widgets', ['row_add_ns', $col['id']]),
             'data'   => $row_data,
             'form'   => $form,
             'errors' => false
-        ));
-
+        ]);
     }
 
 }

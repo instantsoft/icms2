@@ -51,6 +51,17 @@ class actionAdminSettingsTheme extends cmsAction {
                         $renderer->cms_template = $template;
 
                         $renderer->render($template_name, $options);
+
+                        // Если задан абстрактный счётчик, увеличиваем на единицу
+                        // Если он не задан, то вероятно администратор сайта это сделал
+                        // осознано для самостоятельной отладки
+                        if ($this->cms_config->production_time > 0) {
+
+                            $values = $this->cms_config->getConfig();
+                            $values['production_time'] += 1;
+
+                            $this->cms_config->save($values);
+                        }
                     }
                 }
 

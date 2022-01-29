@@ -108,9 +108,9 @@ class fieldParent extends cmsFormField {
             return $this->parseTeaser($value);
         }
 
-		if (!$this->parent_ctype_name) { return false; }
+		if (!$this->parent_ctype_name) { return ''; }
 
-		if (empty($this->item['id'])) { return false; }
+		if (empty($this->item['id'])) { return ''; }
 
         $controller = cmsCore::getController('content', $this->request);
 
@@ -129,7 +129,7 @@ class fieldParent extends cmsFormField {
 			}
 		}
 
-		if (!$parent_ctype) { return false; }
+		if (!$parent_ctype) { return ''; }
 
 		if (!$child_ctype) {
             if (cmsController::enabled($this->item['ctype_name'])){
@@ -139,7 +139,7 @@ class fieldParent extends cmsFormField {
                     'id'         => null
                 );
             } else {
-                return false;
+                return '';
             }
         } else {
             $child_ctype['controller'] = 'content';

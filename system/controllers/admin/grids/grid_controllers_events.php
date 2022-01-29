@@ -32,8 +32,9 @@ function grid_controllers_events ($controller){
             'filter_select' => array(
                 'items' => function($name){
                     $admin_model = cmsCore::getModel('admin');
-                    $controllers = $admin_model->getInstalledControllers();
-                    $items = array('' => '');
+                    $admin_model->join('events', 'e', 'e.listener = i.name');
+                    $controllers = $admin_model->groupBy('i.id')->getInstalledControllers();
+                    $items = ['' => ''];
                     foreach($controllers as $controller){
                         $items[$controller['name']] = $controller['title'];
                     }

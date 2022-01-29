@@ -391,7 +391,7 @@
     define('ERR_PAGE_NOT_FOUND', 		 	 'Страница не найдена');
     define('ERR_FORBIDDEN', 		 	     'Доступ запрещён');
     define('ERR_SITE_OFFLINE',               'Сайт отключен');
-    define('ERR_SITE_OFFLINE_FULL',          'Сайт отключен. <a class="stretched-link" href="%s">Включить</a>');
+    define('ERR_SITE_OFFLINE_FULL',          'Сайт отключен. <a class="stretched-link text-dark" href="%s">Включить</a>');
     define('ERR_SEARCH_TITLE',               'Поиск');
     define('ERR_SEARCH_QUERY_INPUT',         'Что ищем?');
     define('ERR_USER_NOT_FOUND',             'Такого пользователя не существует');
@@ -549,6 +549,7 @@
     define('LANG_NEXT',                      'Далее');
     define('LANG_SKIP',                      'Пропустить');
     define('LANG_DONE',                      'Готово');
+    define('LANG_CHANGE',                    'Изменить');
 
     //NAVIGATION
     define('LANG_HOME',                      'Главная');
@@ -632,6 +633,8 @@
     define('LANG_SEO_DESC_HINT',             'Краткое описание страницы для поисковых систем');
     define('LANG_TAGS',                      'Теги');
     define('LANG_TAGS_HINT',                 'Ключевые слова, через запятую');
+    define('LANG_SEO_META_HINT_PANEL',       'Кликните на поле, чтобы увидеть доступные выражения.');
+    define('LANG_SEO_META_HINT_PATTERN',     'Доступные выражения: <b class="pattern_fields">%s</b> ');
 
     //FILES
     define('LANG_B',               'байт');

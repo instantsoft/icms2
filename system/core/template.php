@@ -333,7 +333,16 @@ class cmsTemplate {
                 echo '<meta name="keywords" content="' . html((!empty($this->metakeys_item) ? string_replace_keys_values_extended($this->metakeys, $this->metakeys_item) : $this->metakeys), false) . '">' . "\n\t\t";
             }
             if (!empty($this->metadesc)) {
-                echo '<meta name="description" content="' . html((!empty($this->metadesc_item) ? string_replace_keys_values_extended($this->metadesc, $this->metadesc_item) : $this->metadesc), false) . '">' . "\n\t\t";
+
+                $num_postfix = '';
+                if (!empty($this->site_config->page_num_in_title)) {
+                    $page = cmsCore::getInstance()->request->get('page', 0);
+                    if ($page > 1) {
+                        $num_postfix = ' ' . LANG_PAGE . ' №' . $page;
+                    }
+                }
+
+                echo '<meta name="description" content="' . html((!empty($this->metadesc_item) ? string_replace_keys_values_extended($this->metadesc, $this->metadesc_item) : $this->metadesc), false) . $num_postfix . '">' . "\n\t\t";
             }
         }
 
@@ -350,6 +359,7 @@ class cmsTemplate {
         }
 
         if (!empty($this->site_config->set_head_preload) && $this->head_preload) {
+            header('X-DNS-Prefetch-Control: on');
             header('Link: ' . implode(', ', $this->head_preload));
         }
 
@@ -2901,36 +2911,46 @@ class cmsTemplate {
      * @param mixed $request Объект запроса
      * @return string
      */
-    public function renderContentList($ctype, $data = array(), $request = false){
+    public function renderContentList($ctype, $data = [], $request = false) {
 
-        $tpl_file = $this->getTemplateFileName('content/'.$ctype['name'].'_list', true);
+        $tpl_file = $this->getTemplateFileName('content/' . $ctype['name'] . '_list', true);
 
-        if (!$tpl_file){
+        $data['list_opt'] = [];
+
+        if (!$tpl_file) {
 
             $style = '';
 
-            if(!empty($ctype['options']['list_style'])){
-                if(is_array($ctype['options']['list_style'])){
-                    $style = $ctype['options']['list_style'][0] ? '_'.$ctype['options']['list_style'][0] : '';
+            if (!empty($ctype['options']['list_style'])) {
+                if (is_array($ctype['options']['list_style'])) {
+                    $style = $ctype['options']['list_style'][0] ? '_' . $ctype['options']['list_style'][0] : '';
                 } else {
-                    $style = '_'.$ctype['options']['list_style'];
+                    $style = '_' . $ctype['options']['list_style'];
                 }
             }
 
             $list_type = $this->controller->getListContext();
 
-            if(isset($ctype['options']['context_list_style'][$list_type])){
-                $style = $ctype['options']['context_list_style'][$list_type] ? '_'.$ctype['options']['context_list_style'][$list_type] : '';
+            if (isset($ctype['options']['context_list_style'][$list_type])) {
+                $style = $ctype['options']['context_list_style'][$list_type] ? '_' . $ctype['options']['context_list_style'][$list_type] : '';
             }
 
-            $tpl_file = $this->getTemplateFileName('content/default_list'.$style);
+            if(!empty($ctype['options']['list_style_options'])){
+                foreach ($ctype['options']['list_style_options'] as $options) {
+                    if($options['name'] === ltrim($style, '_') && !empty($options['value'])){
+                        $data['list_opt'] = json_decode($options['value'], true); break;
+                    }
+                }
+            }
 
+            $tpl_file = $this->getTemplateFileName('content/default_list' . $style);
         }
 
-        if (!$request) { $request = $this->controller->request; }
+        if (!$request) {
+            $request = $this->controller->request;
+        }
 
         return $this->processRender($tpl_file, $data, $request);
-
     }
 
     /**
@@ -2940,24 +2960,27 @@ class cmsTemplate {
      * @param mixed $request Объект запроса
      * @return string
      */
-    public function renderContentItem($ctype_name, $data = array(), $request = false){
+    public function renderContentItem($ctype_name, $data = [], $request = false) {
 
         // опеределен ли в записи шаблон
-        if(!empty($data['item']['template'])){
-            $template_name = $ctype_name.'_item_'.$data['item']['template'];
+        if (!empty($data['item']['template'])) {
+            $template_name = $ctype_name . '_item_' . $data['item']['template'];
         } else {
             // или есть шаблон для типа контента
-            $template_name = $ctype_name.'_item';
+            $template_name = $ctype_name . '_item';
         }
 
-        $tpl_file = $this->getTemplateFileName('content/'.$template_name, true);
+        $tpl_file = $this->getTemplateFileName('content/' . $template_name, true);
 
-        if (!$tpl_file){ $tpl_file = $this->getTemplateFileName('content/default_item'); }
+        if (!$tpl_file) {
+            $tpl_file = $this->getTemplateFileName('content/default_item');
+        }
 
-        if (!$request) { $request = $this->controller->request; }
+        if (!$request) {
+            $request = $this->controller->request;
+        }
 
         return $this->processRender($tpl_file, $data, $request);
-
     }
 
 //============================================================================//

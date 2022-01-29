@@ -1,6 +1,5 @@
 <?php $this->addTplJSName('jquery-scroll'); ?>
 <?php $this->addTplJSName('wall'); ?>
-<a name="wall"></a>
 <div id="wall_widget" class="border-top mt-3 pt-3">
 
     <div class="title_bar d-flex justify-content-between">
@@ -71,7 +70,7 @@
 
     </div>
 
-    <?php if ($perpage < $total) { ?>
+    <?php if ($entries && $perpage < $total) { ?>
         <div class="wall_pages" <?php if($max_entries && (count($entries) > $max_entries) && $page==1) {?>style="display:none"<?php } ?>>
             <?php echo html_pagebar($page, $perpage, $total, '#wall'); ?>
         </div>

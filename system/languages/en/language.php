@@ -392,7 +392,7 @@
     define('ERR_PAGE_NOT_FOUND', 		 	 'Page not found');
     define('ERR_FORBIDDEN', 		 	     'Forbidden');
     define('ERR_SITE_OFFLINE',               'Site is offline');
-    define('ERR_SITE_OFFLINE_FULL',          'Site is offline. <a class="stretched-link" href="%s">Enable</a>');
+    define('ERR_SITE_OFFLINE_FULL',          'Site is offline. <a class="stretched-link text-dark" href="%s">Enable</a>');
     define('ERR_SEARCH_TITLE',               'Search');
     define('ERR_SEARCH_QUERY_INPUT',         'What?');
     define('ERR_USER_NOT_FOUND',             'User does not exist');
@@ -550,6 +550,7 @@
     define('LANG_NEXT',                      'Next');
     define('LANG_SKIP',                      'Skip');
     define('LANG_DONE',                      'Done');
+    define('LANG_CHANGE',                    'Change');
 
     //NAVIGATION
     define('LANG_HOME',                      'Home');
@@ -633,6 +634,8 @@
     define('LANG_SEO_DESC_HINT',             'Short page description for search engines');
     define('LANG_TAGS',                      'Tags');
     define('LANG_TAGS_HINT',                 'Keywords separated by commas');
+    define('LANG_SEO_META_HINT_PANEL',       'Click on the field to see the available expressions.');
+    define('LANG_SEO_META_HINT_PATTERN',     'Available expressions: <b class="pattern_fields">%s</b> ');
 
     //FILES
     define('LANG_B',               'byte');

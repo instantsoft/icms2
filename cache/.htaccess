@@ -1,4 +1,18 @@
-order allow,deny
-<Files ~ "\.(js|css|xml)$">
-   allow from all
-</Files>
+# apache > 2.2
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+# apache <= 2.2
+<IfModule !mod_authz_core.c>
+    order allow,deny
+</IfModule>
+<FilesMatch ".+\.(js|css|xml)$">
+    # apache > 2.2
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    # apache <= 2.2
+    <IfModule !mod_authz_core.c>
+        allow from all
+    </IfModule>
+</FilesMatch>

@@ -21,6 +21,7 @@ class actionAdminWidgets extends cmsAction {
 
         $tpls = cmsCore::getTemplates();
 
+        $scroll_to = strip_tags($this->request->get('scroll_to', ''));
         $template_name = $this->request->get('template_name', '');
 
         if(!$template_name || !in_array($template_name, $tpls)){
@@ -61,7 +62,7 @@ class actionAdminWidgets extends cmsAction {
         // Пошаговое руководство страницы, если есть
         $intro_lang = cmsCore::loadLanguage('templates/'.$this->cms_template->name.'/admin/intro/widgets/widgets');
 
-        return $this->cms_template->render('widgets', array(
+        return $this->cms_template->render('widgets', [
             'is_dynamic_scheme' => $this->is_dynamic_scheme,
             'rows_titles_pos' => $this->rows_titles_pos,
             'intro_lang'    => $intro_lang,
@@ -70,9 +71,9 @@ class actionAdminWidgets extends cmsAction {
             'templates'     => $templates,
             'templates_dynamic_scheme' => $templates_dynamic_scheme,
             'widgets_list'  => $widgets_list,
+            'scroll_to'     => $scroll_to,
             'scheme_html'   => $scheme_html
-        ));
-
+        ]);
     }
 
     public function getSchemeHTML($name=''){

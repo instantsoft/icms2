@@ -134,7 +134,7 @@ function string_explode_list($string_list, $index_as_value = false) {
             if (mb_strpos($row, '|')) {
                 list($index, $value) = explode('|', trim($row));
             } else {
-                $index = $index_as_value ? $row : ($count + 1);
+                $index = (string)($index_as_value ? $row : ($count + 1));
                 $value = $row;
             }
             $items[trim($index)] = trim($value);
@@ -142,6 +142,21 @@ function string_explode_list($string_list, $index_as_value = false) {
     }
 
     return $items;
+}
+
+/**
+ * Приводит ключи массива к строковому типу
+ *
+ * @param array $array Исходный массив
+ * @return array
+ */
+function array_keys_to_string_type($array) {
+
+    $keys        = array_keys($array);
+    $values      = array_values($array);
+    $string_keys = array_map('strval', $keys);
+
+    return array_combine($string_keys, $values);
 }
 
 /**
@@ -982,6 +997,41 @@ function string_bintoip($str) {
 }
 
 /**
+ * Определяет локацию по ip адресу
+ *
+ * @param string $ip
+ * @param boolean $return_array
+ * @return string|array
+ */
+function string_ip_to_location($ip, $return_array = false) {
+
+    // Старая база
+    // Теоретически можно подключить https://github.com/maxmind/GeoIP2-php
+    if(function_exists('geoip_record_by_name')){
+
+        $location  = [];
+
+        $data = geoip_record_by_name($ip);
+
+        if($return_array && !empty($data['country_code'])){
+            $location['code'] = $data['country_code'];
+        }
+
+        if(!empty($data['country_name'])){
+            $location['country'] = $data['country_name'];
+        }
+
+        if(!empty($data['city'])){
+            $location['city'] = $data['city'];
+        }
+
+        return $return_array ? $location : implode(', ', $location);
+    }
+
+    return $return_array ? [] : '';
+}
+
+/**
  * Получает из HTML текста относительные пути
  * из тегов <img>
  *
@@ -1015,6 +1065,14 @@ function string_html_get_images_path($text) {
     return $paths;
 }
 
+/**
+ * Проверяет, что значение пустое
+ * @param mixed $value
+ * @return boolean
+ */
+function is_empty_value($value) {
+    return empty($value) && !is_numeric($value);
+}
 //============================================================================//
 
 /**

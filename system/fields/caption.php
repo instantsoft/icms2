@@ -55,7 +55,7 @@ class fieldCaption extends cmsFormField {
 
     public function parse($value) {
 
-        if (!$value){
+        if (is_empty_value($value)) {
             return '';
         }
 

@@ -128,6 +128,7 @@ class actionContentItemView extends cmsAction {
         }
 
         $item['ctype_name'] = $ctype['name'];
+        $item['ctype'] = $ctype;
 
         if ($ctype['is_cats'] && $item['category_id'] > 1){
 
@@ -142,13 +143,16 @@ class actionContentItemView extends cmsAction {
         // Получаем поля для данного типа контента
         $fields = $this->model->getContentFields($ctype['name']);
 
+        // Запоминаем копию записи для заполнения отпарсенных полей
+        $item_parsed = $item;
+
         // Парсим значения полей
         foreach ($fields as $name => $field) {
             $fields[$name]['html'] = $field['handler']->setItem($item)->parse(isset($item[$name]) ? $item[$name] : '');
+            $item_parsed[$name] = $fields[$name]['html'];
         }
 
         // Для каких необходимо, обрабатываем дополнительно
-        $item_parsed = array_column($fields, 'html', 'name');
         foreach ($fields as $name => $field) {
             $fields[$name]['string_value'] = $field['handler']->setItem($item_parsed)->getStringValue(isset($item[$name]) ? $item[$name] : '');
             $fields[$name]['html'] = $field['handler']->afterParse($fields[$name]['html'], $item_parsed);
@@ -376,7 +380,7 @@ class actionContentItemView extends cmsAction {
                 continue;
             }
 
-            if (mb_strlen($field['html']) === 0) {
+            if (is_empty_value($field['html'])) {
                 continue;
             }
 

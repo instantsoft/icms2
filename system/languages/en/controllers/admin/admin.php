@@ -186,6 +186,8 @@
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Expand filter panel');
     define('LANG_CP_LISTVIEW_STYLE',            'Default list style');
     define('LANG_CP_LIST_STYLE_NAMES',          'Names for list styles');
+    define('LANG_CP_LIST_STYLE_OPTIONS',        'List styles options');
+    define('LANG_CP_LIST_STYLE_OPTIONS_HINT',   'If the list template supports. In JSON format. An example of the default options in the template source file.');
     define('LANG_CP_CONTEXT_LIST_STYLE',        'Styles for other lists');
     define('LANG_CP_CONTEXT_SELECT_LIST',       'Select a list');
     define('LANG_CP_LISTVIEW_STYLE_SLIDER',     'Slider');
@@ -532,7 +534,7 @@
     define('LANG_CP_SETTINGS_DISABLE_METAKEYS', 'Disable meta keywords tag');
     define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Apply the above-specified words and description to the homepage only');
     define('LANG_CP_SETTINGS_META_NO_DEFAULT_HINT',  'If disabled, these words will be displayed on pages with no specified parameters.');
-    define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Add page numbers in the title tag when pagination');
+    define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Add page numbers in the title and meta description tags when pagination');
     define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Add site name to the page title tag');
     define('LANG_CP_SETTINGS_SET_HEAD_PRELOAD',  'Build HTTP Preload headers');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Language');
@@ -849,3 +851,4 @@
     define('LANG_CP_TEMPLATE_NO_ICONS_SELECT', 'The template does not support icon selection.');
     define('LANG_CP_TEMPLATE_ICONS', 'List of template icons');
     define('LANG_CP_COMPILE_TIME', 'Compile time %s sec.');
+    define('LANG_CP_FORMAT', 'Format');

@@ -77,3 +77,4 @@ define('LANG_MODERN_FONT_GOOGLE', 'Google Font');
 define('LANG_MODERN_FAVICON', 'Favicon');
 define('LANG_MODERN_FAVICON_FILE', 'Favicon file');
 define('LANG_MODERN_FAVICON_HEAD', 'Or specify ready-made HTML added to the &lt;head&gt; page tag');
+define('LANG_MODERN_JS_PRINT_HEAD', 'Print JavaScript in the page head');

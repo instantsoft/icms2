@@ -3,18 +3,18 @@
  * Template Name: LANG_CP_LISTVIEW_STYLE_TABLE
  * Template Type: content
  */
-    if( $ctype['options']['list_show_filter'] ) {
-        $this->renderAsset('ui/filter-panel', array(
-            'css_prefix'   => $ctype['name'],
-            'page_url'     => $page_url,
-            'fields'       => $fields,
-            'props_fields' => $props_fields,
-            'props'        => $props,
-            'filters'      => $filters,
-            'ext_hidden_params' => $ext_hidden_params,
-            'is_expanded'  => $ctype['options']['list_expand_filter']
-        ));
-    }
+if( $ctype['options']['list_show_filter'] ) {
+    $this->renderAsset('ui/filter-panel', [
+        'css_prefix'   => $ctype['name'],
+        'page_url'     => $page_url,
+        'fields'       => $fields,
+        'props_fields' => $props_fields,
+        'props'        => $props,
+        'filters'      => $filters,
+        'ext_hidden_params' => $ext_hidden_params,
+        'is_expanded'  => $ctype['options']['list_expand_filter']
+    ]);
+}
 ?>
 <?php if (!$items){ ?>
     <p class="alert alert-info mt-4 alert-list-empty">
@@ -52,7 +52,7 @@
                     <?php if (!isset($item['fields'][$_field['name']])) { continue; } ?>
                     <?php $field = $item['fields'][$_field['name']]; ?>
 
-                    <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
+                    <?php if ($field['name'] === 'title' && $ctype['options']['item_on']){ ?>
                         <h3 class="h5 m-0">
                         <?php if ($item['parent_id']){ ?>
                             <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>">

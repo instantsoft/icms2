@@ -1,5 +1,5 @@
 .content_list_item + .content_list_item {
-    margin-top: $spacer*1.5;
+    margin-top: $spacer*2;
 }
 .icms-body-toolbox + .content_list {
     margin-top: $spacer*1.5 !important;
@@ -12,6 +12,7 @@
             &.left_field {
                 float: left;
                 margin-right: $spacer;
+                margin-bottom: 0;
             }
             &.right_field {
                 float: right;
@@ -50,46 +51,41 @@
     }
 }
 .content_list {
+    &.table {
+        .info_bar {
+            margin-top: 0;
+            padding: 0;
+        }
+    }
     &.compact {
         .field {
             margin-bottom: $spacer*0.25;
         }
+        .content_list_item+.content_list_item {
+            margin-top: $spacer;
+        }
+        article & {
+            @include media-breakpoint-up(lg) {
+                display: flex;
+                flex-wrap: wrap;
+                margin-bottom: -$spacer;
+                & >* {
+                    flex: 0 0 50%;
+                    max-width: 50%;
+                    margin-top: 0 !important;
+                    margin-bottom: $spacer;
+                }
+            }
+        }
     }
-    &.tiled {
-        .article {
-            margin-bottom: $grid-gutter-width;
-            @if $enable-shadows {
-                @include box-shadow($box-shadow);
-                padding: $spacer;
-                .ft_image {
-                    margin: -($spacer) -($spacer) $spacer -($spacer);
-                }
-                .info_bar {
-                    margin-left: -$spacer;
-                    margin-right: -$spacer;
-                    padding-top: $spacer;
-                }
-            }
-            .ft_image {
-                a {
-                    display: block;
-                    overflow: hidden;
-                    > img {
-                        width: 100%;
-                        transition: transform .3s ease-out;
-                        &:hover {
-                            transform: scale(1.1);
-                        }
-                    }
-                }
-            }
+    &.featured {
+        > div {
             .info_bar {
                 background-color: transparent;
                 padding-bottom: 0;
+                margin-top: 0;
             }
-        }
-        &.featured {
-            > div:first-child {
+            &:first-child {
                 .field {
                     @include media-breakpoint-up(lg) {
                         &.ft_image {
@@ -104,13 +100,36 @@
                     }
                 }
             }
-            @include media-breakpoint-up(md) {
-                > div:nth-child(1n+5){
-                    .info_bar {
-                        > div:nth-child(3) {
-                            display: none;
-                        }
+        }
+        @include media-breakpoint-up(md) {
+            > div:nth-child(1n+4){
+                .info_bar {
+                    > div:nth-child(3) {
+                        display: none;
                     }
+                }
+            }
+        }
+        .ft_image {
+            a {
+                display: block;
+                overflow: hidden;
+                > img {
+                    width: 100%;
+                    transition: transform .3s ease-out;
+                    &:hover {
+                        transform: scale(1.1);
+                    }
+                }
+            }
+        }
+    }
+    &.tiled {
+        .ft_image {
+            a {
+                > img {
+                    width: 100%;
+                    border-radius: $border-radius;
                 }
             }
         }
@@ -188,10 +207,20 @@
         margin-right: 0;
     }
 }
-.icms-btn-tag:before {
-    content: '#';
-    margin-right: $spacer*0.1;
+
+.icms-btn-tag {
+    .tags_bar & {
+        margin: 0 $spacer*0.25 $spacer*0.25 0;
+    }
+    &:before {
+        content: '#';
+        margin-right: $spacer*0.1;
+    }
 }
+.tags_bar {
+    margin-bottom: -$spacer*0.25;
+}
+
 .multiple_tags_list {
     li {
         color: $info;

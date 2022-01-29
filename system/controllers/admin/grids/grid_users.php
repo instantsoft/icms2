@@ -47,7 +47,8 @@ function grid_users($controller){
                 } elseif(strpos($value, '127.') === 0){
                     return $value;
                 }
-                return '<a href="#" class="ajaxlink filter_ip" data-toggle="tooltip" data-placement="top" title="'.LANG_CP_USER_FIND_BYIP.'">'.$value.'</a> <a class="view_target" data-toggle="tooltip" data-placement="top" href="https://apps.db.ripe.net/db-web-ui/query?searchtext='.$value.'" target="_blank" rel="noopener noreferrer" title="'.LANG_CP_USER_RIPE_SEARCH.'"><i class="icon-globe icons"></i></a>';
+                $location = string_ip_to_location($value, true);
+                return '<div class="d-flex justify-content-between align-items-center"><a href="#" class="ajaxlink filter_ip text-decoration-none" data-toggle="tooltip" data-placement="top" title="'.LANG_CP_USER_FIND_BYIP.'">'.$value.'</a>&nbsp;<span>'.(!empty($location['code']) ? '<span class="small">'.$location['code'].'</span>&nbsp;' : '').'<a class="view_target text-decoration-none" data-toggle="tooltip" data-placement="top" href="https://apps.db.ripe.net/db-web-ui/query?searchtext='.$value.'" target="_blank" rel="noopener noreferrer" title="'.LANG_CP_USER_RIPE_SEARCH.'"><i class="icon-globe icons"></i></a></span></div>';
             }
         ),
         'date_reg' => array(

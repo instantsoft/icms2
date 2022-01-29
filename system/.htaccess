@@ -1,1 +1,8 @@
-Deny From All
+# apache > 2.2
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+# apache <= 2.2
+<IfModule !mod_authz_core.c>
+    Deny From All
+</IfModule>

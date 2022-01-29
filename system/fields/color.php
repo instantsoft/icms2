@@ -40,6 +40,11 @@ class fieldColor extends cmsFormField {
     }
 
     public function parse($value) {
+
+        if (is_empty_value($value)) {
+            return '';
+        }
+
         return '<div class="color-block" style="background-color:' . $value . '" title="' . html($value, false) . '"></div>';
     }
 

@@ -15,6 +15,9 @@ class wall extends cmsFrontend {
 
         if ($show_id) {
 
+            $this->model->filterEqual('profile_id', $target['profile_id'])->
+                    filterEqual('profile_type', $target['profile_type']);
+
             $entry = $this->model->getEntry($show_id);
 
             if ($entry) {
@@ -98,7 +101,16 @@ class wall extends cmsFrontend {
                 'class'   => 'btn-outline-danger delete',
                 'onclick' => 'return icms.wall.remove({id})',
                 'handler' => function($entry) use($permissions) {
-                    return ($entry['user']['id'] == $this->cms_user->id) || !empty($permissions['delete']);
+
+                    if(isset($permissions['delete'])){
+                        return ($entry['user']['id'] == $this->cms_user->id) || !empty($permissions['delete']);
+                    }
+
+                    if(isset($permissions['delete_handler'])){
+                        return $permissions['delete_handler']($entry);
+                    }
+
+                    return false;
                 }
             ]
         ];

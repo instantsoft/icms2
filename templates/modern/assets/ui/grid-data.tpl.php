@@ -15,8 +15,8 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
     <?php } ?>
     <input type="hidden" name="order_by" value="<?php echo isset($filter['order_by']) ? $filter['order_by'] : $options['order_by']; ?>" />
     <input type="hidden" name="order_to" value="<?php echo isset($filter['order_to']) ? $filter['order_to'] : $options['order_to']; ?>" />
-    <?php foreach($columns as $name=>$column){ ?>
-        <?php if (isset($column['filter'])){ ?>
+    <?php foreach ($columns as $name => $column) { ?>
+        <?php if (isset($column['filter'])) { ?>
             <?php echo html_input('hidden', $name, (isset($filter[$name]) ? $filter[$name] : '')); ?>
         <?php } ?>
     <?php } ?>
@@ -35,7 +35,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
             <thead>
                 <tr>
                     <?php foreach($columns as $name=>$column){ ?>
-                        <?php if ($name=='id' && !$options['show_id']){ $column['class'] = (isset($column['class']) ? $column['class'] : '').' d-none'; } ?>
+                        <?php if ($name === 'id' && !$options['show_id']){ $column['class'] = (isset($column['class']) ? $column['class'] : '').' d-none'; } ?>
                         <th rel="<?php echo $name; ?>" class="<?php if(!empty($column['class'])){ echo $column['class']; } ?><?php if($options['is_sortable']){ ?> sortable sorting<?php } ?>">
                             <?php echo isset($column['title']) ? $column['title'] : ''; ?>
                         </th>
@@ -51,18 +51,18 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
                 <?php if ($options['is_filter']){ ?>
                 <tr class="filter table-align-middle">
                     <?php foreach($columns as $name=>$column){ ?>
-                        <?php if ($name=='id' && !$options['show_id']){ $column['class'] = (isset($column['class']) ? $column['class'] : '').' d-none'; } ?>
+                        <?php if ($name === 'id' && !$options['show_id']){ $column['class'] = (isset($column['class']) ? $column['class'] : '').' d-none'; } ?>
                         <td class="p-2 <?php if(!empty($column['class'])){ ?><?php echo $column['class']; ?><?php } ?>">
-                            <?php if (!empty($column['filter']) && $column['filter'] != 'none'){ ?>
-                                <?php $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : array(); ?>
+                            <?php if (!empty($column['filter']) && $column['filter'] !== 'none'){ ?>
+                                <?php $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : []; ?>
                                 <?php if(strpos($name, 'date_') === 0){ ?>
 
-                                    <?php echo html_datepicker('filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input form-control-sm')), array('minDate'=>date(cmsConfig::get('date_format'), 86400))); ?>
+                                    <?php echo html_datepicker('filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input form-control-sm']), ['minDate'=>date(cmsConfig::get('date_format'), 86400)]); ?>
 
                                 <?php } else { ?>
                                     <?php if (!empty($column['filter_select'])){ ?>
 
-                                        <?php echo html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'custom-select custom-select-sm'))); ?>
+                                        <?php echo html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'custom-select custom-select-sm'])); ?>
 
                                     <?php if (!empty($filter_attributes['multiple'])) { ?>
                                         <?php ob_start(); ?>
@@ -72,9 +72,14 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
                                         <?php $this->addBottom(ob_get_clean()); ?>
                                     <?php } ?>
 
+                                    <?php } else if(!empty($column['filter_checkbox'])) { ?>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="form-check-input input-checkbox custom-control-input" name="filter_<?php echo $name; ?>" value="1" id="filter_<?php echo $name; ?>" rel="<?php echo $name; ?>">
+                                            <label class="custom-control-label" for="filter_<?php echo $name; ?>"><?php echo $column['filter_checkbox']; ?></label>
+                                        </div>
                                     <?php } else { ?>
 
-                                        <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'form-control-sm'))); ?>
+                                        <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'form-control-sm'])); ?>
 
                                     <?php } ?>
                                 <?php } ?>
@@ -100,9 +105,9 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
                     <small class="text-muted mr-2"><?php echo LANG_PAGES_SHOW_PERPAGE; ?></small>
                     <select class="custom-select custom-select-sm form-control form-control-sm">
                         <?php
-                        $perpages = array(15,30,50,100,200,500);
+                        $perpages = [15,30,50,100,200,500];
                         foreach($perpages as $p){ ?>
-                            <option value="<?php echo $p; ?>"<?php if($p===$perpage){ ?> selected<?php } ?>><?php echo $p; ?></option>
+                            <option value="<?php echo $p; ?>"<?php if($p === $perpage){ ?> selected<?php } ?>><?php echo $p; ?></option>
                         <?php } ?>
                     </select>
                 </label>

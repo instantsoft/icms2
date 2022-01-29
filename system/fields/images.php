@@ -64,6 +64,10 @@ class fieldImages extends cmsFormField {
 
     public function parse($value){
 
+        if (is_empty_value($value)) {
+            return '';
+        }
+
         $images = is_array($value) ? $value : cmsModel::yamlToArray($value);
 
         $html         = '';
@@ -97,7 +101,6 @@ class fieldImages extends cmsFormField {
         }
 
         return $html;
-
     }
 
     public function getStringValue($value){ return ''; }

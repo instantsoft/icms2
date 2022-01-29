@@ -83,6 +83,7 @@ class actionAdminCtypesFieldsOptions extends cmsAction {
         return $this->cms_template->renderJSON([
             'error'            => false,
             'is_can_in_filter' => ($base_field->filter_type !== false),
+            'is_virtual'       => $base_field->is_virtual,
             'html'             => ob_get_clean()
         ]);
     }

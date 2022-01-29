@@ -26,7 +26,8 @@
 
                 <?php $index = 0; ?>
                 <?php foreach($fields as $field){ ?>
-                    <?php if ($field['handler']->filter_type==false) { continue; } ?>
+                    <?php if ($field['handler']->filter_type===false) { continue; } ?>
+                    <?php if ($field['handler']->is_virtual) { continue; } ?>
                     <?php if ($field['name']=='user'){ $field['name'] = 'user_id'; } ?>
                     <tr>
                         <td>

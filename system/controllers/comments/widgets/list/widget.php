@@ -47,6 +47,7 @@ class widgetCommentsList extends cmsWidget {
         $items = cmsEventsManager::hook('comments_before_list', $items);
 
         return [
+            'show_rating'  => $this->getOption('show_rating', false),
             'show_avatars' => $show_avatars,
             'show_text'    => $show_text,
             'items'        => $items

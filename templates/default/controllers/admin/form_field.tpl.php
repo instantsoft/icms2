@@ -10,6 +10,7 @@
 <script>
 
     var filter_options_el = $('#fset_visibility > .field').length === 1 ? '#tab-visibility' : '#f_is_in_filter, #tab-filter_access';
+    var virtual_options_el = '#tab-group, #f_options_visible_depend, #tab-format, #tab-profile, #tab-add_access, #tab-edit_access, #tab-author_access';
 
     function loadFieldTypeOptions(field){
 
@@ -41,6 +42,12 @@
                     $(filter_options_el).hide(); $('#is_in_filter').prop('checked', false);
                 } else {
                     $(filter_options_el).show();
+                }
+
+                if(data.is_virtual){
+                    $(virtual_options_el).hide();
+                } else {
+                    $(virtual_options_el).show();
                 }
 
                 $('#tab-type').after($(data.html));

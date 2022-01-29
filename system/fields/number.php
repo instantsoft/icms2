@@ -198,7 +198,7 @@ class fieldNumber extends cmsFormField {
 
     public function parse($value){
 
-        if (!$value){
+        if (is_empty_value($value)) {
             return '';
         }
 
@@ -210,7 +210,9 @@ class fieldNumber extends cmsFormField {
 
     public function getStringValue($value){
 
-        if(!$value){ return ''; }
+        if (is_empty_value($value)) {
+            return '';
+        }
 
         $units = $this->getProperty('units')?:$this->getOption('units');
 

@@ -158,6 +158,8 @@
     define('LANG_USERS_DELETE_STATUS_CONFIRM',   'Delete current status?');
 
     define('LANG_RULE_USERS_VOTE_KARMA',        'Voting for reputation');
+    define('LANG_RULE_USERS_WALL_ADD',         'Adding wall entries');
+    define('LANG_RULE_USERS_WALL_DELETE',      'Removing wall entries');
 
     define('LANG_USERS_KARMA_LOG',          'Reputation history');
     define('LANG_USERS_KARMA_LOG_EMPTY',    'No votes yet');
@@ -179,6 +181,7 @@
     define('LANG_SESS_APP',  'Mobile app');
     define('LANG_SESS_NOT_FOUND',  'There are no active sessions saved.');
     define('LANG_SESS_DROP',  'Drop');
+    define('LANG_SESS_DROP_CONFIRM',  'End this session?');
     define('LANG_SESS_IP',  'IP-address');
     define('LANG_SESS_LAST_DATE',  'Last activity');
     define('LANG_SESS_TYPE',  'Access type');

@@ -157,7 +157,9 @@
     define('LANG_USERS_WHAT_HAPPENED',          'Что нового, %s?');
     define('LANG_USERS_DELETE_STATUS_CONFIRM',  'Удалить текущий статус?');
 
-    define('LANG_RULE_USERS_VOTE_KARMA',        'Оценка чужой репутации');
+    define('LANG_RULE_USERS_VOTE_KARMA',       'Оценка чужой репутации');
+    define('LANG_RULE_USERS_WALL_ADD',         'Добавление записей на стене');
+    define('LANG_RULE_USERS_WALL_DELETE',      'Удаление записей со стены');
 
     define('LANG_USERS_KARMA_LOG',          'История репутации');
     define('LANG_USERS_KARMA_LOG_EMPTY',    'Пока никто не ставил оценок');
@@ -179,6 +181,7 @@
     define('LANG_SESS_APP',  'Приложение');
     define('LANG_SESS_NOT_FOUND',  'Нет активных сохранённых сеансов.');
     define('LANG_SESS_DROP',  'завершить');
+    define('LANG_SESS_DROP_CONFIRM',  'Завершить этот сеанс?');
     define('LANG_SESS_IP',  'IP-адрес');
     define('LANG_SESS_LAST_DATE',  'Последняя активность');
     define('LANG_SESS_TYPE',  'Тип доступа');

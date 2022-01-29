@@ -4,14 +4,13 @@ class formWidgetCommentsListOptions extends cmsForm {
 
     public function init() {
 
-        return array(
+        return [
+            [
+                'type'   => 'fieldset',
+                'title'  => LANG_OPTIONS,
+                'childs' => [
 
-            array(
-                'type' => 'fieldset',
-                'title' => LANG_OPTIONS,
-                'childs' => array(
-
-                    new fieldListMultiple('options:show_list', array(
+                    new fieldListMultiple('options:show_list', [
                         'title' => LANG_WD_COMMENTS_SHOW_LIST,
                         'default' => 0,
                         'show_all'=> true,
@@ -30,34 +29,36 @@ class formWidgetCommentsListOptions extends cmsForm {
                             }
 
                             return $items;
-
                         }
-                    )),
+                    ]),
 
-                    new fieldCheckbox('options:show_avatars', array(
+                    new fieldCheckbox('options:show_avatars', [
                         'title' => LANG_WD_COMMENTS_LIST_SHOW_AVATARS,
-                        'default' => true,
-                    )),
+                        'default' => true
+                    ]),
 
-                    new fieldCheckbox('options:show_text', array(
+                    new fieldCheckbox('options:show_text', [
                         'title' => LANG_WD_COMMENTS_LIST_SHOW_TEXT,
-                        'default' => false,
-                    )),
+                        'default' => false
+                    ]),
 
-                    new fieldNumber('options:limit', array(
+                    new fieldCheckbox('options:show_rating', [
+                        'title' => LANG_WD_COMMENTS_LIST_SHOW_RATING,
+                        'default' => false
+                    ]),
+
+                    new fieldNumber('options:limit', [
                         'title' => LANG_LIST_LIMIT,
                         'default' => 10,
                         'rules' => [
                             ['required'],
                             ['min', 1]
                         ]
-                    ))
+                    ])
 
-                )
-            )
-
-        );
-
+                ]
+            ]
+        ];
     }
 
 }

@@ -3,18 +3,18 @@
  * Template Name: LANG_CP_LISTVIEW_STYLE_BASIC
  * Template Type: content
  */
-    if($ctype['options']['list_show_filter']) {
-        $this->renderAsset('ui/filter-panel', array(
-            'css_prefix'   => $ctype['name'],
-            'page_url'     => $page_url,
-            'fields'       => $fields,
-            'props_fields' => $props_fields,
-            'props'        => $props,
-            'filters'      => $filters,
-            'ext_hidden_params' => $ext_hidden_params,
-            'is_expanded'  => $ctype['options']['list_expand_filter']
-        ));
-    }
+if($ctype['options']['list_show_filter']) {
+    $this->renderAsset('ui/filter-panel', [
+        'css_prefix'   => $ctype['name'],
+        'page_url'     => $page_url,
+        'fields'       => $fields,
+        'props_fields' => $props_fields,
+        'props'        => $props,
+        'filters'      => $filters,
+        'ext_hidden_params' => $ext_hidden_params,
+        'is_expanded'  => $ctype['options']['list_expand_filter']
+    ]);
+}
 ?>
 
 <?php if (!$items){ ?>
@@ -27,7 +27,7 @@
     </p>
 <?php return; } ?>
 
-<div class="content_list default_list <?php echo $ctype['name']; ?>_list mt-3 mt-md-4">
+<div class="content_list default_list <?php echo $ctype['name']; ?>_list mt-3 mt-lg-4">
 
     <?php foreach($items as $item){ ?>
 
@@ -36,13 +36,13 @@
             <?php foreach($item['fields'] as $field){ ?>
                 <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $fields[$field['name']]['options']['wrap_type']; ?>_field <?php echo $fields[$field['name']]['options']['wrap_style']; ?>" <?php if($fields[$field['name']]['options']['wrap_width']){ ?> style="width: <?php echo $fields[$field['name']]['options']['wrap_width']; ?>;"<?php } ?>>
 
-                    <?php if ($field['label_pos'] != 'none'){ ?>
+                    <?php if ($field['label_pos'] !== 'none'){ ?>
                         <div class="title_<?php echo $field['label_pos']; ?>">
-                            <?php echo string_replace_svg_icons($field['title']) . ($field['label_pos']=='left' ? ': ' : ''); ?>
+                            <?php echo string_replace_svg_icons($field['title']) . ($field['label_pos']==='left' ? ': ' : ''); ?>
                         </div>
                     <?php } ?>
 
-                    <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
+                    <?php if ($field['name'] === 'title' && $ctype['options']['item_on']){ ?>
                         <h3 class="value">
                         <?php if (!empty($this->menus['list_actions_menu'])){ ?>
                             <div class="dropdown ml-2 float-right">
@@ -90,7 +90,7 @@
 
             <?php if (!empty($item['show_tags'])){ ?>
                 <div class="tags_bar mt-3">
-                    <?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name'], 'btn btn-outline-secondary btn-sm mr-1 icms-btn-tag', ''); ?>
+                    <?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name'], 'btn btn-outline-secondary btn-sm icms-btn-tag', ''); ?>
                 </div>
             <?php } ?>
 

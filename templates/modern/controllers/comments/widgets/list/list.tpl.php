@@ -4,7 +4,7 @@
         <?php $author_url = href_to_profile($entry['user']); ?>
         <?php $target_url = href_to($entry['target_url']) . "#comment_{$entry['id']}"; ?>
 
-        <div class="media mb-3 comment" >
+        <div class="media mb-3 mb-lg-4 comment">
 
             <div class="media-body">
 
@@ -44,27 +44,41 @@
                         <?php } ?>
                     </div>
                 <?php } ?>
-                <?php if (empty($entry['hide_date'])) { ?>
-                    <div class="text-muted small mt-2">
-                        <?php html_svg_icon('solid', 'history'); ?>
-                        <span>
-                            <?php echo string_date_age_max($entry['date_pub'], true); ?>
-                        </span>
-                        <?php if ($entry['date_last_modified']){ ?>
-                            <span data-toggle="tooltip" data-placement="top" class="date_last_modified ml-2" title="<?php echo LANG_CONTENT_EDITED.' '.strip_tags(html_date_time($entry['date_last_modified'])); ?>">
-                                <?php html_svg_icon('solid', 'pen'); ?>
-                            </span>
+                <?php if (empty($entry['hide_date']) || ($show_rating && $entry['rating'])) { ?>
+                    <div class="text-muted d-flex justify-content-between align-items-center mt-2">
+                        <?php if (empty($entry['hide_date'])) { ?>
+                            <div class="small">
+                                <?php html_svg_icon('solid', 'history'); ?>
+                                <span>
+                                    <?php echo string_date_age_max($entry['date_pub'], true); ?>
+                                </span>
+                                <?php if ($entry['date_last_modified']){ ?>
+                                    <span data-toggle="tooltip" data-placement="top" class="date_last_modified ml-2" title="<?php echo LANG_CONTENT_EDITED.' '.strip_tags(html_date_time($entry['date_last_modified'])); ?>">
+                                        <?php html_svg_icon('solid', 'pen'); ?>
+                                    </span>
+                                <?php } ?>
+                                <?php if ($entry['is_private']) { ?>
+                                    <span class="is_private text-secondary" title="<?php html(LANG_PRIVACY_PRIVATE); ?>">
+                                        <?php html_svg_icon('solid', 'lock'); ?>
+                                    </span>
+                                <?php } ?>
+                            </div>
                         <?php } ?>
-                        <?php if ($entry['is_private']) { ?>
-                            <span class="is_private text-secondary" title="<?php html(LANG_PRIVACY_PRIVATE); ?>">
-                                <?php html_svg_icon('solid', 'lock'); ?>
-                            </span>
+                        <?php if($show_rating && $entry['rating']){ ?>
+                            <div>
+                                <span class="<?php echo html_signed_class($entry['rating']); ?>">
+                                    <?php if($entry['rating'] > 0){ ?>
+                                        <?php html_svg_icon('solid', 'smile'); ?>
+                                    <?php } else { ?>
+                                        <?php html_svg_icon('solid', 'frown'); ?>
+                                    <?php } ?>
+                                    <?php echo html_signed_num($entry['rating']); ?>
+                                </span>
+                            </div>
                         <?php } ?>
                     </div>
                 <?php } ?>
             </div>
-
         </div>
-
     <?php } ?>
 </div>

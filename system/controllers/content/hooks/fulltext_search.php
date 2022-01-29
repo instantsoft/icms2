@@ -54,7 +54,7 @@ class onContentFulltextSearch extends cmsAction {
                     $select_fields[$ctype['name']][] = $field['name'];
                 }
 
-                if (!isset($images_field[$ctype['name']]) && $field['type'] == 'image' &&
+                if (!isset($images_field[$ctype['name']]) && $field['type'] === 'image' &&
                         !$field['is_private'] && $field['is_in_list'] &&
                         (!$field['groups_read'] || $this->cms_user->isInGroups($field['groups_read']))) {
                     $select_fields[$ctype['name']][] = $field['name'];
@@ -101,7 +101,7 @@ class onContentFulltextSearch extends cmsAction {
                 $fields = [];
 
                 foreach ($match_fields as $match_field) {
-                    if ($match_field == 'title') {
+                    if ($match_field === 'title') {
                         continue;
                     }
                     $fields[$match_field] = $item[$match_field];

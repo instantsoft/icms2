@@ -826,16 +826,20 @@ class cmsModel {
      * Фильтр по релевантности, используя fulltext search
      * В таблице должен быть полнотекстовый индекс на $field
      *
-     * @param string $field Имя ячейки таблицы
+     * @param string|array $field Имя ячейки таблицы или массив ячеек
      * @param string $value Значение, к которому нужно найти релевантные записи
      * @param string $lang Язык, используемый для стопслов
      * @return $this
      */
     public function filterRelated($field, $value, $lang = false) {
 
+        if(!is_array($field)){
+            $field = [$field];
+        }
+
         // Реально передали не более 3х символов
         if (mb_strlen($value) <= 3) {
-            return $this->filterLike($field, $value . '%');
+            return $this->filterLike($field[0], $value . '%');
         }
 
         $value = trim(strip_tags(mb_strtolower($value)));
@@ -844,7 +848,7 @@ class cmsModel {
         // После очистки осталось не более 3х символов
         // MySQL не умеет искать в полнотекстовогом индексе по 3м и менее символам
         if (mb_strlen($value) <= 3) {
-            return $this->filterLike($field, $value . '%');
+            return $this->filterLike($field[0], $value . '%');
         }
 
         $query = [];
@@ -888,15 +892,17 @@ class cmsModel {
             });
             $query = array_slice($query, 0, 5);
 
-            $ft_query .= '>\"' . $this->db->escape($value) . '\" <(';
-            $ft_query .= '+' . implode(' +', $this->db->escape($query)) . ')';
+            $ft_query = '>\"' . $this->db->escape($value) . '\" <(';
+            $ft_query .= implode(' ', $this->db->escape($query)) . ')';
         }
 
-        if (strpos($field, '.') === false) {
-            $field = 'i.' . $field;
+        if (strpos($field[0], '.') === false) {
+            $match_fields_str = 'i.' . implode(', i.', $field);
+        } else {
+            $match_fields_str = implode(', ', $field);
         }
 
-        $search_param = "MATCH({$field}) AGAINST ('{$ft_query}' IN BOOLEAN MODE)";
+        $search_param = "MATCH({$match_fields_str}) AGAINST ('{$ft_query}' IN BOOLEAN MODE)";
 
         $this->select($search_param, 'fsort');
 
@@ -2155,51 +2161,58 @@ class cmsModel {
      * таблицы со списком записей
      * @param array $grid
      * @param array $filter
-     * @return bool
+     * @return boolean
      */
-    public function applyGridFilter($grid, $filter){
+    public function applyGridFilter($grid, $filter) {
 
         // применяем сортировку
         if (!empty($filter['order_by'])) {
-            if (!empty($grid['columns'][$filter['order_by']]['order_by'])){
+            if (!empty($grid['columns'][$filter['order_by']]['order_by'])) {
                 $filter['order_by'] = $grid['columns'][$filter['order_by']]['order_by'];
             }
             $this->orderBy($filter['order_by'], $filter['order_to']);
         }
 
         // устанавливаем страницу
-        if (!empty($filter['page'])){
-            $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $this->perpage;
-            $this->limitPage((int)$filter['page'], $perpage);
+        if (!empty($filter['page'])) {
+            $perpage = !empty($filter['perpage']) ? (int) $filter['perpage'] : $this->perpage;
+            $this->limitPage((int) $filter['page'], $perpage);
         }
 
         //
         // проходим по каждой колонке таблицы
         // и проверяем не передан ли фильтр для нее
         //
-        foreach($grid['columns'] as $field => $column){
-            if (!empty($column['filter']) && $column['filter'] != 'none' && isset($filter[$field])){
+        foreach ($grid['columns'] as $field => $column) {
+            if (!empty($column['filter']) && $column['filter'] !== 'none' && isset($filter[$field])) {
 
-                if ($filter[$field] || (string)$filter[$field] === '0'){
+                if (!is_empty_value($filter[$field])) {
 
-                    if (!empty($column['filter_by'])){
+                    if (!empty($column['filter_by'])) {
                         $filter_field = $column['filter_by'];
                     } else {
                         $filter_field = $field;
                     }
 
-                    switch ($column['filter']){
-                        case 'in': $this->filterIn($filter_field, explode(',', $filter[$field])); break;
-                        case 'filled': ($filter[$field] ? $this->filterNotNull($filter_field) : $this->filterIsNull($filter_field)); break;
-                        case 'exact': $this->filterEqual($filter_field, $filter[$field]); break;
-                        case 'like': $this->filterLike($filter_field, "%{$filter[$field]}%"); break;
+                    switch ($column['filter']) {
+                        case 'nn': $this->filterNotNull($filter_field);
+                            break;
+                        case 'ni': $this->filterIsNull($filter_field);
+                            break;
+                        case 'in': $this->filterIn($filter_field, explode(',', $filter[$field]));
+                            break;
+                        case 'filled': ($filter[$field] ? $this->filterNotNull($filter_field) : $this->filterIsNull($filter_field));
+                            break;
+                        case 'exact': $this->filterEqual($filter_field, $filter[$field]);
+                            break;
+                        case 'like': $this->filterLike($filter_field, "%{$filter[$field]}%");
+                            break;
                         case 'date':
-							$date = date('Y-m-d', strtotime($filter[$field]));
-							$this->filterLike($filter_field, "%{$date}%"); break;
+                            $date = date('Y-m-d', strtotime($filter[$field]));
+                            $this->filterLike($filter_field, "%{$date}%");
+                            break;
                     }
-
                 }
-
             }
         }
 

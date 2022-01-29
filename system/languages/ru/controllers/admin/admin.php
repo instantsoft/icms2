@@ -198,6 +198,8 @@
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Разворачивать панель фильтра');
     define('LANG_CP_LISTVIEW_STYLE',            'Стиль списка по умолчанию');
     define('LANG_CP_LIST_STYLE_NAMES',          'Названия для стилей списка');
+    define('LANG_CP_LIST_STYLE_OPTIONS',        'Опции списков');
+    define('LANG_CP_LIST_STYLE_OPTIONS_HINT',   'Если шаблон списка поддерживает. В формате JSON. Пример опций по умолчанию в исходном файле шаблона.');
     define('LANG_CP_CONTEXT_LIST_STYLE',        'Стили для других списков');
     define('LANG_CP_CONTEXT_SELECT_LIST',       'Выберите список');
     define('LANG_CP_LISTVIEW_STYLE_HINT',       'Перечислены шаблоны из папки <b>/'.cmsTemplate::TEMPLATE_BASE_PATH.'%s/content</b>. Можно указать несколько шаблонов, при этом появится возможность переключать их пользователям.');
@@ -561,7 +563,7 @@
     define('LANG_CP_SETTINGS_DISABLE_METAKEYS', 'Отключить тег meta keywords');
 	define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Использовать указанные выше слова и описание только для главной страницы');
 	define('LANG_CP_SETTINGS_META_NO_DEFAULT_HINT',  'Если выключено, эти слова будут отображаться на страницах с не заданными подобными параметрами');
-	define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Добавлять номера страниц в тег title при пагинации');
+	define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Добавлять номера страниц в тег title и meta description при пагинации');
 	define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Добавлять в тег title страницы название сайта');
 	define('LANG_CP_SETTINGS_SET_HEAD_PRELOAD',  'Формировать заголовки HTTP Preload');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');
@@ -891,3 +893,4 @@
     define('LANG_CP_TEMPLATE_NO_ICONS_SELECT', 'Шаблон не поддерживает выбор иконок.');
     define('LANG_CP_TEMPLATE_ICONS', 'Список иконок шаблона');
     define('LANG_CP_COMPILE_TIME', 'Время компиляции %s сек.');
+    define('LANG_CP_FORMAT', 'Формат');

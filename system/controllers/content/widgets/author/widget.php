@@ -102,7 +102,7 @@ class widgetContentAuthor extends cmsWidget {
         if($this->getOption('show_date_reg')) {
 
             $fields['date_reg'] = [
-                'title' => LANG_USERS_PROFILE_REGDATE,
+                'title' => LANG_REGISTRATION,
                 'text'  => string_date_age_max($profile['date_reg'], true)
             ];
         }
@@ -120,7 +120,7 @@ class widgetContentAuthor extends cmsWidget {
             $fields['user_items_link'] = [
                 'href'  => href_to_profile($profile, ['content', $ctype['name']]),
                 'icon'  => 'book-reader',
-                'text'  => sprintf(LANG_WD_CON_AUTHOR_READ, mb_strtolower($ctype['labels']['profile']))
+                'text'  => $this->getOption('user_items_link_title') ?: sprintf(LANG_WD_CON_AUTHOR_READ, mb_strtolower($ctype['labels']['profile']))
             ];
         }
 
