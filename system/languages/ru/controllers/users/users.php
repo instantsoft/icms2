@@ -34,6 +34,7 @@
     define('LANG_USERS_CFG_MIGRATION',      'Переводы');
 
     define('LANG_USERS_OPT_SHOW_USER_GROUPS', 'Показывать группы, к которым принадлежит пользователь');
+    define('LANG_USERS_OPT_SHOW_REG_DATA',  'Показывать дату регистрации пользователя');
     define('LANG_USERS_OPT_FRIENDSHIP',     'Разрешить добавление друзей');
     define('LANG_USERS_OPT_THEME',          'Разрешить настройку дизайна профиля');
     define('LANG_USERS_OPT_THEME_HINT',     'Работает только если шаблон сайта имеет поддержку данной функции');
