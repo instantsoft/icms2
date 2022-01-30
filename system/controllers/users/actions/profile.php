@@ -128,6 +128,18 @@ class actionUsersProfile extends cmsAction {
             ];
 
         }
+        
+        //Если включена опция "показать последний визит пользователя"
+        if (!empty($this->options['show_last_visit'])){
+            //Если пользователь не в сети
+            if (!$profile['is_online']){
+                //Заполняем поле
+                $fields['date_log'] = [
+                    'title' => LANG_USERS_PROFILE_LOGDATE,
+                    'text'  => string_date_age_max($profile['date_log'], true)
+                ];
+            }
+        }
 
         //Если включена опция "показывать группы пользователя"
         if (!empty($this->options['show_user_groups'])){
@@ -147,18 +159,6 @@ class actionUsersProfile extends cmsAction {
                 'title' => LANG_GROUPS,
                 'text'  => implode(', ', $groups_title)
             ];
-        }
-
-        //Если включена опция "показать последний визит пользователя"
-        if (!empty($this->options['show_last_visit'])){
-            //Если пользователь не в сети
-            if (!$profile['is_online']){
-                //Заполняем поле
-                $fields['date_log'] = [
-                    'title' => LANG_USERS_PROFILE_LOGDATE,
-                    'text'  => string_date_age_max($profile['date_log'], true)
-                ];
-            }
         }
 
         if ($profile['inviter_id'] && !empty($profile['inviter_nickname'])) {
