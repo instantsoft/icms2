@@ -10,7 +10,7 @@ class actionUsersProfile extends cmsAction {
 
         $profile = cmsEventsManager::hook('users_profile_view', $profile);
 
-        // отправлен запрос дружбы
+        // Отправлен запрос дружбы
         $this->is_friend_req = $this->options['is_friends_on'] ? $this->model->isFriendshipRequested($this->cms_user->id, $profile['id']) : false;
 
         $content = cmsCore::getController('content', $this->request);
@@ -105,38 +105,60 @@ class actionUsersProfile extends cmsAction {
 
     }
 
+    /**
+     * Возвращает системные поля пользователей
+     *
+     * @param string $profile
+     * @return array 
+     */
     private function getSystemFields($profile) {
 
+        //Объявляем массив, что бы не возникало проблем при переборе
+        $fields = [];
+
+        //Если включена опция "просмотр даты регистрации"
         if (!empty($this->options['show_reg_data'])){
+
+            //Заполняем поле
             $fields = ['date_reg' =>
                 [
                     'title' => LANG_USERS_PROFILE_REGDATE,
                     'text'  => string_date_age_max($profile['date_reg'], true)
                 ]
             ];
+
         }
 
+        //Если включена опция "показывать группы пользователя"
         if (!empty($this->options['show_user_groups'])){
 
+            //Получаем группы пользователя
             $groups = $this->model->getGroups();
 
             $groups_title = [];
 
+            //Заполняем массив именами групп
             foreach ($profile['groups'] as $group_id) {
                 $groups_title[] = $groups[$group_id]['title'];
             }
 
+            //Заполняем поле
             $fields['groups'] = [
                 'title' => LANG_GROUPS,
                 'text'  => implode(', ', $groups_title)
             ];
         }
 
-        if (!$profile['is_online']){
-            $fields['date_log'] = [
-                'title' => LANG_USERS_PROFILE_LOGDATE,
-                'text'  => string_date_age_max($profile['date_log'], true)
-            ];
+        //Если включена опция "показать последний визит пользователя"
+        if (!empty($this->options['show_last_visit'])){
+            //Если пользователь не в сети
+            if (!$profile['is_online']){
+                //Заполняем поле
+                $fields['date_log'] = [
+                    'title' => LANG_USERS_PROFILE_LOGDATE,
+                    'text'  => string_date_age_max($profile['date_log'], true)
+                ];
+            }
         }
 
         if ($profile['inviter_id'] && !empty($profile['inviter_nickname'])) {
@@ -147,6 +169,7 @@ class actionUsersProfile extends cmsAction {
             ];
         }
 
+        //Если тот кто смотрит профиль - админ, показываем IP адресс
         if($this->cms_user->is_admin && $profile['ip']){
 
             $text_ip = $profile['ip'];
