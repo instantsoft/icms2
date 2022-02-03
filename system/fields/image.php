@@ -8,8 +8,6 @@ class fieldImage extends cmsFormField {
     public $var_type    = 'array';
 
     protected $teaser_url = '';
-    
-    protected $use_language = true;
 
     public function getOptions() {
 
@@ -104,7 +102,7 @@ class fieldImage extends cmsFormField {
 
         $show_to_item_link = $this->getOption('show_to_item_link');
 
-        return !empty($this->item['is_private_item']) || !$show_to_item_link ? $img_html : '<a href="'.$url.'">'.$img_html.'</a>';
+        return (!empty($this->item['is_private_item']) || !$show_to_item_link) ? $img_html : '<a href="'.$url.'">'.$img_html.'</a>';
     }
 
     public function parse($value){
