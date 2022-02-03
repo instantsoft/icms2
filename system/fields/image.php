@@ -59,8 +59,8 @@ class fieldImage extends cmsFormField {
                 'title'           => LANG_PARSER_IMAGE_DEFAULT,
                 'extended_option' => true
             ]),
-			new fieldCheckbox('show_to_item_link', [
-                'title' => LANG_F_IMAGE_TO_ITEM_LINK,
+	    new fieldCheckbox('show_to_item_link', [
+                'title' => LANG_PARSER_IMAGE_TO_ITEM_LINK,
                 'default' => true
             ])
         ];
