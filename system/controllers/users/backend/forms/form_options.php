@@ -50,20 +50,22 @@ class formUsersOptions extends cmsForm {
                     new fieldCheckbox('show_user_groups', array(
                         'title' => LANG_USERS_OPT_SHOW_USER_GROUPS
                     )),
-
+                    new fieldCheckbox('show_reg_data', array(
+                        'title' => LANG_USERS_OPT_SHOW_REG_DATA,
+                    )),
+                    new fieldCheckbox('show_last_visit', array(
+                        'title' => LANG_USERS_OPT_SHOW_LAST_VISIT,
+                    )),
                     new fieldCheckbox('is_auth_only', array(
                         'title' => LANG_USERS_OPT_AUTH_ONLY,
                     )),
-
                     new fieldCheckbox('is_status', array(
                         'title' => LANG_USERS_OPT_STATUSES_ENABLED,
                     )),
-
                     new fieldCheckbox('is_themes_on', array(
                         'title' => LANG_USERS_OPT_THEME,
                         'hint' => LANG_USERS_OPT_THEME_HINT,
                     )),
-
                     new fieldNumber('max_tabs', array(
                         'title' => LANG_USERS_OPT_MAX_TABS,
                         'hint' => LANG_USERS_OPT_MAX_TABS_HINT,
