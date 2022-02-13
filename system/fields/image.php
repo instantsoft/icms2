@@ -58,6 +58,10 @@ class fieldImage extends cmsFormField {
             new fieldImage('default_image', [
                 'title'           => LANG_PARSER_IMAGE_DEFAULT,
                 'extended_option' => true
+            ]),
+	    new fieldCheckbox('show_to_item_link', [
+                'title' => LANG_PARSER_IMAGE_TO_ITEM_LINK,
+                'default' => true
             ])
         ];
     }
@@ -96,7 +100,9 @@ class fieldImage extends cmsFormField {
 
         $img_html = html_image($paths, $size_teaser, (empty($this->item['title']) ? $this->name : $this->item['title']));
 
-        return !empty($this->item['is_private_item']) ? $img_html : '<a href="'.$url.'">'.$img_html.'</a>';
+        $show_to_item_link = $this->getOption('show_to_item_link');
+
+        return (!empty($this->item['is_private_item']) || !$show_to_item_link) ? $img_html : '<a href="'.$url.'">'.$img_html.'</a>';
     }
 
     public function parse($value){
