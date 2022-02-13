@@ -52,9 +52,11 @@ class formUsersOptions extends cmsForm {
                     )),
                     new fieldCheckbox('show_reg_data', array(
                         'title' => LANG_USERS_OPT_SHOW_REG_DATA,
+                        'default'  => true
                     )),
                     new fieldCheckbox('show_last_visit', array(
                         'title' => LANG_USERS_OPT_SHOW_LAST_VISIT,
+                        'default'  => true
                     )),
                     new fieldCheckbox('is_auth_only', array(
                         'title' => LANG_USERS_OPT_AUTH_ONLY,

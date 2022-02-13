@@ -54,6 +54,8 @@ function install_package(){
         }
     }
 
+    save_controller_options(['users']);
+
     compile_scss_if_necessary();
 
     return true;

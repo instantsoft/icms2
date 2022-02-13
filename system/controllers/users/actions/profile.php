@@ -108,32 +108,26 @@ class actionUsersProfile extends cmsAction {
     /**
      * Возвращает системные поля пользователей
      *
-     * @param string $profile
-     * @return array 
+     * @param array $profile
+     * @return array
      */
     private function getSystemFields($profile) {
 
-        //Объявляем массив, что бы не возникало проблем при переборе
         $fields = [];
 
-        //Если включена опция "просмотр даты регистрации"
-        if (!empty($this->options['show_reg_data'])){
+        // Если включена опция "просмотр даты регистрации"
+        if (!empty($this->options['show_reg_data'])) {
 
-            //Заполняем поле
-            $fields = ['date_reg' =>
-                [
-                    'title' => LANG_USERS_PROFILE_REGDATE,
-                    'text'  => string_date_age_max($profile['date_reg'], true)
-                ]
+            $fields['date_reg'] = [
+                'title' => LANG_USERS_PROFILE_REGDATE,
+                'text'  => string_date_age_max($profile['date_reg'], true)
             ];
-
         }
-        
-        //Если включена опция "показать последний визит пользователя"
-        if (!empty($this->options['show_last_visit'])){
-            //Если пользователь не в сети
-            if (!$profile['is_online']){
-                //Заполняем поле
+
+        // Если включена опция "показать последний визит пользователя"
+        if (!empty($this->options['show_last_visit'])) {
+            // Если пользователь не в сети
+            if (!$profile['is_online']) {
                 $fields['date_log'] = [
                     'title' => LANG_USERS_PROFILE_LOGDATE,
                     'text'  => string_date_age_max($profile['date_log'], true)
@@ -141,20 +135,19 @@ class actionUsersProfile extends cmsAction {
             }
         }
 
-        //Если включена опция "показывать группы пользователя"
-        if (!empty($this->options['show_user_groups'])){
+        // Если включена опция "показывать группы пользователя"
+        if (!empty($this->options['show_user_groups'])) {
 
-            //Получаем группы пользователя
+            // Получаем группы пользователя
             $groups = $this->model->getGroups();
 
             $groups_title = [];
 
-            //Заполняем массив именами групп
+            // Заполняем массив именами групп
             foreach ($profile['groups'] as $group_id) {
                 $groups_title[] = $groups[$group_id]['title'];
             }
 
-            //Заполняем поле
             $fields['groups'] = [
                 'title' => LANG_GROUPS,
                 'text'  => implode(', ', $groups_title)
@@ -170,27 +163,27 @@ class actionUsersProfile extends cmsAction {
         }
 
         //Если тот кто смотрит профиль - админ, показываем IP адресс
-        if($this->cms_user->is_admin && $profile['ip']){
+        if ($this->cms_user->is_admin && $profile['ip']) {
 
             $text_ip = $profile['ip'];
 
             $location = string_ip_to_location($profile['ip']);
 
-            if($location){
-                $text_ip .= ' ('. $location .')';
+            if ($location) {
+                $text_ip .= ' (' . $location . ')';
             }
 
             $fields['ip'] = [
                 'title' => LANG_USERS_PROFILE_LAST_IP,
-                'href'  => href_to('users').'?ip='.$profile['ip'],
+                'href'  => href_to('users') . '?ip=' . $profile['ip'],
                 'text'  => $text_ip
             ];
         }
 
-        $hook = cmsEventsManager::hook('user_profile_sys_fields', array(
+        $hook = cmsEventsManager::hook('user_profile_sys_fields', [
             'profile' => $profile,
             'fields'  => $fields
-        ));
+        ]);
 
         return $hook['fields'];
     }
