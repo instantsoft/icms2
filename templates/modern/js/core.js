@@ -488,7 +488,7 @@ icms.forms = (function ($) {
 
         $.ajax({
             url: $(form).attr('action'),
-            type: 'POST',
+            method: 'POST',
             data: formData,
             success: function (result) {
 
@@ -501,7 +501,17 @@ icms.forms = (function ($) {
                 if (result.errors === false){
                     $('input[type=text], select, textarea', form).val('').triggerHandler('input');
                     if ("callback" in result){
-                        window[result.callback](form_data, result); return;
+
+                        var params = result.callback.split('.');
+
+                        var calling_func = window;
+                        for(var id in params){
+                            calling_func = calling_func[params[id]];
+                        }
+
+                        calling_func(form_data, result);
+
+                        return;
                     }
                     if (result.success_text){
                         icms.modal.alert(result.success_text);

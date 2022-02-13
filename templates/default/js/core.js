@@ -430,9 +430,19 @@ icms.forms = (function ($) {
 
             $(submit_btn).prop('disabled', false);
 
-            if (result.errors == false){
+            if (result.errors === false){
                 if ("callback" in result){
-                    window[result.callback](form_data, result); return;
+
+                    var params = result.callback.split('.');
+
+                    var calling_func = window;
+                    for(var id in params){
+                        calling_func = calling_func[params[id]];
+                    }
+
+                    calling_func(form_data, result);
+
+                    return;
                 }
                 if (result.success_text){
                     icms.modal.alert(result.success_text);
@@ -443,7 +453,7 @@ icms.forms = (function ($) {
                 return;
             }
 
-            if (typeof(result.errors)=='object'){
+            if (typeof(result.errors) === 'object'){
 
                 $('.field_error', form).removeClass('field_error');
                 $('.error_text', form).remove();

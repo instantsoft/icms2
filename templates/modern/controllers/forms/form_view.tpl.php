@@ -1,3 +1,4 @@
+<?php if(empty($modal_btn['is_show'])){ ?>
 <?php
     $this->addTplJSName([
         'forms-constructor'
@@ -12,8 +13,9 @@
     <?php } ?>
     <?php $this->renderForm($form, [], $form_data['params'], false); ?>
 </div>
+<?php } ?>
 <?php if(!empty($modal_btn['is_show'])){ ?>
-<a class="btn ajax-modal<?php if(!empty($modal_btn['class'])){ ?> <?php echo $modal_btn['class']; ?><?php } ?>" href="#modal-<?php echo $form_data['params']['form_id']; ?>" title="<?php html($form_data['title']); ?>">
+<a class="btn ajax-modal<?php if(!empty($modal_btn['class'])){ ?> <?php echo $modal_btn['class']; ?><?php } ?>" href="<?php echo href_to('forms', 'view', [$form_data['hash']]); ?>" title="<?php html($form_data['title']); ?>">
     <?php if (!empty($modal_btn['icon'])) {
         $icon_params = explode(':', $modal_btn['icon']);
         if(!isset($icon_params[1])){ array_unshift($icon_params, 'solid'); }

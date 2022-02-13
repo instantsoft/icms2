@@ -319,7 +319,7 @@ thead.list_thead {
 h1:not(.error) {
     background: #63c2de;
     border-bottom: solid 1px #20a8d8;
-    margin: 0 -30px 1.5rem -30px;
+    margin: 0 -1.5rem 1.5rem -1.5rem;
     padding: 15px 30px;
     color: #FFF;
     font-size: 1.53125rem;

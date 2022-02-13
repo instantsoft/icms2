@@ -151,6 +151,7 @@ icms.modal = (function ($) {
 
         $.ajax({
             url: url,
+            method: 'POST',
             data: data,
             beforeSend: function(request) {
                 request.setRequestHeader('ICMS-Request-Type', 1);
@@ -168,7 +169,6 @@ icms.modal = (function ($) {
         });
 
         return false;
-
     };
 
     this.setCallback = function(event, callback){
