@@ -499,7 +499,6 @@ icms.forms = (function ($) {
                 $(submit_btn).prop('disabled', false).removeClass('is-busy');
 
                 if (result.errors === false){
-                    $('input[type=text], select, textarea', form).val('').triggerHandler('input');
                     if ("callback" in result){
 
                         var params = result.callback.split('.');
@@ -509,10 +508,11 @@ icms.forms = (function ($) {
                             calling_func = calling_func[params[id]];
                         }
 
-                        calling_func(form_data, result);
+                        calling_func.apply(form, [form_data, result]);
 
                         return;
                     }
+                    $('input[type=text], select, textarea', form).val('').triggerHandler('input');
                     if (result.success_text){
                         icms.modal.alert(result.success_text);
                     }

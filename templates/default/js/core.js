@@ -440,7 +440,7 @@ icms.forms = (function ($) {
                         calling_func = calling_func[params[id]];
                     }
 
-                    calling_func(form_data, result);
+                    calling_func.apply(form, [form_data, result]);
 
                     return;
                 }

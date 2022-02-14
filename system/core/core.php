@@ -1102,6 +1102,8 @@ class cmsCore {
      */
     public static function respondIfModifiedSince($lastmod) {
 
+        if(!$lastmod){ return; }
+
         $last_modified_unix = strtotime($lastmod);
 
         $last_modified = gmdate("D, d M Y H:i:s \G\M\T", $last_modified_unix);

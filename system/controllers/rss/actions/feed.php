@@ -58,7 +58,7 @@ class actionRssFeed extends cmsAction {
         // Преобразовываем относительные ссылки в абсолютные
         if (!empty($feed['items'])) {
             foreach ($feed['items'] as $key => $item) {
-                if (!empty($feed['mapping']['description'])) {
+                if (!empty($feed['mapping']['description']) && !empty($item[$feed['mapping']['description']])) {
                     $feed['items'][$key][$feed['mapping']['description']] = preg_replace(
                         ['#"\/upload\/#u', '#"\/static\/#u'],
                         ['"'.$this->cms_config->upload_host_abs.'/', '"'.$this->cms_config->host.'/static/'],

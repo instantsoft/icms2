@@ -34,6 +34,9 @@ class actionCommentsRate extends cmsAction {
         }
 
         $comment = $this->model->getComment($comment_id);
+        if (!$comment) {
+            return $this->cms_template->renderJSON(['error' => true]);
+        }
 
         if ($comment['user_id'] == $this->cms_user->id) {
             return $this->cms_template->renderJSON(['error' => true]);

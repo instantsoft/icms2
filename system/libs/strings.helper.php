@@ -625,6 +625,8 @@ function string_make_links($string){
  */
 function string_get_meta_keywords($text, $min_length = 5, $limit = 10) {
 
+    if(!$text){ return ''; }
+
     $stat = [];
 
     $text = str_replace(["\n", '<br>', '<br/>'], ' ', $text);
@@ -702,19 +704,23 @@ function string_get_stopwords($lang = 'ru') {
  * @param array $clean_tags Массив тегов, которые надо вырезать вместе с содержимым перед очисткой
  * @return string
  */
-function string_short($string, $length = 0, $postfix = '', $type = 's', $clean_tags = []){
+function string_short($string, $length = 0, $postfix = '', $type = 's', $clean_tags = []) {
 
-    if($clean_tags){
-        $string = preg_replace( '#<('. implode('|', $clean_tags).')[^>]*?>.*</\\1>#sui', '', $string);
+    if(!$string){ return ''; }
+
+    if ($clean_tags) {
+        $string = preg_replace('#<(' . implode('|', $clean_tags) . ')[^>]*?>.*</\\1>#sui', '', $string);
     }
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами
-    $string = str_replace(array("\n", "\r", '<br>', '<br/>', '</p>'), ' ', $string);
+    $string = str_replace(["\n", "\r", '<br>', '<br/>', '</p>'], ' ', $string);
     $string = strip_tags($string);
     $string = preg_replace('#\s\s+#u', ' ', $string);
 
-    if (!$length || mb_strlen($string) <= $length) { return $string; }
+    if (!$length || mb_strlen($string) <= $length) {
+        return $string;
+    }
 
     $length -= min($length, mb_strlen($postfix));
 
@@ -723,13 +729,17 @@ function string_short($string, $length = 0, $postfix = '', $type = 's', $clean_t
         case 's':
             $string = mb_substr($string, 0, $length);
             preg_match('/^(.+)([\.!?…]+)(.*)$/u', $string, $matches);
-            if (!empty($matches[2])) { $string = $matches[1].$matches[2]; }
+            if (!empty($matches[2])) {
+                $string = $matches[1] . $matches[2];
+            }
             break;
         // Обрезаем по последнему слову
         case 'w':
             $string = mb_substr($string, 0, $length + 1);
             preg_match('/^(.*)([\W]+)(\w*)$/uU', $string, $matches);
-            if (!empty($matches[1])) { $string = $matches[1]; }
+            if (!empty($matches[1])) {
+                $string = $matches[1];
+            }
             break;
         // Обрезаем как получится
         default:

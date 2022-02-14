@@ -194,7 +194,9 @@ class modelActivity extends cmsModel {
                 $item['images'] = $images_exist;
             }
 
-            $item['description'] = sprintf($item['description'], $link);
+            if($item['description']){
+                $item['description'] = sprintf($item['description'], $link);
+            }
 
             $item['date_diff'] = string_date_age_max($item['date_pub'], true);
 
