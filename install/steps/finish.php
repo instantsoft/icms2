@@ -1,17 +1,14 @@
 <?php
 
-function step($is_submit=false){
+function step($is_submit = false) {
 
     $host = $_SESSION['install']['hosts']['root'];
 
     unset($_SESSION['install']);
 
-    $result = array(
-        'html' => render('step_finish', array(
+    return [
+        'html' => render('step_finish', [
             'host' => $host
-        ))
-    );
-
-    return $result;
-
+        ])
+    ];
 }

@@ -30,7 +30,7 @@ function get_db_collation($charset) {
 
 function check_db() {
 
-    $db = $_POST['db'];
+    $db = get_post_array('db');
 
     $db['host']           = trim($db['host']);
     $db['user']           = trim($db['user']);
