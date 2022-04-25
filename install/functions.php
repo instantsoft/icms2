@@ -249,5 +249,5 @@ function get_post($name) {
 }
 
 function get_post_array($name) {
-    return (isset($_POST[$name]) && is_array($_POST[$name])) ? $_POST[$name] : '';
+    return (isset($_POST[$name]) && is_array($_POST[$name])) ? $_POST[$name] : [];
 }

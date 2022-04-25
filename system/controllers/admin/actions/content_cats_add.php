@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelContent $model_backend_content
+ */
 class actionAdminContentCatsAdd extends cmsAction {
 
     public function run($ctype_id = false, $parent_id = 1) {
@@ -102,7 +104,7 @@ class actionAdminContentCatsAdd extends cmsAction {
                 $result = $this->model_backend_content->addCategory($ctype['name'], [
                     'parent_id' => $data['parent_id'],
                     'title'     => $category_title
-                ]);
+                ], !empty($ctype['options']['is_cats_first_level_slug']));
 
                 $levels_ids[0] = $result['id'];
                 $cats_ids[]    = $result['id'];
@@ -119,7 +121,7 @@ class actionAdminContentCatsAdd extends cmsAction {
             $result = $this->model_backend_content->addCategory($ctype['name'], [
                 'parent_id' => $parent_id,
                 'title'     => ltrim($category_title, '- ')
-            ]);
+            ], !empty($ctype['options']['is_cats_first_level_slug']));
 
             $levels_ids[$level] = $result['id'];
             $cats_ids[]         = $result['id'];

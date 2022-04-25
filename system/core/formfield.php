@@ -646,24 +646,41 @@ class cmsFormField {
 
         } else if($this->getOption('list_where') === 'table'){
 
-            $model = new cmsModel();
+            $list_table = $this->getOption('list_table');
 
-            $list_where_cond = $this->getOption('list_where_cond');
-            if($list_where_cond){
-                $list_where_cond = json_decode($list_where_cond, true);
-                if(is_array($list_where_cond)){
-                    $model->applyDatasetFilters(['filters' => $list_where_cond]);
+            if($list_table){
+
+                $model = new cmsModel();
+
+                $list_order = $this->getOption('list_order');
+                if($list_order){
+
+                    $ordering = explode(':', $list_order);
+
+                    $model->orderBy($ordering[0], (!empty($ordering[1]) ? $ordering[1] : 'asc'));
                 }
+
+                $list_where_cond = $this->getOption('list_where_cond');
+                if($list_where_cond){
+                    $list_where_cond = json_decode($list_where_cond, true);
+                    if(is_array($list_where_cond)){
+                        $model->applyDatasetFilters(['filters' => $list_where_cond]);
+                    }
+                }
+
+                $model->limit(false);
+
+                $this->items = $model->selectTranslatedField($this->getOption('list_where_title'), $list_table)->
+                        get($list_table, function ($item, $model){
+                    return $item[$this->getOption('list_where_title')];
+                }, $this->getOption('list_where_id')) ?: [];
+
+                if(!$list_order){
+                    ksort($this->items, SORT_NATURAL);
+                }
+
+                $items = $this->items;
             }
-
-            $this->items = $model->selectTranslatedField($this->getOption('list_where_title'), $this->getOption('list_table'))->
-                    get($this->getOption('list_table'), function ($item, $model){
-                return $item[$this->getOption('list_where_title')];
-            }, $this->getOption('list_where_id'));
-
-            ksort($this->items, SORT_NATURAL);
-
-            $items = $this->items;
         }
 
         return $items;

@@ -32,6 +32,50 @@ class fieldList extends cmsFormField {
             new fieldCheckbox('show_empty_value', [
                 'title'   => LANG_PARSER_LIST_ADD_EMPTY,
                 'default' => true
+            ]),
+            new fieldList('list_where', [
+                'title' => LANG_PARSER_LIST_WHERE,
+                'items' => [
+                    ''  => LANG_PARSER_LIST_WHERE_PRE,
+                    'table' => LANG_PARSER_LIST_WHERE_TBL
+                ]
+            ]),
+            new fieldString('list_table', [
+                'title' => LANG_TABLE,
+                'visible_depend' => ['options:list_where' => ['show' => ['table']]]
+            ]),
+            new fieldString('list_where_cond', [
+                'title' => LANG_PARSER_LIST_COND,
+                'patterns_hint' => ['patterns' =>  [
+                    'eq' => '=',
+                    'gt' => '>',
+                    'lt' => '<',
+                    'ge' => '≥',
+                    'le' => '≤',
+                    'nn' => LANG_FILTER_NOT_NULL,
+                    'ni' => LANG_FILTER_IS_NULL,
+                    'lk' => LANG_FILTER_LIKE,
+                    'ln' => LANG_FILTER_NOT_LIKE,
+                    'lb' => LANG_FILTER_LIKE_BEGIN,
+                    'lf' => LANG_FILTER_LIKE_END,
+                    'dy' => LANG_FILTER_DATE_YOUNGER,
+                    'do' => LANG_FILTER_DATE_OLDER
+                ], 'wrap_symbols' => ['"','"']],
+                'hint' => LANG_PARSER_LIST_COND_HINT,
+                'visible_depend' => ['options:list_where' => ['show' => ['table']]]
+            ]),
+            new fieldString('list_order', [
+                'title' => LANG_SORTING,
+                'hint' => LANG_PARSER_LIST_ORDER,
+                'visible_depend' => ['options:list_where' => ['show' => ['table']]]
+            ]),
+            new fieldString('list_where_id', [
+                'title' => LANG_PARSER_LIST_WHERE_ID,
+                'visible_depend' => ['options:list_where' => ['show' => ['table']]]
+            ]),
+            new fieldString('list_where_title', [
+                'title' => LANG_PARSER_LIST_WHERE_TITLE,
+                'visible_depend' => ['options:list_where' => ['show' => ['table']]]
             ])
         ];
     }

@@ -433,16 +433,13 @@ class fieldNumber extends cmsFormField {
             return true;
         }
 
-        $rgxp = "/^([\-]?)([0-9\.,]+)$/i";
-
         if (!empty($value['from'])){
 
             if(is_array($value['from'])){
                 return ERR_VALIDATE_NUMBER;
             }
 
-            if (!preg_match($rgxp, $value['from'])){ return ERR_VALIDATE_NUMBER; }
-
+            if (!is_numeric($value['from'])){ return ERR_VALIDATE_NUMBER; }
         }
 
         if (!empty($value['to']) && !is_array($value['to'])){
@@ -451,8 +448,7 @@ class fieldNumber extends cmsFormField {
                 return ERR_VALIDATE_NUMBER;
             }
 
-            if (!preg_match($rgxp, $value['to'])){ return ERR_VALIDATE_NUMBER; }
-
+            if (!is_numeric($value['to'])){ return ERR_VALIDATE_NUMBER; }
         }
 
         return true;

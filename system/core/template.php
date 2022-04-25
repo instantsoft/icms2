@@ -2818,8 +2818,6 @@ class cmsTemplate {
             $template_name = $this->site_config->template;
         }
 
-        $files = $__files = [];
-
         foreach ($inherit_names as $name) {
             $_files = cmsCore::getFilesList(self::TEMPLATE_BASE_PATH.$name.'/'.$path, $pattern, true);
             $files = array_merge($files, $_files);

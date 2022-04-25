@@ -223,6 +223,11 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_USER_CHANGE_LANG
                     )),
 
+                    new fieldCheckbox('is_browser_auto_lang', array(
+                        'title' => LANG_CP_SETTINGS_BROWSER_AUTO_LANG,
+                        'visible_depend' => array('is_user_change_lang' => array('show' => array('1')))
+                    )),
+
                     new fieldList('default_editor', array(
                         'title' => LANG_CP_SETTINGS_EDITOR,
                         'default' => 'redactor',

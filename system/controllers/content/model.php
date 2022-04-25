@@ -1127,7 +1127,6 @@ class modelContent extends cmsModel {
         return $this->db->isTableExists($table_name);
 
     }
-//============================================================================//
 
     public function filterPropValue($ctype_name, $prop, $value){
 
@@ -1143,7 +1142,6 @@ class modelContent extends cmsModel {
         }
 
         return false;
-
     }
 
 //============================================================================//
@@ -1151,36 +1149,37 @@ class modelContent extends cmsModel {
 
     public function addContentItem($ctype, $item, $fields){
 
-        $table_name = $this->table_prefix . $ctype['name'];
+        $table_name = $this->getContentTypeTableName($ctype['name']);
 
         $item['user_id'] = empty($item['user_id']) ? cmsUser::getInstance()->id : $item['user_id'];
 
-        if (!empty($item['props'])){
+        if (!empty($item['props'])) {
             $props_values = $item['props'];
             unset($item['props']);
         }
 
-        if(!isset($item['category_id'])){
+        if (!isset($item['category_id'])) {
             $item['category_id'] = 0;
         }
 
-        if(!empty($item['is_approved'])){
+        if (!empty($item['is_approved'])) {
             $item['date_approved'] = null; // будет CURRENT_TIMESTAMP
         }
 
-        if (!empty($item['new_category'])){
-            $category = $this->addCategory($ctype['name'], array(
-                'title' => $item['new_category'],
+        if (!empty($item['new_category'])) {
+            $category = $this->addCategory($ctype['name'], [
+                'title'     => $item['new_category'],
                 'parent_id' => $item['category_id']
-            ));
+            ], !empty($ctype['options']['is_cats_first_level_slug']));
+
             $item['category_id'] = $category['id'];
         }
 
         unset($item['new_category']);
 
-        if (!empty($item['new_folder'])){
+        if (!empty($item['new_folder'])) {
             $folder_exists = $this->getContentFolderByTitle($item['new_folder'], $ctype['id'], $item['user_id']);
-            if(!$folder_exists){
+            if (!$folder_exists) {
                 $item['folder_id'] = $this->addContentFolder($ctype['id'], $item['user_id'], $item['new_folder']);
             } else {
                 $item['folder_id'] = $folder_exists['id'];
@@ -1189,85 +1188,82 @@ class modelContent extends cmsModel {
 
         unset($item['new_folder']);
 
-		$add_cats = [];
+        $add_cats = [];
 
-		if (isset($item['add_cats'])){
-            foreach($item['add_cats'] as $cat_id){
-                if(!$cat_id){
+        if (isset($item['add_cats'])) {
+            foreach ($item['add_cats'] as $cat_id) {
+                if (!$cat_id) {
                     continue;
                 }
                 $add_cats[] = $cat_id;
             }
-			unset($item['add_cats']);
-		}
+            unset($item['add_cats']);
+        }
 
         $item['id'] = $this->insert($table_name, $item);
 
-		$this->updateContentItemCategories($ctype['name'], $item['id'], $item['category_id'], $add_cats);
+        $this->updateContentItemCategories($ctype['name'], $item['id'], $item['category_id'], $add_cats);
 
-        if (isset($props_values)){
+        if (isset($props_values)) {
             $this->addPropsValues($ctype['name'], $item['id'], $props_values);
         }
 
-        if (empty($item['slug'])){
+        if (empty($item['slug'])) {
             $item = array_merge($item, $this->getContentItem($ctype['name'], $item['id']));
             $item['slug'] = $this->getItemSlug($ctype, $item, $fields);
         }
 
-        $this->update($table_name, $item['id'], array(
-            'slug' => $item['slug'],
+        $this->update($table_name, $item['id'], [
+            'slug'               => $item['slug'],
             'date_last_modified' => null
-        ));
+        ]);
 
-        cmsCache::getInstance()->clean('content.list.'.$ctype['name']);
-        cmsCache::getInstance()->clean('content.item.'.$ctype['name']);
+        cmsCache::getInstance()->clean('content.list.' . $ctype['name']);
+        cmsCache::getInstance()->clean('content.item.' . $ctype['name']);
 
         $this->fieldsAfterStore($item, $fields, 'add');
 
         return $item;
-
     }
 
-//============================================================================//
-//============================================================================//
+    public function updateContentItem($ctype, $id, $item, $fields) {
 
-    public function updateContentItem($ctype, $id, $item, $fields){
+        $table_name = $this->getContentTypeTableName($ctype['name']);
 
-        $table_name = $this->table_prefix . $ctype['name'];
-
-        if(array_key_exists('date_pub_end', $item)){
-            if($item['date_pub_end'] === null){
+        if (array_key_exists('date_pub_end', $item)) {
+            if ($item['date_pub_end'] === null) {
                 $item['date_pub_end'] = false;
             }
         }
 
-        if (!$ctype['is_fixed_url']){
+        if (!$ctype['is_fixed_url']) {
 
-            if ($ctype['is_auto_url']){
+            if ($ctype['is_auto_url']) {
                 $item['slug'] = $this->getItemSlug($ctype, $item, $fields);
-            } elseif(!empty($item['slug'])) {
+            } elseif (!empty($item['slug'])) {
                 $item['slug'] = lang_slug($item['slug']);
             }
 
-            if(!empty($item['slug'])) {
-                $this->update($table_name, $id, array( 'slug' => $item['slug'] ));
+            if (!empty($item['slug'])) {
+                $this->update($table_name, $id, ['slug' => $item['slug']]);
             }
-
         }
 
-        if (!empty($item['new_category'])){
-            $category = $this->addCategory($ctype['name'], array(
-                'title' => $item['new_category'],
+        if (!empty($item['new_category'])) {
+
+            $category = $this->addCategory($ctype['name'], [
+                'title'     => $item['new_category'],
                 'parent_id' => $item['category_id']
-            ));
+            ], !empty($ctype['options']['is_cats_first_level_slug']));
+
             $item['category_id'] = $category['id'];
         }
 
         unset($item['new_category']);
 
-        if (!empty($item['new_folder'])){
+        if (!empty($item['new_folder'])) {
             $folder_exists = $this->getContentFolderByTitle($item['new_folder'], $ctype['id'], $item['user_id']);
-            if(!$folder_exists){
+            if (!$folder_exists) {
                 $item['folder_id'] = $this->addContentFolder($ctype['id'], $item['user_id'], $item['new_folder']);
             } else {
                 $item['folder_id'] = $folder_exists['id'];
@@ -1279,68 +1275,68 @@ class modelContent extends cmsModel {
 
         // удаляем поле SLUG из перечня полей для апдейта,
         // посколько оно могло быть изменено ранее
-        $update_item = $item; unset($update_item['slug']);
+        $update_item = $item;
+        unset($update_item['slug']);
 
-        if (!empty($update_item['props'])){
+        if (!empty($update_item['props'])) {
             $this->updatePropsValues($ctype['name'], $id, $update_item['props']);
         }
 
-		unset($update_item['props']);
+        unset($update_item['props']);
         unset($update_item['user']);
         unset($update_item['user_nickname']);
 
-		$add_cats = [];
+        $add_cats = [];
 
-		if (isset($update_item['add_cats'])){
-            foreach($update_item['add_cats'] as $cat_id){
-                if(!$cat_id){
+        if (isset($update_item['add_cats'])) {
+            foreach ($update_item['add_cats'] as $cat_id) {
+                if (!$cat_id) {
                     continue;
                 }
                 $add_cats[] = $cat_id;
             }
-			unset($update_item['add_cats']);
-		}
+            unset($update_item['add_cats']);
+        }
 
         $update_item['date_last_modified'] = null;
 
         $this->update($table_name, $id, $update_item);
 
-		$this->updateContentItemCategories($ctype['name'], $id, $item['category_id'], $add_cats);
+        $this->updateContentItemCategories($ctype['name'], $id, $item['category_id'], $add_cats);
 
-        cmsCache::getInstance()->clean('content.list.'.$ctype['name']);
-        cmsCache::getInstance()->clean('content.item.'.$ctype['name']);
+        cmsCache::getInstance()->clean('content.list.' . $ctype['name']);
+        cmsCache::getInstance()->clean('content.item.' . $ctype['name']);
 
         $this->fieldsAfterStore($item, $fields, 'edit');
 
         return $item;
-
     }
 
-    public function updateContentItemTags($ctype_name, $id, $tags){
+    public function updateContentItemTags($ctype_name, $id, $tags) {
 
-        $table_name = $this->table_prefix . $ctype_name;
+        $table_name = $this->getContentTypeTableName($ctype_name);
 
-        $this->update($table_name, $id, array(
+        $this->update($table_name, $id, [
             'tags' => $tags
-        ));
+        ]);
 
-        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
-        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.list.' . $ctype_name);
+        cmsCache::getInstance()->clean('content.item.' . $ctype_name);
 
     }
 
     public function replaceCachedTags($ctype_name, $ids, $new_tag, $old_tag) {
 
-        $table_name = $this->table_prefix . $ctype_name;
+        $table_name = $this->getContentTypeTableName($ctype_name);
 
         $old_tag = $this->db->escape($old_tag);
         $new_tag = $this->db->escape($new_tag);
 
-        if(!is_array($ids)){
+        if (!is_array($ids)) {
             $ids = array($ids);
         }
 
-        foreach($ids as $k=>$v){
+        foreach ($ids as $k => $v) {
             $v = $this->db->escape($v);
             $ids[$k] = "'{$v}'";
         }
@@ -1348,8 +1344,8 @@ class modelContent extends cmsModel {
 
         $this->db->query("UPDATE `{#}{$table_name}` SET `tags` = REPLACE(`tags`, '{$old_tag}', '$new_tag') WHERE id IN ({$ids})");
 
-        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
-        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.list.' . $ctype_name);
+        cmsCache::getInstance()->clean('content.item.' . $ctype_name);
 
     }
 

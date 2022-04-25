@@ -150,6 +150,13 @@ class cmsUser {
             return [];
         }
 
+        $user = cmsEventsManager::hook('user_preloaded', $user);
+
+        if (!$user) {
+            self::logout();
+            return [];
+        }
+
         $model->startTransaction();
 
         // если дата последнего визита еще не сохранена в сессии,
@@ -327,6 +334,9 @@ class cmsUser {
 
         $model->updateUserIp($user['id']);
 
+        self::getInstance()->id = $user['id'];
+        self::getInstance()->is_logged = true;
+
         return true;
     }
 
@@ -367,8 +377,6 @@ class cmsUser {
         }
 
         self::sessionUnset('user');
-
-        self::getInstance()->id = 0;
 
         return true;
     }

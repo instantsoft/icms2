@@ -108,7 +108,7 @@
     define('LANG_CP_CONTENT_CATS_ADD',          'Создать категории');
     define('LANG_CP_CONTENT_CATS_EDIT',         'Редактировать категорию');
     define('LANG_CP_CONTENT_CATS_ORDER',        'Порядок');
-    define('LANG_CP_CONTENT_CATS_ORDER_DRAG',   'Перетаскивайте категории');
+    define('LANG_CP_CONTENT_CATS_ORDER_DRAG',   'Перетаскивайте категории мышью и нажмите "Сохранить"');
     define('LANG_CP_CONTENT_CATS_NONE',         'Данный контент не имеет категорий');
     define('LANG_CP_TRASH',                     'Корзина');
     define('LANG_CP_SHOW_ONLY_IN_TRASH',        'Показать только удалённые материалы');
@@ -187,6 +187,7 @@
     define('LANG_CP_SEOMETA_CATS_KEYS',         'Разрешить ввод ключевых слов для категорий');
     define('LANG_CP_SEOMETA_CATS_DESC',         'Разрешить ввод META-описаний для категорий');
     define('LANG_CP_CATS_AUTO_URL',             'Генерировать URL из названия категории');
+    define('LANG_CP_CATS_FIRST_LEVEL_SLUG',     'URL категорий всегда первого уровня независимо от вложенности');
     define('LANG_CP_LISTVIEW_OPTIONS',          'Просмотр списка');
     define('LANG_CP_PROFILELIST_ON',            'Просмотр списка в профилях пользователей включен');
     define('LANG_CP_LISTVIEW_ON',               'Просмотр списка на сайте включен');
@@ -548,6 +549,7 @@
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'По изменению подсети');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT2', 'Строго по ip адресу');
     define('LANG_CP_SETTINGS_USER_CHANGE_LANG', 'Разрешить смену языка пользователями (подстановкой префикса в URL)');
+    define('LANG_CP_SETTINGS_BROWSER_AUTO_LANG', 'Автоматически определять язык по локали браузера');
     define('LANG_CP_SETTINGS_ALLOW_IPS',        'Разрешенные ip адреса для доступа в админку');
     define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Каждый с новой строки. Не указано - разрешено всем. Текущий ip адрес: %s');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'Как определять ip посетителя');

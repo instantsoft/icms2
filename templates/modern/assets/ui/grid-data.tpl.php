@@ -62,7 +62,11 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
                                 <?php } else { ?>
                                     <?php if (!empty($column['filter_select'])){ ?>
 
-                                        <?php echo html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'custom-select custom-select-sm'])); ?>
+                                        <?php $selected = (isset($filter[$name]) ? $filter[$name] : '');
+                                        if (!empty($filter_attributes['multiple'])) {
+                                            $selected = explode(',', $selected);
+                                        } ?>
+                                        <?php echo html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), $selected, array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'custom-select custom-select-sm'])); ?>
 
                                     <?php if (!empty($filter_attributes['multiple'])) { ?>
                                         <?php ob_start(); ?>

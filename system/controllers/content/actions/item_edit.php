@@ -236,6 +236,9 @@ class actionContentItemEdit extends cmsAction {
 
                         cmsEventsManager::hook('content_after_update_approve', array('ctype_name' => $ctype['name'], 'item' => $item));
                         cmsEventsManager::hook("content_{$ctype['name']}_after_update_approve", $item);
+
+                        cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
+
                     } else {
 
                         $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');

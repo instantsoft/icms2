@@ -7,14 +7,15 @@
 class cmsImages {
 
     const CROPTOP             = 1;
+    const CROPCENTRE          = 2;
     const CROPCENTER          = 2;
     const CROPBOTTOM          = 3;
     const CROPLEFT            = 4;
     const CROPRIGHT           = 5;
     const CROPTOPCENTER       = 6;
 
-    public $quality_jpg       = 95;
-    public $quality_webp      = 95;
+    public $quality_jpg       = 90;
+    public $quality_webp      = 90;
     public $quality_png       = 6;
     public $quality_truecolor = true;
     public $gamma_correct     = false;
@@ -24,18 +25,31 @@ class cmsImages {
 
     protected $source_file_path;
     protected $source_image;
-    protected $original_w;
-    protected $original_h;
-    protected $dest_x = 0;
-    protected $dest_y = 0;
-    protected $source_x;
-    protected $source_y;
-    protected $dest_w;
-    protected $dest_h;
-    protected $source_w;
-    protected $source_h;
+    protected $original_w = 0;
+    protected $original_h = 0;
+    protected $dest_x     = 0;
+    protected $dest_y     = 0;
+    protected $source_x   = 0;
+    protected $source_y   = 0;
+    protected $dest_w     = 0;
+    protected $dest_h     = 0;
+    protected $source_w   = 0;
+    protected $source_h   = 0;
     protected $source_info;
-    protected $filters = [];
+    protected $filters    = [];
+    protected $dest_dir = '';
+
+    /**
+     * Устанавливает директорию назначения
+     * @param string $dest_dir
+     * @return $this
+     */
+    public function setDestinationDir($dest_dir) {
+
+        $this->dest_dir = $dest_dir;
+
+        return $this;
+    }
 
     /**
      * Экземпляр класса из base64 строки изображения
@@ -59,8 +73,12 @@ class cmsImages {
 
         $image_type = $this->source_type;
         $dest_ext   = $this->getSourceExt();
-        $dest_dir   = files_get_upload_dir($user_id === null ? cmsUser::get('id') : $user_id);
 
+        if($this->dest_dir){
+            $dest_dir = $this->dest_dir;
+        } else {
+            $dest_dir = files_get_upload_dir($user_id === null ? cmsUser::get('id') : $user_id);
+        }
 
         if(!empty($preset['convert_format'])){
 
@@ -77,7 +95,7 @@ class cmsImages {
         }
 
         if($file_name){
-            $dest_name = files_sanitize_name($file_name.' '.$preset['name']);
+            $dest_name = files_sanitize_name($file_name.($this->dest_dir ? '' : ' '.$preset['name']));
         } else {
             $dest_name = substr(md5(microtime(true)), 0, 8);
         }
@@ -175,7 +193,6 @@ class cmsImages {
                 imagecopy($dest_image, $wm, $x, $y, 0, 0, $wm_width, $wm_height);
 
                 imagedestroy($wm);
-
             });
 
         }
@@ -242,7 +259,7 @@ class cmsImages {
     protected function applyFilter($image) {
         foreach ($this->filters as $function) {
             if(is_callable($function)){
-                call_user_func_array($function, array($image, $this));
+                call_user_func_array($function, [$image, $this]);
             }
         }
     }
@@ -273,7 +290,9 @@ class cmsImages {
             throw new Exception('Could not read file');
         }
 
-        list($this->original_w, $this->original_h, $this->source_type) = $image_info;
+        $this->original_w  = $image_info[0];
+        $this->original_h  = $image_info[1];
+        $this->source_type = $image_info[2];
 
         switch ($this->source_type) {
             case IMAGETYPE_GIF:
@@ -290,6 +309,8 @@ class cmsImages {
                 break;
             case IMAGETYPE_WEBP:
                 $this->source_image = imagecreatefromwebp($filename);
+                $this->original_w = imagesx($this->source_image);
+                $this->original_h = imagesy($this->source_image);
                 break;
             default:
                 throw new Exception('Unsupported image type');
@@ -300,6 +321,8 @@ class cmsImages {
         }
 
         $this->source_file_path = $filename;
+
+        finfo_close($finfo);
 
         return $this->resize($this->getSourceWidth(), $this->getSourceHeight());
     }
@@ -380,7 +403,7 @@ class cmsImages {
      * Сохраняет новое изображение
      *
      * @param string $filename     Имя файла для сохранения
-     * @param string $image_type   Тип изображения
+     * @param integer $image_type  Тип изображения
      * @param integer $quality     Качество
      * @param integer $permissions Права доступа
      * @param array $exact_size    Массив размеров
@@ -392,7 +415,7 @@ class cmsImages {
             $image_type = $this->source_type;
         }
 
-        $quality = is_numeric($quality) ? abs(intval($quality)) : null;
+        $quality = is_numeric($quality) ? abs((int)$quality) : null;
 
         switch ($image_type) {
             case IMAGETYPE_GIF:
@@ -414,6 +437,7 @@ class cmsImages {
                 imagesavealpha($dest_image, true);
 
                 break;
+
             case IMAGETYPE_JPEG:
 
                 if (!empty($exact_size) && is_array($exact_size)) {
@@ -433,6 +457,7 @@ class cmsImages {
                 }
 
                 break;
+
             case IMAGETYPE_WEBP:
 
                 if (!empty($exact_size) && is_array($exact_size)) {
@@ -455,6 +480,7 @@ class cmsImages {
                 imagesavealpha($dest_image, true);
 
                 break;
+
             case IMAGETYPE_PNG:
 
                 if (!$this->quality_truecolor || !imageistruecolor($this->source_image)) {
@@ -498,15 +524,12 @@ class cmsImages {
 
                 $this->dest_x = 0;
                 $this->dest_y = ($exact_size[1] - $this->getDestHeight()) / 2;
-
             }
             if ($this->getSourceHeight() > $this->getSourceWidth()) {
 
                 $this->dest_x = ($exact_size[0] - $this->getDestWidth()) / 2;
                 $this->dest_y = 0;
-
             }
-
         }
 
         imagecopyresampled(
@@ -592,7 +615,6 @@ class cmsImages {
         unlink($string_temp);
 
         return $string;
-
     }
 
     /**
@@ -619,7 +641,6 @@ class cmsImages {
         header('Content-Type: ' . image_type_to_mime_type($image_type));
 
         $this->save(null, $image_type, $quality);
-
     }
 
     /**
@@ -634,17 +655,16 @@ class cmsImages {
         if ($this->getSourceHeight() < $this->getSourceWidth()) {
 
             $ratio = $max_short / $this->getSourceHeight();
-            $long  = $this->getSourceWidth() * $ratio;
+            $long = (int) ($this->getSourceWidth() * $ratio);
 
             return $this->resize($long, $max_short, $allow_enlarge);
 
         } else {
 
             $ratio = $max_short / $this->getSourceWidth();
-            $long  = $this->getSourceHeight() * $ratio;
+            $long = (int) ($this->getSourceHeight() * $ratio);
 
             return $this->resize($max_short, $long, $allow_enlarge);
-
         }
 
     }
@@ -662,14 +682,14 @@ class cmsImages {
         if ($this->getSourceHeight() > $this->getSourceWidth()) {
 
             $ratio = $max_long / $this->getSourceHeight();
-            $short = $this->getSourceWidth() * $ratio;
+            $short = (int) ($this->getSourceWidth() * $ratio);
 
             return $this->resize($short, $max_long, $allow_enlarge);
 
         } else {
 
             $ratio = $max_long / $this->getSourceWidth();
-            $short = $this->getSourceHeight() * $ratio;
+            $short = (int) ($this->getSourceHeight() * $ratio);
 
             return $this->resize($max_long, $short, $allow_enlarge);
         }
@@ -686,10 +706,9 @@ class cmsImages {
     public function resizeToHeight($height, $allow_enlarge = false) {
 
         $ratio = $height / $this->getSourceHeight();
-        $width = $this->getSourceWidth() * $ratio;
+        $width = (int) ($this->getSourceWidth() * $ratio);
 
         return $this->resize($width, $height, $allow_enlarge);
-
     }
 
     /**
@@ -702,10 +721,9 @@ class cmsImages {
     public function resizeToWidth($width, $allow_enlarge = false) {
 
         $ratio  = $width / $this->getSourceWidth();
-        $height = $this->getSourceHeight() * $ratio;
+        $height = (int) ($this->getSourceHeight() * $ratio);
 
         return $this->resize($width, $height, $allow_enlarge);
-
     }
 
     /**
@@ -722,30 +740,13 @@ class cmsImages {
             return $this;
         }
 
-        $ratio = $this->getSourceHeight() / $this->getSourceWidth();
+        $ratio  = $this->getSourceHeight() / $this->getSourceWidth();
+        $width = $max_width;
+        $height = (int) ($width * $ratio);
 
-        if($this->getSourceHeight() < $this->getSourceWidth()){
-
+        if ($height > $max_height) {
             $height = $max_height;
-            $width  = round($height / $ratio);
-
-            if ($width > $max_width) {
-                $width  = $max_width;
-                $height = round($width * $ratio);
-            }
-
-        } elseif($this->getSourceHeight() > $this->getSourceWidth()){
-
-            $width  = $max_width;
-            $height = round($width * $ratio);
-
-            if ($height > $max_height) {
-                $height = $max_height;
-                $width  = round($height / $ratio);
-            }
-
-        } else {
-            return $this->resizeToLongSide(($max_width > $max_height ? $max_width : $max_height), $allow_enlarge);
+            $width = (int) ($height / $ratio);
         }
 
         return $this->resize($width, $height, $allow_enlarge);
@@ -759,11 +760,10 @@ class cmsImages {
      */
     public function scale($scale) {
 
-        $width  = $this->getSourceWidth() * $scale / 100;
-        $height = $this->getSourceHeight() * $scale / 100;
+        $width  = (int) ($this->getSourceWidth() * $scale / 100);
+        $height = (int) ($this->getSourceHeight() * $scale / 100);
 
         return $this->resize($width, $height, true);
-
     }
 
     /**
@@ -793,7 +793,6 @@ class cmsImages {
         $this->source_h = $this->getSourceHeight();
 
         return $this;
-
     }
 
     /**
@@ -826,7 +825,7 @@ class cmsImages {
 
             $this->resizeToHeight($height, $allow_enlarge);
 
-            $excess_width = ($this->getDestWidth() - $width) / $this->getDestWidth() * $this->getSourceWidth();
+            $excess_width = (int) (($this->getDestWidth() - $width) * $this->getSourceWidth() / $this->getDestWidth());
 
             $this->source_w = $this->getSourceWidth() - $excess_width;
             $this->source_x = $this->getCropPosition($excess_width, $position);
@@ -836,16 +835,14 @@ class cmsImages {
 
             $this->resizeToWidth($width, $allow_enlarge);
 
-            $excess_height = ($this->getDestHeight() - $height) / $this->getDestHeight() * $this->getSourceHeight();
+            $excess_height = (int) (($this->getDestHeight() - $height) * $this->getSourceHeight() / $this->getDestHeight());
 
             $this->source_h = $this->getSourceHeight() - $excess_height;
             $this->source_y = $this->getCropPosition($excess_height, $position);
             $this->dest_h   = $height;
-
         }
 
         return $this;
-
     }
 
     /**
@@ -882,7 +879,6 @@ class cmsImages {
         $this->dest_h = $height;
 
         return $this;
-
     }
 
     /**
@@ -950,7 +946,7 @@ class cmsImages {
      * @param bool $enable
      * @return \cmsImages
      */
-    public function gamma($enable = true) {
+    public function gamma($enable = false) {
         $this->gamma_correct = $enable;
         return $this;
     }

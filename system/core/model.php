@@ -197,56 +197,58 @@ class cmsModel {
         return $category;
     }
 
-    public function getCategoryBySLUG($ctype_name, $slug){
-
+    public function getCategoryBySLUG($ctype_name, $slug) {
         return $this->getCategory($ctype_name, $slug, 'slug');
-
     }
 
-    public function getCategorySLUG($category, $ctype_name){
+    public function getCategorySLUG($category, $ctype_name) {
 
-        $slug = '';
+        if (!empty($category['path'])) {
 
-        foreach($category['path'] as $c){
-            if ($c['id'] == 1) { continue; }
-            if ($slug) { $slug .= '/'; }
-            $slug .= lang_slug( empty($c['slug_key']) ? str_replace('/', '', $c['title']) : $c['slug_key'] );
+            $slug = '';
+
+            foreach ($category['path'] as $c) {
+                if ($c['id'] == 1) {
+                    continue;
+                }
+                if ($slug) {
+                    $slug .= '/';
+                }
+                $slug .= lang_slug(empty($c['slug_key']) ? str_replace('/', '', $c['title']) : $c['slug_key']);
+            }
+        } else {
+
+            $slug = lang_slug(empty($category['slug_key']) ? str_replace('/', '', $category['title']) : $category['slug_key']);
         }
 
-        $slug = mb_substr($slug, 0, 255);
-
-        $slug = $this->checkCorrectEqualSlug($this->getContentCategoryTableName($ctype_name), $slug, $category['id'], 255);
-
-        return $slug;
+        return $this->checkCorrectEqualSlug($this->getContentCategoryTableName($ctype_name), $slug, $category['id'], 255);
     }
 
 //============================================================================//
 //============================================================================//
 
-    public function getCategoriesTree($ctype_name, $is_show_root=true) {
+    public function getCategoriesTree($ctype_name, $is_show_root = true) {
 
-        if (!$is_show_root){
+        if (!$is_show_root) {
             $this->filterGt('parent_id', 0);
         }
 
-        if(!$this->order_by){
+        if (!$this->order_by) {
             $this->orderBy('ns_left');
         }
 
         $this->useCache('content.categories');
 
-        return $this->get($this->getContentCategoryTableName($ctype_name), function($node, $model){
-            if ($node['ns_level']==0) { $node['title'] = LANG_ROOT_CATEGORY; }
-            if(!empty($node['allow_add'])){
+        return $this->get($this->getContentCategoryTableName($ctype_name), function ($node, $model) {
+            if ($node['ns_level'] == 0) {
+                $node['title'] = LANG_ROOT_CATEGORY;
+            }
+            if (!empty($node['allow_add'])) {
                 $node['allow_add'] = cmsModel::yamlToArray($node['allow_add']);
             }
             return $node;
         });
-
     }
-
-//============================================================================//
-//============================================================================//
 
     public function getSubCategories($ctype_name, $parent_id = 1, $item_callback = false) {
 
@@ -258,15 +260,14 @@ class cmsModel {
         return $this->get($this->getContentCategoryTableName($ctype_name), $item_callback);
     }
 
-    public function getSubCategoriesTree($ctype_name, $parent_id=1, $level=1) {
+    public function getSubCategoriesTree($ctype_name, $parent_id = 1, $level = 1) {
 
         $parent = $this->getCategory($ctype_name, $parent_id);
 
-        $this->
-            filterGt('ns_left', $parent['ns_left'])->
+        $this->filterGt('ns_left', $parent['ns_left'])->
             filterLt('ns_right', $parent['ns_right']);
 
-        if ($level){
+        if ($level) {
             $this->filterLtEqual('ns_level', $parent['ns_level'] + $level);
         }
 
@@ -275,7 +276,6 @@ class cmsModel {
         $this->useCache('content.categories');
 
         return $this->get($this->getContentCategoryTableName($ctype_name));
-
     }
 
 //============================================================================//
@@ -311,7 +311,15 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function addCategory($ctype_name, $category){
+    /**
+     * Добавляет категорию
+     *
+     * @param string $ctype_name Префикс таблицы категорий
+     * @param array $category Массив данных категории
+     * @param boolean $first_level_slug Формировать урл только первого уровня
+     * @return array
+     */
+    public function addCategory($ctype_name, $category, $first_level_slug = false) {
 
         $table_name = $this->getContentCategoryTableName($ctype_name);
 
@@ -319,72 +327,90 @@ class cmsModel {
 
         $category['id'] = $this->db->nestedSets->addNode($category['parent_id']);
 
-        if (!$category['id']){ return false; }
+        if (!$category['id']) {
+            return false;
+        }
 
         $this->update($table_name, $category['id'], $category);
 
-        $category['path'] = $this->getCategoryPath($ctype_name, $category);
+        if(!$first_level_slug){
+            $category['path'] = $this->getCategoryPath($ctype_name, $category);
+        }
 
         $category['slug'] = $this->getCategorySLUG($category, $ctype_name);
 
-        $this->update($table_name, $category['id'], array(
+        $this->update($table_name, $category['id'], [
             'slug' => $category['slug']
-        ));
+        ]);
 
         cmsCache::getInstance()->clean('content.categories');
 
         return $category;
     }
 
-//============================================================================//
-//============================================================================//
-
-    public function updateCategory($ctype_name, $id, $category){
-
-        cmsCache::getInstance()->clean('content.categories');
+    /**
+     * Обновляет данные категории
+     *
+     * @param string $ctype_name Префикс таблицы категорий
+     * @param integer $id ID категории
+     * @param array $category Массив данных категории
+     * @param boolean $first_level_slug Формировать урл только первого уровня
+     * @return array
+     */
+    public function updateCategory($ctype_name, $id, $category, $first_level_slug = false) {
 
         $table_name = $this->getContentCategoryTableName($ctype_name);
 
         $category_old = $this->getCategory($ctype_name, $id);
 
-        if ($category_old['parent_id'] != $category['parent_id']){
+        if ($category_old['parent_id'] != $category['parent_id']) {
             $this->db->nestedSets->setTable($table_name);
             $this->db->nestedSets->moveNode($id, $category['parent_id']);
         }
 
-		$this->update($table_name, $id, $category);
+        $this->update($table_name, $id, $category);
+
+        cmsCache::getInstance()->clean('content.categories');
 
         $category['id'] = $id;
-        $category['path'] = $this->getCategoryPath($ctype_name, array('id' => $id));
+
+        if(!$first_level_slug){
+            $category['path'] = $this->getCategoryPath($ctype_name, ['id' => $id]);
+        }
+
         $category['slug'] = $this->getCategorySLUG($category, $ctype_name);
 
-        $this->update($table_name, $id, array(
+        $this->update($table_name, $id, [
             'slug' => $category['slug']
-        ));
+        ]);
+
+        cmsCache::getInstance()->clean('content.categories');
 
         $subcats = $this->getSubCategoriesTree($ctype_name, $id, false);
 
-        if ($subcats){
-            foreach($subcats as $subcat){
-                $subcat['path'] = $this->getCategoryPath($ctype_name, array('id' => $subcat['id']));
+        if ($subcats) {
+            foreach ($subcats as $subcat) {
+
+                if(!$first_level_slug){
+                    $subcat['path'] = $this->getCategoryPath($ctype_name, ['id' => $subcat['id']]);
+                }
+
                 $subcat['slug'] = $this->getCategorySLUG($subcat, $ctype_name);
-                $this->update($table_name, $subcat['id'], array('slug' => $subcat['slug']));
+                $this->update($table_name, $subcat['id'], ['slug' => $subcat['slug']]);
+
+                cmsCache::getInstance()->clean('content.categories');
             }
         }
 
         return $category;
-
     }
 
-//============================================================================//
-//============================================================================//
-
-    public function updateCategoryTree($ctype_name, $tree, $categories_count) {
+    public function updateCategoryTree($ctype_name, $tree, $categories_count, $first_level_slug = false) {
 
         cmsCache::getInstance()->clean('content.categories');
 
         $this->updateCategoryTreeNode($ctype_name, $tree);
-        $this->updateCategoryTreeNodeSlugs($ctype_name, $tree);
+        $this->updateCategoryTreeNodeSlugs($ctype_name, $tree, $first_level_slug);
 
         $root_keys = [
             'ns_left'  => 1,
@@ -415,23 +441,38 @@ class cmsModel {
         return true;
     }
 
-    public function updateCategoryTreeNodeSlugs($ctype_name, $tree) {
+    /**
+     * Перегенерирует slug у всего дерева категорий
+     *
+     * @param string $ctype_name Префикс таблицы категорий
+     * @param array $tree Дерево категорий
+     * @param boolean $first_level_slug Формировать урл только первого уровня
+     *
+     * @return array
+     */
+    public function updateCategoryTreeNodeSlugs($ctype_name, $tree, $first_level_slug = false) {
 
         $table_name = $this->getContentCategoryTableName($ctype_name);
 
         foreach ($tree as $node) {
 
-            $path = $this->getCategoryPath($ctype_name, [
-                'id'        => $node['key'],
-                'parent_id' => $node['parent_key'],
-                'ns_left'   => $node['left'],
-                'ns_right'  => $node['right'],
-                'ns_level'  => $node['level']
-            ]);
+            if(!$first_level_slug){
+
+                $path = $this->getCategoryPath($ctype_name, [
+                    'id'        => $node['key'],
+                    'parent_id' => $node['parent_key'],
+                    'ns_left'   => $node['left'],
+                    'ns_right'  => $node['right'],
+                    'ns_level'  => $node['level']
+                ]);
+            } else {
+                $path = [];
+            }
 
             $slug = $this->getCategorySLUG([
                 'path'  => $path,
                 'title' => $node['title'],
+                'slug_key' => $node['slug_key'],
                 'id'    => $node['key']
             ], $ctype_name);
 
@@ -440,7 +481,7 @@ class cmsModel {
             ]);
 
             if (!empty($node['children'])) {
-                $this->updateCategoryTreeNodeSlugs($ctype_name, $node['children']);
+                $this->updateCategoryTreeNodeSlugs($ctype_name, $node['children'], $first_level_slug);
             }
         }
 

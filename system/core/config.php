@@ -40,6 +40,12 @@ class cmsConfig {
      */
     private $dynamic = [];
     /**
+     * Значения конфигурации,
+     * которые были изменены
+     * @var array
+     */
+    private $changed = [];
+    /**
      * Значения конфигурации, как они есть в файле
      * @var array
      */
@@ -110,6 +116,9 @@ class cmsConfig {
         // Нет такой опции в файле конфигурации
         if(!array_key_exists($key, $this->data)){
             $this->dynamic[] = $key;
+        } else {
+        // Если есть, фиксируем, что меняли
+            $this->changed[$key] = $this->data[$key];
         }
 
         $this->data[$key] = $value;
@@ -245,6 +254,14 @@ class cmsConfig {
         return include $cfg_file;
     }
 
+    public function isChangedKey($key) {
+        return array_key_exists($key, $this->changed);
+    }
+
+    public function isDynamicKey($key) {
+        return in_array($key, $this->dynamic, true);
+    }
+
     public function save($values, $cfg_file = 'config.php') {
 
         $dump = "<?php\n" .
@@ -252,7 +269,7 @@ class cmsConfig {
 
         foreach ($values as $key => $value) {
 
-            if (in_array($key, $this->dynamic)) {
+            if ($this->isDynamicKey($key)) {
                 continue;
             }
 

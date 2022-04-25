@@ -42,7 +42,7 @@ class actionAdminContentCatsOrder extends cmsAction {
 
         $tree = $this->buildNestedSet($tree);
 
-        $this->model_backend_content->updateCategoryTree($ctype['name'], $tree, $this->total_nodes);
+        $this->model_backend_content->updateCategoryTree($ctype['name'], $tree, $this->total_nodes, !empty($ctype['options']['is_cats_first_level_slug']));
     }
 
     private function countChilds($tree, $count) {

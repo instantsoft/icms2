@@ -1527,7 +1527,7 @@ class cmsController {
 
     public function validate_number($value){
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", strval($value))){ return ERR_VALIDATE_NUMBER; }
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !is_numeric($value)){ return ERR_VALIDATE_NUMBER; }
         return true;
     }
 

@@ -67,6 +67,7 @@
     define('LANG_GROUPS',                    'Группы');
     define('LANG_WROTE_IN_GROUP',            'в группе');
     define('LANG_DESIGN',					 'Дизайн');
+    define('LANG_TABLE',					 'Таблица');
 
     //WIDGETS
     define('LANG_WP_SYSTEM',                 'Системные');
@@ -92,6 +93,14 @@
 
     //PARSERS
     define('LANG_PARSER_PREFIX',             'Префикс');
+    define('LANG_PARSER_LIST_WHERE',         'Откуда формировать список');
+    define('LANG_PARSER_LIST_WHERE_PRE',     'Из предустановленных значений');
+    define('LANG_PARSER_LIST_WHERE_TBL',     'Таблица базы данных (без префикса)');
+    define('LANG_PARSER_LIST_COND',          'Условия выборки');
+    define('LANG_PARSER_LIST_COND_HINT',     'В формате JSON, например [{"field": "foo", "condition": "eq", "value": "bar"}].');
+    define('LANG_PARSER_LIST_WHERE_ID',      'Поле с id записи');
+    define('LANG_PARSER_LIST_WHERE_TITLE',   'Поле с названием записи');
+    define('LANG_PARSER_LIST_ORDER',         'В формате поле:направление, например title:asc');
     define('LANG_PARSER_LIST_ADD_EMPTY',     'Добавить в начале предустановленных значений пустое значение');
     define('LANG_PARSER_LIST_IS_AUTOLINK',     'Автоссылка');
     define('LANG_PARSER_LIST_IS_AUTOLINK_HINT', 'Включение этой опции разбивает (по запятой) значение поля на отдельные слова и каждое делает ссылкой. ');

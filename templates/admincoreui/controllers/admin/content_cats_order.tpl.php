@@ -1,14 +1,14 @@
 <?php if (empty($categories)){ ?>
-    <div class="alert alert-warning m-0" role="alert" id="alert_wrap">
+    <div class="alert alert-warning m-0" id="alert_wrap">
         <?php echo LANG_CP_CONTENT_CATS_NONE; ?>
     </div>
 <?php } else { ?>
 
 <div class="modal_padding">
-    <form action="<?php echo $this->href_to('content', array('cats_order', $ctype['id'])); ?>" onsubmit="return contentSaveCatsOrder($(this))" method="post">
-        <fieldset class="modal_treeview">
-            <legend><?php echo LANG_CP_CONTENT_CATS_ORDER_DRAG; ?></legend>
-            <div id="ordertree" class="no-overflow">
+    <form action="<?php echo $this->href_to('content', ['cats_order', $ctype['id']]); ?>" onsubmit="return contentSaveCatsOrder($(this))" method="post">
+        <div class="modal_treeview">
+            <div class="alert alert-info"><?php echo LANG_CP_CONTENT_CATS_ORDER_DRAG; ?></div>
+            <div id="ordertree">
                 <ul id="treeData">
 
                     <?php $last_level = 0; ?>
@@ -28,7 +28,7 @@
                             </li>
                         <?php } ?>
 
-                        <li class="folder" id="<?php echo $id; ?>">
+                            <li class="folder" id="<?php echo $id; ?>" data="slug_key: '<?php html($item['slug_key']); ?>'">
 
                                 <?php html($item['title']); ?>
 
@@ -42,7 +42,7 @@
                         </li></ul>
                     <?php } ?>
             </div>
-        </fieldset>
+        </div>
 
         <?php echo html_input('hidden', 'hash', ''); ?>
         <?php echo html_submit(LANG_SAVE); ?>
@@ -78,8 +78,8 @@
 
             var dict = $('#ordertree').dynatree('getTree').toDict();
             $('input:hidden', form).val( JSON.stringify(dict) );
-            return true;
 
+            return true;
         }
     </script>
 

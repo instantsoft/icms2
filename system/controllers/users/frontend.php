@@ -399,38 +399,39 @@ class users extends cmsFrontend {
         return cmsEventsManager::hook('profiles_datasets', $datasets);
     }
 
-    public function logoutLockedUser($user){
+    public function logoutLockedUser($user) {
 
-        $now = time();
+        $now        = time();
         $lock_until = !empty($user['lock_until']) ? strtotime($user['lock_until']) : false;
 
-        if ($lock_until && ($lock_until <= $now)){
+        if ($lock_until && ($lock_until <= $now)) {
+
             $this->model->unlockUser($user['id']);
-            return;
+
+            return $user;
         }
 
-        $notice_text = array(sprintf(LANG_USERS_LOCKED_NOTICE));
+        $notice_text = [sprintf(LANG_USERS_LOCKED_NOTICE)];
 
-        if($user['lock_until']) {
+        if ($user['lock_until']) {
             $notice_text[] = sprintf(LANG_USERS_LOCKED_NOTICE_UNTIL, html_date($user['lock_until']));
         }
 
-        if($user['lock_reason']) {
+        if ($user['lock_reason']) {
             $notice_text[] = sprintf(LANG_USERS_LOCKED_NOTICE_REASON, $user['lock_reason']);
         }
 
-        if($user['lock_reason']){
-            $this->model->update('{users}', $user['id'], array(
+        if ($user['lock_reason']) {
+            $this->model->update('{users}', $user['id'], [
                 'ip' => null
-            ), true);
+            ], true);
         }
 
         cmsUser::addSessionMessage(implode('<br>', $notice_text), 'error');
 
         cmsUser::logout();
 
-        return;
-
+        return [];
     }
 
     public function listIsAllowed() {

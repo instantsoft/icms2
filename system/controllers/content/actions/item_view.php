@@ -693,11 +693,12 @@ class actionContentItemView extends cmsAction {
                 }
 
                 continue;
-
             }
 
             // редиректы на новые урлы
-			if ($this->cms_config->ctype_default && in_array($this->cms_core->uri_action, $this->cms_config->ctype_default)){
+			if ($this->cms_config->ctype_default &&
+                    empty($this->cms_core->no_uri_change_redirect) &&
+                    in_array($this->cms_core->uri_action, $this->cms_config->ctype_default)){
 
 				$this->redirect(href_to($item['slug'] . '.html'), 301);
 
@@ -748,7 +749,6 @@ class actionContentItemView extends cmsAction {
 
         // ничего не нашли
         return cmsCore::error404();
-
     }
 
     public function applyItemSeo($ctype, $item, $fields) {

@@ -414,6 +414,10 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_CATS_AUTO_URL,
                         'default' => true
                     )),
+                    new fieldCheckbox('options:is_cats_first_level_slug', array(
+                        'title' => LANG_CP_CATS_FIRST_LEVEL_SLUG,
+                        'default' => false
+                    )),
                     new fieldString('options:seo_cat_h1_pattern', array(
                         'title' => LANG_CP_SEOMETA_ITEM_H1,
                         'patterns_hint' => [

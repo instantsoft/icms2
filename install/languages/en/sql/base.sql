@@ -830,7 +830,7 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (104, 'user_privacy_types', 'users', 104, 1),
 (105, 'user_tab_info', 'users', 105, 1),
 (106, 'auth_login', 'users', 106, 1),
-(107, 'user_loaded', 'users', 107, 1),
+(107, 'user_preloaded', 'users', 107, 1),
 (108, 'wall_permissions', 'users', 108, 1),
 (109, 'wall_after_add', 'users', 109, 1),
 (110, 'wall_after_delete', 'users', 110, 1),

@@ -97,7 +97,7 @@
     define('LANG_CP_CONTENT_CATS_ADD',          'Add Category');
     define('LANG_CP_CONTENT_CATS_EDIT',         'Edit Category');
     define('LANG_CP_CONTENT_CATS_ORDER',        'Reorder');
-    define('LANG_CP_CONTENT_CATS_ORDER_DRAG',   'Drag categories to reorder');
+    define('LANG_CP_CONTENT_CATS_ORDER_DRAG',   'Drag categories to reorder and click "Save"');
     define('LANG_CP_CONTENT_CATS_NONE',         'This content has no categories');
     define('LANG_CP_TRASH',                     'Trash');
     define('LANG_CP_SHOW_ONLY_IN_TRASH',        'Show only deleted items');
@@ -175,6 +175,7 @@
     define('LANG_CP_SEOMETA_CATS_KEYS',         'Allow custom keywords for categories');
     define('LANG_CP_SEOMETA_CATS_DESC',         'Allow custom META descriptions for categories');
     define('LANG_CP_CATS_AUTO_URL',             'Generate URL from category title');
+    define('LANG_CP_CATS_FIRST_LEVEL_SLUG',     'Category URLs are always first level regardless of nesting');
     define('LANG_CP_LISTVIEW_OPTIONS',          'List view options');
     define('LANG_CP_PROFILELIST_ON',            'List view in user profiles enabled');
     define('LANG_CP_LISTVIEW_ON',               'List view enabled');
@@ -519,6 +520,7 @@
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'By changing the subnet');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT2', 'Strictly for ip address');
     define('LANG_CP_SETTINGS_USER_CHANGE_LANG', 'Allow change language by user (substitution prefix in the URL)');
+    define('LANG_CP_SETTINGS_BROWSER_AUTO_LANG', 'Automatically detect language by browser locale');
     define('LANG_CP_SETTINGS_ALLOW_IPS',        'IP addresses allowed to access the control panel');
     define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'One address per line. Allowed to all if not specified. Current ip address: %s');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'How to detect a visitor\'s IP');

@@ -20,6 +20,7 @@ class cmsRequest {
      */
     const CTX_TYPE_STANDARD = 0;
     const CTX_TYPE_MODAL    = 1;
+    const CTX_TYPE_API      = 2;
 
     /**
      * Массив данных запроса
@@ -51,11 +52,11 @@ class cmsRequest {
      * @param array $data Параметры для контроллера
      * @param integer $context Контекст (если не указан, определяется автоматически)
      */
-    public function __construct($data, $context = cmsRequest::CTX_AUTO_DETECT){
+    public function __construct($data, $context = cmsRequest::CTX_AUTO_DETECT) {
 
         $this->setData($data);
 
-        if ($context == cmsRequest::CTX_AUTO_DETECT){
+        if ($context == cmsRequest::CTX_AUTO_DETECT) {
             $this->context = $this->detectContext();
         } else {
             $this->context = $context;
@@ -69,9 +70,9 @@ class cmsRequest {
      * Определяет контекст текущего запроса (стандартный или ajax)
      * @return integer
      */
-    private function detectContext(){
-        if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-            $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+    private function detectContext() {
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+                $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
             return cmsRequest::CTX_AJAX;
         } else {
             return cmsRequest::CTX_STANDARD;
@@ -82,7 +83,7 @@ class cmsRequest {
      * Возвращает текущий контекст использования
      * @return integer
      */
-    public function getContext(){
+    public function getContext() {
         return $this->context;
     }
 
@@ -91,15 +92,18 @@ class cmsRequest {
      * @param integer $context
      * @return $this
      */
-    public function setContext($context){
-        $this->context = $context; return $this;
+    public function setContext($context) {
+
+        $this->context = $context;
+
+        return $this;
     }
 
     /**
      * Возвращает true, если запрос вызван через URL
      * @return boolean
      */
-    public function isStandard(){
+    public function isStandard() {
         return ($this->context == cmsRequest::CTX_STANDARD);
     }
 
@@ -107,7 +111,7 @@ class cmsRequest {
      * Возвращает true, если запрос вызван другим контроллером
      * @return boolean
      */
-    public function isInternal(){
+    public function isInternal() {
         return ($this->context == cmsRequest::CTX_INTERNAL);
     }
 
@@ -115,7 +119,7 @@ class cmsRequest {
      * Возвращает true, если запрос вызван через AJAX
      * @return boolean
      */
-    public function isAjax(){
+    public function isAjax() {
         return ($this->context == cmsRequest::CTX_AJAX);
     }
 
@@ -123,8 +127,8 @@ class cmsRequest {
      * Возвращает тип контекста запроса
      * @return integer
      */
-    public function getType(){
-        if(isset($_SERVER['HTTP_ICMS_REQUEST_TYPE']) && is_numeric($_SERVER['HTTP_ICMS_REQUEST_TYPE'])) {
+    public function getType() {
+        if (isset($_SERVER['HTTP_ICMS_REQUEST_TYPE']) && is_numeric($_SERVER['HTTP_ICMS_REQUEST_TYPE'])) {
             return $_SERVER['HTTP_ICMS_REQUEST_TYPE'];
         } else {
             return self::CTX_TYPE_STANDARD;
@@ -135,8 +139,16 @@ class cmsRequest {
      * Возвращает true, если тип контекста запроса для модального окна
      * @return boolean
      */
-    public function isTypeModal(){
+    public function isTypeModal() {
         return $this->getType() == self::CTX_TYPE_MODAL;
+    }
+
+    /**
+     * Возвращает true, если тип контекста запроса для API
+     * @return boolean
+     */
+    public function isTypeApi() {
+        return $this->getType() == self::CTX_TYPE_API;
     }
 
 //============================================================================//
@@ -147,7 +159,7 @@ class cmsRequest {
      * @param string $var Название переменной
      * @return boolean
      */
-    public function has($var){
+    public function has($var) {
         return isset($this->data[$var]);
     }
 
@@ -155,9 +167,15 @@ class cmsRequest {
      * Проверяет наличие переменной по переданной вложенности
      * @return boolean
      */
-    public function hasInArray(){
-        $keys = func_get_args(); if(count($keys) === 1){ $keys = $keys[0]; }
-        return (bool)array_value_recursive($keys, $this->data);
+    public function hasInArray() {
+
+        $keys = func_get_args();
+
+        if (count($keys) === 1) {
+            $keys = $keys[0];
+        }
+
+        return (bool) array_value_recursive($keys, $this->data);
     }
 
     /**
@@ -165,9 +183,14 @@ class cmsRequest {
      * @param string $var Название переменной
      * @return boolean
      */
-    public function hasInQuery($var){
+    public function hasInQuery($var) {
+
         $query = cmsCore::getInstance()->uri_query;
-        if (!$query){ return false; }
+
+        if (!$query) {
+            return false;
+        }
+
         return isset($query[$var]);
     }
 
@@ -178,56 +201,71 @@ class cmsRequest {
      * @param string $var_type Тип переменной
      * @return mixed
      */
-    public function get($var, $default = false, $var_type = null){
+    public function get($var, $default = false, $var_type = null) {
 
         //если значение не определено, возвращаем умолчание
 
-        if (strpos($var, ':') === false){
-            if (!$this->has($var)) { return $default; }
+        if (strpos($var, ':') === false) {
+
+            if (!$this->has($var)) {
+                return $default;
+            }
+
             $value = $this->data[$var];
+
         } else {
+
             $value = array_value_recursive($var, $this->data);
-            if ($value === null) { return $default; }
+            if ($value === null) {
+                return $default;
+            }
         }
 
-        if($var_type === null){
+        if ($var_type === null) {
 
             // типизируем, основываясь на значении по умолчанию
             // берем во внимание не все типы
             $default_type = gettype($default);
 
-            if(in_array($default_type, array('integer','string','double','array'))){
+            if (in_array($default_type, ['integer', 'string', 'double', 'array'])) {
                 $var_type = $default_type;
             }
-
         }
 
-        if($var_type !== null){
+        if ($var_type !== null) {
 
-            if(is_array($value) && $var_type !== 'array'){
+            if (is_array($value) && $var_type !== 'array') {
                 $value = '';
             } else {
                 settype($value, $var_type);
             }
-
         }
 
         return $value;
-
     }
 
     /**
      * Возвращает все имеющиеся параметры
      * @return array
      */
-    public function getAll(){ return $this->data; }
-    public function getData(){ return $this->getAll(); }
+    public function getAll() {
+        return $this->data;
+    }
+
+    public function getData() {
+        return $this->getAll();
+    }
 
     /**
      * Устанавливает параметры текущего запроса
      * @param array $data
      */
-	public function setData($data){ $this->data = $data; }
+	public function setData($data) {
+
+        $this->data = $data;
+
+        return $this;
+    }
 
     /**
      * Устанавливает значение параметра текущего запроса
@@ -235,12 +273,11 @@ class cmsRequest {
      * @param mixed $value Значение параметра
      * @return $this
      */
-    public function set($name, $value){
+    public function set($name, $value) {
 
         $this->data[$name] = $value;
 
         return $this;
-
     }
 
 //============================================================================//
@@ -248,9 +285,11 @@ class cmsRequest {
 
     private static function loadDeviceType() {
 
-        $device_type  = cmsUser::getCookie('device_type', 'string', function ($cookie){ return trim(strip_tags($cookie)); });
+        $device_type = cmsUser::getCookie('device_type', 'string', function ($cookie) {
+            return trim(strip_tags($cookie));
+        });
 
-        if(!$device_type || !in_array($device_type, self::$device_types, true)){
+        if (!$device_type || !in_array($device_type, self::$device_types, true)) {
 
             cmsCore::loadLib('mobile_detect.class');
 
@@ -259,11 +298,9 @@ class cmsRequest {
             $device_type = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'mobile') : 'desktop');
 
             cmsUser::setCookie('device_type', $device_type, 31536000); // на 1 год
-
         }
 
         self::$device_type = $device_type;
-
     }
 
     /**
@@ -272,12 +309,11 @@ class cmsRequest {
      */
     public static function getDeviceType() {
 
-        if(self::$device_type === null){
+        if (self::$device_type === null) {
             self::loadDeviceType();
         }
 
         return self::$device_type;
-
     }
 
 }
