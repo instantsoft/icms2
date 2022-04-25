@@ -36,7 +36,7 @@
 ## Как установить InstantCMS ##
 
 * Проверьте системные требования.
-* Воспользуйтесь инструкцией [по установке InstantCMS](https://docs.instantcms.ru/en/manual/install)?
+* Воспользуйтесь инструкцией [по установке InstantCMS](https://docs.instantcms.ru/manual/install).
 
 ## Ссылки
 
