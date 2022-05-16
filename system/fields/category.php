@@ -43,8 +43,25 @@ class fieldCategory extends cmsFormField {
             new fieldString('btn_icon', [
                 'title'  => LANG_F_CATEGORY_BTN_ICON,
                 'suffix' => '<a href="#" class="icms-icon-select" data-href="' . href_to('admin', 'settings', ['theme', cmsConfig::get('template'), 'icon_list']) . '"><span>' . (defined('LANG_CP_ICON_SELECT') ? LANG_CP_ICON_SELECT : '') . '</span></a>'
+            ]),
+            new fieldCheckbox('filter_multiple', [
+                'title'   => LANG_PARSER_LIST_FILTER_MULTI,
+                'default' => false
             ])
         ];
+    }
+
+    public function getDefaultVarType($is_filter = false) {
+
+        if ($this->context === 'filter') {
+            $is_filter = true;
+        }
+
+        if ($is_filter && $this->getOption('filter_multiple')) {
+            $this->var_type = 'array';
+        }
+
+        return parent::getDefaultVarType($is_filter);
     }
 
     public function getStringValue($value) {
@@ -57,10 +74,14 @@ class fieldCategory extends cmsFormField {
             return '';
         }
 
+        $ctype_default = cmsConfig::get('ctype_default');
+
+        $base_url = ($ctype_default && in_array($this->item['ctype_name'], $ctype_default)) ? '' : $this->item['ctype_name'];
+
         $cats = [
             $this->item['category']['id'] => [
                 'title' => $this->item['category']['title'],
-                'href'  => href_to($this->item['ctype_name'], $this->item['category']['slug'])
+                'href'  => href_to($base_url, $this->item['category']['slug'])
             ]
         ];
 
@@ -68,7 +89,7 @@ class fieldCategory extends cmsFormField {
             foreach ($this->item['categories'] as $category) {
                 $cats[$category['id']] = [
                     'title' => $category['title'],
-                    'href'  => href_to($this->item['ctype_name'], $category['slug'])
+                    'href'  => href_to($base_url, $category['slug'])
                 ];
             }
         }
@@ -109,13 +130,28 @@ class fieldCategory extends cmsFormField {
             return $model;
         }
 
-        return $model->filterCategory($this->item['ctype_name'], ['id' => $value]);
+        $bind_table_name = $model->getContentCategoryTableName($this->item['ctype_name']) . '_bind';
+
+        if (!empty($this->options['filter_multiple']) && is_array($value)) {
+
+            return $model->joinInner($bind_table_name, 'b', 'b.item_id = i.id')->filterIn('b.category_id', $value);
+
+        } else {
+
+            return $model->joinInner($bind_table_name, 'b', 'b.item_id = i.id')->filterEqual('b.category_id', $value);
+        }
     }
 
     public function getFilterInput($value){
 
         if (empty($this->item['ctype_name'])) {
             return '';
+        }
+
+        if (!empty($this->options['filter_multiple'])) {
+            if(!is_array($value)){
+                $value = [];
+            }
         }
 
         if (!$this->show_filter_input_title) {
@@ -131,6 +167,10 @@ class fieldCategory extends cmsFormField {
         }
 
         $this->data['dom_attr'] = ['id' => $this->id];
+
+        if (!empty($this->options['filter_multiple'])) {
+            $this->data['dom_attr']['multiple'] = true;
+        }
 
         return cmsTemplate::getInstance()->renderFormField($this->class . '_filter', [
             'field' => $this,

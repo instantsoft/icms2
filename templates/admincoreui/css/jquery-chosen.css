@@ -43,7 +43,7 @@
       padding: .25rem .25rem .25rem 1rem; }
       .chosen-container .chosen-results li em {
         font-style: normal;
-        color: #6c757d; }
+        color: #5c6873; }
       .chosen-container .chosen-results li.group-result {
         display: list-item;
         cursor: default;
@@ -95,7 +95,7 @@
   border-top-right-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
-  color: #6c757d;
+  color: #5c6873;
   display: block;
   height: calc(1.5em + 0.75rem + 2px);
   overflow: hidden;
@@ -155,10 +155,10 @@
   color: #adb5bd; }
 
 .chosen-container-single a:not([href]):not([tabindex]) {
-  color: #6c757d !important; }
+  color: #5c6873 !important; }
 
 .chosen-container-single a:not([href]):not([tabindex]).chosen-single:not(.chosen-default) {
-  color: #6c757d !important; }
+  color: #5c6873 !important; }
 
 .chosen-container-single .chosen-search-input {
   border: none; }
@@ -228,7 +228,7 @@
       padding: .175rem .175rem .175rem .5rem;
       border: 0 !important;
       background: transparent !important;
-      color: #6c757d;
+      color: #5c6873;
       outline: 0; }
     .chosen-container-multi .chosen-choices .search-field .default {
       color: #e4e7ea; }
@@ -247,7 +247,7 @@
     cursor: default;
     font-size: 0.875rem;
     line-height: 1;
-    color: #6c757d;
+    color: #5c6873;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap; }
@@ -319,7 +319,7 @@
     .chosen-container-active .chosen-choices {
       transition: none; } }
   .chosen-container-active .chosen-choices .search-field input[type="text"] {
-    color: #6c757d !important; }
+    color: #5c6873 !important; }
 
 .chosen-container-active.chosen-with-drop .chosen-choices {
   border-bottom-right-radius: 0;
@@ -329,12 +329,27 @@
   display: inline-block; }
 
 .chosen-disabled {
-  cursor: default;
-  opacity: .5 !important; }
-  .chosen-disabled .chosen-single {
-    cursor: default; }
-  .chosen-disabled .chosen-choices .search-choice .search-choice-close {
-    cursor: default; }
+    cursor: default;
+}
+.chosen-disabled .chosen-single {
+    background-color: #e4e7ea;
+}
+.chosen-disabled .chosen-single abbr {
+    display: none;
+}
+.chosen-disabled .chosen-single div {
+    background-color: transparent;
+}
+.chosen-disabled .chosen-single div:after {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+.chosen-disabled .chosen-single {
+    cursor: default;
+}
+.chosen-disabled .chosen-choices .search-choice .search-choice-close {
+    cursor: default;
+}
 
 .chosen-container-optgroup-clickable li.group-result {
   text-transform: none !important; }

@@ -21,6 +21,10 @@ class onSitemapCronGenerate extends cmsAction {
             return false;
         }
 
+        if(!empty($this->options['sitemap_items_count'])){
+            $this->max_count = $this->options['sitemap_items_count'];
+        }
+
         $source_controllers = [];
         $sources            = [];
         $sitemaps           = [];

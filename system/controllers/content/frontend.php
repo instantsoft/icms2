@@ -613,10 +613,10 @@ class content extends cmsFrontend {
         $subjects = [];
 
         foreach ($ctypes as $ctype) {
-            $subjects[] = array(
+            $subjects[] = [
                 'name'  => $ctype['name'],
                 'title' => $ctype['title']
-            );
+            ];
         }
 
         return $subjects;
@@ -633,96 +633,9 @@ class content extends cmsFrontend {
         return cmsCore::getController('moderation')->requestModeration($ctype_name, $item, $is_new_item);
     }
 
-    public function getCategoryForm($ctype, $action){
+    public function getCategoryForm($ctype, $action) {
 
-        $form = $this->getForm('category', [$ctype, $action]);
-
-        // Если заданы пресеты
-        if (!empty($ctype['options']['cover_sizes'])){
-
-            $fieldset_id = $form->addFieldset(LANG_CATEGORY_COVER);
-            $form->addField($fieldset_id, new fieldImage('cover', array(
-                'options' => array(
-                    'allow_import_link' => true,
-                    'sizes' => $ctype['options']['cover_sizes']
-                )
-            )));
-
-        }
-
-        // Если ручной ввод ключевых слов или описания, то добавляем поля для этого
-        if (!empty($ctype['options']['is_cats_title']) ||
-                !empty($ctype['options']['is_cats_h1']) ||
-                !empty($ctype['options']['is_cats_keys']) ||
-                !empty($ctype['options']['is_cats_desc'])){
-
-            $fieldset_id = $form->addFieldset( LANG_SEO );
-            if (!empty($ctype['options']['is_cats_h1'])){
-                $form->addField($fieldset_id, new fieldString('seo_h1', array(
-                    'title' => LANG_SEO_H1,
-                    'options'=>array(
-                        'max_length'=> 256,
-                        'show_symbol_count'=>true
-                    )
-                )));
-            }
-            if (!empty($ctype['options']['is_cats_title'])){
-                $form->addField($fieldset_id, new fieldString('seo_title', array(
-                    'title' => LANG_SEO_TITLE,
-                    'options'=>array(
-                        'max_length'=> 256,
-                        'show_symbol_count'=>true
-                    )
-                )));
-            }
-            if (!empty($ctype['options']['is_cats_keys'])){
-                $form->addField($fieldset_id, new fieldString('seo_keys', array(
-                    'title' => LANG_SEO_KEYS,
-                    'hint' => LANG_SEO_KEYS_HINT,
-                    'options'=>array(
-                        'max_length'=> 256,
-                        'show_symbol_count'=>true
-                    )
-                )));
-            }
-            if (!empty($ctype['options']['is_cats_desc'])){
-                $form->addField($fieldset_id, new fieldText('seo_desc', array(
-                    'title' => LANG_SEO_DESC,
-                    'hint' => LANG_SEO_DESC_HINT,
-                    'is_strip_tags' => true,
-                    'options'=>array(
-                        'max_length'=> 256,
-                        'show_symbol_count'=>true
-                    )
-                )));
-            }
-        }
-
-        // Если ручной ввод SLUG, то добавляем поле для этого
-        if (empty($ctype['options']['is_cats_auto_url'])){
-
-            $fieldset_id = $form->addFieldset( LANG_SLUG );
-            $form->addField($fieldset_id, new fieldString('slug_key', array(
-                'rules' => array( array('required'), array('max_length', 255) )
-            )));
-
-        }
-
-        // для администраторов показываем поля доступа
-        if($this->cms_user->is_admin){
-
-            $fieldset_id = $form->addFieldset(LANG_PERMISSIONS);
-            $form->addField($fieldset_id, new fieldListGroups('allow_add', array(
-                'title'       => LANG_CONTENT_CATS_ALLOW_ADD,
-                'hint'        => LANG_CONTENT_CATS_ALLOW_ADD_HINT,
-                'show_all'    => true,
-                'show_guests' => false
-            )));
-
-        }
-
-        return cmsEventsManager::hook('content_cat_form', $form);
-
+        return cmsEventsManager::hook('content_cat_form', $this->getForm('category', [$ctype, $action]));
     }
 
 //============================================================================//
@@ -1238,69 +1151,74 @@ class content extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function bindItemToParents($ctype, $item, $parents = false){
+    public function bindItemToParents($ctype, $item, $parents = false) {
 
-        if (!$parents){
+        if (!$parents) {
             $parents = $this->model->getContentTypeParents($ctype['id']);
         }
 
-        foreach($parents as $parent){
+        foreach ($parents as $parent) {
 
             $this->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
 
             $value = isset($item[$parent['id_param_name']]) ? $item[$parent['id_param_name']] : '';
 
-            $ids = array();
+            $ids = [];
 
-            foreach(explode(',', $value) as $id){
-                if (!trim($id)) { continue; }
+            foreach (explode(',', $value) as $id) {
+                if (!trim($id)) {
+                    continue;
+                }
                 $ids[] = trim($id);
             }
 
             $parent_ctype = $this->model->getContentTypeByName($parent['ctype_name']);
 
-            $current_parents   = array();
-            $new_parents       = array();
-            $parents_to_delete = array();
-            $parents_to_add    = array();
+            $current_parents   = [];
+            $new_parents       = [];
+            $parents_to_delete = [];
+            $parents_to_add    = [];
 
-            if (!empty($item['id'])){
+            if (!empty($item['id'])) {
                 $current_parents = $this->model->getContentItemParents($parent_ctype, $ctype, $item['id']);
             }
 
-            if ($ids){
+            if ($ids) {
                 $this->model->filterIn('id', $ids);
                 $new_parents = $this->model->getContentItems($parent['ctype_name']);
             }
 
-            if ($current_parents){
-                foreach($current_parents as $id => $current_parent){
-                    if (isset($new_parents[$id])) { continue; }
-                    if (!in_array($id, $parents_to_delete)){
+            if ($current_parents) {
+                foreach ($current_parents as $id => $current_parent) {
+                    if (isset($new_parents[$id])) {
+                        continue;
+                    }
+                    if (!in_array($id, $parents_to_delete)) {
                         $parents_to_delete[] = $id;
                     }
                 }
             }
 
-            if ($new_parents){
-                foreach($new_parents as $id => $new_parent){
-                    if (isset($current_parents[$id])) { continue; }
-                    if (!in_array($id, $parents_to_add)){
+            if ($new_parents) {
+                foreach ($new_parents as $id => $new_parent) {
+                    if (isset($current_parents[$id])) {
+                        continue;
+                    }
+                    if (!in_array($id, $parents_to_add)) {
                         $parents_to_add[] = $id;
                     }
                 }
             }
 
-            if($parent['target_controller'] != 'content'){
+            if ($parent['target_controller'] != 'content') {
                 $this->model->setTablePrefix('');
             } else {
                 $this->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
             }
 
-            if ($parents_to_add){
-                foreach ($parents_to_add as $new_parent_id){
-
-                    $this->model->bindContentItemRelation(array(
+            if ($parents_to_add) {
+                foreach ($parents_to_add as $new_parent_id) {
+                    $this->model->bindContentItemRelation([
                         'parent_ctype_name' => $parent_ctype['name'],
                         'parent_ctype_id'   => $parent_ctype['id'],
                         'parent_item_id'    => $new_parent_id,
@@ -1308,15 +1226,13 @@ class content extends cmsFrontend {
                         'child_ctype_id'    => $ctype['id'],
                         'child_item_id'     => $item['id'],
                         'target_controller' => $parent['target_controller']
-                    ));
-
+                    ]);
                 }
             }
 
-            if ($parents_to_delete){
-                foreach ($parents_to_delete as $old_parent_id){
-
-                    $this->model->unbindContentItemRelation(array(
+            if ($parents_to_delete) {
+                foreach ($parents_to_delete as $old_parent_id) {
+                    $this->model->unbindContentItemRelation([
                         'parent_ctype_name' => $parent_ctype['name'],
                         'parent_ctype_id'   => $parent_ctype['id'],
                         'parent_item_id'    => $old_parent_id,
@@ -1324,11 +1240,9 @@ class content extends cmsFrontend {
                         'child_ctype_id'    => $ctype['id'],
                         'child_item_id'     => $item['id'],
                         'target_controller' => $parent['target_controller']
-                    ));
-
+                    ]);
                 }
             }
-
         }
 
     }
@@ -1453,7 +1367,6 @@ class content extends cmsFrontend {
             $h1_str = $h1_pattern;
 
             $this->cms_template->setPageH1Item($meta_item);
-
         }
         // то, что задано вручную для катеории в приоритете
         if(!empty($category['seo_h1'])){
@@ -1467,7 +1380,6 @@ class content extends cmsFrontend {
 
             // убираем обработку значений
             $this->cms_template->setPageH1Item(null);
-
         }
 
         /**
@@ -1498,7 +1410,6 @@ class content extends cmsFrontend {
 
             // убираем обработку значений
             $this->cms_template->setPageTitleItem(null);
-
         }
 
         /**
@@ -1511,7 +1422,6 @@ class content extends cmsFrontend {
             $keys_str = $keys_pattern;
 
             $this->cms_template->setPageKeywordsItem($meta_item);
-
         }
         // ключи для категории в приоритете
         if (!empty($category['seo_keys'])){
@@ -1529,7 +1439,6 @@ class content extends cmsFrontend {
             }
 
             $this->cms_template->setPageKeywordsItem(null);
-
         }
 
         /**
@@ -1542,7 +1451,6 @@ class content extends cmsFrontend {
             $desc_str = $desc_pattern;
 
             $this->cms_template->setPageDescriptionItem($meta_item);
-
         }
         // описание для категории в приоритете
         if (!empty($category['seo_desc'])){
@@ -1560,7 +1468,6 @@ class content extends cmsFrontend {
             }
 
             $this->cms_template->setPageDescriptionItem(null);
-
         }
 
         $this->cms_template->setPageH1($h1_str);
@@ -1568,14 +1475,13 @@ class content extends cmsFrontend {
         $this->cms_template->setPageKeywords($keys_str);
         $this->cms_template->setPageDescription($desc_str);
 
-        return array(
+        return [
             'meta_item' => $meta_item,
             'h1_str'    => $h1_str,
             'title_str' => $title_str,
             'keys_str'  => $keys_str,
             'desc_str'  => $desc_str
-        );
-
+        ];
     }
 
     public function getCtypeDatasets($ctype, $params) {
@@ -1584,43 +1490,45 @@ class content extends cmsFrontend {
 
         $list_type = $this->getListContext();
 
-        $datasets = $this->model->getContentDatasets($ctype['id'], true, function ($item, $model) use ($params, $list_type, $first_ds) {
+        $datasets = $this->model->getContentDatasets($ctype['id'], true, function ($item, $model) use ($params, $list_type, &$first_ds) {
 
-            $is_view = !$item['cats_view'] || in_array($params['cat_id'], $item['cats_view']);
+            $is_view      = !$item['cats_view'] || in_array($params['cat_id'], $item['cats_view']);
             $is_user_hide = $item['cats_hide'] && in_array($params['cat_id'], $item['cats_hide']);
 
-            if (!$is_view || $is_user_hide) { return false; }
+            if (!$is_view || $is_user_hide) {
+                return false;
+            }
 
-            $is_view = empty($item['list']['show']) || in_array($list_type, $item['list']['show']);
+            $is_view      = empty($item['list']['show']) || in_array($list_type, $item['list']['show']);
             $is_user_hide = !empty($item['list']['hide']) && in_array($list_type, $item['list']['hide']);
 
-            if (!$is_view || $is_user_hide) { return false; }
+            if (!$is_view || $is_user_hide) {
+                return false;
+            }
 
             $item['title'] = string_replace_user_properties($item['title']);
 
-            $item['first_ds'] = $first_ds ? false : true; $first_ds = true;
+            $item['first_ds'] = $first_ds ? false : true;
+            $first_ds = true;
 
             return $item;
-
         });
 
-        list($datasets, $ctype) = cmsEventsManager::hook('content_datasets', array($datasets, $ctype));
-        list($datasets, $ctype) = cmsEventsManager::hook('content_'.$ctype['name'].'_datasets', array($datasets, $ctype));
+        list($datasets, $ctype) = cmsEventsManager::hook('content_datasets', [$datasets, $ctype]);
+        list($datasets, $ctype) = cmsEventsManager::hook('content_' . $ctype['name'] . '_datasets', [$datasets, $ctype]);
 
         return $datasets;
-
     }
 
-    public function getContentTypeForModeration($name){
+    public function getContentTypeForModeration($name) {
 
-        if(is_numeric($name)){
+        if (is_numeric($name)) {
             $ctype = $this->model->getContentType($name);
         } else {
             $ctype = $this->model->getContentTypeByName($name);
         }
 
         return $ctype;
-
     }
 
     public function isAverageRating($ctype_name, $item_id, $score) {

@@ -46,7 +46,6 @@
         }
 
         echo html_select($field->element_name, $field->data['items'], $value, $field->data['dom_attr']);
-
     }
 
 ?>
@@ -58,7 +57,10 @@
         });
     <?php } ?>
     <?php if (!$field->native_tag && ($field->data['is_chosen_multiple'] || !$field->data['is_multiple'])) { ?>
-        $('#<?php echo $field->data['dom_attr']['id']; ?>').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', placeholder_text_single: '<?php echo LANG_SELECT; ?>', placeholder_text_multiple: '<?php echo LANG_SELECT_MULTIPLE; ?>', disable_search_threshold: 8, width: '100%', allow_single_deselect: true, search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>', search_contains: true, hide_results_on_select: false});
+        $('#<?php echo $field->data['dom_attr']['id']; ?>').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', placeholder_text_single: '<?php echo $field->data['select_hint_if_empty']; ?>', placeholder_text_multiple: '<?php echo $field->data['select_hintmp_if_empty']; ?>', disable_search_threshold: 8, width: '100%', allow_single_deselect: true, search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>', search_contains: true, hide_results_on_select: false});
+        <?php if (!empty($field->data['dom_attr']['readonly'])) { ?>
+            $('#<?php echo $field->data['dom_attr']['id']; ?>').prop('disabled',true).trigger('chosen:updated').prop('disabled',false);
+        <?php } ?>
     <?php } ?>
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

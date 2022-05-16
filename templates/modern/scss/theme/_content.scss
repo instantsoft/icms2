@@ -247,6 +247,7 @@
 }
 .icms-content {
     &-header {
+        $blockName: &;
         position: relative;
         &:before {
             content: "";
@@ -256,10 +257,12 @@
             left: 0;
             top: 0;
             display: block;
-            background-color: rgba(0, 0, 0, 0.55);
+            opacity: .85;
+            background-image: linear-gradient(130deg, rgba($blue, .5) 0%, rgba($purple, .9) 90%);
         }
-        > .icms-content-header__banner {
-            background-color: $gray-300;
+        > #{$blockName}__banner {
+            background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0MCIgaGVpZ2h0PSI0NTQiIHZpZXdCb3g9IjAgMCAxNDQwIDQ1NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPG1hc2sgaWQ9Im1hc2swIiBzdHlsZT0ibWFzay10eXBlOmFscGhhIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTQ2NCIgaGVpZ2h0PSI0NTQiPgo8cmVjdCB5PSIwLjY4ODcyMSIgd2lkdGg9IjE0NjMuMDUiIGhlaWdodD0iNDUzLjI1NSIgcng9IjE2IiBmaWxsPSIjQzRDNEM0Ii8+CjwvbWFzaz4KPGcgbWFzaz0idXJsKCNtYXNrMCkiPgo8cGF0aCBvcGFjaXR5PSIwLjE1IiBkPSJNOTYyLjU2MiAzMjYuMDE2QzgwNy4yNzMgMTkyLjgxMyA1OTMuMjY3IDM0OC40NjkgNDIzLjY2MyAyNDMuMDU0QzMzNS40MTggMTg4LjIwNyAzMTcuNTIzIDEzOC43MTQgMjU0LjE5OCA1Ni44OTU5QzIxMy41ODIgNC40MTcyNyAyMDkuNzExIC00LjcxODY5IDE3MS4xNjEgLTQyLjI1MzdDMTMyLjYxMSAtNzkuNzg4NyA2Mi43MDMxIC0xMjMuMTkyIDYyLjcwMzEgLTEyMy4xOTJWLTI2MC43ODhIMTg4Ny44NFY2NTUuODQxSDE0NTIuMzJDMTQ1Mi4zMiA2NTUuODQxIDEyMTkuNyA2NjAuMTY4IDExMDguMyA1NDYuNTc0QzEwNDAuNTUgNDc3LjQ4NSAxMDQyLjA1IDM5NC4yMDQgOTYyLjU2MiAzMjYuMDE2WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggb3BhY2l0eT0iMC4xNSIgZD0iTTEwMjUuMjYgMjgxLjk1Qzg2OS45NzMgMTQ4Ljc0NyA2NTUuOTY3IDMzOC44MDIgNDg2LjM2NCAyMzMuMzg3QzM5OC4xMTkgMTc4LjUzOSAzNTEuOTIyIC0xNS44MzYyIDMyNi4yMiAtNzMuMjgwMUMzMTIuMTM2IC0xMDQuNzU2IDI5MC42MzIgLTEzMy4wODUgMjU1LjcwMyAtMTU1LjExOEMyMjAuNzc1IC0xNzcuMTUxIDEyNS40MDMgLTE2Ny4yNTkgMTI1LjQwMyAtMTY3LjI1OVYtMzA0Ljg1NEgxOTUwLjU0VjU1NC4yMThIMTU0Mi4xM0MxNTQyLjEzIDU1NC4yMTggMTI1NS43MyA1NjUuMjM1IDExNjIuNTMgNDg2LjMyQzEwODEuMTkgNDE3LjQ0OCAxMTA0Ljc2IDM1MC4xMzggMTAyNS4yNiAyODEuOTVaIiBmaWxsPSJ3aGl0ZSIvPgo8L2c+Cjwvc3ZnPgo=");
+            background-color: $gray-500;
             color: $white;
             &.parallax-window {
                 background: transparent;
@@ -274,6 +277,14 @@
                 .disabled {
                     color: $gray-500 !important;
                 }
+            }
+        }
+        &__image {
+            &:before {
+                background: rgba(0, 0, 0, 0.65);
+            }
+            > #{$blockName}__banner {
+                background-color: $gray-300;
             }
         }
     }

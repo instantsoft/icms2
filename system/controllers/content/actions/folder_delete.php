@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelContent $model
+ */
 class actionContentFolderDelete extends cmsAction {
 
     public function run() {

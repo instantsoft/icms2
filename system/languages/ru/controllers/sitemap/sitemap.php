@@ -20,5 +20,7 @@ define('LANG_SITEMAP_SHOW_LASTMOD', 'Формировать тег lastmod');
 define('LANG_SITEMAP_SHOW_CHANGEFREQ', 'Формировать тег changefreq');
 define('LANG_SITEMAP_SHOW_PRIORITY', 'Формировать тег priority');
 define('LANG_SITEMAP_GENERATE_HTML_SITEMAP', 'Генерировать HTML карту сайта');
+define('LANG_SITEMAP_ITEMS_COUNT', 'Количество записей в одном файле');
+define('LANG_SITEMAP_ITEMS_COUNT_HINT', 'Файлы индекса Sitemap должны быть не больше 50 МБ (в несжатом виде) и могут содержать до 50000 URL. Вы можете уменьшить этот параметр, если возникли проблемы с индексацией. <a href="https://developers.google.com/search/docs/advanced/sitemaps/large-sitemaps" target="_blank">Документация</a>.');
 define('LANG_SITEMAP_ROBOTS_TXT', 'Файл robots.txt');
 define('LANG_SITEMAP_ROBOTS_TXT_HINT', 'Не указывайте здесь директиву Sitemap, она сформируются автоматически.');

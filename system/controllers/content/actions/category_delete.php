@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelContent $model
+ */
 class actionContentCategoryDelete extends cmsAction {
 
     public function run() {
@@ -26,6 +28,9 @@ class actionContentCategoryDelete extends cmsAction {
         }
 
         $this->model->deleteCategory($ctype['name'], $category['id'], true);
+
+        list($ctype, $category) = cmsEventsManager::hook('content_category_after_delete', [$ctype, $category], null, $this->request);
+        list($ctype, $category) = cmsEventsManager::hook("content_{$ctype['name']}_category_after_delete", [$ctype, $category], null, $this->request);
 
         $back_url = $this->getRequestBackUrl();
 

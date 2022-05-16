@@ -238,14 +238,18 @@ class fieldList extends cmsFormField {
             }
         }
 
+        $this->data['dom_attr'] = $this->getProperty('attributes') ?: [];
+        $this->data['dom_attr']['id'] = $this->id;
+
         $this->data['items']                    = $this->getListItems();
         $this->data['is_multiple']              = $this->getProperty('is_multiple');
         $this->data['multiple_select_deselect'] = $this->getProperty('multiple_select_deselect');
         $this->data['is_chosen_multiple']       = $this->getProperty('is_chosen_multiple');
         $this->data['is_tree']                  = $this->getProperty('is_tree');
         $this->data['parent']                   = $this->getProperty('parent');
-        $this->data['dom_attr']                 = ['id' => $this->id];
         $this->data['is_ns_value_items']        = false;
+        $this->data['select_hint_if_empty']     = $this->getProperty('select_hint_if_empty') ?: LANG_SELECT;
+        $this->data['select_hintmp_if_empty']   = $this->getProperty('select_hintmp_if_empty') ?: LANG_SELECT_MULTIPLE;
 
         if ($this->dynamic_list) {
             $this->data['value_items']       = $this->getListValuesItems();

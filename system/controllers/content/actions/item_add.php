@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelContent $model
+ */
 class actionContentItemAdd extends cmsAction {
 
     public function run(){

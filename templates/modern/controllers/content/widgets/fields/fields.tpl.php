@@ -1,5 +1,5 @@
-<div class="icms-content-header">
-    <div class="icms-bg__cover icms-content-header__banner <?php if ($image_is_parallax){ ?>parallax-window<?php } ?>" <?php if ($image_is_parallax){ ?>data-parallax="scroll" data-image-src="<?php echo $image_src; ?>"<?php } else { ?>style="background-image: url(<?php echo $image_src; ?>)"<?php } ?>>
+<div class="icms-content-header<?php if ($image_src){ ?> icms-content-header__image<?php } ?>">
+    <div class="icms-bg__cover icms-content-header__banner<?php if ($image_is_parallax && $image_src){ ?> parallax-window<?php } ?>" <?php if ($image_is_parallax && $image_src){ ?>data-parallax="scroll" data-image-src="<?php echo $image_src; ?>"<?php } elseif($image_src) { ?>style="background-image: url(<?php echo $image_src; ?>)"<?php } ?>>
         <div class="container content_item py-5 position-relative">
             <?php foreach ($fields as $field) { ?>
                 <?php if (!$field['html']) { continue; } ?>
@@ -38,7 +38,7 @@
         </div>
     </div>
 </div>
-<?php if ($image_is_parallax){
+<?php if ($image_is_parallax && $image_src){
 	$this->addTplJSNameFromContext([
         'vendors/parallax/parallax.min'
     ]);

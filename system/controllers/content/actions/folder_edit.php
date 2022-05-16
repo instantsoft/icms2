@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelContent $model
+ */
 class actionContentFolderEdit extends cmsAction {
 
     public function run() {

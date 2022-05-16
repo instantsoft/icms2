@@ -76,6 +76,11 @@ class formSitemapOptions extends cmsForm {
                         'default' => 0,
                         'title' => LANG_SITEMAP_GENERATE_HTML_SITEMAP
                     )),
+                    new fieldNumber('sitemap_items_count', array(
+                        'default' => 50000,
+                        'title' => LANG_SITEMAP_ITEMS_COUNT,
+                        'hint' => LANG_SITEMAP_ITEMS_COUNT_HINT
+                    ))
                 )
             ),
             'sources' => array(
