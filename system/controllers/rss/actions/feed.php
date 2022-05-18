@@ -80,7 +80,7 @@ class actionRssFeed extends cmsAction {
             }
         }
 
-        if ($category){ $feed['title'] = $feed['title'].' / '.$category['title']; }
+        if ($category){ $feed['title'] .=' / '.$category['title']; }
         if ($author){ $feed['title'] = $author['nickname'].' — '.$feed['title']; }
 
         $rss = $this->cms_template->getRenderedChild($feed['template'], [

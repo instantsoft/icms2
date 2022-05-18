@@ -10,7 +10,7 @@ class onRssContentBeforeCategory extends cmsAction {
 
             $title = $ctype['title'];
 
-            if ($category['id'] > 1){ $title = $title . ' / ' . $category['title']; }
+            if ($category['id'] > 1){ $title .= ' / ' . $category['title']; }
 
             $feed_title = sprintf(LANG_RSS_FEED_TITLE_FORMAT, $title, cmsConfig::get('sitename'));
             $feed_url = href_to_abs($this->name, 'feed', $ctype['name']);

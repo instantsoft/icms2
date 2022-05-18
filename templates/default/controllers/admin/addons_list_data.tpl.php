@@ -43,7 +43,7 @@
                     $value = $item['score'];
                     $value *= 10; $step = 0.5 * 10;
                     $value = (round($value)%$step === 0) ? round($value) : round(($value+$step/2)/$step)*$step;
-                    $value = $value / 10;
+                    $value /= 10;
                 ?>
                 <div class="rating">
                 <?php for($s=1; $s<=5; $s++) { ?>

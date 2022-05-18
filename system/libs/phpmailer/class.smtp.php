@@ -712,7 +712,7 @@ class SMTP
         //Message data has been sent, complete the command
         //Increase timelimit for end of DATA command
         $savetimelimit = $this->Timelimit;
-        $this->Timelimit = $this->Timelimit * 2;
+        $this->Timelimit *= 2;
         $result = $this->sendCommand('DATA END', '.', 250);
         $this->recordLastTransactionID();
         //Restore timelimit

@@ -120,7 +120,7 @@ class fieldString extends cmsFormField {
         if ($this->getOption('in_filter_as') === 'select') {
             $this->data['items'] = ['' => ''];
             if ($this->hasDefaultValue()) {
-                $this->data['items'] = $this->data['items'] + string_explode_list($this->getDefaultValue(), true);
+                $this->data['items'] += string_explode_list($this->getDefaultValue(), true);
             }
         }
         return parent::getFilterInput($value);

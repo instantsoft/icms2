@@ -2106,7 +2106,7 @@ class cmsTemplate {
             $controller_name = $this->controller->name;
         }
         if ($subfolder) {
-            $subfolder = $subfolder . '/';
+            $subfolder .= '/';
         }
 
         return $this->getTplFilePath('controllers/' . $controller_name . '/' . $subfolder . 'styles.css', false);
@@ -2560,7 +2560,7 @@ class cmsTemplate {
                             }
                         }
                         if(!empty($save_action)){
-                            $value = '<div class="grid_field_value '.$field.'_grid_value '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.$value.'</div>';
+                            $value = '<div class="grid_field_value '.$field.'_grid_value '.((isset($column['href']) ? 'edit_by_click' : '')).'"><span>'.$value.'</span></div>';
                             $value .= '<div class="grid_field_edit '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.html_input('text', $field, $row[$field], $attributes);
                             if($editable_index == $editable_count){
                                 $value .= html_button(LANG_SAVE, '', '', array('data-action'=>$save_action, 'class'=>'inline_submit  btn-primary'));

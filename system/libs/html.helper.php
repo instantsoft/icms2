@@ -537,7 +537,15 @@ function html_minify($html) {
     ], $html);
 }
 
+/**
+ *
+ * @param float $number Число
+ * @param integer $decimals Знаков после запятой
+ * @param string $thousands_sep Разделитель тысяч
+ * @return string
+ */
 function nf($number, $decimals = 2, $thousands_sep = '') {
-    if (!$number) { return 0; }
-    return number_format((double) str_replace(',', '.', $number), $decimals, '.', $thousands_sep);
+    if (!$number) { return '0'; }
+    $value = number_format((double) str_replace(',', '.', $number), $decimals, '.', $thousands_sep);
+    return rtrim(rtrim($value, '0'), '.');
 }

@@ -551,7 +551,7 @@ function string_replace_keys_values_extended($string, $data){
                                     $par[$k] = $out;
                                 }
                             }
-                            $func_params = $func_params + $par;
+                            $func_params += $par;
                         } else {
                             $func = false;
                         }

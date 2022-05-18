@@ -692,7 +692,7 @@ class content extends cmsFrontend {
             $folders = ['0' => ''];
 
             if (!empty($folders_list)) {
-                $folders = $folders + $folders_list;
+                $folders += $folders_list;
             }
 
             $form->addField($fieldset_id,

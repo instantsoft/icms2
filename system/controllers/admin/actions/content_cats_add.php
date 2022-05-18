@@ -89,7 +89,7 @@ class actionAdminContentCatsAdd extends cmsAction {
                 $remove_level_offset = $level;
             }
 
-            $level = $level - $remove_level_offset;
+            $level -= $remove_level_offset;
 
             $is_sub = $level > 0;
 

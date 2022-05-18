@@ -72,7 +72,7 @@ class formAdminCtypesRelation extends cmsForm {
                             list($target, $id) = explode(':', $ctype_id);
                             $datasets = $content_model->getContentDatasets($id ? $id : $target);
                             if ($datasets) {
-                                $list = $list + array_collection_to_list($datasets, 'id', 'title');
+                                $list += array_collection_to_list($datasets, 'id', 'title');
                             }
                             return $list;
                         }

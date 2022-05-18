@@ -23,7 +23,7 @@ class cmsBackend extends cmsController {
 
         parent::__construct($request);
 
-        $this->root_path = $this->root_path . 'backend/';
+        $this->root_path .= 'backend/';
 
         // Устанавливаем корень для URL внутри бэкенда
         $admin_controller_url = 'admin';

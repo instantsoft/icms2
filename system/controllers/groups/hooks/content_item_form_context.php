@@ -33,7 +33,7 @@ class onGroupsContentItemFormContext extends cmsAction {
         }
 
         if($groups){
-            $groups_list = $groups_list + array_collection_to_list($groups, 'id', 'title');
+            $groups_list += array_collection_to_list($groups, 'id', 'title');
 
             // если вне групп добавление записей запрещено, даём выбор только одной группы
             if($group_id && $action == 'add' && !cmsUser::isAllowed($ctype['name'], 'add') && isset($groups_list[$group_id])){

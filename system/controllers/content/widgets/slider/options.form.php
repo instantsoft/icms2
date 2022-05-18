@@ -21,7 +21,7 @@ class formWidgetContentSliderOptions extends cmsForm {
             }
             $fields = $content_model->getContentFields($ctype['name']);
             if ($fields) {
-                $list = $list + array_collection_to_list($fields, 'name', 'title');
+                $list += array_collection_to_list($fields, 'name', 'title');
             }
             return $list;
         };
@@ -96,7 +96,7 @@ class formWidgetContentSliderOptions extends cmsForm {
                             }
                             $datasets = $content_model->getContentDatasets($ctype_id);
                             if ($datasets) {
-                                $list = $list + array_collection_to_list($datasets, 'id', 'title');
+                                $list += array_collection_to_list($datasets, 'id', 'title');
                             }
                             return $list;
                         }

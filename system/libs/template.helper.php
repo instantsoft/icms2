@@ -407,7 +407,7 @@ function html_select_multiple($name, $items, $selected=array(), $attributes=arra
 
             if ($start_level === false) { $start_level = $level; }
 
-            $level = $level - $start_level;
+            $level -= $start_level;
 
             $title = ltrim($title, '- ');
 
@@ -479,15 +479,15 @@ function html_array_to_list($array){
     foreach($array as $key => $elem){
 
         if(!is_array($elem)){
-            $html = $html . '<li>'.$elem.'</li>' . "\n";
+            $html .= '<li>'.$elem.'</li>' . "\n";
         }
         else {
-            $html = $html . '<li class="folder">'.$key.' '.html_array_to_list($elem).'</li>' . "\n";
+            $html .= '<li class="folder">'.$key.' '.html_array_to_list($elem).'</li>' . "\n";
         }
 
     }
 
-    $html = $html . "</ul>" . "\n";
+    $html .= "</ul>" . "\n";
 
     return $html;
 

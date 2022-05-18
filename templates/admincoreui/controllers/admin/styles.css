@@ -581,7 +581,11 @@ form .child_field{margin-left: 20px}
     z-index: 1;
 }
 .grid_field_value {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+}
+.grid_field_value > span {
+    white-space: nowrap;
 }
 .is_collapsed {
     transition: all 0.3s ease;

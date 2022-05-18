@@ -19,7 +19,7 @@ function step($is_submit) {
     $uniq = uniqid();
 
     if (mkdir($sp . DS . $uniq, 0755, true) && is_writable($sp . DS . $uniq)) {
-        $sp = $sp . DS . $uniq;
+        $sp .= DS . $uniq;
     }
 
     $paths = [

@@ -107,7 +107,7 @@ class widgetContentFilter extends cmsWidget {
 
             $field['handler']->setItem(['ctype_name' => $ctype_name, 'id' => null, 'category' => $category])->setContext('filter');
 
-            $field['handler']->id = $field['handler']->id . '_filter' . $this->id;
+            $field['handler']->id .= '_filter' . $this->id;
 
             $fields[$name] = $field;
 
@@ -132,7 +132,7 @@ class widgetContentFilter extends cmsWidget {
                         setName("p{$prop['id']}")->
                         setContext('filter');
 
-                $prop['handler']->id = $prop['handler']->id . '_filter' . $this->id;
+                $prop['handler']->id .= '_filter' . $this->id;
 
                 $props[$key] = $prop;
 
