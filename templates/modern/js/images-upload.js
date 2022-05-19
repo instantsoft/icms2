@@ -6,6 +6,7 @@ icms.images = (function ($) {
 
     this.uploadCallback = null;
     this.removeCallback = null;
+    this.allowed_mime = [];
 
     this._onMultiSubmit = function(field_name){
         var widget = $('#widget_image_'+field_name);
@@ -118,6 +119,7 @@ icms.images = (function ($) {
         var uploader = new qq.FileUploader({
             element: document.getElementById('file-uploader-'+field_name),
             action: upload_url,
+            allowedMime: this.allowed_mime,
             multiple: false,
             debug: false,
             showMessage: function(message){
@@ -172,6 +174,7 @@ icms.images = (function ($) {
         var uploader = new qq.FileUploader({
             element: document.getElementById('file-uploader-'+field_name),
             action: upload_url,
+            allowedMime: this.allowed_mime,
             debug: false,
             showMessage: function(message){
                 icms.modal.alert(message);

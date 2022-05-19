@@ -60,6 +60,7 @@ class images extends cmsFrontend {
         }
 
         return $this->cms_template->renderInternal($this, 'upload_single', [
+            'allowed_mime'      => $this->allowed_mime,
             'name'              => $name,
             'paths'             => $paths,
             'upload_url'        => $upload_url,
@@ -69,7 +70,6 @@ class images extends cmsFrontend {
             'is_image_exists'   => $is_image_exists,
             'allow_import_link' => !empty($params['allow_import_link']) ? true : false
         ]);
-
     }
 
     public function getMultiUploadWidget($name, $images = false, $params = []) {
@@ -89,6 +89,7 @@ class images extends cmsFrontend {
         }
 
         return $this->cms_template->renderInternal($this, 'upload_multi', [
+            'allowed_mime'      => $this->allowed_mime,
             'name'              => $name,
             'images'            => $images,
             'upload_url'        => $upload_url,
