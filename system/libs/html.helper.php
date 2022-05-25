@@ -547,5 +547,8 @@ function html_minify($html) {
 function nf($number, $decimals = 2, $thousands_sep = '') {
     if (!$number) { return '0'; }
     $value = number_format((double) str_replace(',', '.', $number), $decimals, '.', $thousands_sep);
-    return rtrim(rtrim($value, '0'), '.');
+    if($decimals){
+        return rtrim(rtrim($value, '0'), '.');
+    }
+    return $value;
 }

@@ -47,13 +47,13 @@ class modelForms extends cmsModel {
         $form['options'] = cmsModel::stringToArray($form['options']);
 
         $form['params'] = [
-            'action'   => !empty($form['options']['action']) ? $form['options']['action'] : href_to('forms', 'send_ajax', $form['hash']),
-            'hide_toolbar' => true,
-            'params' => ['form_spam_token' => md5($form['hash'].$form['name'])],
-            'tpl_form' => $form['tpl_form'],
-            'form_class' => 'icms-forms__'.$form['name'],
-            'submit'   => ['title' => LANG_SEND],
-            'method'   => !empty($form['options']['method']) ? $form['options']['method'] : 'ajax'
+            'action'        => !empty($form['options']['action']) ? $form['options']['action'] : href_to('forms', 'send_ajax', $form['hash']),
+            'hide_toolbar'  => true,
+            'params'        => ['form_spam_token' => md5($form['hash'] . $form['name'])],
+            'form_tpl_file' => $form['tpl_form'],
+            'form_class'    => 'icms-forms__' . $form['name'],
+            'submit'        => ['title' => !empty($form['options']['submit_title']) ? $form['options']['submit_title'] : LANG_SEND],
+            'method'        => !empty($form['options']['method']) ? $form['options']['method'] : 'ajax'
         ];
 
         return $form;

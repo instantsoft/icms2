@@ -76,6 +76,16 @@ class fieldList extends cmsFormField {
             new fieldString('list_where_title', [
                 'title' => LANG_PARSER_LIST_WHERE_TITLE,
                 'visible_depend' => ['options:list_where' => ['show' => ['table']]]
+            ]),
+            new fieldList('list_sorting', [
+                'title' => LANG_SORTING,
+                'default' => 'keys',
+                'items' => [
+                    ''       => LANG_SORTING_BYORDER,
+                    'keys'   => LANG_PARSER_LIST_SORT_BY_KEYS,
+                    'values' => LANG_PARSER_LIST_SORT_BY_VALUES
+                ],
+                'visible_depend' => ['options:list_where' => ['show' => ['']]]
             ])
         ];
     }

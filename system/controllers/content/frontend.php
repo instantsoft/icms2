@@ -409,7 +409,10 @@ class content extends cmsFrontend {
         // заполняем поля для шаблона
         if($items){
 
-            list($ctype, $items, $fields) = cmsEventsManager::hook('content_before_fields_list', [$ctype, $items, $fields]);
+            list($ctype, $items, $fields) = cmsEventsManager::hook(
+                ['content_before_fields_list', 'content_'.$ctype['name'].'_before_fields_list'],
+                [$ctype, $items, $fields]
+            );
 
             foreach ($items as $key => $item) {
 
@@ -497,8 +500,10 @@ class content extends cmsFrontend {
             }
         }
 
-        list($ctype, $items) = cmsEventsManager::hook('content_before_list', [$ctype, $items]);
-        list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", [$ctype, $items]);
+        list($ctype, $items) = cmsEventsManager::hook(
+            ['content_before_list', 'content_'.$ctype['name'].'_before_list'],
+            [$ctype, $items]
+        );
 
         cmsModel::cacheResult('current_ctype_fields', $fields);
         cmsModel::cacheResult('current_ctype_props', $props);
@@ -1514,8 +1519,10 @@ class content extends cmsFrontend {
             return $item;
         });
 
-        list($datasets, $ctype) = cmsEventsManager::hook('content_datasets', [$datasets, $ctype]);
-        list($datasets, $ctype) = cmsEventsManager::hook('content_' . $ctype['name'] . '_datasets', [$datasets, $ctype]);
+        list($datasets, $ctype) = cmsEventsManager::hook(
+            ['content_datasets', 'content_' . $ctype['name'] . '_datasets'],
+            [$datasets, $ctype]
+        );
 
         return $datasets;
     }

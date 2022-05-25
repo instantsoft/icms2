@@ -25,6 +25,8 @@ define('LANG_FORMS_CP_DENIED_EMBED_DOMAIN', 'Запрещенные домены
 define('LANG_FORMS_CP_DENIED_EMBED_DOMAIN_HINT', 'На этих доменах не будут показываться встроенные формы');
 define('LANG_FORMS_CP_TPL_FORM', 'Шаблон формы');
 define('LANG_FORMS_CP_TITLE', 'Название формы');
+define('LANG_FORMS_CP_SUBMIT_TITLE', 'Текст кнопки "Отправить"');
+define('LANG_FORMS_CP_SUBMIT_TITLE_HINT', 'Если не указано, будет написано "Отправить"');
 define('LANG_FORMS_CP_NAME_HINT', 'Если включена опция доступности по ссылке, системное имя будет как URL, например /forms/formsysname');
 define('LANG_FORMS_CP_AVAILABLE_BY_LINK', 'Доступна по ссылке');
 define('LANG_FORMS_CP_HIDE_AFTER_SUBMIT', 'Скрывать форму после отправки');

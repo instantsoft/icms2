@@ -101,6 +101,8 @@
     define('LANG_PARSER_LIST_COND_HINT', 'In JSON format, for example [{"field": "foo", "condition": "eq", "value": "bar"}].');
     define('LANG_PARSER_LIST_WHERE_ID', 'The field with the record id');
     define('LANG_PARSER_LIST_WHERE_TITLE', 'The name of the record');
+    define('LANG_PARSER_LIST_SORT_BY_KEYS',  'By keys');
+    define('LANG_PARSER_LIST_SORT_BY_VALUES','By values');
     define('LANG_PARSER_LIST_ORDER', 'The format is field:direction, for example title:asc');
     define('LANG_PARSER_LIST_IS_AUTOLINK',     'AutoLink');
     define('LANG_PARSER_LIST_ADD_EMPTY',     'Add a blank value at the beginning of the preset values');

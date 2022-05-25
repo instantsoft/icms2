@@ -72,6 +72,10 @@ class formFormsForm extends cmsForm {
                     new fieldCheckbox('options:hide_after_submit', array(
                         'title' => LANG_FORMS_CP_HIDE_AFTER_SUBMIT
                     )),
+                    new fieldString('options:submit_title', array(
+                        'title' => LANG_FORMS_CP_SUBMIT_TITLE,
+                        'hint' => LANG_FORMS_CP_SUBMIT_TITLE_HINT
+                    )),
                     new fieldList('options:send_type', array(
                         'title' => LANG_FORMS_CP_SEND_TYPE,
                         'hint' => LANG_FORMS_CP_SEND_TYPE_HINT,

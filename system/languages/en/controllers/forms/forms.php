@@ -25,6 +25,8 @@ define('LANG_FORMS_CP_DENIED_EMBED_DOMAIN', 'Denied embed domains');
 define('LANG_FORMS_CP_DENIED_EMBED_DOMAIN_HINT', 'Embed forms will not show on these domains');
 define('LANG_FORMS_CP_TPL_FORM', 'Form template');
 define('LANG_FORMS_CP_TITLE', 'Form title');
+define('LANG_FORMS_CP_SUBMIT_TITLE', 'Text of the "Send" button');
+define('LANG_FORMS_CP_SUBMIT_TITLE_HINT', 'If not specified, it shows "Send".');
 define('LANG_FORMS_CP_NAME_HINT', 'If the link accessibility option is enabled, the system name will be as URL, for example / forms / formsysname');
 define('LANG_FORMS_CP_AVAILABLE_BY_LINK', 'Available by link');
 define('LANG_FORMS_CP_HIDE_AFTER_SUBMIT', 'Hide the form after submitting');

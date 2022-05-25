@@ -101,6 +101,8 @@
     define('LANG_PARSER_LIST_WHERE_ID',      'Поле с id записи');
     define('LANG_PARSER_LIST_WHERE_TITLE',   'Поле с названием записи');
     define('LANG_PARSER_LIST_ORDER',         'В формате поле:направление, например title:asc');
+    define('LANG_PARSER_LIST_SORT_BY_KEYS',  'По ключам');
+    define('LANG_PARSER_LIST_SORT_BY_VALUES','По значениям');
     define('LANG_PARSER_LIST_ADD_EMPTY',     'Добавить в начале предустановленных значений пустое значение');
     define('LANG_PARSER_LIST_IS_AUTOLINK',     'Автоссылка');
     define('LANG_PARSER_LIST_IS_AUTOLINK_HINT', 'Включение этой опции разбивает (по запятой) значение поля на отдельные слова и каждое делает ссылкой. ');

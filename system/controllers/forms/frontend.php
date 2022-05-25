@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelForms $model
+ */
 class forms extends cmsFrontend {
 
     protected $useOptions = true;
