@@ -48,6 +48,16 @@ class formWidgetContentAuthorOptions extends cmsForm {
                     ]),
                     new fieldCheckbox('options:show_date_reg', [
                         'title' => LANG_WD_CON_AUTHOR_SHOW_DATE_REG
+                    ]),
+                    new fieldCheckbox('options:generate_schemaorg', [
+                        'title' => LANG_WD_CON_GENERATE_SCHEMAORG,
+                        'hint' => LANG_WD_CON_GENERATE_SCHEMAORG_HINT
+                    ]),
+                    new fieldHtml('options:schemaorg_addons', [
+                        'title' => LANG_WD_CON_SCHEMAORG_ADDON,
+                        'hint'  => LANG_WD_CON_SCHEMAORG_ADDON_HINT,
+                        'options' => ['editor' => 'ace', 'editor_options' => ['mode' => 'ace/mode/json']],
+                        'visible_depend' => ['options:generate_schemaorg' => ['show' => ['1']]]
                     ])
                 ]
             ]

@@ -39,7 +39,7 @@
         </ul>
     </div>
 <?php } ?>
-<div class=" card mb-0 rounded-0 form-tabs">
+<div class=" card mb-0 form-tabs">
     <div class="card-body">
         <form action="" method="post" enctype="multipart/form-data">
 

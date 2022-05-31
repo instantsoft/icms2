@@ -21,6 +21,9 @@ class widgetContentAuthor extends cmsWidget {
             return false;
         }
 
+        // Флаг, что мы в записи
+        $is_item_page = false;
+
         // Если мы в записи
         $item = cmsModel::getCachedResult('current_ctype_item');
 
@@ -32,20 +35,22 @@ class widgetContentAuthor extends cmsWidget {
             return false;
         }
 
+        // Виджет в записи
         if(!$profile){
+
+            $is_item_page = true;
 
             $profile = cmsCore::getModel('users')->getUser($item['user_id']);
             if(!$profile){
                 return false;
             }
 
-            $fields = cmsCore::getModel('content')->setTablePrefix('')->getContentFields('{users}', false, false, $show_fields);
+            $fields = cmsCore::getModel('content')->setTablePrefix('')->getContentFields('{users}', false, false);
         }
 
         foreach($fields as $name => $field){
 
             if(!in_array($name, $show_fields)){
-                unset($fields[$name]);
                 continue;
             }
 
@@ -70,8 +75,48 @@ class widgetContentAuthor extends cmsWidget {
 
         }, $profile);
 
+        // Микроразметка
+        $jsonld = [];
+        if ($is_item_page && $this->getOption('generate_schemaorg')){
+
+            $jsonld = [
+                '@context'       => 'https://schema.org',
+                '@type'          => 'Article',
+                'url'            => href_to_abs($ctype['name'], $item['slug']),
+                'headline'       => $item['title'],
+                'articleSection' => !empty($item['category']['title']) ? $item['category']['title'] : '',
+                'commentCount'   => $item['comments'],
+                'discussionUrl'  => href_to_abs($ctype['name'], $item['slug']) . '#comments',
+                'datePublished'  => date('Y-m-d', strtotime($item['date_pub'])),
+                'dateModified'   => date('Y-m-d', strtotime($item['date_last_modified'])),
+                'author'         => [
+                    '@type'         => 'Person',
+                    'name'          => $item['user_nickname'],
+                    'image'         => html_avatar_image_src($profile['avatar'], $fields['avatar']['options']['size_full'], false),
+                    'url'           => href_to_profile($profile, [], true)
+                ]
+            ];
+
+            $schemaorg_addons = $this->getOption('schemaorg_addons');
+
+            if($schemaorg_addons){
+
+                $schemaorg_addons = json_decode($schemaorg_addons, true);
+
+                if($schemaorg_addons){
+                    $schemaorg_addons = $this->replaceSchemaorgValues([
+                        'profile' => $profile,
+                        'item' => $item
+                    ], $schemaorg_addons);
+                }
+
+                $jsonld = array_replace_recursive($jsonld, $schemaorg_addons);
+            }
+        }
+
         return [
             'sys_fields' => $this->getSystemFields($profile, $ctype),
+            'jsonld'     => $jsonld,
             'ctype'      => $ctype,
             'profile'    => $profile,
             'fields'     => $fields,
@@ -130,6 +175,21 @@ class widgetContentAuthor extends cmsWidget {
         ));
 
         return $hook['fields'];
+    }
+
+    private function replaceSchemaorgValues($data, $schemaorg_addons) {
+
+        foreach ($schemaorg_addons as $key => $value) {
+
+            if(is_array($value)){
+                $schemaorg_addons[$key] = $this->replaceSchemaorgValues($data, $value);
+            } else {
+                $schemaorg_addons[$key] = string_replace_keys_values_extended($value, $data);
+            }
+
+        }
+
+        return $schemaorg_addons;
     }
 
 }

@@ -52,7 +52,7 @@
     </div>
     <div class="col">
         <?php if ($this->isToolbar()){ ?>
-            <nav class="cp_toolbar navbar navbar-light bg-light my-2 pl-2" id="addons_toolbar">
+            <nav class="cp_toolbar navbar navbar-light bg-light my-2 pl-2 rounded" id="addons_toolbar">
                 <?php $this->toolbar(); ?>
             </nav>
         <?php } ?>

@@ -25,6 +25,7 @@
 
     <?php foreach($fieldset['fields'] as $field){ ?>
         <?php
+            if (empty($field['html'])) { continue; }
             if (!isset($field['options']['label_in_item'])) {
                 $label_pos = 'none';
             } else {
@@ -64,3 +65,9 @@
     </div>
 <?php } ?>
 </div>
+<?php if ($jsonld){ ?>
+<script type="application/ld+json">
+<?php echo json_encode($jsonld, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>
+
+</script>
+<?php } ?>

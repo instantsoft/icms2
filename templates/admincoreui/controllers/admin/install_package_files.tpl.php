@@ -18,7 +18,7 @@
 ?>
 
 <?php if(empty($hide_title)){ ?>
-<div class="card rounded-0">
+<div class="card">
     <div class="card-body">
 <?php } ?>
 

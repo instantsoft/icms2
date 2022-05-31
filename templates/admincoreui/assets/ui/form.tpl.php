@@ -13,7 +13,7 @@
 
     <?php echo $attributes['prepend_html']; ?>
 
-    <div class="<?php if($form->is_tabbed){ ?>tabs-menu mb-3 <?php } else { ?><?php if(count($form->getStructure()) > 1) { ?> without-tabs <?php } ?> card mb-0 rounded-0 <?php } ?>form-tabs">
+    <div class="<?php if($form->is_tabbed){ ?>tabs-menu mb-3 <?php } else { ?><?php if(count($form->getStructure()) > 1) { ?> without-tabs <?php } ?> card mb-0 <?php } ?>form-tabs">
 
         <?php if($form->is_tabbed){ ?>
             <ul class="nav nav-tabs flex-wrap">
