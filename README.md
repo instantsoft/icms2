@@ -7,6 +7,9 @@
 #### Is a free open source CMS (content management system) that allows you to build websites for any purpose
 
 [![LICENSE](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](./LICENSE)
+[![GitHub release](https://img.shields.io/github/release/instantsoft/icms2.svg)](https://github.com/instantsoft/icms2/releases)
+![PHP version](https://img.shields.io/badge/PHP->=v5.6-red.svg?php=5.6)
+[![Issues](https://img.shields.io/github/issues-closed-raw/instantsoft/icms2.svg?maxAge=2592000)](https://github.com/instantsoft/icms2/issues)
 
 ## Key features
 

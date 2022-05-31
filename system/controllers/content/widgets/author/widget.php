@@ -82,11 +82,11 @@ class widgetContentAuthor extends cmsWidget {
             $jsonld = [
                 '@context'       => 'https://schema.org',
                 '@type'          => 'Article',
-                'url'            => href_to_abs($ctype['name'], $item['slug']),
+                'url'            => href_to_abs($ctype['name'], $item['slug'].'.html'),
                 'headline'       => $item['title'],
                 'articleSection' => !empty($item['category']['title']) ? $item['category']['title'] : '',
                 'commentCount'   => $item['comments'],
-                'discussionUrl'  => href_to_abs($ctype['name'], $item['slug']) . '#comments',
+                'discussionUrl'  => href_to_abs($ctype['name'], $item['slug'].'.html') . '#comments',
                 'datePublished'  => date('Y-m-d', strtotime($item['date_pub'])),
                 'dateModified'   => date('Y-m-d', strtotime($item['date_last_modified'])),
                 'author'         => [
