@@ -57,7 +57,7 @@
 
                             <span class="contact_nickname">
                                 <span><?php echo $nickname; ?></span>
-                                <small title="<?php echo LANG_USERS_PROFILE_LOGDATE; ?>" class="d-block text-muted">
+                                <small class="d-block text-muted">
                                     <?php echo html_date_time($contact['date_last_msg']); ?>
                                 </small>
                             </span>

@@ -214,15 +214,19 @@ class actionContentItemEdit extends cmsAction {
                 //
                 // Сохраняем запись и редиректим на ее просмотр
                 //
-                $item = cmsEventsManager::hook('content_before_update', $item);
-                $item = cmsEventsManager::hook("content_{$ctype['name']}_before_update", $item);
+                $item = cmsEventsManager::hook([
+                    'content_before_update',
+                    "content_{$ctype['name']}_before_update"
+                ], $item, null, $this->request);
 
                 $item = $this->model->updateContentItem($ctype, $id, $item, $fields);
 
                 $this->bindItemToParents($ctype, $item);
 
-                cmsEventsManager::hook('content_after_update', $item);
-                cmsEventsManager::hook("content_{$ctype['name']}_after_update", $item);
+                $item = cmsEventsManager::hook([
+                    'content_after_update',
+                    "content_{$ctype['name']}_after_update"
+                ], $item, null, $this->request);
 
                 if (!$is_draf_submitted) {
 

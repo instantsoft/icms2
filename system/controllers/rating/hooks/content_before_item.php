@@ -36,6 +36,12 @@ class onRatingContentBeforeItem extends cmsAction {
             // запоминаем в этой ячейке для совместимости
             $item['rating_widget'] = $this->getWidget($item['id'], $item['rating'], $is_rating_allowed);
 
+            // Запишем кол-во голосов
+            $item['rating_data'] = [
+                'value' => $item['rating'],
+                'count' => $this->getTotalVoted(),
+            ];
+
             // с версий выше 2.11 инфобар в отдельном массиве
             if(!isset($item['info_bar'])){ $item['info_bar'] = []; }
 
@@ -47,8 +53,7 @@ class onRatingContentBeforeItem extends cmsAction {
 
         }
 
-        return array($ctype, $item, $fields);
-
+        return [$ctype, $item, $fields];
     }
 
 }

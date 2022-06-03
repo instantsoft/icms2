@@ -552,13 +552,17 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function replaceFieldString($table_name, $search, $replace, $field){
+    public function replaceFieldString($table_name, $search, $replace, $field) {
 
-        $search = $this->db->escape($search);
+        $this->filterLike($field, '%'.$search.'%');
+
+        $where = $this->where;
+        $this->resetFilters();
+
+        $search  = $this->db->escape($search);
         $replace = $this->db->escape($replace);
 
-        return $this->db->query("UPDATE `{#}{$table_name}` SET `{$field}` = REPLACE(`{$field}`, '{$search}', '$replace') WHERE `{$field}` LIKE '%{$search}%'");
-
+        return $this->db->query("UPDATE `{#}{$table_name}` i SET i.{$field} = REPLACE(i.{$field}, '{$search}', '{$replace}') WHERE {$where}");
     }
 
 //============================================================================//

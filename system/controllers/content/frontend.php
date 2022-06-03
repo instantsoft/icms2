@@ -224,6 +224,11 @@ class content extends cmsFrontend {
         // Получаем поля для данного типа контента
         $fields = cmsCore::getModel('content')->getContentFields($ctype['name']);
 
+		list($ctype, $fields) = cmsEventsManager::hook(
+            ['content_list_fields', 'content_'.$ctype['name'].'_list_fields'],
+            [$ctype, $fields], null, $this->request
+        );
+
         $page = $this->request->get($this->request_page_name, 1);
 
         $perpage = (empty($ctype['options']['limit']) ? self::perpage : $ctype['options']['limit']);
@@ -324,8 +329,10 @@ class content extends cmsFrontend {
             $this->model->limitPage($page, $perpage);
         }
 
-		list($ctype, $this->model) = cmsEventsManager::hook('content_list_filter', [$ctype, $this->model]);
-		list($ctype, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", [$ctype, $this->model]);
+		list($ctype, $this->model) = cmsEventsManager::hook(
+            ['content_list_filter', 'content_'.$ctype['name'].'_list_filter'],
+            [$ctype, $this->model], null, $this->request
+        );
 
         // правила доступа на просмотр списка записей
         $check_list_perm_result = $this->checkListPerm($ctype['name']);

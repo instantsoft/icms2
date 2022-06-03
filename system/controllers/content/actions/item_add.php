@@ -1,20 +1,20 @@
 <?php
-/**
- * @property \modelContent $model
- */
+
 class actionContentItemAdd extends cmsAction {
 
     public function run(){
 
-        $back_url = $this->getRequestBackUrl();
-
         // Получаем название типа контента
         $ctype_name = $this->request->get('ctype_name', '');
-        if (!$ctype_name) { cmsCore::error404(); }
+        if (!$ctype_name) {
+            return cmsCore::error404();
+        }
 
         // Получаем тип контента
         $ctype = $this->model->getContentTypeByName($ctype_name);
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
 
         $permissions = cmsEventsManager::hook('content_add_permissions', [
             'can_add' => false,
@@ -27,9 +27,9 @@ class actionContentItemAdd extends cmsAction {
         if (!cmsUser::isAllowed($ctype['name'], 'add') && !$permissions['can_add']) {
             if (!cmsUser::isAllowed($ctype['name'], 'add_to_parent')) {
                 if(!$this->cms_user->is_logged){
-                    cmsUser::goLogin();
+                    return cmsUser::goLogin();
                 }
-                cmsCore::error404();
+                return cmsCore::error404();
             }
             $is_check_parent_perm = true;
         }
@@ -38,20 +38,20 @@ class actionContentItemAdd extends cmsAction {
         $user_items_count = $this->model->getUserContentItemsCount($ctype['name'], $this->cms_user->id, false);
         if (cmsUser::isPermittedLimitReached($ctype['name'], 'limit', $user_items_count)){
             cmsUser::addSessionMessage(sprintf(LANG_CONTENT_COUNT_LIMIT, $ctype['labels']['many']), 'error');
-            $this->redirectBack();
+            return $this->redirectBack();
         }
 
         // проверяем что не превышен лимит на число записей в сутки
         $user_items_24count = $this->model->getUserContentItemsCount24($ctype['name'], $this->cms_user->id, false);
         if (cmsUser::isPermittedLimitReached($ctype['name'], 'limit24', $user_items_24count)){
             cmsUser::addSessionMessage(sprintf(LANG_CONTENT_COUNT_LIMIT24, $ctype['labels']['many'], $ctype['labels']['two']), 'error');
-            $this->redirectBack();
+            return $this->redirectBack();
         }
 
         // Проверяем ограничение по карме
         if (cmsUser::isPermittedLimitHigher($ctype['name'], 'karma', $this->cms_user->karma)){
             cmsUser::addSessionMessage(sprintf(LANG_CONTENT_KARMA_LIMIT, cmsUser::getPermissionValue($ctype['name'], 'karma')), 'error');
-            $this->redirectBack();
+            return $this->redirectBack();
         }
 
 		$item = [];
@@ -103,10 +103,10 @@ class actionContentItemAdd extends cmsAction {
 
                     if (!empty($is_check_parent_perm) && !$this->cms_user->is_admin){
                         if (cmsUser::isAllowed($ctype['name'], 'add_to_parent', 'to_own') && $parent_item['user_id'] != $this->cms_user->id){
-                            cmsCore::error404();
+                            return cmsCore::error404();
                         }
                         if (cmsUser::isAllowed($ctype['name'], 'add_to_parent', 'to_other') && $parent_item['user_id'] == $this->cms_user->id){
-                            cmsCore::error404();
+                            return cmsCore::error404();
                         }
                     }
 
@@ -120,7 +120,7 @@ class actionContentItemAdd extends cmsAction {
         }
 
         if (!empty($is_check_parent_perm) && empty($relation_id)){
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         // Заполняем поля значениями по умолчанию, взятыми из профиля пользователя
@@ -140,7 +140,7 @@ class actionContentItemAdd extends cmsAction {
         $is_premoderation = cmsUser::isAllowed($ctype['name'], 'add', 'premod', true);
 
 		$ctype = cmsEventsManager::hook('content_add', $ctype);
-        list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
+        list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", [$form, $item]);
 
         // Форма отправлена?
         $is_submitted = $this->request->has('submit') || $this->request->has('to_draft');
@@ -201,8 +201,8 @@ class actionContentItemAdd extends cmsAction {
 
             }
 
-			list($item, $errors) = cmsEventsManager::hook('content_validate', array($item, $errors), null, $this->request);
-            list($item, $errors, $ctype, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_validate", array($item, $errors, $ctype, $fields), null, $this->request);
+			list($item, $errors) = cmsEventsManager::hook('content_validate', [$item, $errors], null, $this->request);
+            list($item, $errors, $ctype, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_validate", [$item, $errors, $ctype, $fields], null, $this->request);
 
             if (!$errors){
 
@@ -256,13 +256,15 @@ class actionContentItemAdd extends cmsAction {
 
                 $this->bindItemToParents($ctype, $item, $parents);
 
-                $item = cmsEventsManager::hook('content_after_add', $item);
-                $item = cmsEventsManager::hook("content_{$ctype['name']}_after_add", $item);
+                $item = cmsEventsManager::hook([
+                    'content_after_add',
+                    "content_{$ctype['name']}_after_add"
+                ], $item, null, $this->request);
 
                 if(!$is_draf_submitted){
 
                     if ($item['is_approved']){
-                        cmsEventsManager::hook('content_after_add_approve', array('ctype_name' => $ctype['name'], 'item' => $item));
+                        cmsEventsManager::hook('content_after_add_approve', ['ctype_name' => $ctype['name'], 'item' => $item]);
                         cmsEventsManager::hook("content_{$ctype['name']}_after_add_approve", $item);
                     } else {
 
@@ -278,18 +280,20 @@ class actionContentItemAdd extends cmsAction {
 
                 }
 
+                $back_url = $this->getRequestBackUrl();
+
                 if ($back_url){
-                    $this->redirect($back_url);
+                    return $this->redirect($back_url);
                 } else {
 
                     if($is_draf_submitted){
-                        $this->redirectTo('moderation', 'draft');
+                        return $this->redirectTo('moderation', 'draft');
                     }
 
 					if ($ctype['options']['item_on']){
-						$this->redirectTo($ctype['name'], $item['slug'] . '.html');
+						return $this->redirectTo($ctype['name'], $item['slug'] . '.html');
 					} else {
-						$this->redirectTo($ctype['name']);
+						return $this->redirectTo($ctype['name']);
 					}
 
                 }
@@ -306,6 +310,8 @@ class actionContentItemAdd extends cmsAction {
             'edit_times' => cmsUser::getPermissionValue($ctype['name'], 'edit_times'),
             'delete_times' => cmsUser::getPermissionValue($ctype['name'], 'delete_times')
         ];
+
+        $back_url = $this->getRequestBackUrl();
 
         return $this->cms_template->render('item_form', [
             'do'               => 'add',

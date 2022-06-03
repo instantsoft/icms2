@@ -31,7 +31,10 @@ class rating extends cmsFrontend {
         ], $this->cms_user, !empty($this->options['allow_guest_vote']));
 
         return $this;
+    }
 
+    public function getTotalVoted() {
+        return $this->total_voted;
     }
 
     public function setTotalVoted($total_voted) {
@@ -39,7 +42,6 @@ class rating extends cmsFrontend {
         $this->total_voted = $total_voted;
 
         return $this;
-
     }
 
     public function loadCurrentTotalVoted($target_id) {
@@ -47,7 +49,6 @@ class rating extends cmsFrontend {
         $this->model->filterVotes($this->target_controller, $this->target_subject, $target_id);
 
         return $this->setTotalVoted($this->model->getVotesCount(true));
-
     }
 
     public function isUserVoted($target_id) {
@@ -72,7 +73,7 @@ class rating extends cmsFrontend {
 
         $template_name = !empty($this->options['template']) ? $this->options['template'] : 'widget';
 
-        return $this->cms_template->renderInternal($this, $template_name, array(
+        return $this->cms_template->renderInternal($this, $template_name, [
             'show_rating'       => !($this->options['is_hidden'] && !$is_voted && ($is_enabled || !$this->cms_user->is_logged)),
             'options'           => $this->options,
             'label'             => $this->label,
@@ -85,8 +86,7 @@ class rating extends cmsFrontend {
             'is_enabled'        => $is_enabled,
             'current_rating'    => $current_rating ? $current_rating : 0,
             'user'              => $this->cms_user
-        ));
-
+        ]);
     }
 
 }

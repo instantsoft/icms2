@@ -583,12 +583,12 @@ function string_replace_keys_values_extended($string, $data) {
 
             // Поддерживаются вложенные элементы массива, т.е. ключи вида {item.key}
             if (strpos($property, '.') === false) {
-                $data_property = isset($data[$property]) ? $data[$property] : '';
+                $data_property = isset($data[$property]) ? $data[$property] : null;
             } else {
                 $data_property = array_value_recursive($property, $data, '.');
             }
 
-            if (!is_array($data[$property]) && !is_object($data[$property])) {
+            if ($data_property !== null && !is_array($data[$property]) && !is_object($data[$property])) {
 
                 if ($func && function_exists($func)) {
 

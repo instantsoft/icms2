@@ -132,13 +132,17 @@ class fieldCategory extends cmsFormField {
 
         $bind_table_name = $model->getContentCategoryTableName($this->item['ctype_name']) . '_bind';
 
-        if (!empty($this->options['filter_multiple']) && is_array($value)) {
+        if(strpos($model->join, $bind_table_name.' as b ON') === false){
+            $model->joinInner($bind_table_name, 'b', 'b.item_id = i.id');
+        }
 
-            return $model->joinInner($bind_table_name, 'b', 'b.item_id = i.id')->filterIn('b.category_id', $value);
+        if (is_array($value)) {
+
+            return $model->filterIn('b.category_id', $value);
 
         } else {
 
-            return $model->joinInner($bind_table_name, 'b', 'b.item_id = i.id')->filterEqual('b.category_id', $value);
+            return $model->filterEqual('b.category_id', $value);
         }
     }
 
@@ -156,6 +160,11 @@ class fieldCategory extends cmsFormField {
 
         if (!$this->show_filter_input_title) {
             $this->title = false;
+        }
+
+        // Фильтр по категории показывается только если мы не в категории или в корневой (id=1)
+        if (!empty($this->item['category']['id']) && $this->item['category']['id'] > 1) {
+            return '';
         }
 
         $this->data['items'] = ['' => ''];
