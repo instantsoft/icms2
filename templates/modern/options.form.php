@@ -58,31 +58,39 @@ class formModernTemplateOptions extends cmsForm {
         ];
 
         $theme_colors = [
-            '$body-bg'   => LANG_MODERN_THEME_BGCOLOR,
-            '$body-color'=> LANG_MODERN_THEME_BCOLOR,
-            '$link-color'=> LANG_MODERN_THEME_LINK_COLOR,
-            '$primary'   => LANG_MODERN_C_PRIMARY,
-            '$secondary' => LANG_MODERN_C_SECONDARY,
-            '$success'   => LANG_MODERN_C_SUCCESS,
-            '$info'      => LANG_MODERN_C_INFO,
-            '$warning'   => LANG_MODERN_C_WARNING,
-            '$danger'    => LANG_MODERN_C_DANGER,
-            '$light'     => LANG_MODERN_C_LIGHT,
-            '$dark'      => LANG_MODERN_C_DARK
+            '$body-bg'      => LANG_MODERN_THEME_BGCOLOR,
+            '$body-color'   => LANG_MODERN_THEME_BCOLOR,
+            '$link-color'   => LANG_MODERN_THEME_LINK_COLOR,
+            '$header-bg'    => LANG_MODERN_THEME_HBCOLOR,
+            '$header-color' => LANG_MODERN_THEME_HCOLOR,
+            '$footer-bg'    => LANG_MODERN_THEME_FBCOLOR,
+            '$footer-color' => LANG_MODERN_THEME_FCOLOR,
+            '$primary'      => LANG_MODERN_C_PRIMARY,
+            '$secondary'    => LANG_MODERN_C_SECONDARY,
+            '$success'      => LANG_MODERN_C_SUCCESS,
+            '$info'         => LANG_MODERN_C_INFO,
+            '$warning'      => LANG_MODERN_C_WARNING,
+            '$danger'       => LANG_MODERN_C_DANGER,
+            '$light'        => LANG_MODERN_C_LIGHT,
+            '$dark'         => LANG_MODERN_C_DARK
         ];
 
         $theme_colors_default = [
-            'body-bg'   => '$white',
-            'body-color'=> '$gray-800',
-            'link-color'=> '$blue',
-            'primary'   => '$blue',
-            'secondary' => '$gray-600',
-            'success'   => '$green',
-            'info'      => '$cyan',
-            'warning'   => '$yellow',
-            'danger'    => '$red',
-            'light'     => '$gray-100',
-            'dark'      => '$gray-900'
+            'header-bg'    => '$purple',
+            'header-color' => '$white',
+            'footer-bg'    => '$gray-900',
+            'footer-color' => '$gray-600',
+            'body-bg'      => '$white',
+            'body-color'   => '$gray-800',
+            'link-color'   => '$blue',
+            'primary'      => '$blue',
+            'secondary'    => '$gray-600',
+            'success'      => '$green',
+            'info'         => '$cyan',
+            'warning'      => '$yellow',
+            'danger'       => '$red',
+            'light'        => '$gray-100',
+            'dark'         => '$gray-900'
         ];
 
         $exists_vars = array_keys($theme_colors + $gamma);

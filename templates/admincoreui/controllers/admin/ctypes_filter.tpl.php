@@ -27,7 +27,7 @@
 
     $this->addMenuItem('breadcrumb-menu', [
         'title' => LANG_HELP,
-        'url'   => LANG_HELP_URL_CTYPES_FILTERS,
+        'url'   => LANG_HELP_URL_CTYPES_FILTERS_ADD,
         'options' => [
             'target' => '_blank',
             'icon' => 'question-circle'

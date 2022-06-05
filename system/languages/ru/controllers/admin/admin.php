@@ -805,6 +805,7 @@
     define('LANG_HELP_URL_CTYPES_PROPS',            'https://docs.instantcms.ru/manual/ctypes/props');
     define('LANG_HELP_URL_CTYPES_PROP',             'https://docs.instantcms.ru/manual/ctypes/props/add');
     define('LANG_HELP_URL_CTYPES_FILTERS',          'https://docs.instantcms.ru/manual/ctypes/filters');
+    define('LANG_HELP_URL_CTYPES_FILTERS_ADD',      'https://docs.instantcms.ru/manual/ctypes/filters/add');
     define('LANG_HELP_URL_CTYPES_DATASETS',         'https://docs.instantcms.ru/manual/ctypes/datasets');
     define('LANG_HELP_URL_CTYPES_DATASET',          'https://docs.instantcms.ru/manual/ctypes/datasets/add');
     define('LANG_HELP_URL_CTYPES_RELATIONS',        'https://docs.instantcms.ru/manual/ctypes/relations');

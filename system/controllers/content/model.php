@@ -545,6 +545,19 @@ class modelContent extends cmsModel {
 
                 }
 
+                // имя поля сменилось
+                if(($field_old['name'] !== $field['name'])){
+                    if(!$this->table_prefix){
+                        $this->filterEqual('target_controller', $ctype_name);
+                    } else {
+                        $ctype = $this->getContentTypeByName($ctype_name);
+                        $this->filterEqual('ctype_id', $ctype['id']);
+                    }
+                    $this->lockFilters();
+                    $this->replaceFieldString('content_datasets', "by: {$field_old['name']}", "by: {$field['name']}", 'sorting');
+                    $this->unlockFilters();
+                    $this->replaceFieldString('content_datasets', "field: {$field_old['name']}", "field: {$field['name']}", 'filters');
+                }
             }
 
             if ($field['is_in_filter'] && $field_handler->allow_index && !$field_old['is_in_filter']){

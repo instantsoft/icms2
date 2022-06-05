@@ -113,7 +113,8 @@ class cmsDebugging {
     }
 
     public static function startTimer($target) {
-        self::$start_time[$target][] = microtime(true);
+        // Для общего времени выполнения старт берём по константе из index.php
+        self::$start_time[$target][] = ($target === 'cms' && defined('VALID_RUN')) ? VALID_RUN : microtime(true);
     }
 
     public static function getTime($target, $decimals = self::DECIMALS) {

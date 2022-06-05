@@ -25,6 +25,10 @@ scss:
   body-bg: $white
   body-color: $gray-800
   link-color: $blue
+  header-bg: $purple
+  header-color: $white
+  footer-bg: $gray-900
+  footer-color: $gray-600
   primary: $blue
   secondary: $gray-600
   success: $green
@@ -75,6 +79,10 @@ custom_scss:
   body-bg:
   body-color:
   link-color:
+  header-bg:
+  header-color:
+  footer-bg:
+  footer-color:
   primary:
   secondary:
   success:

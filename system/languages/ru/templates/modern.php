@@ -3,6 +3,10 @@
 define('LANG_MODERN_THEME_GAMMA', 'Цветовая гамма');
 define('LANG_MODERN_THEME_COLORS', 'Цвета');
 define('LANG_MODERN_THEME_BGCOLOR', 'Цвет фона сайта');
+define('LANG_MODERN_THEME_HBCOLOR', 'Цвет фона хедера сайта');
+define('LANG_MODERN_THEME_FBCOLOR', 'Цвет фона футера сайта');
+define('LANG_MODERN_THEME_HCOLOR', 'Цвет текста хедера сайта');
+define('LANG_MODERN_THEME_FCOLOR', 'Цвет текста футера сайта');
 define('LANG_MODERN_THEME_BCOLOR', 'Цвет шрифта сайта');
 define('LANG_MODERN_THEME_LINK_COLOR', 'Цвет ссылок сайта');
 define('LANG_MODERN_THEME_GCOLOR', 'Выберите цвет из гаммы');

@@ -93,6 +93,7 @@ class formAdminCtypesFilter extends cmsForm {
         return array(
             'basic' => array(
                 'type' => 'fieldset',
+                'title'  => LANG_CP_BASIC,
                 'childs' => array(
                     new fieldString('slug', array(
                         'title' => LANG_SYSTEM_NAME,

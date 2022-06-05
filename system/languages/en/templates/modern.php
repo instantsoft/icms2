@@ -3,6 +3,10 @@
 define('LANG_MODERN_THEME_GAMMA', 'Color Gamut');
 define('LANG_MODERN_THEME_COLORS', 'Colors');
 define('LANG_MODERN_THEME_BGCOLOR', 'Site background color');
+define('LANG_MODERN_THEME_HBCOLOR', 'Site header background color');
+define('LANG_MODERN_THEME_FBCOLOR', 'Site footer background color');
+define('LANG_MODERN_THEME_HCOLOR', 'Site header text color');
+define('LANG_MODERN_THEME_FCOLOR', 'Site footer text color');
 define('LANG_MODERN_THEME_BCOLOR', 'Site font color');
 define('LANG_MODERN_THEME_LINK_COLOR', 'Site link color');
 define('LANG_MODERN_THEME_GCOLOR', 'Select a color from the gamut');

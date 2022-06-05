@@ -99,7 +99,7 @@ class fieldListBitmask extends cmsFormField {
     public function parse($value) {
 
         if (is_empty_value($value)) {
-            return LANG_NO;
+            return '';
         }
 
         $html = '';

@@ -1,0 +1,49 @@
+.icms-profile-avatar__default {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: $font-size-base;
+    svg {
+        width: 100%;
+        height: 100%;
+        text-rendering: optimizeSpeed;
+    }
+    &.avatar__inlist {
+        width: $avatar-inlist-size;
+        height: $avatar-inlist-size;
+    }
+    &.avatar__mini {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+.icms-user-avatar {
+    position: relative;
+    display: inline-block;
+    > * {
+        border-radius: 50%;
+        padding: 0;
+        overflow: hidden;
+        border: none;
+        min-width: 32px;
+        min-height: 32px;
+    }
+    &.peer_online:after, &.peer_no_online:after {
+        bottom: 0;
+        right: 0;
+        border: 2px solid $white;
+        height: 1em;
+        width: 1em;
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+    }
+    &.peer_online:after {
+        background-color: $green;
+    }
+    &.peer_no_online:after {
+        background-color: $yellow;
+    }
+}

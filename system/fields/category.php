@@ -162,11 +162,6 @@ class fieldCategory extends cmsFormField {
             $this->title = false;
         }
 
-        // Фильтр по категории показывается только если мы не в категории или в корневой (id=1)
-        if (!empty($this->item['category']['id']) && $this->item['category']['id'] > 1) {
-            return '';
-        }
-
         $this->data['items'] = ['' => ''];
 
         $tree = cmsCore::getModel('content')->limit(0)->getCategoriesTree($this->item['ctype_name']) ?: [];

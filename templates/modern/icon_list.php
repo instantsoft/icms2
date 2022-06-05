@@ -1,6 +1,6 @@
 <?php
 /**
- * Массив иконок шаблона
+ * Массив иконок шаблона Modern и его наследуемых
  * Для удобного просмотра и выбора, например в меню
  *
  * $this - контекст cmsTemplate, где это объект шаблона,
@@ -14,20 +14,41 @@
  */
 
 $list = [];
+$files_modern = [];
+$files_current = [];
+$modern_template_icons_path = '';
+
+// Если шаблон не Modern, а зависимый от него, ищем иконки сначала в Modern
+if($this->name !== 'modern'){
+
+    if(array_search('modern', $this->getInheritNames(), true) !== false) {
+
+        $modern_template_icons_path = $this->site_config->root_path . self::TEMPLATE_BASE_PATH . 'modern/images/icons/';
+
+        $files_modern = glob($modern_template_icons_path.'*.svg');
+
+        if (!$files_modern) {
+            $files_modern = [];
+        }
+    }
+}
 
 $template_icons_path = $this->getTplFilePath('images/icons/');
 
-$files = glob($template_icons_path.'*.svg');
+if($template_icons_path !== $modern_template_icons_path){
+
+    $files_current = glob($template_icons_path.'*.svg');
+
+    if (!$files_current) {
+        $files_current = [];
+    }
+}
+
+$files = array_unique(array_merge($files_modern, $files_current));
 
 if (!$files) {
     return $list;
 }
-
-$template_path = str_replace(
-        $this->site_config->root_path,
-        $this->site_config->root,
-        $template_icons_path
-    );
 
 foreach ($files as $file_path) {
 
@@ -45,18 +66,21 @@ foreach ($files as $file_path) {
         continue;
     }
 
-    $list[pathinfo($file_path, PATHINFO_FILENAME)] = $matches[1];
+    $list[pathinfo($file_path, PATHINFO_FILENAME)] = [
+        'url'   => str_replace($this->site_config->root_path, $this->site_config->root, $file_path),
+        'names' => $matches[1]
+    ];
 }
 
 $icon_list = [];
 
-foreach ($list as $file_name => $names) {
+foreach ($list as $file_name => $item) {
 
-    foreach ($names as $name) {
+    foreach ($item['names'] as $name) {
         $icon_list[$file_name][] = [
             'title' => $name,
             'name'  => $file_name.':'.$name,
-            'html'  => '<svg class="icms-svg-icon w-16" fill="currentColor"><use href="'.$template_path.$file_name.'.svg#'.$name.'"></use></svg>'
+            'html'  => '<svg class="icms-svg-icon w-16" fill="currentColor"><use href="'.$item['url'].'#'.$name.'"></use></svg>'
         ];
     }
 }
