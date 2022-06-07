@@ -17,10 +17,8 @@ class actionContentItemView extends cmsAction {
         }
 
         // Проверяем прохождение модерации
-        $is_moderator = $this->cms_user->is_admin;
-        if(!$is_moderator && $this->cms_user->is_logged){
-            $is_moderator = cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
-        }
+        $is_moderator = $this->controller_moderation->userIsContentModerator($ctype['name'], $this->cms_user->id, $item);
+
         // на модерации или в черновиках
         if (!$item['is_approved']){
 

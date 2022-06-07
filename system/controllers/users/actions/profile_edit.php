@@ -140,6 +140,8 @@ class actionUsersProfileEdit extends cmsAction {
                 // Обновляем профиль и редиректим на его просмотр
                 $this->model->updateUser($profile['id'], $profile);
 
+                $this->model->fieldsAfterStore($profile, $fields, 'edit');
+
                 list($profile, $old) = cmsEventsManager::hook('users_after_update', [$profile, $old, $fields]);
 
                 // Отдельно обновляем часовой пояс в сессии

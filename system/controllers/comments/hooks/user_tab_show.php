@@ -2,19 +2,20 @@
 
 class onCommentsUserTabShow extends cmsAction {
 
-    public function run($profile, $tab_name, $tab){
+    public function run($profile, $tab_name, $tab) {
 
         $this->model->filterEqual('user_id', $profile['id']);
 
-        if($profile['id'] == $this->cms_user->id || $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($this->name, $this->cms_user->id)){
+        $is_moderator = $this->controller_moderation->userIsContentModerator($this->name, $this->cms_user->id);
+
+        if ($profile['id'] == $this->cms_user->id || $is_moderator) {
 
             $this->model->disableApprovedFilter();
 
-            $this->model->orderByList(array(
-                array('by' => 'is_approved', 'to' => 'desc'),
-                array('by' => 'date_pub', 'to' => 'desc')
-            ));
-
+            $this->model->orderByList([
+                ['by' => 'is_approved', 'to' => 'desc'],
+                ['by' => 'date_pub', 'to' => 'desc']
+            ]);
         }
 
         $page_url = href_to_profile($profile, 'comments');
@@ -23,13 +24,12 @@ class onCommentsUserTabShow extends cmsAction {
 
         $this->model->enableApprovedFilter();
 
-        return $this->cms_template->renderInternal($this, 'profile_tab', array(
+        return $this->cms_template->renderInternal($this, 'profile_tab', [
             'tab'     => $tab,
             'user'    => $this->cms_user,
             'profile' => $profile,
             'html'    => $list_html
-        ));
-
+        ]);
     }
 
 }

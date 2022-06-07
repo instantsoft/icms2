@@ -136,7 +136,7 @@ class actionContentItemAdd extends cmsAction {
             }
         }
 
-        $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
+        $is_moderator = $this->controller_moderation->userIsContentModerator($ctype['name'], $this->cms_user->id, $item);
         $is_premoderation = cmsUser::isAllowed($ctype['name'], 'add', 'premod', true);
 
 		$ctype = cmsEventsManager::hook('content_add', $ctype);

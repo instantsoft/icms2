@@ -38,10 +38,7 @@ class actionPhotosView extends cmsAction {
         list($photo, $album, $ctype) = cmsEventsManager::hook('photos_before_item', array($photo, $album, $ctype));
 
         // Проверяем прохождение модерации
-        $is_moderator = $this->cms_user->is_admin;
-        if(!$is_moderator && $this->cms_user->is_logged){
-            $is_moderator = cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
-        }
+        $is_moderator = $this->controller_moderation->userIsContentModerator($ctype['name'], $this->cms_user->id, $album);
 
         // на модерации
         if (!$album['is_approved']){

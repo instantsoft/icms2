@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @property \modelComments $model
  */
@@ -6,21 +7,22 @@ class actionCommentsDelete extends cmsAction {
 
     public function run() {
 
-        if (!$this->request->isAjax()) { cmsCore::error404(); }
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
 
-        $is_moderator = $this->controller_moderation->model->userIsContentModerator($this->name, $this->cms_user->id);
+        $comment = $this->model->getComment($this->request->get('id', 0));
 
-        if (!cmsUser::isAllowed('comments', 'delete') && !$is_moderator) {
+        if (!$comment) {
             return $this->cms_template->renderJSON([
                 'error'   => true,
                 'message' => LANG_ERROR
             ]);
         }
 
-        $comment = $this->model->getComment($this->request->get('id', 0));
+        $is_moderator = $this->controller_moderation->userIsContentModerator($this->name, $this->cms_user->id, $comment);
 
-        // Проверяем
-        if (!$comment) {
+        if (!cmsUser::isAllowed('comments', 'delete') && !$is_moderator) {
             return $this->cms_template->renderJSON([
                 'error'   => true,
                 'message' => LANG_ERROR
@@ -36,8 +38,11 @@ class actionCommentsDelete extends cmsAction {
             }
         }
 
-        if (cmsUser::isPermittedLimitReached('comments', 'times', ((time() - strtotime($comment['date_pub']))/60))){
-            return $this->cms_template->renderJSON(array('error' => true, 'message' => 'Time is over'));
+        if (cmsUser::isPermittedLimitReached('comments', 'times', ((time() - strtotime($comment['date_pub'])) / 60))) {
+            return $this->cms_template->renderJSON([
+                'error'   => true,
+                'message' => 'Time is over'
+            ]);
         }
 
         $comment = cmsEventsManager::hook('comments_before_delete', $comment);

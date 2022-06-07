@@ -50,7 +50,7 @@ class comments extends cmsFrontend {
 
     public function getNativeComments() {
 
-        $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($this->name, $this->cms_user->id);
+        $is_moderator = $this->controller_moderation->userIsContentModerator($this->name, $this->cms_user->id);
 
         if($is_moderator){
             $this->model->disableApprovedFilter();
@@ -347,7 +347,7 @@ class comments extends cmsFrontend {
 
         $is_approved = cmsUser::isAllowed('comments', 'add_approved');
 
-        if (!$is_approved && $this->controller_moderation->model->userIsContentModerator($this->name, $this->cms_user->id)) {
+        if (!$is_approved && $this->controller_moderation->userIsContentModerator($this->name, $this->cms_user->id, $comment)) {
             $is_approved = true;
         }
 

@@ -27,20 +27,24 @@ class actionContentItemEdit extends cmsAction {
         $item['ctype_name'] = $ctype['name'];
         $item['ctype_data'] = $ctype;
 
+        $permissions = cmsEventsManager::hook('content_edit_permissions', [
+            'can_adit' => false,
+            'item'     => $item,
+            'ctype'    => $ctype
+        ]);
+
         // автор записи?
         $is_owner = $item['user_id'] == $this->cms_user->id;
 
         // проверяем наличие доступа
-        if (!cmsUser::isAllowed($ctype['name'], 'edit')) {
+        if (!cmsUser::isAllowed($ctype['name'], 'edit') && !$permissions['can_adit']) {
             cmsCore::error404();
         }
-        if (!cmsUser::isAllowed($ctype['name'], 'edit', 'all') && !cmsUser::isAllowed($ctype['name'], 'edit', 'premod_all')) {
-            if (
-                    (cmsUser::isAllowed($ctype['name'], 'edit', 'own') ||
-                    cmsUser::isAllowed($ctype['name'], 'edit', 'premod_own')
-                    ) && !$is_owner) {
-                cmsCore::error404();
-            }
+        if (!cmsUser::isAllowed($ctype['name'], 'edit', 'all') &&
+                !cmsUser::isAllowed($ctype['name'], 'edit', 'premod_all') &&
+                !$permissions['can_adit'] &&
+                ((cmsUser::isAllowed($ctype['name'], 'edit', 'own') || cmsUser::isAllowed($ctype['name'], 'edit', 'premod_own')) && !$is_owner)) {
+            cmsCore::error404();
         }
 
         // модерация
@@ -51,7 +55,7 @@ class actionContentItemEdit extends cmsAction {
         if (!$is_premoderation && !$item['date_approved']) {
             $is_premoderation = cmsUser::isAllowed($ctype['name'], 'add', 'premod', true);
         }
-        $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
+        $is_moderator = $this->controller_moderation->userIsContentModerator($ctype['name'], $this->cms_user->id, $item);
 
         if (!$item['is_approved'] && !$is_moderator && !$item['is_draft']) {
             cmsCore::error404();
