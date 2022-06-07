@@ -543,6 +543,7 @@ class modelBackendContent extends modelContent {
 
         $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
 
+        $filter['cats'] = array_filter($filter['cats']);
         $filter['filters'] = array_filter_recursive($filter['filters']);
         array_multisort($filter['filters']);
         $filter['hash'] = md5(json_encode($filter['filters']));
@@ -565,6 +566,7 @@ class modelBackendContent extends modelContent {
 
         $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
 
+        $filter['cats'] = array_filter($filter['cats']);
         $filter['filters'] = array_filter_recursive($filter['filters']);
         array_multisort($filter['filters']);
         $filter['hash'] = md5(json_encode($filter['filters']));

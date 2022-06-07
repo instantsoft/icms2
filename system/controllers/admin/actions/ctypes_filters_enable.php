@@ -28,6 +28,7 @@ class actionAdminCtypesFiltersEnable extends cmsAction {
                     `title` varchar(100) NOT NULL,
                     `description` text,
                     `filters` text,
+                    `cats` text,
                     `seo_keys` varchar(256) DEFAULT NULL,
                     `seo_desc` varchar(256) DEFAULT NULL,
                     `seo_title` varchar(256) DEFAULT NULL,

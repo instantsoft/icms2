@@ -993,25 +993,29 @@ class modelContent extends cmsModel {
 
         return $this->get($table_name, function($item, $model){
 
-            $item['filters'] = cmsModel::stringToArray($item['filters']);
+            $item['cats'] = cmsModel::stringToArray($item['cats']);
+
+            if(isset($item['filters'])){
+                $item['filters'] = cmsModel::stringToArray($item['filters']);
+            }
 
             return $item;
         });
     }
 
-    public function getContentFilter($ctype, $id, $by_hash = false){
+    public function getContentFilter($ctype, $id, $by_hash = false, $cat_id = 0) {
 
-        if(!$this->isFiltersTableExists($ctype['name'])){
+        if (!$this->isFiltersTableExists($ctype['name'])) {
             return false;
         }
 
-        $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
+        $table_name = $this->getContentTypeTableName($ctype['name']) . '_filters';
 
-        $this->useCache('content.filters.'.$ctype['name']);
+        $this->useCache('content.filters.' . $ctype['name']);
 
         $field_name = 'id';
-        if(!is_numeric($id)){
-            if($by_hash){
+        if (!is_numeric($id)) {
+            if ($by_hash) {
                 $field_name = 'hash';
             } else {
                 $field_name = 'slug';
@@ -1020,15 +1024,20 @@ class modelContent extends cmsModel {
 
         $this->filterEqual($field_name, $id);
 
-        return $this->getItem($table_name, function($item, $model) use($ctype){
+        $item = $this->getItem($table_name, function ($item, $model) use ($ctype) {
 
-            $item['filters'] = cmsModel::stringToArray($item['filters']);
+            $item['cats']       = cmsModel::stringToArray($item['cats']);
+            $item['filters']    = cmsModel::stringToArray($item['filters']);
             $item['ctype_name'] = $ctype['name'];
 
             return $item;
-
         });
 
+        if($item && $cat_id && $item['cats'] && !in_array($cat_id, $item['cats'])){
+            $item = false;
+        }
+
+        return $item;
     }
 
 //============================================================================//

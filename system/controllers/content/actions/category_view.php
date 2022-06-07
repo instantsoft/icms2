@@ -445,7 +445,7 @@ class actionContentCategoryView extends cmsAction {
                     $filter_slug = implode('/', $filters_segments);
 
                     if (!is_numeric($filter_slug)) {
-                        $filter = $this->model->getContentFilter($ctype, $filter_slug);
+                        $filter = $this->model->getContentFilter($ctype, $filter_slug, false, $category['id']);
                     } else {
                         $filter = false;
                     }

@@ -1,46 +1,45 @@
 <?php
 
-function grid_tags($controller){
+function grid_tags($controller) {
 
-    $options = array(
+    $options = [
         'order_by' => 'tag',
         'order_to' => 'asc',
-    );
+    ];
 
-    $columns = array(
-        'tag' => array(
-            'title' => LANG_TAGS_TAG,
-            'href' => href_to($controller->root_url, 'edit', array('{id}')),
+    $columns = [
+        'tag'       => [
+            'title'  => LANG_TAGS_TAG,
+            'href'   => href_to($controller->root_url, 'edit', ['{id}']),
             'filter' => 'like'
-        ),
-        'frequency' => array(
+        ],
+        'frequency' => [
             'title' => LANG_TAGS_TAG_FREQUENCY,
-        ),
-    );
+        ]
+    ];
 
-    $actions = array(
-        array(
+    $actions = [
+        [
             'title' => LANG_VIEW,
             'class' => 'view',
-            'href' => href_to('tags', '{tag|urlencode}')
-        ),
-        array(
+            'href'  => href_to('tags', '{tag|string_urlencode}')
+        ],
+        [
             'title' => LANG_EDIT,
             'class' => 'edit',
-            'href' => href_to($controller->root_url, 'edit', array('{id}')),
-        ),
-        array(
-            'title' => LANG_DELETE,
-            'class' => 'delete',
-            'href' => href_to($controller->root_url, 'delete', array('{id}')),
+            'href'  => href_to($controller->root_url, 'edit', ['{id}']),
+        ],
+        [
+            'title'   => LANG_DELETE,
+            'class'   => 'delete',
+            'href'    => href_to($controller->root_url, 'delete', ['{id}']),
             'confirm' => LANG_TAGS_TAG_DELETE_CONFIRM,
-        )
-    );
+        ]
+    ];
 
-    return array(
+    return [
         'options' => $options,
         'columns' => $columns,
         'actions' => $actions
-    );
-
+    ];
 }

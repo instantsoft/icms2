@@ -2,13 +2,13 @@
 
 class onContentTagsSearchSubjects extends cmsAction {
 
-    public function run($data){
+    public function run($data) {
 
         list($tag, $targets) = $data;
 
-        $menu_items = array();
+        $menu_items = [];
 
-        if(empty($targets[$this->name])){
+        if (empty($targets[$this->name])) {
             return $menu_items;
         }
 
@@ -17,18 +17,18 @@ class onContentTagsSearchSubjects extends cmsAction {
         // Согласно сортировки типов контента
         $ctypes = $this->model->getContentTypes();
 
-        foreach($ctypes as $ctype){
+        foreach ($ctypes as $ctype) {
 
-            if(!in_array($ctype['name'], $ctype_names)){
+            if (!in_array($ctype['name'], $ctype_names, true)) {
                 continue;
             }
 
-            $key = $this->name.'-'.$ctype['name'];
+            $key = $this->name . '-' . $ctype['name'];
 
-            $menu_items[$key] = array(
+            $menu_items[$key] = [
                 'title' => $ctype['title'],
-                'url'   => href_to('tags', $key, array(urlencode($tag['tag'])))
-            );
+                'url'   => href_to('tags', $key, [string_urlencode($tag['tag'])])
+            ];
         }
 
         return $menu_items;

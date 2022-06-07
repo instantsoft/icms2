@@ -493,23 +493,36 @@ function html_array_to_list($array){
 
 }
 
-function html_search_bar($list, $href, $link_class = '', $glue = ', '){
+function html_search_bar($list, $href, $link_class = '', $glue = ', ') {
 
-    if (!$list) { return ''; }
+    if (!$list) {
+        return '';
+    }
 
-    if (!is_array($list)){
+    if (!is_array($list)) {
         $list = explode(',', $list);
     }
 
-    foreach($list as $id => $letter){
+    // RFC2396 для слешей в урлах
+    $encode_slashes = mb_strpos($href, '?') === false;
+
+    foreach ($list as $id => $letter) {
+
         $letter = trim($letter);
-        $list[$id] = '<a class="'.$link_class.'" href="'.$href.urlencode($letter).'">'.html($letter, false).'</a>';
+        $name = $letter;
+
+        if($encode_slashes){
+            $letter = string_urlencode($letter);
+        } else {
+            $letter = urlencode($letter);
+        }
+
+        $list[$id] = '<a class="' . $link_class . '" href="' . $href . $letter . '">' . html($name, false) . '</a>';
     }
 
     return implode($glue, $list);
-
 }
 
-function html_tags_bar($tags, $prefix = '', $class = 'tags_bar_link', $glue = ', '){
-    return html_search_bar($tags, href_to('tags').'/'.($prefix ? $prefix.'/' : ''), $class, $glue);
+function html_tags_bar($tags, $prefix = '', $class = 'tags_bar_link', $glue = ', ') {
+    return html_search_bar($tags, href_to('tags') . '/' . ($prefix ? $prefix . '/' : ''), $class, $glue);
 }

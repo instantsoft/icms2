@@ -311,6 +311,7 @@
     define('LANG_CP_FILTER_DESC_HINT',          'Additional description of the category');
     define('LANG_CP_FILTER_FIELDS',             'Fields filters');
     define('LANG_CP_FILTER_PROPS',              'Props filters');
+    define('LANG_CP_FILTER_CATS',               'Categories where the filter will be available');
     define('LANG_CP_DATASET',                   'Dataset');
     define('LANG_CP_DATASET_ADD',               'Add Dataset');
     define('LANG_CP_DATASET_TITLE',             'Dataset title');

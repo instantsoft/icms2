@@ -21,7 +21,7 @@
                         }
                     ?>
                     <li class="d-inline-block">
-                        <a class="btn mr-1 my-1 icms-btn-tag <?php if($color){ echo 'colored btn-outline-light'; } else { echo 'btn-outline-info '; } ?>" style="font-size: <?php echo round($fs/14, 3); ?>rem;<?php if($color){ echo ' color: '.$color; } ?>" href="<?php echo href_to('tags').'/'.urlencode($tag['tag']); ?>">
+                        <a class="btn mr-1 my-1 icms-btn-tag <?php if($color){ echo 'colored btn-outline-light'; } else { echo 'btn-outline-info '; } ?>" style="font-size: <?php echo round($fs/14, 3); ?>rem;<?php if($color){ echo ' color: '.$color; } ?>" href="<?php echo href_to('tags').'/'.string_urlencode($tag['tag']); ?>">
                             <?php html($tag['tag']); ?>
                         </a>
                     </li>
@@ -29,7 +29,7 @@
 
                 <?php if ($style=='list'){ ?>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a class="icms-btn-tag text-decoration-none" <?php if($color){ echo 'style="color: '.$color.'"'; } ?> href="<?php echo href_to('tags').'/'.urlencode($tag['tag']); ?>">
+                        <a class="icms-btn-tag text-decoration-none" <?php if($color){ echo 'style="color: '.$color.'"'; } ?> href="<?php echo href_to('tags').'/'.string_urlencode($tag['tag']); ?>">
                             <?php html($tag['tag']); ?>
                         </a>
                         <span class="badge badge-primary badge-pill"><?php html($tag['frequency']); ?></span>

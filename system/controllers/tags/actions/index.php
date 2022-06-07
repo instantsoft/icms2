@@ -49,7 +49,7 @@ class actionTagsIndex extends cmsAction {
                 $target = $first_subject[0];
 
                 // редиректим на правильный урл
-                $this->redirect(href_to('tags', $target, urlencode($tag_name)), 301);
+                $this->redirect(href_to('tags', $target, string_urlencode($tag_name)), 301);
 
             }
 
@@ -61,7 +61,7 @@ class actionTagsIndex extends cmsAction {
             cmsCore::error404();
         }
 
-        $page_url = href_to($this->name, $target, urlencode($tag_name));
+        $page_url = href_to($this->name, $target, string_urlencode($tag_name));
 
         // результат поиска получаем только по переданному контроллеру
         $controller = cmsCore::getController($target_controller, $this->request);
@@ -114,7 +114,7 @@ class actionTagsIndex extends cmsAction {
             ]);
         }
 
-        $this->cms_template->addHead('<link rel="canonical" href="'.href_to_abs($this->name, $target, urlencode($tag_name)).'"/>');
+        $this->cms_template->addHead('<link rel="canonical" href="'.href_to_abs($this->name, $target, string_urlencode($tag_name)).'"/>');
 
         return $this->cms_template->render('search', [
             'seo_title'  => $seo_title,

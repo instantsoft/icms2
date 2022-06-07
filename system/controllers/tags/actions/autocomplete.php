@@ -2,11 +2,13 @@
 
 class actionTagsAutocomplete extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        if (!$this->request->isAjax()) { cmsCore::error404(); }
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
 
-        $result = array();
+        $result = [];
 
         $term = $this->request->get('term', '');
         if (!$term) {
@@ -14,25 +16,24 @@ class actionTagsAutocomplete extends cmsAction {
         }
 
         $tags = $this->model->filterLike('tag', "%{$term}%")->
-                select("(LEFT(`tag`, ".mb_strlen($term).") = '{$term}')", 'tag_order')->
-                orderByList(array(
-                    array('by' => 'tag_order', 'to' => 'desc', 'strict' => true),
-                    array('by' => 'tag', 'to' => 'asc')
-                ))->
+                select("(LEFT(`tag`, " . mb_strlen($term) . ") = '{$term}')", 'tag_order')->
+                orderByList([
+                    ['by' => 'tag_order', 'to' => 'desc', 'strict' => true],
+                    ['by' => 'tag', 'to' => 'asc']
+                ])->
                 getTags();
 
-        if ($tags){
-            foreach($tags as $tag){
-                $result[] = array(
+        if ($tags) {
+            foreach ($tags as $tag) {
+                $result[] = [
                     'id'    => $tag['id'],
                     'label' => $tag['tag'],
                     'value' => $tag['tag']
-                );
+                ];
             }
         }
 
         return $this->cms_template->renderJSON($result);
-
     }
 
 }

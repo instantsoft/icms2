@@ -1081,6 +1081,19 @@ function string_html_get_images_path($text) {
 }
 
 /**
+ * Кодирует символы для использования в части URL
+ *
+ * @param string $str
+ * @return string
+ */
+function string_urlencode($str) {
+
+    $str = urlencode($str);
+
+    return str_replace(['%2F'], ['%252f'], $str);
+}
+
+/**
  * Проверяет, что значение пустое
  * @param mixed $value
  * @return boolean

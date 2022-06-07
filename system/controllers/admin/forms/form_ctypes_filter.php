@@ -130,6 +130,23 @@ class formAdminCtypesFilter extends cmsForm {
                 'type'   => 'fieldset',
                 'childs' => $filters_props
             ),
+            'cats' => array(
+                'title'  => LANG_CP_FILTER_CATS,
+                'type'   => 'fieldset',
+                'childs' => array(
+                    new fieldListMultiple('cats', array(
+                        'show_all'  => true,
+                        'generator' => function($prop) use($ctype) {
+                            $model = cmsCore::getModel('content');
+                            $tree = $model->limit(0)->getCategoriesTree($ctype['name']);
+                            foreach ($tree as $c) {
+                                $items[$c['id']] = $c['title'];
+                            }
+                            return $items;
+                        }
+                    ))
+                )
+            ),
             'seo' => array(
                 'title' => LANG_SEO,
                 'type' => 'fieldset',

@@ -7,6 +7,25 @@ function install_package(){
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    $content_model = cmsCore::getModel('content');
+
+    $ctypes = $content_model->getContentTypes();
+
+	foreach($ctypes as $ctype){
+
+        $table_exists = $content_model->isFiltersTableExists($ctype['name']);
+
+        if(!$table_exists){
+            continue;
+        }
+
+        $table_name = $content_model->getContentTypeTableName($ctype['name']) . '_filters';
+
+        if(!$core->db->isFieldExists($table_name, 'cats')){
+            $core->db->query("ALTER TABLE `{#}{$table_name}` ADD `cats` TEXT NULL DEFAULT NULL AFTER `filters`;");
+        }
+	}
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

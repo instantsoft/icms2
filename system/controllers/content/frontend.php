@@ -370,7 +370,7 @@ class content extends cmsFrontend {
             }
 
             // Узнаём совпадение фильтров
-            $search_filter = cmsCore::getModel('content')->getContentFilter($ctype, md5(json_encode($this->active_filters)), true);
+            $search_filter = cmsCore::getModel('content')->getContentFilter($ctype, md5(json_encode($this->active_filters)), true, $category_id);
 
             $filter_link = false;
 

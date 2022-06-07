@@ -327,6 +327,7 @@
     define('LANG_CP_FILTER_DESC_HINT',          'Дополнит описание категории');
     define('LANG_CP_FILTER_FIELDS',             'Фильтры полей');
     define('LANG_CP_FILTER_PROPS',              'Фильтры свойств');
+    define('LANG_CP_FILTER_CATS',               'Категории, где фильтр будет доступен');
 
     define('LANG_CP_DATASET',                   'Набор');
     define('LANG_CP_DATASET_ADD',               'Создать набор');
