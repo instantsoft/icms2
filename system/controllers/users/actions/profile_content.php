@@ -6,7 +6,27 @@ class actionUsersProfileContent extends cmsAction {
 
     public function run($profile, $ctype_name = false, $folder_id = false, $dataset = false){
 
-        if (!$ctype_name) { return cmsCore::error404(); }
+        // не передан тип контента, редиректим на первый из списка
+        if (!$ctype_name) {
+
+            $content_counts = $this->controller_content->model->getUserContentCounts($profile['id'], false, function($ctype) use ($profile){
+                if(!cmsUser::isAllowed($ctype['name'], 'add') &&
+                        !cmsUser::getInstance()->isPrivacyAllowed($profile, 'view_user_'.$ctype['name'])){
+                    return false;
+                }
+                return cmsUser::get('id') == $profile['id'] ? true : $this->controller_content->checkListPerm($ctype['name']);
+            });
+
+            if(!$content_counts){
+                return cmsCore::error404();
+            }
+
+            $ctypes_names = array_keys($content_counts);
+
+            $ctype_name = $ctypes_names[0];
+
+            $this->redirect(href_to_profile($profile, ['content', $ctype_name, $folder_id, $dataset]), 301);
+        }
 
         $ctype = $this->controller_content->model->getContentTypeByName($ctype_name);
         if (!$ctype) { return cmsCore::error404(); }

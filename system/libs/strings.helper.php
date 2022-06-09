@@ -588,7 +588,7 @@ function string_replace_keys_values_extended($string, $data) {
                 $data_property = array_value_recursive($property, $data, '.');
             }
 
-            if ($data_property !== null && !is_array($data[$property]) && !is_object($data[$property])) {
+            if ($data_property !== null && !is_array($data_property) && !is_object($data_property)) {
 
                 if ($func && function_exists($func)) {
 

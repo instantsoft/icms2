@@ -282,16 +282,16 @@ class moderation extends cmsFrontend {
             return false;
         }
 
-        if ($this->cms_user->is_admin) {
+        if ($this->cms_user->is_admin || $this->model->userIsContentModerator($ctype_name, $user_id)) {
             return true;
         }
 
-        list($ctype_name, $user_id, $this->model, $item) = cmsEventsManager::hook([
+        list($ctype_name, $user_id, $item, $is_moderator) = cmsEventsManager::hook([
             'moderation_user_is_moderator',
             'moderation_' . $ctype_name . '_user_is_moderator'
-        ], [$ctype_name, $user_id, $this->model, $item]);
+        ], [$ctype_name, $user_id, $item, false]);
 
-        return $this->model->userIsContentModerator($ctype_name, $user_id);
+        return $is_moderator;
     }
 
 }

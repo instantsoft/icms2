@@ -218,9 +218,9 @@ function html_attr_str($attributes){
 }
 
 function default_images($type, $preset) {
-    return array(
-        $preset => 'default/'.$type.'_'.$preset.'.png'
-    );
+    return [
+        $preset => 'default/' . $type . '_' . $preset . '.png'
+    ];
 }
 
 /**
@@ -229,26 +229,28 @@ function default_images($type, $preset) {
  * @param string $size_preset Название пресета
  * @return string
  */
-function html_avatar_image_src($avatars, $size_preset = 'small', $is_relative = true){
+function html_avatar_image_src($avatars, $size_preset = 'small', $is_relative = true) {
 
     $config = cmsConfig::getInstance();
 
-    if (empty($avatars)){
-		$avatars = array(
-            'normal' => 'default/avatar.jpg',
-            'small' => 'default/avatar_small.jpg',
-            'micro' => 'default/avatar_micro.png'
-        );
-    }
-
-    if (!is_array($avatars)){
+    if (!is_array($avatars)) {
         $avatars = cmsModel::yamlToArray($avatars);
     }
 
-    $src = $avatars[ $size_preset ];
+    if (!$avatars || empty($avatars[$size_preset])) {
+        $avatars = [
+            $size_preset => 'default/avatar.jpg',
+            'normal' => 'default/avatar.jpg',
+            'small'  => 'default/avatar_small.jpg',
+            'micro'  => 'default/avatar_micro.png'
+        ];
 
-	if (strpos($src, $config->upload_host) === false){
-        if($is_relative){
+    }
+
+    $src = $avatars[$size_preset];
+
+    if (strpos($src, $config->upload_host) === false) {
+        if ($is_relative) {
             $src = $config->upload_host . '/' . $src;
         } else {
             $src = $config->upload_host_abs . '/' . $src;
@@ -256,7 +258,6 @@ function html_avatar_image_src($avatars, $size_preset = 'small', $is_relative = 
     }
 
     return html($src, false);
-
 }
 
 /**
@@ -267,29 +268,31 @@ function html_avatar_image_src($avatars, $size_preset = 'small', $is_relative = 
  * @param bool $is_relative Возвращать относительный путь или всегда с полным url
  * @return boolean|string
  */
-function html_image_src($image, $size_preset='small', $is_add_host=false, $is_relative=true){
+function html_image_src($image, $size_preset = 'small', $is_add_host = false, $is_relative = true) {
 
     $config = cmsConfig::getInstance();
 
-    if (!is_array($image)){
+    if (!is_array($image)) {
         $image = cmsModel::yamlToArray($image);
     }
 
-    if (!$image){
+    if (!$image) {
         return false;
     }
 
     $keys = array_keys($image);
-    if ($keys[0] === 0) { $image = $image[0]; }
+    if ($keys[0] === 0) {
+        $image = $image[0];
+    }
 
-	if (isset($image[ $size_preset ])){
-		$src = $image[ $size_preset ];
-	} else {
-		return false;
-	}
+    if (isset($image[$size_preset])) {
+        $src = $image[$size_preset];
+    } else {
+        return false;
+    }
 
-    if ($is_add_host && strpos($src, $config->upload_host) === false){
-        if($is_relative){
+    if ($is_add_host && strpos($src, $config->upload_host) === false) {
+        if ($is_relative) {
             $src = $config->upload_host . '/' . $src;
         } else {
             $src = $config->upload_host_abs . '/' . $src;
@@ -297,7 +300,6 @@ function html_image_src($image, $size_preset='small', $is_add_host=false, $is_re
     }
 
     return html($src, false);
-
 }
 
 /**
