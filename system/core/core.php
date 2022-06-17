@@ -56,46 +56,57 @@ class cmsCore {
         return microtime(true) - self::$start_time;
     }
 
-//============================================================================//
-//============================================================================//
-
+    /**
+     * Определяет язык из URI и изменяет
+     * $_SERVER['REQUEST_URI'] если язык определён
+     *
+     * @return boolean
+     */
     private static function detectLanguage() {
 
         $config = cmsConfig::getInstance();
 
+        if (empty($config->is_user_change_lang) ||
+                empty($_SERVER['REQUEST_URI'])) {
+            return false;
+        }
+
         self::$language = $config->language;
 
-        if (!empty($_SERVER['REQUEST_URI']) && !empty($config->is_user_change_lang)) {
+        $segments = explode('/', mb_substr($_SERVER['REQUEST_URI'], mb_strlen($config->root)));
 
-            $segments = explode('/', mb_substr($_SERVER['REQUEST_URI'], mb_strlen($config->root)));
+        if (empty($segments[0])) {
+            return false;
+        }
 
-            if (empty($segments[0])) { return; }
+        $query_str = '';
+        // Есть ли в GET параметры
+        $pos_que   = mb_strpos($segments[0], '?');
+        if ($pos_que !== false) {
+            $query_str   = mb_substr($segments[0], $pos_que);
+            $segments[0] = strstr($segments[0], '?', true);
+        }
 
-            $query_str = '';
-            // Есть ли в GET параметры
-            $pos_que   = mb_strpos($segments[0], '?');
-            if ($pos_que !== false) {
-                $query_str = mb_substr($segments[0], $pos_que);
-                $segments[0] = strstr($segments[0], '?', true);
-            }
+        // язык может быть только двухбуквенный, определяем его по первому сегменту
+        if (preg_match('/^[a-z]{2}$/i', $segments[0])) {
+            if (is_dir($config->root_path . 'system/languages/' . $segments[0] . '/')) {
+                // язык по умолчанию без префиксов, дубли нам не нужны
+                if ($config->isChangedKey('language') || $segments[0] !== $config->language) {
 
-            // язык может быть только двухбуквенный, определяем его по первому сегменту
-            if (preg_match('/^[a-z]{2}$/i', $segments[0])) {
-                if (is_dir($config->root_path . 'system/languages/' . $segments[0] . '/')) {
-                    // язык по умолчанию без префиксов, дубли нам не нужны
-                    if ($config->isChangedKey('language') || $segments[0] !== $config->language) {
+                    // включаем для моделей поддержку
+                    cmsModel::globalLocalizedOn();
 
-                        // включаем для моделей поддержку
-                        cmsModel::globalLocalizedOn();
+                    self::$language = self::$language_href_prefix = $segments[0];
+                    unset($segments[0]);
 
-                        self::$language = self::$language_href_prefix = $segments[0];
-                        unset($segments[0]);
+                    $_SERVER['REQUEST_URI'] = $config->root . implode('/', $segments) . $query_str;
 
-                        $_SERVER['REQUEST_URI'] = $config->root . implode('/', $segments) . $query_str;
-                    }
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     public static function getLanguageHrefPrefix() {
@@ -241,18 +252,21 @@ class cmsCore {
      * @param string $library Название библиотеки в /system/libs (без расширения)
      * @param string $class Название загружаемого класса (для предотвращения повторной загрузки)
      */
-     public static function loadLib($library, $class=false){
+     public static function loadLib($library, $class = false) {
 
-        if ($class && class_exists($class, false)){ return true; }
+        if ($class && class_exists($class, false)) {
+            return true;
+        }
 
-        $lib_file = cmsConfig::get('root_path').'system/libs/'.$library.'.php';
+        $lib_file = cmsConfig::get('root_path') . 'system/libs/' . $library . '.php';
 
-        if (!is_readable($lib_file)){ self::error(ERR_LIBRARY_NOT_FOUND . ': '. $library); }
+        if (!is_readable($lib_file)) {
+            self::error(ERR_LIBRARY_NOT_FOUND . ': ' . $library);
+        }
 
         include_once $lib_file;
 
         return true;
-
     }
 
 //============================================================================//
@@ -262,18 +276,17 @@ class cmsCore {
      * Загружает класс ядра из папки /system/core
      * @param string $class
      */
-    public static function loadCoreClass($class){
+    public static function loadCoreClass($class) {
 
-        $class_file = cmsConfig::get('root_path') . 'system/core/'.$class.'.class.php';
+        $class_file = cmsConfig::get('root_path') . 'system/core/' . $class . '.class.php';
 
-        if (!is_readable($class_file)){
-            self::error(ERR_CLASS_NOT_FOUND . ': '. $class);
+        if (!is_readable($class_file)) {
+            self::error(ERR_CLASS_NOT_FOUND . ': ' . $class);
         }
 
         include_once $class_file;
 
         return true;
-
     }
 
 //============================================================================//
@@ -284,12 +297,11 @@ class cmsCore {
      * @param str $controller Название контроллера
      * @return bool
      */
-    public static function isModelExists($controller){
+    public static function isModelExists($controller) {
 
-        $model_file = cmsConfig::get('root_path').'system/controllers/'.$controller.'/model.php';
+        $model_file = cmsConfig::get('root_path') . 'system/controllers/' . $controller . '/model.php';
 
         return file_exists($model_file);
-
     }
 
     /**
@@ -297,9 +309,9 @@ class cmsCore {
      * @param string $controller Контроллер модели
      * @param string $delimitter Разделитель слов в названии класса
      */
-    public static function getModel($controller, $delimitter='_'){
+    public static function getModel($controller, $delimitter = '_') {
 
-        if(is_array($controller)){
+        if (is_array($controller)) {
             $controller = end($controller);
         }
 
@@ -308,7 +320,7 @@ class cmsCore {
         try {
             $model = new $model_class();
         } catch (Exception $e) {
-            self::error(ERR_MODEL_NOT_FOUND . ': '.$e->getMessage());
+            self::error(ERR_MODEL_NOT_FOUND . ': ' . $e->getMessage());
         } finally {
             return isset($model) ? $model : null;
         }
@@ -327,7 +339,6 @@ class cmsCore {
         return true;
     }
 
-
 //============================================================================//
 //============================================================================//
 
@@ -336,8 +347,8 @@ class cmsCore {
      * @param string $controller_name
      * @return bool
      */
-    public static function isControllerExists($controller_name){
-        return is_dir(cmsConfig::get('root_path').'system/controllers/'.$controller_name);
+    public static function isControllerExists($controller_name) {
+        return is_dir(cmsConfig::get('root_path') . 'system/controllers/' . $controller_name);
     }
 
     /**

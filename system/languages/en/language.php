@@ -170,6 +170,7 @@
     define('LANG_PARSER_LIST_FILTER_HINT',   'Item index');
     define('LANG_PARSER_LIST_FILTER_MULTI',  'Allow multiple selection in filter');
     define('LANG_PARSER_LIST_FILTER_MULTICH',  'Multiple checkboxes');
+    define('LANG_PARSER_LIST_AS_RADIO_BTN',  'Display list as radio buttons');
     define('LANG_PARSER_LIST_GROUPS',        'User groups list');
     define('LANG_PARSER_LIST_GROUPS_SHOW_GUESTS',     'Show "Guests" item');
     define('LANG_PARSER_LIST_IS_MULTIPLE',   'Allow multiple selection');

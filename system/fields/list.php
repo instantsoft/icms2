@@ -14,6 +14,10 @@ class fieldList extends cmsFormField {
 
     public function getOptions() {
         return [
+            new fieldCheckbox('as_radio_btn', [
+                'title'   => LANG_PARSER_LIST_AS_RADIO_BTN,
+                'default' => false
+            ]),
             new fieldCheckbox('filter_multiple', [
                 'title'   => LANG_PARSER_LIST_FILTER_MULTI,
                 'default' => false
@@ -111,6 +115,9 @@ class fieldList extends cmsFormField {
         } else {
 
             $value = is_array($value) ? $value : [];
+
+            $this->setProperty('as_radio_btn', false);
+            $this->setOption('as_radio_btn', false);
 
             if (!empty($this->options['filter_multiple_checkbox'])) {
 
@@ -248,6 +255,8 @@ class fieldList extends cmsFormField {
             }
         }
 
+        $as_radio_btn = $this->getProperty('as_radio_btn')?:$this->getOption('as_radio_btn');
+
         $this->data['dom_attr'] = $this->getProperty('attributes') ?: [];
         $this->data['dom_attr']['id'] = $this->id;
 
@@ -272,6 +281,8 @@ class fieldList extends cmsFormField {
             if (!isset($this->multiple_keys)) {
                 $this->multiple_keys = new stdClass();
             }
+        } elseif($as_radio_btn) {
+            $this->class = 'list_radio';
         }
 
         return parent::getInput($value);
