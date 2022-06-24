@@ -51,6 +51,10 @@ class admin extends cmsFrontend {
 
         if (!$this->request->isInternal()) {
 
+            if ($this->cms_config->template_admin) {
+                $this->cms_template->setBaseTemplate($this->cms_config->template_admin);
+            }
+
             cmsModel::globalLocalizedOff();
 
             if (!$this->cms_user->is_logged) {

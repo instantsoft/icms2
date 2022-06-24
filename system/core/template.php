@@ -224,33 +224,22 @@ class cmsTemplate {
 
         $this->site_config = cmsConfig::getInstance();
 
-        if ($name) {
-            $this->setName($name);
-        } else {
+        if (!$name) {
 
             $device_type = cmsRequest::getDeviceType();
-            $template    = $this->site_config->template;
+
+            $name = $this->site_config->template;
 
             // шаблон в зависимости от девайса
             if ($device_type !== 'desktop') {
                 $device_template = cmsConfig::get('template_' . $device_type);
                 if ($device_template) {
-                    $template = $device_template;
+                    $name = $device_template;
                 }
             }
-            // шаблон админки, можем определить только тут
-            $controller = cmsCore::getControllerNameByAlias(cmsCore::getInstance()->uri_controller);
-            $controller = $controller ? $controller : cmsCore::getInstance()->uri_controller;
-            if ($controller === 'admin' && $this->site_config->template_admin) {
-                $template = $this->site_config->template_admin;
-            }
-
-            $this->setName($template);
         }
 
-        $this->applyManifest();
-
-        $this->options = $this->getOptions();
+        $this->setBaseTemplate($name);
 
         $this->title = $this->site_config->sitename;
 
@@ -749,11 +738,11 @@ class cmsTemplate {
      */
     public function breadcrumbs($options = []) {
 
-        $default_options = array(
+        $default_options = [
             'home_url'   => href_to_home(),
             'template'   => 'breadcrumbs',
             'strip_last' => true
-        );
+        ];
 
         $options = array_merge($default_options, $options);
 
@@ -802,6 +791,13 @@ class cmsTemplate {
         $this->output .= $html;
     }
 
+    /**
+     * Добавляет HTML на позицию блока
+     *
+     * @param string $position  Название позиции блок
+     * @param string $html      HTML блока
+     * @param boolean $begining Добавить в начало блока
+     */
     public function addToBlock($position, $html, $begining = false){
         if(isset($this->blocks[$position])){
             if($begining){
@@ -975,26 +971,23 @@ class cmsTemplate {
      */
     public function addToolButton($button){
 
-        $item = array(
-            'title' => $button['title'],
-            'url' => isset($button['href']) ? $button['href'] : (isset($button['url']) ? $button['url'] : ''),
-            'level' => isset($button['level']) ? $button['level'] : 1,
+        $item = [
+            'title'        => $button['title'],
+            'url'          => isset($button['href']) ? $button['href'] : (isset($button['url']) ? $button['url'] : ''),
+            'level'        => isset($button['level']) ? $button['level'] : 1,
             'childs_count' => isset($button['childs_count']) ? $button['childs_count'] : 0,
-            'counter' => isset($button['counter']) ? $button['counter'] : null,
-            'options' => array(
-                'icon' => isset($button['icon']) ? $button['icon'] : null,
-                'class' => isset($button['class']) ? $button['class'] : null,
-                'target' => isset($button['target']) ? $button['target'] : '',
+            'counter'      => isset($button['counter']) ? $button['counter'] : null,
+            'options'      => [
+                'icon'    => isset($button['icon']) ? $button['icon'] : null,
+                'class'   => isset($button['class']) ? $button['class'] : null,
+                'target'  => isset($button['target']) ? $button['target'] : '',
                 'onclick' => isset($button['onclick']) ? $button['onclick'] : null,
                 'confirm' => isset($button['confirm']) ? $button['confirm'] : null,
-            ),
-            'data' => isset($button['data']) ? $button['data'] : '',
-        );
+            ],
+            'data'         => isset($button['data']) ? $button['data'] : ''
+        ];
 
-        $this->addMenuItem('toolbar', $item);
-
-        return $this;
-
+        return $this->addMenuItem('toolbar', $item);
     }
 
     /**
@@ -1915,6 +1908,23 @@ class cmsTemplate {
 
 // ========================================================================== //
 // ========================================================================== //
+
+    /**
+     * Устанавливает основной шаблон сайта
+     *
+     * @param string $name
+     * @return $this
+     */
+    public function setBaseTemplate($name) {
+
+        $this->setName($name);
+
+        $this->applyManifest();
+
+        $this->options = $this->getOptions();
+
+        return $this;
+    }
 
     /**
      * Возвращает название глобального шаблона

@@ -28,7 +28,7 @@ class actionContentItemEdit extends cmsAction {
         $item['ctype_data'] = $ctype;
 
         $permissions = cmsEventsManager::hook('content_edit_permissions', [
-            'can_adit' => false,
+            'can_edit' => false,
             'item'     => $item,
             'ctype'    => $ctype
         ]);
@@ -37,12 +37,12 @@ class actionContentItemEdit extends cmsAction {
         $is_owner = $item['user_id'] == $this->cms_user->id;
 
         // проверяем наличие доступа
-        if (!cmsUser::isAllowed($ctype['name'], 'edit') && !$permissions['can_adit']) {
+        if (!cmsUser::isAllowed($ctype['name'], 'edit') && !$permissions['can_edit']) {
             cmsCore::error404();
         }
         if (!cmsUser::isAllowed($ctype['name'], 'edit', 'all') &&
                 !cmsUser::isAllowed($ctype['name'], 'edit', 'premod_all') &&
-                !$permissions['can_adit'] &&
+                !$permissions['can_edit'] &&
                 ((cmsUser::isAllowed($ctype['name'], 'edit', 'own') || cmsUser::isAllowed($ctype['name'], 'edit', 'premod_own')) && !$is_owner)) {
             cmsCore::error404();
         }

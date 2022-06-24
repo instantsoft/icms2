@@ -25,7 +25,9 @@ class actionContentItemDelete extends cmsAction {
         if (!cmsUser::isAllowed($ctype['name'], 'delete') && !$permissions['can_delete']) {
             return cmsCore::error404();
         }
-        if (!cmsUser::isAllowed($ctype['name'], 'delete', 'all') && $item['user_id'] != $this->cms_user->id) {
+        if (!cmsUser::isAllowed($ctype['name'], 'delete', 'all') &&
+                $item['user_id'] != $this->cms_user->id &&
+                !$permissions['can_delete']) {
             return cmsCore::error404();
         }
 

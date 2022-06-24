@@ -21,7 +21,7 @@ class actionAuthRegister extends cmsAction {
 
         list($form, $fieldsets) = $this->getRegistrationForm();
 
-        $user = array();
+        $user = [];
 
         if ($this->request->hasInQuery('inv')){
             $user['inv'] = $this->request->get('inv','');
@@ -38,7 +38,7 @@ class actionAuthRegister extends cmsAction {
             //
             $user = $form->parse($this->request, true);
 
-            $user['groups'] = array();
+            $user['groups'] = [];
 
             if (!empty($this->options['def_groups'])){
                 $user['groups'] = $this->options['def_groups'];
@@ -50,24 +50,28 @@ class actionAuthRegister extends cmsAction {
                 }
             }
 
+            // Поля формы для fieldsAfterStore
+            $fields = [];
             //
             // убираем поля которые не относятся к выбранной пользователем группе
             //
             foreach($fieldsets as $fieldset){
                 foreach($fieldset['fields'] as $field){
 
-                    if (empty($field['groups_add'])) { continue; }
-                    if (in_array(0, $field['groups_add'])) { continue; }
+                    if (!empty($field['groups_add']) &&
+                            !in_array(0, $field['groups_add']) &&
+                            !cmsUser::isUserInGroups($field['groups_add'], $user['groups'])) {
 
-                    if (!cmsUser::isUserInGroups($field['groups_add'], $user['groups'])){
                         $form->disableField($field['name']);
                         unset($user[$field['name']]);
-                    }
 
+                    } else {
+                        $fields[$field['name']] = $field;
+                    }
                 }
             }
 
-            $errors = $form->validate($this,  $user);
+            $errors = $form->validate($this, $user);
 
             if (!$errors){
 
@@ -111,7 +115,7 @@ class actionAuthRegister extends cmsAction {
 
             }
 
-            list($errors, $user) = cmsEventsManager::hook('registration_validation', array($errors, $user));
+            list($errors, $user) = cmsEventsManager::hook('registration_validation', [$errors, $user]);
 
             if (!$errors){
 
@@ -119,12 +123,12 @@ class actionAuthRegister extends cmsAction {
                 // Блокируем пользователя, если включена верификация e-mail
                 //
                 if ($this->options['verify_email']){
-                    $user = array_merge($user, array(
-                        'is_locked' => true,
+                    $user = array_merge($user, [
+                        'is_locked'   => true,
                         'lock_reason' => LANG_REG_CFG_VERIFY_LOCK_REASON,
-                        'pass_token' => hash('sha256', string_random(32, $user['email'])),
-                        'date_token' => ''
-                    ));
+                        'pass_token'  => hash('sha256', string_random(32, $user['email'])),
+                        'date_token'  => ''
+                    ]);
                 }
 
                 $result = $this->model_users->addUser($user);
@@ -132,6 +136,8 @@ class actionAuthRegister extends cmsAction {
                 if ($result['success']){
 
 					$user['id'] = $result['id'];
+
+                    $this->model_users->fieldsAfterStore($user, $fields, 'add');
 
                     // если использовали код приглашения
                     if(!empty($invite['id'])){
@@ -145,10 +151,9 @@ class actionAuthRegister extends cmsAction {
                         $this->model->deleteInvite($invite['id']);
 
                         // уведомляем того, чей инвайт
-                        $this->model_messages->addNotice(array($invite['user_id']), array(
+                        $this->model_messages->addNotice([$invite['user_id']], [
                             'content' => sprintf(LANG_AUTH_INVITE_NOTIFY, href_to_profile($user), $user['nickname'])
-                        ));
-
+                        ]);
                     }
 
                     cmsUser::addSessionMessage(LANG_REG_SUCCESS, 'success');
@@ -160,15 +165,15 @@ class actionAuthRegister extends cmsAction {
 
                         $verify_exp = empty($this->options['verify_exp']) ? 48 : $this->options['verify_exp'];
 
-                        $to = array('email' => $user['email'], 'name' => $user['nickname']);
-                        $letter = array('name' => 'reg_verify');
+                        $to = ['email' => $user['email'], 'name' => $user['nickname']];
+                        $letter = ['name' => 'reg_verify'];
 
-                        $this->controller_messages->sendEmail($to, $letter, array(
+                        $this->controller_messages->sendEmail($to, $letter, [
                             'nickname'    => $user['nickname'],
                             'page_url'    => href_to_abs('auth', 'verify', $user['pass_token']),
                             'pass_token'  => $user['pass_token'],
                             'valid_until' => html_date(date('d.m.Y H:i', time() + ($verify_exp * 3600)), true)
-                        ));
+                        ]);
 
                         cmsUser::addSessionMessage(sprintf(LANG_REG_SUCCESS_NEED_VERIFY, $user['email']), 'info');
 
