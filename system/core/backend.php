@@ -195,19 +195,19 @@ class cmsBackend extends cmsController {
     /**
      * Экшен опций компонента
      *
-     * @return void
+     * @return string
      */
     public function actionOptions() {
 
         if (empty($this->useDefaultOptionsAction)) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $options = cmsController::loadOptions($this->name);
 
         $form = $this->getForm('options', [$options]);
         if (!$form) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $form = $this->addControllerSeoOptions($form);
@@ -229,7 +229,7 @@ class cmsBackend extends cmsController {
 
                 cmsEventsManager::hook("controller_{$this->name}_after_save_options", $options);
 
-                $this->redirectToAction('options');
+                return $this->redirectToAction('options');
             }
 
             if ($errors) {
@@ -259,32 +259,40 @@ class cmsBackend extends cmsController {
 //=========                  УПРАВЛЕНИЕ ДОСТУПОМ                     =========//
 //============================================================================//
 
-    public function actionPerms($subject=''){
+    /**
+     * Экшен правил доступа
+     *
+     * @param string $subject
+     * @return string
+     */
+    public function actionPerms($subject = '') {
 
-        if (empty($this->useDefaultPermissionsAction)){ cmsCore::error404(); }
+        if (empty($this->useDefaultPermissionsAction)) {
+            return cmsCore::error404();
+        }
 
         $rules  = cmsPermissions::getRulesList($this->name);
         $values = cmsPermissions::getPermissions($subject);
 
         // добавляем правила доступа от типа контента, если контроллер на его основе
-		$ctype = cmsCore::getModel('content')->getContentTypeByName($this->name);
+        $ctype = cmsCore::getModel('content')->getContentTypeByName($this->name);
         if ($ctype && $subject == $this->name) {
             $rules = array_merge(cmsPermissions::getRulesList('content'), $rules);
         }
 
-        list($rules, $values) = cmsEventsManager::hook("controller_{$this->name}_perms", array($rules, $values));
+        list($rules, $values) = cmsEventsManager::hook("controller_{$this->name}_perms", [$rules, $values]);
 
         $groups = cmsCore::getModel('users')->getGroups(false);
 
-        $template_params = array(
+        $template_params = [
             'rules'   => $rules,
             'values'  => $values,
             'groups'  => $groups,
             'subject' => $subject
-        );
+        ];
 
         // если задан шаблон опций в контроллере
-        if($this->cms_template->getTemplateFileName('controllers/'.$this->name.'/backend/perms', true)){
+        if ($this->cms_template->getTemplateFileName('controllers/' . $this->name . '/backend/perms', true)) {
 
             return $this->cms_template->render('backend/perms', $template_params);
 
@@ -293,71 +301,83 @@ class cmsBackend extends cmsController {
             $default_admin_tpl = $this->cms_template->getTemplateFileName('controllers/admin/controllers_perms');
 
             return $this->cms_template->processRender($default_admin_tpl, $template_params);
-
         }
-
     }
 
-    public function actionPermsSave($subject=''){
+    /**
+     * Экшен сохранения правил доступа
+     *
+     * @param string $subject
+     * @return redirect
+     */
+    public function actionPermsSave($subject = '') {
 
-        if (empty($this->useDefaultPermissionsAction)){ cmsCore::error404(); }
+        if (empty($this->useDefaultPermissionsAction)) {
+            return cmsCore::error404();
+        }
 
-        $values = $this->request->get('value', array());
+        $values = $this->request->get('value', []);
         $rules  = cmsPermissions::getRulesList($this->name);
 
         // добавляем правила доступа от типа контента, если контроллер на его основе
-		$ctype = cmsCore::getModel('content')->getContentTypeByName($this->name);
+        $ctype = cmsCore::getModel('content')->getContentTypeByName($this->name);
         if ($ctype) {
             $rules = array_merge(cmsPermissions::getRulesList('content'), $rules);
         }
 
-        list($rules, $values) = cmsEventsManager::hook("controller_{$this->name}_perms", array($rules, $values));
+        list($rules, $values) = cmsEventsManager::hook("controller_{$this->name}_perms", [$rules, $values]);
 
         $groups = cmsCore::getModel('users')->getGroups(false);
 
         // перебираем правила
-        foreach($rules as $rule){
+        foreach ($rules as $rule) {
 
             // если для этого правила вообще ничего нет,
             // то присваиваем null
             if (!isset($values[$rule['id']])) {
-                $values[$rule['id']] = null; continue;
+                $values[$rule['id']] = null;
+                continue;
             }
 
             // перебираем группы, заменяем на нуллы
             // значения отсутствующих правил
-            foreach($groups as $group){
+            foreach ($groups as $group) {
                 if (!isset($values[$rule['id']][$group['id']])) {
                     $values[$rule['id']][$group['id']] = null;
                 }
             }
-
         }
 
         cmsUser::addSessionMessage(LANG_CP_PERMISSIONS_SUCCESS, 'success');
 
         cmsPermissions::savePermissions($subject, $values);
 
-        $this->redirectBack();
-
+        return $this->redirectBack();
     }
 
 //============================================================================//
 //=========                           Очереди                        =========//
 //============================================================================//
 
-    public function actionQueue(){
+    /**
+     * Экшен очереди
+     *
+     * @return string
+     */
+    public function actionQueue() {
 
-        if (empty($this->queue['use_queue_action'])){ cmsCore::error404(); }
+        if (empty($this->queue['use_queue_action'])) {
+            return cmsCore::error404();
+        }
 
-        $grid = $this->controller_admin->loadDataGrid('queue', array('contex_controller' => $this));
+        $grid = $this->controller_admin->loadDataGrid('queue', ['contex_controller' => $this]);
 
         if ($this->request->isAjax()) {
 
-            $filter     = array();
+            $filter     = [];
             $filter_str = $this->request->get('filter', '');
 
-            if($filter_str){
+            if ($filter_str) {
                 parse_str($filter_str, $filter);
             }
 
@@ -372,86 +392,103 @@ class cmsBackend extends cmsController {
 
             $this->controller_admin->model->limitPage($page, $perpage);
 
-            $this->controller_admin->model->orderByList(array(
-                array('by' => 'date_started', 'to' => 'asc'),
-                array('by' => 'priority', 'to' => 'desc'),
-                array('by' => 'date_created', 'to' => 'asc')
-            ));
+            $this->controller_admin->model->orderByList([
+                ['by' => 'date_started', 'to' => 'asc'],
+                ['by' => 'priority', 'to' => 'desc'],
+                ['by' => 'date_created', 'to' => 'asc']
+            ]);
 
             $jobs = $this->controller_admin->model->get(cmsQueue::getTableName());
 
             $this->cms_template->renderGridRowsJSON($grid, $jobs, $total, $pages);
 
             $this->halt();
-
         }
 
-        $template_params = array(
+        return $this->cms_template->getRenderedAsset('ui/grid', [
             'grid'       => $grid,
             'page_title' => sprintf(LANG_CP_QUEUE_TITLE, $this->queue['queue_name']),
             'source_url' => href_to($this->root_url, 'queue'),
-        );
-
-        return $this->cms_template->processRender($this->cms_template->getTemplateFileName('assets/ui/grid'), $template_params);
-
+        ]);
     }
 
-    public function actionQueueRestart($job_id){
+    /**
+     * Экшен рестарта задания очереди
+     *
+     * @param integer $job_id
+     * @return type
+     */
+    public function actionQueueRestart($job_id) {
 
-        if (empty($this->queue['use_queue_action'])){ cmsCore::error404(); }
-
-        cmsQueue::restartJob(array('id' => $job_id));
-
-        $this->redirectBack();
-
-    }
-
-    public function actionQueueDelete($job_id){
-
-        if (empty($this->queue['use_queue_action'])){ cmsCore::error404(); }
-
-        $csrf_token = $this->request->get('csrf_token', '');
-        if (!cmsForm::validateCSRFToken( $csrf_token )){
-            cmsCore::error404();
+        if (empty($this->queue['use_queue_action'])) {
+            return cmsCore::error404();
         }
 
-        cmsQueue::deleteJob(array('id' => $job_id));
+        cmsQueue::restartJob(['id' => $job_id]);
 
-        $this->redirectBack();
+        return $this->redirectBack();
+    }
 
+    /**
+     * Экшен удаления задания очереди
+     *
+     * @param integer $job_id
+     * @return type
+     */
+    public function actionQueueDelete($job_id) {
+
+        if (empty($this->queue['use_queue_action'])) {
+            return cmsCore::error404();
+        }
+
+        $csrf_token = $this->request->get('csrf_token', '');
+        if (!cmsForm::validateCSRFToken($csrf_token)) {
+            return cmsCore::error404();
+        }
+
+        cmsQueue::deleteJob(['id' => $job_id]);
+
+        return $this->redirectBack();
     }
 
     //============================================================================//
     //=========                         Модераторы                       =========//
     //============================================================================//
 
-    public function actionModerators(){
+    /**
+     * Экшен списка модераторов
+     *
+     * @return string
+     */
+    public function actionModerators() {
 
-        if (empty($this->useDefaultModerationAction)){ cmsCore::error404(); }
+        if (empty($this->useDefaultModerationAction)) {
+            return cmsCore::error404();
+        }
 
         $moderators = $this->model_moderation->getContentTypeModerators($this->name);
 
-        $template_params = array(
+        $template_params = [
             'title'         => $this->title,
             'not_use_trash' => !$this->useModerationTrash,
             'moderators'    => $moderators
-        );
+        ];
 
-        $this->cms_template->addToolButton(array(
-            'class'  => 'settings',
-            'title'  => LANG_MODERATORATION_OPTIONS,
-            'href'   => href_to('admin', 'controllers', array('edit', 'moderation', 'options'))
-        ));
+        $this->cms_template->addToolButton([
+            'class' => 'settings',
+            'title' => LANG_MODERATORATION_OPTIONS,
+            'href'  => href_to('admin', 'controllers', ['edit', 'moderation', 'options'])
+        ]);
 
-        $this->cms_template->addToolButton(array(
+        $this->cms_template->addToolButton([
             'class'  => 'help',
             'title'  => LANG_HELP,
             'target' => '_blank',
             'href'   => LANG_HELP_URL_CTYPES_MODERATORS
-        ));
+        ]);
 
         // если задан шаблон в контроллере
-        if($this->cms_template->getTemplateFileName('controllers/'.$this->name.'/backend/moderators', true)){
+        if ($this->cms_template->getTemplateFileName('controllers/' . $this->name . '/backend/moderators', true)) {
 
             return $this->cms_template->render('backend/moderators', $template_params);
 
@@ -460,81 +497,95 @@ class cmsBackend extends cmsController {
             $default_admin_tpl = $this->cms_template->getTemplateFileName('controllers/admin/controllers_moderators');
 
             return $this->cms_template->processRender($default_admin_tpl, $template_params);
-
         }
-
     }
 
-    public function actionModeratorsAdd(){
+    /**
+     * Экшен добавления модератора
+     *
+     * @return json Выводит JSON и завершает работу
+     */
+    public function actionModeratorsAdd() {
 
-        if (!$this->request->isAjax()) { cmsCore::error404(); }
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
 
         $name = $this->request->get('name', '');
-        if (!$name) { cmsCore::error404(); }
+        if (!$name) {
+            return cmsCore::error404();
+        }
 
         $user = cmsCore::getModel('users')->filterEqual('email', $name)->getUser();
 
-        if ($user === false){
-            return $this->cms_template->renderJSON(array(
+        if ($user === false) {
+            return $this->cms_template->renderJSON([
                 'error'   => true,
                 'message' => sprintf(LANG_CP_USER_NOT_FOUND, $name)
-            ));
+            ]);
         }
 
         $moderators = $this->model_moderation->getContentTypeModerators($this->name);
 
-        if (isset($moderators[$user['id']])){
-            return $this->cms_template->renderJSON(array(
+        if (isset($moderators[$user['id']])) {
+            return $this->cms_template->renderJSON([
                 'error'   => true,
                 'message' => sprintf(LANG_MODERATOR_ALREADY, $user['nickname'])
-            ));
+            ]);
         }
 
         $moderator = $this->model_moderation->addContentTypeModerator($this->name, $user['id']);
 
-        if (!$moderator){
-            return $this->cms_template->renderJSON(array(
+        if (!$moderator) {
+            return $this->cms_template->renderJSON([
                 'error'   => true,
                 'message' => LANG_ERROR
-            ));
+            ]);
         }
 
         $ctypes_moderator_tpl = $this->cms_template->getTemplateFileName('controllers/admin/ctypes_moderator');
 
-        return $this->cms_template->renderJSON(array(
+        return $this->cms_template->renderJSON([
             'error' => false,
             'name'  => $user['nickname'],
-            'html'  => $this->cms_template->processRender($ctypes_moderator_tpl, array(
-                'moderator' => $moderator,
+            'html'  => $this->cms_template->processRender($ctypes_moderator_tpl, [
+                'moderator'     => $moderator,
                 'not_use_trash' => !$this->useModerationTrash,
-                'ctype'     => array('name' => $this->name, 'controller' => $this->name)
-            ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL)),
+                'ctype'         => ['name' => $this->name, 'controller' => $this->name]
+            ], new cmsRequest([], cmsRequest::CTX_INTERNAL)),
             'id'    => $user['id']
-        ));
-
+        ]);
     }
 
-    public function actionModeratorsDelete(){
+    /**
+     * Экшен удаления модератора
+     *
+     * @return json Выводит JSON и завершает работу
+     */
+    public function actionModeratorsDelete() {
 
-        if (!$this->request->isAjax()) { cmsCore::error404(); }
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
 
         $id = $this->request->get('id', 0);
-        if (!$id) { cmsCore::error404(); }
+        if (!$id) {
+            return cmsCore::error404();
+        }
 
         $moderators = $this->model_moderation->getContentTypeModerators($this->name);
 
-        if (!isset($moderators[$id])){
-            return $this->cms_template->renderJSON(array(
+        if (!isset($moderators[$id])) {
+            return $this->cms_template->renderJSON([
                 'error' => true
-            ));
+            ]);
         }
 
         $this->model_moderation->deleteContentTypeModerator($this->name, $id);
 
-        return $this->cms_template->renderJSON(array(
+        return $this->cms_template->renderJSON([
             'error' => false
-        ));
-
+        ]);
     }
 
 }

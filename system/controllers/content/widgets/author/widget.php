@@ -116,6 +116,7 @@ class widgetContentAuthor extends cmsWidget {
 
         return [
             'sys_fields' => $this->getSystemFields($profile, $ctype),
+            'item'       => $item,
             'jsonld'     => $jsonld,
             'ctype'      => $ctype,
             'profile'    => $profile,

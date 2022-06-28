@@ -33,6 +33,20 @@ function autoLoadCoreClass($_class_name){
             )
         );
         $class_file = 'system/controllers/' . $controller . $path . '/model.php';
+
+    } else
+
+    if (strpos($class_name, 'icms\\') === 0) {
+
+        $paths = explode('\\', $class_name);
+
+        // Удаляем префикс icms
+        // он для отделения namespace-ов от других
+        unset($paths[0]);
+
+        $file_name = array_pop($paths);
+
+        $class_file = 'system/' . implode('/', $paths) . '/' . $file_name . '.php';
     }
 
     if (!$class_file){ return false; }
@@ -44,5 +58,4 @@ function autoLoadCoreClass($_class_name){
     include_once PATH . '/' . $class_file;
 
     return true;
-
 }
