@@ -2,37 +2,15 @@
 
 class actionRssIndex extends cmsAction {
 
-    public function run(){
+    use icms\controllers\admin\traits\listgrid;
 
-        $grid = $this->loadDataGrid('feeds');
+    public function __construct($controller, $params = []) {
 
-        if ($this->request->isAjax()) {
+        parent::__construct($controller, $params);
 
-            $this->model->setPerPage(admin::perpage);
-
-            $filter     = array();
-            $filter_str = $this->request->get('filter', '');
-
-            if ($filter_str){
-                parse_str($filter_str, $filter);
-                $this->model->applyGridFilter($grid, $filter);
-            }
-
-            $total = $this->model->getFeedsCount();
-            $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
-            $pages = ceil($total / $perpage);
-
-            $feeds = $this->model->getFeeds();
-
-            $this->cms_template->renderGridRowsJSON($grid, $feeds, $total, $pages);
-
-            $this->halt();
-
-        }
-
-        return $this->cms_template->render('backend/index', array(
-            'grid' => $grid
-        ));
+        $this->setProperty('table_name', 'rss_feeds');
+        $this->setProperty('grid_name', 'feeds');
+        $this->setProperty('grid_url', $this->cms_template->href_to(''));
 
     }
 

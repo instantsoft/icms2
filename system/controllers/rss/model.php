@@ -2,14 +2,6 @@
 
 class modelRss extends cmsModel {
 
-    public function getFeedsCount() {
-        return $this->getCount('rss_feeds');
-    }
-
-    public function getFeeds() {
-        return $this->get('rss_feeds');
-    }
-
     private function feed() {
         return $this->getItem('rss_feeds', function ($item, $model) {
             $item['mapping'] = cmsModel::yamlToArray($item['mapping']);

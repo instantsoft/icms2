@@ -1357,10 +1357,6 @@ class modelUsers extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getMigrationRulesCount() {
-        return $this->getCount('{users}_groups_migration');
-    }
-
     public function getMigrationRules() {
         return $this->get('{users}_groups_migration');
     }

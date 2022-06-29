@@ -124,6 +124,7 @@
         is_sortable: <?php echo intval($options['is_sortable']); ?>,
         is_filter: <?php echo intval($options['is_filter']); ?>,
         is_draggable: <?php echo intval($options['is_draggable']); ?>,
+        drag_save_url: '<?php echo $options['drag_save_url']; ?>',
         is_actions: <?php echo intval($options['is_actions']); ?>,
         is_pagination: <?php echo intval($options['is_pagination']); ?>,
         is_selectable: <?php echo intval($options['is_selectable']); ?>,
@@ -132,7 +133,9 @@
     });
 
     <?php if ($options['is_auto_init']){ ?>
-        icms.datagrid.init();
+        $(function(){
+            icms.datagrid.init();
+        });
     <?php } ?>
 
 </script>

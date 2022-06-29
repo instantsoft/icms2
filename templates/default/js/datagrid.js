@@ -8,6 +8,7 @@ icms.datagrid = (function ($) {
     this.is_loading = true;
     this.callback = false;
 	this.was_init = false;
+    this.timeout_order = 0;
 
     this.setOptions = function(options){
         _this.options = options;
@@ -189,6 +190,29 @@ icms.datagrid = (function ($) {
             $(this).addClass('edit_by_click_hidden').parent().find('.grid_field_edit').addClass('edit_by_click_visible').find('input.input').focus();
         });
 
+    };
+
+    this.submitOrdering = function(url){
+
+        $('#datagrid_form').html('');
+        $('#datagrid_form').attr('action', url);
+
+        $('.datagrid tbody tr:not(.filter)').each(function(){
+            var item_id = $(this).data('id');
+            $('#datagrid_form').append('<input type="hidden" name="items[]" value="'+item_id+'" />');
+        });
+
+        var form_data = icms.forms.toJSON($('#datagrid_form'));
+
+        $.post(url, form_data, function(result){
+            clearTimeout(_this.timeout_order);
+            _this.timeout_order = setTimeout(function (){
+                console.log(result.success_text);
+            }, 1000);
+            _this.loadRows();
+        }, 'json');
+
+        return false;
     };
 
     this.submit = function(url, confirm_message){
@@ -388,9 +412,15 @@ icms.datagrid = (function ($) {
         if (_this.options.is_draggable) {
             $('#datagrid').tableDnD({
                 onDragClass: 'dragged',
+                onDragStart: function(table, row) {
+                    clearTimeout(_this.timeout_order);
+                },
                 onDrop: function(table, row) {
                     $('.datagrid tbody tr').removeClass('odd');
                     $('.datagrid tbody tr:odd').addClass('odd');
+                    if (_this.options.drag_save_url) {
+                        _this.submitOrdering(_this.options.drag_save_url);
+                    }
                 }
             });
         }

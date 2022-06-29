@@ -2,29 +2,22 @@
 
 class actionWysiwygsPresets extends cmsAction {
 
-    public function run() {
+    use icms\controllers\admin\traits\listgrid;
 
-        $grid = $this->loadDataGrid('presets');
+    public function __construct($controller, $params = []) {
 
-        if ($this->request->isAjax()) {
+        parent::__construct($controller, $params);
 
-            $filter     = [];
-            $filter_str = $this->request->get('filter', '');
-
-            $filter_str = cmsUser::getUPSActual('admin.grid_filter.wysiwyg_presets', $filter_str);
-
-            if ($filter_str){
-                parse_str($filter_str, $filter);
-                $this->model->applyGridFilter($grid, $filter);
-            }
-
-            $presets = $this->model->getPresets();
-
-            return $this->cms_template->renderGridRowsJSON($grid, $presets);
-        }
-
-        return $this->cms_template->render('backend/presets', [
-            'grid' => $grid
+        $this->setProperty('table_name', 'wysiwygs_presets');
+        $this->setProperty('grid_name', 'presets');
+        $this->setProperty('grid_url', $this->cms_template->href_to('presets'));
+        $this->setProperty('title', LANG_WW_PRESETS);
+        $this->setProperty('tool_buttons', [
+            [
+                'class' => 'add',
+                'title' => LANG_ADD,
+                'href'  => $this->cms_template->href_to('presets_add')
+            ]
         ]);
     }
 

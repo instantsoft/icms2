@@ -2,13 +2,22 @@
 
 class actionTagsIndex extends cmsAction {
 
-    public function run(){
+    use icms\controllers\admin\traits\listgrid;
 
-        $grid = $this->loadDataGrid('tags');
+    public function __construct($controller, $params = []) {
 
-        return cmsTemplate::getInstance()->render('backend/tags', array(
-            'grid' => $grid
-        ));
+        parent::__construct($controller, $params);
+
+        $this->setProperty('table_name', 'tags');
+        $this->setProperty('grid_name', 'tags');
+        $this->setProperty('grid_url', $this->cms_template->href_to('index'));
+        $this->setProperty('tool_buttons', [
+            [
+                'class' => 'refresh',
+                'title' => LANG_TAGS_RECOUNT,
+                'href'  => $this->cms_template->href_to('recount')
+            ]
+        ]);
 
     }
 

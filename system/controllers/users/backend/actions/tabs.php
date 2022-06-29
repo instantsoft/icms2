@@ -2,13 +2,22 @@
 
 class actionUsersTabs extends cmsAction {
 
-    public function run(){
+    use icms\controllers\admin\traits\listgrid;
 
-        $grid = $this->loadDataGrid('tabs');
+    public function __construct($controller, $params = []) {
 
-        return cmsTemplate::getInstance()->render('backend/tabs', array(
-            'grid' => $grid
-        ));
+        parent::__construct($controller, $params);
+
+        $this->setProperty('table_name', '{users}_tabs');
+        $this->setProperty('grid_name', 'tabs');
+        $this->setProperty('grid_url', $this->cms_template->href_to('tabs'));
+        $this->setProperty('title', LANG_USERS_CFG_TABS);
+        $this->setProperty('list_callback', function ($model) {
+
+            $model->orderBy('ordering');
+
+            return $model;
+        });
 
     }
 

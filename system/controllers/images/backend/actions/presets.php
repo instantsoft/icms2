@@ -2,16 +2,34 @@
 
 class actionImagesPresets extends cmsAction {
 
-    public function run(){
+    use icms\controllers\admin\traits\listgrid;
 
-        $grid = $this->loadDataGrid('presets');
+    public function __construct($controller, $params = []) {
 
-        return cmsTemplate::getInstance()->render('backend/presets', array(
-            'grid' => $grid
-        ));
+        parent::__construct($controller, $params);
+
+        $this->setProperty('table_name', 'images_presets');
+        $this->setProperty('grid_name', 'presets');
+        $this->setProperty('grid_url', $this->cms_template->href_to('presets'));
+        $this->setProperty('title', LANG_IMAGES_PRESETS);
+        $this->setProperty('tool_buttons', [
+            [
+                'class' => 'add',
+                'title' => LANG_ADD,
+                'href'  => $this->cms_template->href_to('presets_add')
+            ]
+        ]);
+        $this->setProperty('list_callback', function ($model) {
+
+            $model->orderByList([
+                ['by' => 'is_internal', 'to' => 'asc'],
+                ['by' => 'width', 'to' => 'asc'],
+                ['by' => 'quality', 'to' => 'desc']
+            ]);
+
+            return $model;
+        });
 
     }
 
 }
-
-

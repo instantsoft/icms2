@@ -2,10 +2,6 @@
 
 class modelImages extends cmsModel{
 
-	public function getPresetsCount(){
-		return $this->getCount('images_presets');
-	}
-
 	public function getPresets(){
 		return $this->get('images_presets', function($item, $model){
 			$item['wm_image'] = cmsModel::yamlToArray($item['wm_image']);
