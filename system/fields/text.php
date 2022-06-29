@@ -9,51 +9,51 @@ class fieldText extends cmsFormField {
     public $var_type    = 'string';
     public $size        = 5;
 
-    public function getOptions(){
-        return array(
-            new fieldNumber('min_length', array(
-                'title' => LANG_PARSER_TEXT_MIN_LEN,
+    public function getOptions() {
+        return [
+            new fieldNumber('min_length', [
+                'title'   => LANG_PARSER_TEXT_MIN_LEN,
                 'default' => 0
-            )),
-            new fieldNumber('max_length', array(
-                'title' => LANG_PARSER_TEXT_MAX_LEN,
+            ]),
+            new fieldNumber('max_length', [
+                'title'   => LANG_PARSER_TEXT_MAX_LEN,
                 'default' => 4096
-            )),
-            new fieldCheckbox('show_symbol_count', array(
+            ]),
+            new fieldCheckbox('show_symbol_count', [
                 'title' => LANG_PARSER_SHOW_SYMBOL_COUNT
-            )),
-            new fieldCheckbox('is_strip_tags', array(
+            ]),
+            new fieldCheckbox('is_strip_tags', [
                 'title' => LANG_PARSER_IS_STRIP_TAGS
-            )),
-            new fieldCheckbox('is_html_filter', array(
-                'title' => LANG_PARSER_HTML_FILTERING,
-				'extended_option' => true
-            )),
-            new fieldCheckbox('parse_patterns', array(
+            ]),
+            new fieldCheckbox('is_html_filter', [
+                'title'           => LANG_PARSER_HTML_FILTERING,
+                'extended_option' => true
+            ]),
+            new fieldCheckbox('parse_patterns', [
                 'title' => LANG_PARSER_PARSE_PATTERNS,
-                'hint' => LANG_PARSER_PARSE_PATTERNS_HINT
-            )),
-            new fieldCheckbox('build_redirect_link', array(
-                'title' => LANG_PARSER_BUILD_REDIRECT_LINK,
+                'hint'  => LANG_PARSER_PARSE_PATTERNS_HINT
+            ]),
+            new fieldCheckbox('build_redirect_link', [
+                'title'      => LANG_PARSER_BUILD_REDIRECT_LINK,
                 'is_visible' => cmsController::enabled('redirect')
-            )),
-            new fieldNumber('teaser_len', array(
-                'title' => LANG_PARSER_HTML_TEASER_LEN,
-                'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
-				'extended_option' => true
-            )),
-            new fieldCheckbox('show_show_more', array(
-                'title' => LANG_PARSER_SHOW_SHOW_MORE,
-                'default' => false,
-                'visible_depend' => array('options:teaser_len' => array('hide' => array(''))),
-				'extended_option' => true
-            )),
-            new fieldCheckbox('in_fulltext_search', array(
-                'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
-                'hint'  => LANG_PARSER_IN_FULLTEXT_SEARCH_HINT,
+            ]),
+            new fieldNumber('teaser_len', [
+                'title'           => LANG_PARSER_HTML_TEASER_LEN,
+                'hint'            => LANG_PARSER_HTML_TEASER_LEN_HINT,
+                'extended_option' => true
+            ]),
+            new fieldCheckbox('show_show_more', [
+                'title'           => LANG_PARSER_SHOW_SHOW_MORE,
+                'default'         => false,
+                'visible_depend'  => ['options:teaser_len' => ['hide' => ['']]],
+                'extended_option' => true
+            ]),
+            new fieldCheckbox('in_fulltext_search', [
+                'title'   => LANG_PARSER_IN_FULLTEXT_SEARCH,
+                'hint'    => LANG_PARSER_IN_FULLTEXT_SEARCH_HINT,
                 'default' => false
-            ))
-        );
+            ])
+        ];
     }
 
     public function getFilterInput($value) {
@@ -124,7 +124,7 @@ class fieldText extends cmsFormField {
 
     public function afterParse($value, $item){
 
-        if (!$value){
+        if (is_empty_value($value)) {
             return '';
         }
 
@@ -149,12 +149,15 @@ class fieldText extends cmsFormField {
     }
 
     public function store($value, $is_submitted, $old_value = null) {
-        if (!$value) {
+
+        if (is_empty_value($value)) {
             return '';
         }
+
         if ($this->getProperty('is_strip_tags') === true || $this->getOption('is_strip_tags')) {
             return trim(strip_tags($value));
         }
+
         return parent::store($value, $is_submitted, $old_value);
     }
 
@@ -168,10 +171,10 @@ class fieldText extends cmsFormField {
 
     public function getInput($value){
 
-        $this->data['attributes']               = $this->getProperty('attributes')?:[];
-        $this->data['attributes']['rows']       = $this->getOption('size')?:$this->getProperty('size');
-        $this->data['attributes']['id']         = $this->id;
-        $this->data['attributes']['required']   = (array_search(['required'], $this->getRules()) !== false);
+        $this->data['attributes']             = $this->getProperty('attributes') ?: [];
+        $this->data['attributes']['rows']     = $this->getOption('size') ?: $this->getProperty('size');
+        $this->data['attributes']['id']       = $this->id;
+        $this->data['attributes']['required'] = (array_search(['required'], $this->getRules()) !== false);
 
         return parent::getInput($value);
     }

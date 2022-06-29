@@ -109,11 +109,7 @@ class modelComments extends cmsModel {
                         continue;
                     }
 
-                    @unlink(cmsConfig::get('upload_path') . $file['path']);
-
-                    $files_model->filterEqual('path', $file['path']);
-
-                    $files_model->deleteFiltered('uploaded_files');
+                    $files_model->deleteFile($file);
                 }
             }
 
@@ -168,42 +164,42 @@ class modelComments extends cmsModel {
 
         $this->unlockFilters();
 
-        if ($comments) {
+        if (!$comments) {
 
-            $ids = array_keys($comments);
+            $this->resetFilters();
 
-            $this->deleteFiltered('comments');
-
-            $this->filterIn('comment_id', $ids)->deleteFiltered('comments_rating');
-
-            cmsCache::getInstance()->clean('comments.list');
-
-            // Удаляем изображения
-            $files_model = cmsCore::getModel('files');
-
-            foreach ($comments as $content_html) {
-                $paths = string_html_get_images_path($content_html);
-                if ($paths) {
-                    foreach ($paths as $path) {
-
-                        $file = $files_model->getFileByPath($path);
-                        if (!$file) {
-                            continue;
-                        }
-
-                        @unlink(cmsConfig::get('upload_path') . $file['path']);
-
-                        $files_model->filterEqual('path', $file['path']);
-
-                        $files_model->deleteFiltered('uploaded_files');
-                    }
-                }
-            }
-
-            cmsEventsManager::hook('comments_after_delete_list', $ids);
+            return false;
         }
 
-        return $comments ? true : false;
+        $ids = array_keys($comments);
+
+        $this->deleteFiltered('comments');
+
+        $this->filterIn('comment_id', $ids)->deleteFiltered('comments_rating');
+
+        cmsCache::getInstance()->clean('comments.list');
+
+        // Удаляем изображения
+        $files_model = cmsCore::getModel('files');
+
+        foreach ($comments as $content_html) {
+            $paths = string_html_get_images_path($content_html);
+            if ($paths) {
+                foreach ($paths as $path) {
+
+                    $file = $files_model->getFileByPath($path);
+                    if (!$file) {
+                        continue;
+                    }
+
+                   $files_model->deleteFile($file);
+                }
+            }
+        }
+
+        cmsEventsManager::hook('comments_after_delete_list', $ids);
+
+        return true;
     }
 
     public function setCommentsIsDeleted($target_controller, $target_subject, $target_id, $delete = 1) {

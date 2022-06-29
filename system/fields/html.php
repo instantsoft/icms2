@@ -9,106 +9,106 @@ class fieldHtml extends cmsFormField {
     public $var_type    = 'string';
 
     public function getOptions(){
-        return array(
-            new fieldList('editor', array(
-                'title' => LANG_PARSER_HTML_EDITOR,
-                'default' => cmsConfig::get('default_editor'),
-                'generator' => function($item){
-                    $items = [];
+        return [
+            new fieldList('editor', [
+                'title'     => LANG_PARSER_HTML_EDITOR,
+                'default'   => cmsConfig::get('default_editor'),
+                'generator' => function ($item) {
+                    $items   = [];
                     $editors = cmsCore::getWysiwygs();
-                    foreach($editors as $editor){
+                    foreach ($editors as $editor) {
                         $items[$editor] = ucfirst($editor);
                     }
                     $ps = cmsCore::getModel('wysiwygs')->getPresetsList();
-                    if($ps){
+                    if ($ps) {
                         foreach ($ps as $key => $value) {
                             $items[$key] = $value;
                         }
                     }
                     return $items;
                 }
-            )),
-            new fieldList('editor_presets', array(
-                'title'        => LANG_PARSER_HTML_EDITOR_GR,
-                'is_multiple'  => true,
-                'dynamic_list' => true,
-                'select_title' => LANG_SELECT,
-                'multiple_keys' => array(
-                    'group_id' => 'field', 'preset_id' => 'field_select'
-                ),
-                'generator' => function($item){
+            ]),
+            new fieldList('editor_presets', [
+                'title'         => LANG_PARSER_HTML_EDITOR_GR,
+                'is_multiple'   => true,
+                'dynamic_list'  => true,
+                'select_title'  => LANG_SELECT,
+                'multiple_keys' => [
+                    'group_id'  => 'field', 'preset_id' => 'field_select'
+                ],
+                'generator'     => function ($item) {
                     $users_model = cmsCore::getModel('users');
 
                     $items = [];
 
                     $groups = $users_model->getGroups(false);
 
-                    foreach($groups as $group){
+                    foreach ($groups as $group) {
                         $items[$group['id']] = $group['title'];
                     }
 
                     return $items;
                 },
-                'values_generator' => function() {
-                    $items = [];
+                'values_generator' => function () {
+                    $items   = [];
                     $editors = cmsCore::getWysiwygs();
-                    foreach($editors as $editor){
+                    foreach ($editors as $editor) {
                         $items[$editor] = ucfirst($editor);
                     }
                     $ps = cmsCore::getModel('wysiwygs')->getPresetsList();
-                    if($ps){
+                    if ($ps) {
                         foreach ($ps as $key => $value) {
                             $items[$key] = $value;
                         }
                     }
                     return $items;
                 }
-            )),
-            new fieldCheckbox('is_html_filter', array(
-                'title' => LANG_PARSER_HTML_FILTERING,
+            ]),
+            new fieldCheckbox('is_html_filter', [
+                'title'           => LANG_PARSER_HTML_FILTERING,
                 'extended_option' => true
-            )),
-            new fieldCheckbox('parse_patterns', array(
+            ]),
+            new fieldCheckbox('parse_patterns', [
                 'title' => LANG_PARSER_PARSE_PATTERNS,
-                'hint' => LANG_PARSER_PARSE_PATTERNS_HINT
-            )),
-            new fieldCheckbox('build_redirect_link', array(
-                'title' => LANG_PARSER_BUILD_REDIRECT_LINK,
+                'hint'  => LANG_PARSER_PARSE_PATTERNS_HINT
+            ]),
+            new fieldCheckbox('build_redirect_link', [
+                'title'      => LANG_PARSER_BUILD_REDIRECT_LINK,
                 'is_visible' => cmsController::enabled('redirect')
-            )),
-            new fieldNumber('teaser_len', array(
-                'title' => LANG_PARSER_HTML_TEASER_LEN,
-                'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
+            ]),
+            new fieldNumber('teaser_len', [
+                'title'           => LANG_PARSER_HTML_TEASER_LEN,
+                'hint'            => LANG_PARSER_HTML_TEASER_LEN_HINT,
                 'extended_option' => true
-            )),
-            new fieldString('teaser_postfix', array(
+            ]),
+            new fieldString('teaser_postfix', [
                 'title'           => LANG_PARSER_HTML_TEASER_POSTFIX,
-                'visible_depend'  => array('options:teaser_len' => array('hide' => array(''))),
-                'default' => '',
+                'visible_depend'  => ['options:teaser_len' => ['hide' => ['']]],
+                'default'         => '',
                 'extended_option' => true
-            )),
-            new fieldList('teaser_type', array(
-                'title' => LANG_PARSER_HTML_TEASER_TYPE,
-                'items' => array(
+            ]),
+            new fieldList('teaser_type', [
+                'title'           => LANG_PARSER_HTML_TEASER_TYPE,
+                'items'           => [
                     ''  => LANG_PARSER_HTML_TEASER_TYPE_NULL,
                     's' => LANG_PARSER_HTML_TEASER_TYPE_S,
                     'w' => LANG_PARSER_HTML_TEASER_TYPE_W
-                ),
-                'visible_depend'  => array('options:teaser_len' => array('hide' => array(''))),
+                ],
+                'visible_depend'  => ['options:teaser_len' => ['hide' => ['']]],
                 'extended_option' => true
-            )),
-            new fieldCheckbox('show_show_more', array(
-                'title' => LANG_PARSER_SHOW_SHOW_MORE,
-                'default' => false,
-                'visible_depend' => array('options:teaser_len' => array('hide' => array(''))),
+            ]),
+            new fieldCheckbox('show_show_more', [
+                'title'           => LANG_PARSER_SHOW_SHOW_MORE,
+                'default'         => false,
+                'visible_depend'  => ['options:teaser_len' => ['hide' => ['']]],
                 'extended_option' => true
-            )),
-            new fieldCheckbox('in_fulltext_search', array(
-                'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
-                'hint'  => LANG_PARSER_IN_FULLTEXT_SEARCH_HINT,
+            ]),
+            new fieldCheckbox('in_fulltext_search', [
+                'title'   => LANG_PARSER_IN_FULLTEXT_SEARCH,
+                'hint'    => LANG_PARSER_IN_FULLTEXT_SEARCH_HINT,
                 'default' => false
-            ))
-        );
+            ])
+        ];
     }
 
     public function getFilterInput($value) {
@@ -150,8 +150,8 @@ class fieldHtml extends cmsFormField {
         if ($this->getOption('is_html_filter')){
             $value = cmsEventsManager::hook('html_filter', [
                 'text'                => $value,
-                'is_auto_br'          => $this->getOption('editor') == 'markitup',
-                'build_smiles'        => $this->getOption('editor') == 'markitup', // пока что только так
+                'is_auto_br'          => $this->getOption('editor') === 'markitup',
+                'build_smiles'        => $this->getOption('editor') === 'markitup', // пока что только так
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ]);
             $value = string_replace_svg_icons($value);
@@ -187,7 +187,7 @@ class fieldHtml extends cmsFormField {
             $value = cmsEventsManager::hook('html_filter', [
                 'text'                => $value,
                 'is_auto_br'          => false,
-                'build_smiles'        => $this->getOption('editor') == 'markitup', // пока что только так
+                'build_smiles'        => $this->getOption('editor') === 'markitup', // пока что только так
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ]);
         }
@@ -203,27 +203,25 @@ class fieldHtml extends cmsFormField {
         return $model->filterLike($this->name, "%{$value}%");
     }
 
-    public function afterStore($item, $model, $action){
+    public function afterStore($item, $model, $action) {
 
-        if($action == 'add' && !empty($item[$this->name])){
+        if ($action === 'add' && !empty($item[$this->name])) {
 
             $paths = string_html_get_images_path($item[$this->name]);
 
-            if($paths){
-                foreach($paths as $path){
+            if ($paths) {
+                foreach ($paths as $path) {
 
                     $model->filterEqual('path', $path)->filterIsNull('target_id');
                     $model->updateFiltered('uploaded_files', ['target_id' => $item['id']], true);
-
                 }
             }
-
         }
 
         return;
     }
 
-    public function delete($value){
+    public function delete($value) {
 
         if (is_empty_value($value)) {
             return true;
@@ -231,29 +229,25 @@ class fieldHtml extends cmsFormField {
 
         $paths = string_html_get_images_path($value);
 
-        if($paths){
+        if ($paths) {
 
             $files_model = cmsCore::getModel('files');
 
-            foreach($paths as $path){
+            foreach ($paths as $path) {
 
                 $file = $files_model->getFileByPath($path);
-                if(!$file){ continue; }
+                if (!$file) {
+                    continue;
+                }
 
-                @unlink(cmsConfig::get('upload_path').$file['path']);
-
-                $files_model->filterEqual('path', $file['path']);
-
-                $files_model->deleteFiltered('uploaded_files');
-
+                $files_model->deleteFile($file);
             }
-
         }
 
         return true;
     }
 
-    public function getInput($value){
+    public function getInput($value) {
 
         $this->data = cmsCore::getController('wysiwygs')->getEditorParams([
             'editor'  => $this->getOption('editor'),
@@ -261,7 +255,7 @@ class fieldHtml extends cmsFormField {
             'presets' => $this->getOption('editor_presets', [])
         ]);
 
-        if(empty($this->data['options']['id'])){
+        if (empty($this->data['options']['id'])) {
             $this->data['options']['id'] = $this->id;
         }
 

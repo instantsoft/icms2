@@ -9,7 +9,7 @@ class fieldString extends cmsFormField {
     public $type        = 'text';
 
     public function getOptions() {
-        return array(
+        return [
             new fieldNumber('min_length', [
                 'title'   => LANG_PARSER_TEXT_MIN_LEN,
                 'default' => 0
@@ -52,7 +52,7 @@ class fieldString extends cmsFormField {
                 'default'         => false,
                 'extended_option' => true
             ])
-        );
+        ];
     }
 
     public function getRules() {
@@ -102,18 +102,22 @@ class fieldString extends cmsFormField {
     }
 
     public function applyFilter($model, $value) {
+
         switch ($this->getOption('in_filter_as')) {
+
             case 'select':
                 return $model->filterEqual($this->name, $value);
+
             case 'checkbox':
                 if ($value) { // работает и без этого
                     return $model->filterNotNull($this->name);
                 }
-                return $model;
-            case 'input':
+
             default:
                 return $model->filterLike($this->name, '%' . $value . '%');
         }
+
+        return $model;
     }
 
     public function getFilterInput($value) {
@@ -127,10 +131,15 @@ class fieldString extends cmsFormField {
     }
 
     public function store($value, $is_submitted, $old_value = null) {
-        if (!$value) { return ''; }
+
+        if (is_empty_value($value)) {
+            return '';
+        }
+
         if ($this->getProperty('is_clean_disable') === true) {
             return trim($value);
         }
+
         return strip_tags(trim($value));
     }
 
