@@ -1,6 +1,6 @@
 <?php
 /**
- * 2.15.2 => 2.16.0
+ * 2.15.1 => 2.15.2
  */
 function install_package(){
 
@@ -8,6 +8,23 @@ function install_package(){
     $admin = cmsCore::getController('admin');
 
     $content_model = cmsCore::getModel('content');
+
+    $ctypes = $content_model->getContentTypes();
+
+	foreach($ctypes as $ctype){
+
+        $table_exists = $content_model->isFiltersTableExists($ctype['name']);
+
+        if(!$table_exists){
+            continue;
+        }
+
+        $table_name = $content_model->getContentTypeTableName($ctype['name']) . '_filters';
+
+        if(!$core->db->isFieldExists($table_name, 'cats')){
+            $core->db->query("ALTER TABLE `{#}{$table_name}` ADD `cats` TEXT NULL DEFAULT NULL AFTER `filters`;");
+        }
+	}
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
@@ -56,7 +73,9 @@ function install_package(){
         }
     }
 
-    //compile_scss_if_necessary();
+    save_controller_options(['users']);
+
+    compile_scss_if_necessary();
 
     return true;
 }

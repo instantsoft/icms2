@@ -83,7 +83,7 @@ class actionContentItemAdd extends cmsAction {
         ]);
 
         // Связи
-        $parents = $this->model->getContentTypeParents($ctype['id']);
+        $parents = $this->model->filterEqual('c.is_enabled', 1)->getContentTypeParents($ctype['id']);
         if ($parents){
             foreach($parents as $parent){
 

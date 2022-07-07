@@ -169,7 +169,7 @@
     define('LANG_PARSER_LIST_FILTER_HINT',   'Номер варианта');
     define('LANG_PARSER_LIST_FILTER_MULTI',  'Множественный выбор в фильтре');
     define('LANG_PARSER_LIST_FILTER_MULTICH',  'Отображать множественный выбор чекбоксами');
-    define('LANG_PARSER_LIST_AS_RADIO_BTN',  'Отображать список как радиокнопоки');
+    define('LANG_PARSER_LIST_AS_RADIO_BTN',  'Отображать список как радиокнопки');
     define('LANG_PARSER_LIST_GROUPS',        'Список групп пользователей');
     define('LANG_PARSER_LIST_GROUPS_SHOW_GUESTS',     'Показывать пункт "Гости"');
     define('LANG_PARSER_LIST_IS_MULTIPLE',   'Разрешить выбор нескольких вариантов');

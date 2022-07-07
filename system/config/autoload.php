@@ -38,15 +38,13 @@ function autoLoadCoreClass($_class_name){
 
     if (strpos($class_name, 'icms\\') === 0) {
 
-        $paths = explode('\\', $class_name);
+        $paths = explode('\\', $_class_name);
 
         // Удаляем префикс icms
         // он для отделения namespace-ов от других
         unset($paths[0]);
 
-        $file_name = array_pop($paths);
-
-        $class_file = 'system/' . implode('/', $paths) . '/' . $file_name . '.php';
+        $class_file = 'system/' . implode('/', $paths) . '.php';
     }
 
     if (!$class_file){ return false; }

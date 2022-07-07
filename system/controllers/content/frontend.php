@@ -1166,7 +1166,7 @@ class content extends cmsFrontend {
     public function bindItemToParents($ctype, $item, $parents = false) {
 
         if (!$parents) {
-            $parents = $this->model->getContentTypeParents($ctype['id']);
+            $parents = $this->model->filterEqual('c.is_enabled', 1)->getContentTypeParents($ctype['id']);
         }
 
         foreach ($parents as $parent) {
@@ -1185,6 +1185,9 @@ class content extends cmsFrontend {
             }
 
             $parent_ctype = $this->model->getContentTypeByName($parent['ctype_name']);
+            if (!$parent_ctype) {
+                continue;
+            }
 
             $current_parents   = [];
             $new_parents       = [];

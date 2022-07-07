@@ -8,17 +8,17 @@ class modelBackendContent extends modelContent {
         return $this->reloadAllCtypes(false);
     }
 
-    public function addContentType($ctype){
+    public function addContentType($ctype) {
 
-        if(!isset($ctype['labels'])){
-            $ctype['labels'] = array(
+        if (!isset($ctype['labels'])) {
+            $ctype['labels'] = [
                 'one'     => $ctype['name'],
                 'two'     => $ctype['name'],
                 'many'    => $ctype['name'],
                 'create'  => $ctype['name'],
                 'list'    => '',
                 'profile' => ''
-            );
+            ];
         }
 
         $id = $this->insert('content_types', $ctype);
@@ -35,10 +35,10 @@ class modelBackendContent extends modelContent {
         // создаем таблицы
         $table_name = $this->table_prefix . $ctype['name'];
 
-        $this->db->createTable($table_name, $content_table_struct);
+        $this->db->createTable($table_name, $content_table_struct, ($config->innodb_full_text ? $config->db_engine : 'MYISAM'));
         $this->db->createTable("{$table_name}_fields", $fields_table_struct, $config->db_engine);
         $this->db->createCategoriesTable("{$table_name}_cats");
-		$this->db->createCategoriesBindsTable("{$table_name}_cats_bind");
+        $this->db->createCategoriesBindsTable("{$table_name}_cats_bind");
 
         $this->db->createTable("{$table_name}_props", $props_table_struct, $config->db_engine);
         $this->db->createTable("{$table_name}_props_bind", $props_bind_table_struct, $config->db_engine);
@@ -47,95 +47,97 @@ class modelBackendContent extends modelContent {
         //
         // добавляем стандартные поля
         //
-
         // заголовок
-        $this->addContentField($ctype['name'], array(
-            'name' => 'title',
-            'title' => LANG_TITLE,
-            'type' => 'caption',
-            'ctype_id' => $id,
-            'is_in_list' => 1,
-            'is_in_item' => 1,
-            'is_in_filter' => 1,
-            'is_fixed' => 1,
+        $this->addContentField($ctype['name'], [
+            'name'          => 'title',
+            'title'         => LANG_TITLE,
+            'type'          => 'caption',
+            'ctype_id'      => $id,
+            'is_in_list'    => 1,
+            'is_in_item'    => 1,
+            'is_in_filter'  => 1,
+            'is_fixed'      => 1,
             'is_fixed_type' => 1,
-            'is_system' => 0,
-            'options' => array(
-                'label_in_list' => 'none',
-                'label_in_item' => 'none',
-                'min_length' => 3,
-                'max_length' => 255,
-                'is_required' => true
-            )
-        ), true);
+            'is_system'     => 0,
+            'options'       => [
+                'label_in_list'      => 'none',
+                'label_in_item'      => 'none',
+                'min_length'         => 3,
+                'max_length'         => 255,
+                'is_required'        => true,
+                'in_fulltext_search' => true
+            ]
+        ], true);
 
         // дата публикации
-        $this->addContentField($ctype['name'], array(
-            'name' => 'date_pub',
-            'title' => LANG_DATE_PUB,
-            'type' => 'date',
-            'ctype_id' => $id,
-            'is_in_list' => 1,
-            'is_in_item' => 1,
-            'is_in_filter' => 1,
-            'is_fixed' => 1,
+        $this->addContentField($ctype['name'], [
+            'name'          => 'date_pub',
+            'title'         => LANG_DATE_PUB,
+            'type'          => 'date',
+            'ctype_id'      => $id,
+            'is_in_list'    => 1,
+            'is_in_item'    => 1,
+            'is_in_filter'  => 1,
+            'is_fixed'      => 1,
             'is_fixed_type' => 1,
-            'is_system' => 1,
-            'options' => array(
+            'is_system'     => 1,
+            'options'       => [
                 'label_in_list' => 'none',
                 'label_in_item' => 'left',
-                'show_time' => true
-            )
-        ), true);
+                'show_time'     => true
+            ]
+        ], true);
 
         // автор
-        $this->addContentField($ctype['name'], array(
-            'name' => 'user',
-            'title' => LANG_AUTHOR,
-            'type' => 'user',
-            'ctype_id' => $id,
-            'is_in_list' => 1,
-            'is_in_item' => 1,
-            'is_in_filter' => 0,
-            'is_fixed' => 1,
+        $this->addContentField($ctype['name'], [
+            'name'          => 'user',
+            'title'         => LANG_AUTHOR,
+            'type'          => 'user',
+            'ctype_id'      => $id,
+            'is_in_list'    => 1,
+            'is_in_item'    => 1,
+            'is_in_filter'  => 0,
+            'is_fixed'      => 1,
             'is_fixed_type' => 1,
-            'is_system' => 1,
-            'options' => array(
+            'is_system'     => 1,
+            'options'       => [
                 'label_in_list' => 'none',
                 'label_in_item' => 'left'
-            )
-        ), true);
+            ]
+        ], true);
 
         // фотография
-        $this->addContentField($ctype['name'], array(
-            'name' => 'photo',
-            'title' => LANG_PHOTO,
-            'type' => 'image',
-            'ctype_id' => $id,
+        $this->addContentField($ctype['name'], [
+            'name'       => 'photo',
+            'title'      => LANG_PHOTO,
+            'type'       => 'image',
+            'ctype_id'   => $id,
             'is_in_list' => 1,
             'is_in_item' => 1,
-            'is_fixed' => 1,
-            'options' => array(
+            'is_fixed'   => 1,
+            'options'    => [
                 'size_teaser' => 'small',
-                'size_full' => 'normal',
-                'sizes' => array('micro', 'small', 'normal', 'big')
-            )
-        ), true);
+                'size_full'   => 'normal',
+                'sizes'       => ['micro', 'small', 'normal', 'big']
+            ]
+        ], true);
 
         // описание
-        $this->addContentField($ctype['name'], array(
-            'name' => 'content',
-            'title' => LANG_DESCRIPTION,
-            'type' => 'text',
-            'ctype_id' => $id,
+        $this->addContentField($ctype['name'], [
+            'name'       => 'content',
+            'title'      => LANG_DESCRIPTION,
+            'type'       => 'text',
+            'ctype_id'   => $id,
             'is_in_list' => 1,
             'is_in_item' => 1,
-            'is_fixed' => 1,
-            'options' => array(
-                'label_in_list' => 'none',
-                'label_in_item' => 'none'
-            )
-        ), true);
+            'is_fixed'   => 1,
+            'options'    => [
+                'is_strip_tags'  => 1,
+                'is_html_filter' => 1,
+                'label_in_list'  => 'none',
+                'label_in_item'  => 'none'
+            ]
+        ], true);
 
         cmsCache::getInstance()->clean('content.types');
 
@@ -240,107 +242,102 @@ class modelBackendContent extends modelContent {
 //=======================   Структуры таблиц   ===============================//
 //============================================================================//
 
-    public function getContentTableStruct(){
+    public function getContentTableStruct() {
 
-        return array(
-            'id'                 => array('type' => 'primary'),
-            'title'              => array('type' => 'varchar', 'size' => 100, 'fulltext' => true),
-            'content'            => array('type' => 'text'),
-            'photo'              => array('type' => 'text'),
-            'slug'               => array('type' => 'varchar', 'index' => true, 'size' => 100),
-            'seo_keys'           => array('type' => 'varchar', 'size' => 256),
-            'seo_desc'           => array('type' => 'varchar', 'size' => 256),
-            'seo_title'          => array('type' => 'varchar', 'size' => 256),
-            'tags'               => array('type' => 'varchar', 'size' => 1000),
-            'template'           => array('type' => 'varchar', 'size' => 150),
-            'date_pub'           => array('type' => 'timestamp', 'index' => array('date_pub','parent_id', 'user_id'), 'composite_index' => array(4,3,2,1), 'default_current' => true),
-            'date_last_modified' => array('type' => 'timestamp'),
-            'date_pub_end'       => array('type' => 'timestamp', 'index' => true),
-            'is_pub'             => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 0, 'default' => 1),
-            'hits_count'         => array('type' => 'int', 'default' => 0, 'unsigned' => true),
-            'user_id'            => array('type' => 'int', 'index' => 'user_id', 'composite_index' => 0, 'unsigned' => true),
-            'parent_id'          => array('type' => 'int', 'index' => 'parent_id', 'composite_index' => 0, 'unsigned' => true),
-            'parent_type'        => array('type' => 'varchar', 'size' => 32, 'index' => 'parent_id', 'composite_index' => 1),
-            'parent_title'       => array('type' => 'varchar', 'size' => 100),
-            'parent_url'         => array('type' => 'varchar', 'size' => 255),
-            'is_parent_hidden'   => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 1),
-            'category_id'        => array('type' => 'int', 'index' => true, 'default' => 1, 'unsigned' => true),
-            'folder_id'          => array('type' => 'int', 'index' => true, 'unsigned' => true),
-            'is_comments_on'     => array('type' => 'bool', 'default' => 1),
-            'comments'           => array('type' => 'int', 'default' => 0, 'unsigned' => true),
-            'rating'             => array('type' => 'int', 'default' => 0),
-            'is_deleted'         => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 2),
-            'is_approved'        => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 3, 'default' => 1),
-            'approved_by'        => array('type' => 'int', 'index' => true, 'unsigned' => true),
-            'date_approved'      => array('type' => 'timestamp'),
-            'is_private'         => array('type' => 'bool', 'default' => 0)
-        );
-
+        return [
+            'id'                 => ['type' => 'primary'],
+            'title'              => ['type' => 'varchar', 'size' => 255, 'fulltext' => true],
+            'content'            => ['type' => 'text'],
+            'photo'              => ['type' => 'text'],
+            'slug'               => ['type' => 'varchar', 'index' => true, 'size' => 100],
+            'seo_keys'           => ['type' => 'varchar', 'size' => 256],
+            'seo_desc'           => ['type' => 'varchar', 'size' => 256],
+            'seo_title'          => ['type' => 'varchar', 'size' => 256],
+            'tags'               => ['type' => 'varchar', 'size' => 1000],
+            'template'           => ['type' => 'varchar', 'size' => 150],
+            'date_pub'           => ['type' => 'timestamp', 'index' => ['date_pub', 'parent_id', 'user_id'], 'composite_index' => [4, 3, 2, 1], 'default_current' => true],
+            'date_last_modified' => ['type' => 'timestamp'],
+            'date_pub_end'       => ['type' => 'timestamp', 'index' => true],
+            'is_pub'             => ['type' => 'bool', 'index' => 'date_pub', 'composite_index' => 0, 'default' => 1],
+            'hits_count'         => ['type' => 'int', 'default' => 0, 'unsigned' => true],
+            'user_id'            => ['type' => 'int', 'index' => 'user_id', 'composite_index' => 0, 'unsigned' => true],
+            'parent_id'          => ['type' => 'int', 'index' => 'parent_id', 'composite_index' => 0, 'unsigned' => true],
+            'parent_type'        => ['type' => 'varchar', 'size' => 32, 'index' => 'parent_id', 'composite_index' => 1],
+            'parent_title'       => ['type' => 'varchar', 'size' => 100],
+            'parent_url'         => ['type' => 'varchar', 'size' => 255],
+            'is_parent_hidden'   => ['type' => 'bool', 'index' => 'date_pub', 'composite_index' => 1],
+            'category_id'        => ['type' => 'int', 'index' => true, 'default' => 1, 'unsigned' => true],
+            'folder_id'          => ['type' => 'int', 'index' => true, 'unsigned' => true],
+            'is_comments_on'     => ['type' => 'bool', 'default' => 1],
+            'comments'           => ['type' => 'int', 'default' => 0, 'unsigned' => true],
+            'rating'             => ['type' => 'int', 'default' => 0],
+            'is_deleted'         => ['type' => 'bool', 'index' => 'date_pub', 'composite_index' => 2],
+            'is_approved'        => ['type' => 'bool', 'index' => 'date_pub', 'composite_index' => 3, 'default' => 1],
+            'approved_by'        => ['type' => 'int', 'index' => true, 'unsigned' => true],
+            'date_approved'      => ['type' => 'timestamp'],
+            'is_private'         => ['type' => 'bool', 'default' => 0]
+        ];
     }
 
-    public function getFieldsTableStruct(){
+    public function getFieldsTableStruct() {
 
-        return array(
-            'id'            => array('type' => 'primary'),
-            'ctype_id'      => array('type' => 'int', 'unsigned' => true),
-            'name'          => array('type' => 'varchar', 'size' => 40),
-            'title'         => array('type' => 'varchar', 'size' => 100),
-            'hint'          => array('type' => 'varchar', 'size' => 200),
-            'ordering'      => array('type' => 'int', 'index' => 'is_enabled', 'composite_index' => 1, 'unsigned' => true),
-            'is_enabled'    => array('type' => 'bool', 'index' => 'is_enabled', 'composite_index' => 0, 'default' => 1),
-            'fieldset'      => array('type' => 'varchar', 'size' => 32),
-            'type'          => array('type' => 'varchar', 'size' => 16),
-            'is_in_list'    => array('type' => 'bool'),
-            'is_in_item'    => array('type' => 'bool'),
-            'is_in_filter'  => array('type' => 'bool'),
-            'is_private'    => array('type' => 'bool'),
-            'is_fixed'      => array('type' => 'bool'),
-            'is_fixed_type' => array('type' => 'bool'),
-            'is_system'     => array('type' => 'bool'),
-            'values'        => array('type' => 'text'),
-            'options'       => array('type' => 'text'),
-            'groups_read'   => array('type' => 'text'),
-            'groups_add'    => array('type' => 'text'),
-            'groups_edit'   => array('type' => 'text'),
-            'filter_view'   => array('type' => 'text')
-        );
-
+        return [
+            'id'            => ['type' => 'primary'],
+            'ctype_id'      => ['type' => 'int', 'unsigned' => true],
+            'name'          => ['type' => 'varchar', 'size' => 40],
+            'title'         => ['type' => 'varchar', 'size' => 100],
+            'hint'          => ['type' => 'varchar', 'size' => 200],
+            'ordering'      => ['type' => 'int', 'index' => 'is_enabled', 'composite_index' => 1, 'unsigned' => true],
+            'is_enabled'    => ['type' => 'bool', 'index' => 'is_enabled', 'composite_index' => 0, 'default' => 1],
+            'fieldset'      => ['type' => 'varchar', 'size' => 32],
+            'type'          => ['type' => 'varchar', 'size' => 16],
+            'is_in_list'    => ['type' => 'bool'],
+            'is_in_item'    => ['type' => 'bool'],
+            'is_in_filter'  => ['type' => 'bool'],
+            'is_private'    => ['type' => 'bool'],
+            'is_fixed'      => ['type' => 'bool'],
+            'is_fixed_type' => ['type' => 'bool'],
+            'is_system'     => ['type' => 'bool'],
+            'values'        => ['type' => 'text'],
+            'options'       => ['type' => 'text'],
+            'groups_read'   => ['type' => 'text'],
+            'groups_add'    => ['type' => 'text'],
+            'groups_edit'   => ['type' => 'text'],
+            'filter_view'   => ['type' => 'text']
+        ];
     }
 
-    public function getPropsTableStruct(){
+    public function getPropsTableStruct() {
 
-        return array(
-            'id'           => array('type' => 'primary'),
-            'ctype_id'     => array('type' => 'int', 'unsigned' => true),
-            'title'        => array('type' => 'varchar', 'size' => 100),
-            'fieldset'     => array('type' => 'varchar', 'size' => 32),
-            'type'         => array('type' => 'varchar', 'size' => 16),
-            'is_in_filter' => array('type' => 'bool', 'index' => true),
-            'values'       => array('type' => 'text'),
-            'options'      => array('type' => 'text')
-        );
-
+        return [
+            'id'           => ['type' => 'primary'],
+            'ctype_id'     => ['type' => 'int', 'unsigned' => true],
+            'title'        => ['type' => 'varchar', 'size' => 100],
+            'fieldset'     => ['type' => 'varchar', 'size' => 32],
+            'type'         => ['type' => 'varchar', 'size' => 16],
+            'is_in_filter' => ['type' => 'bool', 'index' => true],
+            'values'       => ['type' => 'text'],
+            'options'      => ['type' => 'text']
+        ];
     }
 
     public function getPropsBindTableStruct(){
 
-        return array(
-            'id'       => array('type' => 'primary'),
-            'prop_id'  => array('type' => 'int', 'index' => true, 'unsigned' => true),
-            'cat_id'   => array('type' => 'int', 'index' => true, 'unsigned' => true),
-            'ordering' => array('type' => 'int', 'index' => true, 'unsigned' => true),
-        );
-
+        return [
+            'id'       => ['type' => 'primary'],
+            'prop_id'  => ['type' => 'int', 'index' => true, 'unsigned' => true],
+            'cat_id'   => ['type' => 'int', 'index' => true, 'unsigned' => true],
+            'ordering' => ['type' => 'int', 'index' => true, 'unsigned' => true]
+        ];
     }
 
     public function getPropsValuesTableStruct(){
 
-        return array(
-            'prop_id' => array('type' => 'int', 'index' => true, 'unsigned' => true),
-            'item_id' => array('type' => 'int', 'index' => true, 'unsigned' => true),
-            'value'   => array('type' => 'varchar', 'size' => 255),
-        );
-
+        return [
+            'prop_id' => ['type' => 'int', 'index' => true, 'unsigned' => true],
+            'item_id' => ['type' => 'int', 'index' => true, 'unsigned' => true],
+            'value'   => ['type' => 'varchar', 'size' => 255]
+        ];
     }
 
 //============================================================================//

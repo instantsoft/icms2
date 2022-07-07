@@ -61,17 +61,17 @@ trait listgrid {
         $filter_str = \cmsUser::getUPSActual($this->ups_key, $this->request->get('filter', ''));
 
         if ($filter_str){
-            \parse_str($filter_str, $filter);
+            parse_str($filter_str, $filter);
             $this->model->applyGridFilter($this->grid, $filter);
         }
 
         if($this->trait_params['list_callback']){
-            $this->model = \call_user_func($this->trait_params['list_callback'], $this->model);
+            $this->model = call_user_func($this->trait_params['list_callback'], $this->model);
         }
 
         $total   = $this->model->getCount($this->trait_params['table_name']);
         $perpage = isset($filter['perpage']) ? $filter['perpage'] : \admin::perpage;
-        $pages   = \ceil($total / $perpage);
+        $pages   = ceil($total / $perpage);
 
         $data = $this->model->get($this->trait_params['table_name']);
 

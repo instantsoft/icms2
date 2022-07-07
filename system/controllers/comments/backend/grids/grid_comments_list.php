@@ -57,7 +57,7 @@ function grid_comments_list($controller){
             'handler' => function($value) {
                 if ($value) {
                     $value = string_bintoip($value);
-                    return '<a href="#" class="ajaxlink filter_ip" data-toggle="tooltip" data-placement="top" title="' . LANG_CP_USER_FIND_BYIP . '">' . $value . '</a> <a data-toggle="tooltip" data-placement="top" class="view_target" href="https://apps.db.ripe.net/search/query.html?searchtext=' . $value . '#resultsAnchor" target="_blank" title="' . LANG_CP_USER_RIPE_SEARCH . '" rel="noopener noreferrer"></a>';
+                    return '<a href="#" class="ajaxlink filter_ip" data-toggle="tooltip" data-placement="top" title="' . LANG_CP_USER_FIND_BYIP . '">' . $value . '</a> <a data-toggle="tooltip" data-placement="top" class="view_target" href="https://apps.db.ripe.net/db-web-ui/query?searchtext=' . $value . '" target="_blank" title="' . LANG_CP_USER_RIPE_SEARCH . '" rel="noopener noreferrer"></a>';
                 }
                 return '';
             }

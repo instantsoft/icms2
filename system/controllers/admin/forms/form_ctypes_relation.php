@@ -97,6 +97,7 @@ class formAdminCtypesRelation extends cmsForm {
                     new fieldNumber('options:limit', array(
                         'title' => LANG_CP_RELATION_LAYOUT_LIMIT,
                         'hint' => LANG_CP_RELATION_LAYOUT_LIMIT_HINT,
+                        'default' => 10,
                         'rules'   => [
                             ['required'],
                             ['min', 1]

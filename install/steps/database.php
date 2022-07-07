@@ -32,12 +32,13 @@ function check_db() {
 
     $db = get_post_array('db');
 
-    $db['host']           = trim($db['host']);
-    $db['user']           = trim($db['user']);
-    $db['base']           = trim($db['base']);
-    $db['engine']         = trim($db['engine']);
-    $db['db_charset']     = trim($db['db_charset']);
-    $db['clear_sql_mode'] = 0;
+    $db['host']             = trim($db['host']);
+    $db['user']             = trim($db['user']);
+    $db['base']             = trim($db['base']);
+    $db['engine']           = trim($db['engine']);
+    $db['db_charset']       = trim($db['db_charset']);
+    $db['clear_sql_mode']   = 0;
+    $db['innodb_full_text'] = 0;
 
     if (!preg_match('#^[a-z0-9\_]+$#i', $db['prefix'])) {
         return [
@@ -65,8 +66,26 @@ function check_db() {
         $vdata = $result->fetch_assoc();
         $result->close();
 
-        if(!empty($vdata['version']) && version_compare($vdata['version'], '5.7') >= 0){
-            $db['clear_sql_mode'] = 1;
+        if(!empty($vdata['version'])){
+
+            if(version_compare($vdata['version'], '5.7') >= 0){
+                $db['clear_sql_mode'] = 1;
+            }
+
+            // Полнотекстовый поиск InnoDB для MariaDB
+            if (stripos($vdata['version'], 'MariaDB') !== false) {
+
+                if (version_compare($vdata['version'], '10.0.5') >= 0) {
+                    $db['innodb_full_text'] = 1;
+                }
+
+            } else {
+
+                // Полнотекстовый поиск InnoDB для MySQL
+                if(version_compare($vdata['version'], '5.6.4') >= 0){
+                    $db['innodb_full_text'] = 1;
+                }
+            }
         }
     }
 
@@ -108,15 +127,15 @@ function check_db() {
     }
 
     // Для innodb оборачиваем в транзакцию, это быстрее и удобней
-    if ($db['engine'] == 'InnoDB') {
+    if ($db['engine'] === 'InnoDB') {
         $mysqli->autocommit(false);
     }
 
     // Основной дамп
-    $success = import_dump($mysqli, 'base.sql', $db['prefix'], $db['engine'], ';', $db['db_charset']);
+    $success = import_dump($mysqli, 'base.sql', $db['prefix'], $db['engine'], ';', $db['db_charset'], $db['innodb_full_text']);
     // Гео
     if ($success === true) {
-        $success = import_dump($mysqli, 'geo.sql', $db['prefix'], $db['engine'], ';', $db['db_charset']);
+        $success = import_dump($mysqli, 'geo.sql', $db['prefix'], $db['engine'], ';', $db['db_charset'], $db['innodb_full_text']);
     }
     // Виджеты для шаблона
     if ($success === true) {
@@ -126,7 +145,8 @@ function check_db() {
             $db['prefix'],
             $db['engine'],
             ';',
-            $db['db_charset']
+            $db['db_charset'],
+            $db['innodb_full_text']
         );
     }
 
@@ -140,7 +160,8 @@ function check_db() {
             $db['prefix'],
             $db['engine'],
             ';',
-            $db['db_charset']
+            $db['db_charset'],
+            $db['innodb_full_text']
         );
 
         // Демо виджеты для шаблона
@@ -151,7 +172,8 @@ function check_db() {
                 $db['prefix'],
                 $db['engine'],
                 ';',
-                $db['db_charset']
+                $db['db_charset'],
+                $db['innodb_full_text']
             );
         }
     }
@@ -223,7 +245,7 @@ function check_db_charset($mysqli, $charset) {
     return true;
 }
 
-function import_dump(&$mysqli, $file, $prefix, $engine = 'MyISAM', $delimiter = ';', $charset = 'utf8') {
+function import_dump(&$mysqli, $file, $prefix, $engine = 'MyISAM', $delimiter = ';', $charset = 'utf8', $innodb_full_text = 0) {
 
     clearstatcache();
     @set_time_limit(0);
@@ -255,6 +277,10 @@ function import_dump(&$mysqli, $file, $prefix, $engine = 'MyISAM', $delimiter = 
             $query = trim(implode('', $query));
 
             $query = str_replace(['{#}', 'InnoDB', 'CHARSET=utf8'], [$prefix, $engine, 'CHARSET=' . $charset], $query);
+
+            if ($innodb_full_text && $engine === 'InnoDB') {
+                $query = str_replace(['MyISAM'], ['InnoDB'], $query);
+            }
 
             $result = $mysqli->query($query);
 

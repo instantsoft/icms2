@@ -56,6 +56,7 @@ function create_config($path, $file) {
         'db_engine'                   => $_SESSION['install']['db']['engine'],
         'db_charset'                  => $_SESSION['install']['db']['db_charset'],
         'clear_sql_mode'              => $_SESSION['install']['db']['clear_sql_mode'],
+        'innodb_full_text'            => $_SESSION['install']['db']['innodb_full_text'],
         'db_users_table'              => "{$_SESSION['install']['db']['users_table']}",
         'language'                    => LANG,
         'metakeys'                    => $_SESSION['install']['site']['metakeys'],

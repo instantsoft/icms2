@@ -918,11 +918,13 @@ class modelContent extends cmsModel {
                 $success = $this->update($item_table, $relation['child_item_id'], [
                     'parent_' . $relation['parent_ctype_name'] . '_id' => $ids
                 ]);
-
-                cmsCache::getInstance()->clean('content.list.' . $relation['child_ctype_name']);
-                cmsCache::getInstance()->clean('content.item.' . $relation['child_ctype_name']);
             }
         }
+
+        cmsCache::getInstance()->clean('content.list.' . $relation['child_ctype_name']);
+        cmsCache::getInstance()->clean('content.item.' . $relation['child_ctype_name']);
+        cmsCache::getInstance()->clean('content.list.' . $relation['parent_ctype_name']);
+        cmsCache::getInstance()->clean('content.item.' . $relation['parent_ctype_name']);
 
         return $success;
     }

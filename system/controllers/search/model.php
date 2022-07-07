@@ -124,8 +124,13 @@ class modelSearch extends cmsModel {
             if (!$stopwords || ($stopwords && !in_array($query, $stopwords, true))) {
 
                 // Узнаём минимальное кол-во символов для поиска
-                // ft_min_word_len для MyISAM, если у вас таблицы InnoDB, то замените на innodb_ft_min_token_size
-                $var_value = $this->db->getSqlVariableValue('ft_min_word_len');
+                // ft_min_word_len для MyISAM, innodb_ft_min_token_size для InnoDB
+                $min_word_len_var = 'ft_min_word_len';
+                if(cmsConfig::get('db_engine') === 'InnoDB' && cmsConfig::get('innodb_full_text')){
+                    $min_word_len_var = 'innodb_ft_min_token_size';
+                }
+
+                $var_value = $this->db->getSqlVariableValue($min_word_len_var);
 
                 if($var_value < 3){
                     $this->three_symbol_search = true;
