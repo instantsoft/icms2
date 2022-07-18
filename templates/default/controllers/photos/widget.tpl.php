@@ -11,7 +11,12 @@
         <div class="previews_list">
             <?php if ($photos){ ?>
                 <?php foreach($photos as $photo){ ?>
-                    <?php $presets = array_keys($photo['image']); $small_preset = end($presets); ?>
+                    <?php
+                    $presets = array_keys($photo['image']);
+                    $small_preset = end($presets);
+                    $editor_options = $editor_params['options'];
+                    unset($editor_options['id']);
+                    ?>
                     <div class="preview block" rel="<?php echo $photo['id']; ?>">
                         <div class="thumb">
                             <a rel="edit_list" class="ajax-modal hover_image" href="<?php echo html_image_src($photo['image'], $preset_big, true); ?>">
@@ -35,7 +40,7 @@
                                 <?php echo html_input('text', 'photos['.$photo['id'].']', $photo['title']); ?>
                             </div>
                             <div class="photo_content">
-                                <?php echo html_wysiwyg('content['.$photo['id'].']', $photo['content_source'], $editor_params['editor'], $editor_params['options']); ?>
+                                <?php echo html_wysiwyg('content['.$photo['id'].']', $photo['content_source'], $editor_params['editor'], $editor_options); ?>
                             </div>
                             <div class="photo_additional">
                                 <div class="photo_privacy">

@@ -636,7 +636,7 @@
     define('LANG_CP_INSTALL_PACKAGE_NOT_CLEARED', 'The <b>%s</b> folder has not been cleared due to lack of permissions, clear it manually');
     define('LANG_CP_INSTALL_PACKAGE_INFO',      'Package Info');
     define('LANG_CP_INSTALL_PACKAGE_FILE',      'Package file');
-    define('LANG_CP_INSTALL_PACKAGE_FILE_HINT', 'File with the <b>.icp</b> or <b>.zip</b> extension');
+    define('LANG_CP_INSTALL_PACKAGE_FILE_HINT', 'File with the <b>.zip</b> extension');
     define('LANG_CP_INSTALL_ERR_HINT',          'Result');
     define('LANG_CP_INSTALL_ERR_FIX',           'Solution');
     define('LANG_CP_INSTALL_ERR_WA',            'Workaround');

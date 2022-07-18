@@ -45,6 +45,8 @@ class actionMessagesShowOlder extends cmsAction {
                 limit($this->options['limit'] + 1)->
                 getMessages($this->cms_user->id, $contact_id);
 
+        list($messages, $contact) = cmsEventsManager::hook('messages_before_list', [$messages, $contact]);
+
         if (count($messages) > $this->options['limit']) {
             $has_older = true;
             array_shift($messages);
@@ -52,7 +54,7 @@ class actionMessagesShowOlder extends cmsAction {
             $has_older = false;
         }
 
-        $this->cms_template->renderJSON([
+        return $this->cms_template->renderJSON([
             'error'     => ($messages ? false : true),
             'html'      => ($messages ? $this->cms_template->render('message', [
                 'messages'  => $messages,

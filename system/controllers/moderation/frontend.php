@@ -24,6 +24,11 @@ class moderation extends cmsFrontend {
             return false;
         }
 
+        list($moderator, $target_name, $item, $is_new_item, $pm_message) = cmsEventsManager::hook([
+            'moderation_request_before',
+            'moderation_' . $target_name . '_request_before'
+        ], [$moderator, $target_name, $item, $is_new_item, $pm_message]);
+
         if ($item['user_id']) {
             $author = $this->model_users->getUser($item['user_id']);
             if (!$author) {
@@ -36,7 +41,7 @@ class moderation extends cmsFrontend {
         }
 
         // чтобы на рассылать множество уведомлений, проверяем, есть ли ожидающие модерации записи
-        if (!$this->model->isModeratorTaskExists($target_name, $moderator_id)) {
+        if (!$this->model->isModeratorTaskExists($target_name, $moderator['id'])) {
 
             // личное сообщение
             $this->controller_messages->addRecipient($moderator['id'])->sendNoticePM([
@@ -64,7 +69,7 @@ class moderation extends cmsFrontend {
         }
 
         // добавляем задачу модератору
-        $this->model->addModeratorTask($target_name, $moderator_id, $is_new_item, $item);
+        $this->model->addModeratorTask($target_name, $moderator['id'], $is_new_item, $item);
 
         return sprintf(LANG_MODERATION_IDLE, $moderator['nickname']);
     }
@@ -143,7 +148,9 @@ class moderation extends cmsFrontend {
 
         $after_action = $task['is_new_item'] ? 'add' : 'update';
 
-        cmsEventsManager::hook("content_after_{$after_action}_approve", ['ctype_name' => $target_name, 'item' => $item]);
+        $data = cmsEventsManager::hook("content_after_{$after_action}_approve", ['ctype_name' => $target_name, 'item' => $item]);
+
+        $item = $data['item'];
 
         $item = cmsEventsManager::hook("content_{$target_name}_after_{$after_action}_approve", $item);
 
@@ -180,6 +187,11 @@ class moderation extends cmsFrontend {
         if (!$author) {
             return false;
         }
+
+        list($moderator, $target_name, $item, $task, $author) = cmsEventsManager::hook([
+            'moderation_cancel',
+            'moderation_' . $target_name . '_cancel'
+        ], [$moderator, $target_name, $item, $task, $author]);
 
         // личное сообщение
         $this->controller_messages->addRecipient($moderator['id'])->sendNoticePM([
@@ -224,6 +236,11 @@ class moderation extends cmsFrontend {
         if (!$task) {
             return false;
         }
+
+        list($target_name, $item, $task) = cmsEventsManager::hook([
+            'moderation_rework',
+            'moderation_' . $target_name . '_rework'
+        ], [$target_name, $item, $task]);
 
         $this->moderationNotifyAuthor($item, 'moderation_rework');
 

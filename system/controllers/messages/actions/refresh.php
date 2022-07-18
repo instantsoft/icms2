@@ -5,7 +5,7 @@ class actionMessagesRefresh extends cmsAction {
     /**
      * @var array Описание правил валидации входных данных
      */
-    public $request_params = array(
+    public $request_params = [
         'contact_id' => [
             'default' => 0,
             'rules'   => [
@@ -19,7 +19,7 @@ class actionMessagesRefresh extends cmsAction {
                 ['regexp', "/^([a-z0-9 ]*)$/ui"]
             ]
         ]
-    );
+    ];
 
     public function run() {
 
@@ -37,6 +37,8 @@ class actionMessagesRefresh extends cmsAction {
 
         $messages = $this->model->filterEqual('is_new', 1)->getMessagesFromContact($this->cms_user->id, $contact_id);
 
+        list($messages, $contact) = cmsEventsManager::hook('messages_before_list', [$messages, $contact]);
+
         if ($messages) {
 
             $messages_html = $this->cms_template->render('message', [
@@ -49,7 +51,7 @@ class actionMessagesRefresh extends cmsAction {
             $this->model->setMessagesReaded($this->cms_user->id, $contact_id);
         }
 
-        $this->cms_template->renderJSON([
+        return $this->cms_template->renderJSON([
             'error'         => false,
             'contact_id'    => $contact['contact_id'],
             'is_online'     => (int) $contact['is_online'],

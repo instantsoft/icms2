@@ -56,7 +56,7 @@
                         <label><?php echo LANG_CP_INSTALL_PACKAGE_FILE; ?></label>
                         <div class="input-group mb-3">
                             <div class="custom-file">
-                                <input type="file" name="package" class="custom-file-input" id="package">
+                                <input type="file" name="package" class="custom-file-input" id="package" accept="application/zip">
                                 <label class="custom-file-label" for="package" data-browse="<?php echo LANG_SELECT; ?>"><?php echo LANG_PARSER_FILE; ?></label>
                             </div>
                         </div>

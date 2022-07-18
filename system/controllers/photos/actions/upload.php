@@ -1,9 +1,11 @@
 <?php
-
+/**
+ * @property \modelPhotos $model
+ * @property \modelContent $model_content
+ */
 class actionPhotosUpload extends cmsAction {
 
     private $allow_add_public_albums = false;
-
     private $ctype, $album = [];
 
     public function run($album_id = null) {
@@ -17,7 +19,7 @@ class actionPhotosUpload extends cmsAction {
         }
 
         $this->ctype = $this->model_content->getContentTypeByName('albums');
-        if(!$this->ctype){
+        if (!$this->ctype) {
             return cmsCore::error404();
         }
 
@@ -28,21 +30,25 @@ class actionPhotosUpload extends cmsAction {
 
         // Если альбом не знаем, проверяем правило доступа на его создание
         if (!$album_id) {
+
             if (!cmsUser::isAllowed('albums', 'add')) {
-                cmsCore::error404();
+                return cmsCore::error404();
             }
+
         } else {
 
             $this->album = $this->model_content->getContentItem('albums', $album_id);
+
             if ($this->album) {
 
-                if(!$this->isAllowedUpload($this->album)){
+                if (!$this->isAllowedUpload($this->album)) {
                     return cmsCore::error404();
                 }
 
                 if ($this->cms_user->id == $this->album['id']) {
                     $this->model_content->disablePrivacyFilter();
                 }
+
             } else {
                 return cmsCore::error404();
             }
@@ -50,10 +56,9 @@ class actionPhotosUpload extends cmsAction {
 
         if ($this->request->isAjax()) {
             return $this->processUpload();
-        } else {
-            return $this->showUploadForm();
         }
 
+        return $this->showUploadForm();
     }
 
     private function isAllowedUpload($album) {
@@ -61,6 +66,7 @@ class actionPhotosUpload extends cmsAction {
                 (empty($album['id']) && cmsUser::isAllowed($this->ctype['name'], 'add')) ||
                 ($this->cms_user->id && !empty($album['user_id']) && $album['user_id'] == $this->cms_user->id) ||
                 $this->cms_user->is_admin;
+
     }
 
     public function showUploadForm() {
@@ -71,20 +77,20 @@ class actionPhotosUpload extends cmsAction {
 
         $this->model_content->filterEqual('user_id', $this->cms_user->id);
 
-        if($this->allow_add_public_albums){
+        if ($this->allow_add_public_albums) {
             $this->model_content->filterOr()->filterEqual('is_public', 1);
         }
 
-        $albums = $this->model_content->orderByList(array(
-                array('by' => 'is_public', 'to' => 'asc'),
-                array('by' => 'date_pub', 'to' => 'desc'),
-            ))->getContentItems('albums');
+        $albums = $this->model_content->orderByList([
+                    ['by' => 'is_public', 'to' => 'asc'],
+                    ['by' => 'date_pub', 'to' => 'desc']
+                ])->getContentItems('albums');
 
         if (!$albums) {
 
             $group_id = $this->request->get('group_id', 0);
 
-            $this->redirect(href_to('albums', 'add') . ($group_id ? '?group_id=' . $group_id : ''));
+            return $this->redirect(href_to('albums', 'add') . ($group_id ? '?group_id=' . $group_id : ''));
         }
 
         $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
@@ -96,23 +102,23 @@ class actionPhotosUpload extends cmsAction {
         if ($this->request->has('submit')) {
 
             if (!$this->request->has('photos')) {
-                $this->redirectBack();
+                return $this->redirectBack();
             }
             if (!$this->request->has('content')) {
-                $this->redirectBack();
+                return $this->redirectBack();
             }
 
             // данные
-            $photo_titles      = $this->request->get('photos', array());
-            $photo_contents    = $this->request->get('content', array());
-            $photo_is_privates = $this->request->get('is_private', array());
-            $photo_types       = array();
+            $photo_titles      = $this->request->get('photos', []);
+            $photo_contents    = $this->request->get('content', []);
+            $photo_is_privates = $this->request->get('is_private', []);
+            $photo_types       = [];
             if (!empty($this->options['types'])) {
-                $photo_types = $this->request->get('type', array());
+                $photo_types = $this->request->get('type', []);
             }
 
             if (!$photo_titles) {
-                $this->redirectBack();
+                return $this->redirectBack();
             }
 
             // по ключам названий определяем id фотографий
@@ -123,11 +129,11 @@ class actionPhotosUpload extends cmsAction {
             });
 
             if (!$photo_ids) {
-                $this->redirectBack();
+                return $this->redirectBack();
             }
 
             // формируем массив для каждой фотографии
-            $photo_list = array();
+            $photo_list = [];
             $last_order = $this->model->filterEqual('album_id', $this->album['id'])->getNextOrdering('photos');
 
             foreach ($photo_ids as $photo_id) {
@@ -140,7 +146,7 @@ class actionPhotosUpload extends cmsAction {
                     continue;
                 }
 
-                $_photo = array(
+                $_photo = [
                     'date_pub'       => null,
                     'album_id'       => $this->album['id'],
                     'title'          => strip_tags($photo_titles[$photo_id] ? $photo_titles[$photo_id] : sprintf(LANG_PHOTOS_PHOTO_UNTITLED, $photo_id)),
@@ -153,7 +159,7 @@ class actionPhotosUpload extends cmsAction {
                     'is_private'     => (isset($photo_is_privates[$photo_id]) ? (int) $photo_is_privates[$photo_id] : 0),
                     'type'           => (isset($photo_types[$photo_id]) ? (int) $photo_types[$photo_id] : null),
                     'ordering'       => $last_order
-                );
+                ];
 
                 $photo_list[$photo_id] = $_photo;
 
@@ -162,9 +168,9 @@ class actionPhotosUpload extends cmsAction {
 
             $photos = $this->model->assignPhotoList($photo_list);
 
-            list($photos, $this->album, $this->ctype) = cmsEventsManager::hook('content_photos_after_add', array($photos, $this->album, $this->ctype));
+            list($photos, $this->album, $this->ctype) = cmsEventsManager::hook('content_photos_after_add', [$photos, $this->album, $this->ctype]);
 
-            $this->redirect(href_to('albums', $this->album['slug'] . '.html'));
+            return $this->redirect(href_to('albums', $this->album['slug'] . '.html'));
         }
 
         $photos = $this->model->getOrphanPhotos($this->cms_user->id);
@@ -185,7 +191,7 @@ class actionPhotosUpload extends cmsAction {
             }
         }
 
-        $albums_select = array('' => '');
+        $albums_select = ['' => ''];
         foreach ($_albums_select as $album_type => $_albums) {
             $albums_select['opt' . $num] = array($album_type);
             foreach ($_albums as $album) {
@@ -194,7 +200,7 @@ class actionPhotosUpload extends cmsAction {
             $num++;
         }
 
-        $this->cms_template->render('upload', array(
+        return $this->cms_template->render('upload', [
             'title'         => LANG_PHOTOS_UPLOAD,
             'allow_add'     => cmsUser::isAllowed($this->ctype['name'], 'add'),
             'editor_params' => $editor_params,
@@ -205,32 +211,33 @@ class actionPhotosUpload extends cmsAction {
             'albums_select' => $albums_select,
             'photos'        => $photos,
             'preset_big'    => $this->options['preset'],
-            'types'         => (!empty($this->options['types']) ? (array('' => LANG_PHOTOS_NO_TYPE) + $this->options['types']) : array()),
+            'types'         => (!empty($this->options['types']) ? (['' => LANG_PHOTOS_NO_TYPE] + $this->options['types']) : []),
             'album_id'      => (!empty($this->album['id']) ? $this->album['id'] : false)
-        ));
-
+        ]);
     }
 
     public function processUpload() {
 
         if (!$this->album) {
-            return $this->cms_template->renderJSON(array(
+
+            return $this->cms_template->renderJSON([
                 'success' => false,
                 'error'   => sprintf(LANG_PHOTOS_SELECT_ALBUM, $this->ctype['labels']['one'])
-            ));
+            ]);
         }
 
         // получаем пресеты, которые нужно создать
-        $presets = cmsCore::getModel('images')->orderByList(array(
-            array('by' => 'is_square', 'to' => 'asc'),
-            array('by' => 'width', 'to' => 'desc')
-        ))->filterIsNull('is_internal')->getPresets();
+        $presets = cmsCore::getModel('images')->orderByList([
+                    ['by' => 'is_square', 'to' => 'asc'],
+                    ['by' => 'width', 'to' => 'desc']
+                ])->filterIsNull('is_internal')->getPresets();
 
         if (!$presets || empty($this->options['sizes'])) {
-            return $this->cms_template->renderJSON(array(
+
+            return $this->cms_template->renderJSON([
                 'success' => false,
                 'error'   => 'no presets'
-            ));
+            ]);
         }
 
         $result = $this->cms_uploader->setAllowedMime([
@@ -296,13 +303,13 @@ class actionPhotosUpload extends cmsAction {
         unset($result['path']);
 
         // маленкая картинка
-        $last_image    = end($result['paths']);
-        $result['url'] = $this->cms_config->upload_host . '/' . $last_image;
+        $last_image        = end($result['paths']);
+        $result['url']     = $this->cms_config->upload_host . '/' . $last_image;
         // большая картинка
         $first_image       = reset($result['paths']);
         $result['big_url'] = $this->cms_config->upload_host . '/' . $first_image;
 
-        $sizes = array();
+        $sizes = [];
         foreach ($result['paths'] as $name => $relpath) {
 
             $s = getimagesize($this->cms_config->upload_path . $relpath);
@@ -310,17 +317,17 @@ class actionPhotosUpload extends cmsAction {
                 continue;
             }
 
-            $sizes[$name] = array(
+            $sizes[$name] = [
                 'width'  => $s[0],
                 'height' => $s[1]
-            );
+            ];
         }
 
         $date_photo = (isset($image_data['exif']['date']) ? $image_data['exif']['date'] : false);
         $camera     = (isset($image_data['exif']['camera']) ? $image_data['exif']['camera'] : null);
         unset($image_data['exif']['date'], $image_data['exif']['camera'], $image_data['exif']['orientation']);
 
-        $result['id'] = $this->model->addPhoto(array(
+        $result['id'] = $this->model->addPhoto([
             'album_id'    => $this->album['id'],
             'user_id'     => $this->cms_user->id,
             'image'       => $result['paths'],
@@ -332,10 +339,9 @@ class actionPhotosUpload extends cmsAction {
             'is_private'  => 2,
             'orientation' => $image_data['orientation'],
             'exif'        => (!empty($image_data['exif']) ? $image_data['exif'] : null),
-        ));
+        ]);
 
         return $this->cms_template->renderJSON($result);
-
     }
 
 }

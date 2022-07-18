@@ -212,8 +212,8 @@ class fieldListBitmask extends cmsFormField {
     public function hookAfterUpdate($content_table_name, $field, $field_old, $model) {
 
         $items = $model->limit(false)->
-                selectOnly('id')->
-                select($field_old['name'])->
+                selectOnly('i.id')->
+                select('i.'.$field_old['name'])->
                 get($content_table_name, function ($item, $model)use ($field_old) {
             return $item[$field_old['name']];
         });

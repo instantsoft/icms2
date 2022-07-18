@@ -670,7 +670,7 @@
     define('LANG_CP_INSTALL_PACKAGE_NOT_CLEARED', 'Директория <b>%s</b> не была очищена из-за нехватки прав, сделайте это вручную');
     define('LANG_CP_INSTALL_PACKAGE_INFO',      'Информация о пакете');
     define('LANG_CP_INSTALL_PACKAGE_FILE',      'Файл пакета');
-    define('LANG_CP_INSTALL_PACKAGE_FILE_HINT', 'Файл с расширением <b>.icp</b> или <b>.zip</b>');
+    define('LANG_CP_INSTALL_PACKAGE_FILE_HINT', 'Файл с расширением <b>.zip</b>');
     define('LANG_CP_INSTALL_ERR_HINT',          'Следствие');
     define('LANG_CP_INSTALL_ERR_FIX',           'Решение');
     define('LANG_CP_INSTALL_ERR_WA',            'Обход проблемы');

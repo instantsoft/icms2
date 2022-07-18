@@ -19,7 +19,11 @@ class actionMessagesContact extends cmsAction {
         }
 
         // чтобы не считать общее кол-во, получаем на один больше
-        $messages = $this->model->limit($this->options['limit'] + 1)->getMessages($this->cms_user->id, $contact_id);
+        $messages = $this->model->
+                limit($this->options['limit'] + 1)->
+                getMessages($this->cms_user->id, $contact_id);
+
+        list($messages, $contact) = cmsEventsManager::hook('messages_before_list', [$messages, $contact]);
 
         if (count($messages) > $this->options['limit']) {
             $has_older = true;
@@ -37,7 +41,7 @@ class actionMessagesContact extends cmsAction {
 
         $editor_params['options']['id'] = 'content';
 
-        $this->cms_template->render('contact', [
+        return $this->cms_template->render('contact', [
             'user'          => $this->cms_user,
             'editor_params' => $editor_params,
             'is_me_ignored' => $this->model->isContactIgnored($contact_id, $this->cms_user->id),

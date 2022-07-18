@@ -427,42 +427,50 @@ icms.forms = (function ($) {
         });
     };
 
-	this.updateChildList = function (child_id, url, value, current_value, filter_field_name){
+	this.updateChildList = function (child_id, url, value, current_value, filter_field_name) {
 
-		var child_list = $('#'+child_id);
+        var child_list = $('#' + child_id);
 
-		$('#f_'+child_id+' label').addClass('loading');
+        $('#f_' + child_id + ' label').addClass('loading');
 
-		child_list.html('');
+        child_list.html('');
 
         current_value = current_value || '';
 
-        if(!$.isArray(current_value)){
+        if (!$.isArray(current_value)) {
             current_value = [current_value];
         }
 
-		$.post(url, {value: value, filter_field_name: filter_field_name}, function(result){
+        $.post(url, {value: value, filter_field_name: filter_field_name}, function (result) {
 
-			for(var k in result){if(result.hasOwnProperty(k)){
-                if(typeof result[k].value !== 'undefined'){
-                    var _value = result[k].value;
-                    var title = result[k].title;
-                }else{
-                    var _value = k;
-                    var title = result[k];
+            for (var k in result) {
+                if (result.hasOwnProperty(k)) {
+                    if (typeof result[k].value !== 'undefined') {
+                        var _value = result[k].value;
+                        var title = result[k].title;
+                    } else {
+                        var _value = k;
+                        var title = result[k];
+                    }
+                    child_list.append('<option value="' + _value + '"' + ($.inArray(_value, current_value) !== -1 ? ' selected' : '') + '>' + title + '</option>');
                 }
-				child_list.append('<option value="'+_value+'"'+($.inArray(_value, current_value) !== -1 ? ' selected' : '')+'>'+title+'</option>');
-			}}
+            }
 
             $(child_list).trigger('chosen:updated');
 
-			$('#f_'+child_id+ ' label').removeClass('loading');
+            $('#f_' + child_id + ' label').removeClass('loading');
 
-            icms.events.run('icms_forms_updatechildlist', result);
+            icms.events.run('icms_forms_updatechildlist', {
+                result: result,
+                child_id: child_id,
+                value: value,
+                current_value: current_value,
+                filter_field_name: filter_field_name
+            });
 
-		}, 'json');
+        }, 'json');
 
-	};
+    };
 
     this.submitAjax = function(form, additional_params){
 
