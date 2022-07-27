@@ -106,6 +106,7 @@
     define('LANG_USERS_PROFILE_INVITED_BY', 'По приглашению');
 
     define('LANG_USERS_PROFILE_IS_HIDDEN',  'Личная информация скрыта настройками приватности');
+    define('LANG_USERS_CONTENT_IS_HIDDEN',  '%s запретил просмотр списка своих %s');
 
     define('LANG_USERS_FRIENDS',            'Друзья');
     define('LANG_USERS_FRIENDS_ADD',        'Добавить в друзья');

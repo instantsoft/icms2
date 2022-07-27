@@ -3,6 +3,8 @@
 define('LANG_WD_CONTENT_LIST_DATASET', 'Применить фильтры из набора');
 define('LANG_WD_CONTENT_LIST_RELATION', 'Применить фильтр по связи');
 define('LANG_WD_CONTENT_LIST_FILTER', 'Применить общий фильтр');
+define('LANG_WD_CONTENT_LIST_FILTER_HOOK', 'Применить хук');
+define('LANG_WD_CONTENT_LIST_FILTER_HOOK_HINT', 'Для опытных пользователей! Напишите полное название хука. В хук будет передано <b>[$ctype, $model]</b>');
 define('LANG_WD_CONTENT_LIST_IMAGE', 'Поле изображения');
 define('LANG_WD_CONTENT_LIST_TEASER', 'Поле краткого описания');
 define('LANG_WD_CONTENT_LIST_FIELD_HINT', 'Устаревшие опции для совместимости с предыдущими версиями');

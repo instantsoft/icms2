@@ -27,7 +27,7 @@ class moderation extends cmsFrontend {
         list($moderator, $target_name, $item, $is_new_item, $pm_message) = cmsEventsManager::hook([
             'moderation_request_before',
             'moderation_' . $target_name . '_request_before'
-        ], [$moderator, $target_name, $item, $is_new_item, $pm_message]);
+        ], [$moderator, $target_name, $item, $is_new_item, $pm_message], null, $this->request);
 
         if ($item['user_id']) {
             $author = $this->model_users->getUser($item['user_id']);
@@ -148,11 +148,11 @@ class moderation extends cmsFrontend {
 
         $after_action = $task['is_new_item'] ? 'add' : 'update';
 
-        $data = cmsEventsManager::hook("content_after_{$after_action}_approve", ['ctype_name' => $target_name, 'item' => $item]);
+        $data = cmsEventsManager::hook("content_after_{$after_action}_approve", ['ctype_name' => $target_name, 'item' => $item], null, $this->request);
 
         $item = $data['item'];
 
-        $item = cmsEventsManager::hook("content_{$target_name}_after_{$after_action}_approve", $item);
+        $item = cmsEventsManager::hook("content_{$target_name}_after_{$after_action}_approve", $item, null, $this->request);
 
         $this->moderationNotifyAuthor($item, $letter);
 
@@ -191,7 +191,7 @@ class moderation extends cmsFrontend {
         list($moderator, $target_name, $item, $task, $author) = cmsEventsManager::hook([
             'moderation_cancel',
             'moderation_' . $target_name . '_cancel'
-        ], [$moderator, $target_name, $item, $task, $author]);
+        ], [$moderator, $target_name, $item, $task, $author], null, $this->request);
 
         // личное сообщение
         $this->controller_messages->addRecipient($moderator['id'])->sendNoticePM([
@@ -240,7 +240,7 @@ class moderation extends cmsFrontend {
         list($target_name, $item, $task) = cmsEventsManager::hook([
             'moderation_rework',
             'moderation_' . $target_name . '_rework'
-        ], [$target_name, $item, $task]);
+        ], [$target_name, $item, $task], null, $this->request);
 
         $this->moderationNotifyAuthor($item, 'moderation_rework');
 

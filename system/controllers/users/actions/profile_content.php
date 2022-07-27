@@ -34,7 +34,10 @@ class actionUsersProfileContent extends cmsAction {
         if (!$ctype['options']['profile_on']) { return cmsCore::error404(); }
 
         if (!$this->cms_user->isPrivacyAllowed($profile, 'view_user_'.$ctype['name'])){
-            return cmsCore::error404();
+
+            cmsUser::addSessionMessage(sprintf(LANG_USERS_CONTENT_IS_HIDDEN, $profile['nickname'], $ctype['labels']['many_genitive']));
+
+            return $this->redirect(href_to_profile($profile));
         }
 
         $original_folder_id = $folder_id;

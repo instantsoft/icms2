@@ -3,6 +3,8 @@
 define('LANG_WD_CONTENT_LIST_DATASET', 'Apply dataset filters');
 define('LANG_WD_CONTENT_LIST_RELATION', 'Apply relation filter');
 define('LANG_WD_CONTENT_LIST_FILTER', 'Apply basic filter');
+define('LANG_WD_CONTENT_LIST_FILTER_HOOK', 'Apply the hook');
+define('LANG_WD_CONTENT_LIST_FILTER_HOOK_HINT', 'For advanced users! Enter the full name of the hook. In the hook will be passed an array <b>[$ctype, $model]</b>');
 define('LANG_WD_CONTENT_LIST_IMAGE', 'Image field');
 define('LANG_WD_CONTENT_LIST_TEASER', 'Short description field');
 define('LANG_WD_CONTENT_LIST_FIELD_HINT', 'Deprecated options for compatibility');

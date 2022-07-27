@@ -255,6 +255,34 @@ class cmsDatabase {
         return $this;
     }
 
+    /**
+     * Возвращает ID последней вставленной записи из таблицы
+     * При работе с транзакциями вызывать необходимо до коммита
+     *
+     * @return integer
+     */
+    public function lastId(){
+        return $this->mysqli->insert_id;
+    }
+
+    /**
+     * Возвращает значение переменной сервера
+     *
+     * @param string $value
+     * @return mixed
+     */
+    public function getSqlVariableValue($value) {
+
+        $value = $this->escape($value);
+
+        $result = $this->query("show variables like '{$value}'");
+
+        $data = $this->fetchAssoc($result);
+        $this->freeResult($result);
+
+        return isset($data['Value']) ? $data['Value'] : null;
+    }
+
 //============================================================================//
 //===================== Транзакции (только innodb) ===========================//
 
@@ -428,109 +456,9 @@ class cmsDatabase {
         return cmsCore::error($error_msg, $sql);
     }
 
-//============================================================================//
-//============================================================================//
-
-    public function freeResult($result) {
-        $result->close();
-    }
-
-    public function affectedRows() {
-        return $this->mysqli->affected_rows;
-    }
-
-    public function numRows($result) {
-        if (!$result) {
-            return 0;
-        }
-        return $result->num_rows;
-    }
-
-    public function fetchAssoc($result) {
-        return $result->fetch_assoc();
-    }
-
-    public function fetchRow($result) {
-        return $result->fetch_row();
-    }
-
-    public function error() {
-        return $this->mysqli->error;
-    }
-
-//============================================================================//
-//============================================================================//
-
-    /**
-     * Возвращает ID последней вставленной записи из таблицы
-     * При работе с транзакциями вызывать необходимо
-     * До коммита
-     *
-     * @return integer
-     */
-    public function lastId(){
-        return $this->mysqli->insert_id;
-    }
-
-    /**
-     * Возвращает все названия полей для таблицы
-     * @param string $table
-     * @return array
-     */
-    public function getTableFields($table) {
-
-        if(isset($this->table_fields[$table])){
-            return $this->table_fields[$table];
-        }
-
-        $result = $this->query("SHOW COLUMNS FROM `{#}{$table}`");
-
-        $fields = [];
-
-        while($data = $this->fetchAssoc($result)){
-            $fields[] = $data['Field'];
-        }
-
-        $this->table_fields[$table] = $fields;
-
-        return $fields;
-    }
-
-    /**
-     * Возвращает названия полей и их типы для таблицы
-     * @param string $table
-     * @return array
-     */
-    public function getTableFieldsTypes($table) {
-
-        $result = $this->query("SELECT DATA_TYPE, COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = '{$this->options['db_base']}' AND table_name = '{#}{$table}'");
-
-        $fields = [];
-
-        while($data = $this->fetchAssoc($result)){
-            $fields[$data['COLUMN_NAME']] = $data['DATA_TYPE'];
-        }
-
-        return $fields;
-    }
-
-    public function getSqlVariableValue($value) {
-
-        $value = $this->escape($value);
-
-        $result = $this->query("show variables like '{$value}'");
-
-        $data = $this->fetchAssoc($result);
-        $this->freeResult($result);
-
-        return isset($data['Value']) ? $data['Value'] : null;
-    }
-
-//============================================================================//
-//============================================================================//
-
     /**
      * Подготавливает значение $value поля $field для вставки в запрос
+     *
      * @param string $field
      * @param string $value
      * @param boolean $array_as_json Переходная опция для миграции с Yaml на Json
@@ -605,6 +533,33 @@ class cmsDatabase {
         }
 
         return $value;
+    }
+
+    public function freeResult($result) {
+        $result->close();
+    }
+
+    public function affectedRows() {
+        return $this->mysqli->affected_rows;
+    }
+
+    public function numRows($result) {
+        if (!$result) {
+            return 0;
+        }
+        return $result->num_rows;
+    }
+
+    public function fetchAssoc($result) {
+        return $result->fetch_assoc();
+    }
+
+    public function fetchRow($result) {
+        return $result->fetch_row();
+    }
+
+    public function error() {
+        return $this->mysqli->error;
     }
 
 //============================================================================//
@@ -1078,27 +1033,104 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
+    /**
+     * Возвращает все названия полей для таблицы
+     *
+     * @param string $table_name Название таблицы
+     * @return array
+     */
+    public function getTableFields($table_name) {
+
+        if(isset($this->table_fields[$table_name])){
+            return $this->table_fields[$table_name];
+        }
+
+        $result = $this->query("SHOW COLUMNS FROM `{#}{$table_name}`");
+
+        $fields = [];
+
+        while($data = $this->fetchAssoc($result)){
+            $fields[] = $data['Field'];
+        }
+
+        $this->table_fields[$table_name] = $fields;
+
+        return $fields;
+    }
+
+    /**
+     * Возвращает названия полей и их типы для таблицы
+     *
+     * @param string $table_name Название таблицы
+     * @return array
+     */
+    public function getTableFieldsTypes($table_name) {
+
+        $result = $this->query("SELECT DATA_TYPE, COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = '{$this->options['db_base']}' AND table_name = '{#}{$table_name}'");
+
+        $fields = [];
+
+        while($data = $this->fetchAssoc($result)){
+            $fields[$data['COLUMN_NAME']] = $data['DATA_TYPE'];
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Переименование таблицы
+     *
+     * @param string $table_name_from Какую таблицу переименовываем
+     * @param string $table_name_to Имя новой таблицы
+     * @param boolean $overwrite Перезаписать новую таблицу, если существует
+     * @return boolean
+     */
+    public function renameTable($table_name_from, $table_name_to, $overwrite = false) {
+
+        if(!$this->isTableExists($table_name_to)){
+
+            return $this->query("RENAME TABLE `{#}{$table_name_from}` TO `{#}{$table_name_to}`");
+        }
+
+        if(!$overwrite){
+            return false;
+        }
+
+        $tmp_table = $table_name_to . '_renamed';
+
+        $result = $this->query("RENAME TABLE `{#}{$table_name_to}` TO `{#}{$tmp_table}`, `{#}{$table_name_from}` TO `{#}{$table_name_to}`");
+
+        $this->dropTable($tmp_table);
+
+        return $result;
+    }
+
+    /**
+     * Удаляет таблицу
+     *
+     * @param string $table_name Название таблицы
+     * @return boolean
+     */
     public function dropTable($table_name) {
         return $this->query("DROP TABLE IF EXISTS `{#}{$table_name}`");
     }
 
-    public function dropTableField($table_name, $field_name) {
-        return $this->query("ALTER TABLE `{#}{$table_name}` DROP `{$field_name}`");
-    }
-
+    /**
+     * Очищает таблицу
+     *
+     * @param string $table_name Название таблицы
+     * @return boolean
+     */
     public function truncateTable($table_name) {
         return $this->query("TRUNCATE TABLE `{#}{$table_name}`");
     }
 
-    public function addTableField($table_name, $field_name, $sql) {
-
-        if ($this->isFieldExists($table_name, $field_name)) {
-            return false;
-        }
-
-        return $this->query("ALTER TABLE `{#}{$table_name}` ADD `{$field_name}` {$sql}");
-    }
-
+    /**
+     * Проверяет, что таблица существует
+     *
+     * @param string $table_name Название таблицы
+     * @return boolean
+     */
     public function isTableExists($table_name) {
 
         $result = $this->query('show tables');
@@ -1114,6 +1146,43 @@ class cmsDatabase {
         return in_array($table_name, $tables, true);
     }
 
+    /**
+     * Удаляет ячейку таблицы
+     *
+     * @param string $table_name Название таблицы
+     * @param string $field_name Имя ячейки таблицы
+     * @return boolean
+     */
+    public function dropTableField($table_name, $field_name) {
+        return $this->query("ALTER TABLE `{#}{$table_name}` DROP `{$field_name}`");
+    }
+
+    /**
+     * Добавляет ячейку таблицы
+     *
+     * @param string $table_name Название таблицы
+     * @param string $field_name Имя ячейки таблицы
+     * @param string $sql Часть SQL выражения, определяющее тип ячейки
+     * @return boolean
+     */
+    public function addTableField($table_name, $field_name, $sql) {
+
+        if ($this->isFieldExists($table_name, $field_name)) {
+            return false;
+        }
+
+        return $this->query("ALTER TABLE `{#}{$table_name}` ADD `{$field_name}` {$sql}");
+    }
+
+    /**
+     * Проверяет, что значение поля уникально в таблице
+     *
+     * @param string $table_name Название таблицы
+     * @param string $field_name Имя ячейки таблицы
+     * @param mixed $value Проверяемое значение
+     * @param integer $exclude_row_id Значение ID записи, которую нужно исключить при проверке
+     * @return boolean
+     */
     public function isFieldUnique($table_name, $field_name, $value, $exclude_row_id = false) {
 
         $value = $this->escape(trim($value));
@@ -1127,11 +1196,18 @@ class cmsDatabase {
         return !(bool) $this->getRowsCount($table_name, $where, 1);
     }
 
-    public function isFieldExists($table_name, $field) {
+    /**
+     * Проверяет наличие ячейки в таблице
+     *
+     * @param string $table_name Название таблицы
+     * @param string $field_name Имя ячейки таблицы
+     * @return boolean
+     */
+    public function isFieldExists($table_name, $field_name) {
 
         $table_fields = $this->getTableFields($table_name);
 
-        return in_array($field, $table_fields, true);
+        return in_array($field_name, $table_fields, true);
     }
 
 //============================================================================//

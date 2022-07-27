@@ -8,6 +8,7 @@ class widgetContentList extends cmsWidget {
         $dataset_id      = $this->getOption('dataset');
         $relation_id     = $this->getOption('relation_id');
         $filter_id       = $this->getOption('filter_id');
+        $filter_hook     = $this->getOption('filter_hook');
         $cat_id          = $this->getOption('category_id');
         $image_field     = $this->getOption('image_field');
         $teaser_field    = $this->getOption('teaser_field');
@@ -172,6 +173,10 @@ class widgetContentList extends cmsWidget {
 
         list($ctype, $model) = cmsEventsManager::hook("content_list_filter", [$ctype, $model]);
         list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", [$ctype, $model]);
+
+        if ($filter_hook) {
+            list($ctype, $model) = cmsEventsManager::hook($filter_hook, [$ctype, $model]);
+        }
 
         $items = $model->
                 limit($limit)->

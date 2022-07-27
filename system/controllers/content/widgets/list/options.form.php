@@ -173,6 +173,11 @@ class formWidgetContentListOptions extends cmsForm {
                         },
                         'visible_depend' => array('options:ctype_id' => array('hide' => array('0')))
                     )),
+                    new fieldString('options:filter_hook', array(
+                        'title' => LANG_WD_CONTENT_LIST_FILTER_HOOK,
+                        'hint' => LANG_WD_CONTENT_LIST_FILTER_HOOK_HINT,
+                        'visible_depend' => array('options:ctype_id' => array('hide' => array('0')))
+                    )),
                     new fieldCheckbox('options:auto_group', array(
                         'title' => LANG_CP_WO_AUTO_GROUP,
                         'hint'  => LANG_CP_WO_AUTO_GROUP_HINT

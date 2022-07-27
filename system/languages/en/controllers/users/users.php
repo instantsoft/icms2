@@ -106,6 +106,7 @@
     define('LANG_USERS_PROFILE_INVITED_BY', 'Invited by');
 
     define('LANG_USERS_PROFILE_IS_HIDDEN',  'Private information is hidden in privacy settings');
+    define('LANG_USERS_CONTENT_IS_HIDDEN',  '%s does not allow you to view a list of his %s');
 
     define('LANG_USERS_FRIENDS',            'Friends');
     define('LANG_USERS_FRIENDS_ADD',        'Add to Friends');

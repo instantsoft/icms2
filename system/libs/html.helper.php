@@ -35,7 +35,7 @@ function html_clean($string, $max_length = false) {
     $string = str_replace(["\n", "\r", '<br>', '<br/>'], ' ', $string);
     $string = strip_tags($string);
 
-    if (is_int($max_length)) {
+    if ($max_length) {
         $string = html_strip($string, $max_length);
     }
 
@@ -53,7 +53,7 @@ function html_strip($string, $max_length) {
     $length = mb_strlen($string);
 
     if ($length > $max_length) {
-        $string = mb_substr($string, 0, $max_length);
+        $string = mb_substr($string, 0, (int)$max_length);
         $string .= '...';
     }
 
