@@ -2,21 +2,21 @@
 
 class actionAdminControllersEventsUpdate extends cmsAction {
 
-    public function run(){
+    public function run() {
 
         $diff_events = $this->getEventsDifferences();
 
-        if($diff_events['added']){
+        if ($diff_events['added']) {
             foreach ($diff_events['added'] as $controller => $events) {
-                foreach ($events as $event){
+                foreach ($events as $event) {
                     $this->model->addEvent($controller, $event);
                 }
             }
         }
 
-        if($diff_events['deleted']){
+        if ($diff_events['deleted']) {
             foreach ($diff_events['deleted'] as $controller => $events) {
-                foreach ($events as $event){
+                foreach ($events as $event) {
                     $this->model->deleteEvent($controller, $event);
                 }
             }
@@ -24,8 +24,7 @@ class actionAdminControllersEventsUpdate extends cmsAction {
 
         cmsUser::addSessionMessage(LANG_EVENTS_SUCCESS, 'success');
 
-        $this->redirectBack();
-
+        return $this->redirectToAction('controllers', ['events']);
     }
 
 }

@@ -588,4 +588,8 @@ class cmsBackend extends cmsController {
         ]);
     }
 
+    public function getForm($form_name, $params = false, $path_prefix = '') {
+        return parent::getForm($form_name, $params, 'backend/'.$path_prefix);
+    }
+
 }

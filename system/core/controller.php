@@ -827,50 +827,48 @@ class cmsController {
 
     /**
      * Загружает и возвращает описание структуры формы
-     * в контексте текущего контроллера и, в свою очередь,
-     * его контекста - Frontend или Backend
+     * в контексте текущего контроллера
+     * Для бэкенда метод переопределён в cmsBackend
      *
      * @param string $form_name Название формы
      * @param array $params Параметры формы
      * @param string $path_prefix Префикс путь к файлу формы относительно директории контроллера
      * @return \cmsForm
      */
-    public function getForm($form_name, $params = false, $path_prefix = ''){
+    public function getForm($form_name, $params = false, $path_prefix = '') {
+        return $this->getControllerForm($this->name, $form_name, $params, $path_prefix);
+    }
 
-        $form_file = $this->root_path . $path_prefix . 'forms/form_' . $form_name . '.php';
-        $_form_name = $this->name . $form_name;
+    /**
+     * Загружает и возвращает описание структуры формы
+     *
+     * @param string $controller_name Название контроллера
+     * @param string $form_name Название формы
+     * @param array $params Параметры формы
+     * @param string $path_prefix Префикс путь к файлу формы относительно директории контроллера
+     * @return \cmsForm
+     */
+    public function getControllerForm($controller_name, $form_name, $params = false, $path_prefix = '') {
 
+        $form_file  = $this->cms_config->root_path . 'system/controllers/' . $controller_name . '/'.$path_prefix.'forms/form_' . $form_name . '.php';
+        $_form_name = $controller_name . $form_name;
+
+        // $this всё равно передаётся текущего контроллера
+        // $this->name и $controller_name могут быть различные
         $form = cmsForm::getForm($form_file, $_form_name, $params, $this);
 
-        if($form === false){
-            return cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $form_file));
+        if ($form === false) {
+            cmsCore::error(ERR_FILE_NOT_FOUND . ': ' . str_replace(PATH, '', $form_file));
         }
 
-        if(is_string($form)){
+        if (is_string($form)) {
             return cmsCore::error($form);
         }
 
-        list($form, $params) = cmsEventsManager::hook('form_'.$this->name.'_'.$form_name, array($form, $params));
+        list($form_context, $form, $params) = cmsEventsManager::hook('form_get', [[$this->name, $form_name], $form, $params]);
+        list($form, $params) = cmsEventsManager::hook('form_' . $controller_name . '_' . $form_name, [$form, $params]);
 
         return $form;
-
-    }
-
-    public function getControllerForm($controller, $form_name, $params = false){
-
-        $form_file = $this->cms_config->root_path.'system/controllers/'.$controller.'/forms/form_'.$form_name.'.php';
-        $_form_name = $controller . $form_name;
-
-        $form = cmsForm::getForm($form_file, $_form_name, $params, $this);
-
-        if($form === false){
-            cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $form_file));
-        }
-
-        list($form, $params) = cmsEventsManager::hook('form_'.$controller.'_'.$form_name, array($form, $params));
-
-        return $form;
-
     }
 
 //============================================================================//

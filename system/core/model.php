@@ -634,7 +634,9 @@ class cmsModel {
             return $item;
         }
 
-        if(!is_array($item)){ return $item; }
+        if (!is_array($item)) {
+            return $item;
+        }
 
         $postfix = '_' . $this->lang;
 
@@ -644,7 +646,7 @@ class cmsModel {
 
             if (!isset($item[$lang_key])) {
 
-                if(is_array($value) && $value){
+                if (is_array($value) && $value) {
                     $item[$key] = $this->replaceTranslatedField($value, $table_name);
                 }
 
@@ -652,11 +654,9 @@ class cmsModel {
             }
 
             $item[$key] = $item[$lang_key];
-
         }
 
         return $item;
-
     }
 
     public function setStraightJoin() {
@@ -1177,71 +1177,91 @@ class cmsModel {
         return $this->filterNotNull('online.user_id')->filterTimestampYounger('online.date_created', cmsUser::USER_ONLINE_INTERVAL, 'SECOND');
     }
 
-    public function applyDatasetFilters($dataset, $ignore_sorting = false, $allowed_fields = []){
+    public function applyDatasetFilters($dataset, $ignore_sorting = false, $allowed_fields = []) {
 
-        if (!empty($dataset['filters'])){
+        if (!empty($dataset['filters'])) {
 
-            foreach($dataset['filters'] as $filter){
+            foreach ($dataset['filters'] as $filter) {
 
                 // Если заданы разрешенные поля, проверяем
                 // валидация
-                if($allowed_fields && !in_array($filter['field'], $allowed_fields, true)){
+                if ($allowed_fields && !in_array($filter['field'], $allowed_fields, true)) {
                     continue;
                 }
 
-                if (isset($filter['callback']) && is_callable($filter['callback'])){
-                    $filter['callback']($this, $dataset); continue;
+                if (isset($filter['callback']) && is_callable($filter['callback'])) {
+                    $filter['callback']($this, $dataset);
+                    continue;
                 }
 
-                if (!isset($filter['value'])) { continue; }
-                if (($filter['value'] === '') && !in_array($filter['condition'], array('nn', 'ni'))) { continue; }
-                if (empty($filter['condition'])) { continue; }
+                if (!isset($filter['value'])) {
+                    continue;
+                }
+                if (($filter['value'] === '') && !in_array($filter['condition'], ['nn', 'ni'])) {
+                    continue;
+                }
+                if (empty($filter['condition'])) {
+                    continue;
+                }
 
-                if ($filter['value'] !== '' && !is_array($filter['value'])) { $filter['value'] = string_replace_user_properties($filter['value']); }
+                if ($filter['value'] !== '' && !is_array($filter['value'])) {
+                    $filter['value'] = string_replace_user_properties($filter['value']);
+                }
 
-                switch($filter['condition']){
+                switch ($filter['condition']) {
 
                     // общие условия
-                    case 'eq': $this->filterEqual($filter['field'], $filter['value']); break;
-                    case 'gt': $this->filterGt($filter['field'], $filter['value']); break;
-                    case 'lt': $this->filterLt($filter['field'], $filter['value']); break;
-                    case 'ge': $this->filterGtEqual($filter['field'], $filter['value']); break;
-                    case 'le': $this->filterLtEqual($filter['field'], $filter['value']); break;
-                    case 'nn': $this->filterNotNull($filter['field']); break;
-                    case 'ni': $this->filterIsNull($filter['field']); break;
+                    case 'eq': $this->filterEqual($filter['field'], $filter['value']);
+                        break;
+                    case 'gt': $this->filterGt($filter['field'], $filter['value']);
+                        break;
+                    case 'lt': $this->filterLt($filter['field'], $filter['value']);
+                        break;
+                    case 'ge': $this->filterGtEqual($filter['field'], $filter['value']);
+                        break;
+                    case 'le': $this->filterLtEqual($filter['field'], $filter['value']);
+                        break;
+                    case 'nn': $this->filterNotNull($filter['field']);
+                        break;
+                    case 'ni': $this->filterIsNull($filter['field']);
+                        break;
 
                     // строки
-                    case 'lk': $this->filterLike($filter['field'], '%'.$filter['value'].'%'); break;
-                    case 'ln': $this->filterNotLike($filter['field'], '%'.$filter['value'].'%'); break;
-                    case 'lb': $this->filterLike($filter['field'], $filter['value'] . '%'); break;
-                    case 'lf': $this->filterLike($filter['field'], '%' . $filter['value']); break;
+                    case 'lk': $this->filterLike($filter['field'], '%' . $filter['value'] . '%');
+                        break;
+                    case 'ln': $this->filterNotLike($filter['field'], '%' . $filter['value'] . '%');
+                        break;
+                    case 'lb': $this->filterLike($filter['field'], $filter['value'] . '%');
+                        break;
+                    case 'lf': $this->filterLike($filter['field'], '%' . $filter['value']);
+                        break;
 
                     // даты
-                    case 'dy': $this->filterDateYounger($filter['field'], $filter['value']); break;
-                    case 'do': $this->filterDateOlder($filter['field'], $filter['value']); break;
+                    case 'dy': $this->filterDateYounger($filter['field'], $filter['value']);
+                        break;
+                    case 'do': $this->filterDateOlder($filter['field'], $filter['value']);
+                        break;
 
                     // массив
                     case 'in':
-                        if(!is_array($filter['value'])){ $filter['value'] = explode(',', $filter['value']); }
+                        if (!is_array($filter['value'])) {
+                            $filter['value'] = explode(',', $filter['value']);
+                        }
                         $this->filterIn($filter['field'], $filter['value']);
                         break;
-
                 }
-
             }
-
         }
 
-        if (!empty($dataset['sorting']) && !$ignore_sorting){
+        if (!empty($dataset['sorting']) && !$ignore_sorting) {
             $this->orderByList($dataset['sorting']);
         }
 
-        if(!empty($dataset['index'])){
+        if (!empty($dataset['index'])) {
             $this->forceIndex($dataset['index'], 2);
         }
 
         return true;
-
     }
 
     /**
@@ -1357,6 +1377,36 @@ class cmsModel {
         $this->select = [];
 
         return $this->select($field, $as);
+    }
+
+    /**
+     * Возвращает имя поля, учитывая язык
+     *
+     * @param string $field Имя поля
+     * @param string $table Таблица, в котором это поле есть
+     * @return string
+     */
+    public function getTranslatedFieldName($field, $table = '') {
+
+        if ($this->lang === $this->default_lang) {
+            return $field;
+        }
+
+        // Имя с переводом, с учётом префикса таблицы
+        $field_name = $field . '_' . $this->lang;
+
+        if($table){
+
+            // Убираем алиас уточнения таблицы
+            $check_name = (strpos($field_name, '.') === false ? $field_name : ltrim(strrchr($field_name, '.'), '.'));
+
+            // Нет поля с переводом
+            if (!$this->db->isFieldExists($table, $check_name)) {
+                $field_name = $field;
+            }
+        }
+
+        return $field_name;
     }
 
     public function joinQuery($query, $as, $on, $join_type = self::INNER_JOIN){
@@ -1514,80 +1564,144 @@ class cmsModel {
         return $this->indexHint($index_name, 'USE', $for);
     }
 
-    public function orderByRaw($order_by){
+    /**
+     * Сортировка по полю, у которого может быть перевод
+     * Если поле с переводом есть, отсортируется по нему
+     *
+     * @param string $field Название ячейки БД без языкового префикса
+     * @param string $direction Направление сортировки
+     * @param string $table Таблица, где находится ячейка. Не указана - проверки не будет
+     * @return $this
+     */
+    public function orderByTranslatedField($field, $direction = 'asc', $table = '') {
+
+        return $this->orderBy($this->getTranslatedFieldName($field, $table), $direction);
+    }
+
+    /**
+     * Устанавливает сортировку
+     *
+     * @param string $order_by
+     * @return $this
+     */
+    public function orderByRaw($order_by) {
+
         $this->order_by = $order_by;
+
         return $this;
     }
 
-    public function orderBy($field, $direction='', $is_force_index_by_field = false){
-        if(strpos($field, '(') !== false){ return $this; } // в названии поля не может быть функции
-        if($direction){
+    /**
+     * Устанавливает сортировку
+     *
+     * @param string $field Поле для сортировки
+     * @param string $direction Направление сортировки
+     * @param boolean $is_force_index_by_field deprecated
+     * @return $this
+     */
+    public function orderBy($field, $direction = '', $is_force_index_by_field = false) {
+
+        if (strpos($field, '(') !== false) {
+            return $this;
+        } // в названии поля не может быть функции
+        if ($direction) {
             $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
         }
-        if (strpos($field, '.') === false){ $field = 'i.'.$field; }
-        $this->order_by = $field.' '.$direction;
-        return $this;
+        if (strpos($field, '.') === false) {
+            $field = 'i.' . $field;
+        }
+
+        return $this->orderByRaw($field . ' ' . $direction);
     }
 
-    public function orderByList($list){
+    /**
+     * Устанавливает множественную сортировку
+     *
+     * @param array $list Массив сортировок с ключами by и to
+     * @return $this
+     */
+    public function orderByList($list) {
 
-		$this->order_by = '';
+        $this->order_by = '';
 
-		if (is_array($list)){
+        if (is_array($list)) {
 
-			foreach($list as $o){
+            foreach ($list as $o) {
 
-                if(strpos($o['by'], '(') !== false){ continue; }
+                if (strpos($o['by'], '(') !== false) {
+                    continue;
+                }
 
-				$field     = $o['by'];
+                $field     = $o['by'];
                 $direction = strtolower($o['to']) === 'desc' ? 'desc' : 'asc';
 
-                if (empty($o['strict']) && strpos($field, '.') === false){ $field = 'i.'.$field; }
-				if ($this->order_by) { $this->order_by .= ', '; }
-				$this->order_by .= $field.' '.$direction;
-
-			}
-
-		}
-
-		return $this;
-
-    }
-
-    public function limit($from, $howmany=0) {
-        $this->limit = (int)$from;
-        $howmany     = (int)$howmany;
-        if ($this->limit < 0) { $this->limit = 0; }
-        if ($howmany){
-            if ($howmany <= 0){ $howmany = 15; }
-            $this->limit .= ', '. $howmany;
+                if (empty($o['strict']) && strpos($field, '.') === false) {
+                    $field = 'i.' . $field;
+                }
+                if ($this->order_by) {
+                    $this->order_by .= ', ';
+                }
+                $this->order_by .= $field . ' ' . $direction;
+            }
         }
+
         return $this;
     }
 
-    public function limitPage($page, $perpage=0) {
+    public function limit($from, $howmany = 0) {
+
+        $this->limit = (int) $from;
+        $howmany     = (int) $howmany;
+
+        if ($this->limit < 0) {
+            $this->limit = 0;
+        }
+
+        if ($howmany) {
+            if ($howmany <= 0) {
+                $howmany = 15;
+            }
+            $this->limit .= ', ' . $howmany;
+        }
+
+        return $this;
+    }
+
+    public function limitPage($page, $perpage = 0) {
+
         $page    = (int) $page;
         $perpage = (int) $perpage;
-        if ($perpage <= 0) { $perpage = $this->perpage; }
-        $this->limit(($page-1)*$perpage, $perpage);
-        return $this;
+
+        if ($perpage <= 0) {
+            $perpage = $this->perpage;
+        }
+
+        return $this->limit(($page - 1) * $perpage, $perpage);
     }
 
-    public function limitPagePlus($page, $perpage=0) {
+    public function limitPagePlus($page, $perpage = 0) {
+
         $page    = (int) $page;
         $perpage = (int) $perpage;
-        if ($perpage <= 0) { $perpage = $this->perpage; }
-        $this->limit(($page-1)*$perpage, $perpage+1);
+
+        if ($perpage <= 0) {
+            $perpage = $this->perpage;
+        }
+
+        return $this->limit(($page - 1) * $perpage, $perpage + 1);
+    }
+
+    public function setPerPage($perpage) {
+
+        $this->perpage = (int) $perpage;
+
         return $this;
     }
 
-    public function setPerPage($perpage){
-        $this->perpage = (int)$perpage;
-        return $this;
-    }
+    public function setReadType($type) {
 
-    public function setReadType($type){
         $this->read_type = $type;
+
         return $this;
     }
 
@@ -1688,9 +1802,9 @@ class cmsModel {
 
     }
 
-    public function getFieldFiltered($table_name, $field_name){
+    public function getFieldFiltered($table_name, $field_name) {
 
-        $this->select = array('i.'.$field_name.' as '.$field_name);
+        $this->select = ['i.' . $field_name . ' as ' . $field_name];
 
         $this->table = $table_name;
 
@@ -1702,18 +1816,19 @@ class cmsModel {
 
         $result = $this->db->query($sql);
 
-        if (!$this->db->numRows($result)){ return false; }
+        if (!$this->db->numRows($result)) {
+            return false;
+        }
 
         $item = $this->db->fetchAssoc($result);
 
-        if($this->localized){
+        if ($this->localized) {
             $item = $this->replaceTranslatedField($item, $table_name);
         }
 
         $this->db->freeResult($result);
 
-        return $item[ $field_name ];
-
+        return $item[$field_name];
     }
 
 //============================================================================//

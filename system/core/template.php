@@ -2407,16 +2407,17 @@ class cmsTemplate {
     public function renderForm($form, $data, $attributes = [], $errors = false) {
 
         $attributes = array_replace_recursive([
-            'is_ajax'      => false,
-            'only_fields'  => false,
-            'submit'       => ['title' => LANG_SAVE, 'show' => true],
-            'cancel'       => ['title' => LANG_CANCEL, 'href' => href_to_home(), 'show' => false],
-            'action'       => '',
-            'append_html'  => '',
-            'prepend_html' => '',
-            'form_id'      => md5(microtime(true)),
-            'form_class'   => '',
-            'method'       => 'post'
+            'is_ajax'       => false,
+            'cookie_prefix' => '',
+            'only_fields'   => false,
+            'submit'        => ['title' => LANG_SAVE, 'show' => true],
+            'cancel'        => ['title' => LANG_CANCEL, 'href' => href_to_home(), 'show' => false],
+            'action'        => '',
+            'append_html'   => '',
+            'prepend_html'  => '',
+            'form_id'       => md5(microtime(true)),
+            'form_class'    => '',
+            'method'        => 'post'
         ], $attributes);
 
         if($attributes['method'] === 'ajax'){
@@ -2430,7 +2431,7 @@ class cmsTemplate {
             $form_tpl_file = $attributes['form_tpl_file'];
         }
 
-        $cookie_tab_key = $form->getName();
+        $cookie_tab_key = $attributes['cookie_prefix'] . $form->getName();
 
         $active_tab = cmsUser::getCookie($cookie_tab_key);
 
