@@ -27,7 +27,7 @@
 
 ## Live Demo ##
 
-Try it out for yourself in our [online demo](https://demo.instantcms.ru/)
+Try it out for yourself in our [online demo](https://demo.instantcms.io/)
 
 ## Requirements ##
 * PHP 5.6+ (PHP 7, PHP 8 supported too)
@@ -46,7 +46,8 @@ This software is distributed under the GPL-2.0 license. Please read license.en.t
 
 ## Resources
 
-* [Official site](https://instantcms.ru/)
+* [Official site](https://instantcms.io/)
+* [Official site (ru)](https://instantcms.ru/)
 * [Add-ons for CMS](https://addons.instantcms.ru/)
 * [Documentation](https://docs.instantcms.ru/en)
 * [Russian documentation](https://docs.instantcms.ru/)
