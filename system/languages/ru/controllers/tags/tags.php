@@ -12,6 +12,7 @@ define('LANG_TAGS_SETTINGS', 'Настроить теги');
 define('LANG_TAGS_RECOUNT', 'Пересчитать теги');
 define('LANG_TAGS_CONTEXT_LT_SEARCH', 'При поиске по тегам');
 define('LANG_TAGS_SEO_HINT', 'Можно использовать выражения {tag} - текущий тег, {ctype_title} - название текущего типа контента');
+define('LANG_TAGS_LEN_ERROR', 'Тег <b>%s</b> слишком большой, максимальная длина одного тега %s символа');
 define('LANG_WD_TAGS_CLOUD_ORDERING', 'Сортировать теги');
 define('LANG_WD_TAGS_CLOUD_ORDER_BY_TAG', 'По алфавиту');
 define('LANG_WD_TAGS_CLOUD_ORDER_BY_FREQ', 'По частоте использования');

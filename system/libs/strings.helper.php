@@ -943,8 +943,14 @@ function get_localized_value($field, $data) {
 
     $lang = cmsCore::getLanguageHrefPrefix();
 
-    $field .= ($lang ? '_' . $lang : '');
+    $field_lang = $field . ($lang ? '_' . $lang : '');
 
+    // Есть переведённое
+    if (array_key_exists($field_lang, $data)) {
+        return $data[$field_lang];
+    }
+
+    // Есть без перевода
     if (array_key_exists($field, $data)) {
         return $data[$field];
     }

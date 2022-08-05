@@ -2,6 +2,8 @@
 
 class modelTags extends cmsModel {
 
+    const TAG_LEN = 32;
+
     public function filterTarget($controller, $subject, $id) {
 
         $this->filterEqual('target_controller', $controller);
@@ -28,6 +30,8 @@ class modelTags extends cmsModel {
             $tag = mb_strtolower(trim($tag));
 
             if (!$tag) { continue; }
+
+            if (mb_strlen($tag) > self::TAG_LEN) { continue; }
 
             if (in_array($tag, $tags_inserted)) {
                 continue;

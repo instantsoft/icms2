@@ -101,6 +101,8 @@ class cmsCore {
 
                     $_SERVER['REQUEST_URI'] = $config->root . implode('/', $segments) . $query_str;
 
+                    $config->languageInitialized();
+
                     return true;
                 }
             }

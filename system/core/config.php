@@ -50,6 +50,11 @@ class cmsConfig {
      * @var array
      */
     private $config = [];
+    /**
+     * Флаг, что ядро определило язык сайта, отличный от умолчания
+     * @var boolean
+     */
+    private $is_language_initialized = false;
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -105,6 +110,18 @@ class cmsConfig {
     }
 
     /**
+     * Язык инициализирован ядром
+     *
+     * @return $this
+     */
+    public function languageInitialized() {
+
+        $this->is_language_initialized = true;
+
+        return $this;
+    }
+
+    /**
      * Устанавливает/изменяет значение опции конфигурации
      *
      * @param string $key Ключ
@@ -149,13 +166,27 @@ class cmsConfig {
     }
 
     public function __get($name) {
-        if(!array_key_exists($name, $this->data)){
+
+        if ($this->is_language_initialized) {
+
+            $value = get_localized_value($name, $this->data);
+
+            return $value === null ? false : $value;
+        }
+
+        if (!array_key_exists($name, $this->data)) {
             return false;
         }
+
         return $this->data[$name];
     }
 
     public function __isset($name) {
+
+        if ($this->is_language_initialized) {
+            return get_localized_value($name, $this->data) !== null;
+        }
+
         return array_key_exists($name, $this->data);
     }
 

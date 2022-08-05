@@ -181,7 +181,6 @@ class actionContentItemEdit extends cmsAction {
                 }
 
                 $date_pub_time     = strtotime($item['date_pub']);
-                $date_pub_end_time = strtotime($item['date_pub_end']);
                 $now_time          = time();
                 $now_date          = strtotime(date('Y-m-d', $now_time));
                 $is_pub            = true;
@@ -192,8 +191,11 @@ class actionContentItemEdit extends cmsAction {
                 }
                 if ($is_date_pub_end_allowed && !empty($item['date_pub_end'])) {
 
+                    $date_pub_end_time = strtotime($item['date_pub_end']);
+
                     $days_from_pub = floor(($now_date - $date_pub_end_time) / 60 / 60 / 24);
                     $is_pub        = $is_pub && ($days_from_pub < 1);
+
                 } else if ($is_date_pub_ext_allowed && !$this->cms_user->is_admin) {
 
                     $days                 = $item['pub_days'];

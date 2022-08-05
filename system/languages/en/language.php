@@ -717,7 +717,7 @@
     //MAIL
     define('LANG_MAIL_DEFAULT_ALT',          'Please view this e-mail with a client that supports HTML');
 
-    define('LANG_POWERED_BY_INSTANTCMS',     'Powered by <a href="https://instantcms.ru/">InstantCMS</a>');
+    define('LANG_POWERED_BY_INSTANTCMS',     'Powered by <a href="https://instantcms.io/">InstantCMS</a>');
     define('LANG_ICONS_BY_FATCOW',           'Icons by <a href="https://icons8.com/">Icons8</a>');
     define('LANG_SUCCESS_MSG',               'Successfully saved');
 

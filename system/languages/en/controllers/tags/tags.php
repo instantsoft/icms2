@@ -12,6 +12,7 @@ define('LANG_TAGS_SETTINGS', 'Configure Tags');
 define('LANG_TAGS_RECOUNT', 'Recount Tags');
 define('LANG_TAGS_CONTEXT_LT_SEARCH', 'When searching by tags');
 define('LANG_TAGS_SEO_HINT', 'You can use the expressions {tag} - the current tag, {ctype_title} - the title of the current content type');
+define('LANG_TAGS_LEN_ERROR', 'The <b>%s</b> tag is too large, the maximum length of one tag is %s characters');
 define('LANG_WD_TAGS_CLOUD_ORDERING', 'Sort tags');
 define('LANG_WD_TAGS_CLOUD_ORDER_BY_TAG', 'Alphabetically');
 define('LANG_WD_TAGS_CLOUD_ORDER_BY_FREQ', 'By frequency');
