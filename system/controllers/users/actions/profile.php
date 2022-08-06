@@ -117,41 +117,49 @@ class actionUsersProfile extends cmsAction {
 
         // Если включена опция "просмотр даты регистрации"
         if (!empty($this->options['show_reg_data'])) {
-
-            $fields['date_reg'] = [
-                'title' => LANG_USERS_PROFILE_REGDATE,
-                'text'  => string_date_age_max($profile['date_reg'], true)
-            ];
+            // Проверяем настройки приватности (последний визит)
+            if(cmsUser::getInstance()->isPrivacyAllowed($profile, 'users_show_reg_data')) {
+                $fields['date_reg'] = [
+                    'title' => LANG_USERS_PROFILE_REGDATE,
+                    'text'  => string_date_age_max($profile['date_reg'], true)
+                ];
+            }
         }
 
         // Если включена опция "показать последний визит пользователя"
         if (!empty($this->options['show_last_visit'])) {
             // Если пользователь не в сети
             if (!$profile['is_online']) {
-                $fields['date_log'] = [
-                    'title' => LANG_USERS_PROFILE_LOGDATE,
-                    'text'  => string_date_age_max($profile['date_log'], true)
-                ];
+                // Проверяем настройки приватности (последний визит)
+                if(cmsUser::getInstance()->isPrivacyAllowed($profile, 'users_show_last_visit')) {
+                    $fields['date_log'] = [
+                        'title' => LANG_USERS_PROFILE_LOGDATE,
+                        'text'  => string_date_age_max($profile['date_log'], true)
+                    ];
+                }
             }
         }
 
         // Если включена опция "показывать группы пользователя"
         if (!empty($this->options['show_user_groups'])) {
 
-            // Получаем группы пользователя
-            $groups = $this->model->getGroups();
+            // Проверяем настройки приватности (группы пользователя)
+            if(cmsUser::getInstance()->isPrivacyAllowed($profile, 'users_show_user_groups')) {
+                // Получаем группы пользователя
+                $groups = $this->model->getGroups();
 
-            $groups_title = [];
+                $groups_title = [];
 
-            // Заполняем массив именами групп
-            foreach ($profile['groups'] as $group_id) {
-                $groups_title[] = $groups[$group_id]['title'];
+                // Заполняем массив именами групп
+                foreach ($profile['groups'] as $group_id) {
+                    $groups_title[] = $groups[$group_id]['title'];
+                }
+
+                $fields['groups'] = [
+                    'title' => LANG_GROUPS,
+                    'text'  => implode(', ', $groups_title)
+                ];
             }
-
-            $fields['groups'] = [
-                'title' => LANG_GROUPS,
-                'text'  => implode(', ', $groups_title)
-            ];
         }
 
         if ($profile['inviter_id'] && !empty($profile['inviter_nickname'])) {

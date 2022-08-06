@@ -142,8 +142,11 @@
     define('LANG_USERS_NOTIFY_FRIEND_ACCEPT',  'Уведомлять об одобренных запросах дружбы');
     define('LANG_USERS_NOTIFY_FRIEND_DELETE',  'Уведомлять о прекращении дружбы');
 
-    define('LANG_USERS_PRIVACY_FRIENDSHIP',    'Кто может отправлять мне запросы дружбы?');
+    define('LANG_USERS_PRIVACY_FRIENDSHIP',    'Кто может отправлять вам запросы дружбы?');
     define('LANG_USERS_PRIVACY_PROFILE_VIEW',  'Кто может просматривать ваш профиль?');
+    define('LANG_USERS_PRIVACY_SHOW_REG_DATA', 'Кто может видеть вашу дату регистрации?');
+    define('LANG_USERS_PRIVACY_SHOW_LAST_VISIT',    'Кто может видеть ваш последний визит?');
+    define('LANG_USERS_PRIVACY_SHOW_USER_GROUPS',   'Кто может видеть ваши группы?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL',  'Кто может писать на вашей стене?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL_REPLY', 'Кто может комментировать записи на стене?');
     define('LANG_USERS_PRIVACY_PROFILE_CTYPE',  'Кто может просматривать список ваших %s?');
