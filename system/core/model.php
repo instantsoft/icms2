@@ -2562,7 +2562,7 @@ class cmsModel {
         if (!is_array($input_array)) {
             return null;
         }
-        return json_encode($input_array);
+        return json_encode($input_array, JSON_UNESCAPED_UNICODE);
     }
 
     /**

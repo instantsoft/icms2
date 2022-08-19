@@ -1456,8 +1456,8 @@ CREATE TABLE `{#}tags_bind` (
 DROP TABLE IF EXISTS `{#}uploaded_files`;
 CREATE TABLE `{#}uploaded_files` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `path` varchar(255) DEFAULT NULL COMMENT 'File path',
-  `name` varchar(255) DEFAULT NULL COMMENT 'File name',
+  `path` varchar(170) DEFAULT NULL COMMENT 'File path',
+  `name` varchar(100) DEFAULT NULL COMMENT 'File name',
   `size` int(11) unsigned DEFAULT NULL COMMENT 'File size',
   `counter` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Download counter',
   `type` varchar(32) DEFAULT 'file' COMMENT  'File type',

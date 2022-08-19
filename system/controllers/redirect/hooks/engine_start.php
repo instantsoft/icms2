@@ -13,6 +13,12 @@ class onRedirectEngineStart extends cmsAction {
         $rules = json_decode($this->options['rewrite_json'], true);
 
         if ($rules) {
+
+            $checked_uri = $this->cms_core->uri_before_remap;
+            if ($this->cms_core->uri_query) {
+                $checked_uri .= '?' . http_build_query($this->cms_core->uri_query);
+            }
+
             //перебираем правила
             foreach ($rules as $rule) {
                 //небольшая валидация правила
@@ -21,7 +27,7 @@ class onRedirectEngineStart extends cmsAction {
                 }
                 $matches = [];
                 //проверяем совпадение выражения source с текущим uri
-                if (preg_match($rule['source'], $this->cms_core->uri_before_remap, $matches)) {
+                if (preg_match($rule['source'], $checked_uri, $matches)) {
 
                     //перебираем совпавшие сегменты и добавляем их в target
                     //чтобы сохранить параметры из $this->cms_core->uri в новом адресе

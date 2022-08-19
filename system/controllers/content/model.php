@@ -1731,6 +1731,23 @@ class modelContent extends cmsModel {
         return $this->get($table_name, false, false);
     }
 
+    public function selectFieldsForList($ctype_name, $fields) {
+
+        $table_fields = $this->db->getTableFields($this->getContentTypeTableName($ctype_name));
+
+        $excluded_fields = ['seo_keys', 'seo_desc', 'seo_title'];
+
+        foreach($fields as $field){
+            if (!$field['is_in_list']) {
+                $excluded_fields[] = $field['name'];
+            }
+        }
+
+        $select_fields = array_diff($table_fields, $excluded_fields);
+
+        return $this->selectList($select_fields, true, true);
+    }
+
     public function getContentItems($ctype_name, $callback = null) {
 
         $this->joinUser();

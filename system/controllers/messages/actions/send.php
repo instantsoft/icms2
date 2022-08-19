@@ -117,6 +117,14 @@ class actionMessagesSend extends cmsAction {
             ]);
         }
 
+        if(mb_strlen($content_html) > 65535){
+            return $this->cms_template->renderJSON([
+                'error'   => true,
+                'date'    => false,
+                'message' => sprintf(ERR_VALIDATE_MAX_LENGTH, 65535)
+            ]);
+        }
+
         $this->setSender($this->cms_user->id)->addRecipient($contact_id);
 
         $message_id = $this->sendMessage($content_html);

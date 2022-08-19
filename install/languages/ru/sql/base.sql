@@ -1455,8 +1455,8 @@ CREATE TABLE `{#}tags_bind` (
 DROP TABLE IF EXISTS `{#}uploaded_files`;
 CREATE TABLE `{#}uploaded_files` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `path` varchar(255) DEFAULT NULL COMMENT 'Путь к файлу',
-  `name` varchar(255) DEFAULT NULL COMMENT 'Имя файла',
+  `path` varchar(170) DEFAULT NULL COMMENT 'Путь к файлу',
+  `name` varchar(100) DEFAULT NULL COMMENT 'Имя файла',
   `size` int(11) unsigned DEFAULT NULL COMMENT 'Размер файла',
   `counter` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Счетчик скачиваний',
   `type` varchar(32) DEFAULT 'file' COMMENT  'Тип файла',
