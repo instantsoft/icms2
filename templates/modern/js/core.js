@@ -16,7 +16,7 @@ $(document).ready(function(){
         });
     });
 
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip({trigger : 'hover'});
 });
 
 icms.template = (function ($) {

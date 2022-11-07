@@ -18,6 +18,7 @@ define('LANG_BS4_MENU_NAV_STYLE', 'Расположение меню');
 define('LANG_BS4_MENU_NAV_STYLE_ADD', 'Расположение меню на других разрешениях');
 define('LANG_BS4_MENU_NAV_STYLE_HL', 'Горизонтальное, по левому краю');
 define('LANG_BS4_MENU_NAV_STYLE_HC', 'Горизонтальное, по центру');
+define('LANG_BS4_MENU_NAV_STYLE_HB', 'Горизонтальное, по ширине');
 define('LANG_BS4_MENU_NAV_STYLE_HR', 'Горизонтальное, по правому краю');
 define('LANG_BS4_MENU_NAV_STYLE_V', 'Вертикальное');
 define('LANG_BS4_MENU_IS_PILLS', 'Активные пункты как кнопки');

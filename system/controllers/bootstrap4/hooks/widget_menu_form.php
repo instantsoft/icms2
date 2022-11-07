@@ -32,9 +32,10 @@ class onBootstrap4WidgetMenuForm extends cmsAction {
             'title' => LANG_BS4_MENU_NAV_STYLE,
             'items' => [
                 '' => LANG_BS4_MENU_NAV_STYLE_HL,
-                'justify-content-center' => LANG_BS4_MENU_NAV_STYLE_HC,
-                'justify-content-end'    => LANG_BS4_MENU_NAV_STYLE_HR,
-                'flex-column'            => LANG_BS4_MENU_NAV_STYLE_V
+                'justify-content-between' => LANG_BS4_MENU_NAV_STYLE_HB,
+                'justify-content-center'  => LANG_BS4_MENU_NAV_STYLE_HC,
+                'justify-content-end'     => LANG_BS4_MENU_NAV_STYLE_HR,
+                'flex-column'             => LANG_BS4_MENU_NAV_STYLE_V
             ]
         )));
 

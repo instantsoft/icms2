@@ -18,6 +18,7 @@ define('LANG_BS4_MENU_NAV_STYLE', 'Menu style');
 define('LANG_BS4_MENU_NAV_STYLE_ADD', 'Menu style at other resolutions ');
 define('LANG_BS4_MENU_NAV_STYLE_HL', 'Horizontal, Left');
 define('LANG_BS4_MENU_NAV_STYLE_HC', 'Horizontal, centered');
+define('LANG_BS4_MENU_NAV_STYLE_HB', 'Horizontal, by width');
 define('LANG_BS4_MENU_NAV_STYLE_HR', 'Horizontal, Right');
 define('LANG_BS4_MENU_NAV_STYLE_V', 'Vertical');
 define('LANG_BS4_MENU_IS_PILLS', 'Active items as buttons');

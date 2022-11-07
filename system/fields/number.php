@@ -306,7 +306,7 @@ class fieldNumber extends cmsFormField {
 
                     $controller_name = 'content';
 
-                    if(cmsCore::isControllerExists($this->item['ctype_name'])){
+                    if(cmsCore::isModelExists($this->item['ctype_name'])){
                         $controller_name = $this->item['ctype_name'];
                     }
 
