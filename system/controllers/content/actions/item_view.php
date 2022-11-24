@@ -474,8 +474,11 @@ class actionContentItemView extends cmsAction {
 
             $this->cms_template->addMenuItems('item-menu', $childs['tabs']);
         }
+	    
+	$tpl_file = $this->cms_template->getTemplateFileName('controllers/content/item_view_' . $ctype['name'], true) ?
+                'item_view_' . $ctype['name'] : 'item_view';
 
-        return $this->cms_template->render('item_view', [
+        return $this->cms_template->render($tpl_file, [
             'item_seo'         => $item_seo,
             'ctype'            => $ctype,
             'fields'           => $fields,
