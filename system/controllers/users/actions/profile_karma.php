@@ -14,6 +14,8 @@ class actionUsersProfileKarma extends cmsAction {
 
         $page = $this->request->get('page', 1);
         $perpage = 15;
+        
+        cmsEventsManager::hook('users_karma_log_filter', $this->model);
 
         $total = $this->model->getKarmaLogCount($profile['id']);
         $log   = $this->model->limitPage($page, $perpage)->getKarmaLog($profile['id']);
