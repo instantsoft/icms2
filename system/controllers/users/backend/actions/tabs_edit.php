@@ -2,43 +2,37 @@
 
 class actionUsersTabsEdit extends cmsAction {
 
-    public function run($tab_id){
+    use icms\traits\controllers\actions\formItem;
 
-        if (!$tab_id) { cmsCore::error404(); }
+    public function __construct($controller, $params = []) {
 
-        $form = $this->getForm('tab', array('edit'));
+        parent::__construct($controller, $params);
 
-        $is_submitted = $this->request->has('submit');
+        $list_url = $this->cms_template->href_to('tabs');
 
-        $tab = $this->model->getUsersProfilesTab($tab_id);
+        $this->table_name  = '{users}_tabs';
+        $this->cache_key   = 'users.tabs';
+        $this->form_name   = 'tab';
+        $this->success_url = $list_url;
+        $this->title       = '{title}';
 
-        if ($is_submitted){
+        $this->breadcrumbs = [
+            [LANG_USERS_CFG_TABS, $list_url],
+            '{title}'
+        ];
 
-            $tab = $form->parse($this->request, $is_submitted);
-            $errors = $form->validate($this,  $tab);
-
-            if (!$errors){
-
-                $this->model->updateUsersProfilesTab($tab_id, $tab);
-
-                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
-
-                $this->redirectToAction('tabs');
-
-            }
-
-            if ($errors){
-                cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-            }
-
-        }
-
-        return $this->cms_template->render('backend/tab', array(
-            'do'     => 'edit',
-            'tab'    => $tab,
-            'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
-        ));
+        $this->tool_buttons = [
+            [
+                'class' => 'save',
+                'title' => LANG_SAVE,
+                'href'  => 'javascript:icms.forms.submit()'
+            ],
+            [
+                'class' => 'cancel',
+                'title' => LANG_CANCEL,
+                'href'  => $list_url
+            ]
+        ];
 
     }
 

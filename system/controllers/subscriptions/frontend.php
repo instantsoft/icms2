@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelSubscriptions $model
+ */
 class subscriptions extends cmsFrontend {
 
     protected $useOptions = true;

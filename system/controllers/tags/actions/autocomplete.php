@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelTags $model
+ */
 class actionTagsAutocomplete extends cmsAction {
 
     public function run() {

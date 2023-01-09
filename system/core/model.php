@@ -12,24 +12,24 @@ class cmsModel {
     /**
      * Типы MySQL JOIN
      */
-	const LEFT_JOIN = 'LEFT JOIN';
-	const RIGHT_JOIN = 'RIGHT JOIN';
-	const INNER_JOIN = 'INNER JOIN';
-	const STRAIGHT_JOIN = 'STRAIGHT_JOIN';
-	const LEFT_OUTER_JOIN = 'LEFT OUTER JOIN';
-	const RIGHT_OUTER_JOIN = 'RIGHT OUTER JOIN';
-	const NATURAL_LEFT_JOIN = 'NATURAL LEFT JOIN';
-	const NATURAL_LEFT_OUTER_JOIN = 'NATURAL LEFT OUTER JOIN';
-	const NATURAL_RIGHT_JOIN = 'NATURAL RIGHT JOIN';
-	const NATURAL_RIGHT_OUTER_JOIN = 'NATURAL RIGHT OUTER JOIN';
+	const LEFT_JOIN                = 'LEFT JOIN';
+    const RIGHT_JOIN               = 'RIGHT JOIN';
+    const INNER_JOIN               = 'INNER JOIN';
+    const STRAIGHT_JOIN            = 'STRAIGHT_JOIN';
+    const LEFT_OUTER_JOIN          = 'LEFT OUTER JOIN';
+    const RIGHT_OUTER_JOIN         = 'RIGHT OUTER JOIN';
+    const NATURAL_LEFT_JOIN        = 'NATURAL LEFT JOIN';
+    const NATURAL_LEFT_OUTER_JOIN  = 'NATURAL LEFT OUTER JOIN';
+    const NATURAL_RIGHT_JOIN       = 'NATURAL RIGHT JOIN';
+    const NATURAL_RIGHT_OUTER_JOIN = 'NATURAL RIGHT OUTER JOIN';
 
     /**
      * Уровни изоляций транзакций
      */
     const READ_UNCOMMITTED = 'READ UNCOMMITTED';
-    const READ_COMMITTED = 'READ COMMITTED';
-    const REPEATABLE_READ = 'REPEATABLE READ';
-    const SERIALIZABLE = 'SERIALIZABLE';
+    const READ_COMMITTED   = 'READ COMMITTED';
+    const REPEATABLE_READ  = 'REPEATABLE READ';
+    const SERIALIZABLE     = 'SERIALIZABLE';
 
     /**
      * Булевы операторы, которых быть не должно при fulltext search
@@ -74,7 +74,6 @@ class cmsModel {
     public $limit      = 1000;
     public $perpage    = 50;
     public $encoded_fields = [];
-    public $is_transaction_started = false;
 
     public $keep_filters = false;
     public $filter_on  = false;
@@ -1703,93 +1702,6 @@ class cmsModel {
         $this->read_type = $type;
 
         return $this;
-    }
-
-//============================================================================//
-//============================== Транзакции ==================================//
-
-    public function processTransaction($payload_callback, $after_autocommit_on = false) {
-
-        // нам не нужно, чтобы внутри транзакции при ошибке запроса
-        // всё умирало
-        $this->db->query_quiet = true;
-
-        // флаг результата выполнения
-        $success = true;
-
-        // мы внутри транзакции?
-        $is_autocommit_on = $this->db->isAutocommitOn();
-
-        // выключаем автокоммит, чтобы все запросы были в транзакции
-        // если автокоммит выключен, то мы уже в транзакции
-        if ($is_autocommit_on) {
-            $this->db->autocommitOff();
-        }
-
-        try {
-
-            $success = call_user_func_array($payload_callback, array($this));
-
-        } catch (Exception $e) {
-
-            error_log($e->getMessage());
-
-            $success = false;
-
-        }
-
-        $this->db->query_quiet = null;
-
-        if ($is_autocommit_on || $after_autocommit_on) {
-
-            $this->endTransaction($success);
-
-        }
-
-        return $success;
-
-    }
-
-    public function startTransaction() {
-
-        $this->is_transaction_started = true;
-
-        $this->db->autocommitOff();
-
-        return $this;
-
-    }
-
-    public function endTransaction($success) {
-
-        if ($success) {
-
-            $this->db->commit();
-
-        } else {
-
-            $this->db->rollback();
-
-        }
-
-        $this->db->autocommitOn();
-
-        $this->is_transaction_started = false;
-
-        return $this;
-
-    }
-
-    public function forUpdate() {
-        return $this->setReadType('FOR UPDATE');
-    }
-
-    public function lockInShareMode() {
-        return $this->setReadType('LOCK IN SHARE MODE');
-    }
-
-    public function setTransactionIsolationLevel($level) {
-        $this->db->query("SET TRANSACTION ISOLATION LEVEL {$level};"); return $this;
     }
 
 //============================================================================//

@@ -4,6 +4,8 @@
  */
 class modelUsers extends cmsModel {
 
+    use icms\traits\controllers\models\transactable;
+
     public function getUsersCount($reset = false) {
 
         $this->useCache('users.list');
@@ -1168,46 +1170,31 @@ class modelUsers extends cmsModel {
 //=========================    ВКЛАДКИ ПРОФИЛЕЙ   ============================//
 //============================================================================//
 
-    public function getUsersProfilesTabs($only_active=false, $by_field='id'){
+    public function getUsersProfilesTabs($only_active = false, $by_field = 'id') {
 
         $this->useCache('users.tabs');
 
-        if ($only_active){ $this->filterEqual('is_active', 1); }
+        if ($only_active) {
+            $this->filterEqual('is_active', 1);
+        }
 
-        return $this->orderBy('ordering')->get('{users}_tabs', function($item, $model){
+        return $this->orderBy('ordering')->get('{users}_tabs', function ($item, $model) {
+
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+
             return $item;
         }, $by_field);
-
     }
 
-    public function getUsersProfilesTab($tab_id){
-
-        $this->useCache('users.tabs');
-
-        return $this->getItemById('{users}_tabs', $tab_id);
-
-    }
-
-    public function updateUsersProfilesTab($id, $tab){
-
-        cmsCache::getInstance()->clean('users.tabs');
-
-        return $this->update('{users}_tabs', $id, $tab);
-
-    }
-
-    public function reorderUsersProfilesTabs($fields_ids_list){
+    public function reorderUsersProfilesTabs($fields_ids_list) {
 
         $this->reorderByList('{users}_tabs', $fields_ids_list);
 
         cmsCache::getInstance()->clean('users.tabs');
 
         return true;
-
     }
-
 
 //============================================================================//
 //==============================    СТАТУСЫ   ================================//
@@ -1352,29 +1339,6 @@ class modelUsers extends cmsModel {
         cmsEventsManager::hook('users_rating_update', [$user_id, $score]);
 
         return true;
-    }
-
-//============================================================================//
-//============================================================================//
-
-    public function getMigrationRules() {
-        return $this->get('{users}_groups_migration');
-    }
-
-    public function getMigrationRule($id) {
-        return $this->getItemById('{users}_groups_migration', $id);
-    }
-
-    public function addMigrationRule($rule) {
-        return $this->insert('{users}_groups_migration', $rule);
-    }
-
-    public function updateMigrationRule($id, $rule) {
-        return $this->update('{users}_groups_migration', $id, $rule);
-    }
-
-    public function deleteMigrationRule($id) {
-        return $this->delete('{users}_groups_migration', $id);
     }
 
 //============================================================================//

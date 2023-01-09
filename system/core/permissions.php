@@ -8,15 +8,17 @@ class cmsPermissions {
      * @param array $rule Массив данных правила
      * @return integer|false
      */
-    static function addRule($controller, $rule){
+    static function addRule($controller, $rule) {
 
         $core = cmsCore::getInstance();
 
-        if($core->db->getRowsCount('perms_rules', "controller = '{$controller}' AND name = '{$rule['name']}'", 1)){
+        if ($core->db->getRowsCount('perms_rules', "controller = '{$controller}' AND name = '{$rule['name']}'", 1)) {
             return false;
         }
 
-        if (!in_array($rule['type'], array('flag', 'list', 'number'))){ $rule['type'] = 'flag'; }
+        if (!in_array($rule['type'], ['flag', 'list', 'number'])) {
+            $rule['type'] = 'flag';
+        }
 
         $sql = "INSERT INTO {#}perms_rules (controller, name, type, options)
                 VALUES ('{$controller}', '{$rule['name']}', '{$rule['type']}', '{$rule['options']}')";
@@ -26,7 +28,6 @@ class cmsPermissions {
         $rule_id = ($core->db->error()) ? false : $core->db->lastId('perms_rules');
 
         return $rule_id;
-
     }
 
     /**
@@ -34,7 +35,7 @@ class cmsPermissions {
      * @param string $controller Название контроллера
      * @return array
      */
-    static function getRulesList($controller){
+    static function getRulesList($controller) {
 
         $model = new cmsModel();
 
@@ -42,28 +43,30 @@ class cmsPermissions {
 
         cmsCore::loadControllerLanguage($controller);
 
-        return $model->orderBy('name')->get('perms_rules', function($rule, $model){
+        return $model->orderBy('name')->get('perms_rules', function ($rule, $model) {
 
-            $title_const = 'LANG_RULE_'.strtoupper($rule['controller']).'_'.strtoupper($rule['name']);
-            $hint_const  = 'LANG_RULE_'.strtoupper($rule['controller']).'_'.strtoupper($rule['name']).'_HINT';
+            $title_const = 'LANG_RULE_' . strtoupper($rule['controller']) . '_' . strtoupper($rule['name']);
+            $hint_const  = 'LANG_RULE_' . strtoupper($rule['controller']) . '_' . strtoupper($rule['name']) . '_HINT';
 
-            $rule['title'] = defined($title_const) ? constant($title_const) : (!empty($rule['title']) ? $rule['title'] : $title_const);
+            $rule['title']      = defined($title_const) ? constant($title_const) : (!empty($rule['title']) ? $rule['title'] : $title_const);
             $rule['title_hint'] = defined($hint_const) ? constant($hint_const) : '';
 
-            if ($rule['type'] == 'list' && $rule['options']){
+            if ($rule['type'] === 'list' && $rule['options']) {
+
                 $rule['options'] = explode(',', $rule['options']);
-                $options = array();
+
+                $options    = [];
                 $options[0] = LANG_PERM_OPTION_NULL;
-                foreach($rule['options'] as $id=>$option){
-                    $options[trim($option)] = constant('LANG_PERM_OPTION_'.strtoupper(trim($option)));
+
+                foreach ($rule['options'] as $id => $option) {
+                    $options[trim($option)] = constant('LANG_PERM_OPTION_' . strtoupper(trim($option)));
                 }
+
                 $rule['options'] = $options;
             }
 
             return $rule;
-
-        });
-
+        }) ?: [];
     }
 
     /**
@@ -71,27 +74,27 @@ class cmsPermissions {
      * @param string $subject
      * @return array
      */
-    static function getPermissions($subject=false){
+    static function getPermissions($subject = false) {
 
         $model = new cmsModel();
 
-        if ($subject){
+        if ($subject) {
             $model->filterEqual('subject', $subject);
         }
 
         $items = $model->get('perms_users', false, false);
-        if (!$items) { return false; }
+        if (!$items) {
+            return false;
+        }
 
-        $values = array();
+        $values = [];
 
-        foreach($items as $item){
+        foreach ($items as $item) {
 
             $values[$item['rule_id']][$item['group_id']] = $item['value'];
-
         }
 
         return $values;
-
     }
 
     /**
@@ -106,7 +109,6 @@ class cmsPermissions {
         $model->filterIn('group_id', $user_groups);
 
         return self::getPermissionsData($model);
-
     }
 
     static function getRuleSubjectPermissions($controller, $subject, $permission) {
@@ -118,7 +120,6 @@ class cmsPermissions {
                 filterEqual('subject', $subject);
 
         return self::getPermissionsData($model);
-
     }
 
     private static function getPermissionsData($model) {
@@ -130,11 +131,13 @@ class cmsPermissions {
         $model->joinInner('perms_rules', 'r FORCE INDEX (PRIMARY ) ', 'r.id = i.rule_id');
 
         $items = $model->get('perms_users', false, false);
-        if (!$items) { return array(); }
+        if (!$items) {
+            return [];
+        }
 
-        $values = array();
+        $values = [];
 
-        foreach($items as $item){
+        foreach ($items as $item) {
 
             //
             // Для правил, которые являются списками важен порядок опций
@@ -144,41 +147,39 @@ class cmsPermissions {
             // группах, тогда будет браться самая приоритетная из всех
             // доступных опций (значений) этого правила
             //
-            if ($item['rule_type'] == 'list'){
+            if ($item['rule_type'] == 'list') {
 
                 $rule_options = explode(',', $item['rule_options']);
 
-                if (isset($values[$item['subject']][$item['rule_name']])){
-                    $current_value      = $values[$item['subject']][$item['rule_name']];
-                    $current_priority   = array_search($current_value, $rule_options);
-                    $next_priority      = array_search($item['value'], $rule_options);
-                    if ($current_priority >= $next_priority) { continue; }
+                if (isset($values[$item['subject']][$item['rule_name']])) {
+                    $current_value    = $values[$item['subject']][$item['rule_name']];
+                    $current_priority = array_search($current_value, $rule_options);
+                    $next_priority    = array_search($item['value'], $rule_options);
+                    if ($current_priority >= $next_priority) {
+                        continue;
+                    }
                 }
-
             }
 
             $values[$item['subject']][$item['rule_name']] = $item['value'];
-
         }
 
         return $values;
-
     }
 
     /**
      * Возвращает массив контроллеров, для которых есть правила доступа
      * @return array
      */
-    static function getControllersWithRules(){
+    static function getControllersWithRules() {
 
         $model = new cmsModel();
 
         $model->groupBy('controller');
 
-        return $model->get('perms_rules', function($rule, $model){
+        return $model->get('perms_rules', function ($rule, $model) {
             return $rule['controller'];
         }, false);
-
     }
 
     /**
@@ -186,11 +187,11 @@ class cmsPermissions {
      * @param string $subject Субъект действия правила
      * @param array $perms Правила и их значения
      */
-    static function savePermissions($subject, $perms){
+    static function savePermissions($subject, $perms) {
 
         $model = new cmsModel();
 
-        foreach($perms as $rule_id => $values){
+        foreach ($perms as $rule_id => $values) {
 
             if (is_null($values)) {
                 $model->filterEqual('subject', $subject)
@@ -199,7 +200,7 @@ class cmsPermissions {
                 continue;
             }
 
-            foreach($values as $group_id => $value){
+            foreach ($values as $group_id => $value) {
 
                 $model->filterEqual('subject', $subject)
                         ->filterEqual('rule_id', $rule_id)
@@ -217,26 +218,26 @@ class cmsPermissions {
 
                 $model->unlockFilters();
 
-                if ($is_exists){
-                    $model->updateFiltered('perms_users', array(
-                        'rule_id' => $rule_id,
-                        'group_id' => $group_id,
-                        'subject' => $subject,
-                        'value' => $value
-                    ));
-                } else {
-                    $model->insert('perms_users', array(
-                        'rule_id' => $rule_id,
-                        'group_id' => $group_id,
-                        'subject' => $subject,
-                        'value' => $value
-                    ));
-                }
+                if ($is_exists) {
 
+                    $model->updateFiltered('perms_users', [
+                        'rule_id'  => $rule_id,
+                        'group_id' => $group_id,
+                        'subject'  => $subject,
+                        'value'    => $value
+                    ]);
+                } else {
+
+                    $model->insert('perms_users', [
+                        'rule_id'  => $rule_id,
+                        'group_id' => $group_id,
+                        'subject'  => $subject,
+                        'value'    => $value
+                    ]);
+                }
             }
 
             $model->resetFilters();
-
         }
 
     }
@@ -254,12 +255,16 @@ class cmsPermissions {
      */
     public static function getRulesGroupMembers($controller, $name, $value = false, $subject = false) {
 
-        if (!$subject) { $subject = $controller; }
+        if (!$subject) {
+            $subject = $controller;
+        }
 
         $model = new cmsModel();
 
         $rule = $model->filterEqual('controller', $controller)->filterEqual('name', $name)->getItem('perms_rules');
-        if (!$rule) { return []; }
+        if (!$rule) {
+            return [];
+        }
 
         $model->filterEqual('subject', $subject)->filterEqual('rule_id', $rule['id']);
         if ($value) {
@@ -269,22 +274,25 @@ class cmsPermissions {
         $groups_ids = $model->selectOnly('group_id')->get('perms_users', function ($item, $model) {
             return $item['group_id'];
         }, 'group_id');
-        if (!$groups_ids) { return []; }
+
+        if (!$groups_ids) {
+            return [];
+        }
 
         return $model->filterIn('group_id', $groups_ids)->
-            selectOnly('i.user_id', 'id')->
-            joinUser('user_id', [
-                'u.notify_options' => 'notify_options',
-                'u.email'          => 'email',
-                'u.slug'           => 'slug',
-                'u.nickname'       => 'nickname',
-                'u.avatar'         => 'avatar'
-            ])->joinSessionsOnline()->get('{users}_groups_members', function ($item, $model) {
+                selectOnly('i.user_id', 'id')->
+                joinUser('user_id', [
+                    'u.notify_options' => 'notify_options',
+                    'u.email'          => 'email',
+                    'u.slug'           => 'slug',
+                    'u.nickname'       => 'nickname',
+                    'u.avatar'         => 'avatar'
+                ])->joinSessionsOnline()->get('{users}_groups_members', function ($item, $model) {
 
-                $item['notify_options'] = cmsModel::yamlToArray($item['notify_options']);
+            $item['notify_options'] = cmsModel::yamlToArray($item['notify_options']);
 
-                return $item;
-            }) ?: [];
+            return $item;
+        }) ?: [];
     }
 
 }

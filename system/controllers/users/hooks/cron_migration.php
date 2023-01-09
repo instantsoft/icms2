@@ -6,7 +6,7 @@ class onUsersCronMigration extends cmsAction {
 
     public function run() {
 
-        $rules = $this->model->filterEqual('is_active', 1)->getMigrationRules();
+        $rules = $this->model->filterEqual('is_active', 1)->get('{users}_groups_migration');
 
         if (!$rules) {
             return true;

@@ -2,35 +2,22 @@
 
 class actionGeoIndex extends cmsAction {
 
-    public function run(){
+    use icms\traits\controllers\actions\listgrid;
 
-		$grid = $this->loadDataGrid('countries');
+    public function __construct($controller, $params = []) {
 
-        if($this->request->isAjax()){
+        parent::__construct($controller, $params);
 
-            $this->model->setPerPage(admin::perpage);
+        $this->table_name = 'geo_countries';
+        $this->grid_name  = 'countries';
 
-            $filter     = array();
-            $filter_str = $this->request->get('filter', '');
-
-            if ($filter_str){
-                parse_str($filter_str, $filter);
-                $this->model->applyGridFilter($grid, $filter);
-            }
-
-            $total   = $this->model->getCount('geo_countries');
-            $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
-            $pages   = ceil($total / $perpage);
-
-            $countries = $this->model->get('geo_countries');
-
-            $this->cms_template->renderGridRowsJSON($grid, $countries, $total, $pages);
-
-            $this->halt();
-
-        }
-
-        return $this->cms_template->render('backend/countries', array('grid' => $grid));
-
+        $this->tool_buttons = [
+            [
+                'class' => 'add',
+                'title' => LANG_GEO_ADD_COUNTRY,
+                'href'  => $this->cms_template->href_to('country')
+            ]
+        ];
     }
+
 }

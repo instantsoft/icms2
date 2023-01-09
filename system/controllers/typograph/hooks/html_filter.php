@@ -93,7 +93,7 @@ class onTypographHtmlFilter extends cmsAction {
         ]);
 
         $jevix->cfgSetTagIsEmpty([
-            'a', 'iframe', 'div'
+            'a', 'iframe', 'div', 'td'
         ]);
 
         // Устанавливаем разрешённые параметры тегов. Также можно устанавливать допустимые значения этих параметров.

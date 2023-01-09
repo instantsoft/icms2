@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelTags $model
+ */
 class tags extends cmsFrontend {
 
     protected $useOptions = true;

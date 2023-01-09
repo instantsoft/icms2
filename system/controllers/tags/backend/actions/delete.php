@@ -2,13 +2,22 @@
 
 class actionTagsDelete extends cmsAction {
 
-    public function run($id){
+    use icms\traits\controllers\actions\deleteItem;
 
-        if (!$id) { cmsCore::error404(); }
+    public function __construct($controller, $params = []) {
 
-        $this->model->deleteTag($id);
+        parent::__construct($controller, $params);
 
-        $this->redirectBack();
+        $this->table_name  = 'tags';
+        $this->cache_key   = 'tags.tags';
+        $this->success_url = $this->cms_template->href_to('');
+
+        $this->delete_callback = function($item, $model){
+
+            $model->filterEqual('tag_id', $item['id'])->deleteFiltered('tags_bind');
+
+            return true;
+        };
 
     }
 

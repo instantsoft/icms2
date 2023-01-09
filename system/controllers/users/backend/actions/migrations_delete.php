@@ -2,19 +2,14 @@
 
 class actionUsersMigrationsDelete extends cmsAction {
 
-    public function run($rule_id) {
+    use icms\traits\controllers\actions\deleteItem;
 
-        if (!$rule_id) { cmsCore::error404(); }
+    public function __construct($controller, $params = []) {
 
-        if (!cmsForm::validateCSRFToken( $this->request->get('csrf_token', '') )){
-            cmsCore::error404();
-        }
+        parent::__construct($controller, $params);
 
-        $this->model->deleteMigrationRule($rule_id);
-
-        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
-
-        $this->redirectToAction('migrations');
+        $this->table_name  = '{users}_groups_migration';
+        $this->success_url = $this->cms_template->href_to('migrations');
 
     }
 

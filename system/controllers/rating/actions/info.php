@@ -1,11 +1,17 @@
 <?php
+/**
+ * @property \modelRating $model
+ */
+class actionRatingInfo extends cmsAction {
 
-class actionRatingInfo extends cmsAction{
+    public function run() {
 
-    public function run(){
-
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
-        if (!$this->options['is_show']){ cmsCore::error404(); }
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
+        if (!$this->options['is_show']) {
+            return cmsCore::error404();
+        }
 
         // Получаем параметры
         $target_controller = $this->request->get('controller', '');
@@ -15,7 +21,7 @@ class actionRatingInfo extends cmsAction{
         // Флаг что нужно вывести только голый список
         $is_list_only = $this->request->get('is_list_only');
 
-        $page = $this->request->get('page', 1);
+        $page    = $this->request->get('page', 1);
         $perpage = 10;
 
         $this->model->filterVotes($target_controller, $target_subject, $target_id)->
@@ -27,30 +33,24 @@ class actionRatingInfo extends cmsAction{
 
         $pages = ceil($total / $perpage);
 
-        if ($is_list_only){
+        if ($is_list_only) {
 
-            $this->cms_template->render('info_list', array(
+            return $this->cms_template->render('info_list', [
                 'votes' => $votes,
                 'user'  => $this->cms_user
-            ));
-
+            ]);
         }
 
-        if (!$is_list_only){
-
-            $this->cms_template->render('info', array(
-                'target_controller' => $target_controller,
-                'target_subject'    => $target_subject,
-                'target_id'         => $target_id,
-                'votes'             => $votes,
-                'user'              => $this->cms_user,
-                'page'              => $page,
-                'pages'             => $pages,
-                'perpage'           => $perpage
-            ));
-
-        }
-
+        return $this->cms_template->render('info', [
+            'target_controller' => $target_controller,
+            'target_subject'    => $target_subject,
+            'target_id'         => $target_id,
+            'votes'             => $votes,
+            'user'              => $this->cms_user,
+            'page'              => $page,
+            'pages'             => $pages,
+            'perpage'           => $perpage
+        ]);
     }
 
 }

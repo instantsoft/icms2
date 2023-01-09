@@ -2,20 +2,14 @@
 
 class actionWysiwygsPresetsDelete extends cmsAction {
 
-    public function run($id){
+    use icms\traits\controllers\actions\deleteItem;
 
-        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))){
-            cmsCore::error404();
-        }
+    public function __construct($controller, $params = []) {
 
-        $preset = $this->model->getPreset($id);
-        if (!$preset) { cmsCore::error404(); }
+        parent::__construct($controller, $params);
 
-        $this->model->deletePreset($preset['id']);
-
-        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
-
-        $this->redirectToAction('presets');
+        $this->table_name  = 'wysiwygs_presets';
+        $this->success_url = $this->cms_template->href_to('presets');
 
     }
 

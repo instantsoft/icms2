@@ -76,11 +76,9 @@ class cmsQueue {
             $model->filterEqual('queue', $queue);
         }
 
-        $model->startTransaction();
-
         $json_decode_errors = [];
 
-        $jobs = $model->forUpdate()->filterIsNull('is_locked')->
+        $jobs = $model->filterIsNull('is_locked')->
                     filterLtEqual('attempts', static::$max_attempts)->
                     filterStart()->
                     filterIsNull('date_started')->
@@ -102,9 +100,6 @@ class cmsQueue {
         });
 
         if (!$jobs) {
-
-            $model->endTransaction(true);
-
             return false;
         }
 
@@ -121,8 +116,6 @@ class cmsQueue {
         foreach ($json_decode_errors as $id => $json_last_error_msg) {
             static::setJobError($jobs[$id], $json_last_error_msg);
         }
-
-        $model->endTransaction(true);
 
         foreach ($jobs as $job) {
 

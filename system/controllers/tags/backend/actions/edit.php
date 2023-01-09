@@ -1,24 +1,26 @@
 <?php
-
+/**
+ * @property \modelTags $model
+ */
 class actionTagsEdit extends cmsAction {
 
-    public function run($tag_id){
-
-        if (!$tag_id) { cmsCore::error404(); }
+    public function run($tag_id) {
 
         $form = $this->getForm('tag');
 
         $tag = $this->model->getTag($tag_id);
-        if (!$tag) { cmsCore::error404(); }
+        if (!$tag) {
+            return cmsCore::error404();
+        }
 
         $original_tag = $tag;
 
-        if ($this->request->has('submit')){
+        if ($this->request->has('submit')) {
 
-            $tag = $form->parse($this->request, true);
-            $errors = $form->validate($this,  $tag);
+            $tag    = $form->parse($this->request, true);
+            $errors = $form->validate($this, $tag);
 
-            if (!$errors){
+            if (!$errors) {
 
                 if ($original_tag['tag'] == $tag['tag']) {
 
@@ -26,47 +28,41 @@ class actionTagsEdit extends cmsAction {
 
                     cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
-                    $this->redirectToAction();
-
+                    return $this->redirectToAction();
                 }
 
                 $duplicate_id = $this->model->getTagId($tag['tag']);
 
-                if (!$duplicate_id){
+                if (!$duplicate_id) {
 
                     $this->model->updateTag($tag_id, $tag);
 
                     $this->model->replaceTargetTags($tag_id, $tag['tag'], $original_tag['tag']);
 
                     cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
-
                 }
 
-                if ($duplicate_id){
+                if ($duplicate_id) {
 
                     $this->model->mergeTags($tag_id, $duplicate_id);
 
                     cmsUser::addSessionMessage(sprintf(LANG_TAGS_MERGED, $original_tag['tag'], $tag['tag']), 'success');
-
                 }
 
-                $this->redirectToAction();
-
+                return $this->redirectToAction();
             }
 
-            if ($errors){
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
-        return $this->cms_template->render('backend/tag', array(
+        return $this->cms_template->render('backend/tag', [
             'do'     => 'edit',
             'tag'    => $tag,
             'form'   => $form,
             'errors' => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }

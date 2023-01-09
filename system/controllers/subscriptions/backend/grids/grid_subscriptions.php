@@ -1,79 +1,81 @@
 <?php
 
-function grid_subscriptions ($controller){
+function grid_subscriptions($controller) {
 
     cmsCore::loadAllControllersLanguages();
 
-    $options = array(
+    $options = [
         'is_sortable'   => false,
         'show_id'       => true,
         'is_selectable' => true,
         'order_by'      => 'subscribers_count',
         'order_to'      => 'desc'
-    );
+    ];
 
-    $columns = array(
-        'id' => array(
+    $columns  = [
+        'id' => [
             'title' => 'id',
             'class' => 'd-none d-lg-table-cell',
             'width' => 30
-        ),
-        'title' => array(
-            'title'  => LANG_TITLE,
-            'editable' => array(
+        ],
+        'title' => [
+            'title'    => LANG_TITLE,
+            'editable' => [
                 'table' => 'subscriptions'
-            ),
+            ],
             'filter' => 'like'
-        ),
-        'controller' => array(
+        ],
+        'controller' => [
             'title'  => LANG_EVENTS_LISTENER,
-            'class' => 'd-none d-lg-table-cell',
+            'class'  => 'd-none d-lg-table-cell',
             'width'  => 200,
             'filter' => 'like',
-            'filter_select' => array(
-                'items' => function($name){
+            'filter_select' => [
+                'items' => function ($name) {
+
                     $admin_model = cmsCore::getModel('admin');
-                    $controllers = $admin_model->getInstalledControllers();
-                    $items = array('' => '');
-                    foreach($controllers as $controller){
+                    $admin_model->join('subscriptions', 's', 's.controller = i.name');
+                    $controllers = $admin_model->groupBy('i.id')->getInstalledControllers();
+
+                    $items = ['' => ''];
+                    foreach ($controllers as $controller) {
                         $items[$controller['name']] = $controller['title'];
                     }
                     return $items;
                 }
-            ),
-            'handler' => function($val, $row){
-                return string_lang($val.'_CONTROLLER', $val);
+            ],
+            'handler' => function ($val, $row) {
+                return string_lang($val . '_CONTROLLER', $val);
             }
-        ),
-        'subject' => array(
+        ],
+        'subject' => [
             'title' => LANG_CP_SUBJECT,
             'class' => 'd-none d-lg-table-cell',
             'width' => 200
-        ),
-        'subscribers_count' => array(
+        ],
+        'subscribers_count' => [
             'title' => LANG_SBSCR_SUBSCRIBERS,
             'width' => 80
-        )
-    );
+        ]
+    ];
 
-    $actions = array(
-        array(
+    $actions = [
+        [
             'title' => LANG_VIEW,
             'class' => 'view',
             'href'  => rel_to_href('{subject_url}')
-        ),
-        array(
+        ],
+        [
             'title'   => LANG_DELETE,
             'class'   => 'delete',
-            'href'    => href_to($controller->root_url, 'delete', array('{id}')),
+            'href'    => href_to($controller->root_url, 'delete', ['{id}']),
             'confirm' => LANG_SBSCR_DELETE_CONFIRM
-        )
-    );
+        ]
+    ];
 
-    return array(
+    return [
         'options' => $options,
         'columns' => $columns,
         'actions' => $actions
-    );
-
+    ];
 }

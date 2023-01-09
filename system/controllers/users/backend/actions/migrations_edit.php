@@ -2,43 +2,42 @@
 
 class actionUsersMigrationsEdit extends cmsAction {
 
-    public function run($rule_id){
+    use icms\traits\controllers\actions\formItem;
 
-        if (!$rule_id) { cmsCore::error404(); }
+    public function __construct($controller, $params = []) {
 
-        $form = $this->getForm('migration', array('edit'));
+        parent::__construct($controller, $params);
 
-        $is_submitted = $this->request->has('submit');
+        $list_url = $this->cms_template->href_to('migrations');
 
-        $rule = $this->model->getMigrationRule($rule_id);
+        $this->table_name  = '{users}_groups_migration';
+        $this->form_name   = 'migration';
+        $this->success_url = $list_url;
+        $this->title       = '{title}';
 
-        if ($is_submitted){
+        $this->breadcrumbs = [
+            [LANG_USERS_CFG_MIGRATION, $list_url],
+            '{title}'
+        ];
 
-            $rule = $form->parse($this->request, $is_submitted);
-            $errors = $form->validate($this,  $rule);
-
-            if (!$errors){
-
-                $this->model->updateMigrationRule($rule_id, $rule);
-
-                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
-
-                $this->redirectToAction('migrations');
-
-            }
-
-            if ($errors){
-                cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-            }
-
-        }
-
-        return $this->cms_template->render('backend/migration', array(
-            'do'     => 'edit',
-            'rule'   => $rule,
-            'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
-        ));
+        $this->tool_buttons = [
+            [
+                'class' => 'save',
+                'title' => LANG_SAVE,
+                'href'  => 'javascript:icms.forms.submit()'
+            ],
+            [
+                'class' => 'cancel',
+                'title' => LANG_CANCEL,
+                'href'  => $list_url
+            ],
+            [
+                'class'  => 'help',
+                'title'  => LANG_HELP,
+                'target' => '_blank',
+                'href'   => LANG_HELP_URL_COM_USERS_MIGRATON
+            ]
+        ];
 
     }
 

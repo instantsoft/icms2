@@ -1,14 +1,16 @@
 <?php
 
-class modelAdmin extends cmsModel{
+class modelAdmin extends cmsModel {
+
+    use icms\traits\controllers\models\transactable;
 
 //============================================================================//
 //==========================    КОМПОНЕНТЫ   =================================//
 //============================================================================//
 
-    public function getInstalledControllers(){
+    public function getInstalledControllers() {
 
-        if(!$this->order_by){
+        if (!$this->order_by) {
             $this->orderByList([
                 [
                     'by' => 'is_enabled',
@@ -21,25 +23,22 @@ class modelAdmin extends cmsModel{
             ]);
         }
 
-        return $this->get('controllers', function($item, $model){
+        return $this->get('controllers', function ($item, $model) {
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
 
-            $item['title'] = string_lang($item['name'].'_CONTROLLER', $item['title']);
+            $item['title'] = string_lang($item['name'] . '_CONTROLLER', $item['title']);
 
             return $item;
-
         });
-
     }
 
-    public function getInstalledControllersCount(){
-
+    public function getInstalledControllersCount() {
         return $this->getCount('controllers');
-
     }
 
     public function getControllerInfo($controller_name){
+
         return $this->getItemByField('controllers', 'name', $controller_name, function($item){
             $item['options'] = cmsModel::yamlToArray($item['options']);
             $item['files'] = cmsModel::yamlToArray($item['files']);
@@ -91,11 +90,11 @@ class modelAdmin extends cmsModel{
 
     public function addEvent($listener, $event) {
 
-        $id = $this->insert('events', array(
+        $id = $this->insert('events', [
             'listener' => $listener,
             'event'    => $event,
             'ordering' => $this->getNextOrdering('events')
-        ));
+        ]);
 
         cmsCache::getInstance()->clean('events');
 
@@ -117,19 +116,17 @@ class modelAdmin extends cmsModel{
 //==========================    ПЛАНИРОВЩИК    ===============================//
 //============================================================================//
 
-    public function getSchedulerTasksCount(){
+    public function getSchedulerTasksCount() {
 
         return $this->getCount('scheduler_tasks');
-
     }
 
-    public function getSchedulerTasks(){
+    public function getSchedulerTasks() {
 
         return $this->get('scheduler_tasks');
-
     }
 
-    public function getPendingSchedulerTasks(){
+    public function getPendingSchedulerTasks() {
 
         $tasks = $this->filterEqual('is_active', 1)->
                 orderBy('ordering', 'asc')->
@@ -137,78 +134,69 @@ class modelAdmin extends cmsModel{
 
         $pending = [];
 
-        if($tasks){
-	        foreach($tasks as $task){
+        if ($tasks) {
+            foreach ($tasks as $task) {
 
-	            if ($task['is_new']) {
-	                $pending[] = $task;
-	                continue;
-	            }
+                if ($task['is_new']) {
+                    $pending[] = $task;
+                    continue;
+                }
 
-	            $time_last_run = strtotime($task['date_last_run']);
-	            $time_now = time();
+                $time_last_run = strtotime($task['date_last_run']);
+                $time_now      = time();
 
-	            $minutes_ago = floor(($time_now - $time_last_run) / 60);
+                $minutes_ago = floor(($time_now - $time_last_run) / 60);
 
-	            if ($minutes_ago >= $task['period']){
-	                $pending[] = $task;
-	                continue;
-	            }
-
-	        }
+                if ($minutes_ago >= $task['period']) {
+                    $pending[] = $task;
+                    continue;
+                }
+            }
         }
 
         return $pending;
-
     }
 
-    public function getSchedulerTask($id){
+    public function getSchedulerTask($id) {
 
         return $this->getItemById('scheduler_tasks', $id);
-
     }
 
-    public function addSchedulerTask($task){
+    public function addSchedulerTask($task) {
 
         return $this->insert('scheduler_tasks', $task);
-
     }
 
-    public function updateSchedulerTask($id, $task){
+    public function updateSchedulerTask($id, $task) {
 
         return $this->update('scheduler_tasks', $id, $task);
-
     }
 
-    public function updateSchedulerTaskDate($task){
+    public function updateSchedulerTaskDate($task) {
 
-        return $this->updateSchedulerTask($task['id'], array(
-            'is_new' => 0,
-            'date_last_run' => ($task['is_strict_period'] ? date('Y-m-d H:i:s', (strtotime($task['date_last_run']) + ($task['period']*60))) : null)
-        ));
-
+        return $this->updateSchedulerTask($task['id'], [
+            'is_new'        => 0,
+            'date_last_run' => ($task['is_strict_period'] ? date('Y-m-d H:i:s', (strtotime($task['date_last_run']) + ($task['period'] * 60))) : null)
+        ]);
     }
 
-    public function deleteSchedulerTask($id){
+    public function deleteSchedulerTask($id) {
 
         return $this->delete('scheduler_tasks', $id);
-
     }
 
-    public function toggleSchedulerPublication($id, $is_active){
+    public function toggleSchedulerPublication($id, $is_active) {
 
-     	return $this->update('scheduler_tasks', $id, array(
-			'is_active' => $is_active
-		));
-
+        return $this->update('scheduler_tasks', $id, [
+            'is_active' => $is_active
+        ]);
     }
 
-    public function getTableItemsCount24($table_name, $date_pub_field = 'date_pub'){
+    public function getTableItemsCount24($table_name, $date_pub_field = 'date_pub') {
 
         $this->filterDateYounger($date_pub_field, 1);
 
         return $this->getCount($table_name, 'id', true);
-
     }
 
 }

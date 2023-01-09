@@ -2,50 +2,39 @@
 
 class actionSubscriptionsList extends cmsAction {
 
-    public function run(){
+    use icms\traits\controllers\actions\listgrid;
 
-        $grid = $this->loadDataGrid('subscriptions');
+    public function __construct($controller, $params = []) {
 
-        if ($this->request->isAjax()) {
+        parent::__construct($controller, $params);
 
-            $filter     = array();
-            $filter_str = $this->request->get('filter', '');
+        $this->table_name = 'subscriptions';
+        $this->grid_name  = 'subscriptions';
+        $this->title      = LANG_SBSCR_LIST;
 
-            $filter_str = cmsUser::getUPSActual('admin.grid_filter.subscriptions', $filter_str);
+        $this->tool_buttons = [
+            [
+                'class'   => 'delete',
+                'title'   => LANG_DELETE,
+                'href'    => null,
+                'onclick' => "return icms.datagrid.submit('".$this->cms_template->href_to('delete').'?csrf_token='.cmsForm::getCSRFToken()."', '".LANG_DELETE_SELECTED_CONFIRM."')"
+            ]
+        ];
 
-            if ($filter_str){
-                parse_str($filter_str, $filter);
-                $this->model->applyGridFilter($grid, $filter);
+        $this->items_callback = function($items){
+
+            if($items){
+
+                foreach ($items as $key => $item) {
+
+                    $items[$key]['params'] = cmsModel::stringToArray($item['params']);
+                }
             }
-
-            $total = $this->model->getCount('subscriptions');
-
-            $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
-
-            $this->model->setPerPage($perpage);
-
-            $pages = ceil($total / $perpage);
-
-            $items = $this->model->get('subscriptions', function($item, $model) {
-
-                $item['params'] = cmsModel::stringToArray($item['params']);
-
-                return $item;
-
-            });
 
             $items = cmsEventsManager::hook('admin_subscriptions_list', $items);
 
-            $this->cms_template->renderGridRowsJSON($grid, $items, $total, $pages);
-
-            $this->halt();
-
-        }
-
-        return $this->cms_template->render('backend/subscriptions', array(
-            'grid' => $grid
-        ));
-
+            return $items;
+        };
     }
 
 }

@@ -1,14 +1,20 @@
 <?php
-
+/**
+ * @property \modelSubscriptions $model
+ */
 class actionSubscriptionsGuestConfirm extends cmsAction {
 
-    public function run($confirm_token){
+    public function run($confirm_token) {
 
-        if($this->cms_user->is_logged){ cmsCore::error404(); }
+        if ($this->cms_user->is_logged) {
+            return cmsCore::error404();
+        }
 
         $subscription = $this->model->getSubscriptionByToken($confirm_token);
 
-        if(!$subscription){ cmsCore::error404(); }
+        if (!$subscription) {
+            return cmsCore::error404();
+        }
 
         $this->model->verifySubscription($confirm_token);
 
@@ -16,8 +22,7 @@ class actionSubscriptionsGuestConfirm extends cmsAction {
 
         cmsUser::addSessionMessage(LANG_SBSCR_VERIFY_SUCCESS, 'success');
 
-        $this->redirectToHome();
-
+        return $this->redirectToHome();
     }
 
 }

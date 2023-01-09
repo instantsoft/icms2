@@ -30,8 +30,4 @@ class modelWysiwygs extends cmsModel {
         }, 'id');
 	}
 
-	public function deletePreset ($id) {
-		return $this->delete('wysiwygs_presets', $id);
-	}
-
 }

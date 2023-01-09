@@ -2,39 +2,42 @@
 
 class actionUsersMigrationsAdd extends cmsAction {
 
-    public function run() {
+    use icms\traits\controllers\actions\formItem;
 
-        $form = $this->getForm('migration', array('add'));
+    public function __construct($controller, $params = []) {
 
-        $rule = [];
+        parent::__construct($controller, $params);
 
-        if ($this->request->has('submit')) {
+        $list_url = $this->cms_template->href_to('migrations');
 
-            $rule = $form->parse($this->request, true);
+        $this->table_name  = '{users}_groups_migration';
+        $this->form_name   = 'migration';
+        $this->success_url = $list_url;
+        $this->title       = LANG_USERS_MIG_ADD;
 
-            $errors = $form->validate($this, $rule);
+        $this->breadcrumbs = [
+            [LANG_USERS_CFG_MIGRATION, $list_url],
+            LANG_USERS_MIG_ADD
+        ];
 
-            if (!$errors) {
-
-                $rule_id = $this->model->addMigrationRule($rule);
-
-                cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
-
-                $this->redirectToAction('migrations');
-
-            }
-
-            if ($errors) {
-                cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-            }
-        }
-
-        return $this->cms_template->render('backend/migration', array(
-            'do'     => 'add',
-            'rule'   => $rule,
-            'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
-        ));
+        $this->tool_buttons = [
+            [
+                'class' => 'save',
+                'title' => LANG_SAVE,
+                'href'  => 'javascript:icms.forms.submit()'
+            ],
+            [
+                'class' => 'cancel',
+                'title' => LANG_CANCEL,
+                'href'  => $list_url
+            ],
+            [
+                'class'  => 'help',
+                'title'  => LANG_HELP,
+                'target' => '_blank',
+                'href'   => LANG_HELP_URL_COM_USERS_MIGRATON
+            ]
+        ];
 
     }
 

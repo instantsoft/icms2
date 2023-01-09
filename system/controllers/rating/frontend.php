@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelRating $model
+ */
 class rating extends cmsFrontend {
 
     protected $useOptions = true;
