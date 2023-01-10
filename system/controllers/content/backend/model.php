@@ -723,10 +723,12 @@ class modelBackendContent extends modelContent {
         }
 
         unset($prop['cats']);
+	    
+	$prop['id'] = $id;
+	cmsEventsManager::hook('ctype_prop_before_update', array($prop, $old_prop, $ctype_name, $this));
 
         $result = $this->update($table_name, $id, $prop);
 
-        $prop['id'] = $id;
         cmsEventsManager::hook('ctype_prop_after_update', array($prop, $ctype_name, $this));
 
         return $result;
