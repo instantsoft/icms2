@@ -153,6 +153,8 @@ class actionUsersProfileEditPassword extends cmsAction {
                     $result = $this->model->updateUser($profile['id'], $profile);
 
                     if ($result['success']) {
+                        
+                        list($profile, $data, $form) = cmsEventsManager::hook('users_after_edit_password', [$profile, $data, $form]);
 
                         if (!empty($data['password1'])) {
                             $success_text[] = LANG_PASS_CHANGED;
