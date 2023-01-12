@@ -16,7 +16,7 @@ class actionUsersFields extends cmsAction {
             [
                 'class' => 'add',
                 'title' => LANG_CP_FIELD_ADD,
-                'href'  => $this->cms_template->href_to('fields_add')
+                'href'  => $this->cms_template->href_to('fields_add', ['users'])
             ]
         ];
 

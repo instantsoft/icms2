@@ -61,6 +61,10 @@ class cmsUser {
         $this->ip       = self::getIp();
         $this->date_log = date('Y-m-d H:i:s');
 
+        if(PHP_SAPI === 'cli') {
+            return;
+        }
+
         if (self::isSessionSet('user:id')) {
 
             // уже авторизован

@@ -4,11 +4,7 @@
 
     $this->setPageTitle(LANG_MODERATORS, $ctype['title']);
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-    $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
     $this->addBreadcrumb(LANG_MODERATORS);
-
-    $this->addMenuItems('ctype', $this->controller->getCtypeMenu('moderators', $ctype['id']));
 
 	$this->addToolButton(array(
 		'class'  => 'settings',
@@ -29,7 +25,7 @@
 <h1><?php echo LANG_CONTENT_TYPE; ?>: <span><?php echo $ctype['title']; ?></span></h1>
 
 <div class="pills-menu">
-    <?php $this->menu('ctype'); ?>
+    <?php $this->menu('admin_toolbar'); ?>
 </div>
 
 <div class="cp_toolbar">

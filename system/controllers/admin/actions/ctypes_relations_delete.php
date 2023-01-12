@@ -2,15 +2,21 @@
 
 class actionAdminCtypesRelationsDelete extends cmsAction {
 
-    public function run($relation_id) {
+    public function run($relation_id = null) {
 
-        if (!$relation_id) {  cmsCore::error404(); }
+        if (!$relation_id) {
+            return cmsCore::error404();
+        }
 
         if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $relation = $this->model_backend_content->getContentRelation($relation_id);
+
+        if (!$relation) {
+            return cmsCore::error404();
+        }
 
         $ctype = $this->model_backend_content->getContenttype($relation['ctype_id']);
 
@@ -25,7 +31,6 @@ class actionAdminCtypesRelationsDelete extends cmsAction {
             $target_ctype = [
                 'name' => $relation['target_controller']
             ];
-
         } else {
             $target_ctype = $this->model_backend_content->getContentType($relation['child_ctype_id']);
         }
@@ -37,7 +42,7 @@ class actionAdminCtypesRelationsDelete extends cmsAction {
 
         cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
-        $this->redirectBack();
+        return $this->redirectToAction('ctypes', ['relations', $ctype['id']]);
     }
 
 }

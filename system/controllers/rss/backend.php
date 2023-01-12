@@ -2,23 +2,20 @@
 
 class backendRss extends cmsBackend {
 
-    public function loadCallback() {
+    public function __construct(cmsRequest $request) {
 
-        $this->callbacks = [
-            'actiontoggle_rss_feeds_is_enabled' => [
-                function ($controller, $item) {
+        parent::__construct($request);
 
-                    $controller_name = $item['ctype_name'];
+        $this->addEventListener('actiontoggle_rss_feeds_is_enabled', function ($controller, $item) {
 
-                    if ($controller->model->isCtypeFeed($item['ctype_name'])) {
-                        $controller_name = 'content';
-                    }
+            $controller_name = $item['ctype_name'];
 
-                    cmsEventsManager::hook('rss_' . $controller_name . '_controller_after_update', $item);
-                }
-            ]
-        ];
+            if ($controller->model->isCtypeFeed($item['ctype_name'])) {
+                $controller_name = 'content';
+            }
 
+            cmsEventsManager::hook('rss_' . $controller_name . '_controller_after_update', $item);
+        });
     }
 
 }

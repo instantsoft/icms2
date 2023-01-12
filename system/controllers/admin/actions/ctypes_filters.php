@@ -2,21 +2,28 @@
 
 class actionAdminCtypesFilters extends cmsAction {
 
-    public function run($ctype_id = null){
+    public function run($ctype_id = null) {
 
-        if (!$ctype_id) { cmsCore::error404(); }
+        if (!$ctype_id) {
+            return cmsCore::error404();
+        }
 
         $ctype = $this->model_content->getContentType($ctype_id);
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
+
+        $this->dispatchEvent('ctype_loaded', [$ctype, 'filters']);
 
         $table_exists = $this->model_content->isFiltersTableExists($ctype['name']);
 
-        if(!$table_exists){
-            return $this->cms_template->render('ctypes_filters', array(
+        if (!$table_exists) {
+
+            return $this->cms_template->render('ctypes_filters', [
                 'table_exists' => $table_exists,
-                'ctype' => $ctype,
-                'grid'  => []
-            ));
+                'ctype'        => $ctype,
+                'grid'         => []
+            ]);
         }
 
         $grid = $this->loadDataGrid('ctype_filters', ['ctype' => $ctype]);
@@ -29,16 +36,14 @@ class actionAdminCtypesFilters extends cmsAction {
 
             $this->cms_template->renderGridRowsJSON($grid, $filters);
 
-            $this->halt();
-
+            return $this->halt();
         }
 
-        return $this->cms_template->render('ctypes_filters', array(
+        return $this->cms_template->render('ctypes_filters', [
             'table_exists' => $table_exists,
-            'ctype' => $ctype,
-            'grid'  => $grid
-        ));
-
+            'ctype'        => $ctype,
+            'grid'         => $grid
+        ]);
     }
 
 }

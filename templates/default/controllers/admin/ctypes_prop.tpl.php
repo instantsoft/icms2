@@ -6,16 +6,14 @@
     if ($do=='add') { $this->setPageTitle(LANG_CP_FIELD_ADD, $ctype['title']); }
     if ($do=='edit') { $this->setPageTitle(LANG_CP_FIELD . ': ' . $prop['title']); }
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-
     if ($do=='add'){
-        $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
+
         $this->addBreadcrumb(LANG_CP_CTYPE_PROPS, $this->href_to('ctypes', array('props', $ctype['id'])));
         $this->addBreadcrumb(LANG_CP_FIELD_ADD);
     }
 
     if ($do=='edit'){
-        $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
+
         $this->addBreadcrumb(LANG_CP_CTYPE_PROPS, $this->href_to('ctypes', array('props', $ctype['id'])));
         $this->addBreadcrumb($prop['title']);
     }

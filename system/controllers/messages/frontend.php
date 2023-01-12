@@ -91,7 +91,7 @@ class messages extends cmsFrontend {
     }
 
     /**
-     * Отправляет сообщение
+     * Отправляет личное сообщение
      *
      * @param string $content
      * @return integer | false

@@ -2,20 +2,46 @@
 
 class actionAdminCtypesFields extends cmsAction {
 
-    public function run($ctype_id = null){
+    public function run($ctype_id = null) {
 
-        if (!$ctype_id) { cmsCore::error404(); }
+        if (!$ctype_id) {
+            return cmsCore::error404();
+        }
 
         $ctype = $this->model_content->getContentType($ctype_id);
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
+
+        $this->dispatchEvent('ctype_loaded', [$ctype, 'fields']);
 
         $grid = $this->loadDataGrid('ctype_fields', $ctype['name']);
 
-        return $this->cms_template->render('ctypes_fields', array(
-            'ctype' => $ctype,
-            'grid' => $grid
-        ));
+        if ($this->request->isAjax()) {
 
+            $filter     = [];
+            $filter_str = cmsUser::getUPSActual('admin.grid_filter.ctypes_fields', $this->request->get('filter', ''));
+
+            if ($filter_str){
+                parse_str($filter_str, $filter);
+                $this->model_content->applyGridFilter($grid, $filter);
+            }
+
+            $this->model_content->orderBy('ordering', 'asc');
+
+            $fields = $this->model_content->getContentFields($ctype['name'], false, false);
+
+            $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
+
+            $this->cms_template->renderGridRowsJSON($grid, $fields);
+
+            return $this->halt();
+        }
+
+        return $this->cms_template->render('ctypes_fields', [
+            'ctype' => $ctype,
+            'grid'  => $grid
+        ]);
     }
 
 }

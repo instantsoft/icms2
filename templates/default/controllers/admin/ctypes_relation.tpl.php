@@ -5,16 +5,14 @@
     if ($do=='add') { $this->setPageTitle(LANG_CP_RELATION_ADD, $ctype['title']); }
     if ($do=='edit') { $this->setPageTitle(LANG_CP_RELATION . ': ' . $relation['title']); }
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-
     if ($do=='add'){
-        $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
+
         $this->addBreadcrumb(LANG_CP_CTYPE_RELATIONS, $this->href_to('ctypes', array('relations', $ctype['id'])));
         $this->addBreadcrumb(LANG_CP_RELATION_ADD);
     }
 
     if ($do=='edit'){
-        $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
+
         $this->addBreadcrumb(LANG_CP_CTYPE_RELATIONS, $this->href_to('ctypes', array('relations', $ctype['id'])));
         $this->addBreadcrumb($relation['title']);
     }

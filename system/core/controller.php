@@ -73,10 +73,9 @@ class cmsController {
      */
     protected $outer_controller_model = '';
 
-    protected $callbacks = array();
     protected $useOptions = false;
 
-    protected $active_filters = array();
+    protected $active_filters = [];
 
     /**
      * Неизвестные экшены определять
@@ -109,7 +108,6 @@ class cmsController {
             $this->options = $this->getOptions();
         }
 
-        $this->loadCallback();
     }
 
     protected function loadModel() {
@@ -132,89 +130,57 @@ class cmsController {
         }
     }
 
-    public function setRequest( cmsRequest $request) {
-        $this->request = $request; return $this;
-    }
+    public function setRequest(cmsRequest $request) {
 
-    /////////////////    Набор методов для коллбэков    ////////////////////////
-    /**
-     * Этот метод переопределяется в дочерних классах
-     * где задается начальный набор функций, которые будут применены в коллбэках
-     */
-    public function loadCallback() {}
-    /**
-     * Устанавливает один или множество коллбэков
-     * @param string $name Назначение - обычно название метода, где будет применяться
-     * @param array $callbacks Массив коллбэков
-     * @return \cmsController
-     */
-    public function setCallback($name, $callbacks) { $this->callbacks[$name] = $callbacks; return $this; }
-    /**
-     * Применяет коллбэки
-     * @param string $name Назначение - обычно __FUNCTION__
-     * @param array $params Массив параметров
-     * @return \cmsController
-     */
-    public function processCallback($name, $params) {
-        $name = strtolower($name);
-        if(!empty($this->callbacks[$name])){
-            array_unshift($params, $this);
-            foreach ($this->callbacks[$name] as $callback) {
-                call_user_func_array($callback, $params);
-            }
-        }
+        $this->request = $request;
+
         return $this;
-    }
-
-    protected function loadCmsObj($name) {
-
-        if(strpos($name, 'cms_') === 0){
-
-            $class_name = string_to_camel('_', $name);
-
-            if(method_exists($class_name, 'getInstance')){
-                $this->{$name} = call_user_func(array($class_name, 'getInstance'));
-            } else {
-                $this->{$name} = new $class_name();
-            }
-
-            return true;
-
-        }
-
-        return false;
-
     }
 
     public function __get($name) {
 
-        if($this->loadCmsObj($name)){
-            return $this->{$name};
-        }
+        $this->{$name} = null;
 
-        if(strpos($name, 'controller_') === 0){
+        if (strpos($name, 'cms_') === 0) {
+
+            $class_name = string_to_camel('_', $name);
+
+            if (method_exists($class_name, 'getInstance')) {
+                $this->{$name} = call_user_func([$class_name, 'getInstance']);
+            } else {
+                $this->{$name} = new $class_name();
+            }
+
+        } else if (strpos($name, 'controller_') === 0) {
+
             $this->{$name} = cmsCore::getController(str_replace('controller_', '', $name), $this->request);
-            return $this->{$name};
-        }
 
-        if(strpos($name, 'model_') === 0){
+        } else if (strpos($name, 'model_') === 0) {
+
             $this->{$name} = cmsCore::getModel(str_replace('model_', '', $name));
-            return $this->{$name};
+
+        } else {
+            trigger_error('Undefined property: '.$name, E_USER_WARNING);
         }
 
-        return null;
-
+        return $this->{$name};
     }
 
-    public function setRootURL($root_url){
+    public function setRootURL($root_url) {
+
         $this->root_url = $root_url;
+
+        return $this;
     }
 
 //============================================================================//
 //============================================================================//
 
     public function setListContext($list_type) {
-        $this->list_type = $list_type; return $this;
+
+        $this->list_type = $list_type;
+
+        return $this;
     }
 
     public function getListContext() {

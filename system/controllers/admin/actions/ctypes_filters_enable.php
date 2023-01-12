@@ -2,7 +2,7 @@
 
 class actionAdminCtypesFiltersEnable extends cmsAction {
 
-    public function run($ctype_id) {
+    public function run($ctype_id = null) {
 
         if (!$ctype_id) {
             return cmsCore::error404();
@@ -44,10 +44,10 @@ class actionAdminCtypesFiltersEnable extends cmsAction {
         }
 
         if ($back_url) {
-            $this->redirect($back_url);
-        } else {
-            $this->redirectBack();
+            return $this->redirect($back_url);
         }
+
+        return $this->redirectToAction('ctypes', ['filters', $ctype['id']]);
     }
 
 }

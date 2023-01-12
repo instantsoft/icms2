@@ -2,27 +2,46 @@
 
 class actionGroupsFields extends cmsAction {
 
-    public function run(){
+    use icms\traits\controllers\actions\listgrid;
 
-        $grid = $this->loadDataGrid('fields');
+    public function __construct($controller, $params = []) {
 
-        if ($this->request->isAjax()) {
+        parent::__construct($controller, $params);
 
-            $content_model = cmsCore::getModel('content')->
-                                setTablePrefix('')->
-                                orderBy('ordering', 'asc');
+        $this->table_name = 'groups_fields';
+        $this->grid_name  = 'fields';
+        $this->title      = LANG_GROUPS_FIELDS;
 
-            $fields = $content_model->getContentFields('groups', false, false);
+        $this->tool_buttons = [
+            [
+                'class' => 'add',
+                'title' => LANG_CP_FIELD_ADD,
+                'href'  => $this->cms_template->href_to('fields_add', ['groups'])
+            ]
+        ];
 
-            $this->cms_template->renderGridRowsJSON($grid, $fields);
+        $this->list_callback = function ($model) {
 
-            $this->halt();
+            $model->orderBy('ordering', 'asc');
 
-        }
+            return $model;
+        };
 
-        return $this->cms_template->render('backend/fields', array(
-            'grid' => $grid
-        ));
+        $this->items_callback = function ($items) {
+
+            if($items){
+                foreach ($items as $key => $item) {
+
+                    $field_class = 'field' . string_to_camel('_', $item['type']);
+
+                    $handler = new $field_class($item['name']);
+
+                    $items[$key]['handler_title'] = $handler->getTitle();
+                }
+            }
+
+            return $items;
+        };
 
     }
 

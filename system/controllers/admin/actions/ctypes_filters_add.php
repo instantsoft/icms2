@@ -2,7 +2,7 @@
 
 class actionAdminCtypesFiltersAdd extends cmsAction {
 
-    public function run($ctype_id, $id = null, $do = 'add') {
+    public function run($ctype_id = null, $id = null, $do = 'add') {
 
         if (!$ctype_id) {
             return cmsCore::error404();
@@ -12,6 +12,8 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
         if (!$ctype) {
             return cmsCore::error404();
         }
+
+        $this->dispatchEvent('ctype_loaded', [$ctype, 'filters']);
 
         $fields = $this->model_backend_content->getContentFields($ctype['name']);
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
@@ -62,7 +64,7 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
 
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
-                $this->redirectToAction('ctypes', ['filters', $ctype['id']]);
+                return $this->redirectToAction('ctypes', ['filters', $ctype['id']]);
             }
 
             if ($errors) {

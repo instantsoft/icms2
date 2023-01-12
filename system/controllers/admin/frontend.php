@@ -1,6 +1,8 @@
 <?php
 class admin extends cmsFrontend {
 
+    use icms\traits\eventDispatcher;
+
     const addons_api_key   = '8e13cb202f8bdc27dc765e0448e50d11';
     const addons_api_point = 'https://api.instantcms.ru/api/method/';
 

@@ -5,16 +5,14 @@ class backendActivity extends cmsBackend {
     public $useDefaultOptionsAction = true;
     public $useDefaultPermissionsAction = true;
 
-    public function loadCallback() {
+    public function __construct(cmsRequest $request) {
 
-        $this->callbacks = [
-            'actionoptions' => [
-                function ($controller, $options) {
-                    $controller->model->enableTypes($options['types']);
-                }
-            ]
-        ];
+        parent::__construct($request);
 
+        $this->addEventListener('controller_save_options', function ($controller, $options) {
+
+            $controller->model->enableTypes($options['types']);
+        });
     }
 
     public function actionIndex() {

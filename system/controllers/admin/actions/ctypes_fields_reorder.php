@@ -2,25 +2,32 @@
 
 class actionAdminCtypesFieldsReorder extends cmsAction {
 
-    public function run($ctype_name){
+    public function run($ctype_name = null) {
 
-        $items = $this->request->get('items', array());
+        $ctype = $this->model_content->getContentTypeByName($ctype_name);
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
 
-        if (!$items || !$ctype_name){ cmsCore::error404(); }
+        $items = $this->request->get('items', []);
 
-        cmsCore::getModel('content')->reorderContentFields($ctype_name, $items);
+        if (!$items) {
+            return cmsCore::error404();
+        }
 
-        if ($this->request->isAjax()){
-			return $this->cms_template->renderJSON(array(
-				'error' => false,
-				'success_text' => LANG_CP_ORDER_SUCCESS
-			));
+        $this->model_content->reorderContentFields($ctype['name'], $items);
+
+        if ($this->request->isAjax()) {
+
+            return $this->cms_template->renderJSON([
+                'error'        => false,
+                'success_text' => LANG_CP_ORDER_SUCCESS
+            ]);
         }
 
         cmsUser::addSessionMessage(LANG_CP_ORDER_SUCCESS, 'success');
 
-        $this->redirectBack();
-
+        return $this->redirectToAction('ctypes', ['fields', $ctype['id']]);
     }
 
 }

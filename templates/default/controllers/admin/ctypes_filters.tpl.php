@@ -4,13 +4,8 @@
 
     $this->setPageTitle(LANG_CP_CTYPE_FILTERS, $ctype['title']);
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-    $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
     $this->addBreadcrumb(LANG_CP_CTYPE_FILTERS);
 
-    $this->addMenuItems('ctype', $this->controller->getCtypeMenu('datasets', $ctype['id'])); ?>
-
-<?php
 if($table_exists){
     $this->addToolButton(array(
         'class' => 'add',
@@ -32,7 +27,7 @@ if($table_exists){
 ?>
 
 <div class="pills-menu">
-    <?php $this->menu('ctype'); ?>
+    <?php $this->menu('admin_toolbar'); ?>
 </div>
 
 <?php if(!$table_exists){ ?>

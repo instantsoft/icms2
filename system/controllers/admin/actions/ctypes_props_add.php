@@ -2,13 +2,18 @@
 
 class actionAdminCtypesPropsAdd extends cmsAction {
 
-    public function run($ctype_id, $category_id) {
+    public function run($ctype_id = null, $category_id = null) {
 
-        if (!$ctype_id) { cmsCore::error404(); }
-        if (!$category_id) { cmsCore::error404(); }
+        if (!$ctype_id || !$category_id) {
+            return cmsCore::error404();
+        }
 
         $ctype = $this->model_backend_content->getContentType($ctype_id);
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
+
+        $this->dispatchEvent('ctype_loaded', [$ctype, 'props']);
 
         $form = $this->getForm('ctypes_prop', ['add', $ctype]);
 
@@ -56,7 +61,7 @@ class actionAdminCtypesPropsAdd extends cmsAction {
                     cmsUser::addSessionMessage(sprintf(LANG_CP_FIELD_CREATED, $prop['title']), 'success');
                 }
 
-                $this->redirectToAction('ctypes', ['props', $ctype['id']]);
+                return $this->redirectToAction('ctypes', ['props', $ctype['id']]);
             }
 
             if ($errors) {

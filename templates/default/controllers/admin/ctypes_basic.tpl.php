@@ -6,16 +6,12 @@
     if ($do=='add') { $this->setPageTitle(LANG_CP_CTYPES_ADD); }
     if ($do=='edit') { $this->setPageTitle(LANG_CONTENT_TYPE . ': ' . $ctype['title']); }
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-
     if ($do=='add'){
         $this->addBreadcrumb(LANG_CP_CTYPES_ADD);
-        $this->addMenuItems('ctype', $this->controller->getCtypeMenu('add'));
     }
 
     if ($do=='edit'){
         $this->addBreadcrumb($ctype['title']);
-        $this->addMenuItems('ctype', $this->controller->getCtypeMenu('edit', $id));
     }
 
     $this->addToolButton(array(
@@ -37,7 +33,7 @@
 ?>
 
 <div class="pills-menu">
-    <?php $this->menu('ctype'); ?>
+    <?php $this->menu('admin_toolbar'); ?>
 </div>
 
 <?php

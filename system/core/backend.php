@@ -2,6 +2,8 @@
 
 class cmsBackend extends cmsController {
 
+    use icms\traits\eventDispatcher;
+
     public $maintained_ctype = false;
 
     protected $backend_menu = [];
@@ -120,7 +122,8 @@ class cmsBackend extends cmsController {
             $field => $i[$field]
         ]);
 
-        $this->processCallback('actiontoggle_' . $table . '_' . $field, [$i]);
+        // Уведомляем слушателей
+        $this->dispatchEvent('actiontoggle_' . $table . '_' . $field, [$i]);
 
         return $this->cms_template->renderJSON([
             'error' => false,
@@ -225,7 +228,7 @@ class cmsBackend extends cmsController {
 
                 cmsController::saveOptions($this->name, $options);
 
-                $this->processCallback(__FUNCTION__, [$options]);
+                $this->dispatchEvent('controller_save_options', [$options]);
 
                 cmsEventsManager::hook("controller_{$this->name}_after_save_options", $options);
 

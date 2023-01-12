@@ -2,23 +2,27 @@
 
 class actionAdminCtypesRelationsEdit extends cmsAction {
 
-    public function run($ctype_id, $relation_id) {
+    public function run($ctype_id = null, $relation_id = null) {
 
         if (!$ctype_id || !$relation_id) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $ctype = $this->model_backend_content->getContentType($ctype_id);
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
 
         $relation = $this->model_backend_content->getContentRelation($relation_id);
-        if (!$relation) { cmsCore::error404(); }
+        if (!$relation) {
+            return cmsCore::error404();
+        }
 
         $form = $this->getForm('ctypes_relation', ['edit', $ctype['id']]);
 
         $form->setFieldProperty('basic', 'child_ctype_id', 'is_visible', false);
 
-        if ($relation['layout'] != 'tab') {
+        if ($relation['layout'] !== 'tab') {
             $form->hideFieldset('tab-opts');
         }
 
@@ -45,7 +49,7 @@ class actionAdminCtypesRelationsEdit extends cmsAction {
 
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
-                $this->redirectToAction('ctypes', ['relations', $ctype['id']]);
+                return $this->redirectToAction('ctypes', ['relations', $ctype['id']]);
             }
 
             if ($errors) {
@@ -54,6 +58,9 @@ class actionAdminCtypesRelationsEdit extends cmsAction {
         }
 
         $relation['child_ctype_id'] = $relation['target_controller'] . ':' . $relation['child_ctype_id'];
+
+        // Для того, чтобы сформировалось подменю типа контента, см system/controllers/admin/actions/ctypes.php
+        $this->dispatchEvent('ctype_loaded', [$ctype, 'relations']);
 
         return $this->cms_template->render('ctypes_relation', [
             'do'       => 'edit',

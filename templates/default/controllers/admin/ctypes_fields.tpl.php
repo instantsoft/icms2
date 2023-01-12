@@ -4,12 +4,7 @@
 
     $this->setPageTitle(LANG_CP_CTYPE_FIELDS, $ctype['title']);
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-
-    $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
     $this->addBreadcrumb(LANG_CP_CTYPE_FIELDS);
-
-    $this->addMenuItems('ctype', $this->controller->getCtypeMenu('fields', $ctype['id']));
 
     $this->addToolButton(array(
         'class' => 'add',
@@ -37,10 +32,10 @@
 ?>
 
 <div class="pills-menu">
-    <?php $this->menu('ctype'); ?>
+    <?php $this->menu('admin_toolbar'); ?>
 </div>
 
-<?php $this->renderGrid($this->href_to('ctypes', array('fields_ajax', $ctype['name'])), $grid); ?>
+<?php $this->renderGrid($this->href_to('ctypes', array('fields', $ctype['id'])), $grid); ?>
 
 <div class="buttons">
     <?php echo html_button(LANG_SAVE_ORDER, 'save_button', "icms.datagrid.submit('{$this->href_to('ctypes', array('fields_reorder', $ctype['name']))}')"); ?>

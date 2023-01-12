@@ -4,12 +4,7 @@
 
     $this->setPageTitle(LANG_CP_CTYPE_DATASETS, $ctype['title']);
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-
-    $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
     $this->addBreadcrumb(LANG_CP_CTYPE_DATASETS);
-
-    $this->addMenuItems('ctype', $this->controller->getCtypeMenu('datasets', $ctype['id']));
 
     $this->addToolButton(array(
         'class' => 'add',
@@ -37,7 +32,7 @@
 ?>
 
 <div class="pills-menu">
-    <?php $this->menu('ctype'); ?>
+    <?php $this->menu('admin_toolbar'); ?>
 </div>
 
 <?php $this->renderGrid($this->href_to('ctypes', array('datasets', $ctype['id'])), $grid); ?>

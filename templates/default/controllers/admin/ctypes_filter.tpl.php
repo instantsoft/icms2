@@ -6,13 +6,10 @@
     if ($do=='add') { $this->setPageTitle(LANG_CP_FILTER_ADD, $ctype['title']); }
     if ($do=='edit') { $this->setPageTitle(LANG_CP_GRID_COLYMNS_FILTER . ': ' . $filter['title']); }
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-
     $cancel_url = $this->href_to('ctypes', array('filters', $ctype['id']));
 
     if ($do=='add'){
 
-        $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
         $this->addBreadcrumb(LANG_CP_CTYPE_FILTERS, $cancel_url);
         $this->addBreadcrumb(LANG_CP_FILTER_ADD);
 
@@ -20,7 +17,6 @@
 
     if ($do=='edit'){
 
-        $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
         $this->addBreadcrumb(LANG_CP_CTYPE_FILTERS, $cancel_url);
         $this->addBreadcrumb($filter['title']);
 

@@ -694,6 +694,10 @@ class modelBackendContent extends modelContent {
             return $item;
         });
 
+        if(!$prop){
+            return false;
+        }
+
         $this->filterEqual('prop_id', $id);
 
         $prop['cats'] = $this->get($bind_table_name, function($item, $model){

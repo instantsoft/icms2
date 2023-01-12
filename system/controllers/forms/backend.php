@@ -8,22 +8,23 @@ class backendForms extends cmsBackend {
 
     protected $unknown_action_as_index_param = true;
 
-    public function loadCallback() {
-        $this->callbacks = array(
-            'actionoptions'=>array(
-                function($controller, $options){
-                    // Выключаем/включем слушателя
-                    if(empty($options['allow_shortcode'])){
-                        $is_enabled = 0;
-                    } else {
-                        $is_enabled = 1;
-                    }
-                    $this->model->filterEqual('event', 'content_before_item');
-                    $this->model->filterEqual('listener', 'forms');
-                    $this->model->updateFiltered('events', ['is_enabled' => $is_enabled], true);
-                }
-            )
-        );
+    public function __construct(cmsRequest $request) {
+
+        parent::__construct($request);
+
+        $this->addEventListener('controller_save_options', function($controller, $options){
+
+            // Выключаем/включем слушателя
+            if(empty($options['allow_shortcode'])){
+                $is_enabled = 0;
+            } else {
+                $is_enabled = 1;
+            }
+
+            $this->model->filterEqual('event', 'content_before_item');
+            $this->model->filterEqual('listener', 'forms');
+            $this->model->updateFiltered('events', ['is_enabled' => $is_enabled], true);
+        });
     }
 
     public function getBackendMenu() {
@@ -45,31 +46,29 @@ class backendForms extends cmsBackend {
         ];
     }
 
-    public function getFormMenu($do = 'add', $id = null){
+    public function getFormMenu($do = 'add', $id = null) {
 
-        $menu = array(
-
-            array(
+        $menu = [
+            [
                 'title' => LANG_CP_CTYPE_SETTINGS,
-                'url' => href_to($this->root_url, $do, [$id])
-            ),
-            array(
-                'title' => LANG_CP_CTYPE_FIELDS,
-                'url' => href_to($this->root_url, 'form_fields', [$id]),
+                'url'   => href_to($this->root_url, $do, [$id])
+            ],
+            [
+                'title'    => LANG_CP_CTYPE_FIELDS,
+                'url'      => href_to($this->root_url, 'form_fields', [$id]),
                 'disabled' => in_array($do, ['add', 'copy'])
-            )
-        );
+            ]
+        ];
 
-        list($menu, $do, $id) = cmsEventsManager::hook('admin_forms_menu', array($menu, $do, $id));
+        list($menu, $do, $id) = cmsEventsManager::hook('admin_forms_menu', [$menu, $do, $id]);
 
         return $menu;
-
     }
 
     public function validate_unique_field($form_id, $value){
 
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), array('integer','string','double'))) { return ERR_VALIDATE_INVALID; }
+        if (!in_array(gettype($value), ['integer','string','double'])) { return ERR_VALIDATE_INVALID; }
 
         $this->model->filterEqual('form_id', $form_id);
         $this->model->filterEqual('name', $value);

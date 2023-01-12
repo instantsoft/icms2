@@ -4,14 +4,20 @@ class actionAdminCtypesLabels extends cmsAction {
 
     public function run($id = null) {
 
-        if (!$id) { cmsCore::error404(); }
+        if (!$id) {
+            return cmsCore::error404();
+        }
 
         $wizard_mode = $this->request->get('wizard_mode', 0);
 
         $form = $this->getForm('ctypes_labels');
 
         $ctype = $this->model_backend_content->getContentType($id);
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
+
+        $this->dispatchEvent('ctype_loaded', [$ctype, 'edit']);
 
         cmsCore::loadControllerLanguage('content');
 
@@ -28,6 +34,7 @@ class actionAdminCtypesLabels extends cmsAction {
                 $ctype = cmsEventsManager::hook('ctype_labels_after_update', $ctype);
 
                 if ($wizard_mode) {
+
                     $this->redirectToAction('ctypes', ['fields', $id], ['wizard_mode' => true]);
                 } else {
 

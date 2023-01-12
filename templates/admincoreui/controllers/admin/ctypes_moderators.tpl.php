@@ -4,15 +4,11 @@
 
     $this->setPageTitle(LANG_MODERATORS, $ctype['title']);
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-    $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
     $this->addBreadcrumb(LANG_MODERATORS);
-
-    $this->addMenuItems('admin_toolbar', $this->controller->getCtypeMenu('moderators', $ctype['id']));
 
     $this->addMenuItem('breadcrumb-menu', [
         'title' => LANG_MODERATORATION_OPTIONS,
-        'url'   => href_to('admin', 'controllers', array('edit', 'moderation', 'options')),
+        'url'   => href_to('admin', 'controllers', ['edit', 'moderation', 'options']),
         'options' => [
             'icon' => 'cog'
         ]
@@ -49,11 +45,11 @@
         <tbody>
             <?php if ($moderators){ ?>
                 <?php foreach($moderators as $moderator) { ?>
-                    <?php echo $this->renderControllerChild('admin', 'ctypes_moderator', array(
+                    <?php echo $this->renderControllerChild('admin', 'ctypes_moderator', [
                         'moderator' => $moderator,
                         'not_use_trash' => false,
                         'ctype' => $ctype
-                    )); ?>
+                    ]); ?>
                 <?php } ?>
             <?php } ?>
         </tbody>
@@ -61,19 +57,16 @@
 </div>
 
 <div id="ctype_moderators_add" class="card mt-0"
-    data-url_submit="<?php echo $this->href_to('ctypes', array('moderators', $ctype['id'],  'add')); ?>"
-    data-url_delete="<?php echo $this->href_to('ctypes', array('moderators', $ctype['id'],  'delete')); ?>"
+    data-url_submit="<?php echo $this->href_to('ctypes', ['moderators', $ctype['id'],  'add']); ?>"
+    data-url_delete="<?php echo $this->href_to('ctypes', ['moderators', $ctype['id'],  'delete']); ?>"
     data-url_autocomplete="<?php echo $this->href_to('users', 'autocomplete'); ?>"
     >
     <div class="card-body">
         <h4><?php echo LANG_MODERATOR_ADD; ?></h4>
         <div class="hint text-muted"><?php echo LANG_MODERATOR_ADD_HINT; ?></div>
         <div class="field form-inline mt-3">
-            <?php echo html_input('text', 'user_email', '', array('id'=>'user_email', 'autocomplete'=>'off', 'class' => 'mr-4')); ?>
-            <?php echo html_button(LANG_ADD, 'add', 'return icms.adminModerators.add()', ['id'=>'submit', 'class' => 'button-submit btn-primary']); ?>
-            <div class="loading-icon ml-4" style="display:none">
-                <div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>
-            </div>
+            <?php echo html_input('text', 'user_email', '', ['id'=>'user_email', 'autocomplete'=>'off', 'class' => 'mr-4']); ?>
+            <?php echo html_button(LANG_ADD, 'add', 'return icms.adminModerators.add(this)', ['id'=>'submit', 'class' => 'button-submit btn-primary']); ?>
         </div>
     </div>
 </div>

@@ -31,21 +31,19 @@ icms.adminModerators = (function ($) {
         this.url_autocomplete = $(ctype_moderators_add).data('url_autocomplete');;
     };
 
-    this.add = function(){
+    this.add = function(btn){
 
         var name = $('#user_email').val();
 
-        if (name.length==0) { return false; }
+        if (name.length === 0) { return false; }
 
-        $('#ctype_moderators_add .field').hide();
-        $('#ctype_moderators_add .loading-icon').show();
+        $(btn).addClass('is-busy');
 
         $.post(this.url_submit, {name: name}, function(result){
 
             $('#user_email').val('');
 
-            $('#ctype_moderators_add .field').show();
-            $('#ctype_moderators_add .loading-icon').hide();
+            $(btn).removeClass('is-busy');
 
             if (result.error){
                 alert(result.message);
@@ -64,7 +62,6 @@ icms.adminModerators = (function ($) {
         }, 'json');
 
         return false;
-
     };
 
     this.cancel = function(id){

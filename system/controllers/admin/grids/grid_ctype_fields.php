@@ -89,6 +89,14 @@ function grid_ctype_fields($controller, $ctype_name) {
 
     $actions = [
         [
+            'title' => LANG_COPY,
+            'class' => 'copy',
+            'href'  => href_to($controller->name, 'ctypes', ['fields_add', '{ctype_id}', '{id}', 1]),
+            'handler' => function ($row) {
+                return !$row['is_system'] && !$row['is_fixed'];
+            }
+        ],
+        [
             'title' => LANG_EDIT,
             'class' => 'edit',
             'href'  => href_to($controller->name, 'ctypes', ['fields_edit', '{ctype_id}', '{id}'])

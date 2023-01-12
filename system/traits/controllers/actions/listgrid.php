@@ -60,6 +60,12 @@ trait listgrid {
     protected $items_callback = null;
 
     /**
+     * Префикс действия, если надо передать управление другому экшену
+     * @var string
+     */
+    protected $external_action_prefix = '';
+
+    /**
      * Ключ UPS
      * @var string
      */
@@ -82,7 +88,7 @@ trait listgrid {
         // если нужно, передаем управление другому экшену
         if ($do && !is_numeric($do)) {
 
-            $this->runExternalAction($do, array_slice($this->params, 1));
+            $this->runExternalAction($this->external_action_prefix.$do, array_slice($this->params, 1));
             return;
         }
 
@@ -108,11 +114,23 @@ trait listgrid {
 
         $this->cms_template->addToolButtons($this->tool_buttons);
 
-        return $this->cms_template->getRenderedAsset('ui/grid', [
+        $html = $this->cms_template->getRenderedAsset('ui/grid', [
             'grid'       => $this->grid,
             'page_title' => $this->title,
             'source_url' => $this->grid_url ? $this->grid_url : $this->cms_template->href_to($this->current_action)
         ]);
+
+        if ($this->request->isStandard()) {
+            $this->cms_template->addOutput($html);
+        }
+
+        $css_file = $this->cms_template->getStylesFileName();
+
+        if ($css_file) {
+            $this->cms_template->addCSSFromContext($css_file, $this->request);
+        }
+
+        return $html;
     }
 
     public function getListItems(){

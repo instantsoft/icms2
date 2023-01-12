@@ -4,12 +4,7 @@
 
     $this->setPageTitle(LANG_CP_CTYPE_LABELS, $ctype['title']);
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-
-    $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
     $this->addBreadcrumb(LANG_CP_CTYPE_LABELS);
-
-    $this->addMenuItems('ctype', $this->controller->getCtypeMenu('edit', $id));
 
     $this->addToolButton(array(
         'class' => 'save',
@@ -31,7 +26,7 @@
 ?>
 
 <div class="pills-menu">
-    <?php $this->menu('ctype'); ?>
+    <?php $this->menu('admin_toolbar'); ?>
 </div>
 
 <?php

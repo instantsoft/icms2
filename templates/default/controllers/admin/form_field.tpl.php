@@ -1,10 +1,10 @@
 <?php
     $form_id = md5(microtime(true));
-    $this->renderForm($form, $field, array(
+    $this->renderForm($form, $field, [
         'action' => '',
         'form_id' => $form_id,
         'method' => 'post'
-    ), $errors);
+    ], $errors);
 ?>
 
 <script>
@@ -20,7 +20,7 @@
 
         if(field_type){
             $.post('<?php echo $fields_options_link; ?>', {
-                <?php if ($do=='edit') { ?>
+                <?php if (!empty($field['id'])) { ?>
                     field_id: '<?php echo $field['id']; ?>',
                 <?php } ?>
                 form_id: '<?php echo $form_id; ?>',

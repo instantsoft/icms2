@@ -2,7 +2,7 @@
 
 class formGroupsField extends cmsForm {
 
-    public function init($do) {
+    public function init($do, $ctype_name) {
 
         return array(
             'basic' => array(

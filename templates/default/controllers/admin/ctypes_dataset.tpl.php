@@ -6,9 +6,8 @@
     if ($do=='add') { $this->setPageTitle(LANG_CP_DATASET_ADD, $ctype['title']); }
     if ($do=='edit') { $this->setPageTitle(LANG_CP_DATASET . ': ' . $dataset['title']); }
 
-    if($ctype['id']){
-        $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-    } else {
+    if(!$ctype['id']){
+
         $this->addBreadcrumb(LANG_CP_SECTION_CONTROLLERS, $this->href_to('controllers'));
         $this->addBreadcrumb($ctype['title'], $this->href_to('controllers', 'edit/'.$ctype['name']));
     }
@@ -21,10 +20,6 @@
 
     if ($do=='add'){
 
-        if($ctype['id']){
-            $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
-        }
-
         $this->addBreadcrumb(LANG_CP_CTYPE_DATASETS, $cancel_url);
         $this->addBreadcrumb(LANG_CP_DATASET_ADD);
 
@@ -32,13 +27,8 @@
 
     if ($do=='edit'){
 
-        if($ctype['id']){
-            $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
-        }
-
         $this->addBreadcrumb(LANG_CP_CTYPE_DATASETS, $cancel_url);
         $this->addBreadcrumb($dataset['title']);
-
     }
 
     $this->addToolButton(array(

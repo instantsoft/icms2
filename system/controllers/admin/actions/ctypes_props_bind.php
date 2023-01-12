@@ -2,21 +2,23 @@
 
 class actionAdminCtypesPropsBind extends cmsAction {
 
-    public function run($ctype_id, $category_id) {
+    public function run($ctype_id = null, $category_id = null) {
+
+        if (!$ctype_id || !$category_id) {
+            return cmsCore::error404();
+        }
+
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
 
         $prop_id   = $this->request->get('prop_id', 0);
         $is_childs = $this->request->get('is_childs', 0);
 
         if (!$prop_id) {
-            $this->redirectBack();
+            return $this->redirectToAction('ctypes', ['props', $ctype_id]);
         }
-
-        if (!$ctype_id || !$category_id) {
-            cmsCore::error404();
-        }
-
-        $ctype = $this->model_backend_content->getContentType($ctype_id);
-        if (!$ctype) { cmsCore::error404(); }
 
         $cats = [$category_id];
 
@@ -33,7 +35,7 @@ class actionAdminCtypesPropsBind extends cmsAction {
 
         cmsUser::addSessionMessage(LANG_CP_PROPS_BIND_SC, 'success');
 
-        $this->redirectToAction('ctypes', ['props', $ctype_id]);
+        return $this->redirectToAction('ctypes', ['props', $ctype_id]);
     }
 
 }

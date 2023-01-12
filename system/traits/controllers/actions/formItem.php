@@ -170,6 +170,10 @@ trait formItem {
             'errors'      => isset($errors) ? $errors : false
         ]);
 
+        if ($this->request->isStandard()) {
+            $this->cms_template->addOutput($html);
+        }
+
         if($this->request->isAjax()){
             die($html);
         }

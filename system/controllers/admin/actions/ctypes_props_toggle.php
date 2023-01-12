@@ -2,7 +2,7 @@
 
 class actionAdminCtypesPropsToggle extends cmsAction {
 
-    public function run($ctype_id, $prop_id) {
+    public function run($ctype_id = null, $prop_id = null) {
 
         if (!$ctype_id || !$prop_id) {
             return $this->cms_template->renderJSON([

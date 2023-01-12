@@ -2,26 +2,42 @@
 
 class actionAdminCtypesProps extends cmsAction {
 
-    public function run($ctype_id = null) {
+    public function run($ctype_id = null, $category_id = false) {
 
-        if (!$ctype_id) { cmsCore::error404(); }
+        if (!$ctype_id) {
+            return cmsCore::error404();
+        }
 
-        $ctype = $this->model_content->getContentType($ctype_id);
-        if (!$ctype) { cmsCore::error404(); }
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
 
-        $cats = $this->model_content->getSubCategories($ctype['name']);
+        $this->dispatchEvent('ctype_loaded', [$ctype, 'props']);
 
-        $props = $this->model_content->orderBy('title')->getContentProps($ctype['name']);
+        $cats = $this->model_backend_content->getSubCategories($ctype['name']);
 
-        $grid = $this->loadDataGrid('ctype_props', $this->cms_template->href_to('ctypes', array('props_reorder', $ctype['name'])));
+        $props = $this->model_backend_content->orderBy('title')->getContentProps($ctype['name']);
 
-        return $this->cms_template->render('ctypes_props', array(
+        $grid = $this->loadDataGrid('ctype_props', $this->cms_template->href_to('ctypes', ['props_reorder', $ctype['name']]));
+
+        if ($this->request->isAjax()) {
+
+            $this->model_backend_content->orderBy('ordering', 'asc');
+
+            $fields = $this->model_backend_content->getContentPropsBinds($ctype['name'], $category_id);
+
+            $this->cms_template->renderGridRowsJSON($grid, $fields);
+
+            return $this->halt();
+        }
+
+        return $this->cms_template->render('ctypes_props', [
             'ctype' => $ctype,
             'cats'  => $cats,
             'props' => $props,
             'grid'  => $grid
-        ));
-
+        ]);
     }
 
 }

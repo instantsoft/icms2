@@ -1,6 +1,9 @@
 var fit_layout_delta = 0;
 var hh1, hh2;
 function fitLayout(){
+    if(!hh1 && !hh2){
+        return;
+    }
     $('table.layout').height(hh2 - hh1 - 2 + fit_layout_delta);
     $('table.layout').width( $('#cp_body').width() + 40 );
 }
@@ -50,14 +53,21 @@ var toolbarScroll = {
     }
 };
 $(function(){
-    hh1 = $('#cp_body h1').offset().top + $('#cp_body h1').height();
-    hh2 = $('#cp_footer').offset().top;
+
+    if($('#cp_body h1').length > 0){
+
+        hh1 = $('#cp_body h1').offset().top + $('#cp_body h1').height();
+        hh2 = $('#cp_footer').offset().top;
+
+        fitLayout();
+    }
+
     $(window).on('resize', function (){
         toolbarScroll.init();
         fitLayout();
     });
     toolbarScroll.init();
-    fitLayout();
+
     icms.events.on('datagrid_rows_loaded', function (result){
         fitLayout();
         toolbarScroll.init();

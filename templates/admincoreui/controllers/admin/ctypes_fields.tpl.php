@@ -2,23 +2,19 @@
 
     $this->setPageTitle(LANG_CP_CTYPE_FIELDS, $ctype['title']);
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-    $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
     $this->addBreadcrumb(LANG_CP_CTYPE_FIELDS);
 
-    $this->addMenuItems('admin_toolbar', $this->controller->getCtypeMenu('fields', $ctype['id']));
-
-    $this->addToolButton(array(
+    $this->addToolButton([
         'class' => 'add',
         'title' => LANG_CP_FIELD_ADD,
-        'href'  => $this->href_to('ctypes', array('fields_add', $ctype['id']))
-    ));
+        'href'  => $this->href_to('ctypes', ['fields_add', $ctype['id']])
+    ]);
 
-    $this->addToolButton(array(
+    $this->addToolButton([
         'class' => 'view_list',
         'title' => LANG_CP_CTYPE_TO_LIST,
         'href'  => $this->href_to('ctypes')
-    ));
+    ]);
 
     $this->addMenuItem('breadcrumb-menu', [
         'title' => LANG_HELP,
@@ -29,4 +25,4 @@
         ]
     ]);
 
-    $this->renderGrid($this->href_to('ctypes', array('fields_ajax', $ctype['name'])), $grid);
+    $this->renderGrid($this->href_to('ctypes', ['fields', $ctype['id']]), $grid);

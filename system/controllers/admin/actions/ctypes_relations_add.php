@@ -2,12 +2,16 @@
 
 class actionAdminCtypesRelationsAdd extends cmsAction {
 
-    public function run($ctype_id) {
+    public function run($ctype_id = null) {
 
-        if (!$ctype_id) { cmsCore::error404(); }
+        if (!$ctype_id) {
+            return cmsCore::error404();
+        }
 
         $ctype = $this->model_backend_content->getContentType($ctype_id);
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
 
         $form = $this->getForm('ctypes_relation', ['add', $ctype['id']]);
 
@@ -47,7 +51,7 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
 
                     cmsUser::addSessionMessage(LANG_CP_RELATION_CREATED, 'success');
 
-                    if ($relation['target_controller'] != 'content') {
+                    if ($relation['target_controller'] !== 'content') {
 
                         $this->model_backend_content->setTablePrefix('');
 
@@ -84,13 +88,16 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
                     }
                 }
 
-                $this->redirectToAction('ctypes', array('relations', $ctype['id']));
+                return $this->redirectToAction('ctypes', ['relations', $ctype['id']]);
             }
 
             if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
         }
+
+        // Для того, чтобы сформировалось подменю типа контента, см system/controllers/admin/actions/ctypes.php
+        $this->dispatchEvent('ctype_loaded', [$ctype, 'relations']);
 
         return $this->cms_template->render('ctypes_relation', [
             'do'       => 'add',

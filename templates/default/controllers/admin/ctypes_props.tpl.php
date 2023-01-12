@@ -12,11 +12,7 @@
 <?php
     $this->setPageTitle(LANG_CP_CTYPE_PROPS, $ctype['title']);
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-    $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
     $this->addBreadcrumb(LANG_CP_CTYPE_PROPS);
-
-    $this->addMenuItems('ctype', $this->controller->getCtypeMenu('props', $ctype['id']));
 
     if ($cats){
 
@@ -64,7 +60,7 @@
 ?>
 
 <div class="pills-menu">
-    <?php $this->menu('ctype'); ?>
+    <?php $this->menu('admin_toolbar'); ?>
 </div>
 
 <?php if (!$cats){ ?>
@@ -135,7 +131,7 @@
                                     is_loaded = true;
                                     icms.datagrid.init();
                                 }
-                                icms.datagrid.setURL("<?php echo $this->href_to('ctypes', array('props_ajax', $ctype['name'])); ?>/" + key[1]);
+                                icms.datagrid.setURL("<?php echo $this->href_to('ctypes', array('props', $ctype['id'])); ?>/" + key[1]);
                                 icms.datagrid.loadRows(filterPropsList);
                             },
 

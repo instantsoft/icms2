@@ -3,54 +3,58 @@
         'datatree',
         'admin-props'
     ]);
+
     $this->addTplCSSName('datatree');
 
     $this->setPageTitle(LANG_CP_CTYPE_PROPS, $ctype['title']);
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
-    $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
     $this->addBreadcrumb(LANG_CP_CTYPE_PROPS);
     // туда будет подставляться активный пункт дерева
     $this->addBreadcrumb('', $this->href_to('ctypes').'?last');
 
-    $this->addMenuItems('admin_toolbar', $this->controller->getCtypeMenu('props', $ctype['id']));
-
     if ($cats){
 
-        $this->addToolButton(array(
+        $this->addToolButton([
             'class' => 'menu d-xl-none',
             'data'  => [
                 'toggle' =>'quickview',
                 'toggle-element' => '#left-quickview'
             ],
             'title' => LANG_CATEGORIES
-        ));
+        ]);
 
-        $this->addToolButton(array(
-            'class' => 'add',
+        $this->addToolButton([
+            'class' => 'add datagrid_change',
             'title' => LANG_CP_FIELD_ADD,
-            'href'  => $this->href_to('ctypes', array('props_add', $ctype['name']))
-        ));
+            'data'  => [
+                'href' => $this->href_to('ctypes', ['props_add'])
+            ]
+        ]);
 
-        $this->addToolButton(array(
-            'class' => 'add_folder',
+        $this->addToolButton([
+            'class' => 'add_folder datagrid_change',
             'title' => LANG_CP_CONTENT_CATS_ADD,
-            'href'  => $this->href_to('content', array('cats_add'))
-        ));
+            'data'  => [
+                'href'  => $this->href_to('content', ['cats_add'])
+            ]
+        ]);
 
-        $this->addToolButton(array(
-            'class' => 'edit_folder',
+        $this->addToolButton([
+            'class' => 'edit_folder datagrid_change',
             'title' => LANG_CP_CONTENT_CATS_EDIT,
-            'href'  => $this->href_to('content', array('cats_edit'))
-        ));
+            'data'  => [
+                'href'  => $this->href_to('content', ['cats_edit'])
+            ]
+        ]);
 
-        $this->addToolButton(array(
-            'class' => 'delete_folder',
+        $this->addToolButton([
+            'class' => 'delete_folder datagrid_change datagrid_csrf',
             'title' => LANG_DELETE_CATEGORY,
-            'href'  => $this->href_to('content', array('cats_delete')),
+            'data'  => [
+                'href'  => $this->href_to('content', ['cats_delete'])
+            ],
             'confirm' => LANG_DELETE_CATEGORY_CONFIRM
-        ));
-
+        ]);
     }
 
     $this->addMenuItem('breadcrumb-menu', [
@@ -65,11 +69,14 @@
 ?>
 
 <?php if (!$cats){ ?>
-    <p class="alert alert-info mt-4"><?php printf(LANG_CP_PROPS_NO_CATS, $ctype['title']); ?></p>
-    <p class="alert alert-success mt-4"><?php printf(LANG_CP_PROPS_NO_CATS_ADD, $this->href_to('content', array('cats_add', $ctype['id'], 1)) . '?back=' . href_to_current()); ?></p>
+    <p class="alert alert-info mt-4">
+        <?php printf(LANG_CP_PROPS_NO_CATS, $ctype['title']); ?>
+    </p>
+    <p class="alert alert-success mt-4">
+        <?php printf(LANG_CP_PROPS_NO_CATS_ADD, $this->href_to('content', ['cats_add', $ctype['id'], 1]) . '?back=' . href_to_current()); ?>
+    </p>
+    <?php return; ?>
 <?php } ?>
-
-<?php if ($cats){ ?>
 
 <div class="row align-items-stretch mb-4">
     <div class="col-auto quickview-wrapper" id="left-quickview">
@@ -111,70 +118,14 @@
         <?php } ?>
     </div>
 </div>
-
+<?php ob_start(); ?>
 <script>
-    $(function(){
 
-        is_loaded = false;
+    icms.adminProps.cookie_path_key = 'icms[props<?php echo $ctype['id']; ?>_tree_path]';
+    icms.adminProps.props_bind_url = '<?php echo $this->href_to('ctypes', ['props_bind']); ?>';
+    icms.adminProps.datagrid_url = '<?php echo $this->href_to('ctypes', ['props', $ctype['id']]); ?>';
+    icms.adminProps.tree_ajax_url = '<?php echo $this->href_to('content', ['tree_ajax']); ?>';
+    icms.adminProps.back_url = '<?php echo $this->href_to('ctypes', ['props', $ctype['id']]) ?>';
 
-        $("#datatree").dynatree({
-            onPostInit: function(isReloading, isError){
-                var path = $.cookie('icms[props<?php echo $ctype['id']; ?>_tree_path]');
-                if (!path) {
-                    $('a', "#datatree").eq(0).trigger('click');
-                }
-                if (path) {
-                    $("#datatree").dynatree("getTree").loadKeyPath(path, function(node, status){
-                        if(status == "loaded") {
-                            node.expand();
-                        }else if(status == "ok") {
-                            node.activate();
-                            node.expand();
-                        }
-                    });
-                }
-            },
-            onActivate: function(node){
-                node.expand();
-                $.cookie('icms[props<?php echo $ctype['id']; ?>_tree_path]', node.getKeyPath(), {expires: 7, path: '/'});
-                var key = node.data.key.split('.');
-                $('.cp_toolbar .add').show();
-                $('.cp_toolbar .edit_folder, .cp_toolbar .delete_folder').show();
-                if(key[1] == 0){
-                    hide_filter_props_list = true;
-                    $('.cp_toolbar .add, .cp_toolbar .edit_folder, .cp_toolbar .delete_folder').hide();
-                } else {
-                    hide_filter_props_list = false;
-                }
-                $('.cp_toolbar .add a').attr('href', "<?php echo $this->href_to('ctypes', array('props_add')); ?>/" + key[0] + "/" + key[1]);
-                $('.cp_toolbar .add_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_add')); ?>/" + key[0] + "/" + key[1] + '?back=<?php echo $this->href_to('ctypes', array('props', $ctype['id'])) ?>');
-                $('.cp_toolbar .edit_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_edit')); ?>/" + key[0] + "/" + key[1] + '?back=<?php echo $this->href_to('ctypes', array('props', $ctype['id'])) ?>');
-                $('.cp_toolbar .delete_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_delete')); ?>/" + key[0] + "/" + key[1] + '?back=<?php echo $this->href_to('ctypes', array('props', $ctype['id'])) ?>&csrf_token='+icms.forms.getCsrfToken());
-                $('form#props-bind').attr('action', "<?php echo $this->href_to('ctypes', array('props_bind')); ?>/" + key[0] + "/" + key[1]);
-                if (node.bExpanded==false){
-                    $('#props-bind #is_childs .input-checkbox').removeAttr('checked');
-                    $('#props-bind #is_childs').hide();
-                } else {
-                    $('#props-bind #is_childs .input-checkbox').attr('checked', 'checked');
-                    $('#props-bind #is_childs').show();
-                }
-                $('.breadcrumb-item.active').html(node.data.title);
-                if (!is_loaded){
-                    is_loaded = true;
-                    icms.datagrid.init();
-                }
-                icms.datagrid.setURL("<?php echo $this->href_to('ctypes', array('props_ajax', $ctype['name'])); ?>/" + key[1]);
-                icms.datagrid.loadRows(filterPropsList);
-            },
-            onLazyRead: function(node){
-                node.appendAjax({
-                    url: "<?php echo $this->href_to('content', array('tree_ajax')); ?>",
-                    data: {
-                        id: node.data.key
-                    }
-                });
-            }
-        });
-    });
 </script>
-<?php } ?>
+<?php $this->addBottom(ob_get_clean()); ?>

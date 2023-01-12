@@ -2,91 +2,95 @@
 
 class actionAdminCtypesDatasetsEdit extends cmsAction {
 
-    public function run($dataset_id){
+    public function run($dataset_id = null) {
 
-        if (!$dataset_id) { cmsCore::error404(); }
+        if (!$dataset_id) {
+            return cmsCore::error404();
+        }
 
         $dataset = $old_dataset = $this->model_backend_content->getContentDataset($dataset_id);
-        if (!$dataset) { cmsCore::error404(); }
 
-        if($dataset['ctype_id']){
+        if (!$dataset) {
+            return cmsCore::error404();
+        }
+
+        if ($dataset['ctype_id']) {
 
             $ctype = $this->model_backend_content->getContentType($dataset['ctype_id']);
-            if (!$ctype) { cmsCore::error404(); }
+            if (!$ctype) {
+                return cmsCore::error404();
+            }
 
             $controller_name = 'content';
+
+            $this->dispatchEvent('ctype_loaded', [$ctype, 'datasets']);
 
         } else {
 
             cmsCore::loadControllerLanguage($dataset['target_controller']);
 
-            $ctype = array(
-                'title' => string_lang($dataset['target_controller'].'_controller'),
+            $ctype = [
+                'title' => string_lang($dataset['target_controller'] . '_controller'),
                 'name'  => $dataset['target_controller'],
                 'id'    => null
-            );
+            ];
 
             $this->model_backend_content->setTablePrefix('');
 
             $controller_name = $dataset['target_controller'];
-
         }
 
-        $fields  = $this->model_backend_content->getContentFields($ctype['name']);
+        $fields = $this->model_backend_content->getContentFields($ctype['name']);
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
-        $cats_list = array();
+        $cats_list = [];
 
-        if($ctype['id']){
+        if ($ctype['id']) {
 
             $cats = $this->model_backend_content->getCategoriesTree($ctype['name'], false);
 
-            if ($cats){
-                foreach($cats as $c){
-                    $cats_list[$c['id']] = str_repeat('-- ', $c['ns_level']-1).' '.$c['title'];
+            if ($cats) {
+                foreach ($cats as $c) {
+                    $cats_list[$c['id']] = str_repeat('-- ', $c['ns_level'] - 1) . ' ' . $c['title'];
                 }
             }
-
         }
 
         $fields_list = $this->buildDatasetFieldsList($controller_name, $fields);
 
-        $form = $this->getForm('ctypes_dataset', array('edit', $ctype, $cats_list, $fields_list, $dataset));
+        $form = $this->getForm('ctypes_dataset', ['edit', $ctype, $cats_list, $fields_list, $dataset]);
 
-        if ($this->request->has('submit')){
+        if ($this->request->has('submit')) {
 
             $dataset = $form->parse($this->request, true);
 
-            $errors = $form->validate($this,  $dataset);
+            $errors = $form->validate($this, $dataset);
 
-            if (!$errors){
+            if (!$errors) {
 
                 $this->model_backend_content->updateContentDataset($dataset_id, $dataset, $ctype, $old_dataset);
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                if($ctype['id']){
-                    $this->redirectToAction('ctypes', array('datasets', $ctype['id']));
+                if ($ctype['id']) {
+                    return $this->redirectToAction('ctypes', ['datasets', $ctype['id']]);
                 }
 
-                $this->redirect(href_to('admin', 'controllers', array('edit', $ctype['name'], 'datasets')));
-
+                return $this->redirect(href_to('admin', 'controllers', ['edit', $ctype['name'], 'datasets']));
             }
 
-            if ($errors){
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
-        return $this->cms_template->render('ctypes_dataset', array(
+        return $this->cms_template->render('ctypes_dataset', [
             'do'      => 'edit',
             'ctype'   => $ctype,
             'dataset' => $dataset,
             'form'    => $form,
             'errors'  => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }

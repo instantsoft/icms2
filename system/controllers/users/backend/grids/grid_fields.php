@@ -20,7 +20,7 @@ function grid_fields($controller) {
         ],
         'title' => [
             'title'    => LANG_CP_FIELD_TITLE,
-            'href'     => href_to($controller->root_url, 'fields_edit', ['{id}']),
+            'href'     => href_to($controller->root_url, 'fields_edit', ['users', '{id}']),
             'editable' => [
                 'table' => '{users}_fields'
             ]
@@ -83,9 +83,17 @@ function grid_fields($controller) {
 
     $actions = [
         [
+            'title' => LANG_COPY,
+            'class' => 'copy',
+            'href'  => href_to($controller->root_url, 'fields_add', ['users', '{id}', 1]),
+            'handler' => function ($row) {
+                return !$row['is_system'] && !$row['is_fixed'];
+            }
+        ],
+        [
             'title' => LANG_EDIT,
             'class' => 'edit',
-            'href'  => href_to($controller->root_url, 'fields_edit', ['{id}'])
+            'href'  => href_to($controller->root_url, 'fields_edit', ['users', '{id}'])
         ],
         [
             'title'   => LANG_DELETE,

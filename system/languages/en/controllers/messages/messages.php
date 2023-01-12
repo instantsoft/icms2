@@ -1,6 +1,6 @@
 <?php
 
-    define('LANG_MESSAGES_CONTROLLER',      'Private messages');
+    define('LANG_MESSAGES_CONTROLLER',      'PM and notifications');
     define('LANG_PM_MY_MESSAGES',           'My Messages');
     define('LANG_PM_NO_MESSAGES',           'You have no private messages. To write a message, go to the profile of the desired user and select "Write message" from the menu.');
     define('LANG_PM_NO_NOTICES',            'No notifications');

@@ -2,10 +2,12 @@
 
 class actionGroupsFieldsReorder extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        $items = $this->request->get('items', array());
-        if (!$items){ cmsCore::error404(); }
+        $items = $this->request->get('items', []);
+        if (!$items) {
+            return cmsCore::error404();
+        }
 
         $content_model = cmsCore::getModel('content');
 
@@ -13,17 +15,17 @@ class actionGroupsFieldsReorder extends cmsAction {
 
         $content_model->reorderContentFields('groups', $items);
 
-        if ($this->request->isAjax()){
-			return $this->cms_template->renderJSON(array(
-				'error' => false,
-				'success_text' => LANG_CP_ORDER_SUCCESS
-			));
+        if ($this->request->isAjax()) {
+
+            return $this->cms_template->renderJSON([
+                'error'        => false,
+                'success_text' => LANG_CP_ORDER_SUCCESS
+            ]);
         }
 
         cmsUser::addSessionMessage(LANG_CP_ORDER_SUCCESS, 'success');
 
-        $this->redirectBack();
-
+        return $this->redirectToAction('fields');
     }
 
 }
