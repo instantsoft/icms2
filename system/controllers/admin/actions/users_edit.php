@@ -22,20 +22,22 @@ class actionAdminUsersEdit extends cmsAction {
 
             cmsCore::loadControllerLanguage('auth');
 
-            $user = $form->parse($this->request, true);
+            $data = $form->parse($this->request, true);
 
-            if (!$user['is_locked']) {
-                $user['lock_until']  = null;
-                $user['lock_reason'] = null;
+            if (!$data['is_locked']) {
+                $data['lock_until']  = null;
+                $data['lock_reason'] = null;
             }
 
-            $errors = $form->validate($this, $user);
+            $errors = $form->validate($this, $data);
 
             if (!$errors) {
+				
+				list($user, $data, $form) = cmsEventsManager::hook('users_before_edit_password', [$user, $data, $form]);
 
-                if ($user['email'] && $old_email != $user['email']) {
+                if ($data['email'] && $old_email != $data['email']) {
 
-                    cmsUser::setUPS('users.change_email_' . md5($user['email']), [
+                    cmsUser::setUPS('users.change_email_' . md5($data['email']), [
                         'accepted'  => 1,
                         'email'     => $old_email,
                         'timestamp' => time(),
@@ -44,17 +46,19 @@ class actionAdminUsersEdit extends cmsAction {
 
                     cmsUser::setUPS('users.change_email_' . md5($old_email), [
                         'accepted'  => 1,
-                        'email'     => $user['email'],
+                        'email'     => $data['email'],
                         'timestamp' => time(),
                         'hash'      => string_random()
                     ]);
                 }
 
-                $result = $this->model_users->updateUser($id, $user);
+                $result = $this->model_users->updateUser($id, $data);
 
                 if ($result['success']) {
 
                     cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+					
+					list($user, $data, $form) = cmsEventsManager::hook('users_after_edit_password', [$user, $data, $form]);
 
                     $back_url = $this->getRequestBackUrl();
 
