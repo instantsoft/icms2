@@ -196,7 +196,6 @@ class users extends cmsFrontend {
         }
 
         return $menu;
-
     }
 
     public function getProfileEditMenu($profile){

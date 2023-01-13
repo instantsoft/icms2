@@ -60,7 +60,7 @@ if( $ctype['options']['list_show_filter'] ) {
 
                 <div class="position-absolute btn-dark btn-sm icms-photo-album__note">
                     <?php echo html_spellcount($item['photos_count'], LANG_PHOTOS_PHOTO_SPELLCOUNT); ?>
-                    <?php if ($item['is_public'] && !empty($fields['is_public']['is_in_list'])) { ?>
+                    <?php if (!empty($item['is_public']) && !empty($fields['is_public']['is_in_list'])) { ?>
                         / <span><?php echo LANG_PHOTOS_PUBLIC_ALBUM; ?></span>
                     <?php } ?>
                 </div>

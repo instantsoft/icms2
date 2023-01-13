@@ -30,6 +30,12 @@ trait listgrid {
     protected $grid_name = '';
 
     /**
+     * Аргументы, передаваемые в файл описания грида
+     * @var array
+     */
+    protected $grid_args = false;
+
+    /**
      * URL загрузки данных грида
      * @var string
      */
@@ -104,21 +110,26 @@ trait listgrid {
 
     public function setListGridParams() {
 
-        $this->ups_key = 'admin.grid_filter.' . $this->name .'_'. $this->grid_name;
+        $this->ups_key = 'grid_filter.' . $this->name .'_'. $this->grid_name;
 
-        $this->grid = $this->loadDataGrid($this->grid_name, false, $this->ups_key);
+        $this->grid = $this->loadDataGrid($this->grid_name, $this->grid_args, $this->ups_key);
 
     }
 
-    public function renderListItemsGrid(){
+    public function getListItemsGridHtml(){
 
         $this->cms_template->addToolButtons($this->tool_buttons);
 
-        $html = $this->cms_template->getRenderedAsset('ui/grid', [
+        return $this->cms_template->getRenderedAsset('ui/grid', [
             'grid'       => $this->grid,
             'page_title' => $this->title,
             'source_url' => $this->grid_url ? $this->grid_url : $this->cms_template->href_to($this->current_action)
         ]);
+    }
+
+    public function renderListItemsGrid(){
+
+        $html = $this->getListItemsGridHtml();
 
         if ($this->request->isStandard()) {
             $this->cms_template->addOutput($html);

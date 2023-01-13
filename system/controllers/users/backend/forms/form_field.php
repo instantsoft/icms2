@@ -2,197 +2,246 @@
 
 class formUsersField extends cmsForm {
 
-    public function init($do, $ctype_name) {
+    private $reserved_names = ['ctype', 'ctype_name', 'item_css_class', 'notice_title', 'actions'];
 
-        return array(
-            'basic' => array(
+    public function init($do) {
+
+        return [
+            'basic' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_BASIC,
-                'childs' => array(
-                    new fieldString('name', array(
+                'childs' => [
+                    new fieldString('name', [
                         'title' => LANG_SYSTEM_NAME,
-                        'rules' => array(
-                            array('required'),
-                            array('sysname'),
-                            array('max_length', 20),
-                            $do == 'add' ? array('unique_field') : false
-                        )
-                    )),
-                    new fieldString('title', array(
+                        'hint'  => $do === 'edit' ? LANG_SYSTEM_EDIT_NOTICE : false,
+                        'rules' => [
+                            ['required'],
+                            ['sysname'],
+                            ['max_length', 20],
+                            [function($controller, $data, $value) {
+
+                                if(in_array($value, $this->reserved_names)){
+                                    return ERR_VALIDATE_INVALID;
+                                }
+
+                                return true;
+                            }],
+                            $do === 'add' ? ['unique_field'] : false
+                        ]
+                    ]),
+                    new fieldString('title', [
                         'title' => LANG_CP_FIELD_TITLE,
-                        'rules' => array(
-                            array('required'),
-                            array('max_length', 100)
-                        )
-                    )),
-                    new fieldString('hint', array(
+                        'rules' => [
+                            ['required'],
+                            ['max_length', 100]
+                        ]
+                    ]),
+                    new fieldString('hint', [
                         'title' => LANG_CP_FIELD_HINT,
                         'is_clean_disable' => true,
-                        'rules' => array(
-                            array('max_length', 255)
-                        )
-                    )),
-                )
-            ),
-            'type' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_FIELD_TYPE,
-                'childs' => array(
-                    new fieldList('type', array(
-                        'default' => 'string',
-                        'generator' => function() {
+                        'rules' => [
+                            ['max_length', 255]
+                        ]
+                    ]),
+                    new fieldCheckbox('is_enabled', [
+                        'title'   => LANG_IS_ENABLED,
+                        'default' => 1
+                    ])
+                ]
+            ],
+            'type' => [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_TYPE,
+                'childs' => [
+                    new fieldList('type', [
+                        'default'   => 'string',
+                        'hint'      => $do === 'edit' ? LANG_CP_FIELD_TYPE_HINT : '',
+                        'generator' => function () {
                             return cmsForm::getAvailableFormFields('only_public', 'users');
                         }
-                    ))
-                )
-            ),
-            'group' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_FIELD_FIELDSET,
-                'childs' => array(
-                    new fieldList('fieldset', array(
-                        'title' => LANG_CP_FIELD_FIELDSET_SELECT,
-                        'generator' => function($field) {
+                    ])
+                ]
+            ],
+            'group' => [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_FIELDSET,
+                'childs' => [
+                    new fieldList('fieldset', [
+                        'title'     => LANG_CP_FIELD_FIELDSET_SELECT,
+                        'generator' => function ($field) {
                             $model = cmsCore::getModel('content');
                             $model->setTablePrefix('');
                             $fieldsets = $model->getContentFieldsets('{users}');
-                            $items = array('');
-                            foreach($fieldsets as $fieldset) { $items[$fieldset] = $fieldset; }
+                            $items     = [''];
+                            foreach ($fieldsets as $fieldset) {
+                                $items[$fieldset] = $fieldset;
+                            }
                             return $items;
                         }
-                    )),
-                    new fieldString('new_fieldset', array(
+                    ]),
+                    new fieldString('new_fieldset', [
                         'title' => LANG_CP_FIELD_FIELDSET_ADD,
-                        'rules' => array(
-                            array('max_length', 32)
-                        )
-                    )),
-                )
-            ),
-            'visibility' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_FIELD_VISIBILITY,
-                'childs' => array(
-                    new fieldCheckbox('is_in_item', array(
-                        'title' => LANG_CP_FIELD_IN_PROFILE,
+                        'rules' => [
+                            ['max_length', 32]
+                        ]
+                    ]),
+                ]
+            ],
+            'visibility' => [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_VISIBILITY,
+                'childs' => [
+                    new fieldCheckbox('is_in_item', [
+                        'title'   => LANG_CP_FIELD_IN_PROFILE,
                         'default' => true
-                    )),
-                    new fieldCheckbox('is_in_list', array(
+                    ]),
+                    new fieldCheckbox('is_in_list', [
                         'title' => LANG_CP_FIELD_IN_LIST,
-                    )),
-                    new fieldCheckbox('is_in_filter', array(
-                        'title' => LANG_CP_FIELD_IN_FILTER,
-                    ))
-                )
-            ),
-            'labels' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_FIELD_LABELS,
-                'childs' => array(
-                    new fieldList('options:label_in_list', array(
-                        'title' => LANG_CP_FIELD_LABELS_IN_LIST,
-                        'default' => 'none',
-                        'items' => array(
-                            'left' => LANG_CP_FIELD_LABEL_LEFT,
-                            'top' => LANG_CP_FIELD_LABEL_TOP,
-                            'none' => LANG_CP_FIELD_LABEL_NONE
-                        )
-                    )),
-                    new fieldList('options:label_in_item', array(
-                        'title' => LANG_CP_FIELD_LABELS_IN_ITEM,
-                        'default' => 'left',
-                        'items' => array(
-                            'left' => LANG_CP_FIELD_LABEL_LEFT,
-                            'top' => LANG_CP_FIELD_LABEL_TOP,
-                            'none' => LANG_CP_FIELD_LABEL_NONE
-                        )
-                    ))
-                )
-            ),
-            'format' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_FIELD_FORMAT,
-                'childs' => array(
-                    new fieldCheckbox('options:is_required', array(
-                        'title' => LANG_VALIDATE_REQUIRED,
-                    )),
-                    new fieldCheckbox('options:is_digits', array(
-                        'title' => LANG_VALIDATE_DIGITS,
-                    )),
-                    new fieldCheckbox('options:is_alphanumeric', array(
-                        'title' => LANG_VALIDATE_ALPHANUMERIC,
-                    )),
-                    new fieldCheckbox('options:is_email', array(
-                        'title' => LANG_VALIDATE_EMAIL,
-                    )),
-                    new fieldCheckbox('options:is_url', array(
-                        'title' => LANG_VALIDATE_URL,
-                    )),
-                    new fieldCheckbox('options:is_unique', array(
-                        'title' => LANG_VALIDATE_UNIQUE,
-                    )),
-                )
-            ),
-            'values' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_FIELD_VALUES,
-                'childs' => array(
-                    new fieldText('values', array(
-                        'size' => 8
-                    ))
-                )
-            ),
+                    ]),
+                    new fieldCheckbox('is_in_filter', [
+                        'title' => LANG_CP_FIELD_IN_FILTER
+                    ]),
+                    new fieldList('options:visible_depend', [
+                        'title'         => LANG_CP_FIELD_VISIBLE_DEPEND,
+                        'hint'          => LANG_CP_FIELD_VISIBLE_DEPEND_HINT,
+                        'add_title'     => LANG_ADD,
+                        'is_multiple'   => true,
+                        'dynamic_list'  => true,
+                        'single_select' => 0,
+                        'select_title'  => LANG_CP_FIELD_VISIBLE_DEPEND_F,
+                        'multiple_keys' => [
+                            'field'  => 'field', 'action' => 'field_select', 'value'  => 'field_value'
+                        ],
+                        'generator' => function () {
 
-            'read_access' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_FIELD_GROUPS_READ,
-                'childs' => array(
-                    new fieldListGroups('groups_read', array(
+                            $model = cmsCore::getModel('content');
+                            $model->setTablePrefix('');
+
+                            $fields = $model->getContentFields('{users}');
+
+                            $items = [];
+
+                            if ($fields) {
+                                foreach ($fields as $field) {
+                                    $items[$field['name']] = $field['title'];
+                                }
+                            }
+
+                            return $items;
+                        },
+                        'value_items' => [
+                            'show' => LANG_CP_FIELD_VISIBLE_DEPEND_SHOW,
+                            'hide' => LANG_CP_FIELD_VISIBLE_DEPEND_HIDE
+                        ]
+                    ])
+                ]
+            ],
+            'labels'  => [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_LABELS,
+                'childs' => [
+                    new fieldList('options:label_in_list', [
+                        'title'   => LANG_CP_FIELD_LABELS_IN_LIST,
+                        'default' => 'left',
+                        'items'   => [
+                            'left' => LANG_CP_FIELD_LABEL_LEFT,
+                            'top'  => LANG_CP_FIELD_LABEL_TOP,
+                            'none' => LANG_CP_FIELD_LABEL_NONE
+                        ]
+                    ]),
+                    new fieldList('options:label_in_item', [
+                        'title'   => LANG_CP_FIELD_LABELS_IN_ITEM,
+                        'default' => 'left',
+                        'items'   => [
+                            'left' => LANG_CP_FIELD_LABEL_LEFT,
+                            'top'  => LANG_CP_FIELD_LABEL_TOP,
+                            'none' => LANG_CP_FIELD_LABEL_NONE
+                        ]
+                    ])
+                ]
+            ],
+            'format'  => [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_FORMAT,
+                'childs' => [
+                    new fieldCheckbox('options:is_required', [
+                        'title' => LANG_VALIDATE_REQUIRED
+                    ]),
+                    new fieldCheckbox('options:is_digits', [
+                        'title' => LANG_VALIDATE_DIGITS
+                    ]),
+                    new fieldCheckbox('options:is_alphanumeric', [
+                        'title' => LANG_VALIDATE_ALPHANUMERIC
+                    ]),
+                    new fieldCheckbox('options:is_email', [
+                        'title' => LANG_VALIDATE_EMAIL
+                    ]),
+                    new fieldCheckbox('options:is_url', [
+                        'title' => LANG_VALIDATE_URL
+                    ]),
+                    new fieldCheckbox('options:is_unique', [
+                        'title' => LANG_VALIDATE_UNIQUE
+                    ])
+                ]
+            ],
+            'values' => [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_VALUES,
+                'childs' => [
+                    new fieldText('values', [
+                        'size' => 8
+                    ])
+                ]
+            ],
+            'read_access' => [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_GROUPS_READ,
+                'childs' => [
+                    new fieldListGroups('groups_read', [
                         'show_all' => true
-                    ))
-                )
-            ),
-            'add_access' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_FIELD_GROUPS_ADD,
-                'childs' => array(
-                    new fieldListGroups('groups_add', array(
+                    ])
+                ]
+            ],
+            'add_access' => [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_GROUPS_ADD,
+                'childs' => [
+                    new fieldListGroups('groups_add', [
                         'show_all' => true
-                    ))
-                )
-            ),
-            'edit_access' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_FIELD_GROUPS_EDIT,
-                'childs' => array(
-                    new fieldListGroups('groups_edit', array(
+                    ])
+                ]
+            ],
+            'edit_access' => [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_GROUPS_EDIT,
+                'childs' => [
+                    new fieldListGroups('groups_edit', [
                         'show_all' => true
-                    ))
-                )
-            ),
-            'filter_access' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_FIELD_IN_FILTER,
-                'childs' => array(
-                    new fieldListGroups('filter_view', array(
+                    ])
+                ]
+            ],
+            'filter_access' => [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_IN_FILTER,
+                'childs' => [
+                    new fieldListGroups('filter_view', [
                         'show_all' => true
-                    ))
-                )
-            ),
-            'author_access' => array(
-                'type' => 'fieldset',
-                'title' => LANG_CP_FIELD_AUTHOR_ACCESS,
-                'childs' => array(
-                    new fieldListMultiple('options:author_access', array(
-                        'items' => array(
+                    ])
+                ]
+            ],
+            'author_access' => [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_AUTHOR_ACCESS,
+                'childs' => [
+                    new fieldListMultiple('options:author_access', [
+                        'items' => [
                             'is_read' => LANG_CP_FIELD_READING,
                             'is_edit' => LANG_CP_FIELD_EDITING,
-                        )
-                    ))
-                )
-            )
-        );
-
+                        ]
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

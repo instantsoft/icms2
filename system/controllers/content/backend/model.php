@@ -707,17 +707,17 @@ class modelBackendContent extends modelContent {
         return $prop;
     }
 
-    public function updateContentProp($ctype_name, $id, $prop){
+    public function updateContentProp($ctype_name, $id, $prop) {
 
         $table_name = $this->table_prefix . $ctype_name . '_props';
 
         $old_prop = $this->getContentProp($ctype_name, $id);
 
         $missed_cats_list = array_diff($old_prop['cats'], $prop['cats']);
-        $added_cats_list = array_diff($prop['cats'], $old_prop['cats']);
+        $added_cats_list  = array_diff($prop['cats'], $old_prop['cats']);
 
         if ($missed_cats_list) {
-            foreach($missed_cats_list as $cat_id){
+            foreach ($missed_cats_list as $cat_id) {
                 $this->unbindContentProp($ctype_name, $id, $cat_id);
             }
         }
@@ -727,13 +727,14 @@ class modelBackendContent extends modelContent {
         }
 
         unset($prop['cats']);
-	    
-	$prop['id'] = $id;
-	cmsEventsManager::hook('ctype_prop_before_update', array($prop, $old_prop, $ctype_name, $this));
+
+        $prop['id'] = $id;
+
+        cmsEventsManager::hook('ctype_prop_before_update', [$prop, $old_prop, $ctype_name, $this]);
 
         $result = $this->update($table_name, $id, $prop);
 
-        cmsEventsManager::hook('ctype_prop_after_update', array($prop, $ctype_name, $this));
+        cmsEventsManager::hook('ctype_prop_after_update', [$prop, $ctype_name, $this]);
 
         return $result;
     }

@@ -251,9 +251,9 @@ class fieldListBitmask extends cmsFormField {
             foreach ($new_rows as $nkey => $title) {
                 $new_item_value .= in_array($nkey, $old_item_values) ? '1' : '0';
             }
-            
+
             if(strpos($new_item_value, '1') === false){
-                $new_item_value = NULL;
+                $new_item_value = null;
             }
 
             // записываем обратно в базу
