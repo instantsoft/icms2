@@ -78,6 +78,12 @@ trait listgrid {
     protected $ups_key;
 
     /**
+     * Префикс ключа UPS для уникализации
+     * @var string
+     */
+    protected $ups_key_prefix = '';
+
+    /**
      * Грид
      * @var array
      */
@@ -110,7 +116,7 @@ trait listgrid {
 
     public function setListGridParams() {
 
-        $this->ups_key = 'grid_filter.' . $this->name .'_'. $this->grid_name;
+        $this->ups_key = 'grid_filter.' . $this->ups_key_prefix . $this->name .'_'. $this->grid_name;
 
         $this->grid = $this->loadDataGrid($this->grid_name, $this->grid_args, $this->ups_key);
 

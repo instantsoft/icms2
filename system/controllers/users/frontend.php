@@ -173,7 +173,7 @@ class users extends cmsFrontend {
                 ];
 
                 if (empty($this->tabs_controllers[$tab['controller']])) {
-                    $controller = cmsCore::getController($tab['controller'], $this->request);
+                    $controller = cmsCore::getController($tab['controller'], new cmsRequest($this->request->getData(), cmsRequest::CTX_INTERNAL));
                 } else {
                     $controller = $this->tabs_controllers[$tab['controller']];
                 }

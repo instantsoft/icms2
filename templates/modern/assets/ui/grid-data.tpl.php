@@ -17,7 +17,17 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
     <input type="hidden" name="order_to" value="<?php echo isset($filter['order_to']) ? $filter['order_to'] : $options['order_to']; ?>" />
     <?php foreach ($columns as $name => $column) { ?>
         <?php if (isset($column['filter'])) { ?>
-            <?php echo html_input('hidden', $name, (isset($filter[$name]) ? $filter[$name] : '')); ?>
+            <?php if (!empty($column['filter_range'])) {
+                echo html_input('hidden', $name.'[from]', (isset($filter[$name]['from']) ? $filter[$name]['from'] : ''));
+                echo html_input('hidden', $name.'[to]', (isset($filter[$name]['to']) ? $filter[$name]['to'] : ''));
+            } else {
+
+                // На случай, если описание грида изменится, то getUPS может выдать ошибку Array to string conversion
+                $filter[$name] = isset($filter[$name]) ? $filter[$name] : '';
+                $filter[$name] = isset($filter[$name]['from']) ? $filter[$name]['from'] : $filter[$name];
+
+                echo html_input('hidden', $name, $filter[$name]);
+            } ?>
         <?php } ?>
     <?php } ?>
     <input type="hidden" id="advanced_filter" name="advanced_filter" value="" />
@@ -51,13 +61,47 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
                 <?php if ($options['is_filter']){ ?>
                 <tr class="filter table-align-middle">
                     <?php foreach($columns as $name=>$column){ ?>
-                        <?php if ($name === 'id' && !$options['show_id']){ $column['class'] = (isset($column['class']) ? $column['class'] : '').' d-none'; } ?>
-                        <td class="p-2 <?php if(!empty($column['class'])){ ?><?php echo $column['class']; ?><?php } ?>">
+                        <?php
+                        if ($name === 'id' && !$options['show_id']){ $column['class'] = (isset($column['class']) ? $column['class'] : '').' d-none'; }
+                        $with_filter = '';
+                        if (isset($filter[$name])){
+                            if (is_array($filter[$name]) && (!empty($filter[$name]['from']) || !empty($filter[$name]['to']))){
+                                $with_filter = ' with_filter';
+                            }
+                            if (! is_array($filter[$name]) && !empty($filter[$name])){
+                                $with_filter = ' with_filter';
+                            }
+                        }
+                        ?>
+                        <td class="p-2 <?php if(!empty($column['class'])){ ?><?php echo $column['class']; ?><?php } ?><?php echo $with_filter; ?>">
                             <?php if (!empty($column['filter']) && $column['filter'] !== 'none'){ ?>
                                 <?php $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : []; ?>
                                 <?php if(strpos($name, 'date_') === 0){ ?>
 
-                                    <?php echo html_datepicker('filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input form-control-sm']), ['minDate'=>date(cmsConfig::get('date_format'), 86400)]); ?>
+                                    <?php
+
+                                    $filter_attributes = array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input form-control-sm']);
+
+                                    $datepicker_options = [
+                                        'minDate'=>date(cmsConfig::get('date_format'), 86400)
+                                    ];
+
+                                    if (!empty($column['filter_range'])){
+
+                                        $filter_attributes['id'] = 'filter_'.$name.'_from';
+                                        $filter_attributes['rel'] = $name.'[from]';
+
+                                        echo html_datepicker('filter_'.$name.'[from]', (isset($filter[$name]['from']) ? $filter[$name]['from'] : ''), $filter_attributes, $datepicker_options);
+
+                                        $filter_attributes['id'] = 'filter_'.$name.'_to';
+                                        $filter_attributes['rel'] = $name.'[to]';
+
+                                        echo '&nbsp-&nbsp' . html_datepicker('filter_'.$name.'[to]', (isset($filter[$name]['to']) ? $filter[$name]['to'] : ''), $filter_attributes, $datepicker_options);
+                                    } else {
+                                        echo html_datepicker('filter_'.$name, $filter[$name], $filter_attributes, $datepicker_options);
+                                    }
+
+                                    ?>
 
                                 <?php } else { ?>
                                     <?php if (!empty($column['filter_select'])){ ?>
@@ -83,7 +127,30 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
                                         </div>
                                     <?php } else { ?>
 
-                                        <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'form-control-sm'])); ?>
+                                        <?php
+
+                                        $filter_attributes = array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'form-control-sm']);
+
+                                        if (!empty($column['filter_range']) && $column['filter'] === 'exact'){
+
+                                            $filter_attributes['id'] = 'filter_'.$name.'_from';
+                                            $filter_attributes['rel'] = $name.'[from]';
+                                            $filter_attributes['placeholder'] = LANG_FROM;
+
+                                            echo html_input('search', 'filter_'.$name.'[from]', (isset($filter[$name]['from']) ? $filter[$name]['from'] : ''), $filter_attributes);
+
+                                            $filter_attributes['id'] = 'filter_'.$name.'_to';
+                                            $filter_attributes['rel'] = $name.'[to]';
+                                            $filter_attributes['placeholder'] = LANG_TO;
+
+                                            echo '&nbsp-&nbsp' . html_input('search', 'filter_'.$name.'[to]', (isset($filter[$name]['to']) ? $filter[$name]['to'] : ''), $filter_attributes);
+
+                                        } else {
+
+                                            echo html_input('search', 'filter_'.$name, $filter[$name], $filter_attributes);
+
+                                        }
+                                    ?>
 
                                     <?php } ?>
                                 <?php } ?>

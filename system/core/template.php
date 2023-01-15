@@ -2651,12 +2651,54 @@ class cmsTemplate {
                 if(!empty($column['filter']) && $column['filter'] !== 'none'){
                     $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : array();
                     if(strpos($name, 'date_') === 0){
-                        $filter = html_datepicker('filter_'.$name, (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input form-control-sm')), array('minDate'=>date(cmsConfig::get('date_format'), 86400))).$clear_filter;
+
+                        $filter_attributes = array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input form-control-sm']);
+
+                        $datepicker_options = [
+                            'minDate'=>date(cmsConfig::get('date_format'), 86400)
+                        ];
+
+                        if (!empty($column['filter_range'])){
+
+                            $filter_attributes['id'] = 'filter_'.$name.'_from';
+                            $filter_attributes['rel'] = $name.'[from]';
+
+                            $filter = html_datepicker('filter_'.$name.'[from]', (isset($grid['filter'][$name]['from']) ? $grid['filter'][$name]['from'] : ''), $filter_attributes, $datepicker_options);
+
+                            $filter_attributes['id'] = 'filter_'.$name.'_to';
+                            $filter_attributes['rel'] = $name.'[to]';
+
+                            $filter .= '&nbsp-&nbsp' . html_datepicker('filter_'.$name.'[to]', (isset($grid['filter'][$name]['to']) ? $grid['filter'][$name]['to'] : ''), $filter_attributes, $datepicker_options).$clear_filter;
+
+                        } else {
+
+                            $filter = html_datepicker('filter_'.$name, (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), $filter_attributes, $datepicker_options).$clear_filter;
+
+                        }
+
                     }
                     elseif(!empty($column['filter_select'])){
                         $filter = html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class'=>'custom-select custom-select-sm')));
                     } else {
-                        $filter = html_input('text', 'filter_'.$name, (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'form-control-sm'))).$clear_filter;
+                        $filter_attributes = array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'form-control-sm']);
+
+                        if (!empty($column['filter_range']) && $column['filter'] === 'exact'){
+
+                            $filter_attributes['id'] = 'filter_'.$name.'_from';
+                            $filter_attributes['rel'] = $name.'[from]';
+
+                            $filter = html_input('search', 'filter_'.$name.'[from]', (isset($grid['filter'][$name]['from']) ? $grid['filter'][$name]['from'] : ''), $filter_attributes);
+
+                            $filter_attributes['id'] = 'filter_'.$name.'_to';
+                            $filter_attributes['rel'] = $name.'[to]';
+
+                            $filter .= '&nbsp-&nbsp' . html_input('search', 'filter_'.$name.'[to]', (isset($grid['filter'][$name]['to']) ? $grid['filter'][$name]['to'] : ''), $filter_attributes).$clear_filter;
+
+                        } else {
+
+                            $filter = html_input('search', 'filter_'.$name, (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), $filter_attributes).$clear_filter;
+
+                        }
                     }
                 } else {
                     $filter = '';

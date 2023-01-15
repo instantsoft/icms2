@@ -2275,13 +2275,45 @@ class cmsModel {
                             break;
                         case 'filled': ($filter[$field] ? $this->filterNotNull($filter_field) : $this->filterIsNull($filter_field));
                             break;
-                        case 'exact': $this->filterEqual($filter_field, $filter[$field]);
+                        case 'exact':
+
+                            if (!empty($column['filter_range'])){
+
+                                if (!empty($filter[$field]['from']) && is_numeric($filter[$field]['from'])){
+                                    $this->filterGtEqual($filter_field, $filter[$field]['from']);
+                                }
+                                if (!empty($filter[$field]['to']) && is_numeric($filter[$field]['to'])){
+                                    $this->filterLtEqual($filter_field, $filter[$field]['to']);
+                                }
+
+                            } else {
+
+                                if (!empty($filter[$field])){
+                                    $this->filterEqual($filter_field, $filter[$field]);
+                                }
+                            }
+
                             break;
                         case 'like': $this->filterLike($filter_field, "%{$filter[$field]}%");
                             break;
                         case 'date':
-                            $date = date('Y-m-d', strtotime($filter[$field]));
-                            $this->filterLike($filter_field, "%{$date}%");
+
+                            if (!empty($column['filter_range'])){
+
+                                if (!empty($filter[$field]['from'])){
+                                    $date_from = date('Y-m-d', strtotime($filter[$field]['from']));
+                                    $this->filterGtEqual($filter_field, $date_from);
+                                }
+                                if (!empty($filter[$field]['to'])){
+                                    $date_to = date('Y-m-d', strtotime($filter[$field]['to']));
+                                    $this->filterLtEqual($filter_field, $date_to);
+                                }
+
+                            } else {
+                                $date = date('Y-m-d', strtotime($filter[$field]));
+                                $this->filterLike($filter_field, "%{$date}%");
+                            }
+
                             break;
                     }
                 }

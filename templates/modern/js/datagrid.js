@@ -35,10 +35,21 @@ icms.datagrid = (function ($) {
                     $('#datagrid_filter input[name="'+filter+'"]').val(value);
 
                     if ($(this).is('input')) {
+                        let td_first = $(this).parents('td:first');
+                        let inputs = $('input', td_first);
+
+                        if (inputs.length > 1){
+                            inputs.each(function(){
+                                if ($(this).val()){
+                                    value = true;
+                                }
+                            });
+                        }
+
                         if (value) {
-                            $(this).parents('td:first').addClass('with_filter');
+                            td_first.addClass('with_filter');
                         } else {
-                            $(this).parents('td:first').removeClass('with_filter');
+                            td_first.removeClass('with_filter');
                         }
                     }
                 });
