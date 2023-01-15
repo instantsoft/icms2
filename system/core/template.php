@@ -2678,7 +2678,33 @@ class cmsTemplate {
 
                     }
                     elseif(!empty($column['filter_select'])){
-                        $filter = html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class'=>'custom-select custom-select-sm')));
+
+                        $filter_attributes = array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'custom-select custom-select-sm']);
+
+                        $select_items = (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name));
+
+                        if (!empty($column['filter_range']) && $column['filter'] === 'exact'){
+
+                            $selected_from = isset($grid['filter'][$name]['from']) ? $grid['filter'][$name]['from'] : '';
+                            $filter_attributes['id'] = 'filter_'.$name.'_from';
+                            $filter_attributes['rel'] = $name.'[from]';
+                            $filter_attributes['placeholder'] = LANG_FROM;
+
+                            $filter = html_select('filter_'.$name.'[from]', $select_items, $selected_from, $filter_attributes);
+
+                            $selected_to = isset($grid['filter'][$name]['to']) ? $grid['filter'][$name]['to'] : '';
+                            $filter_attributes['id'] = 'filter_'.$name.'_to';
+                            $filter_attributes['rel'] = $name.'[to]';
+                            $filter_attributes['placeholder'] = LANG_TO;
+
+                            $filter .= '&nbsp-&nbsp' . html_select('filter_'.$name.'[to]', $select_items, $selected_to, $filter_attributes);
+
+                        } else {
+                            $selected = isset($grid['filter'][$name]) ? $grid['filter'][$name] : '';
+                            $filter = html_select('filter_'.$name, $select_items, $selected, $filter_attributes);
+
+                        }
+
                     } else {
                         $filter_attributes = array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'form-control-sm']);
 

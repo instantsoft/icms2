@@ -106,16 +106,43 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
                                 <?php } else { ?>
                                     <?php if (!empty($column['filter_select'])){ ?>
 
-                                        <?php $selected = (isset($filter[$name]) ? $filter[$name] : '');
+                                        <?php
                                         if (!empty($filter_attributes['multiple'])) {
                                             $selected = explode(',', $selected);
                                         } ?>
-                                        <?php echo html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), $selected, array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'custom-select custom-select-sm'])); ?>
+
+                                        <?php
+                                        $filter_attributes = array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'custom-select custom-select-sm']);
+
+                                        $select_items = (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name));
+
+                                        if (!empty($column['filter_range']) && $column['filter'] === 'exact'){
+
+                                            $selected_from = (isset($filter[$name]['from']) ? $filter[$name]['from'] : '');
+                                            $filter_attributes['id'] = 'filter_'.$name.'_from';
+                                            $filter_attributes['rel'] = $name.'[from]';
+                                            $filter_attributes['placeholder'] = LANG_FROM;
+
+                                            echo html_select('filter_'.$name.'[from]', $select_items, $selected_from, $filter_attributes);
+
+                                            $selected_to = (isset($filter[$name]['to']) ? $filter[$name]['to'] : '');
+                                            $filter_attributes['id'] = 'filter_'.$name.'_to';
+                                            $filter_attributes['rel'] = $name.'[to]';
+                                            $filter_attributes['placeholder'] = LANG_TO;
+
+                                            echo '&nbsp-&nbsp' . html_select('filter_'.$name.'[to]', $select_items, $selected_to, $filter_attributes);
+
+                                        } else {
+                                            $selected = (isset($filter[$name]) ? $filter[$name] : '');
+                                            echo html_select('filter_'.$name, $select_items, $selected, $filter_attributes);
+
+                                        }
+                                        ?>
 
                                     <?php if (!empty($filter_attributes['multiple'])) { ?>
                                         <?php ob_start(); ?>
                                         <script>
-                                            $('#filter_<?php echo $name; ?>').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', placeholder_text_single: '<?php echo LANG_SELECT; ?>', placeholder_text_multiple: '<?php echo LANG_SELECT_MULTIPLE; ?>', disable_search_threshold: 8, width: '100%', allow_single_deselect: true, search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>', search_contains: true, hide_results_on_select: false});
+                                            $('#filter_<?php echo $name; ?>, #filter_<?php echo $name; ?>_from, #filter_<?php echo $name; ?>_to').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', placeholder_text_single: '<?php echo LANG_SELECT; ?>', placeholder_text_multiple: '<?php echo LANG_SELECT_MULTIPLE; ?>', disable_search_threshold: 8, width: '100%', allow_single_deselect: true, search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>', search_contains: true, hide_results_on_select: false});
                                         </script>
                                         <?php $this->addBottom(ob_get_clean()); ?>
                                     <?php } ?>
@@ -128,7 +155,6 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
                                     <?php } else { ?>
 
                                         <?php
-
                                         $filter_attributes = array_merge($filter_attributes, ['id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'form-control-sm']);
 
                                         if (!empty($column['filter_range']) && $column['filter'] === 'exact'){
@@ -150,7 +176,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
                                             echo html_input('search', 'filter_'.$name, $filter[$name], $filter_attributes);
 
                                         }
-                                    ?>
+                                        ?>
 
                                     <?php } ?>
                                 <?php } ?>
