@@ -2,7 +2,10 @@
 
 class formAdminCtypesField extends cmsForm {
 
-    private $reserved_names = ['ctype', 'ctype_name', 'private_item_hint', 'is_private_item', 'fields', 'fields_names', 'is_new', 'info_bar', 'category', 'categories'];
+    private $reserved_names = [
+        'ctype', 'ctype_name', 'private_item_hint', 'is_private_item',
+        'fields', 'fields_names', 'is_new', 'info_bar', 'category', 'categories'
+    ];
 
     public function init($do, $ctype_name) {
 
@@ -20,9 +23,9 @@ class formAdminCtypesField extends cmsForm {
                             ['required'],
                             ['sysname'],
                             ['max_length', 40],
-                            [function($controller, $data, $value) {
+                            [function ($controller, $data, $value) {
 
-                                if(in_array($value, $this->reserved_names)){
+                                if (in_array($value, $this->reserved_names)) {
                                     return ERR_VALIDATE_INVALID;
                                 }
 
@@ -33,6 +36,11 @@ class formAdminCtypesField extends cmsForm {
                     ]),
                     new fieldString('title', [
                         'title' => LANG_CP_FIELD_TITLE,
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => $model->getContentTypeTableName($ctype_name).'_fields'
+                        ],
                         'rules' => [
                             ['required'],
                             ['max_length', 100]
@@ -40,6 +48,11 @@ class formAdminCtypesField extends cmsForm {
                     ]),
                     new fieldString('hint', [
                         'title' => LANG_CP_FIELD_HINT,
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => $model->getContentTypeTableName($ctype_name).'_fields'
+                        ],
                         'is_clean_disable' => true,
                         'rules' => [
                             ['max_length', 255]
@@ -84,7 +97,7 @@ class formAdminCtypesField extends cmsForm {
                         'rules' => [
                             ['max_length', 32]
                         ]
-                    ]),
+                    ])
                 ]
             ],
             'visibility' => [
@@ -262,6 +275,11 @@ class formAdminCtypesField extends cmsForm {
                 'title'  => LANG_CP_FIELD_VALUES,
                 'childs' => [
                     new fieldText('values', [
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => $model->getContentTypeTableName($ctype_name).'_fields'
+                        ],
                         'size' => 8
                     ])
                 ]
@@ -332,5 +350,4 @@ class formAdminCtypesField extends cmsForm {
             ]
         ];
     }
-
 }

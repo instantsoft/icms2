@@ -4,6 +4,8 @@ class actionAdminSettingsCheckNested extends cmsAction {
 
     public function run() {
 
+        cmsModel::globalLocalizedOn();
+
         $db_nested_tables = cmsEventsManager::hookAll('db_nested_tables');
 
         $form = new cmsForm();
@@ -65,6 +67,8 @@ class actionAdminSettingsCheckNested extends cmsAction {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
         }
+
+        cmsModel::globalLocalizedOff();
 
         return $this->cms_template->render('settings_check_nested', array(
             'nested_tables_exists' => boolval($db_nested_tables),

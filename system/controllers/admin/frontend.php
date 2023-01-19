@@ -795,15 +795,15 @@ class admin extends cmsFrontend {
         return $result;
     }
 
-    public function getWidgetOptionsForm($widget_name, $controller_name = false, $options = false, $template_name = false, $allow_set_cacheable = true){
+    public function getWidgetOptionsForm($widget_name, $controller_name = false, $options = false, $template_name = false, $allow_set_cacheable = true) {
 
-        if(!$template_name){
+        if (!$template_name) {
             $template_name = $this->cms_config->template;
         }
 
         $template = new cmsTemplate($template_name);
 
-		$widget_path = cmsCore::getWidgetPath($widget_name, $controller_name);
+        $widget_path = cmsCore::getWidgetPath($widget_name, $controller_name);
 
         $path = $this->cms_config->system_path . $widget_path;
 
@@ -811,204 +811,218 @@ class admin extends cmsFrontend {
 
         $form_name = 'widget' . ($controller_name ? "_{$controller_name}_" : '_') . "{$widget_name}_options";
 
-        $form = cmsForm::getForm($form_file, $form_name, array($options, $template_name));
-        if (!$form) { $form = new cmsForm(); }
+        $form = cmsForm::getForm($form_file, $form_name, [$options, $template_name]);
+        if (!$form) {
+            $form = new cmsForm();
+        }
 
         $form->is_tabbed = true;
 
-		//
-		// Опции внешнего вида
-		//
-		$design_fieldset_id = $form->addFieldset(LANG_DESIGN, 'design');
+        //
+        // Опции внешнего вида
+        //
+        $design_fieldset_id = $form->addFieldset(LANG_DESIGN, 'design');
 
-            $form->addField($design_fieldset_id, new fieldList('tpl_wrap', array(
-                'title' => LANG_WIDGET_WRAPPER_TPL,
-				'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
-				'default' => 'wrapper',
-                'generator' => function($item) use ($template_name){
-                    return ['' => LANG_WIDGET_WRAPPER_TPL_NO, '-1' => LANG_WIDGET_WRAPPER_TPL_CUST] + $this->cms_template->getAvailableTemplatesFiles('widgets', 'wrapper*.tpl.php', $template_name);
-                }
-            )));
-
-            // Стили обёрток
-            $preset_file = $template->getTplFilePath('widgets/wrapper_styles.php');
-            if($preset_file){
-
-                cmsCore::loadTemplateLanguage($template_name);
-
-                $preset_styles = include $preset_file;
-
-                $form->addField($design_fieldset_id, new fieldList('tpl_wrap_style', array(
-                    'title' => LANG_CP_WIDGETS_STYLE,
-                    'generator' => function($item) use ($preset_styles){
-                        $items = ['' => ''];
-                        foreach ($preset_styles as $key => $value) {
-                            $items['opt'.$key] = [$key];
-                            foreach ($value as $k => $v) {
-                                $items[$k] = $v;
-                            }
-                        }
-                        return $items;
-                    },
-                    'visible_depend' => ['tpl_wrap' => ['show' => array_keys($preset_styles)]]
-                )));
+        $form->addField($design_fieldset_id, new fieldList('tpl_wrap', [
+            'title' => LANG_WIDGET_WRAPPER_TPL,
+            'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
+            'default' => 'wrapper',
+            'generator' => function ($item) use ($template_name) {
+                return ['' => LANG_WIDGET_WRAPPER_TPL_NO, '-1' => LANG_WIDGET_WRAPPER_TPL_CUST] + $this->cms_template->getAvailableTemplatesFiles('widgets', 'wrapper*.tpl.php', $template_name);
             }
+        ]));
 
-            $wrap_custom_fields = [
-                'title' => LANG_TITLE,
-                'id'    => 'ID',
-                'body'  => LANG_WIDGET_BODY
-            ];
+        // Стили обёрток
+        $preset_file = $template->getTplFilePath('widgets/wrapper_styles.php');
+        if ($preset_file) {
 
-            $form->addField($design_fieldset_id, new fieldHtml('tpl_wrap_custom', [
-                'title' => LANG_WIDGET_WRAPPER_TPL_CUST,
-                'patterns_hint' => [
-                    'patterns' =>  $wrap_custom_fields,
-                    'text_panel' => '',
-                    'always_show' => true,
-                    'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN
-                ],
-                'options' => ['editor' => 'ace'],
-                'visible_depend' => ['tpl_wrap' => ['show' => ['-1']]]
+            cmsCore::loadTemplateLanguage($template_name);
+
+            $preset_styles = include $preset_file;
+
+            $form->addField($design_fieldset_id, new fieldList('tpl_wrap_style', [
+                'title' => LANG_CP_WIDGETS_STYLE,
+                'generator' => function ($item) use ($preset_styles) {
+                    $items = ['' => ''];
+                    foreach ($preset_styles as $key => $value) {
+                        $items['opt' . $key] = [$key];
+                        foreach ($value as $k => $v) {
+                            $items[$k] = $v;
+                        }
+                    }
+                    return $items;
+                },
+                'visible_depend' => ['tpl_wrap' => ['show' => array_keys($preset_styles)]]
             ]));
+        }
 
-            $form->addField($design_fieldset_id, new fieldList('tpl_body', array(
-                'title' => LANG_WIDGET_BODY_TPL,
-				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
-                'default' => $widget_name,
-                'generator' => function($item) use ($template_name, $widget_path){
-                    return $this->cms_template->getAvailableTemplatesFiles($widget_path, '*.tpl.php', $template_name);
-               }
-            )));
+        $wrap_custom_fields = [
+            'title' => LANG_TITLE,
+            'id'    => 'ID',
+            'body'  => LANG_WIDGET_BODY
+        ];
 
-            $form->addField($design_fieldset_id, new fieldString('class_wrap', array(
-                'title' => LANG_CSS_CLASS_WRAP,
-                'visible_depend' => ['tpl_wrap' => ['hide' => ['-1']]]
-            )));
+        $form->addField($design_fieldset_id, new fieldHtml('tpl_wrap_custom', [
+            'title' => LANG_WIDGET_WRAPPER_TPL_CUST,
+            'patterns_hint' => [
+                'patterns' =>  $wrap_custom_fields,
+                'text_panel' => '',
+                'always_show' => true,
+                'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN
+            ],
+            'options' => ['editor' => 'ace'],
+            'visible_depend' => ['tpl_wrap' => ['show' => ['-1']]]
+        ]));
 
-            $form->addField($design_fieldset_id, new fieldString('class_title', array(
-                'title' => LANG_CSS_CLASS_TITLE,
-                'visible_depend' => ['tpl_wrap' => ['hide' => ['', 'wrapper_plain', '-1']]]
-            )));
+        $form->addField($design_fieldset_id, new fieldList('tpl_body', [
+            'title' => LANG_WIDGET_BODY_TPL,
+            'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
+            'default' => $widget_name,
+            'generator' => function ($item) use ($template_name, $widget_path) {
+                return $this->cms_template->getAvailableTemplatesFiles($widget_path, '*.tpl.php', $template_name);
+            }
+        ]));
 
-            $form->addField($design_fieldset_id, new fieldString('class', array(
-                'title' => LANG_CSS_CLASS_BODY,
-                'visible_depend' => ['tpl_wrap' => ['hide' => ['', 'wrapper_plain', '-1']]]
-            )));
+        $form->addField($design_fieldset_id, new fieldString('class_wrap', [
+            'title' => LANG_CSS_CLASS_WRAP,
+            'visible_depend' => ['tpl_wrap' => ['hide' => ['-1']]]
+        ]));
+
+        $form->addField($design_fieldset_id, new fieldString('class_title', [
+            'title' => LANG_CSS_CLASS_TITLE,
+            'visible_depend' => ['tpl_wrap' => ['hide' => ['', 'wrapper_plain', '-1']]]
+        ]));
+
+        $form->addField($design_fieldset_id, new fieldString('class', [
+            'title' => LANG_CSS_CLASS_BODY,
+            'visible_depend' => ['tpl_wrap' => ['hide' => ['', 'wrapper_plain', '-1']]]
+        ]));
 
         //
         // Опции доступа
         //
         $access_fieldset_id = $form->addFieldset(LANG_PERMISSIONS, 'permissions');
 
-            // Показывать группам
-            $form->addField($access_fieldset_id, new fieldListGroups('groups_view', array(
-                'title'       => LANG_SHOW_TO_GROUPS,
-                'show_all'    => true,
-                'show_guests' => true
-            )));
+        // Показывать группам
+        $form->addField($access_fieldset_id, new fieldListGroups('groups_view', [
+            'title'       => LANG_SHOW_TO_GROUPS,
+            'show_all'    => true,
+            'show_guests' => true
+        ]));
 
-            // Не показывать группам
-            $form->addField($access_fieldset_id, new fieldListGroups('groups_hide', array(
-                'title'       => LANG_HIDE_FOR_GROUPS,
-                'show_all'    => false,
-                'show_guests' => true
-            )));
+        // Не показывать группам
+        $form->addField($access_fieldset_id, new fieldListGroups('groups_hide', [
+            'title'       => LANG_HIDE_FOR_GROUPS,
+            'show_all'    => false,
+            'show_guests' => true
+        ]));
 
-            $form->addField($access_fieldset_id, new fieldListMultiple('languages', array(
-                'title'   => LANG_WIDGET_LANG_SELECT,
-                'default' => 0,
-                'show_all'=> true,
-                'generator'   => function ($item){
-                    $langs = cmsCore::getLanguages();
-                    $items = array();
-                    foreach ($langs as $lang) {
-                        $items[$lang] = $lang;
-                    }
-                    return $items;
+        $form->addField($access_fieldset_id, new fieldListMultiple('languages', [
+            'title'   => LANG_WIDGET_LANG_SELECT,
+            'default' => 0,
+            'show_all' => true,
+            'generator'   => function ($item) {
+                $langs = cmsCore::getLanguages();
+                $items = [];
+                foreach ($langs as $lang) {
+                    $items[$lang] = $lang;
                 }
-            )));
+                return $items;
+            }
+        ]));
 
-            $form->addField($access_fieldset_id, new fieldListMultiple('device_types', array(
-                'title'   => LANG_WIDGET_DEVICE,
-                'default' => 0,
-                'show_all'=> true,
-                'items'   => array(
-                    'tablet'  => LANG_TABLET_DEVICES,
-                    'mobile'  => LANG_MOBILE_DEVICES,
-                    'desktop' => LANG_DESKTOP_DEVICES
-                )
-            )));
+        $form->addField($access_fieldset_id, new fieldListMultiple('device_types', [
+            'title'   => LANG_WIDGET_DEVICE,
+            'default' => 0,
+            'show_all' => true,
+            'items'   => [
+                'tablet'  => LANG_TABLET_DEVICES,
+                'mobile'  => LANG_MOBILE_DEVICES,
+                'desktop' => LANG_DESKTOP_DEVICES
+            ]
+        ]));
 
-            $form->addField($access_fieldset_id, new fieldListMultiple('template_layouts', array(
-                'title'   => LANG_WIDGET_TEMPLATE_LAYOUT,
-                'default' => 0,
-                'show_all'=> true,
-                'generator' => function($item) use ($template_name){
-                    $layouts = $this->cms_template->getAvailableTemplatesFiles('', '*.tpl.php', $template_name);
-                    $items = [];
-                    if ($layouts) {
-                        foreach ($layouts as $layout) {
-                            if($layout == 'admin'){ continue; }
-                            $items[$layout] = string_lang('LANG_'.$template_name.'_THEME_LAYOUT_'.$layout, $layout);
+        $form->addField($access_fieldset_id, new fieldListMultiple('template_layouts', [
+            'title'   => LANG_WIDGET_TEMPLATE_LAYOUT,
+            'default' => 0,
+            'show_all' => true,
+            'generator' => function ($item) use ($template_name) {
+                $layouts = $this->cms_template->getAvailableTemplatesFiles('', '*.tpl.php', $template_name);
+                $items = [];
+                if ($layouts) {
+                    foreach ($layouts as $layout) {
+                        if ($layout == 'admin') {
+                            continue;
                         }
+                        $items[$layout] = string_lang('LANG_' . $template_name . '_THEME_LAYOUT_' . $layout, $layout);
                     }
-                    return $items;
-               }
-            )));
+                }
+                return $items;
+            }
+        ]));
 
         //
         // Опции заголовка
         //
         $title_fieldset_id = $form->addFieldsetToBeginning(LANG_BASIC_OPTIONS, 'basic_options');
 
-            // ID виджета
-            $form->addField($title_fieldset_id, new fieldNumber('id', array(
-                'is_hidden'=>true
-            )));
-            $form->addField($title_fieldset_id, new fieldString('template', array(
-                'is_hidden'=>true,
-                'default' => $template_name
-            )));
+        // ID виджета
+        $form->addField($title_fieldset_id, new fieldNumber('id', [
+            'is_hidden' => true
+        ]));
 
-            // Заголовок виджета
-            $form->addField($title_fieldset_id, new fieldString('title', array(
-                'title' => LANG_TITLE,
-                'rules' => array(
-                    array('required'),
-                    array('min_length', 3),
-                    array('max_length', 128)
-                )
-            )));
+        $form->addField($title_fieldset_id, new fieldString('template', [
+            'is_hidden' => true,
+            'default' => $template_name
+        ]));
 
-            // Флаг показа заголовка
-            $form->addField($title_fieldset_id, new fieldCheckbox('is_title', array(
-                'title'   => LANG_SHOW_TITLE,
-                'default' => true
-            )));
+        // Заголовок виджета
+        $form->addField($title_fieldset_id, new fieldString('title', [
+            'title' => LANG_TITLE,
+            'can_multilanguage' => true,
+            'multilanguage_params' => [
+                'is_table_field' => true,
+                'table' => 'widgets_bind'
+            ],
+            'rules' => [
+                ['required'],
+                ['min_length', 3],
+                ['max_length', 128]
+            ]
+        ]));
 
-            // Флаг объединения с предыдущим виджетом
-            $form->addField($title_fieldset_id, new fieldCheckbox('is_tab_prev', array(
-                'title'   => LANG_WIDGET_TAB_PREV,
-                'default' => false
-            )));
+        // Флаг показа заголовка
+        $form->addField($title_fieldset_id, new fieldCheckbox('is_title', [
+            'title'   => LANG_SHOW_TITLE,
+            'default' => true
+        ]));
 
-            // Управление кэшированием
-            if($this->cms_config->cache_enabled && $allow_set_cacheable){
-                $form->addField($title_fieldset_id, new fieldCheckbox('is_cacheable', array(
-                    'title' => LANG_CP_CACHE
-                )));
-            }
+        // Флаг объединения с предыдущим виджетом
+        $form->addField($title_fieldset_id, new fieldCheckbox('is_tab_prev', [
+            'title'   => LANG_WIDGET_TAB_PREV,
+            'default' => false
+        ]));
 
-            // Ссылки в заголовке
-            $form->addField($title_fieldset_id, new fieldText('links', array(
-                'title' => LANG_WIDGET_TITLE_LINKS,
-                'hint'  => LANG_WIDGET_TITLE_LINKS_HINT,
-                'is_strip_tags' => true
-            )));
+        // Управление кэшированием
+        if ($this->cms_config->cache_enabled && $allow_set_cacheable) {
+            $form->addField($title_fieldset_id, new fieldCheckbox('is_cacheable', [
+                'title' => LANG_CP_CACHE
+            ]));
+        }
 
-		return cmsEventsManager::hook('widget_options_full_form', $form);
+        // Ссылки в заголовке
+        $form->addField($title_fieldset_id, new fieldText('links', [
+            'title' => LANG_WIDGET_TITLE_LINKS,
+            'hint'  => LANG_WIDGET_TITLE_LINKS_HINT,
+            'can_multilanguage' => true,
+            'multilanguage_params' => [
+                'is_table_field' => true,
+                'table' => 'widgets_bind'
+            ],
+            'is_strip_tags' => true
+        ]));
 
+        return cmsEventsManager::hook('widget_options_full_form', $form);
     }
 
     public function getAddonsMethod($name, $params = array(), $cacheable = false) {

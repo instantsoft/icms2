@@ -8,6 +8,8 @@ class actionAdminCtypesFields extends cmsAction {
             return cmsCore::error404();
         }
 
+        $this->model_content->localizedOn();
+
         $ctype = $this->model_content->getContentType($ctype_id);
         if (!$ctype) {
             return cmsCore::error404();
@@ -37,6 +39,8 @@ class actionAdminCtypesFields extends cmsAction {
 
             return $this->halt();
         }
+
+        $this->model_content->localizedOff();
 
         return $this->cms_template->render('ctypes_fields', [
             'ctype' => $ctype,

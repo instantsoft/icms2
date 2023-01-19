@@ -27,6 +27,10 @@ class cmsCore {
 	public $link;
 	public $request;
 
+    /**
+     * DB link
+     * @var \cmsDatabase
+     */
     public $db;
 
     private static $includedFiles = [];

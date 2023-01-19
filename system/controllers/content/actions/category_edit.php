@@ -15,7 +15,7 @@ class actionContentCategoryEdit extends cmsAction {
         }
 
         // проверяем поддержку категорий
-        if (!$ctype['is_cats']) {
+        if (!$ctype['is_cats'] && !$this->cms_user->is_admin) {
             return cmsCore::error404();
         }
 

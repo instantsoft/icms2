@@ -28,7 +28,7 @@
 Спробуйте самі в нашому [онлайн демо](https://demo.instantcms.ru/)
 
 ## Системні вимоги ##
-* Інтерпретатор PHP версії 5.6 або вище (PHP 8.1 також підтримується);
+* Інтерпретатор PHP версії 5.6 або вище;
 * Модулі для PHP: GD, iconv, mbstring, simplexml, json, filter;
 * СУБД MySQL версії 5 або вищої, MariaDB;
 * Веб-сервер Apache із встановленим модулем mod_rewrite або Nginx + PHP-FPM + конвертовані правила .htaccess.

@@ -253,7 +253,7 @@ CREATE TABLE `{#}content_datasets` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) unsigned DEFAULT NULL COMMENT 'Content typpe ID',
   `name` varchar(32) NOT NULL COMMENT 'Dataset title',
-  `title` varchar(100) NOT NULL COMMENT 'Dataset heading',
+  `title` varchar(100) DEFAULT NULL COMMENT 'Dataset heading',
   `description` text COMMENT 'Dataset description',
   `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Order number',
   `is_visible` tinyint(1) unsigned DEFAULT NULL COMMENT 'Show dataset on site?',
@@ -324,7 +324,7 @@ CREATE TABLE `{#}content_relations_bind` (
 DROP TABLE IF EXISTS `{#}content_types`;
 CREATE TABLE `{#}content_types` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) NOT NULL,
+  `title` varchar(100) DEFAULT NULL,
   `name` varchar(32) NOT NULL COMMENT 'System name',
   `description` text COMMENT 'Description',
   `ordering` int(11) DEFAULT NULL,
@@ -336,9 +336,7 @@ CREATE TABLE `{#}content_types` (
   `is_in_groups` tinyint(1) unsigned DEFAULT NULL COMMENT 'Create in groups',
   `is_in_groups_only` tinyint(1) unsigned DEFAULT NULL COMMENT 'Create only in groups',
   `is_comments` tinyint(1) unsigned DEFAULT NULL COMMENT 'Comments enabled?',
-  `is_comments_tree` tinyint(1) unsigned DEFAULT NULL,
   `is_rating` tinyint(1) unsigned DEFAULT NULL COMMENT 'Allow rating?',
-  `is_rating_pos` tinyint(1) unsigned DEFAULT NULL,
   `is_tags` tinyint(1) unsigned DEFAULT NULL,
   `is_auto_keys` tinyint(1) unsigned DEFAULT NULL COMMENT 'Autogeneration of keywords?',
   `is_auto_desc` tinyint(1) unsigned DEFAULT NULL COMMENT 'Autogeneration of description?',
@@ -357,9 +355,9 @@ CREATE TABLE `{#}content_types` (
   KEY `ordering` (`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Content types';
 
-INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_comments_tree`, `is_rating`, `is_rating_pos`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
-(1, 'Pages', 'pages', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: null\nlist_on: null\nprofile_on: null\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: page\ntwo: pages\nmany: pages\ncreate: page\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1),
-(7, 'Photo albums', 'albums', '<p>User photo albums</p>', NULL, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: album\ntwo: albums\nmany: albums\ncreate: album\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1);
+INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_rating`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
+(1, 'Pages', 'pages', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: null\nlist_on: null\nprofile_on: null\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: page\ntwo: pages\nmany: pages\ncreate: page\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1),
+(7, 'Photo albums', 'albums', '<p>User photo albums</p>', NULL, NULL, NULL, NULL, 1, NULL, 1, 1, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: album\ntwo: albums\nmany: albums\ncreate: album\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1);
 
 DROP TABLE IF EXISTS `{#}controllers`;
 CREATE TABLE `{#}controllers` (
@@ -403,7 +401,8 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (21, 'Geobase', 'geo', 1, '---\nauto_detect: 1\nauto_detect_provider: geoiplookup\ndefault_country_id: null\ndefault_country_id_cache: null\ndefault_region_id: null\ndefault_region_id_cache: null\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (22, 'Subscriptions', 'subscriptions', 1, '---\nguest_email_confirmation: 1\nneed_auth: null\nverify_exp: 24\nupdate_user_rating: 1\nrating_value: 1\nadmin_email:\nlimit: 20\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (23, 'Wysiwyg editors', 'wysiwygs', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(24, 'Form constructor', 'forms', 1, '---\nsend_text: >\n  Thanks! Form\n sent successfully.\nallow_embed: null\nallow_embed_domain:\ndenied_embed_domain:\nletter: |\n  [subject:Form: {form_title} - {site}]\r\n  \r\n  Hello.\r\n  \r\n  The form <b>{form_title}</b> has been sent from the site {site}.\r\n  \r\n  Form data:\r\n  \r\n  {form_data}\r\n  \r\n  --\r\n   Best regards, {site}\r\n   <small>This letter is sent automatically, please do not reply.</small>\nnotify_text: \'<p>Hello.</p><p>Form <strong>{form_title}</strong> submitted.</p><p><strong>Form data:</strong></p><p>{form_data}</p>\'\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
+(24, 'Form constructor', 'forms', 1, '---\nsend_text: >\n  Thanks! Form\n sent successfully.\nallow_embed: null\nallow_embed_domain:\ndenied_embed_domain:\nletter: |\n  [subject:Form: {form_title} - {site}]\r\n  \r\n  Hello.\r\n  \r\n  The form <b>{form_title}</b> has been sent from the site {site}.\r\n  \r\n  Form data:\r\n  \r\n  {form_data}\r\n  \r\n  --\r\n   Best regards, {site}\r\n   <small>This letter is sent automatically, please do not reply.</small>\nnotify_text: \'<p>Hello.</p><p>Form <strong>{form_title}</strong> submitted.</p><p><strong>Form data:</strong></p><p>{form_data}</p>\'\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(25, 'Multilinguality', 'languages', 1, '---\r\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (
@@ -940,7 +939,11 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (215, 'engine_start', 'redirect', 215, 1),
 (216, 'restore_user', 'comments', 216, 1),
 (217, 'set_user_is_deleted', 'comments', 217, 1),
-(218, 'comments_after_delete_list', 'moderation', 218, 1);
+(218, 'comments_after_delete_list', 'moderation', 218, 1),
+(219, 'form_get', 'languages', 219, 1),
+(220, 'widget_options_full_form', 'languages', 220, 1),
+(221, 'languages_forms', 'admin', 221, 1),
+(222, 'languages_forms', 'widgets', 222, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

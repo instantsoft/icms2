@@ -4,25 +4,21 @@ class formWidgetTextOptions extends cmsForm {
 
     public function init() {
 
-        return array(
-
-            array(
-                'type' => 'fieldset',
-                'title' => LANG_OPTIONS,
-                'childs' => array(
-
-                    new fieldHtml('options:content', array(
+        return [
+            [
+                'type'   => 'fieldset',
+                'title'  => LANG_OPTIONS,
+                'childs' => [
+                    new fieldHtml('options:content', [
                         'title' => LANG_WD_TEXT_CONTENT,
-                        'rules' => array(
-                            array('required')
-                        )
-                    ))
-
-                )
-            )
-
-        );
-
+                        'can_multilanguage' => true,
+                        'rules' => [
+                            ['required']
+                        ]
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

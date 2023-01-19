@@ -119,6 +119,10 @@ class cmsFormField {
      */
     public $data = [];
 
+    /**
+     * Зависимости показа (видимости) поля
+     * @var arra
+     */
     public $visible_depend = [];
 
     /**
@@ -150,6 +154,28 @@ class cmsFormField {
      * @var boolean
      */
     public $multilanguage = false;
+
+    /**
+     * Поле может быть доступно на нескольких языках
+     * как минимум контроллер languages ориентируется на
+     * этот флаг
+     *
+     * @var boolean
+     */
+    public $can_multilanguage = false;
+
+    /**
+     * Параметры мультиязычности поля
+     * 
+     * @var array
+     */
+    public $multilanguage_params = [
+        // Флаг, что поле в таблице
+        // При этом автоматически создадутся языковые колонки
+        'is_table_field' => null,
+        // Если флаг выше включен, в этой таблице создадутся языковые колонки
+        'table' => null
+    ];
 
     /**
      * Тип поля

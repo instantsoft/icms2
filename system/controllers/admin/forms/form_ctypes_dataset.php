@@ -6,25 +6,25 @@ class formAdminCtypesDataset extends cmsForm {
 
         $ctype_id = (!empty($ctype['id']) ? $ctype['id'] : $ctype['name']);
 
-        $lists = cmsEventsManager::hookAll('ctype_lists_context', 'dataset:'.$ctype['name']);
+        $lists = cmsEventsManager::hookAll('ctype_lists_context', 'dataset:' . $ctype['name']);
 
-        $ds_lists = array();
+        $ds_lists = [];
 
-        if($lists){
+        if ($lists) {
             foreach ($lists as $list) {
                 $ds_lists = array_merge($ds_lists, $list);
             }
         }
 
-        $name_rules = array(['required'], ['sysname']);
-        if($do == 'add'){
+        $name_rules = [['required'], ['sysname']];
+        if ($do == 'add') {
             $name_rules[] = ['unique_ctype_dataset', $ctype_id, false];
         } else {
             $name_rules[] = ['unique_ctype_dataset', $ctype_id, $dataset['id']];
         }
 
         // Значит не тип контента
-        if(!is_numeric($ctype_id)){
+        if (!is_numeric($ctype_id)) {
 
             $name_rules[] = ['unique', $ctype_id, 'slug'];
 
@@ -45,100 +45,110 @@ class formAdminCtypesDataset extends cmsForm {
             ];
         }
 
-        $form = array(
-            'basic' => array(
+        $form = [
+            'basic' => [
                 'type' => 'fieldset',
-                'childs' => array(
-                    new fieldString('name', array(
+                'childs' => [
+                    new fieldString('name', [
                         'title' => LANG_SYSTEM_NAME,
                         'rules' => $name_rules
-                    )),
-                    new fieldString('title', array(
+                    ]),
+                    new fieldString('title', [
                         'title' => LANG_CP_DATASET_TITLE,
-                        'rules' => array(
-                            array('required'),
-                            array('max_length', 100)
-                        )
-                    )),
-                    new fieldHtml('description', array(
-                        'title' => LANG_DESCRIPTION
-                    )),
-                    new fieldNumber('max_count', array(
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'content_datasets'
+                        ],
+                        'rules' => [
+                            ['required'],
+                            ['max_length', 100]
+                        ]
+                    ]),
+                    new fieldHtml('description', [
+                        'title' => LANG_DESCRIPTION,
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'content_datasets'
+                        ]
+                    ]),
+                    new fieldNumber('max_count', [
                         'title' => LANG_LIST_LIMIT,
                         'default' => 0,
-                        'rules' => array(
-                            array('max', 65535)
-                        )
-                    )),
-                    new fieldCheckbox('is_visible', array(
+                        'rules' => [
+                            ['max', 65535]
+                        ]
+                    ]),
+                    new fieldCheckbox('is_visible', [
                         'title' => LANG_CP_DATASET_IS_VISIBLE,
                         'default' => true
-                    ))
-                )
-            ),
-            'sorting' => array(
+                    ])
+                ]
+            ],
+            'sorting' => [
                 'title'  => LANG_SORTING,
                 'type'   => 'fieldset',
-                'childs' => array(
-                    new fieldList('sorting', array(
+                'childs' => [
+                    new fieldList('sorting', [
                         'add_title'    => LANG_SORTING_ADD,
                         'is_multiple'  => true,
                         'dynamic_list' => true,
                         'select_title' => LANG_SORTING_FIELD,
-                        'multiple_keys' => array(
+                        'multiple_keys' => [
                             'by' => 'field', 'to' => 'field_select'
-                        ),
-                        'generator' => function() use($fields_list){
+                        ],
+                        'generator' => function () use ($fields_list) {
 
-                            $items = array();
+                            $items = [];
 
-                            if($fields_list){
-                                foreach($fields_list as $field){
+                            if ($fields_list) {
+                                foreach ($fields_list as $field) {
                                     $items[$field['value']] = $field['title'];
                                 }
                             }
 
                             return $items;
                         },
-                        'value_items' => array(
+                        'value_items' => [
                             'asc'  => LANG_SORTING_ASC,
                             'desc' => LANG_SORTING_DESC
-                        )
-                    ))
-                )
-            ),
-            'filter' => array(
+                        ]
+                    ])
+                ]
+            ],
+            'filter' => [
                 'title'  => LANG_FILTERS,
                 'type'   => 'fieldset',
-                'childs' => array(
-                    new fieldList('filters', array(
+                'childs' => [
+                    new fieldList('filters', [
                         'add_title'    => LANG_FILTER_ADD,
                         'is_multiple'  => true,
                         'dynamic_list' => true,
                         'single_select' => 0,
                         'select_title' => LANG_FILTER_FIELD,
-                        'multiple_keys' => array(
+                        'multiple_keys' => [
                             'field' => 'field', 'condition' => 'field_select', 'value' => 'field_value'
-                        ),
-                        'generator' => function() use($fields_list){
+                        ],
+                        'generator' => function () use ($fields_list) {
 
-                            $items = array();
+                            $items = [];
 
-                            if($fields_list){
-                                foreach($fields_list as $field){
-                                    $items[$field['value']] = array(
+                            if ($fields_list) {
+                                foreach ($fields_list as $field) {
+                                    $items[$field['value']] = [
                                         'title' => $field['title'],
-                                        'data'  => array(
+                                        'data'  => [
                                             'ns' => $field['type']
-                                        )
-                                    );
+                                        ]
+                                    ];
                                 }
                             }
 
                             return $items;
                         },
-                        'value_items' => array(
-                            'int'  => array(
+                        'value_items' => [
+                            'int'  => [
                                 'eq' => '=',
                                 'gt' => '&gt;',
                                 'lt' => '&lt;',
@@ -146,8 +156,8 @@ class formAdminCtypesDataset extends cmsForm {
                                 'le' => '&le;',
                                 'nn' => LANG_FILTER_NOT_NULL,
                                 'ni' => LANG_FILTER_IS_NULL
-                            ),
-                            'str'  => array(
+                            ],
+                            'str'  => [
                                 'eq' => '=',
                                 'lk' => LANG_FILTER_LIKE,
                                 'ln' => LANG_FILTER_NOT_LIKE,
@@ -155,8 +165,8 @@ class formAdminCtypesDataset extends cmsForm {
                                 'lf' => LANG_FILTER_LIKE_END,
                                 'nn' => LANG_FILTER_NOT_NULL,
                                 'ni' => LANG_FILTER_IS_NULL
-                            ),
-                            'date'  => array(
+                            ],
+                            'date'  => [
                                 'eq' => '=',
                                 'gt' => '&gt;',
                                 'lt' => '&lt;',
@@ -166,125 +176,143 @@ class formAdminCtypesDataset extends cmsForm {
                                 'do' => LANG_FILTER_DATE_OLDER,
                                 'nn' => LANG_FILTER_NOT_NULL,
                                 'ni' => LANG_FILTER_IS_NULL
-                            )
-                        )
-                    ))
-                )
-            ),
-            'seo' => array(
+                            ]
+                        ]
+                    ])
+                ]
+            ],
+            'seo' => [
                 'title' => LANG_SEO,
                 'type' => 'fieldset',
-                'childs' => array(
-                    new fieldString('seo_h1', array(
+                'childs' => [
+                    new fieldString('seo_h1', [
                         'title' => LANG_CP_SEOMETA_ITEM_H1,
                         'hint' => ($meta_item_fields ? LANG_CP_SEOMETA_DS_HINT : ''),
-                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : ''),
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'content_datasets'
+                        ],
+                        'patterns_hint' => ($meta_item_fields ? ['patterns' =>  $meta_item_fields] : ''),
                         'default' => (!empty($ctype['options']['seo_cat_h1_pattern']) ? $ctype['options']['seo_cat_h1_pattern'] : null),
-                        'options'=>array(
-                            'max_length'=> 256,
-                            'show_symbol_count'=>true
-                        )
-                    )),
-                    new fieldString('seo_title', array(
+                        'options' => [
+                            'max_length' => 256,
+                            'show_symbol_count' => true
+                        ]
+                    ]),
+                    new fieldString('seo_title', [
                         'title' => LANG_CP_SEOMETA_ITEM_TITLE,
                         'hint' => ($meta_item_fields ? LANG_CP_SEOMETA_DS_HINT : ''),
-                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : ''),
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'content_datasets'
+                        ],
+                        'patterns_hint' => ($meta_item_fields ? ['patterns' =>  $meta_item_fields] : ''),
                         'default' => (!empty($ctype['options']['seo_cat_title_pattern']) ? $ctype['options']['seo_cat_title_pattern'] : null),
-                        'options'=>array(
-                            'max_length'=> 256,
-                            'show_symbol_count'=>true
-                        )
-                    )),
-                    new fieldString('seo_keys', array(
+                        'options' => [
+                            'max_length' => 256,
+                            'show_symbol_count' => true
+                        ]
+                    ]),
+                    new fieldString('seo_keys', [
                         'title' => LANG_CP_SEOMETA_ITEM_KEYS,
                         'hint' => ($meta_item_fields ? LANG_CP_SEOMETA_DS_HINT : ''),
-                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : ''),
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'content_datasets'
+                        ],
+                        'patterns_hint' => ($meta_item_fields ? ['patterns' =>  $meta_item_fields] : ''),
                         'default' => (!empty($ctype['options']['seo_cat_keys_pattern']) ? $ctype['options']['seo_cat_keys_pattern'] : null),
-                        'options'=>array(
-                            'max_length'=> 256,
-                            'show_symbol_count'=>true
-                        )
-                    )),
-                    new fieldText('seo_desc', array(
+                        'options' => [
+                            'max_length' => 256,
+                            'show_symbol_count' => true
+                        ]
+                    ]),
+                    new fieldText('seo_desc', [
                         'title' => LANG_CP_SEOMETA_ITEM_DESC,
                         'hint' => ($meta_item_fields ? LANG_CP_SEOMETA_DS_HINT : ''),
-                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : ''),
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'content_datasets'
+                        ],
+                        'patterns_hint' => ($meta_item_fields ? ['patterns' =>  $meta_item_fields] : ''),
                         'default' => (!empty($ctype['options']['seo_cat_desc_pattern']) ? $ctype['options']['seo_cat_desc_pattern'] : null),
                         'is_strip_tags' => true,
-                        'options'=>array(
-                            'max_length'=> 256,
-                            'show_symbol_count'=>true
-                        )
-                    ))
-                )
-            ),
-            'gv' => array(
+                        'options' => [
+                            'max_length' => 256,
+                            'show_symbol_count' => true
+                        ]
+                    ])
+                ]
+            ],
+            'gv' => [
                 'title' => LANG_SHOW_TO_GROUPS,
                 'type' => 'fieldset',
-                'childs' => array(
-                    new fieldListGroups('groups_view', array(
+                'childs' => [
+                    new fieldListGroups('groups_view', [
                         'show_all' => true,
                         'show_guests' => true
-                    ))
-                )
-            ),
-            'gh' => array(
+                    ])
+                ]
+            ],
+            'gh' => [
                 'title' => LANG_HIDE_FOR_GROUPS,
                 'type' => 'fieldset',
-                'childs' => array(
-                    new fieldListGroups('groups_hide', array(
+                'childs' => [
+                    new fieldListGroups('groups_hide', [
                         'show_all' => false,
                         'show_guests' => true
-                    ))
-                )
-            ),
-            'list_show' => array(
+                    ])
+                ]
+            ],
+            'list_show' => [
                 'title' => LANG_CP_FIELD_IN_LIST_CONTEXT,
                 'type' => 'fieldset',
-                'childs' => array(
-                    new fieldList('list:show', array(
+                'childs' => [
+                    new fieldList('list:show', [
                         'is_chosen_multiple' => true,
                         'items' => $ds_lists
-                    )),
-                )
-            ),
-            'list_hide' => array(
+                    ]),
+                ]
+            ],
+            'list_hide' => [
                 'title' => LANG_CP_FIELD_NOT_IN_LIST_CONTEXT,
                 'type' => 'fieldset',
-                'childs' => array(
-                    new fieldList('list:hide', array(
+                'childs' => [
+                    new fieldList('list:hide', [
                         'is_chosen_multiple' => true,
                         'items' => $ds_lists
-                    )),
-                )
-            )
-        );
+                    ]),
+                ]
+            ]
+        ];
 
-        if (!empty($ctype['is_cats']) && $cats_list){
-            $form['cv'] = array(
+        if (!empty($ctype['is_cats']) && $cats_list) {
+            $form['cv'] = [
                 'title' => LANG_CP_CATS_VIEW,
                 'type' => 'fieldset',
-                'childs' => array(
-                    new fieldList('cats_view', array(
+                'childs' => [
+                    new fieldList('cats_view', [
                         'is_chosen_multiple' => true,
                         'items' => $cats_list
-                    )),
-                )
-            );
-            $form['ch'] = array(
+                    ]),
+                ]
+            ];
+            $form['ch'] = [
                 'title' => LANG_CP_CATS_HIDE,
                 'type' => 'fieldset',
-                'childs' => array(
-                    new fieldList('cats_hide', array(
+                'childs' => [
+                    new fieldList('cats_hide', [
                         'is_chosen_multiple' => true,
                         'items' => $cats_list
-                    ))
-                )
-            );
+                    ])
+                ]
+            ];
         }
 
         return $form;
-
     }
-
 }

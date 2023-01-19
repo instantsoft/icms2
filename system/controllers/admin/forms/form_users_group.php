@@ -3,41 +3,44 @@ class formAdminUsersGroup extends cmsForm {
 
     public function init($do) {
 
-        return array(
-            array(
+        return [
+            [
                 'type' => 'fieldset',
-                'childs' => array(
-                    new fieldString('name', array(
+                'childs' => [
+                    new fieldString('name', [
                         'title' => LANG_SYSTEM_NAME,
-                        'rules' => array(
-                            array('required'),
-                            array('sysname'),
-                            array('max_length', 32),
-                            $do == 'add' ? array('unique', '{users}_groups', 'name') : false
-                        )
-                    )),
-                    new fieldString('title', array(
+                        'rules' => [
+                            ['required'],
+                            ['sysname'],
+                            ['max_length', 32],
+                            $do == 'add' ? ['unique', '{users}_groups', 'name'] : false
+                        ]
+                    ]),
+                    new fieldString('title', [
                         'title' => LANG_TITLE,
-                        'rules' => array(
-                            array('required'),
-                            array('max_length', 32)
-                        )
-                    )),
-                )
-            ),
-            array(
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => '{users}_groups'
+                        ],
+                        'rules' => [
+                            ['required'],
+                            ['max_length', 32]
+                        ]
+                    ])
+                ]
+            ],
+            [
                 'type' => 'fieldset',
-                'childs' => array(
-                    new fieldCheckbox('is_public', array(
+                'childs' => [
+                    new fieldCheckbox('is_public', [
                         'title' => LANG_CP_USER_GROUP_IS_PUBLIC
-                    )),
-                    new fieldCheckbox('is_filter', array(
+                    ]),
+                    new fieldCheckbox('is_filter', [
                         'title' => LANG_CP_USER_GROUP_IS_FILTER
-                    )),
-                )
-            ),
-        );
-
+                    ])
+                ]
+            ]
+        ];
     }
-
 }

@@ -1268,7 +1268,7 @@ class cmsModel {
      *
      * @param array $fields Массив полей
      * @param boolean $is_this_only Выборка только перечисленных
-     * @param boolean $translated_table Выборка с учётом мультиязычности
+     * @param boolean|string $translated_table Выборка с учётом мультиязычности
      * @return $this
      */
     public function selectList($fields, $is_this_only = false, $translated_table = false) {
@@ -1353,15 +1353,18 @@ class cmsModel {
             return $this->select($field, $as);
         }
 
+        // Имя с переводом, с учётом префикса таблицы
         $field_name = $field . '_' . $this->lang;
 
-        $select_name = (strpos($field, '.') === false ? $field : ltrim(strrchr($field, '.'), '.'));
+        // Переведённое поле выбираем по имени оригинального
+        $select_as_name = (strpos($field, '.') === false ? $field : ltrim(strrchr($field, '.'), '.'));
 
-        if (!$this->db->isFieldExists($table, $select_name)) {
+        // Нет поля с переводом. В isFieldExists не учитывается префикс таблицы
+        if (!$this->db->isFieldExists($table, $select_as_name . '_' . $this->lang)) {
             $field_name = $field;
         }
 
-        return $this->select($field_name, $select_name);
+        return $this->select($field_name, $select_as_name);
     }
 
     /**
@@ -1707,16 +1710,29 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getField($table_name, $row_id, $field_name){
+    public function getField($table_name, $row_id, $field_name) {
 
-        $this->filterEqual('id', $row_id);
-        return $this->getFieldFiltered($table_name, $field_name);
-
+        return $this->filterEqual('id', $row_id)->
+                getFieldFiltered($table_name, $field_name);
     }
 
     public function getFieldFiltered($table_name, $field_name) {
 
-        $this->select = ['i.' . $field_name . ' as ' . $field_name];
+        $this->selectOnly($field_name);
+
+        $item = $this->getItem($table_name);
+
+        if (!$item) {
+            return false;
+        }
+
+        return $item[$field_name];
+    }
+
+//============================================================================//
+//============================================================================//
+
+    public function getItem($table_name, $item_callback = false) {
 
         $this->table = $table_name;
 
@@ -1724,7 +1740,34 @@ class cmsModel {
 
         $sql = $this->getSQL();
 
+        $encoded_fields = $this->encoded_fields;
+
         $this->resetFilters();
+
+        // если указан ключ кеша для этого запроса
+        // то пробуем получить результаты из кеша
+        if ($this->cache_key) {
+
+            $cache_key = $this->cache_key . '.' . md5($sql);
+            $cache     = cmsCache::getInstance();
+
+            $item = $cache->get($cache_key);
+
+            if ($item) {
+
+                if ($this->localized) {
+                    $item = $this->replaceTranslatedField($item, $table_name);
+                }
+
+                if (is_callable($item_callback)) {
+                    $item = call_user_func_array($item_callback, [$item, $this]);
+                }
+
+                $this->stopCache();
+
+                return $item;
+            }
+        }
 
         $result = $this->db->query($sql);
 
@@ -1734,97 +1777,29 @@ class cmsModel {
 
         $item = $this->db->fetchAssoc($result);
 
+        // для кеша формируем массив без обработки коллбэком
+        if ($this->cache_key) {
+            $_item = $item;
+        }
+
+        if ($encoded_fields) {
+            foreach ($encoded_fields as $field) {
+                $item[$field] = base64_decode($item[$field]);
+                unset($item['enc_' . $field]);
+            }
+        }
+
         if ($this->localized) {
             $item = $this->replaceTranslatedField($item, $table_name);
         }
 
-        $this->db->freeResult($result);
-
-        return $item[$field_name];
-    }
-
-//============================================================================//
-//============================================================================//
-
-    public function getItem($table_name, $item_callback = false){
-
-        $select = implode(', ', $this->select);
-
-        $sql = "SELECT {$select}
-                FROM {#}{$table_name} i
-                {$this->index_action}";
-
-        if ($this->join){ $sql .= $this->join; }
-
-        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
-
-        if ($this->order_by){ $sql .= 'ORDER BY '.$this->order_by.PHP_EOL; }
-
-        $sql .= 'LIMIT 1';
-
-        if ($this->read_type){
-            $sql .= PHP_EOL.$this->read_type;
-        }
-
-        $encoded_fields = $this->encoded_fields;
-
-        $this->resetFilters();
-
-        // если указан ключ кеша для этого запроса
-        // то пробуем получить результаты из кеша
-        if ($this->cache_key){
-
-            $cache_key = $this->cache_key . '.' . md5($sql);
-            $cache = cmsCache::getInstance();
-
-            $item = $cache->get($cache_key);
-
-            if ($item){
-
-                if(is_callable($item_callback)){
-                    $item = call_user_func_array($item_callback, array($item, $this));
-                }
-
-                if($this->localized){
-                    $item = $this->replaceTranslatedField($item, $table_name);
-                }
-
-                $this->stopCache();
-
-                return $item;
-            }
-
-        }
-
-        $result = $this->db->query($sql);
-
-        if (!$this->db->numRows($result)){ return false; }
-
-        $item = $this->db->fetchAssoc($result);
-
-        // для кеша формируем массив без обработки коллбэком
-        if ($this->cache_key){
-            $_item = $item;
-        }
-
-        if($encoded_fields){
-            foreach ($encoded_fields as $field) {
-                $item[$field] = base64_decode($item[$field]);
-                unset($item['enc_'.$field]);
-            }
-        }
-
-        if(is_callable($item_callback)){
-            $item = call_user_func_array($item_callback, array($item, $this));
-        }
-
-        if($this->localized){
-            $item = $this->replaceTranslatedField($item, $table_name);
+        if (is_callable($item_callback)) {
+            $item = call_user_func_array($item_callback, [$item, $this]);
         }
 
         // если указан ключ кеша для этого запроса
         // то сохраняем результаты в кеше
-        if ($this->cache_key){
+        if ($this->cache_key) {
             $cache->set($cache_key, $_item);
             $this->stopCache();
         }
@@ -1832,17 +1807,17 @@ class cmsModel {
         $this->db->freeResult($result);
 
         return $item;
-
     }
 
-    public function getItemById($table_name, $id, $item_callback=false){
-        $this->filterEqual('id', $id);
-        return $this->getItem($table_name, $item_callback);
+    public function getItemById($table_name, $id, $item_callback = false) {
+
+        return $this->getItemByField($table_name, 'id', $id, $item_callback);
     }
 
-    public function getItemByField($table_name, $field_name, $field_value, $item_callback=false){
-        $this->filterEqual($field_name, $field_value);
-        return $this->getItem($table_name, $item_callback);
+    public function getItemByField($table_name, $field_name, $field_value, $item_callback = false) {
+
+        return $this->filterEqual($field_name, $field_value)->
+                getItem($table_name, $item_callback);
     }
 
 //============================================================================//
@@ -1963,13 +1938,13 @@ class cmsModel {
 
                     foreach ($_items as $key => $item) {
 
-                        $item = call_user_func_array($item_callback, array($item, $this));
-                        if ($item === false) {
-                            continue;
-                        }
-
                         if ($this->localized) {
                             $item = $this->replaceTranslatedField($item, $table_name);
+                        }
+
+                        $item = call_user_func_array($item_callback, [$item, $this]);
+                        if ($item === false) {
+                            continue;
                         }
 
                         $items[$key] = $item;
@@ -2012,6 +1987,10 @@ class cmsModel {
                 }
             }
 
+            if ($this->localized) {
+                $item = $this->replaceTranslatedField($item, $table_name);
+            }
+
             // если задан коллбек для обработки строк,
             // то пропускаем строку через него
             if (is_callable($item_callback)) {
@@ -2019,10 +1998,6 @@ class cmsModel {
                 if ($item === false) {
                     continue;
                 }
-            }
-
-            if ($this->localized) {
-                $item = $this->replaceTranslatedField($item, $table_name);
             }
 
             // добавляем обработанную строку в результирующий массив
@@ -2050,7 +2025,7 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getSQL(){
+    public function getSQL() {
 
         $select = implode(', ', $this->select);
 
@@ -2058,20 +2033,31 @@ class cmsModel {
                 FROM {#}{$this->table} i
                 {$this->index_action}";
 
-        if ($this->join){ $sql .= $this->join; }
+        if ($this->join) {
+            $sql .= $this->join;
+        }
 
-        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
+        if ($this->where) {
+            $sql .= 'WHERE ' . $this->where . PHP_EOL;
+        }
 
-        if ($this->group_by){ $sql .= 'GROUP BY '.$this->group_by.PHP_EOL; }
+        if ($this->group_by) {
+            $sql .= 'GROUP BY ' . $this->group_by . PHP_EOL;
+        }
 
-        if ($this->order_by){ $sql .= 'ORDER BY '.$this->order_by.PHP_EOL; }
+        if ($this->order_by) {
+            $sql .= 'ORDER BY ' . $this->order_by . PHP_EOL;
+        }
 
-        if ($this->limit){ $sql .= 'LIMIT '.$this->limit.PHP_EOL; }
+        if ($this->limit) {
+            $sql .= 'LIMIT ' . $this->limit . PHP_EOL;
+        }
 
-        if ($this->read_type){ $sql .= $this->read_type.PHP_EOL; }
+        if ($this->read_type) {
+            $sql .= $this->read_type . PHP_EOL;
+        }
 
         return $sql;
-
     }
 
 //============================================================================//

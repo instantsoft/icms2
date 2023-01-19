@@ -17,6 +17,8 @@ class actionAdminCtypesPerms extends cmsAction {
 
         cmsCore::loadControllerLanguage('content');
 
+        cmsModel::globalLocalizedOn();
+
         $rules  = cmsPermissions::getRulesList('content');
         $values = cmsPermissions::getPermissions($ctype['name']);
 
