@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminCtypesRelationsDelete extends cmsAction {
 
     public function run($relation_id = null) {

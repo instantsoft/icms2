@@ -8,6 +8,14 @@ class modelBackendContent extends modelContent {
         return $this->reloadAllCtypes(false);
     }
 
+    public function getContentType($id, $by_field = 'id') {
+        return $this->getItemByField('content_types', $by_field, $id, [$this, 'contentTypesCallback']);
+    }
+
+    public function getContentTypeByName($name) {
+        return $this->getContentType($name, 'name');
+    }
+
     public function addContentType($ctype) {
 
         if (!isset($ctype['labels'])) {

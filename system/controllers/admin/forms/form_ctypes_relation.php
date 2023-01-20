@@ -6,33 +6,35 @@ class formAdminCtypesRelation extends cmsForm {
 
         $content_model = cmsCore::getModel('content');
 
-        return array(
-            'basic' => array(
+        $content_model->localizedOn();
+
+        return [
+            'basic' => [
                 'type' => 'fieldset',
-                'childs' => array(
+                'childs' => [
 
-                    new fieldList('child_ctype_id', array(
+                    new fieldList('child_ctype_id', [
                         'title' => LANG_CP_RELATION_CHILD,
-                        'generator' => function() use ($ctype_id, $do, $content_model) {
+                        'generator' => function () use ($ctype_id, $do, $content_model) {
 
-                            $items = $rel_names = array();
+                            $items = $rel_names = [];
 
                             $relation_childs = cmsEventsManager::hookAll('ctype_relation_childs', $ctype_id);
 
-                            if (is_array($relation_childs)){
+                            if (is_array($relation_childs)) {
 
                                 $relations = $content_model->getContentTypeChilds($ctype_id);
 
-                                if($relations){
+                                if ($relations) {
                                     foreach ($relations as $relation) {
-                                        $rel_names[] = $relation['target_controller'].':'.$relation['child_ctype_id'];
+                                        $rel_names[] = $relation['target_controller'] . ':' . $relation['child_ctype_id'];
                                     }
                                 }
 
-                                foreach($relation_childs as $relation_child){
-                                    foreach($relation_child['types'] as $name => $title){
-                                        if($do == 'add'){
-                                            if(!in_array($name, $rel_names)){
+                                foreach ($relation_childs as $relation_child) {
+                                    foreach ($relation_child['types'] as $name => $title) {
+                                        if ($do === 'add') {
+                                            if (!in_array($name, $rel_names)) {
                                                 $items[$name] = $title;
                                             }
                                         } else {
@@ -43,24 +45,28 @@ class formAdminCtypesRelation extends cmsForm {
                             }
 
                             return $items;
-
                         }
-                    )),
+                    ]),
 
-                    new fieldString('title', array(
+                    new fieldString('title', [
                         'title' => LANG_CP_RELATION_TITLE,
-                        'rules' => array(
-                            array('required')
-                        )
-                    )),
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'content_relations'
+                        ],
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
 
-                    new fieldList('options:dataset_id', array(
+                    new fieldList('options:dataset_id', [
                         'title' => LANG_CP_CTYPE_DATASET,
-						'parent' => array(
-							'list' => 'child_ctype_id',
-							'url'  => href_to('content', 'widget_datasets_ajax')
-						),
-                        'generator' => function($item, $request) use($content_model) {
+                        'parent' => [
+                            'list' => 'child_ctype_id',
+                            'url'  => href_to('content', 'widget_datasets_ajax')
+                        ],
+                        'generator' => function ($item, $request) use ($content_model) {
                             $list     = ['0' => ''];
                             $ctype_id = is_array($item) ? array_value_recursive('child_ctype_id', $item) : false;
                             if ($request) {
@@ -76,25 +82,25 @@ class formAdminCtypesRelation extends cmsForm {
                             }
                             return $list;
                         }
-                    ))
+                    ])
 
-                )
-            ),
-            'layout' => array(
+                ]
+            ],
+            'layout' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_RELATION_LAYOUT,
-                'childs' => array(
+                'childs' => [
 
-                    new fieldList('layout', array(
+                    new fieldList('layout', [
                         'title' => LANG_CP_RELATION_LAYOUT_TYPE,
-                        'items' => array(
+                        'items' => [
                             'list' => LANG_CP_RELATION_LAYOUT_LIST,
                             'tab' => LANG_CP_RELATION_LAYOUT_TAB,
                             'hidden' => LANG_CP_RELATION_LAYOUT_HIDDEN,
-                        )
-                    )),
+                        ]
+                    ]),
 
-                    new fieldNumber('options:limit', array(
+                    new fieldNumber('options:limit', [
                         'title' => LANG_CP_RELATION_LAYOUT_LIMIT,
                         'hint' => LANG_CP_RELATION_LAYOUT_LIMIT_HINT,
                         'default' => 10,
@@ -102,59 +108,70 @@ class formAdminCtypesRelation extends cmsForm {
                             ['required'],
                             ['min', 1]
                         ]
-                    )),
+                    ]),
 
-                    new fieldCheckbox('options:is_hide_empty', array(
+                    new fieldCheckbox('options:is_hide_empty', [
                         'title' => LANG_CP_RELATION_LAYOUT_HIDE_EMPTY
-                    )),
+                    ]),
 
-                    new fieldCheckbox('options:is_hide_title', array(
+                    new fieldCheckbox('options:is_hide_title', [
                         'title' => LANG_CP_RELATION_LAYOUT_HIDE_TITLE
-                    )),
+                    ]),
 
-                    new fieldCheckbox('options:is_hide_filter', array(
+                    new fieldCheckbox('options:is_hide_filter', [
                         'title' => LANG_CP_RELATION_LAYOUT_HIDE_FILTER
-                    )),
-
-                )
-            ),
-            'tab-opts' => array(
+                    ])
+                ]
+            ],
+            'tab-opts' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_RELATION_TAB_OPTS,
-                'childs' => array(
+                'childs' => [
 
-                    new fieldString('seo_title', array(
+                    new fieldString('seo_title', [
                         'title' => LANG_CP_RELATION_TAB_SEO_TITLE,
                         'hint' => LANG_CP_RELATION_TAB_SEO_HINT,
-                        'options'=>array(
-                            'max_length'=> 256,
-                            'show_symbol_count'=>true
-                        )
-                    )),
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'content_relations'
+                        ],
+                        'options' => [
+                            'max_length' => 256,
+                            'show_symbol_count' => true
+                        ]
+                    ]),
 
-                    new fieldString('seo_keys', array(
+                    new fieldString('seo_keys', [
                         'title' => LANG_CP_RELATION_TAB_SEO_KEYS,
                         'hint' => LANG_CP_RELATION_TAB_SEO_HINT,
-                        'options'=>array(
-                            'max_length'=> 256,
-                            'show_symbol_count'=>true
-                        )
-                    )),
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'content_relations'
+                        ],
+                        'options' => [
+                            'max_length' => 256,
+                            'show_symbol_count' => true
+                        ]
+                    ]),
 
-                    new fieldText('seo_desc', array(
+                    new fieldText('seo_desc', [
                         'title' => LANG_CP_RELATION_TAB_SEO_DESC,
                         'hint' => LANG_CP_RELATION_TAB_SEO_HINT,
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'content_relations'
+                        ],
                         'is_strip_tags' => true,
-                        'options'=>array(
-                            'max_length'=> 256,
-                            'show_symbol_count'=>true
-                        )
-                    ))
-
-                )
-            )
-        );
-
+                        'options' => [
+                            'max_length' => 256,
+                            'show_symbol_count' => true
+                        ]
+                    ])
+                ]
+            ]
+        ];
     }
-
 }

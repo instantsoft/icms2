@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminCtypesRelationsEdit extends cmsAction {
 
     public function run($ctype_id = null, $relation_id = null) {
@@ -8,10 +10,12 @@ class actionAdminCtypesRelationsEdit extends cmsAction {
             return cmsCore::error404();
         }
 
-        $ctype = $this->model_backend_content->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
         if (!$ctype) {
             return cmsCore::error404();
         }
+
+        $this->model_backend_content->localizedOff();
 
         $relation = $this->model_backend_content->getContentRelation($relation_id);
         if (!$relation) {

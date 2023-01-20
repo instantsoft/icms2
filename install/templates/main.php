@@ -48,7 +48,7 @@
 
         <div id="footer" class="section">
             <div id="copyright">
-                <a href="http://instantsoft.ru" target="_blank">InstantSoft</a>, <a href="https://instantcms.ru/" target="_blank">InstantCMS</a> &copy; 2008 – <?php echo date('Y'); ?>
+                <a href="https://instantcms.ru/" target="_blank">InstantCMS</a> &copy; 2008 – <?php echo date('Y'); ?>
             </div>
             <div id="version">
                 <?php echo get_version(); ?>

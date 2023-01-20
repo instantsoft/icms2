@@ -166,7 +166,7 @@ class cmsFormField {
 
     /**
      * Параметры мультиязычности поля
-     * 
+     *
      * @var array
      */
     public $multilanguage_params = [
@@ -174,7 +174,9 @@ class cmsFormField {
         // При этом автоматически создадутся языковые колонки
         'is_table_field' => null,
         // Если флаг выше включен, в этой таблице создадутся языковые колонки
-        'table' => null
+        'table' => null,
+        // Убирать правило required с поля
+        'unset_required' => null
     ];
 
     /**

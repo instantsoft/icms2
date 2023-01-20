@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminCtypesDatasetsEdit extends cmsAction {
 
     public function run($dataset_id = null) {
@@ -13,6 +15,8 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
         if (!$dataset) {
             return cmsCore::error404();
         }
+
+        $this->model_backend_content->localizedOn();
 
         if ($dataset['ctype_id']) {
 
@@ -39,8 +43,6 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
 
             $controller_name = $dataset['target_controller'];
         }
-
-        $this->model_backend_content->localizedOn();
 
         $fields = $this->model_backend_content->getContentFields($ctype['name']);
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);

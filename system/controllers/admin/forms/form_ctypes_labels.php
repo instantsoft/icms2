@@ -78,6 +78,7 @@ class formAdminCtypesLabels extends cmsForm {
             [
                 'type'   => 'fieldset',
                 'title'  => LANG_CP_ACTIONS_LABELS,
+                'can_multilanguage' => true,
                 'childs' => [
                     new fieldString('labels:create', [
                         'title' => LANG_CP_ACTION_ADD_LABEL,
@@ -91,6 +92,7 @@ class formAdminCtypesLabels extends cmsForm {
             [
                 'type'   => 'fieldset',
                 'title'  => LANG_CP_LIST_LABELS,
+                'can_multilanguage' => true,
                 'childs' => [
                     new fieldString('labels:list', [
                         'title' => LANG_CP_LIST_LABEL,
@@ -111,6 +113,7 @@ class formAdminCtypesLabels extends cmsForm {
             'ctype_relations' => [
                 'type'   => 'fieldset',
                 'title'  => LANG_CP_CTYPE_RELATIONS,
+                'can_multilanguage' => true,
                 'childs' => [
                     new fieldString('labels:relations_tab_title', [
                         'title' => LANG_CP_LIST_LABELS_RTAB_TITLE,

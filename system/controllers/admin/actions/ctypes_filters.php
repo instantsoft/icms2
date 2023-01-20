@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminCtypesFilters extends cmsAction {
 
     public function run($ctype_id = null) {
@@ -8,14 +10,14 @@ class actionAdminCtypesFilters extends cmsAction {
             return cmsCore::error404();
         }
 
-        $ctype = $this->model_content->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
         if (!$ctype) {
             return cmsCore::error404();
         }
 
         $this->dispatchEvent('ctype_loaded', [$ctype, 'filters']);
 
-        $table_exists = $this->model_content->isFiltersTableExists($ctype['name']);
+        $table_exists = $this->model_backend_content->isFiltersTableExists($ctype['name']);
 
         if (!$table_exists) {
 
@@ -30,9 +32,9 @@ class actionAdminCtypesFilters extends cmsAction {
 
         if ($this->request->isAjax()) {
 
-            $this->model_content->orderBy('id', 'asc');
+            $this->model_backend_content->orderBy('id', 'asc');
 
-            $filters = $this->model_content->getContentFilters($ctype['name']);
+            $filters = $this->model_backend_content->getContentFilters($ctype['name']);
 
             $this->cms_template->renderGridRowsJSON($grid, $filters);
 

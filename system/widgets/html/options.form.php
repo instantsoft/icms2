@@ -12,6 +12,9 @@ class formWidgetHtmlOptions extends cmsForm {
                     new fieldHtml('options:content', [
                         'title'   => LANG_WD_HTML_CONTENT,
                         'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'unset_required' => true
+                        ],
                         'options' => ['editor' => 'ace'],
                         'rules'   => [
                             ['required']

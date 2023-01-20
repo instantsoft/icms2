@@ -1364,7 +1364,7 @@ class cmsModel {
             $field_name = $field;
         }
 
-        return $this->select($field_name, $select_as_name);
+        return $this->select($field_name, ($as ? $as : $select_as_name));
     }
 
     /**
@@ -1755,12 +1755,12 @@ class cmsModel {
 
             if ($item) {
 
-                if ($this->localized) {
-                    $item = $this->replaceTranslatedField($item, $table_name);
-                }
-
                 if (is_callable($item_callback)) {
                     $item = call_user_func_array($item_callback, [$item, $this]);
+                }
+
+                if ($this->localized) {
+                    $item = $this->replaceTranslatedField($item, $table_name);
                 }
 
                 $this->stopCache();
@@ -1789,12 +1789,12 @@ class cmsModel {
             }
         }
 
-        if ($this->localized) {
-            $item = $this->replaceTranslatedField($item, $table_name);
-        }
-
         if (is_callable($item_callback)) {
             $item = call_user_func_array($item_callback, [$item, $this]);
+        }
+
+        if ($this->localized) {
+            $item = $this->replaceTranslatedField($item, $table_name);
         }
 
         // если указан ключ кеша для этого запроса
@@ -1938,13 +1938,13 @@ class cmsModel {
 
                     foreach ($_items as $key => $item) {
 
-                        if ($this->localized) {
-                            $item = $this->replaceTranslatedField($item, $table_name);
-                        }
-
                         $item = call_user_func_array($item_callback, [$item, $this]);
                         if ($item === false) {
                             continue;
+                        }
+
+                        if ($this->localized) {
+                            $item = $this->replaceTranslatedField($item, $table_name);
                         }
 
                         $items[$key] = $item;
@@ -1987,10 +1987,6 @@ class cmsModel {
                 }
             }
 
-            if ($this->localized) {
-                $item = $this->replaceTranslatedField($item, $table_name);
-            }
-
             // если задан коллбек для обработки строк,
             // то пропускаем строку через него
             if (is_callable($item_callback)) {
@@ -1998,6 +1994,10 @@ class cmsModel {
                 if ($item === false) {
                     continue;
                 }
+            }
+
+            if ($this->localized) {
+                $item = $this->replaceTranslatedField($item, $table_name);
             }
 
             // добавляем обработанную строку в результирующий массив

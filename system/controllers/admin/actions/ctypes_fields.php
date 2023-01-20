@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminCtypesFields extends cmsAction {
 
     public function run($ctype_id = null) {
@@ -8,9 +10,7 @@ class actionAdminCtypesFields extends cmsAction {
             return cmsCore::error404();
         }
 
-        $this->model_content->localizedOn();
-
-        $ctype = $this->model_content->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
         if (!$ctype) {
             return cmsCore::error404();
         }
@@ -26,12 +26,12 @@ class actionAdminCtypesFields extends cmsAction {
 
             if ($filter_str){
                 parse_str($filter_str, $filter);
-                $this->model_content->applyGridFilter($grid, $filter);
+                $this->model_backend_content->applyGridFilter($grid, $filter);
             }
 
-            $this->model_content->orderBy('ordering', 'asc');
+            $this->model_backend_content->orderBy('ordering', 'asc');
 
-            $fields = $this->model_content->getContentFields($ctype['name'], false, false);
+            $fields = $this->model_backend_content->getContentFields($ctype['name'], false, false);
 
             $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
@@ -39,8 +39,6 @@ class actionAdminCtypesFields extends cmsAction {
 
             return $this->halt();
         }
-
-        $this->model_content->localizedOff();
 
         return $this->cms_template->render('ctypes_fields', [
             'ctype' => $ctype,

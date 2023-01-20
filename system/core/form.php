@@ -254,7 +254,21 @@ class cmsForm {
                 foreach ($langs as $lang) {
 
                     if($default_lang !== $lang) {
+
                         $_field = clone $field;
+
+                        if(!empty($_field->multilanguage_params['unset_required'])){
+
+                            $required_key = array_search(['required'], $_field->getRules());
+                            if($required_key !== false){
+                                unset($_field->rules[$required_key]);
+                            }
+                            $class_key = array_search('reguired_field', $_field->classes);
+                            if($class_key !== false){
+                                unset($_field->classes[$class_key]);
+                            }
+                        }
+
                     } else {
                         $_field = $field;
                     }
@@ -838,7 +852,6 @@ class cmsForm {
      * @param array $data Данные, полученные из формы
      * @param boolean $is_check_csrf Проверять валидность csrf токена
      * @return boolean|array Если ошибки не найдены, возвращает false
-     *                       При ошибке CSRF токена возвращает true
      *                       Если ошибки найдены, возвращает их массив
      *                       в формате [имя_поля => текст_ошибки]
      */

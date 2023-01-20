@@ -3,15 +3,20 @@ icms.adminRelation = (function ($) {
 
     this.onDocumentReady = function(){
 
-        let isTitleTyped = $('#title').val() !== '';
+        let title = $("input[id^=title]");
 
-        $('#title').on('input', function(){
+        let isTitleTyped = title.val() !== '';
+
+        title.on('input', function(){
             isTitleTyped = true;
         });
 
         $('#child_ctype_id').on('change', function(){
            if (!isTitleTyped){
-               $('#title').val($(this).find('option:selected').text().replace(/(.*): /gi, ''));
+
+               let opt_title = $(this).find('option:selected').text().replace(/(.*): /gi, '');
+
+               title.val(opt_title);
            }
         }).triggerHandler('change');
 

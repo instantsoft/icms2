@@ -45,6 +45,35 @@ class modelContent extends cmsModel {
         return self::$all_ctypes;
     }
 
+    protected function contentTypesCallback($item, $model) {
+
+        $item['options'] = cmsModel::yamlToArray($item['options']);
+        $item['labels']  = $model->makeContentTypeLabels($item['labels']);
+
+        // YAML некорректно преобразовывает пустые значения массива
+        // убрать после перевода всего на JSON
+        if (!empty($item['options']['list_style'])) {
+            if (is_array($item['options']['list_style'])) {
+                $list_styles = [];
+                foreach ($item['options']['list_style'] as $key => $value) {
+                    $list_styles[$key] = is_array($value) ? '' : $value;
+                }
+                $item['options']['list_style'] = $list_styles;
+            }
+        }
+        if (!empty($item['options']['context_list_cover_sizes'])) {
+            if (is_array($item['options']['context_list_cover_sizes'])) {
+                $list_styles = [];
+                foreach ($item['options']['context_list_cover_sizes'] as $key => $value) {
+                    $list_styles[$key ? $key : ''] = $value;
+                }
+                $item['options']['context_list_cover_sizes'] = $list_styles;
+            }
+        }
+
+        return $item;
+    }
+
     public function getContentTypesFiltered() {
 
         $this->useCache('content.types');
@@ -53,34 +82,7 @@ class modelContent extends cmsModel {
             $this->orderBy('ordering');
         }
 
-        return $this->get('content_types', function ($item, $model) {
-
-            $item['options'] = cmsModel::yamlToArray($item['options']);
-            $item['labels']  = $model->makeContentTypeLabels($item['labels']);
-
-            // YAML некорректно преобразовывает пустые значения массива
-            // убрать после перевода всего на JSON
-            if (!empty($item['options']['list_style'])) {
-                if (is_array($item['options']['list_style'])) {
-                    $list_styles = [];
-                    foreach ($item['options']['list_style'] as $key => $value) {
-                        $list_styles[$key] = is_array($value) ? '' : $value;
-                    }
-                    $item['options']['list_style'] = $list_styles;
-                }
-            }
-            if (!empty($item['options']['context_list_cover_sizes'])) {
-                if (is_array($item['options']['context_list_cover_sizes'])) {
-                    $list_styles = [];
-                    foreach ($item['options']['context_list_cover_sizes'] as $key => $value) {
-                        $list_styles[$key ? $key : ''] = $value;
-                    }
-                    $item['options']['context_list_cover_sizes'] = $list_styles;
-                }
-            }
-
-            return $item;
-        });
+        return $this->get('content_types', [$this, 'contentTypesCallback']);
     }
 
     private function makeContentTypeLabels($labels) {
@@ -315,6 +317,8 @@ class modelContent extends cmsModel {
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
+        $this->selectTranslatedField('i.values', $table_name, 'default');
+
         $this->useCache('content.fields.' . $ctype_name);
 
         if ($enabled) {
@@ -335,7 +339,6 @@ class modelContent extends cmsModel {
             $item['groups_add']  = cmsModel::yamlToArray($item['groups_add']);
             $item['groups_edit'] = cmsModel::yamlToArray($item['groups_edit']);
             $item['filter_view'] = cmsModel::yamlToArray($item['filter_view']);
-            $item['default']     = $item['values'];
 
             $item = $model->formatFieldVisibleDepend($item);
 
@@ -844,7 +847,7 @@ class modelContent extends cmsModel {
         $this->useCache('content.relations');
 
         $this->selectOnly('i.*');
-        $this->select('c.title', 'child_title');
+        $this->selectTranslatedField('c.title', 'content_types', 'child_title');
         $this->select('c.labels', 'child_labels');
         $this->select('c.name', 'child_ctype_name');
 

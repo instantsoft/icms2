@@ -324,7 +324,7 @@ CREATE TABLE `{#}content_relations_bind` (
 DROP TABLE IF EXISTS `{#}content_types`;
 CREATE TABLE `{#}content_types` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) DEFAULT NULL 'Название',
+  `title` varchar(100) DEFAULT NULL COMMENT 'Название',
   `name` varchar(32) NOT NULL COMMENT 'Системное имя',
   `description` text COMMENT 'Описание',
   `ordering` int(11) DEFAULT NULL,
@@ -332,7 +332,7 @@ CREATE TABLE `{#}content_types` (
   `is_date_range` tinyint(1) unsigned DEFAULT NULL COMMENT 'Разрешить управление сроком публикации?',
   `is_cats` tinyint(1) unsigned DEFAULT NULL COMMENT 'Категории включены?',
   `is_cats_recursive` tinyint(1) unsigned DEFAULT NULL COMMENT 'Сквозной просмотр категорий?',
-  `is_folders` tinyint(1) unsigned DEFAULT NULL 'Включены личные папки?',
+  `is_folders` tinyint(1) unsigned DEFAULT NULL COMMENT 'Включены личные папки?',
   `is_in_groups` tinyint(1) unsigned DEFAULT NULL COMMENT 'Создание в группах',
   `is_in_groups_only` tinyint(1) unsigned DEFAULT NULL COMMENT 'Создание только в группах',
   `is_comments` tinyint(1) unsigned DEFAULT NULL COMMENT 'Комментарии включены?',

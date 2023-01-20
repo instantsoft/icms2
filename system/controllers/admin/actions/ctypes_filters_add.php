@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminCtypesFiltersAdd extends cmsAction {
 
     public function run($ctype_id = null, $id = null, $do = 'add') {
@@ -8,10 +10,12 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
             return cmsCore::error404();
         }
 
-        $ctype = $this->model_backend_content->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
         if (!$ctype) {
             return cmsCore::error404();
         }
+
+        $this->model_backend_content->loadAllCtypes();
 
         $this->dispatchEvent('ctype_loaded', [$ctype, 'filters']);
 
@@ -26,6 +30,9 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
         ];
 
         if ($id) {
+
+            $this->model_backend_content->localizedOff();
+
             $filter = $this->model_backend_content->getContentFilter($ctype, $id);
             if (!$filter) {
                 return cmsCore::error404();

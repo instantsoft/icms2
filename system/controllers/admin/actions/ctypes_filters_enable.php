@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelContent $model_content
+ */
 class actionAdminCtypesFiltersEnable extends cmsAction {
 
     public function run($ctype_id = null) {

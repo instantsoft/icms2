@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminCtypesDatasetsAdd extends cmsAction {
 
     public function run($ctype_id = null) {
@@ -7,6 +9,8 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
         if (!$ctype_id) {
             return cmsCore::error404();
         }
+
+        $this->model_backend_content->localizedOn();
 
         if (is_numeric($ctype_id)) {
 
@@ -37,8 +41,6 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
 
             $controller_name = $ctype_id;
         }
-
-        $this->model_backend_content->localizedOn();
 
         $fields = $this->model_backend_content->getContentFields($ctype['name']);
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);

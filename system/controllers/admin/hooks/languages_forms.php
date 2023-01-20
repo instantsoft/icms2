@@ -22,6 +22,12 @@ class onAdminLanguagesForms extends cmsAction {
                 'ctypes_dataset' => [
                     'title' => LANG_CONTENT_TYPE.' / '.LANG_CP_CTYPE_DATASETS
                 ],
+                'ctypes_relation' => [
+                    'title' => LANG_CONTENT_TYPE.' / '.LANG_CP_CTYPE_RELATIONS
+                ],
+                'ctypes_filter' => [
+                    'title' => LANG_CONTENT_TYPE.' / '.LANG_CP_CTYPE_FILTERS
+                ],
                 'ctypes_basic' => [
                     'title' => LANG_CONTENT_TYPE
                 ],

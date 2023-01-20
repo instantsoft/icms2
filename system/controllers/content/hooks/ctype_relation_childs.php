@@ -2,24 +2,25 @@
 
 class onContentCtypeRelationChilds extends cmsAction {
 
-    public function run($ctype_id){
+    public function run($ctype_id) {
 
-        $types = array();
+        $types = [];
 
-        $ctypes = $this->model->getContentTypes();
+        $ctypes = $this->model->localizedOn()->getContentTypesFiltered();
 
         if ($ctypes) {
             foreach ($ctypes as $ctype) {
-                if ($ctype['id'] == $ctype_id) { continue; }
+                if ($ctype['id'] == $ctype_id) {
+                    continue;
+                }
                 $types["content:{$ctype['id']}"] = sprintf(LANG_CP_SETTINGS_FP_SHOW_CONTENT, $ctype['title']);
             }
         }
 
-        return array(
+        return [
             'name'  => $this->name,
             'types' => $types
-        );
-
+        ];
     }
 
 }

@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ * @property \modelUsers $model_users
+ * @property \modelModeration $model_moderation
+ */
 class actionAdminCtypesModerators extends cmsAction {
 
     public function run($ctype_id = null, $action = 'view') {
@@ -8,7 +12,7 @@ class actionAdminCtypesModerators extends cmsAction {
             return cmsCore::error404();
         }
 
-        $this->ctype = $this->model_content->getContentType($ctype_id);
+        $this->ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
         if (!$this->ctype) {
             return cmsCore::error404();
         }
@@ -51,9 +55,9 @@ class actionAdminCtypesModerators extends cmsAction {
             return cmsCore::error404();
         }
 
-        $user = cmsCore::getModel('users')->filterEqual('email', $name)->getUser();
+        $user = $this->model_users->filterEqual('email', $name)->getUser();
 
-        if ($user === false) {
+        if (!$user) {
 
             return $this->cms_template->renderJSON([
                 'error'   => true,
