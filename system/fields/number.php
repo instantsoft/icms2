@@ -111,9 +111,11 @@ class fieldNumber extends cmsFormField {
                 )),
             new fieldString('prefix', array(
                 'title' => LANG_PARSER_PREFIX,
+                'can_multilanguage' => true
             )),
             new fieldString('units', array(
                 'title' => LANG_PARSER_NUMBER_UNITS,
+                'can_multilanguage' => true
             )),
             new fieldList('units_sep', array(
                 'title'   => LANG_PARSER_NUMBER_UNITS_SEP,

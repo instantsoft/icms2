@@ -792,6 +792,20 @@ class cmsController {
 //============================================================================//
 
     /**
+     * Собирает форму из коллбэка
+     * И применяет хук form_make
+     *
+     * @param callable $callback
+     * @return cmsForm
+     */
+    public function makeForm(callable $callback) : cmsForm {
+
+        $form = $callback(new cmsForm());
+
+        return cmsEventsManager::hook('form_make', $form);
+    }
+
+    /**
      * Загружает и возвращает описание структуры формы
      * в контексте текущего контроллера
      * Для бэкенда метод переопределён в cmsBackend

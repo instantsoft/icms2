@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminContent extends cmsAction {
 
     public function run($do = false) {
@@ -17,7 +19,7 @@ class actionAdminContent extends cmsAction {
             }
         }
 
-        $ctypes = $this->model_backend_content->getContentTypes();
+        $ctypes = $this->model_backend_content->localizedOn()->getContentTypesFiltered();
 
         $key_path = '/1.1';
 

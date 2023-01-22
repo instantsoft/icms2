@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminCtypesPropsBind extends cmsAction {
 
     public function run($ctype_id = null, $category_id = null) {

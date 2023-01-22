@@ -4,6 +4,12 @@ class formContentCategory extends cmsForm {
 
     public function init($ctype, $action) {
 
+        $model = cmsCore::getModel('content');
+
+        $model->localizedOn();
+
+        $table_name = $model->getContentCategoryTableName($ctype['name']);
+
         $fieldsets = [
             'base' => [
                 'title'  => LANG_BASIC_OPTIONS,
@@ -11,6 +17,11 @@ class formContentCategory extends cmsForm {
                 'childs' => [
                     new fieldString('title', [
                         'title' => LANG_CATEGORY_TITLE,
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => $table_name
+                        ],
                         'options' => [
                             'max_length' => 200
                         ],
@@ -20,9 +31,9 @@ class formContentCategory extends cmsForm {
                     ]),
                     new fieldList('parent_id', [
                         'title' => LANG_PARENT_CATEGORY,
-                        'generator' => function ($cat) use ($ctype) {
+                        'generator' => function ($cat) use ($ctype, $model) {
 
-                            $tree = cmsCore::getModel('content')->limit(0)->getCategoriesTree($ctype['name']);
+                            $tree = $model->limit(0)->getCategoriesTree($ctype['name']);
 
                             if ($tree) {
                                 foreach ($tree as $item) {
@@ -41,7 +52,12 @@ class formContentCategory extends cmsForm {
                         }
                     ]),
                     new fieldHtml('description', [
-                        'title' => LANG_CATEGORY_DESCRIPTION
+                        'title' => LANG_CATEGORY_DESCRIPTION,
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => $table_name
+                        ]
                     ]),
                     new fieldCheckbox('is_hidden', [
                         'title' => LANG_CATEGORY_IS_HIDDEN
@@ -83,6 +99,11 @@ class formContentCategory extends cmsForm {
 
                 $fieldsets['cat_seo']['childs'][] = new fieldString('seo_h1', [
                     'title'   => LANG_SEO_H1,
+                    'can_multilanguage' => true,
+                    'multilanguage_params' => [
+                        'is_table_field' => true,
+                        'table' => $table_name
+                    ],
                     'options' => [
                         'max_length' => 256,
                         'show_symbol_count' => true
@@ -94,6 +115,11 @@ class formContentCategory extends cmsForm {
 
                 $fieldsets['cat_seo']['childs'][] = new fieldString('seo_title', [
                     'title'   => LANG_SEO_TITLE,
+                    'can_multilanguage' => true,
+                    'multilanguage_params' => [
+                        'is_table_field' => true,
+                        'table' => $table_name
+                    ],
                     'options' => [
                         'max_length' => 256,
                         'show_symbol_count' => true
@@ -106,6 +132,11 @@ class formContentCategory extends cmsForm {
                 $fieldsets['cat_seo']['childs'][] = new fieldString('seo_keys', [
                     'title'   => LANG_SEO_KEYS,
                     'hint'    => LANG_SEO_KEYS_HINT,
+                    'can_multilanguage' => true,
+                    'multilanguage_params' => [
+                        'is_table_field' => true,
+                        'table' => $table_name
+                    ],
                     'options' => [
                         'max_length' => 256,
                         'show_symbol_count' => true
@@ -118,6 +149,11 @@ class formContentCategory extends cmsForm {
                 $fieldsets['cat_seo']['childs'][] = new fieldText('seo_desc', [
                     'title'         => LANG_SEO_DESC,
                     'hint'          => LANG_SEO_DESC_HINT,
+                    'can_multilanguage' => true,
+                    'multilanguage_params' => [
+                        'is_table_field' => true,
+                        'table' => $table_name
+                    ],
                     'is_strip_tags' => true,
                     'options'       => [
                         'max_length' => 256,

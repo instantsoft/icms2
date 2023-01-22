@@ -943,7 +943,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (219, 'form_get', 'languages', 219, 1),
 (220, 'widget_options_full_form', 'languages', 220, 1),
 (221, 'languages_forms', 'admin', 221, 1),
-(222, 'languages_forms', 'widgets', 222, 1);
+(222, 'languages_forms', 'widgets', 222, 1),
+(223, 'languages_forms', 'content', 223, 1),
+(224, 'form_make', 'languages', 224, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -1856,7 +1858,7 @@ CREATE TABLE `{#}widgets_bind` (
   `template_layouts` varchar(500) DEFAULT NULL,
   `languages` varchar(100) DEFAULT NULL,
   `widget_id` int(11) UNSIGNED NOT NULL,
-  `title` varchar(128) NOT NULL COMMENT 'Заголовок',
+  `title` varchar(128) DEFAULT NULL COMMENT 'Заголовок',
   `links` text,
   `class` varchar(64) DEFAULT NULL COMMENT 'CSS класс',
   `class_title` varchar(64) DEFAULT NULL,

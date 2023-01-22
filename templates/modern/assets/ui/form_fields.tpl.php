@@ -28,7 +28,7 @@
 
                 if(!is_numeric($first_field_key)){ ?>
 
-                    <ul class="nav nav-tabs flex-wrap field_tabbed<?php echo $_field[$first_field_key]->visible_depend ? ' child_field' : ''; ?>">
+                    <ul class="nav nav-tabs flex-wrap mb-2 field_tabbed<?php echo $_field[$first_field_key]->visible_depend ? ' child_field' : ''; ?>">
                         <?php foreach ($_field as $key => $field) { ?>
                         <li class="nav-item field_tabbed_<?php echo $key; ?>">
                             <a class="nav-link <?php echo $lang_active_tab ? 'active' : ''; $lang_active_tab = false; ?>" href="#f_<?php echo $field->id; ?>">

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminCtypesPropsEdit extends cmsAction {
 
     public function run($ctype_id = null, $prop_id = null) {
@@ -8,13 +10,13 @@ class actionAdminCtypesPropsEdit extends cmsAction {
             cmsCore::error404();
         }
 
-        $ctype = $this->model_backend_content->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
 
         if (!$ctype) {
             cmsCore::error404();
         }
 
-        $prop = $this->model_backend_content->getContentProp($ctype['name'], $prop_id);
+        $prop = $this->model_backend_content->localizedOff()->getContentProp($ctype['name'], $prop_id);
 
         if (!$prop) {
             return cmsCore::error404();

@@ -28,6 +28,9 @@ class onAdminLanguagesForms extends cmsAction {
                 'ctypes_filter' => [
                     'title' => LANG_CONTENT_TYPE.' / '.LANG_CP_CTYPE_FILTERS
                 ],
+                'ctypes_prop' => [
+                    'title' => LANG_CONTENT_TYPE.' / '.LANG_CP_CTYPE_PROPS
+                ],
                 'ctypes_basic' => [
                     'title' => LANG_CONTENT_TYPE
                 ],

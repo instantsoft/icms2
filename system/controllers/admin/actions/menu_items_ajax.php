@@ -1,23 +1,24 @@
 <?php
-
+/**
+ * @property \modelMenu $model_menu
+ */
 class actionAdminMenuItemsAjax extends cmsAction {
 
-    public function run($menu_id, $parent_id){
+    public function run($menu_id, $parent_id) {
 
-        if (!$this->request->isAjax()) { cmsCore::error404(); }
-
-        $menu_model = cmsCore::getModel('menu');
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
 
         $grid = $this->loadDataGrid('menu_items');
 
-        $items = $menu_model->getMenuItems($menu_id, $parent_id);
+        $items = $this->model_menu->localizedOn()->getMenuItems($menu_id, $parent_id);
 
         $total = $items ? 1 : 0;
 
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $items, $total);
+        $this->cms_template->renderGridRowsJSON($grid, $items, $total);
 
-        $this->halt();
-
+        return $this->halt();
     }
 
 }

@@ -1,17 +1,21 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminContentCatsOrder extends cmsAction {
 
     private $total_nodes = 0;
 
     public function run($ctype_id) {
 
-        $ctype = $this->model_backend_content->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
         if (!$ctype) {
             return cmsCore::error404();
         }
 
         $categories = $this->model_backend_content->getCategoriesTree($ctype['name'], false);
+
+        $this->model_backend_content->localizedRestore();
 
         if ($this->request->has('submit')) {
 

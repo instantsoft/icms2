@@ -1,11 +1,14 @@
 <?php
 
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminWidgetsLoad extends cmsAction {
 
     public function run() {
 
         if (!$this->request->isAjax()) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         cmsCore::loadAllControllersLanguages();
@@ -17,6 +20,8 @@ class actionAdminWidgetsLoad extends cmsAction {
         if (!$template || !in_array($template, $tpls)) {
             $template = cmsConfig::get('template');
         }
+
+        $this->model_backend_widgets->localizedOn();
 
         $page_ids = [0];
 
@@ -31,15 +36,15 @@ class actionAdminWidgetsLoad extends cmsAction {
 
                     $page['url_mask'] = explode("\n", $page['url_mask']);
 
-                    $uri = str_replace(array(
-                        '%','*','{slug}'
-                    ), array(
-                        '000','ab/c_','abc-0'
-                    ), trim($page['url_mask'][0]));
+                    $uri = str_replace([
+                        '%', '*', '{slug}'
+                    ], [
+                        '000', 'ab/c_', 'abc-0'
+                    ], trim($page['url_mask'][0]));
 
                     $matched_pages = $this->cms_core->detectMatchedWidgetPages($this->cms_core->getWidgetsPages(), $uri);
 
-                    if($matched_pages){
+                    if ($matched_pages) {
                         foreach (array_keys($matched_pages) as $pid) {
                             $page_ids[] = $pid;
                         }
@@ -51,10 +56,10 @@ class actionAdminWidgetsLoad extends cmsAction {
 
         $scheme = $this->model_backend_widgets->getWidgetBindingsScheme($page_id, $page_ids, $template);
 
-        $this->cms_template->renderJSON(array(
+        return $this->cms_template->renderJSON([
             'is_exists' => ($scheme !== false),
             'scheme'    => $scheme
-        ));
+        ]);
     }
 
 }

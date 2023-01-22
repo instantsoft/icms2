@@ -169,17 +169,32 @@ trait formFieldItem {
             // добавляем поля настроек типа поля в общую форму
             // чтобы они были обработаны парсером и валидатором
             // вместе с остальными полями
-            $field_type                 = $this->request->get('type', '');
-            $field_class                = 'field' . string_to_camel('_', $field_type);
-            $field_object               = new $field_class(null, null);
-            $field_object->subject_name = $ctype['name'];
-            $field_options              = $field_object->getOptions();
+            $field_type   = $this->request->get('type', '');
+            $field_class  = 'field' . string_to_camel('_', $field_type);
 
-            $form->addFieldsetAfter('type', LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
-            foreach ($field_options as $option_field) {
-                $option_field->setName("options:{$option_field->name}");
-                $form->addField('field_settings', $option_field);
+            if (!class_exists($field_class)) {
+                return cmsCore::error(ERR_CLASS_NOT_FOUND);
             }
+
+            $field_object = new $field_class(null, [
+                'subject_name' => $ctype['name']
+            ]);
+
+            $field_options = $field_object->getOptions();
+
+            $form->mergeForm($this->makeForm(function($form) use($field_options){
+
+                $form->addFieldset(LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
+
+                foreach ($field_options as $field_field) {
+
+                    $field_field->setName("options:{$field_field->name}");
+
+                    $form->addField('field_settings', $field_field);
+                }
+
+                return $form;
+            }));
 
             $defaults = ['ctype_id' => $ctype['id']];
             if($field['is_fixed_type']){

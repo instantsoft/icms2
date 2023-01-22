@@ -2,18 +2,18 @@
 
 class onContentAdminDashboardChart extends cmsAction {
 
-	public function run(){
+    public function run() {
 
-		$ctypes = $this->model->getContentTypes();
+        $ctypes = $this->model->localizedOn()->getContentTypesFiltered();
 
-        $data = array(
+        $data = [
             'id'       => 'content',
             'title'    => LANG_CONTENT,
             'sections' => [],
             'footer'   => []
-        );
+        ];
 
-		foreach($ctypes as $ctype){
+        foreach ($ctypes as $ctype) {
 
             $ctype_table_name = $this->model->getContentTypeTableName($ctype['name']);
 
@@ -24,16 +24,16 @@ class onContentAdminDashboardChart extends cmsAction {
             ];
 
             $data['footer'][$ctype['name']][] = [
-                'title' => LANG_CP_TOTAL.' '.$ctype['labels']['many'],
-                'table' => $ctype_table_name,
+                'title'    => LANG_CP_TOTAL . ' ' . $ctype['labels']['many'],
+                'table'    => $ctype_table_name,
                 'progress' => 'success'
             ];
 
             $data['footer'][$ctype['name']][] = [
-                'title' => LANG_CP_ONMODERATE,
-                'table' => 'moderators_tasks',
+                'title'    => LANG_CP_ONMODERATE,
+                'table'    => 'moderators_tasks',
                 'progress' => 'warning',
-                'filters' => [
+                'filters'  => [
                     [
                         'condition' => 'eq',
                         'value'     => $ctype['name'],
@@ -43,10 +43,10 @@ class onContentAdminDashboardChart extends cmsAction {
             ];
 
             $data['footer'][$ctype['name']][] = [
-                'title' => LANG_CONTENT_CONTEXT_LT_TRASH,
-                'table' => $ctype_table_name,
+                'title'    => LANG_CONTENT_CONTEXT_LT_TRASH,
+                'table'    => $ctype_table_name,
                 'progress' => 'secondary',
-                'filters' => [
+                'filters'  => [
                     [
                         'condition' => 'eq',
                         'value'     => 1,
@@ -56,10 +56,10 @@ class onContentAdminDashboardChart extends cmsAction {
             ];
 
             $data['footer'][$ctype['name']][] = [
-                'title' => LANG_CP_NOTPUB.' '.$ctype['labels']['many'],
-                'table' => $ctype_table_name,
+                'title'    => LANG_CP_NOTPUB . ' ' . $ctype['labels']['many'],
+                'table'    => $ctype_table_name,
                 'progress' => 'danger',
-                'filters' => [
+                'filters'  => [
                     [
                         'condition' => 'eq',
                         'value'     => 0,
@@ -67,11 +67,9 @@ class onContentAdminDashboardChart extends cmsAction {
                     ]
                 ]
             ];
-
-		}
+        }
 
         return $data;
-
     }
 
 }

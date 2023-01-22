@@ -1,22 +1,24 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminContentTreeAjax extends cmsAction {
 
     public function run() {
 
         if (!$this->request->isAjax()) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $id = $this->request->get('id', '');
 
         if (!$id || !preg_match('/^([0-9\.]+)$/i', $id)) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         list ($ctype_id, $parent_id) = explode('.', $id);
 
-        $ctype = $this->model_backend_content->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
         if (!$ctype) {
             return cmsCore::error404();
         }
@@ -36,7 +38,7 @@ class actionAdminContentTreeAjax extends cmsAction {
             }
         }
 
-        $this->cms_template->renderJSON($tree_nodes);
+        return $this->cms_template->renderJSON($tree_nodes);
     }
 
 }

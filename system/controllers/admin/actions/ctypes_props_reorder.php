@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminCtypesPropsReorder extends cmsAction {
 
     public function run($ctype_name = null) {

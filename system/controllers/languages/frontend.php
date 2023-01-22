@@ -15,6 +15,10 @@ class languages extends cmsFrontend {
      */
     public function enableMultilanguageFormFields(cmsForm $form) : void {
 
+        if(!$this->cms_config->is_user_change_lang){
+            return;
+        }
+
         // Поля, которые нужно создать в БД
         $create_db_fields = [];
 

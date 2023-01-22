@@ -142,6 +142,22 @@ class cmsForm {
 //========================= Работа со структурой =============================//
 
     /**
+     * Объединяет форму с переданной
+     * заменяя наборы полей при совпадении ключей
+     *
+     * @param cmsForm $form
+     * @return void
+     */
+    public function mergeForm(cmsForm $form) {
+
+        $structure = $form->getStructure();
+
+        foreach($structure as $fid => $fieldset){
+            $this->addStructure($fid, $fieldset);
+        }
+    }
+
+    /**
      * Устанавливает массив полей формы
      *
      * @param array $structure

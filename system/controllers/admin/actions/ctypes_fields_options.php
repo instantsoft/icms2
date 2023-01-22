@@ -55,18 +55,19 @@ class actionAdminCtypesFieldsOptions extends cmsAction {
             $values['options'] = $field['options'];
         }
 
-        $form = new cmsForm();
+        $form = $this->makeForm(function($form) use($options){
 
-        $form->addFieldset(LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
+            $form->addFieldset(LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
 
-        foreach ($options as $key => $field_field) {
+            foreach ($options as $field_field) {
 
-            $name = "options:{$field_field->name}";
+                $field_field->setName("options:{$field_field->name}");
 
-            $field_field->setName($name);
+                $form->addField('field_settings', $field_field);
+            }
 
-            $form->addField('field_settings', $field_field);
-        }
+            return $form;
+        });
 
         ob_start();
 

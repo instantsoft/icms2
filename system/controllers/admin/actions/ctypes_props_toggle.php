@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminCtypesPropsToggle extends cmsAction {
 
     public function run($ctype_id = null, $prop_id = null) {
