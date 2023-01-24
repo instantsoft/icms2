@@ -10,13 +10,13 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
             return cmsCore::error404();
         }
 
-        $dataset = $old_dataset = $this->model_backend_content->getContentDataset($dataset_id);
+        $dataset = $old_dataset = $this->model_backend_content->localizedOff()->getContentDataset($dataset_id);
 
         if (!$dataset) {
             return cmsCore::error404();
         }
 
-        $this->model_backend_content->localizedOn();
+        $this->model_backend_content->localizedRestore();
 
         if ($dataset['ctype_id']) {
 
@@ -61,8 +61,6 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
         }
 
         $fields_list = $this->buildDatasetFieldsList($controller_name, $fields);
-
-        $this->model_backend_content->localizedOff();
 
         $form = $this->getForm('ctypes_dataset', ['edit', $ctype, $cats_list, $fields_list, $dataset]);
 

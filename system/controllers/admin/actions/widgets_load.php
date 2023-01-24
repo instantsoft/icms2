@@ -1,7 +1,6 @@
 <?php
-
 /**
- * @property \modelBackendContent $model_backend_content
+ * @property \modelBackendWidgets $model_backend_widgets
  */
 class actionAdminWidgetsLoad extends cmsAction {
 
@@ -20,8 +19,6 @@ class actionAdminWidgetsLoad extends cmsAction {
         if (!$template || !in_array($template, $tpls)) {
             $template = cmsConfig::get('template');
         }
-
-        $this->model_backend_widgets->localizedOn();
 
         $page_ids = [0];
 

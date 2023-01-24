@@ -121,8 +121,6 @@ class fieldParent extends cmsFormField {
 
         $controller = cmsCore::getController('content', $this->request);
 
-        $controller->model->localizedOn();
-
         $ctypes = $controller->model->getContentTypes();
 
         $parent_ctype = $child_ctype = false;
@@ -179,7 +177,7 @@ class fieldParent extends cmsFormField {
             return '';
         }
 
-        $parent_ctype = cmsCore::getModel('content')->localizedOn()->getContentTypeByName($this->parent_ctype_name);
+        $parent_ctype = cmsCore::getModel('content')->getContentTypeByName($this->parent_ctype_name);
 
         if (!$parent_ctype) {
             return '';
@@ -251,7 +249,7 @@ class fieldParent extends cmsFormField {
         $parent_ctype = [];
 
         if($this->parent_ctype_name){
-            $parent_ctype = cmsCore::getModel('content')->localizedOn()->getContentTypeByName($this->parent_ctype_name);
+            $parent_ctype = cmsCore::getModel('content')->getContentTypeByName($this->parent_ctype_name);
         }
 
         return cmsTemplate::getInstance()->renderFormField($this->class, [
@@ -311,7 +309,7 @@ class fieldParent extends cmsFormField {
         $content_model = cmsCore::getModel('content');
         $content_model->filterIn('id', $ids);
 
-        return $content_model->localizedOn()->getContentItems($this->parent_ctype_name);
+        return $content_model->getContentItems($this->parent_ctype_name);
     }
 
     private function getParentItems($store_result = true) {
@@ -329,8 +327,6 @@ class fieldParent extends cmsFormField {
         }
 
         $content_model = cmsCore::getModel('content');
-
-        $content_model->localizedOn();
 
         $ctypes = $content_model->getContentTypes();
 

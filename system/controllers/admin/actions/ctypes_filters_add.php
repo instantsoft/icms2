@@ -10,7 +10,7 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
             return cmsCore::error404();
         }
 
-        $ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
         if (!$ctype) {
             return cmsCore::error404();
         }
@@ -31,12 +31,12 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
 
         if ($id) {
 
-            $this->model_backend_content->localizedOff();
-
-            $filter = $this->model_backend_content->getContentFilter($ctype, $id);
+            $filter = $this->model_backend_content->localizedOff()->getContentFilter($ctype, $id);
             if (!$filter) {
                 return cmsCore::error404();
             }
+
+            $this->model_backend_content->localizedRestore();
         }
 
         $table_name = $this->model_backend_content->table_prefix . $ctype['name'] . '_filters';

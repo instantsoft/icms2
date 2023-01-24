@@ -154,7 +154,7 @@ class formAdminCtypesFilter extends cmsForm {
                         'show_all'  => true,
                         'generator' => function ($prop) use ($ctype) {
                             $model = cmsCore::getModel('content');
-                            $tree = $model->limit(0)->localizedOn()->getCategoriesTree($ctype['name']);
+                            $tree = $model->limit(0)->getCategoriesTree($ctype['name']);
                             foreach ($tree as $c) {
                                 $items[$c['id']] = $c['title'];
                             }
@@ -239,7 +239,7 @@ class formAdminCtypesFilter extends cmsForm {
         $last_header_id = false;
         $items          = ['' => ''];
 
-        $tree = cmsCore::getModel('content')->localizedOn()->limit(0)->getCategoriesTree($ctype['name']);
+        $tree = cmsCore::getModel('content')->limit(0)->getCategoriesTree($ctype['name']);
         if (!$tree) {
             return $items;
         }
@@ -285,7 +285,7 @@ class formAdminCtypesFilter extends cmsForm {
 
         $bind_table_name = $model->table_prefix . $ctype_name . '_props_bind';
 
-        $items = $model->localizedOn()->get($bind_table_name);
+        $items = $model->get($bind_table_name);
 
         $result = [];
 

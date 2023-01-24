@@ -6,8 +6,6 @@ class formAdminCtypesRelation extends cmsForm {
 
         $content_model = cmsCore::getModel('content');
 
-        $content_model->localizedOn();
-
         return [
             'basic' => [
                 'type' => 'fieldset',

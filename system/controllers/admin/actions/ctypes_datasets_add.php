@@ -10,8 +10,6 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
             return cmsCore::error404();
         }
 
-        $this->model_backend_content->localizedOn();
-
         if (is_numeric($ctype_id)) {
 
             $ctype = $this->model_backend_content->getContentType($ctype_id);
@@ -59,8 +57,6 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
         }
 
         $fields_list = $this->buildDatasetFieldsList($controller_name, $fields);
-
-        $this->model_backend_content->localizedOff();
 
         $form = $this->getForm('ctypes_dataset', ['add', $ctype, $cats_list, $fields_list]);
 

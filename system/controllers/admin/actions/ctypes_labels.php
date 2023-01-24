@@ -12,10 +12,12 @@ class actionAdminCtypesLabels extends cmsAction {
 
         $form = $this->getForm('ctypes_labels');
 
-        $ctype = $this->model_backend_content->getContentType($id);
+        $ctype = $this->model_backend_content->localizedOff()->getContentType($id);
         if (!$ctype) {
             return cmsCore::error404();
         }
+
+        $this->model_backend_content->localizedRestore();
 
         $this->dispatchEvent('ctype_loaded', [$ctype, 'edit']);
 

@@ -10,7 +10,7 @@ class actionAdminCtypesProps extends cmsAction {
             return cmsCore::error404();
         }
 
-        $ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
         if (!$ctype) {
             return cmsCore::error404();
         }

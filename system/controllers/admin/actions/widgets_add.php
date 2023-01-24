@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendWidgets $model_backend_widgets
+ */
 class actionAdminWidgetsAdd extends cmsAction {
 
     public function run() {
@@ -28,10 +30,12 @@ class actionAdminWidgetsAdd extends cmsAction {
             return $this->cms_template->renderJSON(['error' => true]);
         }
 
-        $widget_bind = $this->model_backend_widgets->getWidgetBinding($res['id']);
+        $widget_bind = $this->model_backend_widgets->localizedOff()->getWidgetBinding($res['id']);
         if (!$widget_bind) {
             return $this->cms_template->renderJSON(['error' => true]);
         }
+
+        $this->model_backend_widgets->localizedRestore();
 
         // Чтобы ланг файлы шаблона подгрузились
         $template = new cmsTemplate($template_name);

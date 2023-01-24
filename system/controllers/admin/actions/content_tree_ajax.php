@@ -18,7 +18,7 @@ class actionAdminContentTreeAjax extends cmsAction {
 
         list ($ctype_id, $parent_id) = explode('.', $id);
 
-        $ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
         if (!$ctype) {
             return cmsCore::error404();
         }

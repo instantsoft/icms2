@@ -88,7 +88,7 @@ trait formItem {
 
         if($id){
 
-            $data = $this->model->getItemById($this->table_name, $id, function ($item, $model) {
+            $data = $this->model->localizedOff()->getItemById($this->table_name, $id, function ($item, $model) {
                 foreach ($item as $key => $value) {
 
                     if ($value && strpos($value, '---') === 0) {
@@ -101,6 +101,8 @@ trait formItem {
             if(!$data){
                 return cmsCore::error404();
             }
+
+            $this->model->localizedRestore();
 
             $do = 'edit';
         }

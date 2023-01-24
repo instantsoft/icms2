@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminContentItemToggle extends cmsAction {
 
     public function run($ctype_name = false, $item_id = false) {

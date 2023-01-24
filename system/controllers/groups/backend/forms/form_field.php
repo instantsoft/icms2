@@ -2,232 +2,292 @@
 
 class formGroupsField extends cmsForm {
 
+    private $reserved_names = ['ctype', 'ctype_name', 'fields'];
+
     public function init($do, $ctype_name) {
 
-        return array(
-            'basic' => array(
+        return [
+            'basic' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_BASIC,
-                'childs' => array(
-                    new fieldString('name', array(
+                'childs' => [
+                    new fieldString('name', [
                         'title' => LANG_SYSTEM_NAME,
-                        'rules' => array(
-                            array('required'),
-                            array('sysname'),
-                            array('max_length', 40),
-                            $do == 'add' ? array('unique_field') : false
-                        )
-                    )),
-                    new fieldString('title', array(
+                        'rules' => [
+                            ['required'],
+                            ['sysname'],
+                            ['max_length', 40],
+                            [function($controller, $data, $value) {
+
+                                if(in_array($value, $this->reserved_names)){
+                                    return ERR_VALIDATE_INVALID;
+                                }
+
+                                return true;
+                            }],
+                            $do === 'add' ? ['unique_field'] : false
+                        ]
+                    ]),
+                    new fieldString('title', [
                         'title' => LANG_CP_FIELD_TITLE,
-                        'rules' => array(
-                            array('required'),
-                            array('max_length', 128)
-                        )
-                    )),
-                    new fieldString('hint', array(
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'groups_fields'
+                        ],
+                        'rules' => [
+                            ['required'],
+                            ['max_length', 128]
+                        ]
+                    ]),
+                    new fieldString('hint', [
                         'title' => LANG_CP_FIELD_HINT,
-                        'rules' => array(
-                            array('max_length', 200)
-                        )
-                    )),
-                )
-            ),
-            'type' => array(
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'groups_fields'
+                        ],
+                        'rules' => [
+                            ['max_length', 200]
+                        ]
+                    ])
+                ]
+            ],
+            'type' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_TYPE,
-                'childs' => array(
-                    new fieldList('type', array(
+                'childs' => [
+                    new fieldList('type', [
                         'default' => 'string',
-                        'generator' => function() {
+                        'generator' => function () {
                             return cmsForm::getAvailableFormFields('only_public', 'groups');
                         }
-                    ))
-                )
-            ),
-            'group' => array(
+                    ])
+                ]
+            ],
+            'group' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_FIELDSET,
-                'childs' => array(
-                    new fieldList('fieldset', array(
+                'childs' => [
+                    new fieldList('fieldset', [
                         'title' => LANG_CP_FIELD_FIELDSET_SELECT,
-                        'generator' => function($field) {
+                        'generator' => function ($field) {
                             $model = cmsCore::getModel('content');
                             $model->setTablePrefix('');
                             $fieldsets = $model->getContentFieldsets('groups');
-                            $items = array('');
-                            if($fieldsets){ foreach($fieldsets as $fieldset) { $items[$fieldset] = $fieldset; } }
+                            $items = [''];
+                            if ($fieldsets) {
+                                foreach ($fieldsets as $fieldset) {
+                                    $items[$fieldset] = $fieldset;
+                                }
+                            }
                             return $items;
                         }
-                    )),
-                    new fieldString('new_fieldset', array(
+                    ]),
+                    new fieldString('new_fieldset', [
                         'title' => LANG_CP_FIELD_FIELDSET_ADD,
-                        'rules' => array(
-                            array('max_length', 32)
-                        )
-                    )),
-                )
-            ),
-            'visibility' => array(
+                        'rules' => [
+                            ['max_length', 32]
+                        ]
+                    ])
+                ]
+            ],
+            'visibility' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_VISIBILITY,
-                'childs' => array(
-                    new fieldCheckbox('is_in_item', array(
+                'childs' => [
+                    new fieldCheckbox('is_in_item', [
                         'title' => LANG_CP_FIELD_IN_ITEM,
                         'default' => true
-                    )),
-                    new fieldCheckbox('is_in_list', array(
+                    ]),
+                    new fieldCheckbox('is_in_list', [
                         'title' => LANG_CP_FIELD_IN_LIST,
-                    )),
-                    new fieldCheckbox('is_in_filter', array(
+                    ]),
+                    new fieldCheckbox('is_in_filter', [
                         'title' => LANG_CP_FIELD_IN_FILTER,
-                    ))
-                )
-            ),
-            'labels' => array(
+                    ]),
+                    new fieldList('options:visible_depend', [
+                        'title'         => LANG_CP_FIELD_VISIBLE_DEPEND,
+                        'hint'          => LANG_CP_FIELD_VISIBLE_DEPEND_HINT,
+                        'add_title'     => LANG_ADD,
+                        'is_multiple'   => true,
+                        'dynamic_list'  => true,
+                        'single_select' => 0,
+                        'select_title'  => LANG_CP_FIELD_VISIBLE_DEPEND_F,
+                        'multiple_keys' => [
+                            'field'  => 'field', 'action' => 'field_select', 'value'  => 'field_value'
+                        ],
+                        'generator' => function () {
+
+                            $model = cmsCore::getModel('content');
+                            $model->setTablePrefix('');
+
+                            $fields = $model->getContentFields('groups');
+
+                            $items = [];
+
+                            if ($fields) {
+                                foreach ($fields as $field) {
+                                    $items[$field['name']] = $field['title'];
+                                }
+                            }
+
+                            return $items;
+                        },
+                        'value_items' => [
+                            'show' => LANG_CP_FIELD_VISIBLE_DEPEND_SHOW,
+                            'hide' => LANG_CP_FIELD_VISIBLE_DEPEND_HIDE
+                        ]
+                    ])
+                ]
+            ],
+            'labels' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_LABELS,
-                'childs' => array(
-                    new fieldList('options:label_in_list', array(
+                'childs' => [
+                    new fieldList('options:label_in_list', [
                         'title' => LANG_CP_FIELD_LABELS_IN_LIST,
                         'default' => 'none',
-                        'items' => array(
+                        'items' => [
                             'left' => LANG_CP_FIELD_LABEL_LEFT,
                             'top' => LANG_CP_FIELD_LABEL_TOP,
                             'none' => LANG_CP_FIELD_LABEL_NONE
-                        )
-                    )),
-                    new fieldList('options:label_in_item', array(
+                        ]
+                    ]),
+                    new fieldList('options:label_in_item', [
                         'title' => LANG_CP_FIELD_LABELS_IN_ITEM,
                         'default' => 'left',
-                        'items' => array(
+                        'items' => [
                             'left' => LANG_CP_FIELD_LABEL_LEFT,
                             'top' => LANG_CP_FIELD_LABEL_TOP,
                             'none' => LANG_CP_FIELD_LABEL_NONE
-                        )
-                    ))
-                )
-            ),
-            'wrap' => array(
+                        ]
+                    ])
+                ]
+            ],
+            'wrap' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_WRAP,
-                'childs' => array(
-                    new fieldList('options:wrap_type', array(
+                'childs' => [
+                    new fieldList('options:wrap_type', [
                         'title' => LANG_CP_FIELD_WRAP_TYPE,
                         'default' => 'auto',
-                        'items' => array(
+                        'items' => [
                             'left'  => LANG_CP_FIELD_WRAP_LTYPE,
                             'right' => LANG_CP_FIELD_WRAP_RTYPE,
                             'none'  => LANG_CP_FIELD_WRAP_NTYPE,
                             'auto'  => LANG_CP_FIELD_WRAP_ATYPE
-                        )
-                    )),
-                    new fieldString('options:wrap_width', array(
+                        ]
+                    ]),
+                    new fieldString('options:wrap_width', [
                         'title'   => LANG_CP_FIELD_WRAP_WIDTH,
                         'hint'    => LANG_CP_FIELD_WRAP_WIDTH_HINT,
                         'default' => ''
-                    ))
-                )
-            ),
-            'format' => array(
+                    ])
+                ]
+            ],
+            'format' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_FORMAT,
-                'childs' => array(
-                    new fieldCheckbox('options:is_required', array(
+                'childs' => [
+                    new fieldCheckbox('options:is_required', [
                         'title' => LANG_VALIDATE_REQUIRED,
-                    )),
-                    new fieldCheckbox('options:is_digits', array(
+                    ]),
+                    new fieldCheckbox('options:is_digits', [
                         'title' => LANG_VALIDATE_DIGITS,
-                    )),
-                    new fieldCheckbox('options:is_alphanumeric', array(
+                    ]),
+                    new fieldCheckbox('options:is_alphanumeric', [
                         'title' => LANG_VALIDATE_ALPHANUMERIC,
-                    )),
-                    new fieldCheckbox('options:is_email', array(
+                    ]),
+                    new fieldCheckbox('options:is_email', [
                         'title' => LANG_VALIDATE_EMAIL,
-                    )),
-                    new fieldCheckbox('options:is_url', array(
+                    ]),
+                    new fieldCheckbox('options:is_url', [
                         'title' => LANG_VALIDATE_URL,
-                    )),
-                    new fieldCheckbox('options:is_unique', array(
+                    ]),
+                    new fieldCheckbox('options:is_unique', [
                         'title' => LANG_VALIDATE_UNIQUE,
-                    )),
-                )
-            ),
-            'values' => array(
+                    ])
+                ]
+            ],
+            'values' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_VALUES,
-                'childs' => array(
-                    new fieldText('values', array(
+                'childs' => [
+                    new fieldText('values', [
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'groups_fields'
+                        ],
                         'size' => 8
-                    ))
-                )
-            ),
-            'profile' => array(
+                    ])
+                ]
+            ],
+            'profile' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_PROFILE_VALUE,
-                'childs' => array(
-                    new fieldList('options:profile_value', array(
+                'childs' => [
+                    new fieldList('options:profile_value', [
                         'hint' => LANG_CP_FIELD_PROFILE_VALUE_HINT,
-                        'generator' => function($field){
+                        'generator' => function ($field) {
                             $model = cmsCore::getModel('content');
                             $model->setTablePrefix('');
-                            $fields = $model->filterIn('type', array('string', 'text', 'html', 'list', 'city', 'listbitmask'))->getContentFields('{users}');
-                            $items = array(''=>LANG_NO) + array_collection_to_list($fields, 'name', 'title');
+                            $fields = $model->filterIn('type', ['string', 'text', 'html', 'list', 'city', 'listbitmask'])->getContentFields('{users}');
+                            $items = ['' => LANG_NO] + array_collection_to_list($fields, 'name', 'title');
                             return $items;
                         }
-                    ))
-                )
-            ),
-            'read_access' => array(
+                    ])
+                ]
+            ],
+            'read_access' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_GROUPS_READ,
-                'childs' => array(
-                    new fieldListGroups('groups_read', array(
+                'childs' => [
+                    new fieldListGroups('groups_read', [
                         'show_all' => true
-                    ))
-                )
-            ),
-            'add_access' => array(
+                    ])
+                ]
+            ],
+            'add_access' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_GROUPS_ADD,
-                'childs' => array(
-                    new fieldListGroups('groups_add', array(
+                'childs' => [
+                    new fieldListGroups('groups_add', [
                         'show_all' => true
-                    ))
-                )
-            ),
-            'edit_access' => array(
+                    ])
+                ]
+            ],
+            'edit_access' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_GROUPS_EDIT,
-                'childs' => array(
-                    new fieldListGroups('groups_edit', array(
+                'childs' => [
+                    new fieldListGroups('groups_edit', [
                         'show_all' => true
-                    ))
-                )
-            ),
-            'filter_access' => array(
+                    ])
+                ]
+            ],
+            'filter_access' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_IN_FILTER,
-                'childs' => array(
-                    new fieldListGroups('filter_view', array(
+                'childs' => [
+                    new fieldListGroups('filter_view', [
                         'show_all' => true
-                    ))
-                )
-            ),
-            'author_access' => array(
+                    ])
+                ]
+            ],
+            'author_access' => [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_AUTHOR_ACCESS,
-                'childs' => array(
-                    new fieldListMultiple('options:author_access', array(
-                        'items' => array(
+                'childs' => [
+                    new fieldListMultiple('options:author_access', [
+                        'items' => [
                             'is_read' => LANG_CP_FIELD_READING,
                             'is_edit' => LANG_CP_FIELD_EDITING,
-                        )
-                    ))
-                )
-            )
-        );
-
+                        ]
+                    ])
+                ]
+            ]
+        ];
     }
-
 }

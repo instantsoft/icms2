@@ -4,6 +4,8 @@ class actionAdminWidgetsImportScheme extends cmsAction {
 
     public function run($to_template_name) {
 
+        $this->model->localizedOff();
+
         $form = $this->getForm('widgets_import_scheme', [$to_template_name]);
 
         $is_submitted = $this->request->has('csrf_token');

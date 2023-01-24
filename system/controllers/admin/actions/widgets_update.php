@@ -8,6 +8,8 @@ class actionAdminWidgetsUpdate extends cmsAction {
             return cmsCore::error404();
         }
 
+        $this->model_backend_widgets->localizedOff();
+
         $template_name = $this->request->get('template', '');
         $widget_id     = $this->request->get('id', 0);
 
@@ -48,7 +50,7 @@ class actionAdminWidgetsUpdate extends cmsAction {
 
             $widget = $this->model_backend_widgets->getWidgetBinding($widget_id);
 
-            if ($widget['device_types'] && $widget['device_types'] !== array(0) && count($widget['device_types']) < 3) {
+            if ($widget['device_types'] && $widget['device_types'] !== [0] && count($widget['device_types']) < 3) {
 
                 foreach ($widget['device_types'] as $dt) {
                     $device_types[] = string_lang('LANG_' . $dt . '_DEVICES');

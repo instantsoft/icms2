@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelUsers $model_users
+ */
 class actionAdminUsers extends cmsAction {
 
     public function run($do = false) {
@@ -10,10 +12,8 @@ class actionAdminUsers extends cmsAction {
             return;
         }
 
-        $groups = $this->model_users->localizedOn()->getGroups();
+        $groups = $this->model_users->getGroups();
         $groups = array_pad($groups, (count($groups) + 1) * -1, ['id' => 0, 'title' => LANG_ALL]);
-
-        $this->model_users->localizedOff();
 
         $grid = $this->loadDataGrid('users', false, 'admin.grid_filter.users');
 

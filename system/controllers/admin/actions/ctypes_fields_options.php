@@ -47,10 +47,12 @@ class actionAdminCtypesFieldsOptions extends cmsAction {
                 $content_model->setTablePrefix('');
             }
 
-            $field = $content_model->getContentField($ctype_name, $field_id);
+            $field = $content_model->localizedOff()->getContentField($ctype_name, $field_id);
             if (!$field) {
                 return $this->halt();
             }
+
+            $content_model->localizedRestore();
 
             $values['options'] = $field['options'];
         }

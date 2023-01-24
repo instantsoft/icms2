@@ -92,10 +92,12 @@ trait formFieldItem {
         // Если передан
         if($field_id){
 
-            $field = $this->model_content->getContentField($ctype['name'], $field_id);
+            $field = $this->model_content->localizedOff()->getContentField($ctype['name'], $field_id);
             if (!$field) {
                 return cmsCore::error404();
             }
+
+            $this->model_content->localizedRestore();
 
             if(!$is_copy){
 

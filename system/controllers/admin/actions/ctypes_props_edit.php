@@ -7,13 +7,13 @@ class actionAdminCtypesPropsEdit extends cmsAction {
     public function run($ctype_id = null, $prop_id = null) {
 
         if (!$ctype_id || !$prop_id) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
-        $ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
 
         if (!$ctype) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $prop = $this->model_backend_content->localizedOff()->getContentProp($ctype['name'], $prop_id);
@@ -21,6 +21,8 @@ class actionAdminCtypesPropsEdit extends cmsAction {
         if (!$prop) {
             return cmsCore::error404();
         }
+
+        $this->model_backend_content->localizedRestore();
 
         $this->dispatchEvent('ctype_loaded', [$ctype, 'props']);
 

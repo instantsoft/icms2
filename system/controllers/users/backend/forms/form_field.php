@@ -31,6 +31,11 @@ class formUsersField extends cmsForm {
                     ]),
                     new fieldString('title', [
                         'title' => LANG_CP_FIELD_TITLE,
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => '{users}_fields'
+                        ],
                         'rules' => [
                             ['required'],
                             ['max_length', 100]
@@ -38,6 +43,11 @@ class formUsersField extends cmsForm {
                     ]),
                     new fieldString('hint', [
                         'title' => LANG_CP_FIELD_HINT,
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => '{users}_fields'
+                        ],
                         'is_clean_disable' => true,
                         'rules' => [
                             ['max_length', 255]
@@ -189,6 +199,11 @@ class formUsersField extends cmsForm {
                 'title'  => LANG_CP_FIELD_VALUES,
                 'childs' => [
                     new fieldText('values', [
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => '{users}_fields'
+                        ],
                         'size' => 8
                     ])
                 ]

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminCtypesEdit extends cmsAction {
 
     public function run($id = null) {
@@ -8,10 +10,12 @@ class actionAdminCtypesEdit extends cmsAction {
             return cmsCore::error404();
         }
 
-        $ctype = $this->model_backend_content->getContentType($id);
+        $ctype = $this->model_backend_content->localizedOff()->getContentType($id);
         if (!$ctype) {
             return cmsCore::error404();
         }
+
+        $this->model->localizedRestore();
 
         $this->dispatchEvent('ctype_loaded', [$ctype, 'edit']);
 

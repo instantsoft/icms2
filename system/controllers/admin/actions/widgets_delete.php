@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendWidgets $model_backend_widgets
+ */
 class actionAdminWidgetsDelete extends cmsAction {
 
     public function run($bp_id = false) {

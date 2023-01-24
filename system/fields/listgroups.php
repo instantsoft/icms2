@@ -28,7 +28,7 @@ class fieldListGroups extends cmsFormField {
 
         $items = $this->getProperty('show_all') ? [0 => LANG_ALL] : [];
 
-        $groups = $users_model->localizedOn()->getGroups((bool) $this->getProperty('show_guests'));
+        $groups = $users_model->getGroups((bool) $this->getProperty('show_guests'));
 
         foreach ($groups as $group) {
             $items[$group['id']] = $group['title'];

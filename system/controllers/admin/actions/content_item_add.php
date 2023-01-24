@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminContentItemAdd extends cmsAction {
 
     public function run($ctype_id, $category_id = 1, $add_from_admin = 0) {

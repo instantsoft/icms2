@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendContent $model_backend_content
+ */
 class actionAdminCtypesDatasetsToggle extends cmsAction {
 
     public function run($dataset_id = null) {

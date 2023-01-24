@@ -18,7 +18,7 @@ class actionAdminMenuTreeAjax extends cmsAction {
 
         list ($menu_id, $parent_id) = explode('.', $id);
 
-        $items = $this->model_menu->localizedOn()->getMenuItems($menu_id, $parent_id);
+        $items = $this->model_menu->getMenuItems($menu_id, $parent_id);
 
         $tree_nodes = [];
 

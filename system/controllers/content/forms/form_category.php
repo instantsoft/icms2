@@ -6,8 +6,6 @@ class formContentCategory extends cmsForm {
 
         $model = cmsCore::getModel('content');
 
-        $model->localizedOn();
-
         $table_name = $model->getContentCategoryTableName($ctype['name']);
 
         $fieldsets = [

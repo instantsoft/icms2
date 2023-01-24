@@ -1,17 +1,24 @@
 <?php
 
+/**
+ * @property \modelUsers $model_users
+ */
 class actionAdminUsersGroupEdit extends cmsAction {
 
     public function run($id = false) {
 
-        if (!$id) { cmsCore::error404(); }
+        if (!$id) {
+            return cmsCore::error404();
+        }
 
-        $users_model = cmsCore::getModel('users');
+        $group = $this->model_users->localizedOff()->getGroup($id);
+        if (!$group) {
+            return cmsCore::error404();
+        }
 
-        $group = $users_model->getGroup($id);
-        if (!$group) { cmsCore::error404(); }
+        $this->model_users->localizedRestore();
 
-        $form = $this->getForm('users_group', array('edit'));
+        $form = $this->getForm('users_group', ['edit']);
 
         $is_submitted = $this->request->has('submit');
 
@@ -23,28 +30,25 @@ class actionAdminUsersGroupEdit extends cmsAction {
 
             if (!$errors) {
 
-                $users_model->updateGroup($id, $group);
+                $this->model_users->updateGroup($id, $group);
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
                 $this->redirectToAction('users');
-
             }
 
             if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
-        return $this->cms_template->render('users_group', array(
+        return $this->cms_template->render('users_group', [
             'do'     => 'edit',
             'menu'   => $this->getUserGroupsMenu('view', $group['id']),
             'group'  => $group,
             'form'   => $form,
             'errors' => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
 }

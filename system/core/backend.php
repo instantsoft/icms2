@@ -144,6 +144,7 @@ class cmsBackend extends cmsController {
                     new fieldText('seo_desc', [
                         'title' => LANG_SEO_DESC,
                         'hint'  => LANG_SEO_DESC_HINT,
+                        'multilanguage' => true,
                         'is_strip_tags' => true,
                         'options' => [
                             'max_length' => 256,
@@ -158,6 +159,7 @@ class cmsBackend extends cmsController {
                     new fieldString('seo_keys', [
                         'title'   => LANG_SEO_KEYS,
                         'hint'    => LANG_SEO_KEYS_HINT,
+                        'multilanguage' => true,
                         'options' => [
                             'max_length' => 256,
                             'show_symbol_count' => true
@@ -178,14 +180,17 @@ class cmsBackend extends cmsController {
                 'childs' => [
                     new fieldString('tag_title', [
                         'title' => LANG_CP_SEOMETA_ITEM_TITLE,
+                        'multilanguage' => true,
                         'patterns_hint' => ($meta_item_fields ? ['patterns' => $meta_item_fields] : '')
                     ]),
                     new fieldString('tag_desc', [
                         'title' => LANG_CP_SEOMETA_ITEM_DESC,
+                        'multilanguage' => true,
                         'patterns_hint' => ($meta_item_fields ? ['patterns' => $meta_item_fields] : '')
                     ]),
                     new fieldString('tag_h1', [
                         'title' => LANG_CP_SEOMETA_ITEM_H1,
+                        'multilanguage' => true,
                         'patterns_hint' => ($meta_item_fields ? ['patterns' => $meta_item_fields] : '')
                     ])
                 ]

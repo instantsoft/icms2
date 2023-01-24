@@ -4,6 +4,8 @@ class actionAdminWidgetsExportScheme extends cmsAction {
 
     public function run($from_template) {
 
+        $this->model->localizedOff();
+
         $widgets = $this->getExistsWidgets($from_template);
 
         $form = $this->getForm('widgets_export_scheme', [$widgets]);
@@ -81,12 +83,12 @@ class actionAdminWidgetsExportScheme extends cmsAction {
                     }
                 }
 
-                return $this->cms_template->renderJSON(array(
+                return $this->cms_template->renderJSON([
                     'errors'   => false,
                     'filename' => $from_template.' - InstantCMS Widgets Scheme.yaml',
                     'yaml'     => cmsModel::arrayToYaml($export),
                     'callback' => 'successExport'
-                ));
+                ]);
             }
 
             if ($errors) {

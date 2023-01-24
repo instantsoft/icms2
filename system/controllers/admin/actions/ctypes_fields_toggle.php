@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelContent $model_content
+ */
 class actionAdminCtypesFieldsToggle extends cmsAction {
 
     public function run($mode = null, $ctype_id = null, $field_id = null) {

@@ -57,8 +57,6 @@ class admin extends cmsFrontend {
                 $this->cms_template->setBaseTemplate($this->cms_config->template_admin);
             }
 
-            cmsModel::globalLocalizedOff();
-
             if (!$this->cms_user->is_logged) {
                 cmsCore::errorForbidden('', true);
             }

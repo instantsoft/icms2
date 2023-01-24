@@ -6,8 +6,6 @@ class formAdminCtypesProp extends cmsForm {
 
         $model = cmsCore::getModel('backend_content');
 
-        $model->localizedOn();
-
         $table_name = $model->table_prefix . $ctype['name'] . '_props';
 
         return [

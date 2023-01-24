@@ -211,13 +211,14 @@ class modelBackendWidgets extends modelWidgets {
 
     public function getControllerPages($controller_name) {
 
-        if ($controller_name != 'custom') {
+        if ($controller_name !== 'custom') {
 
             $this->filterEqual('controller', $controller_name);
 
             if ($controller_name === 'content') {
+
                 $this->joinLeft('content_types', 'ct', "i.name LIKE concat(ct.name, '.%')")->
-                        select('ct.title', 'title_subject')->
+                        selectTranslatedField('ct.title', 'content_types', 'title_subject')->
                         filterEqual('ct.is_enabled', 1);
             }
         } else {

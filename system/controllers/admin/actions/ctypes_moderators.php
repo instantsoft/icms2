@@ -12,7 +12,7 @@ class actionAdminCtypesModerators extends cmsAction {
             return cmsCore::error404();
         }
 
-        $this->ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
+        $this->ctype = $this->model_backend_content->getContentType($ctype_id);
         if (!$this->ctype) {
             return cmsCore::error404();
         }

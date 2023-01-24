@@ -2,9 +2,9 @@
 
 class actionAdminIndexPageSettings extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        $dashboard_blocks = cmsEventsManager::hookAll('admin_dashboard_block', ['only_titles' => true], array());
+        $dashboard_blocks = cmsEventsManager::hookAll('admin_dashboard_block', ['only_titles' => true], []);
 
         $result_blocks = [];
 
@@ -19,18 +19,18 @@ class actionAdminIndexPageSettings extends cmsAction {
         $fieldset_id = $form->addFieldset();
 
         foreach ($result_blocks as $name => $title) {
+
             $form->addField($fieldset_id,
-                new fieldCheckbox('dashboard_enabled:'.$name, array(
-                        'title' => $title,
-                        'default' => 1
-                    )
-                )
+                new fieldCheckbox('dashboard_enabled:' . $name, [
+                    'title'   => $title,
+                    'default' => 1
+                ])
             );
         }
 
         if (!$this->request->isAjax()) {
 
-            if(!$this->request->has('submit')){
+            if (!$this->request->has('submit')) {
                 return cmsCore::error404();
             }
 
@@ -38,28 +38,25 @@ class actionAdminIndexPageSettings extends cmsAction {
 
             $errors = $form->validate($this, $data);
 
-            if (!$errors){
+            if (!$errors) {
                 cmsController::saveOptions('admin', array_merge($this->options, $data));
             }
 
-            if ($errors){
+            if ($errors) {
 
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
 
-            $this->redirectToAction('index');
-
+            return $this->redirectToAction('index');
         }
 
         $values = !empty($this->options) ? $this->options : [];
 
-        return $this->cms_template->render('index_page_settings', array(
+        return $this->cms_template->render('index_page_settings', [
             'values' => $values,
             'errors' => isset($errors) ? $errors : false,
             'form'   => $form
-        ));
-
+        ]);
     }
 
 }

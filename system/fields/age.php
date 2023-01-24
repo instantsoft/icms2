@@ -11,6 +11,7 @@ class fieldAge extends cmsFormField {
         return array(
             new fieldString('date_title', [
                 'title' => LANG_PARSER_AGE_DATE_TITLE,
+                'can_multilanguage' => true,
                 'rules' => [['required']]
             ]),
             new fieldCheckbox('show_date', [

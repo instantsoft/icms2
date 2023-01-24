@@ -945,7 +945,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (221, 'languages_forms', 'admin', 221, 1),
 (222, 'languages_forms', 'widgets', 222, 1),
 (223, 'languages_forms', 'content', 223, 1),
-(224, 'form_make', 'languages', 224, 1);
+(224, 'form_make', 'languages', 224, 1),
+(225, 'languages_forms', 'users', 225, 1),
+(226, 'languages_forms', 'groups', 226, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

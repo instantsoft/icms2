@@ -6,7 +6,7 @@ class actionAdminContentFilter extends cmsAction {
 
     public function run($ctype_id) {
 
-        $ctype = $this->model_backend_content->localizedOn()->getContentType($ctype_id);
+        $ctype = $this->model_backend_content->getContentType($ctype_id);
         if (!$ctype) {
             return cmsCore::error404();
         }

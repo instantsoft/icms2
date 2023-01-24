@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelBackendWidgets $model_backend_widgets
+ */
 class actionAdminWidgetsEdit extends cmsAction {
 
     public function run($binded_id = false) {
@@ -22,10 +24,12 @@ class actionAdminWidgetsEdit extends cmsAction {
             $template_name = cmsConfig::get('template');
         }
 
-        $widget = $this->model_backend_widgets->getWidgetBinding($binded_id);
+        $widget = $this->model_backend_widgets->localizedOff()->getWidgetBinding($binded_id);
         if (!$widget) {
             return cmsCore::error404();
         }
+
+        $this->model_backend_widgets->localizedRestore();
 
         // Чтобы ланг файлы шаблона подгрузились
         $template = new cmsTemplate($template_name);

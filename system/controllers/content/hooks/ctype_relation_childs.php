@@ -6,7 +6,7 @@ class onContentCtypeRelationChilds extends cmsAction {
 
         $types = [];
 
-        $ctypes = $this->model->localizedOn()->getContentTypesFiltered();
+        $ctypes = $this->model->getContentTypesFiltered();
 
         if ($ctypes) {
             foreach ($ctypes as $ctype) {

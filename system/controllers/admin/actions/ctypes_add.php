@@ -43,7 +43,7 @@ class actionAdminCtypesAdd extends cmsAction {
                     cmsUser::addSessionMessage(sprintf(LANG_CP_CTYPE_CREATED, $ctype['title']), 'success');
                 }
 
-                $this->redirectToAction('ctypes', ['labels', $ctype_id], ['wizard_mode' => true]);
+                return $this->redirectToAction('ctypes', ['labels', $ctype_id], ['wizard_mode' => true]);
             }
 
             if ($errors) {

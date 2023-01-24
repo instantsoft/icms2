@@ -2,9 +2,11 @@
 
 class actionAdminControllersAjax extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        if (!$this->request->isAjax()) { cmsCore::error404(); }
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
 
         cmsCore::loadAllControllersLanguages();
 
@@ -12,12 +14,12 @@ class actionAdminControllersAjax extends cmsAction {
 
         $this->model->setPerPage(admin::perpage);
 
-        $filter     = array();
+        $filter     = [];
         $filter_str = $this->request->get('filter', '');
 
         $filter_str = cmsUser::getUPSActual('admin.grid_filter.controllers', $filter_str);
 
-        if ($filter_str){
+        if ($filter_str) {
             parse_str($filter_str, $filter);
             $this->model->applyGridFilter($grid, $filter);
         }
@@ -27,10 +29,9 @@ class actionAdminControllersAjax extends cmsAction {
 
         $controllers = $this->model->getInstalledControllers();
 
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $controllers, $total, $pages);
+        $this->cms_template->renderGridRowsJSON($grid, $controllers, $total, $pages);
 
-        $this->halt();
-
+        return $this->halt();
     }
 
 }

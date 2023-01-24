@@ -4,7 +4,7 @@ class onContentAdminDashboardChart extends cmsAction {
 
     public function run() {
 
-        $ctypes = $this->model->localizedOn()->getContentTypesFiltered();
+        $ctypes = $this->model->getContentTypesFiltered();
 
         $data = [
             'id'       => 'content',

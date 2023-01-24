@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelContent $model_backend_content
+ */
 class actionAdminContentCatsDelete extends cmsAction {
 
     public function run($ctype_id, $category_id = false) {

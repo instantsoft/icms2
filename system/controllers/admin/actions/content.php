@@ -19,7 +19,7 @@ class actionAdminContent extends cmsAction {
             }
         }
 
-        $ctypes = $this->model_backend_content->localizedOn()->getContentTypesFiltered();
+        $ctypes = $this->model_backend_content->getContentTypesFiltered();
 
         $key_path = '/1.1';
 

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelContent $model_content
+ */
 class actionAdminCtypesFieldsDelete extends cmsAction {
 
     public function run($ctype_id = null, $field_id = null) {

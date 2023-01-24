@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelContent $model_content
+ */
 class actionAdminCtypesFieldsReorder extends cmsAction {
 
     public function run($ctype_name = null) {

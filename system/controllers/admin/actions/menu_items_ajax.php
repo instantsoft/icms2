@@ -12,7 +12,7 @@ class actionAdminMenuItemsAjax extends cmsAction {
 
         $grid = $this->loadDataGrid('menu_items');
 
-        $items = $this->model_menu->localizedOn()->getMenuItems($menu_id, $parent_id);
+        $items = $this->model_menu->getMenuItems($menu_id, $parent_id);
 
         $total = $items ? 1 : 0;
 

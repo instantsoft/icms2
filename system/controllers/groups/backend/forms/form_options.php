@@ -4,53 +4,49 @@ class formGroupsOptions extends cmsForm {
 
     public function init() {
 
-        return array(
+        return [
 
-            'list' => array(
+            'list' => [
                 'type' => 'fieldset',
                 'title' => LANG_GROUPS_LIST,
-                'childs' => array(
+                'childs' => [
 
-                    new fieldCheckbox('is_filter', array(
+                    new fieldCheckbox('is_filter', [
                         'title' => LANG_CP_LISTVIEW_FILTER,
-                    ))
+                    ])
 
-                )
-            ),
+                ]
+            ],
 
-            'view' => array(
+            'view' => [
                 'type' => 'fieldset',
                 'title' => LANG_GROUPS_VIEW,
-                'childs' => array(
+                'childs' => [
 
-                    new fieldString('change_owner_email', array(
+                    new fieldString('change_owner_email', [
                         'title' => LANG_GROUPS_OPT_CHANGE_OWNER_EMAIL,
-                        'rules' => array(
-                            array('email')
-                        )
-                    ))
+                        'rules' => [
+                            ['email']
+                        ]
+                    ])
 
-                )
-            ),
+                ]
+            ],
 
-            'limit' => array(
+            'limit' => [
                 'type' => 'fieldset',
                 'title' => LANG_LIST_LIMIT,
-                'childs' => array(
+                'childs' => [
 
-                    new fieldNumber('limit', array(
+                    new fieldNumber('limit', [
                         'default' => 15,
                         'rules' => [
                             ['required'],
                             ['min', 1]
                         ]
-                    ))
-
-                )
-            )
-
-        );
-
+                    ])
+                ]
+            ]
+        ];
     }
-
 }
