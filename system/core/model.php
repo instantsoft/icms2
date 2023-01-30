@@ -604,6 +604,10 @@ class cmsModel {
         return $this;
     }
 
+    public function isLocalizedOn() {
+        return $this->localized;
+    }
+
     public function localizedOn() {
         $this->localized = true; return $this;
     }

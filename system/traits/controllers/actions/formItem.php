@@ -111,7 +111,7 @@ trait formItem {
 
         if ($this->request->has('csrf_token')){
 
-            $data = $form->parse($this->request, true);
+            $data = $form->parse($this->request, true, $data);
 
             $errors = $form->validate($this, $data);
 

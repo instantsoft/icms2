@@ -89,8 +89,13 @@ class cmsQueue {
             $item['payload'] = json_decode($item['payload'], true);
 
             if($item['payload'] === null){
+
                 $json_decode_errors[$item['id']] = json_last_error_msg();
+
+                return false;
+
             } else if (!isset($item['payload']['params'])) {
+
                 $item['payload']['params'] = [];
             }
 

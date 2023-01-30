@@ -2,12 +2,18 @@
 
 class actionAdminInlineSave extends cmsAction {
 
-    public function run($table = null, $item_id = null) {
+    public function run($table = null, $item_id = null, $disable_language_context = null) {
 
         header('X-Frame-Options: DENY');
 
         if (!$this->request->isAjax()) {
             return cmsCore::error404();
+        }
+
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return $this->cms_template->renderJSON([
+                'error' => LANG_ERROR . ' #csrf_token'
+            ]);
         }
 
         if (!$item_id || !$table || !is_numeric($item_id) || $this->validate_regexp('/^([a-z0-9\_{}]*)$/', urldecode($table)) !== true) {
@@ -52,11 +58,18 @@ class actionAdminInlineSave extends cmsAction {
                 continue;
             }
 
-            // Перевод
-            $field_tr = $this->model->getTranslatedFieldName($field, $table);
-            // Обновиться должно только поле с переводом
-            if($field_tr !== $field){
-                unset($data[$field]);
+            if(!$disable_language_context){
+
+                // Перевод
+                $field_tr = $this->model->getTranslatedFieldName($field, $table);
+                // Обновиться должно только поле с переводом
+                if($field_tr !== $field){
+                    unset($data[$field]);
+                }
+
+            } else {
+
+                $field_tr = $field;
             }
 
             if ($value) {

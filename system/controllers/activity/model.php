@@ -127,7 +127,7 @@ class modelActivity extends cmsModel {
 
         $this->joinUserNotDeleted();
 
-        $this->select('t.description', 'description');
+        $this->selectTranslatedField('t.description', 'activity_types');
         $this->joinLeft('activity_types', 't', 't.id = i.type_id');
 
         $this->joinSessionsOnline();

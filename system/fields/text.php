@@ -57,7 +57,16 @@ class fieldText extends cmsFormField {
     }
 
     public function getFilterInput($value) {
-        return html_input('text', $this->name, $value);
+
+        if(!$this->show_filter_input_title){
+            $this->element_title = false;
+        }
+
+        $this->title = $this->element_title;
+
+        $attributes = $this->getProperty('attributes') ?: [];
+
+        return ($this->title ? '<label>'.$this->title.'</label>' : '').html_input('text', $this->name, $value, $attributes);
     }
 
     public function getRules() {

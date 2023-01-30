@@ -174,7 +174,7 @@ CREATE TABLE `{#}activity_types` (
   `controller` varchar(32) NOT NULL,
   `name` varchar(32) NOT NULL,
   `title` varchar(100) NOT NULL,
-  `description` varchar(200) NOT NULL,
+  `description` varchar(200) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `is_enabled` (`is_enabled`),
   KEY `controller` (`controller`),
@@ -947,7 +947,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (223, 'languages_forms', 'content', 223, 1),
 (224, 'form_make', 'languages', 224, 1),
 (225, 'languages_forms', 'users', 225, 1),
-(226, 'languages_forms', 'groups', 226, 1);
+(226, 'languages_forms', 'groups', 226, 1),
+(227, 'languages_forms', 'activity', 227, 1),
+(228, 'grid_activity_types', 'languages', 228, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

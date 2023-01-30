@@ -1,5 +1,5 @@
 <?php if($field->title){ ?><label><?php } ?>
-    <?php echo html_checkbox($field->element_name, (bool)$value, 1, array('id'=>$field->id)); ?>
+    <?php echo html_checkbox($field->element_name, (bool)$value, 1, $field->data['attributes']); ?>
     <?php if($field->title){echo $field->title;} ?>
     <?php if(!empty($field->toggle)) { ?>
         <?php $self_id = "#f_{$field->id}" ;?>

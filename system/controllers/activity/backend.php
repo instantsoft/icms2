@@ -29,6 +29,13 @@ class backendActivity extends cmsBackend {
                 ]
             ],
             [
+                'title' => LANG_ACTIVITY_TYPES,
+                'url'   => href_to($this->root_url, 'types'),
+                'options' => [
+                    'icon' => 'list-alt'
+                ]
+            ],
+            [
                 'title' => LANG_PERMISSIONS,
                 'url'   => href_to($this->root_url, 'perms', 'activity'),
                 'options' => [

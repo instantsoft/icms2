@@ -74,4 +74,13 @@ class fieldCaption extends cmsFormField {
         return $model->filterLike($this->name, "%{$value}%");
     }
 
+    public function getInput($value) {
+
+        $this->data['attributes'] = $this->getProperty('attributes') ?: ['autocomplete' => 'off'];
+        $this->data['attributes']['id'] = $this->id;
+        $this->data['attributes']['required'] = (array_search(['required'], $this->getRules()) !== false);
+
+        return parent::getInput($value);
+    }
+
 }

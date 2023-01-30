@@ -2553,40 +2553,45 @@ class cmsTemplate {
                         }
                     }
 
-                    if(!empty($column['editable']['table'])){
-                        if(!empty($row['id'])){
-                            $save_action = href_to('admin', 'inline_save', array(urlencode($column['editable']['table']), $row['id']));
+                    if (isset($column['editable'])) {
+
+                        if (!empty($row['id']) && !empty($column['editable']['table'])) {
+                            $save_action = href_to('admin', 'inline_save', [urlencode($column['editable']['table']), $row['id']]);
                         }
-                        if(!empty($column['editable']['save_action'])){
+
+                        if (!empty($column['editable']['save_action'])) {
                             $save_action = string_replace_keys_values_extended($column['editable']['save_action'], $row);
                         }
-                        $attributes = array('autocomplete' => 'off');
-                        if(!empty($column['editable']['attributes'])){
+
+                        $attributes = ['autocomplete' => 'off'];
+
+                        if (!empty($column['editable']['attributes'])) {
                             foreach ($column['editable']['attributes'] as $akey => $avalue) {
-                                if(is_string($avalue)){
+                                if (is_string($avalue)) {
                                     $attributes[$akey] = string_replace_keys_values_extended($avalue, $row);
                                 } else {
                                     $attributes[$akey] = $avalue;
                                 }
                             }
                         }
-                        if(!empty($save_action)){
-                            $value = '<div class="grid_field_value '.$field.'_grid_value '.((isset($column['href']) ? 'edit_by_click' : '')).'"><span>'.$value.'</span></div>';
-                            $value .= '<div class="grid_field_edit '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.html_input('text', $field, $row[$field], $attributes);
-                            if($editable_index == $editable_count){
-                                $value .= html_button(LANG_SAVE, '', '', array('data-action'=>$save_action, 'class'=>'inline_submit  btn-primary'));
+                        if (!empty($save_action)) {
+
+                            $save_action .='?csrf_token='.cmsForm::getCSRFToken();
+
+                            $value = '<div class="grid_field_value ' . $field . '_grid_value ' . ((isset($column['href']) ? 'edit_by_click' : '')) . '"><span>' . $value . '</span></div>';
+                            $value .= '<div class="grid_field_edit ' . ((isset($column['href']) ? 'edit_by_click' : '')) . '">' . html_input('text', $field, $row[$field], $attributes);
+                            if ($editable_index == $editable_count) {
+                                $value .= html_button(LANG_SAVE, '', '', ['data-action' => $save_action, 'class' => 'inline_submit  btn-primary']);
                             }
                             $value .= '</div>';
 
                             $editable_index++;
-
                         }
                     }
 
                     $rows[$row_index][] = $value;
 
                     $cell_index++;
-
                 }
 
                 // если есть колонка действий, то формируем набор ссылок
