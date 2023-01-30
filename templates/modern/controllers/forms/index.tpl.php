@@ -1,7 +1,7 @@
 <?php
     $this->setPageTitle($form_data['title']);
     $this->addBreadcrumb($form_data['title']);
-    $this->addTplJSName([
+    $this->addTplJSNameFromContext([
         'forms-constructor'
     ]);
 ?>
