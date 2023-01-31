@@ -272,6 +272,18 @@ class modelContent extends cmsModel {
 
         }
 
+        // Если не выбрана группа, обнуляем поля групп
+        foreach ($field as $key => $value) {
+            if(strpos($key, 'fieldset') === 0 && !$value){
+                $field[$key] = null;
+            }
+        }
+
+        // если создается новая группа, то выбираем ее
+        if ($field['new_fieldset']) {
+            $field[$this->getTranslatedFieldName('fieldset', $fields_table_name)] = $field['new_fieldset'];
+        }
+
         $field['id'] = $this->insert($fields_table_name, $field);
 
         cmsEventsManager::hook('ctype_field_after_add', array($field, $ctype_name, $this));
@@ -616,6 +628,18 @@ class modelContent extends cmsModel {
 
         }
 
+        // Если не выбрана группа, обнуляем поля групп
+        foreach ($field as $key => $value) {
+            if(strpos($key, 'fieldset') === 0 && !$value){
+                $field[$key] = null;
+            }
+        }
+
+        // если создается новая группа, то выбираем ее
+        if ($field['new_fieldset']) {
+            $field[$this->getTranslatedFieldName('fieldset', $fields_table_name)] = $field['new_fieldset'];
+        }
+
         $result = $this->update($fields_table_name, $id, $field);
 
         if ($result){
@@ -712,10 +736,10 @@ class modelContent extends cmsModel {
         return true;
     }
 
-    public function getContentFieldsets($ctype_id){
+    public function getContentFieldsets($ctype_id) {
 
-        if (is_numeric($ctype_id)){
-            $ctype = $this->getContentType($ctype_id);
+        if (is_numeric($ctype_id)) {
+            $ctype      = $this->getContentType($ctype_id);
             $ctype_name = $ctype['name'];
         } else {
             $ctype_name = $ctype_id;
@@ -723,18 +747,25 @@ class modelContent extends cmsModel {
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
-        $this->useCache('content.fields.'.$ctype_name);
+        $this->useCache('content.fields.' . $ctype_name);
 
-        $this->groupBy('fieldset');
+        $name = $this->getTranslatedFieldName('fieldset', $table_name);
 
-        if (!$this->order_by){ $this->orderBy('fieldset'); }
+        if (!$this->order_by) {
+            $this->orderBy($name);
+        }
 
-        $fieldsets = $this->get($table_name, function($item, $model){
-            $item = $item['fieldset'];
-            return $item;
-        }, false);
+        $this->groupBy($name);
 
-        if ($fieldsets[0] == '') { unset($fieldsets[0]); }
+        $this->selectOnly($name, 'fieldset');
+
+        $fieldsets = $this->get($table_name, function ($item, $model) {
+
+            if(!$item['fieldset']){
+                return false;
+            }
+            return $item['fieldset'];
+        }, false) ?: [];
 
         return $fieldsets;
     }

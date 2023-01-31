@@ -12,6 +12,14 @@ class fieldList extends cmsFormField {
     public $show_empty_value        = true;
     public $disable_array_key_rules = false;
 
+    public function __clone() {
+
+        if (isset($this->generator) || $this->getOption('list_where') === 'table') {
+
+            $this->items = null;
+        }
+    }
+
     public function getOptions() {
         return [
             new fieldCheckbox('as_radio_btn', [

@@ -604,6 +604,13 @@ class cmsModel {
         return $this;
     }
 
+    public function setLang($lang) {
+
+        $this->lang = $lang;
+
+        return $this;
+    }
+
     public function isLocalizedOn() {
         return $this->localized;
     }

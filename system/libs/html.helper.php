@@ -197,24 +197,44 @@ function href_to_home($add_host = false){
 
 /**
  * Возвращает отформатированную строку аттрибутов тега
- * @param array $attributes
+ * @param array $attributes Атрибуты тега название=>значение
+ * @param boolean $unset_class_key Не формировать CSS класс
  * @return string
  */
-function html_attr_str($attributes){
+function html_attr_str($attributes, $unset_class_key = true) {
     $attr_str = '';
-    unset($attributes['class']);
-    if (is_array($attributes)){
-        foreach($attributes as $key=>$val){
-            if(is_bool($val)){
-                if($val === true){
+    if($unset_class_key){
+        unset($attributes['class']);
+    }
+    if (is_array($attributes)) {
+        foreach ($attributes as $key => $val) {
+            if (is_bool($val)) {
+                if ($val === true) {
                     $attr_str .= "{$key} ";
                 }
                 continue;
             }
-            $attr_str .= $key.'="'.html($val, false).'" ';
+            $attr_str .= $key . '="' . html($val, false) . '" ';
         }
     }
     return $attr_str;
+}
+
+/**
+ * Печатает короткий HTML тег
+ * @param string $tag_name Имя тега
+ * @param array $attributes Атрибуты тега название=>значение
+ * @param string $class CSS класс, если он отдельно от атрибутов
+ * @return string
+ */
+function html_tag_short($tag_name, $attributes, $class = '') {
+
+    if(!empty($attributes['class'])){
+        $class .= ' ' . $attributes['class'];
+    }
+    $attributes['class'] = trim($class);
+
+    return '<'.$tag_name.' ' . html_attr_str($attributes, false) . '/>';
 }
 
 function default_images($type, $preset) {

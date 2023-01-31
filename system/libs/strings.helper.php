@@ -376,13 +376,13 @@ function real_date_diff($date1, $date2 = null) {
  * @param boolean $is_time Дополнять часом и минутами
  * @return string
  */
-function string_date_format($date, $is_time = false){
+function string_date_format($date, $is_time = false) {
 
-    if(!$date){
+    if (is_empty_value($date)) {
         return '';
     }
 
-    if(!is_numeric($date)){
+    if (!is_numeric($date)) {
         $timestamp = strtotime($date);
     } else {
         $timestamp = $date;
@@ -391,25 +391,27 @@ function string_date_format($date, $is_time = false){
     $item_date = date('j F Y', $timestamp);
 
     $today_date     = date('j F Y');
-    $yesterday_date = date('j F Y', time()-3600*24);
+    $yesterday_date = date('j F Y', time() - 3600 * 24);
 
-    switch($item_date){
-        case $today_date: $result = LANG_TODAY;
+    switch ($item_date) {
+        case $today_date:
+            $result = LANG_TODAY;
             break;
-        case $yesterday_date: $result = LANG_YESTERDAY;
+        case $yesterday_date:
+            $result = LANG_YESTERDAY;
             break;
-        default: $result = lang_date($item_date);
+        default:
+            $result = lang_date($item_date);
     }
 
-    if ($is_time){
+    if ($is_time) {
 
-        $result .= ' '.LANG_IN.' ' . date('H:i', $timestamp);
-
+        $result .= ' ' . LANG_IN . ' ' . date('H:i', $timestamp);
     }
 
     return $result;
-
 }
+
 /**
  * Находит в строке все выражения вида {file_name%icon_name} и заменяет на svg иконку
  * где file_name - имя svg файла по пути /templates/шаблон/images/icons/

@@ -165,6 +165,13 @@ class cmsFormField {
     public $can_multilanguage = false;
 
     /**
+     * Язык поля (для мультиязычности)
+     *
+     * @var string
+     */
+    public $lang = '';
+
+    /**
      * Параметры мультиязычности поля
      *
      * @var array
@@ -207,6 +214,8 @@ class cmsFormField {
      * @param array $options Массив опций
      */
 	public function __construct($name, $options = false) {
+
+        $this->lang = cmsConfig::get('language');
 
         if($name){
             $this->setName($name);
@@ -557,8 +566,8 @@ class cmsFormField {
      * @param mixed $old_value Предыдущее значение поля
      * @return string | array
      */
-    public function store($value, $is_submitted, $old_value=null){
-        if($this->store_array_as_json && is_array($value)){
+    public function store($value, $is_submitted, $old_value = null) {
+        if ($this->store_array_as_json && is_array($value)) {
             return cmsModel::arrayToString($value);
         }
         return $value;
@@ -662,7 +671,7 @@ class cmsFormField {
         } else if (isset($this->generator)) {
 
             $generator = $this->generator;
-            $items = $this->items = $generator($this->item, $this->request);
+            $items = $this->items = $generator($this->item, $this->request, $this);
 
         } else if ($this->hasDefaultValue()) {
 

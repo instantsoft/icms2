@@ -244,6 +244,7 @@
     define('LANG_CP_FIELD_FIELDSET',            'Field group');
     define('LANG_CP_FIELD_FIELDSET_SELECT',     'Select group');
     define('LANG_CP_FIELD_FIELDSET_ADD',        'Create new group');
+    define('LANG_CP_FIELD_FIELDSET_ADD_HINT',   'For the current site language');
     define('LANG_CP_FIELD_HINT',                'Field hint');
     define('LANG_CP_FIELD_ADD',                 'Add Field');
     define('LANG_CP_FIELD_CREATED',             'Field &laquo;%s&raquo; has been created');

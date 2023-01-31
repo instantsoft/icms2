@@ -260,6 +260,7 @@
     define('LANG_CP_FIELD_FIELDSET',            'Группа');
     define('LANG_CP_FIELD_FIELDSET_SELECT',     'Выберите группу');
     define('LANG_CP_FIELD_FIELDSET_ADD',        'Создать новую группу');
+    define('LANG_CP_FIELD_FIELDSET_ADD_HINT',   'Для текущего языка сайта');
     define('LANG_CP_FIELD_HINT',                'Подсказка для поля');
     define('LANG_CP_FIELD_ADD',                 'Создать поле');
     define('LANG_CP_FIELD_CREATED',             'Поле &laquo;%s&raquo; создано');

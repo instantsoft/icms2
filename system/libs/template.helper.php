@@ -54,69 +54,136 @@ function html_pagebar($page, $perpage, $total, $base_uri = false, $query = [], $
 
 /**
  * Возвращает тег <input>
+ *
  * @param string $type Тип поля
  * @param string $name Имя поля
  * @param string $value Значение по умолчанию
  * @param array $attributes Атрибуты тега название=>значение
  * @return html
  */
-function html_input($type='text', $name='', $value='', $attributes=array()){
-    if ($type=='password'){ $attributes['autocomplete'] = 'off'; }
+function html_input($type = 'text', $name = '', $value = '', $attributes = []) {
+
+    if ($type === 'password') {
+        $attributes['autocomplete'] = 'off';
+    }
+    $attributes['type']  = $type;
+    $attributes['name']  = $name;
+    $attributes['value'] = $value;
+
+    return html_tag_short('input', $attributes, 'input form-control');
+}
+
+/**
+ * Возвращает тег <input type="file">
+ *
+ * @param string $name Имя поля
+ * @param array $attributes Атрибуты тега название=>значение
+ * @return html
+ */
+function html_file_input($name, $attributes = []) {
+
+    $attributes['type'] = 'file';
+    $attributes['name'] = $name;
+
+    return html_tag_short('input', $attributes, 'file-input form-control-file');
+}
+
+/**
+ * Возвращает тег <textarea>
+ *
+ * @param string $name Имя поля
+ * @param string $value Значение по умолчанию
+ * @param array $attributes Атрибуты тега название=>значение
+ * @return html
+ */
+function html_textarea($name = '', $value = '', $attributes = []) {
     $attr_str = html_attr_str($attributes);
-    $class = 'input';
-    if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	return '<input type="'.$type.'" class="form-control '.$class.'" name="'.$name.'" value="'.html($value, false).'" '.$attr_str.'/>';
+    $class    = 'textarea';
+    if (isset($attributes['class'])) {
+        $class .= ' ' . $attributes['class'];
+    }
+    return '<textarea name="' . $name . '" class="form-control ' . $class . '" ' . $attr_str . '>' . html($value, false) . '</textarea>';
 }
 
-function html_file_input($name, $attributes=array()){
-    $attr_str = html_attr_str($attributes);
-    $class = 'file-input';
-    if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	return '<input type="file" class="form-control-file '.$class.'" name="'.$name.'" '.$attr_str.'/>';
+/**
+ * Возвращает тег <input type="checkbox">
+ *
+ * @param string $name Имя поля
+ * @param boolean $checked Включен/выключен
+ * @param mixed $value Значение
+ * @param array $attributes Атрибуты тега название=>значение
+ * @return html
+ */
+function html_checkbox($name, $checked = false, $value = 1, $attributes = []) {
+
+    if ($checked) {
+        $attributes['checked'] = true;
+    }
+
+    $attributes['type']  = 'checkbox';
+    $attributes['name']  = $name;
+    $attributes['value'] = $value;
+
+    return html_tag_short('input', $attributes, 'input-checkbox form-check-input');
 }
 
-function html_textarea($name='', $value='', $attributes=array()){
-    $attr_str = html_attr_str($attributes);
-    $class = 'textarea';
-    if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	$html = '<textarea name="'.$name.'" class="form-control '.$class.'" '.$attr_str.'>'.html($value, false).'</textarea>';
-	return $html;
+/**
+ * Возвращает тег <input type="radio">
+ *
+ * @param string $name Имя поля
+ * @param boolean $checked Включен/выключен
+ * @param mixed $value Значение
+ * @param array $attributes Атрибуты тега название=>значение
+ * @return type
+ */
+function html_radio($name, $checked = false, $value = 1, $attributes = []) {
+
+    if ($checked) {
+        $attributes['checked'] = 'checked';
+    }
+
+    $attributes['type']  = 'radio';
+    $attributes['name']  = $name;
+    $attributes['value'] = $value;
+
+    return html_tag_short('input', $attributes, 'input-radio form-check-input');
 }
 
-function html_back_button(){
-	return '<div class="back_button"><a href="javascript:window.history.go(-1);">'.LANG_BACK.'</a></div>';
-}
-
-function html_checkbox($name, $checked=false, $value=1, $attributes=array()){
-    if ($checked) { $attributes['checked'] = 'checked'; }
-    $attr_str = html_attr_str($attributes);
-    $class = 'input-checkbox';
-    if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	return '<input type="checkbox" class="form-check-input '.$class.'" name="'.$name.'" value="'.$value.'" '.$attr_str.'/>';
-}
-
-function html_radio($name, $checked=false, $value=1, $attributes=array()){
-    if ($checked) { $attributes['checked'] = 'checked'; }
-    $attr_str = html_attr_str($attributes);
-    $class = 'input-radio';
-    if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-  return '<input type="radio" class="form-check-input '.$class.'" name="'.$name.'" value="'.$value.'" '.$attr_str.'/>';
-}
-
-function html_date($date=false, $is_time=false){
-    $timestamp = $date ? strtotime($date) : time();
+/**
+ * Печатает отформатированную дату
+ *
+ * @param boolean|string $date Дата
+ * @param boolean $is_time Показывать время?
+ * @return string
+ */
+function html_date($date = false, $is_time = false) {
+    $timestamp   = $date ? strtotime($date) : time();
     $date_format = cmsConfig::get('date_format');
-    $date = '<time datetime="'.date('c', $timestamp).'">'.htmlspecialchars(($date_format == 'd F Y') ? string_date_format($timestamp) : date(cmsConfig::get('date_format'), $timestamp)).'</time>';
-    if ($is_time){ $date .= ' <span class="time">' . date('H:i', $timestamp). '</span>'; }
+    $date        = '<time datetime="' . date('c', $timestamp) . '">' . htmlspecialchars(($date_format == 'd F Y') ? string_date_format($timestamp) : date($date_format, $timestamp)) . '</time>';
+    if ($is_time) {
+        $date .= ' <span class="time">' . date('H:i', $timestamp) . '</span>';
+    }
     return $date;
 }
 
-function html_time($date=false){
+/**
+ * Печатает время от даты
+ *
+ * @param boolean|string $date Дата
+ * @return string
+ */
+function html_time($date = false) {
     $timestamp = $date ? strtotime($date) : time();
     return date('H:i', $timestamp);
 }
 
-function html_date_time($date=false){
+/**
+ * Печатает отформатированную дату и время
+ *
+ * @param boolean|string $date Дата
+ * @return string
+ */
+function html_date_time($date = false) {
     return html_date($date, true);
 }
 
@@ -462,6 +529,10 @@ function html_switch($name, $active){
 	$html .= '<label><input type="radio" name="'.$name.'" value="1" '. ($active ? 'checked' : '') .'/> ' . LANG_ON . "</label> \n";
 	$html .= '<label><input type="radio" name="'.$name.'" value="0" '. (!$active ? 'checked' : '') .'/> ' . LANG_OFF . "</label> \n";
 	return $html;
+}
+
+function html_back_button(){
+	return '<div class="back_button"><a href="javascript:window.history.go(-1);">'.LANG_BACK.'</a></div>';
 }
 
 function html_bool_span($value, $condition, $classes = ['negative badge badge-danger', 'positive badge badge-success']){

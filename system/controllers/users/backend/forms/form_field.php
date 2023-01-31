@@ -78,9 +78,14 @@ class formUsersField extends cmsForm {
                 'childs' => [
                     new fieldList('fieldset', [
                         'title'     => LANG_CP_FIELD_FIELDSET_SELECT,
-                        'generator' => function ($field) {
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => '{users}_fields'
+                        ],
+                        'generator' => function ($field, $request, $formfield) {
                             $model = cmsCore::getModel('content');
-                            $model->setTablePrefix('');
+                            $model->setTablePrefix('')->setLang($formfield->lang);
                             $fieldsets = $model->getContentFieldsets('{users}');
                             $items     = [''];
                             foreach ($fieldsets as $fieldset) {
@@ -91,10 +96,11 @@ class formUsersField extends cmsForm {
                     ]),
                     new fieldString('new_fieldset', [
                         'title' => LANG_CP_FIELD_FIELDSET_ADD,
+                        'hint' => LANG_CP_FIELD_FIELDSET_ADD_HINT,
                         'rules' => [
                             ['max_length', 32]
                         ]
-                    ]),
+                    ])
                 ]
             ],
             'visibility' => [

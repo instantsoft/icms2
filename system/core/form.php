@@ -273,6 +273,8 @@ class cmsForm {
 
                         $_field = clone $field;
 
+                        $_field->lang = $lang;
+
                         if(!empty($_field->multilanguage_params['unset_required'])){
 
                             $required_key = array_search(['required'], $_field->getRules());

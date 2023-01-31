@@ -83,8 +83,14 @@ class formAdminCtypesField extends cmsForm {
                 'childs' => [
                     new fieldList('fieldset', [
                         'title'     => LANG_CP_FIELD_FIELDSET_SELECT,
-                        'generator' => function ($field) use ($model, $ctype_name) {
-                            $fieldsets = $model->getContentFieldsets($ctype_name);
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => $model->getContentTypeTableName($ctype_name).'_fields'
+                        ],
+                        'generator' => function ($field, $request, $formfield) use ($ctype_name) {
+                            $model = cmsCore::getModel('content');
+                            $fieldsets = $model->setLang($formfield->lang)->getContentFieldsets($ctype_name);
                             $items     = [''];
                             foreach ($fieldsets as $fieldset) {
                                 $items[$fieldset] = $fieldset;
@@ -94,6 +100,7 @@ class formAdminCtypesField extends cmsForm {
                     ]),
                     new fieldString('new_fieldset', [
                         'title' => LANG_CP_FIELD_FIELDSET_ADD,
+                        'hint' => LANG_CP_FIELD_FIELDSET_ADD_HINT,
                         'rules' => [
                             ['max_length', 32]
                         ]

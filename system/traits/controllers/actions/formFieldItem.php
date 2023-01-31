@@ -208,17 +208,6 @@ trait formFieldItem {
 
             if (!$errors) {
 
-                // если не выбрана группа, обнуляем поле группы
-                if (!$_field['fieldset']) {
-                    $_field['fieldset'] = null;
-                }
-
-                // если создается новая группа, то выбираем ее
-                if ($_field['new_fieldset']) {
-                    $_field['fieldset'] = $_field['new_fieldset'];
-                }
-                unset($_field['new_fieldset']);
-
                 if($do === 'edit'){
 
                     $this->model_content->updateContentField($ctype['name'], $field_id, $_field);
