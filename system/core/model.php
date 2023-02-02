@@ -2279,18 +2279,15 @@ class cmsModel {
 
                             if (!empty($column['filter_range'])){
 
-                                if (!empty($filter[$field]['from']) && is_numeric($filter[$field]['from'])){
+                                if (!is_empty_value($filter[$field]['from'])){
                                     $this->filterGtEqual($filter_field, $filter[$field]['from']);
                                 }
-                                if (!empty($filter[$field]['to']) && is_numeric($filter[$field]['to'])){
+                                if (!is_empty_value($filter[$field]['to'])){
                                     $this->filterLtEqual($filter_field, $filter[$field]['to']);
                                 }
 
                             } else {
-
-                                if (!empty($filter[$field])){
-                                    $this->filterEqual($filter_field, $filter[$field]);
-                                }
+                                $this->filterEqual($filter_field, $filter[$field]);
                             }
 
                             break;
@@ -2300,11 +2297,11 @@ class cmsModel {
 
                             if (!empty($column['filter_range'])){
 
-                                if (!empty($filter[$field]['from'])){
+                                if (!is_empty_value($filter[$field]['from'])){
                                     $date_from = date('Y-m-d', strtotime($filter[$field]['from']));
                                     $this->filterGtEqual($filter_field, $date_from);
                                 }
-                                if (!empty($filter[$field]['to'])){
+                                if (!is_empty_value($filter[$field]['to'])){
                                     $date_to = date('Y-m-d', strtotime($filter[$field]['to']));
                                     $this->filterLtEqual($filter_field, $date_to);
                                 }
