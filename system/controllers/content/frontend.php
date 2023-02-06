@@ -396,7 +396,7 @@ class content extends cmsFrontend {
 
         }
 
-        $this->model->selectFieldsForList($ctype['name'], $fields);
+        //$this->model->selectFieldsForList($ctype['name'], $fields);
 
         $items = isset($items) ? $items : $this->model->getContentItems($ctype['name']);
         // если задано максимальное кол-во, ограничиваем им

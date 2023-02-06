@@ -1003,6 +1003,7 @@ function string_iptobin($ip) {
 function string_bintoip($str) {
     if(!$str){ return null; }
     $len = strlen($str);
+    if($len < 4){ $len = 4; }
     if ($len === 16 || $len === 4) {
         return inet_ntop(pack('A' . $len, $str));
     } else {

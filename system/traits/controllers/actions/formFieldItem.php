@@ -123,6 +123,9 @@ trait formFieldItem {
 
         $form = $this->getForm($this->form_name, [$do, $ctype['name']]);
 
+        // Общий хук
+        list($form, $ctype, $field) = cmsEventsManager::hook('content_form_field', [$form, $ctype, $field]);
+
         // Применяем хуки
         if($this->form_hooks){
             $form = cmsEventsManager::hook($this->form_hooks, $form);

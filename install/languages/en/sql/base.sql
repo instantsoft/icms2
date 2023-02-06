@@ -949,7 +949,10 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (225, 'languages_forms', 'users', 225, 1),
 (226, 'languages_forms', 'groups', 226, 1),
 (227, 'languages_forms', 'activity', 227, 1),
-(228, 'grid_activity_types', 'languages', 228, 1);
+(228, 'grid_activity_types', 'languages', 228, 1),
+(229, 'content_form_field', 'languages', 229, 1),
+(230, 'ctype_field_after_add', 'languages', 230, 1),
+(231, 'ctype_field_after_update', 'languages', 231, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
