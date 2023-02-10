@@ -732,3 +732,6 @@
     define('LANG_DEBUG_TAB_WIDGETS',         'Widgets');
     define('LANG_DEBUG_TAB_INCLUDES',        'Included files');
     define('LANG_DEBUG_TAB_TEMPLATE',        'Templates');
+
+    //GRIDS
+    define('LANG_GRID_SELECT_HINT',            'Click on a row to select or ');

@@ -213,7 +213,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perp
         <?php if ($options['is_selectable']){ ?>
             <div class="col col-lg-7 text-right">
                 <div class="datagrid_navigation datagrid_select_actions">
-                    <small class="shint text-muted mr-2"><?php echo LANG_CP_SELECT_HINT; ?></small>
+                    <small class="shint text-muted mr-2"><?php echo LANG_GRID_SELECT_HINT; ?></small>
                     <button type="button" class="btn btn-primary btn-sm sall"><?php echo LANG_SELECT_ALL; ?></button>
                     <button type="button" class="btn btn-warning btn-sm sremove"><?php echo LANG_DESELECT_ALL; ?></button>
                     <button type="button" class="btn btn-secondary btn-sm sinvert"><?php echo LANG_INVERT_ALL; ?></button>

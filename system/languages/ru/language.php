@@ -730,3 +730,6 @@
     define('LANG_DEBUG_TAB_WIDGETS',         'Виджеты');
     define('LANG_DEBUG_TAB_INCLUDES',        'Подключенные файлы');
     define('LANG_DEBUG_TAB_TEMPLATE',        'Шаблоны');
+
+    //GRIDS
+    define('LANG_GRID_SELECT_HINT',          'Кликните на строку, чтобы выделить или ');
