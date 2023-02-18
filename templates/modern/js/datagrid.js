@@ -165,14 +165,14 @@ icms.datagrid = (function ($) {
             var action_url = $(s_button).data('action');
             var fields = {};
             var placeholders = {};
-            $(tr_wrap).find('.grid_field_edit input.input').each(function (){
+            $(tr_wrap).find('.grid_field_edit :input').each(function (){
                 fields[$(this).attr('name')] = $(this).val();
                 placeholders[$(this).attr('name')] = $(this).attr('placeholder') ? $(this).attr('placeholder') : '';
             });
             $.post(action_url, {data: fields}, function(data){
                 $(s_button).prop('disabled', false).removeClass('is-busy');
                 if(data.error){ toastr.error(data.error); } else {
-                    $(tr_wrap).find('.grid_field_edit input').addClass('is-valid');
+                    $(tr_wrap).find('.grid_field_edit :input').addClass('is-valid');
                     $('body').trigger('click');
                     for(var _field in fields){
                         var g_value_wrap = $(tr_wrap).find('.'+_field+'_grid_value');
@@ -188,10 +188,10 @@ icms.datagrid = (function ($) {
             }, 'json');
             return false;
         });
-        $(document).on('input', '.grid_field_edit input.input', function(){
+        $(document).on('input', '.grid_field_edit :input', function(){
             $(this).removeClass('is-valid');
         });
-        $(document).on('keypress', '.grid_field_edit input.input', function(e){
+        $(document).on('keypress', '.grid_field_edit :input', function(e){
             if (e.which == 13) {
                 $(this).closest('tr').find('.inline_submit').trigger('click');
             }
@@ -205,7 +205,7 @@ icms.datagrid = (function ($) {
             $(current_tr).addClass('current-edit-line');
             $(current_tr).find('td').css('position', 'relative');
             var grid_field_edit = $(this).closest('td').find('.grid_field_edit');
-            $(grid_field_edit).show().find('input.input').focus();
+            $(grid_field_edit).show().find(':input').focus();
             if($('.inline_submit', grid_field_edit).length === 0){
                 $(grid_field_edit).append($(current_tr).find('.inline_submit').last().clone(true));
             }

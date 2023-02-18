@@ -157,7 +157,7 @@ icms.datagrid = (function ($) {
             var tr_wrap = $(this).closest('tr');
             var action_url = $(this).data('action');
             var fields = {};
-            $(tr_wrap).find('.grid_field_edit input.input').each(function (){
+            $(tr_wrap).find('.grid_field_edit :input').each(function (){
                 fields[$(this).attr('name')] = $(this).val();
             });
             $.post(action_url, {data: fields}, function(data){
@@ -177,17 +177,17 @@ icms.datagrid = (function ($) {
             }, 'json');
             return false;
         });
-        $(document).on('input', '.grid_field_edit input.input', function(){
+        $(document).on('input', '.grid_field_edit :input', function(){
             $(this).parent().removeClass('success');
         });
-        $(document).on('keypress', '.grid_field_edit input.input', function(e){
+        $(document).on('keypress', '.grid_field_edit :input', function(e){
             if (e.which == 13) {
                 $(this).closest('tr').find('.inline_submit').trigger('click');
             }
         });
         $(document).on('click', '.grid_field_value.edit_by_click', function(event){
             if (event.target.nodeName === 'A') { return true; }
-            $(this).addClass('edit_by_click_hidden').parent().find('.grid_field_edit').addClass('edit_by_click_visible').find('input.input').focus();
+            $(this).addClass('edit_by_click_hidden').parent().find('.grid_field_edit').addClass('edit_by_click_visible').find(':input').focus();
         });
 
     };
