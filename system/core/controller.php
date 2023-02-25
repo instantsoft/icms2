@@ -8,6 +8,7 @@
  * @property \cmsUser $cms_user
  * @property \cmsRequest $request
  */
+#[\AllowDynamicProperties]
 class cmsController {
 
     private static $controllers;

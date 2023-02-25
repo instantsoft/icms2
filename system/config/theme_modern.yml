@@ -58,6 +58,7 @@ scss:
   green: '#33bd66'
   teal: '#3bd4c2'
   cyan: '#0abde3'
+body_classes:
 font_type:
 font_string: >
   -apple-system, BlinkMacSystemFont,

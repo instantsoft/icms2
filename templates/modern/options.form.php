@@ -175,6 +175,11 @@ class formModernTemplateOptions extends cmsForm {
                         'default' => 1
                     )),
 
+                    new fieldString('body_classes', array(
+                        'title' => LANG_MODERN_THEME_BODY_CLASSES,
+                        'hint' => LANG_MODERN_THEME_BODY_CLASSES_HINT
+                    )),
+
                     new fieldString('scss:grid-gutter-width', array(
                         'title' => LANG_MODERN_THEME_GRID_GUTTER_W,
                         'default' => '30px'

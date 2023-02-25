@@ -33,6 +33,8 @@ define('LANG_MODERN_THEME_AVATAR_INLIST_SIZE', 'The size of the letter avatar in
 define('LANG_MODERN_THEME_AVATAR_INLIST_SIZE_HINT', 'Must match the preset size for user list avatar');
 define('LANG_MODERN_THEME_PAGINATION_TPL', 'Page Numbering Block Template');
 define('LANG_MODERN_THEME_ENABLE_MODAL_BLUR', 'Blur background when modal windows are opened');
+define('LANG_MODERN_THEME_BODY_CLASSES', 'Additional CSS classes for the body tag');
+define('LANG_MODERN_THEME_BODY_CLASSES_HINT', 'For all site pages. You can specify other CSS classes in the "Widgets and Pages" section page settings.');
 define('LANG_MODERN_THEME_GRID_GUTTER_W', 'Base Grid Offset');
 define('LANG_MODERN_C_WHITE', 'White');
 define('LANG_MODERN_C_GRAY100', 'Gray 100');

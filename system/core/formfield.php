@@ -2,6 +2,7 @@
 /**
  * Базовый класс для работы всех полей форм CMS
  */
+#[\AllowDynamicProperties]
 class cmsFormField {
 
     /**

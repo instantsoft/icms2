@@ -8,9 +8,9 @@ $form_url_sep = strpos($form_url, '?') === false ? '?' : '&';
 
 <div class="icms-filter-panel gui-panel my-3 <?php echo $css_prefix;?>-filter">
 
-    <a class="icms-filter-link__open btn btn-block btn-light text-left <?php if($filters || $is_expanded){ ?>d-none<?php } ?>" href="#">
+    <button class="icms-filter-link__open btn btn-block btn-light text-left <?php if($filters || $is_expanded){ ?>d-none<?php } ?>">
         <?php html_svg_icon('solid', 'filter'); ?> <span><?php echo LANG_SHOW_FILTER; ?></span>
-    </a>
+    </button>
 
     <div class="icms-filter-container p-3 bg-light position-relative <?php if(!$filters && !$is_expanded){ ?>d-none<?php } ?>">
         <button type="button" class="close position-absolute icms-filter-link__close" title="<?php echo LANG_CLOSE; ?>">

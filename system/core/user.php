@@ -2,7 +2,7 @@
 
 define('GUEST_GROUP_ID', 1);
 define('DEF_GROUP_ID', 3);
-
+#[\AllowDynamicProperties]
 class cmsUser {
 
     const USER_ONLINE_INTERVAL      = 180;

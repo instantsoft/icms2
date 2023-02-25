@@ -13,7 +13,7 @@ class languages extends cmsFrontend {
      * @param cmsForm $form
      * @return void
      */
-    public function enableMultilanguageFormFields(cmsForm $form) : void {
+    public function enableMultilanguageFormFields(cmsForm $form) {
 
         if(!$this->cms_config->is_user_change_lang){
             return;

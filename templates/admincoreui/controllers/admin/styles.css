@@ -444,21 +444,12 @@ ul.field_tabbed > li > a {
     background-repeat: no-repeat;
     background-position: 0.25rem 0.5rem;
     background-size: auto 16px;
-    padding-left: 40px;
-    filter: grayscale(60%);
-}
-ul.field_tabbed > li > a.active {
-    filter: grayscale(0%);
-}
-ul.field_tabbed > li.field_tabbed_ru > a, .icon-lang-ru {
-    background-image: url("../../images/languages/ru.svg");
-}
-ul.field_tabbed > li.field_tabbed_en > a, .icon-lang-en  {
-    background-image: url("../../images/languages/en.svg");
 }
 .field.multilanguage {
-    padding: 0.5rem 0 0.5rem 1rem;
-    border-left: 1px solid #c8ced3;
+    padding: 0 0 0.5rem 0;
+}
+.field.multilanguage:nth-last-child(-n+2) {
+    padding-bottom: 0;
 }
 .datagrid .flag_trigger,
 .datagrid .flag_lock_on,
@@ -505,9 +496,11 @@ ul.field_tabbed > li.field_tabbed_en > a, .icon-lang-en  {
 #cp-widgets-layout table td .block:last-child, .widgets-layout-scheme .block:last-child,
 #cp-widgets-list li:last-child,
 #cp-widgets-layout .position li:last-child,
-.without-tabs .form-group:last-child {
+.without-tabs .form-group:last-child,
+.without-tabs .form-group.multilanguage:nth-last-child(-n+2){
     margin-bottom: 0 !important;
 }
+
 .without-tabs fieldset {
     padding: 0.5rem 1.25rem 1.25rem 1.25rem;
     border-radius: 4px;

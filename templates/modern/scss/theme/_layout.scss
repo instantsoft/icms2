@@ -145,6 +145,10 @@ blockquote, .bb_quote {
     }
 }
 .spoiler {
+    margin-bottom: $spacer;
+    &:last-child {
+        margin-bottom: 0;
+    }
     > input {
         + label {
             cursor: pointer;

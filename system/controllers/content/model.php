@@ -759,15 +759,13 @@ class modelContent extends cmsModel {
 
         $this->selectOnly($name, 'fieldset');
 
-        $fieldsets = $this->get($table_name, function ($item, $model) {
+        return $this->get($table_name, function ($item, $model) {
 
             if(!$item['fieldset']){
                 return false;
             }
             return $item['fieldset'];
         }, false) ?: [];
-
-        return $fieldsets;
     }
 
 //============================================================================//
