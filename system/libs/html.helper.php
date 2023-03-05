@@ -334,11 +334,12 @@ function html_image_src($image, $size_preset = 'small', $is_add_host = false, $i
 function html_wysiwyg($field_name, $content = '', $wysiwyg = false, $config = []) {
 
     $dom_id = !empty($config['id']) ? $config['id'] : str_replace(['[',']'], ['_', ''], $field_name);
+    $class_css = !empty($config['class']) ? ' '.$config['class'] : '';
 
     if (!$wysiwyg) {
 
         if ($wysiwyg === null) {
-            return '<textarea class="textarea form-control" rows="5" id="' . $dom_id . '" name="' . $field_name . '">' . html($content, false) . '</textarea>';
+            return '<textarea class="textarea form-control'.$class_css.'" rows="5" id="' . $dom_id . '" name="' . $field_name . '">' . html($content, false) . '</textarea>';
         }
 
         $wysiwyg = cmsConfig::get('default_editor');
@@ -347,7 +348,7 @@ function html_wysiwyg($field_name, $content = '', $wysiwyg = false, $config = []
     $connector = 'wysiwyg/' . $wysiwyg . '/wysiwyg.class.php';
 
     if (!cmsCore::includeFile($connector)) {
-        return '<textarea class="error_wysiwyg" id="' . $dom_id . '" name="' . $field_name . '">' . html($content, false) . '</textarea>';
+        return '<textarea class="error_wysiwyg'.$class_css.'" id="' . $dom_id . '" name="' . $field_name . '">' . html($content, false) . '</textarea>';
     }
 
     cmsCore::loadControllerLanguage($wysiwyg);
