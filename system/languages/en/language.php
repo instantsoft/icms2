@@ -93,6 +93,8 @@
     define('LANG_MOBILE_DEVICES',  'Phones');
 
     //PARSERS
+    define('LANG_PARSER_TEMPLATE',           'Field template');
+    define('LANG_PARSER_TEMPLATE_HINT',	     'A file in the <b>%s</b> directory of your template, starting with <b>%s</b>');
     define('LANG_PARSER_PREFIX',             'Prefix');
     define('LANG_PARSER_LIST_WHERE', 'From where to form the list');
     define('LANG_PARSER_LIST_WHERE_PRE', 'From preset values');
@@ -208,6 +210,8 @@
     define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Emphasize first image in entry');
     define('LANG_PARSER_IMAGE_MAX_COUNT',    'The maximum images count');
     define('LANG_PARSER_IMAGE_MAX_COUNT_HINT', 'Maximum %s');
+    define('LANG_PARSER_IMAGE_VIEW_AS_SLIDER', 'Display images with a slider');
+    define('LANG_PARSER_IMAGE_SLIDER_DOTS',  'Show slider dots');
     define('LANG_PARSER_SMALL_IMAGE_PRESET', 'Thumbnail preset');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Create thumbnails');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Image size in list');

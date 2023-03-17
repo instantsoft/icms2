@@ -5,23 +5,21 @@ icms.images = (function ($) {
     this.uploadCallback = null;
     this.removeCallback = null;
 
-    //====================================================================//
-
     this._onSubmit = function(field_name){
-        widget = $('#widget_image_'+field_name);
+        let widget = $('#widget_image_'+field_name);
         $('.upload', widget).hide();
         $('.loading', widget).show();
     };
 
     this._showButton = function(field_name){
-        var widget = $('#widget_image_'+field_name);
+        let widget = $('#widget_image_'+field_name);
         $('.upload', widget).show();
         $('.loading', widget).hide();
     };
 
     this._onComplete = function(field_name, result){
 
-        var widget = $('#widget_image_'+field_name);
+        let widget = $('#widget_image_'+field_name);
 
         if(!result.success) {
             icms.modal.alert(result.error);
@@ -55,14 +53,14 @@ icms.images = (function ($) {
 
         icms.images._showButton(field_name);
 
-        widget = $('#widget_image_'+field_name);
+        let widget = $('#widget_image_'+field_name);
 
         if(!result.success) {
             return;
         }
 
         var idx = $('.data input:last', widget).attr('rel');
-        if (typeof(idx) == 'undefined') { idx = 0; } else { idx++; }
+        if (typeof(idx) === 'undefined') { idx = 0; } else { idx++; }
 
         var preview_block = $('.preview_template', widget).clone().removeClass('preview_template').addClass('preview').attr('rel', idx).show();
 
@@ -110,7 +108,7 @@ icms.images = (function ($) {
 
     this.upload = function(field_name, upload_url){
 
-        var uploader = new qq.FileUploader({
+        return new qq.FileUploader({
             element: document.getElementById('file-uploader-'+field_name),
             action: upload_url,
             multiple: false,
@@ -127,13 +125,10 @@ icms.images = (function ($) {
                 }
                 icms.images._onSubmit(field_name);
             },
-
             onComplete: function(id, file_name, result){
                 icms.images._onComplete(field_name, result);
             }
-
         });
-
     };
 
     this.incrementUploadedCount = function (field_name){
@@ -145,7 +140,6 @@ icms.images = (function ($) {
         $('#file-uploader-'+field_name).data('uploaded_count', current_count);
 
         return current_count;
-
     };
 
     this.decrementUploadedCount = function (field_name){
@@ -157,14 +151,13 @@ icms.images = (function ($) {
         $('#file-uploader-'+field_name).data('uploaded_count', current_count);
 
         return current_count;
-
     };
 
     this.createUploader = function(field_name, upload_url, max_images, LANG_UPLOAD_ERR_MAX_IMAGES){
 
         max_images = +(max_images || 0);
 
-        var uploader = new qq.FileUploader({
+        return new qq.FileUploader({
             element: document.getElementById('file-uploader-'+field_name),
             action: upload_url,
             debug: false,
@@ -189,7 +182,6 @@ icms.images = (function ($) {
                 icms.images._onMultiComplete(field_name, result);
             }
         });
-
     };
 
     this.initSortable = function (field_name){
@@ -222,8 +214,6 @@ icms.images = (function ($) {
         });
     };
 
-    //====================================================================//
-
     this.remove = function(field_name){
 
         var widget = $('#widget_image_'+field_name);
@@ -250,7 +240,6 @@ icms.images = (function ($) {
         }, 'json');
 
         return false;
-
     };
 
     this.removeOne = function(field_name, link){

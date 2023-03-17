@@ -100,6 +100,11 @@ class cmsFormField {
      */
     public $store_array_as_json = false;
     /**
+     * Флаг, что выводится тизер поля
+     * @var boolean
+     */
+    public $is_parse_teaser = false;
+    /**
      * Массив опций поля
      * @var array
      */
@@ -500,7 +505,12 @@ class cmsFormField {
      * @param mixed $value Значение поля
      * @return string
      */
-    public function parseTeaser($value){ return $this->parse($value); }
+    public function parseTeaser($value) {
+
+        $this->is_parse_teaser = true;
+
+        return $this->parse($value);
+    }
 
     /**
      * Выполняет некие действия после отработки метода parse

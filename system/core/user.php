@@ -400,7 +400,7 @@ class cmsUser {
 
         $date_created = $model->filterEqual('user_id', $user_id)->getFieldFiltered('sessions_online', 'date_created');
 
-        if ($date_created && (time() - self::USER_ONLINE_INTERVAL) >= strtotime($date_created)) {
+        if ($date_created && (time() - self::USER_ONLINE_INTERVAL) < strtotime($date_created)) {
             self::$cached_online[$user_id] = true;
         }
 

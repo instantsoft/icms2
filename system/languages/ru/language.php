@@ -92,6 +92,8 @@
     define('LANG_MOBILE_DEVICES',  'Телефоны');
 
     //PARSERS
+    define('LANG_PARSER_TEMPLATE',           'Шаблон поля');
+    define('LANG_PARSER_TEMPLATE_HINT',	     'Файл из директории <b>%s</b> вашего шаблона, начинающийся на <b>%s</b>');
     define('LANG_PARSER_PREFIX',             'Префикс');
     define('LANG_PARSER_LIST_WHERE',         'Откуда формировать список');
     define('LANG_PARSER_LIST_WHERE_PRE',     'Из предустановленных значений');
@@ -206,6 +208,8 @@
     define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Выделять первое изображение в записи');
     define('LANG_PARSER_IMAGE_MAX_COUNT',    'Максимальное количество изображений');
     define('LANG_PARSER_IMAGE_MAX_COUNT_HINT', 'Максимум %s');
+    define('LANG_PARSER_IMAGE_VIEW_AS_SLIDER', 'Выводить изображения слайдером');
+    define('LANG_PARSER_IMAGE_SLIDER_DOTS',  'Показывать точки слайдера');
 	define('LANG_PARSER_SMALL_IMAGE_PRESET', 'Пресет миниатюр');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Создавать превью-изображения');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Размер в списке');

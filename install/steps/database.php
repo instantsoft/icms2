@@ -248,6 +248,7 @@ function check_db_charset($mysqli, $charset) {
 function import_dump(&$mysqli, $file, $prefix, $engine = 'MyISAM', $delimiter = ';', $charset = 'utf8', $innodb_full_text = 0) {
 
     clearstatcache();
+
     @set_time_limit(0);
 
     $file = PATH . 'languages' . DS . LANG . DS . 'sql' . DS . $file;
@@ -261,40 +262,49 @@ function import_dump(&$mysqli, $file, $prefix, $engine = 'MyISAM', $delimiter = 
         return false;
     }
 
-    $file = fopen($file, 'r');
+    $read_file_dump_query = function ($filename) use($prefix, $engine, $delimiter, $charset, $innodb_full_text) {
 
-    $query   = [];
+        $file = fopen($filename, 'r');
+
+        $query = [];
+
+        while (($line = fgets($file)) !== false) {
+
+            $query[] = $line;
+
+            if (preg_match('~' . preg_quote($delimiter, '~') . '\s*$~iS', end($query)) === 1) {
+
+                $query = trim(implode('', $query));
+
+                $query = str_replace(['{#}', 'InnoDB', 'CHARSET=utf8'], [$prefix, $engine, 'CHARSET=' . $charset], $query);
+
+                if ($innodb_full_text && $engine === 'InnoDB') {
+                    $query = str_replace(['MyISAM'], ['InnoDB'], $query);
+                }
+
+                yield $query;
+            }
+
+            if (is_string($query) === true) {
+                $query = [];
+            }
+        }
+
+        fclose($file);
+    };
+
     $success = false;
 
-    while (feof($file) === false) {
+    foreach ($read_file_dump_query($file) as $query) {
 
-        $query[] = fgets($file);
+        $mysqli->query($query);
 
-        if (preg_match('~' . preg_quote($delimiter, '~') . '\s*$~iS', end($query)) === 1) {
-
-            $success = true;
-
-            $query = trim(implode('', $query));
-
-            $query = str_replace(['{#}', 'InnoDB', 'CHARSET=utf8'], [$prefix, $engine, 'CHARSET=' . $charset], $query);
-
-            if ($innodb_full_text && $engine === 'InnoDB') {
-                $query = str_replace(['MyISAM'], ['InnoDB'], $query);
-            }
-
-            $result = $mysqli->query($query);
-
-            if ($mysqli->errno) {
-                return $mysqli->error . "\n\n" . $query;
-            }
+        if ($mysqli->errno) {
+            return $mysqli->error . "\n\n" . $query;
         }
 
-        if (is_string($query) === true) {
-            $query = [];
-        }
+        $success = true;
     }
-
-    fclose($file);
 
     return $success;
 }

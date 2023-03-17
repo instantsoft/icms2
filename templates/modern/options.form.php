@@ -313,7 +313,7 @@ class formModernTemplateOptions extends cmsForm {
 
             'favicon' => array(
                 'type' => 'fieldset',
-                'title' => LANG_MODERN_FAVICON,
+                'title' => '&lt;head&gt;',
                 'childs' => array(
 
                     new fieldFile('favicon', array(

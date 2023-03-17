@@ -237,12 +237,14 @@ class messages extends cmsFrontend {
     }
 
     /**
-     * Отправляет Email сообщение
+     * Подготоваливает Email сообщение
+     * Ставит в очередь или сразу отправляет
      *
-     * @param array | string $to
-     * @param array | string $letter
-     * @param array $data
-     * @param boolean $is_nl2br_text
+     * @param array|string $to       Кому отправлять сообщение
+     * @param array|string $letter   Текст письма
+     * @param array $data            Массив данных, которыми нужно заменить выражения в письме
+     * @param boolean $is_nl2br_text Расставлять переносы тегами <br>
+     *
      * @return boolean
      */
     public function sendEmail($to, $letter, $data = [], $is_nl2br_text = true) {
@@ -321,6 +323,27 @@ class messages extends cmsFrontend {
             return true;
         }
 
+        return $this->sendEmailRaw($to, $letter, $is_nl2br_text) === true ? true : false;
+    }
+
+    /**
+     * Выполняет отправку email сообщения
+     *
+     * @param array|string $to       Кому отправлять сообщение
+     * @param array|string $letter   Текст письма
+     * @param boolean $is_nl2br_text Расставлять переносы тегами <br>
+     *
+     * @return boolean|string true или текст ошибки
+     */
+    public function sendEmailRaw($to, $letter, $is_nl2br_text = null) {
+
+        // URL для отписки от рассылки
+        $unsubscribe_url = $to['custom_headers']['List-Unsubscribe'] ?? $this->cms_config->host;
+
+        if(empty($to['custom_headers']['List-Unsubscribe'])){
+            $to['custom_headers']['List-Unsubscribe'] = $unsubscribe_url;
+        }
+
         $mailer = new cmsMailer();
 
         list($letter, $is_nl2br_text, $to) = cmsEventsManager::hook('process_email_letter', [$letter, $is_nl2br_text, $to]);
@@ -346,13 +369,33 @@ class messages extends cmsFrontend {
         $letter['text'] = $mailer->parseSubject($letter['text']);
         $letter['text'] = $mailer->parseAttachments($letter['text']);
 
+        // Если есть общий шаблон писем
+        if (!empty($this->options['email_template'])) {
+
+            if($is_nl2br_text){
+
+                $letter['text'] = nl2br($letter['text']);
+
+                $is_nl2br_text = false;
+            }
+
+            $data_template = [
+                'body'            => $letter['text'],
+                'year'            => date('Y'),
+                'site'            => $this->cms_config->sitename,
+                'unsubscribe_url' => $unsubscribe_url
+            ];
+
+            $letter['text'] = string_replace_keys_values($this->options['email_template'], $data_template);
+        }
+
         $mailer->setBodyHTML(($is_nl2br_text ? nl2br($letter['text']) : $letter['text']));
 
         $result = $mailer->send();
 
         $mailer->clearTo()->clearAttachments();
 
-        return $result;
+        return $result ? true : $mailer->getErrorInfo();
     }
 
 }

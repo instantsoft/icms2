@@ -91,6 +91,11 @@ class fieldForms extends cmsFormField {
             $form = $forms->setItemAuthor($form, $this->item['user_id']);
         }
 
+        if (!empty($this->item['ctype_name']) && !empty($this->item['id'])) {
+
+            $form = $forms->setContextTarget($form, $this->item['ctype_name'].':'.$this->item['id']);
+        }
+
         return cmsTemplate::getInstance()->renderInternal($forms, 'form_view', [
             'modal_btn' => [
                 'is_show' => $this->getOption('form_in_modal', false),

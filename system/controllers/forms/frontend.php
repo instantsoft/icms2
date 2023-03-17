@@ -119,6 +119,10 @@ class forms extends cmsFrontend {
             'default' => 0,
             'show_id_attr' => false
         ]));
+        $form->addField($fieldset_id, new fieldHidden('context_target', [
+            'default' => '',
+            'show_id_attr' => false
+        ]));
         $form->addField($fieldset_id, new fieldHidden($submit_form_name.':page_url', [
             'title' => LANG_FORMS_PAGE_URL,
             'default' => $this->cms_config->host . $this->cms_core->uri_absolute
@@ -154,6 +158,13 @@ class forms extends cmsFrontend {
         list($form, $form_data) = cmsEventsManager::hook('forms_get_form', [$form, $form_data]);
 
         return [$form, $form_data];
+    }
+
+    public function setContextTarget($form, $target) {
+
+        $form->setFieldProperty('system', 'context_target', 'default', $target);
+
+        return $form;
     }
 
     public function setItemAuthor($form, $user_id) {

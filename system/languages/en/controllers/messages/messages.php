@@ -1,6 +1,7 @@
 <?php
 
-    define('LANG_MESSAGES_CONTROLLER',      'PM and notifications');
+    define('LANG_MESSAGES_CONTROLLER',      'PM, Notifications, Email');
+    define('LANG_PM_MESSAGES',              'Private messages');
     define('LANG_PM_MY_MESSAGES',           'My Messages');
     define('LANG_PM_NO_MESSAGES',           'You have no private messages. To write a message, go to the profile of the desired user and select "Write message" from the menu.');
     define('LANG_PM_NO_NOTICES',            'No notifications');
@@ -41,6 +42,9 @@
     define('LANG_PM_PMAILING_TYPE_MESSAGE', 'As a private message');
     define('LANG_PM_PMAILING_TYPE_EMAIL',   'As Email');
     define('LANG_PM_PMAILING_SENDED',       '%s sended');
+    define('LANG_PM_EMAIL_TEMPLATE',        'Basic email template');
+    define('LANG_PM_EMAIL_BODY',            'Letter body');
+    define('LANG_PM_EMAIL_UNSUBSCRIBE_URL', 'Unsubscribe URL');
     define('LANG_PM_NOTIFY',                'notification|notification|notifications');
     define('LANG_PM_MESSAGE',               'message|message|messages');
     define('LANG_PM_EMAIL',                 'email|emails|emails');

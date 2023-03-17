@@ -32,12 +32,11 @@
         <?php $this->head(true, !empty($this->options['js_print_head']), true); ?>
     <?php if(!empty($this->options['favicon_head_html'])) { ?>
         <?php echo $this->options['favicon_head_html']."\n"; ?>
+    <?php } ?>
+    <?php if(!empty($this->options['favicon']['path'])) { ?>
+        <link rel="icon" href="<?php echo $config->upload_root . $this->options['favicon']['path']; ?>" type="<?php echo pathinfo($this->options['favicon']['path'], PATHINFO_EXTENSION) === 'svg' ? 'image/svg+xml' : 'image/x-icon'; ?>">
     <?php } else { ?>
-        <?php if(!empty($this->options['favicon']['path'])) { ?>
-            <link rel="icon" href="<?php echo $config->upload_root . $this->options['favicon']['path']; ?>" type="<?php echo pathinfo($this->options['favicon']['path'], PATHINFO_EXTENSION) === 'svg' ? 'image/svg+xml' : 'image/x-icon'; ?>">
-        <?php } else { ?>
-            <link rel="icon" href="<?php echo $this->getTemplateFilePath('images/favicons/favicon.ico'); ?>" type="image/x-icon">
-        <?php } ?>
+        <link rel="icon" href="<?php echo $this->getTemplateFilePath('images/favicons/favicon.ico'); ?>" type="image/x-icon">
     <?php } ?>
     </head>
     <body id="<?php echo $device_type; ?>_device_type" data-device="<?php echo $device_type; ?>" class="d-flex flex-column min-vh-100<?php if(!empty($body_classes)) { ?> <?php echo implode(' ', $body_classes); ?><?php } ?> <?php echo $this->options['body_classes'] ?? ''; ?>">

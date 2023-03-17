@@ -80,7 +80,6 @@ define('LANG_MODERN_FONT_TYPE', 'Site font');
 define('LANG_MODERN_FONT_TYPE_STR', 'Specify font string manually');
 define('LANG_MODERN_FONT_STRING', 'Specify a priority list of one or more font family names c smooth finish');
 define('LANG_MODERN_FONT_GOOGLE', 'Google Font');
-define('LANG_MODERN_FAVICON', 'Favicon');
 define('LANG_MODERN_FAVICON_FILE', 'Favicon file');
-define('LANG_MODERN_FAVICON_HEAD', 'Or specify ready-made HTML added to the &lt;head&gt; page tag');
+define('LANG_MODERN_FAVICON_HEAD', 'Ready-made HTML added to the &lt;head&gt; page tag');
 define('LANG_MODERN_JS_PRINT_HEAD', 'Print JavaScript in the page head');

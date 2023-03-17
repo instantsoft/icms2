@@ -190,7 +190,7 @@ class cmsImages {
 
                 imagealphablending($dest_image, true);
 
-                imagecopy($dest_image, $wm, $x, $y, 0, 0, $wm_width, $wm_height);
+                imagecopy($dest_image, $wm, (int)$x, (int)$y, 0, 0, $wm_width, $wm_height);
 
                 imagedestroy($wm);
             });
@@ -535,14 +535,14 @@ class cmsImages {
         imagecopyresampled(
             $dest_image,
             $this->source_image,
-            $this->dest_x,
-            $this->dest_y,
-            $this->source_x,
-            $this->source_y,
+            (int)$this->dest_x,
+            (int)$this->dest_y,
+            (int)$this->source_x,
+            (int)$this->source_y,
             $this->getDestWidth(),
             $this->getDestHeight(),
-            $this->source_w,
-            $this->source_h
+            (int)$this->source_w,
+            (int)$this->source_h
         );
 
         if ($this->gamma_correct) {

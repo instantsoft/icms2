@@ -58,26 +58,28 @@ class fieldListBitmask extends cmsFormField {
         return $this->getInput($value);
     }
 
-    public function getStringValue($value) {
+    public function getSelectedValues($value) {
 
         if (is_empty_value($value)) {
-            return '';
+            return [];
         }
 
-        $string = '';
+        $list = [];
 
         if ($this->items) {
 
-            $pos  = 0;
-            $list = [];
+            $pos = 0;
 
-            foreach ($this->items as $key => $item) {
+            $is_array = is_array($value);
 
-                if (!is_array($value)) {
+            foreach ($this->items as $key => $name) {
+
+                if (!$is_array) {
 
                     if (substr($value, $pos, 1) === '1') {
-                        $list[] = $item;
+                        $list[$key] = $name;
                     }
+
                     $pos++;
                     if ($pos + 1 > strlen($value)) {
                         break;
@@ -85,44 +87,50 @@ class fieldListBitmask extends cmsFormField {
                 } else {
 
                     if (in_array($key, $value)) {
-                        $list[] = $item;
+                        $list[$key] = $name;
                     }
                 }
             }
-
-            $string = implode(', ', $list);
         }
 
-        return $string;
+        return $list;
+    }
+
+    public function getStringValue($value) {
+
+        $list = $this->getSelectedValues($value);
+
+        if (!$list) {
+            return '';
+        }
+
+        return implode(', ', $list);
     }
 
     public function parse($value) {
 
-        if (is_empty_value($value)) {
+        $list = $this->getSelectedValues($value);
+
+        if (!$list) {
             return '';
         }
 
         $html = '';
 
-        if ($this->items) {
-            $is_autolink = $this->getOption('is_autolink');
-            $pos         = 0;
-            $html        .= '<ul class="' . $this->getOption('list_class') . ' list-unstyled">';
-            foreach ($this->items as $key => $item) {
-                if (substr($value, $pos, 1) === '1') {
-                    if ($is_autolink) {
-                        $html .= '<li class="list-inline-item"><a class="listbitmask_autolink ' . $this->item['ctype_name'] . '_listbitmask_autolink" href="' . href_to($this->item['ctype_name']) . '?' . $this->name . '%5B%5D=' . urlencode($key) . '">' . html($item, false) . '</a></li>';
-                    } else {
-                        $html .= '<li class="list-inline-item"><span>' . html($item, false) . '</span></li>';
-                    }
-                }
-                $pos++;
-                if ($pos + 1 > strlen($value)) {
-                    break;
-                }
+        $is_autolink = $this->getOption('is_autolink');
+
+        $html .= '<ul class="' . $this->getOption('list_class') . ' list-unstyled">';
+
+        foreach ($list as $key => $name) {
+
+            if ($is_autolink) {
+                $html .= '<li class="list-inline-item"><a class="listbitmask_autolink ' . $this->item['ctype_name'] . '_listbitmask_autolink" href="' . href_to($this->item['ctype_name']) . '?' . $this->name . '%5B%5D=' . urlencode($key) . '">' . html($name, false) . '</a></li>';
+            } else {
+                $html .= '<li class="list-inline-item"><span>' . html($name, false) . '</span></li>';
             }
-            $html .= '</ul>';
         }
+
+        $html .= '</ul>';
 
         return $html;
     }
@@ -183,28 +191,11 @@ class fieldListBitmask extends cmsFormField {
 
     public function getInput($value) {
 
-        $this->data['items'] = array_keys_to_string_type($this->items);
+        $this->items = array_keys_to_string_type($this->items);
         $this->data['selected'] = [];
 
-        if ($value) {
-            if (!is_array($value)) {
-                $pos = 0;
-                foreach ($this->data['items'] as $key => $title) {
-                    if (substr($value, $pos, 1) === '1') {
-                        $this->data['selected'][] = $key;
-                    }
-                    $pos++;
-                    if ($pos + 1 > mb_strlen($value)) {
-                        break;
-                    }
-                }
-            } else {
-
-                foreach ($value as $k => $v) {
-                    $this->data['selected'][] = $v;
-                }
-            }
-        }
+        $this->data['items'] = $this->items;
+        $this->data['selected'] = array_keys($this->getSelectedValues($value));
 
         return parent::getInput($value);
     }

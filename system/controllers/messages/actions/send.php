@@ -40,6 +40,10 @@ class actionMessagesSend extends cmsAction {
             return cmsCore::error404();
         }
 
+        if (!$this->cms_user->isInGroups($this->options['groups_allowed'])) {
+            return cmsCore::error404();
+        }
+
         $contact_id = $this->request->get('contact_id');
         $content    = $this->request->get('content');
         $last_date  = $this->request->get('last_date');

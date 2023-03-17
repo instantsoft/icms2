@@ -1,6 +1,7 @@
 <?php
 
-    define('LANG_MESSAGES_CONTROLLER',      'Сообщения и уведомления');
+    define('LANG_MESSAGES_CONTROLLER',      'Сообщения, уведомления, Email');
+    define('LANG_PM_MESSAGES',              'Личные сообщения');
     define('LANG_PM_MY_MESSAGES',           'Мои сообщения');
     define('LANG_PM_NO_MESSAGES',           'У вас нет личных сообщений. Чтобы написать сообщение, зайдите в профиль нужного пользователя и выберите в меню "Написать сообщение".');
     define('LANG_PM_NO_NOTICES',            'Нет уведомлений');
@@ -41,6 +42,9 @@
     define('LANG_PM_PMAILING_TYPE_MESSAGE', 'Как личное сообщение');
     define('LANG_PM_PMAILING_TYPE_EMAIL',   'Как Email');
     define('LANG_PM_PMAILING_SENDED',       'Отправлено %s');
+    define('LANG_PM_EMAIL_TEMPLATE',        'Базовый шаблон писем email');
+    define('LANG_PM_EMAIL_BODY',            'Тело письма');
+    define('LANG_PM_EMAIL_UNSUBSCRIBE_URL', 'URL отписки от рассылки');
     define('LANG_PM_NOTIFY',                'уведомление|уведомления|уведомлений');
     define('LANG_PM_MESSAGE',               'сообщение|сообщения|сообщений');
     define('LANG_PM_EMAIL',                 'сообщение|сообщения|сообщений');
