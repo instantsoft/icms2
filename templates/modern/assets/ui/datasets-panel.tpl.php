@@ -1,8 +1,6 @@
-<?php $this->addTplJSNameFromContext('vendors/slick/slick.min'); ?>
-<?php $this->addTplCSSNameFromContext('slick'); ?>
 <?php if(!isset($ds_prefix)){ $ds_prefix = '/'; } ?>
 <?php $active_filters_query = $this->controller->getActiveFiltersQuery(); ?>
-<div class="content_datasets <?php if(isset($wrap_class)){ echo $wrap_class; } else { echo 'my-3 my-md-4'; } ?>">
+<div class="content_datasets mobile-menu-wrapper <?php if(isset($wrap_class)){ echo $wrap_class; } else { echo 'my-3 my-md-4'; } ?>">
     <ul class="nav nav-pills pills-menu dataset-pills">
         <?php $ds_counter = 0; ?>
         <?php foreach($datasets as $set){ ?>
@@ -36,10 +34,3 @@
         <?php echo $current_dataset['description']; ?>
     </div>
 <?php } ?>
-<?php ob_start(); ?>
-<script>
-if(typeof dsslick === 'undefined'){
-    var dsslick = icms.menu.initSwipe('.dataset-pills', {variableWidth: true, initialSlide: $('.dataset-pills > li.is-active').index()});
-}
-</script>
-<?php $this->addBottom(ob_get_clean()); ?>

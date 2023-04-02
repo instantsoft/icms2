@@ -5,6 +5,46 @@
         background-color: rgba(0, 0, 0, 0.25);
     }
 }
+.mobile-menu-wrapper {
+    @include media-breakpoint-down(lg) {
+        &__info_bar {
+            &:not(.transparent) {
+                background-color: $gray-100;
+            }
+            border-top: 1px solid $gray-200;
+            margin-top: $spacer;
+            .info_bar {
+                border-top: none;
+                margin-top: 0;
+            }
+        }
+        &__tab {
+            border-bottom: $nav-tabs-border-width solid $nav-tabs-border-color;
+            .nav-tabs {
+                border-bottom: none;
+                .nav-link {
+                    margin-bottom: 0;
+                }
+            }
+        }
+        white-space: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        > .nav, > .swipe-wrapper {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            > li, > .swipe-item {
+                flex: 0 0 auto;
+            }
+        }
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
 #mobile_device_type {
     .icms-user-menu {
         > .dropdown-menu {

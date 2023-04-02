@@ -23,7 +23,7 @@ class onContentEngineStart extends cmsAction {
         }
 
         // в типе контента дефис, значит это набор или категория
-        if(strpos($this->cms_core->uri_action, '-') !== false){
+        if(strpos($this->cms_core->uri_action, '-') !== false && strpos($this->cms_core->uri_action, '.html') === false){
 
             list($ctype_name, $cat_slug) = explode('-', $this->cms_core->uri_action);
 

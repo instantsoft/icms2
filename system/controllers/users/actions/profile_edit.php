@@ -71,7 +71,10 @@ class actionUsersProfileEdit extends cmsAction {
             $form->addField($fieldset_id, new fieldList('time_zone', [
                 'default'   => $this->cms_config->time_zone,
                 'generator' => function($item) {
-                    return cmsCore::getTimeZones();
+
+                    $zones = (new cmsConfigs('timezones.php'))->getAll();
+
+                    return array_combine($zones, $zones);
                 }
             ]));
         }

@@ -31,8 +31,7 @@
                     <?php } ?>
                     <?php if (!empty($feed['mapping']['image'])) { ?>
                         <?php $image = cmsModel::yamlToArray($item[$feed['mapping']['image']]); ?>
-                        <?php if (!empty($image[$feed['mapping']['image_size']])) { ?>
-                            <?php $imgp = img_get_params($this->site_config->upload_path . $image[$feed['mapping']['image_size']]); ?>
+                        <?php if (!empty($image[$feed['mapping']['image_size']]) && $imgp = img_get_params($this->site_config->upload_path . $image[$feed['mapping']['image_size']])) { ?>
                             <enclosure url="<?php echo $this->site_config->upload_host_abs . '/' . $image[$feed['mapping']['image_size']]; ?>" type="<?php echo $imgp['mime']; ?>" length="<?php echo $imgp['filesize']; ?>" />
                         <?php } ?>
                     <?php } ?>

@@ -139,14 +139,3 @@
     <?php } ?>
 
 </div>
-<?php if (!empty($item['info_bar'])){ ?>
-    <?php
-    $this->addTplJSNameFromContext('vendors/slick/slick.min');
-    $this->addTplCSSNameFromContext('slick');
-    ob_start();
-    ?>
-    <script>
-        icms.menu.initSwipe('.icms-photo-album__info_bar', {variableWidth: true});
-    </script>
-    <?php $this->addBottom(ob_get_clean()); ?>
-<?php } ?>

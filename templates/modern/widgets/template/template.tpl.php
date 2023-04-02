@@ -58,12 +58,12 @@
 <?php } elseif($widget->options['type'] === 'lang_select') { ?>
         <ul class="nav">
             <li class="nav-item dropdown">
-                <a class="nav-link text-warning font-weight-bold dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+                <a class="nav-link text-warning font-weight-bold dropdown-toggle" data-toggle="dropdown" href="#">
                     <?php echo strtoupper($current_lang); ?>
                 </a>
                 <div class="dropdown-menu">
                     <?php foreach ($langs as $lang) { ?>
-                        <a class="dropdown-item<?php if($lang == $current_lang){ ?> active<?php } ?>" href="<?php html(($config->language == $lang ? '' : '/'.$lang).$_SERVER['REQUEST_URI']); ?>">
+                        <a class="dropdown-item<?php if($lang === $current_lang){ ?> active<?php } ?>" href="<?php html($config->root . ($config->language === $lang ? '' : $lang.'/').$core->uri.($core->uri_query ? '?'.http_build_query($core->uri_query) : '')); ?>">
                             <?php echo strtoupper($lang); ?>
                         </a>
                     <?php } ?>

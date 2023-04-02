@@ -95,9 +95,10 @@ if($ctype['options']['list_show_filter']) {
             <?php } ?>
 
             <?php if (!empty($item['info_bar'])){ ?>
-                <div class="info_bar">
+            <div class="mobile-menu-wrapper mobile-menu-wrapper__info_bar">
+                <div class="info_bar swipe-wrapper">
                     <?php foreach($item['info_bar'] as $bar){ ?>
-                        <div class="bar_item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
+                        <div class="bar_item swipe-item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
                             <?php if (!empty($bar['icon'])){ ?>
                                 <?php html_svg_icon('solid', $bar['icon']); ?>
                             <?php } ?>
@@ -111,18 +112,9 @@ if($ctype['options']['list_show_filter']) {
                         </div>
                     <?php } ?>
                 </div>
+            </div>
             <?php } ?>
         </div>
     <?php } ?>
 </div>
 <?php echo html_pagebar($page, $perpage, $total, $page_url, $filter_query); ?>
-
-<?php
-$this->addTplJSNameFromContext('vendors/slick/slick.min');
-$this->addTplCSSNameFromContext('slick');
-ob_start();
-?>
-<script>
-    icms.menu.initSwipe('.info_bar', {variableWidth: true});
-</script>
-<?php $this->addBottom(ob_get_clean()); ?>

@@ -259,7 +259,7 @@ class content extends cmsFrontend {
 			$value = $this->request->get($name, false, $field['handler']->getDefaultVarType());
 
             $value = $field['handler']->storeFilter($value);
-			if (!$value) { continue; }
+			if (is_empty_value($value)) { continue; }
 
 			if($field['handler']->applyFilter($this->model, $value) !== false){
 
@@ -292,7 +292,7 @@ class content extends cmsFrontend {
 				$value = $this->request->get($name, false, $prop['handler']->getDefaultVarType());
 
                 $value = $prop['handler']->storeFilter($value);
-				if (!$value) { continue; }
+				if (is_empty_value($value)) { continue; }
 
 				if($this->model->filterPropValue($ctype['name'], $prop, $value) !== false){
 
@@ -1276,7 +1276,7 @@ class content extends cmsFrontend {
             'ds_description'    => null,
             'f_title'           => null,
             'f_description'     => null,
-            'ctype_title'       => (empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list']),
+            'ctype_title'       => $ctype['title'],
             'ctype_description' => ($ctype['description'] ? strip_tags($ctype['description']) : null),
             'ctype_label1'      => (!empty($ctype['labels']['one']) ? $ctype['labels']['one'] : null),
             'ctype_label2'      => (!empty($ctype['labels']['two']) ? $ctype['labels']['two'] : null),
@@ -1319,7 +1319,7 @@ class content extends cmsFrontend {
             $desc_pattern = $ctype['seo_desc'];
         }
 
-        if(!empty($category['id'])){
+        if(!empty($category['title']) && (empty($dataset['first_ds']) || !empty($category['id']))){
 
             if (!empty($ctype['options']['seo_cat_h1_pattern'])){
                 $h1_pattern = $ctype['options']['seo_cat_h1_pattern'];
@@ -1384,19 +1384,14 @@ class content extends cmsFrontend {
             $h1_str = $h1_pattern;
 
             $this->cms_template->setPageH1Item($meta_item);
+
         }
         // то, что задано вручную для катеории в приоритете
-        if(!empty($category['seo_h1'])){
+        if(!empty($category['seo_h1']) && empty($dataset['seo_h1'])){
 
             $h1_str = $category['seo_h1'];
 
-            // задан набор и он не первый
-            if (!empty($dataset['title']) && empty($dataset['first_ds'])){
-                $h1_str .= ' / '.$dataset['title'];
-            }
-
-            // убираем обработку значений
-            $this->cms_template->setPageH1Item(null);
+            $this->cms_template->setPageH1Item($meta_item);
         }
 
         /**
@@ -1408,25 +1403,13 @@ class content extends cmsFrontend {
             $title_str = $title_pattern;
 
             $this->cms_template->setPageTitleItem($meta_item);
-
         }
         // заданное вручную в приоритете
-        if (!empty($category['seo_title'])){
+        if (!empty($category['seo_title']) && empty($dataset['seo_title'])){
 
             $title_str = $category['seo_title'];
 
-            // задан набор и он не первый
-            if (!empty($dataset['title']) && empty($dataset['first_ds'])){
-                $title_str .= ' / '.$dataset['title'];
-            }
-
-            // если есть фильтр
-            if(!empty($meta_item['filter_string'])){
-                $title_str .= ', '.$meta_item['filter_string'];
-            }
-
-            // убираем обработку значений
-            $this->cms_template->setPageTitleItem(null);
+            $this->cms_template->setPageTitleItem($meta_item);
         }
 
         /**
@@ -1439,23 +1422,14 @@ class content extends cmsFrontend {
             $keys_str = $keys_pattern;
 
             $this->cms_template->setPageKeywordsItem($meta_item);
+
         }
         // ключи для категории в приоритете
-        if (!empty($category['seo_keys'])){
+        if (!empty($category['seo_keys']) && empty($dataset['seo_keys'])){
 
             $keys_str = $category['seo_keys'];
 
-            // задан набор и он не первый
-            if (!empty($dataset['title']) && empty($dataset['first_ds'])){
-                $keys_str .= ', '.$dataset['title'];
-            }
-
-            // если есть фильтр
-            if(!empty($meta_item['filter_string'])){
-                $keys_str .= ', '.$meta_item['filter_string'];
-            }
-
-            $this->cms_template->setPageKeywordsItem(null);
+            $this->cms_template->setPageKeywordsItem($meta_item);
         }
 
         /**
@@ -1468,23 +1442,14 @@ class content extends cmsFrontend {
             $desc_str = $desc_pattern;
 
             $this->cms_template->setPageDescriptionItem($meta_item);
+
         }
         // описание для категории в приоритете
-        if (!empty($category['seo_desc'])){
+        if (!empty($category['seo_desc']) && empty($dataset['seo_desc'])){
 
             $desc_str = $category['seo_desc'];
 
-            // задан набор и он не первый
-            if (!empty($dataset['title']) && empty($dataset['first_ds'])){
-                $desc_str .= ', '.$dataset['title'];
-            }
-
-            // если есть фильтр
-            if(!empty($meta_item['filter_string'])){
-                $desc_str .= ': '.$meta_item['filter_string'];
-            }
-
-            $this->cms_template->setPageDescriptionItem(null);
+            $this->cms_template->setPageDescriptionItem($meta_item);
         }
 
         $this->cms_template->setPageH1($h1_str);

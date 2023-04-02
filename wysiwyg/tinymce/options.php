@@ -1,6 +1,8 @@
 <?php
 class formWysiwygTinymceOptions extends cmsForm {
 
+    private $mimetypes;
+
     public function init($do) {
 
         cmsCore::includeFile('wysiwyg/tinymce/wysiwyg.class.php');
@@ -169,7 +171,12 @@ class formWysiwygTinymceOptions extends cmsForm {
     }
 
     private function getMimeTypes() {
-        return cmsCore::includeAndCall('system/libs/mimetypes.php', 'getMimeTypes');
+
+        if($this->mimetypes === null){
+            $this->mimetypes = (new cmsConfigs('mimetypes.php'))->getAll();
+        }
+
+        return $this->mimetypes;
     }
 
 }

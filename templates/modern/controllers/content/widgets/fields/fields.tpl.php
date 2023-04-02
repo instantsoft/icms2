@@ -11,9 +11,10 @@
                 </div>
             <?php } ?>
             <?php if ($show_info_block && !empty($item['info_bar'])){ ?>
-                <div class="info_bar bg-transparent p-0 border-0 text-white">
+            <div class="mobile-menu-wrapper">
+                <div class="info_bar bg-transparent p-0 border-0 text-white swipe-wrapper">
                     <?php foreach($item['info_bar'] as $bar){ ?>
-                        <div class="bar_item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
+                        <div class="bar_item swipe-item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
                             <?php if (!empty($bar['icon'])){ ?>
                                 <?php html_svg_icon('solid', $bar['icon']); ?>
                             <?php } ?>
@@ -25,15 +26,7 @@
                         </div>
                     <?php } ?>
                 </div>
-                <?php
-                $this->addTplJSNameFromContext('vendors/slick/slick.min');
-                $this->addTplCSSNameFromContext('slick');
-                ob_start();
-                ?>
-                <script>
-                    icms.menu.initSwipe('.info_bar', {variableWidth: true});
-                </script>
-                <?php $this->addBottom(ob_get_clean()); ?>
+            </div>
             <?php } ?>
         </div>
     </div>

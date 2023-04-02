@@ -1492,7 +1492,7 @@ class modelContent extends cmsModel {
 
 	}
 
-    public function moveContentItemsToCategory($ctype, $category_id, $items_ids, $fields){
+    public function moveContentItemsToCategory($ctype, $from_id, $to_id, $items_ids, $fields) {
 
         $table_name = $this->table_prefix . $ctype['name'];
         $binds_table_name = $this->table_prefix . $ctype['name'] . '_cats_bind';
@@ -1501,6 +1501,11 @@ class modelContent extends cmsModel {
 
 		foreach($items as $item){
 
+            $this->
+                    filterEqual('item_id', $item['id'])->
+                    filterEqual('category_id', $from_id)->
+                    deleteFiltered($binds_table_name);
+
 			$this->
 				filterEqual('item_id', $item['id'])->
 				filterEqual('category_id', $item['category_id'])->
@@ -1508,38 +1513,37 @@ class modelContent extends cmsModel {
 
 			$is_bind_exists = $this->
 								filterEqual('item_id', $item['id'])->
-								filterEqual('category_id', $category_id)->
+                    filterEqual('category_id', $to_id)->
 								getCount($binds_table_name, 'item_id');
 
 			$this->resetFilters();
 
 			if (!$is_bind_exists){
 
-				$this->insert($binds_table_name, array(
+                $this->insert($binds_table_name, [
 					'item_id' => $item['id'],
-					'category_id' => $category_id
-				));
-
+                    'category_id' => $to_id
+                ]);
 			}
 
-			$item['category_id'] = $category_id;
+            $item['category_id'] = $to_id;
 
 			if (!$ctype['is_fixed_url'] && $ctype['is_auto_url']){
-				$item['slug'] = $this->getItemSlug($ctype, $item, $fields);
-				$this->update($table_name, $item['id'], array( 'slug' => $item['slug'] ));
-			}
 
+				$item['slug'] = $this->getItemSlug($ctype, $item, $fields);
+
+                $this->update($table_name, $item['id'], ['slug' => $item['slug']]);
+            }
 		}
 
-        $this->filterIn('id', $items_ids)->updateFiltered($table_name, array(
-            'category_id' => $category_id
-        ));
+        $this->filterIn('id', $items_ids)->updateFiltered($table_name, [
+            'category_id' => $to_id
+        ]);
 
         cmsCache::getInstance()->clean('content.list.'.$ctype['name']);
         cmsCache::getInstance()->clean('content.item.'.$ctype['name']);
 
         return true;
-
     }
 
 	public function updateContentItemCategories($ctype_name, $id, $category_id, $add_cats){

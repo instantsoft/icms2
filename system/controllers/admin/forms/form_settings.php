@@ -251,7 +251,10 @@ class formAdminSettings extends cmsForm {
                     new fieldList('time_zone', [
                         'title'     => LANG_CP_SETTINGS_TIMEZONE,
                         'generator' => function ($item) {
-                            return cmsCore::getTimeZones();
+
+                            $zones = (new cmsConfigs('timezones.php'))->getAll();
+
+                            return array_combine($zones, $zones);
                         }
                     ]),
                     new fieldCheckbox('allow_users_time_zone', [

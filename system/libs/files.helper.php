@@ -536,19 +536,27 @@ function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false
     return true;
 
 }
+
 /**
  * Возвращает параметры изображения
+ *
  * @param string $path Полный путь к файлу
  * @return boolean|array
  */
 function img_get_params($path) {
 
+    if (!is_readable($path)) {
+        return false;
+    }
+
     $s = getimagesize($path);
-    if ($s === false) { return false; }
+    if ($s === false) {
+        return false;
+    }
 
-    $exif_data = array();
+    $exif_data = [];
 
-    $exif = (function_exists('exif_read_data') && $s['mime'] === 'image/jpeg' ? (@exif_read_data($path, null, true)) : null);
+    $exif = (function_exists('exif_read_data') && $s['mime'] === 'image/jpeg') ? (@exif_read_data($path, null, true)) : null;
 
     if ($exif) {
         if (isset($exif['COMPUTED']['ApertureFNumber'])) {
@@ -610,15 +618,14 @@ function img_get_params($path) {
         $orientation = 'portrait';
     }
 
-    return array(
+    return [
         'orientation' => $orientation,
         'width'       => $s[0],
         'height'      => $s[1],
         'mime'        => $s['mime'],
         'exif'        => $exif_data,
         'filesize'    => round(filesize($path))
-    );
-
+    ];
 }
 
 /**
@@ -626,31 +633,30 @@ function img_get_params($path) {
  *
  * @param string $command Команда
  * @param string $postfix Строка после команды
- * @return array
+ * @return ?array
  */
-function console_exec_command($command, $postfix = ' 2>&1'){
+function console_exec_command($command, $postfix = ' 2>&1') {
 
-    if(!function_exists('exec')){
+    if (!function_exists('exec')) {
         return null;
     }
 
-    $buffer = array();
+    $buffer = [];
     $err    = '';
 
-    $result = exec($command.$postfix, $buffer, $err);
+    $result = exec($command . $postfix, $buffer, $err);
 
-    if($err !== 127){
-        if(!isset($buffer[0])){
+    if ($err !== 127) {
+        if (!isset($buffer[0])) {
             $buffer[0] = $result;
         }
         $b = strtolower($buffer[0]);
-        if(strstr($b,'error') || strstr($b,' no ') || strstr($b,'not found') || strstr($b,'No such file or directory')){
-            return false;
+        if (strstr($b, 'error') || strstr($b, ' no ') || strstr($b, 'not found') || strstr($b, 'No such file or directory')) {
+            return [];
         }
     } else {
-        return false;
+        return [];
     }
 
     return $buffer;
-
 }

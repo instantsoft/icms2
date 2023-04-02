@@ -132,17 +132,9 @@
 
 		<?php $this->addMenuItems('profile_tabs', $tabs); ?>
 
-		<?php $this->menu('profile_tabs', true, 'icms-profile__tabs nav nav-tabs my-3', $this->controller->options['max_tabs']); ?>
-
-        <?php
-        $this->addTplJSNameFromContext('vendors/slick/slick.min');
-        $this->addTplCSSNameFromContext('slick');
-        ob_start();
-        ?>
-        <script>
-            icms.menu.initSwipe('.icms-profile__tabs', {variableWidth: true, initialSlide: $('.icms-profile__tabs > li.is-active').index()});
-        </script>
-        <?php $this->addBottom(ob_get_clean()); ?>
+        <div class="mobile-menu-wrapper mobile-menu-wrapper__tab my-3">
+            <?php $this->menu('profile_tabs', true, 'icms-profile__tabs nav nav-tabs', $this->controller->options['max_tabs']); ?>
+        </div>
 
 	<?php } ?>
 

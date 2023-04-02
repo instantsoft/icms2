@@ -59,7 +59,7 @@ function html_pagebar($page, $perpage, $total, $base_uri = false, $query = [], $
  * @param string $name Имя поля
  * @param string $value Значение по умолчанию
  * @param array $attributes Атрибуты тега название=>значение
- * @return html
+ * @return string
  */
 function html_input($type = 'text', $name = '', $value = '', $attributes = []) {
 
@@ -78,7 +78,7 @@ function html_input($type = 'text', $name = '', $value = '', $attributes = []) {
  *
  * @param string $name Имя поля
  * @param array $attributes Атрибуты тега название=>значение
- * @return html
+ * @return string
  */
 function html_file_input($name, $attributes = []) {
 
@@ -94,7 +94,7 @@ function html_file_input($name, $attributes = []) {
  * @param string $name Имя поля
  * @param string $value Значение по умолчанию
  * @param array $attributes Атрибуты тега название=>значение
- * @return html
+ * @return string
  */
 function html_textarea($name = '', $value = '', $attributes = []) {
     $attr_str = html_attr_str($attributes);
@@ -112,7 +112,7 @@ function html_textarea($name = '', $value = '', $attributes = []) {
  * @param boolean $checked Включен/выключен
  * @param mixed $value Значение
  * @param array $attributes Атрибуты тега название=>значение
- * @return html
+ * @return string
  */
 function html_checkbox($name, $checked = false, $value = 1, $attributes = []) {
 
@@ -134,7 +134,7 @@ function html_checkbox($name, $checked = false, $value = 1, $attributes = []) {
  * @param boolean $checked Включен/выключен
  * @param mixed $value Значение
  * @param array $attributes Атрибуты тега название=>значение
- * @return type
+ * @return string
  */
 function html_radio($name, $checked = false, $value = 1, $attributes = []) {
 
@@ -187,31 +187,42 @@ function html_date_time($date = false) {
     return html_date($date, true);
 }
 
-function html_datepicker($name='', $value='', $attributes=array(), $datepicker = array()){
-    if (isset($attributes['id'])){
+/**
+ * Печатает поле выбора даты
+ *
+ * @param string $name Имя поля
+ * @param string $value Значение
+ * @param array $attributes Атрибуты тега input
+ * @param array $datepicker Параметры datepicker
+ * @return string
+ */
+function html_datepicker($name = '', $value = '', $attributes = [], $datepicker = []) {
+    if (isset($attributes['id'])) {
         $id = $attributes['id'];
         unset($attributes['id']);
     } else {
         $id = $name;
     }
     $attributes['autocomplete'] = 'off';
-    $datepicker_default = array(
+    $datepicker_default = [
         'showStatus' => true,
         'changeYear' => true,
-        'yearRange'  => '1976:'.date('Y', strtotime('+5 year')),
+        'yearRange'  => '1976:' . date('Y', strtotime('+5 year')),
         'dateFormat' => cmsConfig::get('date_format_js')
-    );
-    if($datepicker){
+    ];
+    if ($datepicker) {
         $datepicker_default = array_merge($datepicker_default, $datepicker);
     }
     $class = 'form-control date-input';
-    if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
+    if (isset($attributes['class'])) {
+        $class .= ' ' . $attributes['class'];
+    }
     $attr_str = html_attr_str($attributes);
-	$html  = '<input type="text" placeholder="'.LANG_SELECT.'" name="'.$name.'" value="'.htmlspecialchars($value).'" class="'.$class.'"  id="'.$id.'" '.$attr_str.'/>';
-    $script = '<script>';
-    $script .= '$(function(){ var datepicker_params = '.json_encode($datepicker_default).';datepicker_params.onSelect = function(dateText,inst){$("#'.$id.'").trigger("input");icms.events.run("icms_datepicker_selected_'.$name.'", inst);};datepicker_params.beforeShow = function(input,inst){icms.events.run("icms_datepicker_before_show_'.$name.'", inst);};$("#'.$id.'").datepicker(datepicker_params);});';
-    $script .= '</script>';
-    if(cmsCore::getInstance()->request->isAjax()){
+    $html     = '<input type="text" placeholder="' . LANG_SELECT . '" name="' . $name . '" value="' . htmlspecialchars($value) . '" class="' . $class . '"  id="' . $id . '" ' . $attr_str . '/>';
+    $script   = '<script>';
+    $script   .= '$(function(){ var datepicker_params = ' . json_encode($datepicker_default) . ';datepicker_params.onSelect = function(dateText,inst){$("#' . $id . '").trigger("input");icms.events.run("icms_datepicker_selected_' . $name . '", inst);};datepicker_params.beforeShow = function(input,inst){icms.events.run("icms_datepicker_before_show_' . $name . '", inst);};$("#' . $id . '").datepicker(datepicker_params);});';
+    $script   .= '</script>';
+    if (cmsCore::getInstance()->request->isAjax()) {
         $html .= $script;
     } else {
         cmsTemplate::getInstance()->addBottom($script);
@@ -240,10 +251,11 @@ function html_submit($caption = LANG_SUBMIT, $name = 'submit', $attributes = [])
 
 /**
  * Возвращает html-код кнопки
+ *
  * @param str $caption Заголовок
  * @param str $name Название кнопки
  * @param str $onclick Содержимое аттрибута onclick (javascript)
- * @return html
+ * @return string
  */
 function html_button($caption, $name, $onclick = '', $attributes = []) {
 
@@ -267,28 +279,27 @@ function html_button($caption, $name, $onclick = '', $attributes = []) {
 
 /**
  * Возвращает тег <img> аватара пользователя
+ *
  * @param array|yaml $avatars Все изображения аватара
  * @param string $size_preset Название пресета
  * @param string $alt Замещающий текст изображения
  * @param bool $is_html_empty_avatar Вместо дефолтных изображений показывать цветной блок с буквой
  * @return string
  */
-function html_avatar_image($avatars, $size_preset='small', $alt='', $is_html_empty_avatar=false){
+function html_avatar_image($avatars, $size_preset = 'small', $alt = '', $is_html_empty_avatar = false) {
 
     $src = html_avatar_image_src($avatars, $size_preset);
 
-    $img = '<img class="img-fluid" src="'.$src.'" alt="'.html($alt, false).'" title="'.html($alt, false).'" />';
+    $img = '<img class="img-fluid" src="' . $src . '" alt="' . html($alt, false) . '" title="' . html($alt, false) . '" />';
 
-    if(empty($avatars) && !empty($alt) && $is_html_empty_avatar){
+    if (empty($avatars) && !empty($alt) && $is_html_empty_avatar) {
 
         $iparams = get_image_block_param_by_title($alt);
 
-        $img = '<div class="default_avatar" style="'.$iparams['style'].'" data-letter="'.htmlspecialchars(mb_substr($alt, 0, 1)).'">'.$img.'</div>';
-
+        $img = '<div class="default_avatar" style="' . $iparams['style'] . '" data-letter="' . htmlspecialchars(mb_substr($alt, 0, 1)) . '">' . $img . '</div>';
     }
 
     return $img;
-
 }
 
 function html_avatar_image_empty($title, $class = ''){
@@ -324,53 +335,57 @@ function get_image_block_param_by_title($title) {
 
 /**
  * Возвращает тег <img>
+ *
  * @param array|yaml $image Все размеры заданного изображения
  * @param string $size_preset Название пресета
  * @param string $alt Замещающий текст изображения
  * @param array $attributes Массив аттрибутов тега
  * @return string
  */
-function html_image($image, $size_preset='small', $alt='', $attributes = array()){
+function html_image($image, $size_preset = 'small', $alt = '', $attributes = []) {
 
-    if(is_array($size_preset)){
+    if (is_array($size_preset)) {
         list($small_preset, $modal_preset) = $size_preset;
     } else {
         $small_preset = $size_preset;
         $modal_preset = false;
     }
 
-	$src = html_image_src($image, $small_preset, true);
-	if (!$src) { return ''; }
+    $src = html_image_src($image, $small_preset, true);
+    if (!$src) {
+        return '';
+    }
 
-    $title = html((isset($attributes['title']) ? $attributes['title'] : $alt), false); unset($attributes['title']);
+    $title = html((isset($attributes['title']) ? $attributes['title'] : $alt), false);
+    unset($attributes['title']);
 
     $attr_str = html_attr_str($attributes);
-    $class = isset($attributes['class']) ? $attributes['class'] : '';
+    $class    = isset($attributes['class']) ? $attributes['class'] : '';
 
-    $image_html = '<img src="'.$src.'" title="'.$title.'" alt="'.html($alt, false).'" '.$attr_str.' class="img-fluid '.$class.'" />';
+    $image_html = '<img src="' . $src . '" title="' . $title . '" alt="' . html($alt, false) . '" ' . $attr_str . ' class="img-fluid ' . $class . '" />';
 
-    if($modal_preset){
+    if ($modal_preset) {
         $modal_src = html_image_src($image, $modal_preset, true);
         if ($modal_src) {
-            return '<a title="'.$title.'" class="ajax-modal modal_image hover_image" href="'.$modal_src.'">'.$image_html.'</a>';
+            return '<a title="' . $title . '" class="ajax-modal modal_image hover_image" href="' . $modal_src . '">' . $image_html . '</a>';
         }
     }
 
     return $image_html;
-
 }
 
 /**
- * Возвращает тег HTML gif изображения
+ * Возвращает HTML блок gif изображения
+ *
  * @param array|yaml $image Все размеры заданного изображения
  * @param string $size_preset Название пресета
  * @param string $alt Замещающий текст изображения
  * @param array $attributes Массив аттрибутов тега
  * @return string
  */
-function html_gif_image($image, $size_preset='small', $alt='', $attributes = array()){
+function html_gif_image($image, $size_preset = 'small', $alt = '', $attributes = []) {
 
-    if(is_array($size_preset)){
+    if (is_array($size_preset)) {
         list($small_preset, $modal_preset) = $size_preset;
     } else {
         $small_preset = $size_preset;
@@ -378,161 +393,175 @@ function html_gif_image($image, $size_preset='small', $alt='', $attributes = arr
     }
 
     $class = isset($attributes['class']) ? $attributes['class'] : '';
-    if($small_preset == 'micro'){
+    if ($small_preset == 'micro') {
         $class .= ' micro_image';
     }
 
-    $original_src = html_image_src($image, $modal_preset?:'original', true);
+    $original_src = html_image_src($image, $modal_preset ?: 'original', true);
     $preview_src  = html_image_src($image, $small_preset, true);
 
-    if (!$preview_src) { return ''; }
+    if (!$preview_src) {
+        return '';
+    }
 
-    return '<a class="ajax-modal gif_image '.$class.'" href="'.$original_src.'" '.html_attr_str($attributes).'>
+    return '<a class="ajax-modal gif_image ' . $class . '" href="' . $original_src . '" ' . html_attr_str($attributes) . '>
                 <span class="background_overlay"></span>
                 <span class="image_label">gif</span>
-                <img class="img-fluid" src="'.$preview_src.'" alt="'.html($alt, false).'" />
+                <img class="img-fluid" src="' . $preview_src . '" alt="' . html($alt, false) . '" />
             </a>';
-
 }
 
 /**
  * Генерирует список опций
+ *
  * @param string $name Имя списка
  * @param array $items Массив элементов списка (значение => заголовок)
  * @param string|array $selected Значение выбранного(ых) элемента
  * @param array $attributes Массив аттрибутов тега
  * @return string HTML
  */
-function html_select($name, $items, $selected = '', $attributes = array()){
+function html_select($name, $items, $selected = '', $attributes = []) {
 
     $name = isset($attributes['multiple']) ? $name . '[]' : $name;
 
     $attr_str = html_attr_str($attributes);
-    $class = isset($attributes['class']) ? $attributes['class'] : '';
-    $html = '<select class="form-control '.$class.'" name="'.$name.'" '.$attr_str.'>'."\n";
+    $class    = isset($attributes['class']) ? $attributes['class'] : '';
+    $html     = '<select class="form-control ' . $class . '" name="' . $name . '" ' . $attr_str . '>' . "\n";
 
     $optgroup = false;
 
-    if(is_array($selected) && $selected){
+    if (is_array($selected) && $selected) {
         foreach ($selected as $k => $v) {
-            if(is_numeric($v)){ $selected[$k] = (int)$v; }
+            if (is_numeric($v)) {
+                $selected[$k] = (int) $v;
+            }
         }
     }
 
-    if($items && is_array($items)){
-        foreach($items as $value => $title){
+    if ($items && is_array($items)) {
+        foreach ($items as $value => $title) {
 
-            if(is_array($title)){
-                if($optgroup !== false){
-                    $html .= "\t".'</optgroup>'."\n";
+            if (is_array($title)) {
+                if ($optgroup !== false) {
+                    $html     .= "\t" . '</optgroup>' . "\n";
                     $optgroup = false;
                 }
                 $optgroup = true;
-                $html .= "\t".'<optgroup label="'.htmlspecialchars($title[0]).'">'."\n";
+                $html     .= "\t" . '<optgroup label="' . htmlspecialchars($title[0]) . '">' . "\n";
                 continue;
             }
 
-            if (is_array($selected)){
+            if (is_array($selected)) {
                 $sel = in_array($value, $selected, true) ? 'selected' : '';
             } else {
                 $sel = ((string) $selected === (string) $value) ? 'selected' : '';
             }
 
-            $html .= "\t".'<option'.(!$title ? ' label="'.LANG_ALL.'"' : '').' value="'.htmlspecialchars($value).'" '.$sel.'>'.htmlspecialchars($title).'</option>'."\n";
-
+            $html .= "\t" . '<option' . (!$title ? ' label="' . LANG_ALL . '"' : '') . ' value="' . htmlspecialchars($value) . '" ' . $sel . '>' . htmlspecialchars($title) . '</option>' . "\n";
         }
     }
 
-    if($optgroup !== false){
-        $html .= "\t".'</optgroup>'."\n";
+    if ($optgroup !== false) {
+        $html .= "\t" . '</optgroup>' . "\n";
     }
 
-    $html .= '</select>'."\n";
-    return $html;
+    $html .= '</select>' . "\n";
 
+    return $html;
 }
 
 /**
  * Генерирует список опций с множественным выбором
+ *
  * @param string $name Имя списка
  * @param array $items Массив элементов списка (значение => заголовок)
  * @param string $selected Массив значений выбранных элементов
  * @param array $attributes Массив аттрибутов тега
- * @return html
+ * @return string
  */
-function html_select_multiple($name, $items, $selected=array(), $attributes=array(), $is_tree=false){
-    $attr_str = html_attr_str($attributes);
-    $class = isset($attributes['class']) ? $attributes['class'] : '';
-	$html = '<div class="input_checkbox_list '.$class.'" '.$attr_str.'>'."\n";
+function html_select_multiple($name, $items, $selected = [], $attributes = [], $is_tree = false) {
+
+    $attr_str    = html_attr_str($attributes);
+    $class       = isset($attributes['class']) ? $attributes['class'] : '';
+    $html        = '<div class="input_checkbox_list ' . $class . '" ' . $attr_str . '>' . "\n";
     $start_level = false;
-    if(is_array($selected) && $selected){
+
+    if (is_array($selected) && $selected) {
         foreach ($selected as $k => $v) {
-            if(is_numeric($v)){ $selected[$k] = (int)$v; }
+            if (is_numeric($v)) {
+                $selected[$k] = (int) $v;
+            }
         }
     }
-    foreach ($items as $value=>$title){
+    foreach ($items as $value => $title) {
 
         $checked = is_array($selected) && in_array($value, $selected, true);
 
-        if ($is_tree){
+        if ($is_tree) {
 
             $level = mb_strlen(str_replace(' ', '', $title)) - mb_strlen(ltrim(str_replace(' ', '', $title), '-'));
 
-            if ($start_level === false) { $start_level = $level; }
+            if ($start_level === false) {
+                $start_level = $level;
+            }
 
             $level -= $start_level;
 
             $title = ltrim($title, '- ');
 
-            $html .= "\t" . '<label class="form-check form-check-block" '. ($level>0 ? 'style="margin-left:'.($level*0.75).'rem"' : ''). '>' .
-                    html_checkbox($name.'[]', $checked, $value) . ' ' .
-                    '<span>'.htmlspecialchars($title).'</span></label>' . "\n";
-
+            $html .= "\t" . '<label class="form-check form-check-block" ' . ($level > 0 ? 'style="margin-left:' . ($level * 0.75) . 'rem"' : '') . '>' .
+                    html_checkbox($name . '[]', $checked, $value) . ' ' .
+                    '<span>' . htmlspecialchars($title) . '</span></label>' . "\n";
         } else {
 
             $html .= "\t" . '<label class="form-check form-check-inline">' .
-                    html_checkbox($name.'[]', $checked, $value) . ' ' .
-                    '<span>'.htmlspecialchars($title) . '</span></label>' . "\n";
-
+                    html_checkbox($name . '[]', $checked, $value) . ' ' .
+                    '<span>' . htmlspecialchars($title) . '</span></label>' . "\n";
         }
+    }
+    $html .= '</div>' . "\n";
 
-	}
-	$html .= '</div>'."\n";
-	return $html;
+    return $html;
 }
 
 /**
  * Генерирует и возвращает дерево категорий в виде комбо-бокса
+ *
  * @param array $tree Массив с элементами дерева NS
  * @param int $selected_id ID выбранного элемента
- * @return html
+ * @return string
  */
-function html_category_list($tree, $selected_id=0){
-	$html = '<select name="category_id" id="category_id" class="combobox form-control">'."\n";
-	foreach ($tree as $cat){
-		$padding = str_repeat('---', $cat['ns_level']).' ';
-		if ($selected_id == $cat['id']) { $selected = 'selected'; } else { $selected = ''; }
-		$html .= "\t" . '<option value="'.$cat['id'].'" '.$selected.'>'.$padding.' '.htmlspecialchars($cat['title']).'</option>' . "\n";
-	}
-    $html .= '</select>'."\n";
-	return $html;
+function html_category_list($tree, $selected_id = 0) {
+    $html = '<select name="category_id" id="category_id" class="combobox form-control">' . "\n";
+    foreach ($tree as $cat) {
+        $padding = str_repeat('---', $cat['ns_level']) . ' ';
+        if ($selected_id == $cat['id']) {
+            $selected = 'selected';
+        } else {
+            $selected = '';
+        }
+        $html .= "\t" . '<option value="' . $cat['id'] . '" ' . $selected . '>' . $padding . ' ' . htmlspecialchars($cat['title']) . '</option>' . "\n";
+    }
+    $html .= '</select>' . "\n";
+    return $html;
 }
 
 /**
  * Генерирует две радио-кнопки ВКЛ и ВЫКЛ
+ *
  * @param string $name
  * @param bool $active
- * @return html
+ * @return string
  */
-function html_switch($name, $active){
-	$html = '';
-	$html .= '<label><input type="radio" name="'.$name.'" value="1" '. ($active ? 'checked' : '') .'/> ' . LANG_ON . "</label> \n";
-	$html .= '<label><input type="radio" name="'.$name.'" value="0" '. (!$active ? 'checked' : '') .'/> ' . LANG_OFF . "</label> \n";
-	return $html;
+function html_switch($name, $active) {
+    $html = '';
+    $html .= '<label><input type="radio" name="' . $name . '" value="1" ' . ($active ? 'checked' : '') . '/> ' . LANG_ON . "</label> \n";
+    $html .= '<label><input type="radio" name="' . $name . '" value="0" ' . (!$active ? 'checked' : '') . '/> ' . LANG_OFF . "</label> \n";
+    return $html;
 }
 
-function html_back_button(){
-	return '<div class="back_button"><a href="javascript:window.history.go(-1);">'.LANG_BACK.'</a></div>';
+function html_back_button() {
+    return '<div class="back_button"><a href="javascript:window.history.go(-1);">' . LANG_BACK . '</a></div>';
 }
 
 function html_bool_span($value, $condition, $classes = ['negative badge badge-danger', 'positive badge badge-success']){
@@ -545,29 +574,27 @@ function html_bool_span($value, $condition, $classes = ['negative badge badge-da
 
 /**
  * Строит рекурсивно список UL из массива
+ *
  * @author acmol
  * @param array $array
  * @return string
  */
-function html_array_to_list($array){
+function html_array_to_list($array) {
 
-    $html = '<ul>' . "\n";
+    $html = '<ul>';
 
-    foreach($array as $key => $elem){
+    foreach ($array as $key => $elem) {
 
-        if(!is_array($elem)){
-            $html .= '<li>'.$elem.'</li>' . "\n";
+        if (!is_array($elem)) {
+            $html .= '<li>' . $elem . '</li>';
+        } else {
+            $html .= '<li class="folder">' . $key . ' ' . html_array_to_list($elem) . '</li>';
         }
-        else {
-            $html .= '<li class="folder">'.$key.' '.html_array_to_list($elem).'</li>' . "\n";
-        }
-
     }
 
-    $html .= "</ul>" . "\n";
+    $html .= '</ul>';
 
     return $html;
-
 }
 
 function html_search_bar($list, $href, $link_class = '', $glue = ', ') {

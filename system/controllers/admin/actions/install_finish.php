@@ -130,7 +130,7 @@ class actionAdminInstallFinish extends cmsAction {
 
         cmsCore::loadControllerLanguage($manifest['package']['name']);
 
-        $form = cmsForm::getForm($form_file, $form_name, false);
+        $form = cmsForm::getForm($form_file, $form_name, [[]]);
 
         if ($form && is_readable($controller_root_path . 'backend.php')) {
 
@@ -170,7 +170,7 @@ class actionAdminInstallFinish extends cmsAction {
 
         cmsCore::loadControllerLanguage($manifest['package']['name']);
 
-        $form = cmsForm::getForm($form_file, $form_name, false);
+        $form = cmsForm::getForm($form_file, $form_name, [[]]);
 
         if ($form && is_readable($controller_root_path . 'backend.php')) {
 

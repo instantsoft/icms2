@@ -64,7 +64,9 @@ class onContentSitemapUrls extends cmsAction {
 
                 foreach($datasets as $ds){
 
+                    // На первый набор не надо
                     if($ds_counter){
+
                         $urls[] = [
                             'last_modified' => date('Y-m-d'),
                             'title'         => $ds['title'],

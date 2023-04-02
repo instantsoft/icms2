@@ -32,7 +32,7 @@ class cmsUploader {
 
         $this->allowed_mime = $types;
 
-        $mime_types = cmsCore::includeAndCall('system/libs/mimetypes.php', 'getMimeTypes');
+        $mime_types = (new cmsConfigs('mimetypes.php'))->getAll();
 
         foreach ($this->allowed_mime as $mime) {
             if(isset($mime_types[$mime])){

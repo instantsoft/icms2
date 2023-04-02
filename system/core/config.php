@@ -1,24 +1,18 @@
 <?php
 /**
- * Класс для работы с конфигурациями
+ * Класс для работы с конфигурацией InstantCMS
  */
-class cmsConfig {
-
-    /**
-     * Путь директории с конфигурациями
-     * можно изменить на хранение вне корня сайта,
-     * изменив путь, используя две точки (..) для
-     * указания на родительские каталоги
-     */
-    const CONFIG_DIR = '/system/config/';
+class cmsConfig extends cmsConfigs {
 
     /**
      * Синглтон
      * @var object
      */
     private static $instance = null;
+
     /**
      * Сформированный массив ремапа контроллеров
+     *
      * @var array
      */
     private static $mapping  = null;
@@ -28,33 +22,6 @@ class cmsConfig {
      * @var boolean
      */
     private $ready = false;
-    /**
-     * Массив конфигурации сайта
-     * @var array
-     */
-    private $data = [];
-    /**
-     * Динамические значения конфигурации,
-     * которые не указаны в файле
-     * @var array
-     */
-    private $dynamic = [];
-    /**
-     * Значения конфигурации,
-     * которые были изменены
-     * @var array
-     */
-    private $changed = [];
-    /**
-     * Значения конфигурации, как они есть в файле
-     * @var array
-     */
-    private $config = [];
-    /**
-     * Флаг, что ядро определило язык сайта, отличный от умолчания
-     * @var boolean
-     */
-    private $is_language_initialized = false;
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -67,6 +34,12 @@ class cmsConfig {
         return self::getInstance()->$key;
     }
 
+    /**
+     * Подключаем ремап контроллеров
+     * http://docs.instantcms.ru/manual/settings/rewriting
+     *
+     * @return array
+     */
     public static function getControllersMapping() {
 
         if (self::$mapping !== null) {
@@ -75,12 +48,14 @@ class cmsConfig {
 
         self::$mapping = [];
 
-        $map_file     = 'system/config/remap.php';
+        $map_file     = PATH . parent::CONFIG_DIR . 'remap.php';
         $map_function = 'remap_controllers';
 
-        if (!cmsCore::includeFile($map_file)) {
+        if (!is_readable($map_file)) {
             return self::$mapping;
         }
+
+        include_once $map_file;
 
         if (!function_exists($map_function)) {
             return self::$mapping;
@@ -96,9 +71,18 @@ class cmsConfig {
     }
 
     public function __construct($cfg_file = 'config.php') {
-        if ($this->setData($cfg_file)) {
-            $this->ready = true;
+
+        parent::__construct($cfg_file);
+
+        if (!$this->data) {
+            return;
         }
+
+        $this->setData();
+
+        $this->initErrorReporting();
+
+        $this->ready = true;
     }
 
     /**
@@ -110,93 +94,11 @@ class cmsConfig {
     }
 
     /**
-     * Язык инициализирован ядром
+     * Устанавливает дополнительные опции конфигурации
      *
-     * @return $this
+     * @return bool
      */
-    public function languageInitialized() {
-
-        $this->is_language_initialized = true;
-
-        return $this;
-    }
-
-    /**
-     * Устанавливает/изменяет значение опции конфигурации
-     *
-     * @param string $key Ключ
-     * @param mixed $value Значение
-     * @return $this
-     */
-    public function set($key, $value) {
-
-        // Нет такой опции в файле конфигурации
-        if(!array_key_exists($key, $this->data)){
-            $this->dynamic[] = $key;
-        } else {
-        // Если есть, фиксируем, что меняли
-            $this->changed[$key] = $this->data[$key];
-        }
-
-        $this->data[$key] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Возвращает весь актуальный конфиг сайта
-     * @return array
-     */
-    public function getAll() {
-        return $this->data;
-    }
-
-    /**
-     * Возвращает весь конфиг сайта, как он задан в файле
-     * Если передан ключ, возвращает его значение
-     *
-     * @param string $key
-     * @return mixed
-     */
-    public function getConfig($key = null) {
-        if($key === null){
-            return $this->config;
-        }
-        return array_key_exists($key, $this->config) ? $this->config[$key] : false;
-    }
-
-    public function __get($name) {
-
-        if ($this->is_language_initialized) {
-
-            $value = get_localized_value($name, $this->data);
-
-            return $value === null ? false : $value;
-        }
-
-        if (!array_key_exists($name, $this->data)) {
-            return false;
-        }
-
-        return $this->data[$name];
-    }
-
-    public function __isset($name) {
-
-        if ($this->is_language_initialized) {
-            return get_localized_value($name, $this->data) !== null;
-        }
-
-        return array_key_exists($name, $this->data);
-    }
-
-    public function setData($cfg_file = 'config.php') {
-
-        $this->data = $this->load($cfg_file);
-        if (!$this->data) { return false; }
-
-        // Запоминаем оригинальный конфиг
-        $this->config = $this->data;
+    public function setData() {
 
         if (empty($this->data['detect_ip_key']) || !isset($_SERVER[$this->data['detect_ip_key']])) {
             $this->data['detect_ip_key'] = 'REMOTE_ADDR';
@@ -270,73 +172,29 @@ class cmsConfig {
         return true;
     }
 
+    /**
+     * Устанавливает обработку ошибок PHP
+     */
+    private function initErrorReporting() {
+
+        error_reporting(E_ALL);
+
+        ini_set('log_errors', true);
+
+        // Если данная опция установлена в .htaccess или в Apache
+        // Её установка здесь ничего не изменит
+        ini_set('display_errors', $this->data['debug']);
+        ini_set('display_startup_errors', $this->data['debug']);
+
+    }
+
+    /**
+     * Проверяет, что текущий протокол HTTPS
+     *
+     * @return boolean
+     */
     public static function isSecureProtocol() {
         return self::get('protocol') === 'https://';
-    }
-
-    public function load($cfg_file = 'config.php') {
-
-        $cfg_file = PATH . self::CONFIG_DIR . $cfg_file;
-
-        if (!is_readable($cfg_file)) {
-            return [];
-        }
-
-        return include $cfg_file;
-    }
-
-    public function isChangedKey($key) {
-        return array_key_exists($key, $this->changed);
-    }
-
-    public function isDynamicKey($key) {
-        return in_array($key, $this->dynamic, true);
-    }
-
-    public function save($values, $cfg_file = 'config.php') {
-
-        $dump = "<?php\n" .
-                "return array(\n\n";
-
-        foreach ($values as $key => $value) {
-
-            if ($this->isDynamicKey($key)) {
-                continue;
-            }
-
-            $value = var_export($value, true);
-
-            $tabs = 10 - ceil((mb_strlen($key) + 3) / 4);
-
-            $dump .= "\t'{$key}'";
-            $dump .= str_repeat("\t", $tabs > 0 ? $tabs : 0);
-            $dump .= "=> $value,\n";
-        }
-
-        $dump .= "\n);\n";
-
-        $file = PATH . self::CONFIG_DIR . $cfg_file;
-
-        $success = false;
-
-        if (is_writable($file)) {
-
-            if (function_exists('opcache_reset')) {
-                @opcache_reset();
-            }
-
-            $success = file_put_contents($file, $dump);
-        }
-
-        return $success;
-    }
-
-    public function update($key, $value, $cfg_file = 'config.php') {
-
-        $data = $this->load($cfg_file);
-        $data[$key] = $value;
-
-        return $this->save($data, $cfg_file);
     }
 
 }

@@ -3,7 +3,9 @@
     color: $white;
     text-shadow: none;
 }
-
+*, :after, :before {
+    scroll-behavior: smooth;
+}
 .icms-header {
     &__top {
         background-color: darken($header-bg, 10%);

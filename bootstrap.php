@@ -17,11 +17,11 @@ define('ROOT', rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR));
 mb_internal_encoding('UTF-8');
 
 // Подключаем автозагрузчик пакетов Composer
-if (file_exists(PATH . '/vendor/autoload.php')) {
-    require_once PATH.'/vendor/autoload.php';
+if (is_readable(PATH . '/vendor/autoload.php')) {
+    require_once PATH . '/vendor/autoload.php';
 }
 
-// Подключаем автозагрузчик классов
+// Подключаем автозагрузчик классов CMS
 require_once PATH . '/system/config/autoload.php';
 
 // Устанавливаем обработчик автозагрузки классов
@@ -30,67 +30,41 @@ spl_autoload_register('autoLoadCoreClass');
 // Инициализируем конфиг
 $config = cmsConfig::getInstance();
 
-// дебаг отключен - скрываем все сообщения об ошибках
-if(!$config->debug){
+// Проверяем, что система установлена
+if (!$config->isReady()) {
 
-    error_reporting(0);
+    // Отправляем на установку
+    if (PHP_SAPI !== 'cli') {
 
-} else {
+        $root = str_replace(str_replace(DIRECTORY_SEPARATOR, '/', realpath($_SERVER['DOCUMENT_ROOT'])), '', str_replace(DIRECTORY_SEPARATOR, '/', PATH));
+        header('location:' . $root . '/install/');
+        die;
+    }
 
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-
-    // включаем отладку
-    cmsDebugging::enable();
-
+    die('no config');
 }
 
-// Проверяем, что система установлена
-if (!$config->isReady()){
-    $root = str_replace(str_replace(DIRECTORY_SEPARATOR, '/', realpath($_SERVER['DOCUMENT_ROOT'])), '', str_replace(DIRECTORY_SEPARATOR, '/', PATH));
-    header('location:'.$root.'/install/');
-    die();
+// включаем отладку CMS
+if ($config->debug) {
+
+    cmsDebugging::enable();
 }
 
 // Стартуем сессию если константа SESSION_START объявлена
-if(defined('SESSION_START')){
+if (defined('SESSION_START')) {
 
-    // Устанавливаем директорию сессий
-    cmsUser::setSessionSavePath($config->session_save_handler, $config->session_save_path);
-
-    cmsUser::sessionStart($config->cookie_domain, $config->session_name);
-
-    // таймзона сессии
-    $session_time_zone = cmsUser::sessionGet('user:time_zone');
-
-    // если таймзона в сессии отличается от дефолтной
-    if($session_time_zone && $session_time_zone != $config->time_zone){
-        $config->set('time_zone', $session_time_zone);
-    }
-
-}
-
-// Язык браузера
-if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) &&
-        !empty($config->is_user_change_lang) &&
-        !empty($config->is_browser_auto_lang)){
-    $user_lang = strtolower(substr((string)$_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
-    if($user_lang !== $config->getConfig('language') &&
-            preg_match('/^[a-z]{2}$/i', $user_lang) &&
-            is_dir($config->root_path.'system/languages/'.$user_lang.'/')){
-        $config->set('language', $user_lang);
-    }
+    cmsUser::sessionStart($config);
 }
 
 // Устанавливаем часовую зону
+// Могла быть изменена в cmsUser::sessionStart
 date_default_timezone_set($config->time_zone);
 
 // Подключаем все необходимые классы и библиотеки
 cmsCore::loadLib('html.helper');
 cmsCore::loadLib('strings.helper');
 cmsCore::loadLib('files.helper');
-if(!$config->native_yaml){
+if (!$config->native_yaml) {
     cmsCore::loadLib('spyc.class');
 }
 
@@ -101,26 +75,20 @@ $core = cmsCore::getInstance();
 $core->connectDB();
 
 // соединение не установлено? Показываем ошибку
-if(!$core->db->ready()){
+if (!$core->db->ready()) {
 
     cmsCore::loadLanguage();
 
     return cmsCore::error($core->db->connectError());
-
 }
 
 // Запускаем кеш
 cmsCache::getInstance()->start();
 
+// Регистрируем остановку кэша
+register_shutdown_function(function () {
+
+    cmsCache::getInstance()->stop();
+});
+
 cmsEventsManager::hook('core_start');
-
-// Загружаем локализацию
-cmsCore::loadLanguage();
-
-// устанавливаем локаль языка
-if(function_exists('lang_setlocale')){
-    lang_setlocale();
-}
-
-// устанавливаем локаль MySQL
-$core->db->setLcMessages();

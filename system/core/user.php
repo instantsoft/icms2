@@ -452,20 +452,36 @@ class cmsUser {
         return true;
     }
 
-    public static function sessionStart($cookie_domain = false, $session_name = 'ICMSSID') {
+    /**
+     * Стратует сессию PHP
+     * и меняет таймзону, если задана у юзера
+     *
+     * @param cmsConfig $config
+     */
+    public static function sessionStart(cmsConfig $config) {
 
-        session_name($session_name);
+        // Устанавливаем директорию сессий
+        self::setSessionSavePath($config->session_save_handler, $config->session_save_path);
 
-        if ($cookie_domain) {
-            $cookie_domain = '.' . $cookie_domain;
+        session_name($config->session_name);
+
+        $cookie_domain = null;
+
+        if ($config->cookie_domain) {
+            $cookie_domain = '.' . $config->cookie_domain;
         }
 
-        // если используете ТОЛЬКО https, раскомментируйте строку ниже,
-        // а следующую за ней закомментируйте
-        //session_set_cookie_params(0, '/', $cookie_domain, true, true);
-        session_set_cookie_params(0, '/;SameSite=Lax', $cookie_domain, false, true);
+        session_set_cookie_params(0, '/;SameSite=Lax', $cookie_domain, cmsConfig::isSecureProtocol(), true);
 
-        return session_start();
+        session_start();
+
+        // таймзона сессии
+        $session_time_zone = self::sessionGet('user:time_zone');
+
+        // если таймзона в сессии отличается от дефолтной
+        if ($session_time_zone && $session_time_zone !== $config->time_zone) {
+            $config->set('time_zone', $session_time_zone);
+        }
     }
 
     public static function sessionSet($key, $value) {
@@ -818,36 +834,22 @@ class cmsUser {
      * @return boolean
      */
     public function isInGroups($groups) {
-
-        if (empty($groups) || $groups == [0]) {
-            return true;
-        }
-        if (in_array(0, $groups)) {
-            return true;
-        }
-
-        $found = false;
-
-        foreach ($groups as $group_id) {
-            $found = $found || in_array($group_id, $this->groups);
-        }
-
-        return $found;
+        return self::isUserInGroups($this->groups, $groups);
     }
 
     public static function isUserInGroups($user_groups, $groups) {
 
-        if (in_array(0, $groups)) {
+        if (empty($groups) || in_array(0, $groups)) {
             return true;
         }
 
-        $found = false;
-
         foreach ($groups as $group_id) {
-            $found = $found || in_array($group_id, $user_groups);
+            if(in_array($group_id, $user_groups)) {
+                return true;
+            }
         }
 
-        return $found;
+        return false;
     }
 
 //============================================================================//

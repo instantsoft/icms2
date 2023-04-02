@@ -119,6 +119,8 @@ class fieldList extends cmsFormField {
 
         if (empty($this->options['filter_multiple'])) {
 
+            $this->setProperty('show_empty_value', true);
+
             return parent::getFilterInput($value);
         } else {
 

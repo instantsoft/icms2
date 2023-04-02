@@ -2780,15 +2780,19 @@ class cmsTemplate {
      *
      * @param string $tpl_file Название файла шаблона
      * @param array $data Массив параметров, передаваемых в шаблон
+     * @param object $request Объект запроса
+     * @param boolean $min_html Сжимать HTML
      * @return string
      */
-    public function getRenderedAsset($tpl_file, $data = []) {
+    public function getRenderedAsset($tpl_file, $data = [], $request = false, $min_html = false) {
 
         ob_start();
 
-        $this->renderAsset($tpl_file, $data);
+        $this->renderAsset($tpl_file, $data, $request);
 
-        return ob_get_clean();
+        $html = ob_get_clean();
+
+        return ($min_html && $this->site_config->min_html) ? html_minify($html) : $html;
     }
 
     /**

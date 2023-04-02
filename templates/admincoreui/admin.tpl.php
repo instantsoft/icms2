@@ -86,7 +86,7 @@
                     </a>
                     <div class="dropdown-menu">
                         <?php foreach ($langs as $lang) { ?>
-                            <a class="dropdown-item<?php if($lang == $current_lang){ ?> active<?php } ?>" href="<?php html(($config->language == $lang ? '' : '/'.$lang).$_SERVER['REQUEST_URI']); ?>">
+                            <a class="dropdown-item<?php if($lang === $current_lang){ ?> active<?php } ?>" href="<?php html($config->root . ($config->language === $lang ? '' : $lang.'/').$core->uri.($core->uri_query ? '?'.http_build_query($core->uri_query) : '')); ?>">
                                 <?php echo strtoupper($lang); ?>
                             </a>
                         <?php } ?>

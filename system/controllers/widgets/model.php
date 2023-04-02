@@ -111,7 +111,7 @@ class modelWidgets extends cmsModel {
             }
 
             return $item;
-        }, false);
+        }, false) ?: [];
     }
 
     public function getWidgetsForPages($pages_list, $template){

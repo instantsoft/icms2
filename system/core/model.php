@@ -99,18 +99,21 @@ class cmsModel {
     protected $lang;
     protected $default_lang;
 
-    public function __construct(){
+    public function __construct() {
 
         $this->name = strtolower(str_replace('model', '', get_called_class()));
 
         $this->db = cmsCore::getInstance()->db;
 
-        $this->lang = cmsCore::getLanguageName();
+        $this->lang         = cmsCore::getLanguageName();
         $this->default_lang = cmsConfig::get('language');
 
-        $this->localized = self::$global_localized;
+        if (cmsConfig::getInstance()->isfindLocalized()) {
+            self::globalLocalizedOn();
+        }
 
-	}
+        $this->localized = self::$global_localized;
+    }
 
 //============================================================================//
 //============================================================================//
