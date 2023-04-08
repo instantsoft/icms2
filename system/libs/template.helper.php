@@ -66,6 +66,9 @@ function html_input($type = 'text', $name = '', $value = '', $attributes = []) {
     if ($type === 'password') {
         $attributes['autocomplete'] = 'off';
     }
+    if ($type === 'number') {
+        $attributes['inputmode'] = 'decimal';
+    }
     $attributes['type']  = $type;
     $attributes['name']  = $name;
     $attributes['value'] = $value;
