@@ -4,46 +4,75 @@
  */
 class actionAdminCtypesFields extends cmsAction {
 
-    public function run($ctype_id = null) {
+    use icms\traits\controllers\actions\listgrid {
+        renderListItemsGrid as private traitRenderListItemsGrid;
+    }
 
-        if (!$ctype_id) {
+    private $ctype = [];
+
+    public function __construct($controller, $params = []) {
+
+        parent::__construct($controller, $params);
+
+        $ctype_id = $params[0] ?? 0;
+
+        $this->ctype = $this->model_backend_content->getContentType($ctype_id);
+        if (!$this->ctype) {
             return cmsCore::error404();
         }
 
-        $ctype = $this->model_backend_content->getContentType($ctype_id);
-        if (!$ctype) {
-            return cmsCore::error404();
-        }
+        $this->table_name = $this->model->getContentTypeTableName($this->ctype['name']) . '_fields';
+        $this->grid_name  = 'ctype_fields';
+        $this->grid_args  = $this->ctype['name'];
+        $this->title      = LANG_CP_CTYPE_FIELDS;
 
-        $this->dispatchEvent('ctype_loaded', [$ctype, 'fields']);
+        $this->tool_buttons = [
+            [
+                'class' => 'add',
+                'title' => LANG_CP_FIELD_ADD,
+                'href'  => $this->cms_template->href_to('ctypes', ['fields_add', $this->ctype['id']])
+            ],
+            [
+                'class' => 'view_list',
+                'title' => LANG_CP_CTYPE_TO_LIST,
+                'href'  => $this->cms_template->href_to('ctypes')
+            ]
+        ];
 
-        $grid = $this->loadDataGrid('ctype_fields', $ctype['name']);
+        $this->list_callback = function ($model) {
 
-        if ($this->request->isAjax()) {
+            $model->selectTranslatedField('i.values', $this->table_name, 'default');
 
-            $filter     = [];
-            $filter_str = cmsUser::getUPSActual('admin.grid_filter.ctypes_fields', $this->request->get('filter', ''));
+            return $model;
+        };
 
-            if ($filter_str){
-                parse_str($filter_str, $filter);
-                $this->model_backend_content->applyGridFilter($grid, $filter);
-            }
+        $this->item_callback = function ($item, $model) {
 
-            $this->model_backend_content->orderBy('ordering', 'asc');
+            $field_class = 'field' . string_to_camel('_', $item['type']);
 
-            $fields = $this->model_backend_content->getContentFields($ctype['name'], false, false);
+            $handler = new $field_class($item['name']);
 
-            $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
+            $item['handler_title'] = $handler->getTitle();
 
-            $this->cms_template->renderGridRowsJSON($grid, $fields);
+            return $item;
+        };
+    }
 
-            return $this->halt();
-        }
+    public function renderListItemsGrid(){
 
-        return $this->cms_template->render('ctypes_fields', [
-            'ctype' => $ctype,
-            'grid'  => $grid
+        // Для того, чтобы сформировалось подменю типа контента, см system/controllers/admin/actions/ctypes.php
+        $this->dispatchEvent('ctype_loaded', [$this->ctype, 'fields']);
+
+        $this->cms_template->addMenuItem('breadcrumb-menu', [
+            'title' => LANG_HELP,
+            'url'   => LANG_HELP_URL_CTYPES_FIELDS,
+            'options' => [
+                'target' => '_blank',
+                'icon'   => 'question-circle'
+            ]
         ]);
+
+        return $this->traitRenderListItemsGrid();
     }
 
 }

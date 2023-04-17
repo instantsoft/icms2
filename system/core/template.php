@@ -2186,7 +2186,7 @@ class cmsTemplate {
             header('Content-type: application/json; charset=utf-8');
         }
 
-        $json = json_encode($data);
+        $json = json_encode($data, JSON_UNESCAPED_UNICODE);
 
         if ($json === false) {
             $json = json_encode([
@@ -2448,252 +2448,33 @@ class cmsTemplate {
 
     /**
      * Печатает шаблон Grid таблицы
+     * И загружает данные по ajax
      *
-     * @param string $source_url URL ajax запроса списка данных
-     * @param array $grid Данные Grid таблицы
+     * @param string|false $source_url URL ajax запроса списка данных
+     * @param cmsGrid $grid Данные Grid таблицы
      */
-    public function renderGrid($source_url, $grid) {
+    public function renderGrid($source_url, cmsGrid $grid) {
 
-        $this->addTplJSName('datagrid');
+        $grid->source_url = $source_url;
 
-        if ($grid['options']['is_pagination']) {
-            $this->addTplJSName('datagrid-pagination');
-        }
-
-        if ($grid['options']['is_draggable']) {
-            $this->addTplJSName('datagrid-drag');
-        }
-
-        $grid['source_url'] = $source_url;
-
-        $this->renderAsset('ui/grid-data', $grid);
+        $this->renderAsset('ui/grid-data', [
+            'grid' => $grid,
+            'rows' => $grid->makeGridRows() // без данных
+        ]);
     }
 
-    public function renderGridRowsJSON($grid, $dataset, $total = 1, $pages_count = 1) {
-        echo json_encode($this->getGridRows($grid, $dataset, $total, $pages_count));
-    }
+    /**
+     * Печатает JSON сформированные данные грида
+     *
+     * @param cmsGrid $grid Объект грида
+     * @param array $dataset Данные из таблицы БД
+     * @param integer $total Сколько всего записей
+     * @param integer $pages_count @deprecated
+     * @return void
+     */
+    public function renderGridRowsJSON(cmsGrid $grid, $dataset, $total = 0, $pages_count = 1) {
 
-    public function getGridRows($grid, $dataset, $total = 1, $pages_count = 1) {
-
-        $rows = $titles = $classes = [];
-        $row_index = 0;
-
-        //
-        // проходим по всем строкам из набора данных
-        //
-        if ($total && $dataset){
-            foreach($dataset as $row){
-
-                $cell_index = 0;
-                $editable_index = 1;
-                $editable_count = count(array_filter($grid['columns'], function($element) { return isset($element['editable']); }));
-
-                // вычисляем содержимое для каждой колонки таблицы
-                foreach($grid['columns'] as $field => $column){
-
-                    $titles[$cell_index] = isset($column['title']) ? $column['title'] : '';
-                    $classes[$cell_index] = isset($column['class']) ? $column['class'] : '';
-
-                    if (isset($column['key_alias'])){
-                        $field = $column['key_alias'];
-                    }
-
-                    if(isset($row[$field])){
-                        if (!is_array($row[$field]) && !isset($column['handler'])){
-                            $value = html($row[$field], false);
-                        } else {
-                            $value = $row[$field];
-                        }
-                        if ($value === null) { $value = ''; }
-                    } else {
-                        $value = '';
-                    }
-
-                    if (isset($column['flag']) && $column['flag']){
-
-                        if (isset($column['flag_handler'])){
-                            $value = $column['flag_handler']($value, $row);
-                        }
-
-						if (isset($column['flag_on'])){
-							$is_flag_on = $value == $column['flag_on'];
-						} else {
-							$is_flag_on = (int)$value;
-						}
-
-                        $flag_class = $column['flag']===true ? 'flag' : $column['flag'];
-
-						$flag_toggle_url = isset($column['flag_toggle']) ? $column['flag_toggle'] : false;
-
-						if ($flag_toggle_url){
-							$flag_toggle_url = string_replace_keys_values($flag_toggle_url, $row);
-						}
-
-						$flag_content = $flag_toggle_url ? '<a href="'.$flag_toggle_url.'"></a>' : '';
-
-                        $value = '<div class="flag_trigger '.($is_flag_on > 0 ? "{$flag_class}_on" : ($is_flag_on < 0 ? "{$flag_class}_middle" : "{$flag_class}_off")).'" data-class="'.$flag_class.'">'.$flag_content.'</div>';
-
-                    }
-
-                    if (isset($column['handler'])){
-                        $value = $column['handler']($value, $row);
-                    }
-
-                    // если из значения нужно сделать ссылку, то парсим шаблон
-                    // адреса, заменяя значения полей
-                    if (isset($column['href'])){
-                        if (isset($column['href_handler'])){
-                            $is_active = $column['href_handler']($row);
-                        } else {
-                            $is_active = true;
-                        }
-                        if($is_active){
-                            $column['href'] = string_replace_keys_values_extended($column['href'], $row);
-                            $value = '<a href="'.$column['href'].'">'.$value.'</a>';
-                        }
-                    }
-
-                    if (isset($column['editable'])) {
-
-                        if (!empty($row['id']) && !empty($column['editable']['table'])) {
-                            $save_action = href_to('admin', 'inline_save', [urlencode($column['editable']['table']), $row['id']]);
-                        }
-
-                        if (!empty($column['editable']['save_action'])) {
-                            $save_action = string_replace_keys_values_extended($column['editable']['save_action'], $row);
-                        }
-
-                        $attributes = ['autocomplete' => 'off'];
-
-                        if (!empty($column['editable']['attributes'])) {
-                            foreach ($column['editable']['attributes'] as $akey => $avalue) {
-                                if (is_string($avalue)) {
-                                    $attributes[$akey] = string_replace_keys_values_extended($avalue, $row);
-                                } else {
-                                    $attributes[$akey] = $avalue;
-                                }
-                            }
-                        }
-                        if (!empty($save_action)) {
-
-                            $save_action .='?csrf_token='.cmsForm::getCSRFToken();
-
-                            $value = '<div class="grid_field_value ' . $field . '_grid_value ' . ((isset($column['href']) ? 'edit_by_click' : '')) . '"><span>' . $value . '</span></div>';
-                            $value .= '<div class="grid_field_edit ' . ((isset($column['href']) ? 'edit_by_click' : '')) . '">' . html_input('text', $field, $row[$field], $attributes);
-                            if ($editable_index == $editable_count) {
-                                $value .= html_button(LANG_SAVE, '', '', ['data-action' => $save_action, 'class' => 'inline_submit  btn-primary']);
-                            }
-                            $value .= '</div>';
-
-                            $editable_index++;
-                        }
-                    }
-
-                    $rows[$row_index][] = $value;
-
-                    $cell_index++;
-                }
-
-                // если есть колонка действий, то формируем набор ссылок
-                // для текущей строки
-                if ($grid['actions']){
-
-                    $titles[$cell_index] = LANG_CP_ACTIONS;
-                    $classes[$cell_index] = '';
-
-                    $actions_html = '<div class="actions">';
-
-                    foreach($grid['actions'] as $action){
-
-                        $confirm_attr = '';
-
-                        if (isset($action['handler'])){
-                            $is_active = $action['handler']($row);
-                        } else {
-                            $is_active = true;
-                        }
-
-                        if ($is_active){
-
-                            // парсим шаблон адреса, заменяя значения полей
-                            if (isset($action['href'])){
-                                $action['href'] = string_replace_keys_values_extended($action['href'], $row);
-                            }
-
-                            // парсим шаблон запроса подтверждения, заменяя значения полей
-                            if (isset($action['confirm'])){
-                                $action['confirm'] = string_replace_keys_values_extended($action['confirm'], $row);
-                                $confirm_attr = 'onclick="if(!confirm(\''.html($action['confirm'], false).'\')){ return false; }"';
-                            }
-
-                            // все действия с подтверждением снабжаем csrf_token
-                            if ($confirm_attr && !empty($action['href'])){
-                                $action['href'] .= (strpos($action['href'], '?') !== false ? '&' : '?').'csrf_token='.cmsForm::getCSRFToken();
-                            }
-
-                            $actions_html .= '<a data-toggle="tooltip" data-placement="top" class="'.$action['class'].'" href="'.$action['href'].'" title="'.$action['title'].'" '.$confirm_attr.'></a>';
-
-                        }
-
-                    }
-
-                    $actions_html .= '</div>';
-
-                    $rows[$row_index][] = $actions_html;
-
-                    $cell_index++;
-
-                }
-
-                $row_index++;
-            }
-        }
-
-        $columns = array();
-        if($grid['options']['load_columns']){
-            $clear_filter = '<a class="clear_filter" href="#" onclick="return icms.datagrid.resetFilter(this)"></a>';
-            foreach($grid['columns'] as $name=>$column){
-                if(!empty($column['filter']) && $column['filter'] !== 'none'){
-                    $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : array();
-                    if(strpos($name, 'date_') === 0){
-                        $filter = html_datepicker('filter_'.$name, (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input form-control-sm')), array('minDate'=>date(cmsConfig::get('date_format'), 86400))).$clear_filter;
-                    }
-                    elseif(!empty($column['filter_select'])){
-                        $filter = html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class'=>'custom-select custom-select-sm')));
-                    } else {
-                        $filter = html_input('text', 'filter_'.$name, (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'form-control-sm'))).$clear_filter;
-                    }
-                } else {
-                    $filter = '';
-                }
-                $columns[] = array(
-                    'sortable'  => $grid['options']['is_sortable'],
-                    'width'     => isset($column['width']) ? $column['width'] : '',
-                    'title'     => isset($column['title']) ? $column['title'] : '',
-                    'name'      => $name,
-                    'filter'    => $filter,
-                    'order_to'  => !empty($grid['filter']['order_by']) && $grid['filter']['order_by'] === $name && !empty($grid['filter']['order_to']) ? $grid['filter']['order_to'] : ''
-                );
-            }
-            if($grid['actions']){
-                $columns[] = array(
-                    'sortable'  => false,
-                    'width'     => count($grid['actions']) * 30,
-                    'title'     => LANG_CP_ACTIONS,
-                    'name'      => 'dg_actions',
-                    'filter'    => ''
-                );
-            }
-        }
-
-        return [
-            'classes'     => $classes,
-            'titles'      => $titles,
-            'rows'        => $rows,
-            'pages_count' => $pages_count,
-            'total'       => $total,
-            'columns'     => $columns
-        ];
+        $this->renderJSON($grid->makeGridRows(($dataset ?: []), $total));
     }
 
     /**

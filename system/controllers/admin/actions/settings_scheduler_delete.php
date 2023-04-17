@@ -2,19 +2,14 @@
 
 class actionAdminSettingsSchedulerDelete extends cmsAction {
 
-    public function run($id){
+    use icms\traits\controllers\actions\deleteItem;
 
-        if (!$id) { cmsCore::error404(); }
+    public function __construct($controller, $params = []) {
 
-        if (!cmsForm::validateCSRFToken( $this->request->get('csrf_token', '') )){
-            cmsCore::error404();
-        }
+        parent::__construct($controller, $params);
 
-        $this->model->deleteSchedulerTask($id);
-
-        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
-
-        $this->redirectToAction('settings', array('scheduler'));
+        $this->table_name  = 'scheduler_tasks';
+        $this->success_url = $this->cms_template->href_to('settings', 'scheduler');
 
     }
 

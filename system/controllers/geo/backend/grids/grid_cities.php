@@ -2,63 +2,57 @@
 
 function grid_cities($controller) {
 
-    $options = array(
-        'is_sortable'   => true,
+    $options = [
+        'is_sortable'   => false,
         'is_filter'     => true,
         'is_pagination' => true,
         'is_draggable'  => true,
-        'drag_save_url' => $controller->cms_template->href_to('cities_reorder'),
+        'drag_save_url' => href_to('admin', 'reorder', 'geo_cities'),
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
-        'show_id'       => true
-    );
+        'show_id'       => false
+    ];
 
-    $columns = array(
-        'id' => array(
-            'title'  => 'ID',
-            'class'  => 'd-none d-lg-table-cell',
-            'width'  => 20,
-            'filter' => 'exact'
-        ),
-        'name' => array(
+    $columns = [
+        'id' => [
+            'title' => 'ID'
+        ],
+        'name' => [
             'title'    => LANG_TITLE,
-            'href'     => href_to($controller->root_url, 'city', array('{id}')),
+            'href'     => href_to($controller->root_url, 'city', ['{id}']),
             'filter'   => 'like',
-            'editable' => array(
-                'table' => 'geo_cities'
-            )
-        ),
-        'ordering' => array(
-            'title' => LANG_GEO_POSITION,
-            'class' => 'd-none d-lg-table-cell',
-            'width' => 60
-        ),
-        'is_enabled' => array(
+            'editable' => [
+                'rules' => [
+                    ['required'],
+                    ['max_length', 128]
+                ]
+            ]
+        ],
+        'is_enabled' => [
             'title'       => LANG_IS_ENABLED,
             'flag'        => true,
-            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'geo_cities', 'is_enabled')),
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', ['{id}', 'geo_cities', 'is_enabled']),
             'width'       => 80
-        )
-    );
+        ]
+    ];
 
-    $actions = array(
-        array(
+    $actions = [
+        [
             'title' => LANG_EDIT,
             'class' => 'edit',
-            'href'  => href_to($controller->root_url, 'city', array('{id}'))
-        ),
-        array(
+            'href'  => href_to($controller->root_url, 'city', ['{id}'])
+        ],
+        [
             'title'   => LANG_DELETE,
             'class'   => 'delete',
-            'href'    => href_to($controller->root_url, 'delete', array('city', '{id}')),
+            'href'    => href_to($controller->root_url, 'delete', ['city', '{id}']),
             'confirm' => LANG_GEO_DELETE_CITY
-        )
-    );
+        ]
+    ];
 
-    return array(
+    return [
         'options' => $options,
         'columns' => $columns,
         'actions' => $actions
-    );
-
+    ];
 }

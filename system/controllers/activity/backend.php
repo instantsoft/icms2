@@ -15,15 +15,11 @@ class backendActivity extends cmsBackend {
         });
     }
 
-    public function actionIndex() {
-        $this->redirectToAction('options');
-    }
-
     public function getBackendMenu() {
         return [
             [
                 'title' => LANG_OPTIONS,
-                'url'   => href_to($this->root_url, 'options'),
+                'url'   => href_to($this->root_url),
                 'options' => [
                     'icon' => 'cog'
                 ]

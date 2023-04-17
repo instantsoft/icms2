@@ -1,86 +1,89 @@
 <?php
 
-function grid_presets($controller){
+function grid_presets($controller) {
 
-    $options = array(
-        'is_sortable' => false,
-        'is_filter' => false,
+    $options = [
+        'is_sortable'   => false,
+        'is_filter'     => false,
         'is_pagination' => false,
-        'is_draggable' => false,
-        'show_id' => false
-    );
+        'is_draggable'  => false,
+        'show_id'       => false
+    ];
 
-    $columns = array(
-        'id' => array(
-            'title' => 'id',
-            'width' => 30,
-        ),
-        'title' => array(
-            'title' => LANG_IMAGES_PRESET,
-            'href' => href_to($controller->root_url, 'presets_edit', array('{id}')),
-            'editable' => array(
-                'table' => 'images_presets'
-            )
-        ),
-        'name' => array(
-            'title' => LANG_SYSTEM_NAME,
-            'width' => 200
-        ),
-        'width' => array(
-            'title' => LANG_IMAGES_PRESET_SIZE,
-            'width' => 100,
-			'handler' => function($val, $row){
-				return ($val ? $val : LANG_AUTO) . ' x ' . ($row['height'] ? $row['height'] : LANG_AUTO);
-			}
-        ),
-        'convert_format' => array(
-            'title' => LANG_CP_FORMAT,
-			'handler' => function($val, $row){
-				return $val ?: LANG_IMAGES_PRESET_OUT_ASIS;
-			},
-            'width' => 70
-        ),
-        'quality' => array(
-            'title' => LANG_IMAGES_PRESET_QUALITY,
-			'handler' => function($val, $row){
-				return $val.' %';
-			},
-            'width' => 70
-        ),
-        'is_square' => array(
-            'title' => LANG_IMAGES_PRESET_CROP,
-			'flag' => true,
-            'width' => 120
-        ),
-        'is_watermark' => array(
-            'title' => LANG_IMAGES_PRESET_WM,
-			'flag' => true,
-            'width' => 100
-        ),
-    );
+    $columns = [
+        'id' => [
+            'title' => 'id'
+        ],
+        'title' => [
+            'title'    => LANG_IMAGES_PRESET,
+            'href'     => href_to($controller->root_url, 'presets_edit', ['{id}']),
+            'editable' => []
+        ],
+        'name' => [
+            'title'      => LANG_SYSTEM_NAME,
+            'switchable' => true
+        ],
+        'width' => [
+            'title'      => LANG_IMAGES_PRESET_SIZE,
+            'width'      => 100,
+            'switchable' => true,
+            'handler'    => function ($val, $row) {
+                return ($val ? $val : LANG_AUTO) . ' x ' . ($row['height'] ? $row['height'] : LANG_AUTO);
+            }
+        ],
+        'convert_format' => [
+            'title'      => LANG_CP_FORMAT,
+            'switchable' => true,
+            'handler'    => function ($val, $row) {
+                return $val ?: LANG_IMAGES_PRESET_OUT_ASIS;
+            }
+        ],
+        'quality' => [
+            'title'      => LANG_IMAGES_PRESET_QUALITY,
+            'switchable' => true,
+            'handler'    => function ($val, $row) {
+                return $val . ' %';
+            },
+            'editable' => [],
+            'width'    => 70
+        ],
+        'is_square' => [
+            'title'      => LANG_IMAGES_PRESET_CROP,
+            'switchable' => true,
+            'flag'       => true,
+            'width'      => 120
+        ],
+        'is_watermark' => [
+            'title'      => LANG_IMAGES_PRESET_WM,
+            'switchable' => true,
+            'flag'       => true,
+            'width'      => 100
+        ]
+    ];
 
-    $actions = array(
-        array(
+    $actions = [
+        [
             'title' => LANG_EDIT,
             'class' => 'edit',
-            'href' => href_to($controller->root_url, 'presets_edit', array('{id}')),
-        ),
-        array(
-            'title' => LANG_DELETE,
-            'class' => 'delete',
-            'href' => href_to($controller->root_url, 'presets_delete', array('{id}')),
+            'href'  => href_to($controller->root_url, 'presets_edit', ['{id}']),
+        ],
+        [
+            'title'   => LANG_DELETE,
+            'class'   => 'delete',
+            'href'    => href_to($controller->root_url, 'presets_delete', ['{id}']),
             'confirm' => LANG_IMAGES_PRESET_DELETE_CONFIRM,
-			'handler' => function($row){
-				if($row['is_internal']){ return false; }
-				return true;
-			}
-        )
-    );
+            'handler' => function ($row) {
+                if ($row['is_internal']) {
+                    return false;
+                }
+                return true;
+            }
+        ]
+    ];
 
-    return array(
+    return [
         'options' => $options,
         'columns' => $columns,
         'actions' => $actions
-    );
-
+    ];
 }

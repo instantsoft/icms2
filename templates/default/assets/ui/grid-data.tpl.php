@@ -102,7 +102,7 @@
 <?php } ?>
 <?php if ($options['is_selectable']){ ?>
     <div class="datagrid_select_actions">
-        <strong class="shint"><?php echo LANG_CP_SELECT_HINT; ?></strong>
+        <strong class="shint"><?php echo LANG_GRID_SELECT_HINT; ?></strong>
         <span class="sall"><?php echo LANG_SELECT_ALL; ?></span>
         <span class="sremove"><?php echo LANG_DESELECT_ALL; ?></span>
         <span class="sinvert"><?php echo LANG_INVERT_ALL; ?></span>

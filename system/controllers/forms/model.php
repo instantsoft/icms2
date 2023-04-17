@@ -192,15 +192,6 @@ class modelForms extends cmsModel {
         return true;
     }
 
-    public function reorderFormFields($fields_ids_list){
-
-        $this->reorderByList('forms_fields', $fields_ids_list);
-
-        cmsCache::getInstance()->clean('forms.fields');
-
-        return true;
-    }
-
     public function deleteController($id) {
 
         $this->db->dropTable('forms');

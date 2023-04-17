@@ -20,9 +20,10 @@ function grid_tags($controller) {
 
     $actions = [
         [
-            'title' => LANG_VIEW,
-            'class' => 'view',
-            'href'  => href_to('tags', '{tag|string_urlencode}')
+            'title'  => LANG_VIEW,
+            'class'  => 'view',
+            'target' => '_blank',
+            'href'   => href_to('tags', '{tag|string_urlencode}')
         ],
         [
             'title' => LANG_EDIT,

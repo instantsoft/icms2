@@ -78,8 +78,4 @@
 
 ?>
 
-<?php $this->renderGrid($this->href_to('controllers', array('events_ajax')), $grid); ?>
-
-<div class="buttons">
-    <?php echo html_button(LANG_SAVE_ORDER, 'save_button', "icms.datagrid.submit('{$this->href_to('controllers', array('events_reorder'))}')"); ?>
-</div>
+<?php echo $grid_html; ?>

@@ -71,7 +71,6 @@
     define('LANG_CP_CTYPE_DATASETS',            'Datasets');
     define('LANG_CP_CTYPE_FILTERS',             'Filters');
     define('LANG_CP_CTYPE_DATASET',             'Dataset');
-    define('LANG_CP_GRID_COLYMNS_SETTINGS',     'Columns settings');
     define('LANG_CP_GRID_COLYMNS_SYSTEM',       'System');
     define('LANG_CP_GRID_COLYMNS_USER',         'User');
     define('LANG_CP_GRID_COLYMNS_FILTER',       'Filter');
@@ -81,7 +80,6 @@
     define('LANG_CP_GRID_COLYMNS_DATE',         'Date');
     define('LANG_CP_GRID_COLYMNS_SELECT',       'Select');
     define('LANG_CP_GRID_COLYMNS_FLAG',         'Switch');
-    define('LANG_CP_GRID_COLYMNS_RESET',        'Reset');
     define('LANG_CP_GRID_COLYMNS_CUT_TEXT',     'First 100 symbols');
     define('LANG_CP_GRID_COLYMNS_IMAGES_NMB',   'Number of images');
     define('LANG_CP_GRID_COLYMNS_PREVIEW',      'Preview');
@@ -107,7 +105,6 @@
     define('LANG_CP_CONTENT_CATS_TITLES',       'Category title or categories tree');
     define('LANG_CP_CONTENT_CATS_TITLES_HINT',  'Enter one item per line to create multiple categories<br>Add a hyphen before the title to make a nested category<br><a href="https://docs.instantcms.ru/en/manual/content/cats" target="_blank">Detailed Manual</a>');
     define('LANG_CP_CONTENT_CATS_BIND',         'Bind parent category properties');
-    define('LANG_CP_SELECT_HINT',               'Click on a row to select or ');
     define('LANG_CP_BASIC',                     'Basic settings');
     define('LANG_CP_IS_COLLAPSED',              'Collapsible blocks in the add/edit item form');
     define('LANG_CP_PUBLICATION',               'Publication');

@@ -17,7 +17,7 @@
         });
     });
     function successSaveComment (form, result){
-        $('#'+result.comment_id+' .comment_text_edit').html(result.text);
+        icms.datagrid.loadRows();
         icms.modal.close();
     }
 </script>

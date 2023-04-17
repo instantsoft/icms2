@@ -42,7 +42,6 @@
     define('LANG_FILTER_IS_NULL',            'не заполнено');
     define('LANG_FILTER_APPLY',              'Фильтровать');
     define('LANG_FILTER_URL',                'Ссылка');
-    define('LANG_FILTER_SAVE_DIFF_ORDER',    'Сохранять различную сортировку');
     define('LANG_SORTING_FIELD',             'Сортировка по полю');
     define('LANG_SORTING',                   'Сортировка');
     define('LANG_SORTING_ADD',               'Добавить правило');
@@ -418,6 +417,9 @@
     define('LANG_UPLOAD_ERR_CANT_WRITE', 	 'Ошибка записи файла на диск');
     define('LANG_UPLOAD_ERR_EXTENSION', 	 'Загрузка файла была прервана');
     define('LANG_UPLOAD_ERR_MIME',           'Файл имеет неподходящий формат');
+
+    define('LANG_GRID_SELECT_HINT', 'Кликните на строку, чтобы выделить или ');
+    define('LANG_GRID_COLYMNS_SETTINGS', 'Отображение столбцов');
 
     //MONEY
     define('LANG_CURRENCY',                  'руб.');

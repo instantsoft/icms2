@@ -11,8 +11,6 @@ class actionAdminContentFilter extends cmsAction {
             return cmsCore::error404();
         }
 
-        $datasets = $this->model_backend_content->getContentDatasets($ctype_id);
-
         $fields = $this->model_backend_content->getContentFields($ctype['name']);
 
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
@@ -41,16 +39,17 @@ class actionAdminContentFilter extends cmsAction {
             ];
         }
 
+        $fields[] = [
+            'title'   => LANG_CP_SHOW_ONLY_IN_TRASH,
+            'name'    => 'is_deleted',
+            'handler' => new fieldCheckbox('is_deleted')
+        ];
+
         list($fields, $ctype) = cmsEventsManager::hook('admin_content_filter', [$fields, $ctype]);
         list($fields, $ctype) = cmsEventsManager::hook('admin_content_' . $ctype['name'] . '_filter', [$fields, $ctype]);
 
-        $diff_order = cmsUser::getUPS('admin.grid_filter.content.diff_order');
-
-        return $this->cms_template->render('content_filter', [
-            'ctype'      => $ctype,
-            'datasets'   => $datasets,
-            'fields'     => $fields,
-            'diff_order' => $diff_order
+        return $this->cms_template->render('grid_advanced_filter', [
+            'fields' => $fields
         ]);
     }
 

@@ -1,30 +1,18 @@
 <?php
 
     $this->setPageTitle(LANG_EVENTS_MANAGEMENT);
-
     $this->addBreadcrumb(LANG_EVENTS_MANAGEMENT);
 
     $this->addMenuItems('admin_toolbar', $this->controller->getAddonsMenu());
 
-    if (!empty($events_add) || !empty($events_delete)){
-
-        $this->addToolButton(array(
-            'class' => 'refresh',
-            'title' => LANG_EVENTS_REFRESH,
-            'href'  => $this->href_to('controllers', array('events_update'))
-        ));
-
-    }
-
     $this->addMenuItem('breadcrumb-menu', [
-        'title' => LANG_HELP,
-        'url'   => LANG_HELP_URL_EVENTS,
+        'title'   => LANG_HELP,
+        'url'     => LANG_HELP_URL_EVENTS,
         'options' => [
             'target' => '_blank',
-            'icon' => 'question-circle'
+            'icon'   => 'question-circle'
         ]
     ]);
-
 ?>
 
 <?php if (!empty($events_delete)){ ?>
@@ -62,7 +50,7 @@
         </div>
 
 <?php } ?>
-<div class="alert alert-warning" role="alert">
+<div class="alert alert-warning">
     <?php echo LANG_EVENTS_MANAGEMENT_HINT; ?>
 </div>
-<?php $this->renderGrid($this->href_to('controllers', array('events_ajax')), $grid);
+<?php echo $grid_html;

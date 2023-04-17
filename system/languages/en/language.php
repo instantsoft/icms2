@@ -43,7 +43,6 @@
     define('LANG_FILTER_IS_NULL',            'not filled');
     define('LANG_FILTER_APPLY',              'Apply');
     define('LANG_FILTER_URL',                'URL');
-    define('LANG_FILTER_SAVE_DIFF_ORDER',    'Save different order');
     define('LANG_SORTING_FIELD',             'Sort by field');
     define('LANG_SORTING',                   'Sort');
     define('LANG_SORTING_ADD',               'New rule');
@@ -419,6 +418,9 @@
     define('LANG_UPLOAD_ERR_CANT_WRITE', 'Failed to write file to disk');
     define('LANG_UPLOAD_ERR_EXTENSION', 	 'File upload was cancelled');
     define('LANG_UPLOAD_ERR_MIME',           'File has wrong format');
+
+    define('LANG_GRID_SELECT_HINT', 'Click on a row to select or ');
+    define('LANG_GRID_COLYMNS_SETTINGS', 'Displaying columns');
 
     //MONEY
     define('LANG_CURRENCY',                  '$');

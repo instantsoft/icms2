@@ -1,50 +1,49 @@
 <?php
 
-function grid_feeds($controller){
+function grid_feeds($controller) {
 
-    $options = array(
+    $options = [
         'order_by' => 'title',
         'order_to' => 'asc',
-    );
+    ];
 
-    $columns = array(
-        'title' => array(
-            'title' => LANG_RSS_FEED_TITLE,
-            'href' => href_to($controller->root_url, 'edit', array('{id}')),
+    $columns = [
+        'title' => [
+            'title'  => LANG_RSS_FEED_TITLE,
+            'href'   => href_to($controller->root_url, 'edit', ['{id}']),
             'filter' => 'like'
-        ),
-        'is_enabled' => array(
-            'title' => LANG_IS_ENABLED,
-            'flag'  => true,
-            'width' => 60,
-            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'rss_feeds', 'is_enabled'))
-        ),
-        'is_cache' => array(
-            'title' => LANG_RSS_FEED_IS_CACHE,
-            'flag'  => true,
-            'width' => 60,
-            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'rss_feeds', 'is_cache'))
-        ),
-    );
+        ],
+        'is_enabled' => [
+            'title'       => LANG_IS_ENABLED,
+            'flag'        => true,
+            'width'       => 60,
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', ['{id}', 'rss_feeds', 'is_enabled'])
+        ],
+        'is_cache' => [
+            'title'       => LANG_RSS_FEED_IS_CACHE,
+            'flag'        => true,
+            'width'       => 60,
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', ['{id}', 'rss_feeds', 'is_cache'])
+        ]
+    ];
 
-    $actions = array(
-        array(
-            'title' => LANG_VIEW,
-            'class' => 'rss',
-            'href' => href_to('rss', 'feed', '{ctype_name}')
-        ),
-        array(
+    $actions = [
+        [
+            'title'  => LANG_VIEW,
+            'target' => '_blank',
+            'class'  => 'rss',
+            'href'   => href_to('rss', 'feed', '{ctype_name}')
+        ],
+        [
             'title' => LANG_EDIT,
             'class' => 'edit',
-            'href' => href_to($controller->root_url, 'edit', array('{id}')),
-        ),
-    );
+            'href'  => href_to($controller->root_url, 'edit', ['{id}']),
+        ]
+    ];
 
-    return array(
+    return [
         'options' => $options,
         'columns' => $columns,
         'actions' => $actions
-    );
-
+    ];
 }
-

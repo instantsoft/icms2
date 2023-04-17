@@ -4,77 +4,190 @@
  */
 class actionAdminContent extends cmsAction {
 
-    public function run($do = false) {
+    use icms\traits\oneable;
 
-        $ctype_id = 0;
-        $ctype    = [];
+    use icms\traits\controllers\actions\listgrid {
+        getListItemsGridHtml as private traitGetListItemsGridHtml;
+    }
 
-        // если нужно, передаем управление другому экшену
-        if ($do) {
-            if (!is_numeric($do)) {
-                $this->runExternalAction('content_' . $do, array_slice($this->params, 1));
-                return;
-            } else {
-                $ctype_id = $do;
-            }
+    private $ctype = [];
+
+    private $tree_path_key = '';
+
+    private $category_id = 1;
+
+    public function __construct($controller, $params = []) {
+
+        parent::__construct($controller, $params);
+
+        $this->external_action_prefix = 'content_';
+
+        $this->toolbar_hook = 'admin_content_toolbar';
+    }
+
+    public function prepareRun() {
+
+        $this->loadCtype(($this->params[0] ?? 0), ($this->params[1] ?? false));
+
+        $category = $this->model_backend_content->getCategory($this->ctype['name'], $this->category_id);
+        if (!$category) {
+            return cmsCore::error404();
         }
 
-        $ctypes = $this->model_backend_content->getContentTypesFiltered();
+        $this->table_name = $this->model->getContentTypeTableName($this->ctype['name']);
+        $this->grid_name  = 'content_items';
+        $this->grid_args  = [$this->ctype];
+        $this->ups_key    = $this->ctype['name'].'.';
 
-        $key_path = '/1.1';
+        $this->tool_buttons = [
+            [
+                'class' => 'menu d-xl-none',
+                'data'  => [
+                    'toggle' =>'quickview',
+                    'toggle-element' => '#left-quickview'
+                ],
+                'title' => LANG_MENU
+            ],
+            [
+                'class' => 'settings',
+                'title' => LANG_CONFIG,
+                'href'  => null
+            ],
+            [
+                'class' => 'logs',
+                'title' => LANG_MODERATION_LOGS,
+                'href'  => null
+            ],
+            [
+                'class'        => 'folder',
+                'childs_count' => 4,
+                'title'        => LANG_CATEGORIES
+            ],
+            [
+                'class' => 'add_folder',
+                'level' => 2,
+                'title' => LANG_CP_CONTENT_CATS_ADD
+            ],
+            [
+                'class' => 'edit_folder',
+                'level' => 2,
+                'title' => LANG_EDIT
+            ],
+            [
+                'class'   => 'delete_folder',
+                'level'   => 2,
+                'title'   => LANG_DELETE_CATEGORY,
+                'confirm' => LANG_DELETE_CATEGORY_CONFIRM
+            ],
+            [
+                'class'   => 'tree_folder',
+                'level'   => 2,
+                'title'   => LANG_CP_CONTENT_CATS_ORDER,
+                'onclick' => 'return contentCatsReorder($(this))'
+            ],
+            [
+                'class' => 'add add_site',
+                'title' => LANG_CP_CONTENT_ITEM_ADD
+            ],
+            [
+                'class' => 'add add_cpanel',
+                'title' => LANG_CP_CONTENT_ITEM_ADD_CP
+            ]
+        ];
+
+        $this->list_callback = function ($model) use($category) {
+
+            $model->filterCategory($this->ctype['name'], $category, true, !empty($this->ctype['options']['is_cats_multi']));
+
+            $model->joinUser();
+
+            $model->joinLeft(
+                'moderators_logs',
+                'mlog',
+                "mlog.target_id = i.id AND mlog.target_controller = 'content' AND mlog.target_subject = '{$this->ctype['name']}' AND mlog.date_expired IS NOT NULL"
+            );
+            $model->select('mlog.date_expired', 'trash_date_expired');
+
+            $model->joinModerationsTasks($this->ctype['name']);
+
+            return $model;
+        };
+    }
+
+    public function getListItemsGridHtml() {
+
+        $ctypes = $this->getOnce($this->model_backend_content)->getContentTypesFiltered();
+
+        $grid_html = $this->traitGetListItemsGridHtml();
+
+        return $this->cms_template->renderInternal($this, 'content', [
+            'key_path'  => $this->tree_path_key,
+            'ctype'     => $this->ctype,
+            'ctypes'    => $ctypes,
+            'grid_html' => $grid_html
+        ]);
+    }
+
+    private function loadCtype($ctype_id, $category_id) {
+
+        if ($category_id !== false) {
+            $this->category_id = $category_id;
+        }
+
+        // Если передан из урл
+        if ($ctype_id) {
+
+            $this->ctype = $this->model_backend_content->getContentType($ctype_id);
+
+            if (!$this->ctype) {
+                return cmsCore::error404();
+            }
+        }
 
         // Сохранённый путь дерева
         $tree_path = cmsUser::getCookie('content_tree_path');
 
         if ($tree_path) {
-            $tree_path = explode('/', trim($tree_path, '/'));
-        }
 
-        // Если $ctype_id передан, формируем $key_path
-        if ($ctype_id) {
+            $tree_path = ltrim($tree_path, '/');
 
-            $key_path = '/' . $ctype_id . '.1';
+            if (preg_match('/^([0-9\/\.]+)$/i', $tree_path)) {
 
-            // дополняем его категориями, если в куках этот тип контента
-            if ($tree_path && '/' . $tree_path[0] === $key_path) {
-                $key_path = '/' . implode('/', $tree_path);
-            }
-        } else {
+                $this->tree_path_key = $tree_path;
 
-            // Иначе, берём id типа контента из кук и формируем $key_path
-            if ($tree_path) {
+                $tree_keys = explode('/', $tree_path);
 
-                $ctype_id = (int) $tree_path[0];
+                $tree_key = explode('.', end($tree_keys));
 
-                $key_path = '/' . implode('/', $tree_path);
-            }
-        }
+                $ctype_id = (int)($tree_key[0] ?? 0);
 
-        if ($ctype_id) {
+                // если не передан из урла, берём из куки
+                if (!$this->ctype) {
+                    $this->ctype = $this->model_backend_content->getContentType($ctype_id);
+                }
 
-            $ctype = $this->model_backend_content->getContentType($ctype_id);
+                if ($this->ctype) {
 
-            if (!$ctype && $do) {
-                return cmsCore::error404();
+                    if ($category_id === false) {
+                        $this->category_id = (int)($tree_key[1] ?? $this->category_id);
+                    }
+
+                    return;
+                }
             }
         }
 
-        if (!empty($ctype)) {
-            $grid = $this->loadDataGrid('content_items', $ctype['name'], 'admin.grid_filter.content.' . $ctype['name']);
-        } else {
-            $grid = $this->loadDataGrid('content_items');
+        // Иначе первый из списка
+        if (!$this->ctype) {
+
+            $ctypes = $this->getOnce($this->model_backend_content)->getContentTypesFiltered();
+
+            $this->ctype = reset($ctypes);
+
+            $this->tree_path_key = $this->ctype['id'].'.'.$this->category_id;
         }
 
-        $diff_order = cmsUser::getUPS('admin.grid_filter.content.diff_order');
-
-        return $this->cms_template->render('content', [
-            'key_path'   => $key_path,
-            'ctype'      => $ctype,
-            'ctype_id'   => $ctype_id,
-            'ctypes'     => $ctypes,
-            'grid'       => $grid,
-            'diff_order' => $diff_order
-        ]);
+        return;
     }
 
 }

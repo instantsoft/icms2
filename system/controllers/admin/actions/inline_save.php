@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @deprecated
+ * Экшен получения списка записей должен
+ * так же сохранять поле, см. пример /system/traits/controllers/actions/listgrid.php
+ */
 class actionAdminInlineSave extends cmsAction {
 
     public function run($table = null, $item_id = null, $disable_language_context = null) {

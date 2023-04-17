@@ -1,6 +1,6 @@
 <?php
 
-class actionGroupsFields extends cmsAction {
+class actionGroupsIndex extends cmsAction {
 
     use icms\traits\controllers\actions\listgrid;
 
@@ -27,20 +27,15 @@ class actionGroupsFields extends cmsAction {
             return $model;
         };
 
-        $this->items_callback = function ($items) {
+        $this->item_callback = function ($item, $model) {
 
-            if($items){
-                foreach ($items as $key => $item) {
+            $field_class = 'field' . string_to_camel('_', $item['type']);
 
-                    $field_class = 'field' . string_to_camel('_', $item['type']);
+            $handler = new $field_class($item['name']);
 
-                    $handler = new $field_class($item['name']);
+            $item['handler_title'] = $handler->getTitle();
 
-                    $items[$key]['handler_title'] = $handler->getTitle();
-                }
-            }
-
-            return $items;
+            return $item;
         };
 
     }

@@ -4,35 +4,61 @@
  */
 class actionAdminCtypesRelations extends cmsAction {
 
-    public function run($ctype_id = null) {
+    use icms\traits\controllers\actions\listgrid {
+        renderListItemsGrid as private traitRenderListItemsGrid;
+    }
 
-        if (!$ctype_id) {
+    private $ctype = [];
+
+    public function __construct($controller, $params = []) {
+
+        parent::__construct($controller, $params);
+
+        $ctype_id = $params[0] ?? 0;
+
+        $this->ctype = $this->model_backend_content->getContentType($ctype_id);
+        if (!$this->ctype) {
             return cmsCore::error404();
         }
 
-        $ctype = $this->model_backend_content->getContentType($ctype_id);
-        if (!$ctype) {
-            return cmsCore::error404();
-        }
+        $this->table_name = 'content_relations';
+        $this->grid_name  = 'ctype_relations';
+        $this->title      = LANG_CP_CTYPE_RELATIONS;
 
-        $grid = $this->loadDataGrid('ctype_relations', href_to('admin', 'ctypes', ['relations_reorder', $ctype['id']]));
+        $this->tool_buttons = [
+            [
+                'class' => 'add',
+                'title' => LANG_CP_RELATION_ADD,
+                'href'  => $this->cms_template->href_to('ctypes', ['relations_add', $this->ctype['id']])
+            ],
+            [
+                'class' => 'view_list',
+                'title' => LANG_CP_CTYPE_TO_LIST,
+                'href'  => $this->cms_template->href_to('ctypes')
+            ]
+        ];
 
-        if ($this->request->isAjax()) {
+        $this->list_callback = function ($model) {
 
-            $relations = $this->model_backend_content->getContentRelations($ctype_id);
+            return $model->filterEqual('ctype_id', $this->ctype['id']);
+        };
+    }
 
-            $this->cms_template->renderGridRowsJSON($grid, $relations);
-
-            return $this->halt();
-        }
+    public function renderListItemsGrid(){
 
         // Для того, чтобы сформировалось подменю типа контента, см system/controllers/admin/actions/ctypes.php
-        $this->dispatchEvent('ctype_loaded', [$ctype, 'relations']);
+        $this->dispatchEvent('ctype_loaded', [$this->ctype, 'relations']);
 
-        return $this->cms_template->render('ctypes_relations', [
-            'ctype' => $ctype,
-            'grid'  => $grid
+        $this->cms_template->addMenuItem('breadcrumb-menu', [
+            'title' => LANG_HELP,
+            'url'   => LANG_HELP_URL_CTYPES_RELATIONS,
+            'options' => [
+                'target' => '_blank',
+                'icon' => 'question-circle'
+            ]
         ]);
+
+        return $this->traitRenderListItemsGrid();
     }
 
 }

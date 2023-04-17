@@ -6,7 +6,7 @@ function grid_subscriptions($controller) {
 
     $options = [
         'is_sortable'   => false,
-        'show_id'       => true,
+        'show_id'       => false,
         'is_selectable' => true,
         'order_by'      => 'subscribers_count',
         'order_to'      => 'desc'
@@ -14,22 +14,18 @@ function grid_subscriptions($controller) {
 
     $columns  = [
         'id' => [
-            'title' => 'id',
-            'class' => 'd-none d-lg-table-cell',
-            'width' => 30
+            'title' => 'id'
         ],
         'title' => [
             'title'    => LANG_TITLE,
-            'editable' => [
-                'table' => 'subscriptions'
-            ],
+            'editable' => [],
             'filter' => 'like'
         ],
         'controller' => [
             'title'  => LANG_EVENTS_LISTENER,
             'class'  => 'd-none d-lg-table-cell',
             'width'  => 200,
-            'filter' => 'like',
+            'filter' => 'exact',
             'filter_select' => [
                 'items' => function ($name) {
 
@@ -37,7 +33,7 @@ function grid_subscriptions($controller) {
                     $admin_model->join('subscriptions', 's', 's.controller = i.name');
                     $controllers = $admin_model->groupBy('i.id')->getInstalledControllers();
 
-                    $items = ['' => ''];
+                    $items = ['' => LANG_ALL];
                     foreach ($controllers as $controller) {
                         $items[$controller['name']] = $controller['title'];
                     }
@@ -61,9 +57,10 @@ function grid_subscriptions($controller) {
 
     $actions = [
         [
-            'title' => LANG_VIEW,
-            'class' => 'view',
-            'href'  => rel_to_href('{subject_url}')
+            'title'  => LANG_VIEW,
+            'class'  => 'view',
+            'target' => '_blank',
+            'href'   => rel_to_href('{subject_url}')
         ],
         [
             'title'   => LANG_DELETE,

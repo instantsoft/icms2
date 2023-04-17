@@ -1,100 +1,99 @@
 <?php
 
-function grid_controllers($controller){
+function grid_controllers($controller) {
 
-    $denied = array(
-        'admin','auth','images','content','moderation','users'
-    );
+    $denied = [
+        'admin', 'auth', 'images', 'content', 'moderation', 'users'
+    ];
 
-    $options = array(
-        'order_by' => false,
-        'order_to' => false,
+    $options = [
+        'order_by'      => false,
+        'order_to'      => false,
         'is_pagination' => false
-    );
+    ];
 
-    $columns = array(
-        'title' => array(
+    $columns = [
+        'title' => [
             'title'        => LANG_TITLE,
-            'href'         => href_to($controller->name, 'controllers', array('edit', '{name}')),
+            'href'         => href_to($controller->name, 'controllers', ['edit', '{name}']),
             'filter'       => 'like',
-            'href_handler' => function($item) {
+            'href_handler' => function ($item) {
                 return $item['is_backend'];
             }
-        ),
-        'slug' => array(
-            'title' => LANG_ADMIN_CONTROLLER_SLUG,
-            'class' => 'd-none d-lg-table-cell',
-            'width' => 300,
-            'editable' => array(
-                'table' => 'controllers',
-                'attributes' => array('placeholder' => '{name}')
-            ),
-            'handler' => function ($v, $row){
-                if(!$v){
+        ],
+        'slug' => [
+            'title'    => LANG_ADMIN_CONTROLLER_SLUG,
+            'class'    => 'd-none d-lg-table-cell',
+            'editable' => [
+                'attributes' => ['placeholder' => '{name}'],
+                'rules' => [
+                    ['sysname']
+                ]
+            ],
+            'handler' => function ($v, $row) {
+                if (!$v) {
                     return $row['name'];
                 }
                 return $v;
             }
-        ),
-        'is_enabled' => array(
-            'title' => LANG_IS_ENABLED,
-			'flag' => true,
-			'flag_toggle' => href_to($controller->name, 'controllers', array('toggle', '{id}')),
-            'width' => 70,
-            'handler' => function ($v, $row) use ($denied){
-                if(in_array($row['name'], $denied)){
-                    return '';
+        ],
+        'is_enabled' => [
+            'title'        => LANG_IS_ENABLED,
+            'flag'         => true,
+            'flag_toggle'  => href_to($controller->name, 'controllers', ['toggle', '{id}']),
+            'href_handler' => function ($row) use ($denied) {
+                if (in_array($row['name'], $denied)) {
+                    return false;
                 }
-                return $v;
+                return true;
             }
-        ),
-        'version' => array(
-            'title' => LANG_VERSION,
-            'class' => 'd-none d-lg-table-cell',
-            'width' => 70,
+        ],
+        'version' => [
+            'title'  => LANG_VERSION,
+            'class'  => 'd-none d-lg-table-cell',
+            'width'  => 70,
             'filter' => 'like'
-        ),
-        'author' => array(
-            'title' => LANG_AUTHOR,
-            'class' => 'd-none d-lg-table-cell',
-            'width' => 250,
-            'href' => '{url}',
+        ],
+        'author'  => [
+            'title'  => LANG_AUTHOR,
+            'class'  => 'd-none d-lg-table-cell',
+            'width'  => 200,
+            'href'   => '{url}',
             'filter' => 'like'
-        )
-    );
+        ]
+    ];
 
-    $actions = array(
-        array(
-            'title' => LANG_CP_PACKAGE_CONTENTS,
-            'class' => 'view ajax-modal',
-            'href' => href_to($controller->name, 'package_files_list', array('controllers', '{id}')),
-            'handler' => function($row){
+    $actions = [
+        [
+            'title'   => LANG_CP_PACKAGE_CONTENTS,
+            'class'   => 'view ajax-modal',
+            'href'    => href_to($controller->name, 'package_files_list', ['controllers', '{id}']),
+            'handler' => function ($row) {
                 return $row['files'];
             }
-        ),
-        array(
-            'title' => LANG_CONFIG,
-            'class' => 'config',
-            'href' => href_to($controller->name, 'controllers', array('edit', '{name}')),
-            'handler' => function($row){
+        ],
+        [
+            'title'   => LANG_CONFIG,
+            'class'   => 'config',
+            'href'    => href_to($controller->name, 'controllers', ['edit', '{name}']),
+            'handler' => function ($row) {
                 return $row['is_backend'];
             }
-        ),
-        array(
-            'title' => LANG_DELETE,
-            'class' => 'delete',
+        ],
+        [
+            'title'   => LANG_DELETE,
+            'class'   => 'delete',
             'confirm' => LANG_CP_DELETE_COMPONENT_CONFIRM,
-            'href' => href_to($controller->name, 'controllers_delete', array('{name}')),
-            'handler' => function($row){
+            'href'    => href_to($controller->name, 'controllers_delete', ['{name}']),
+            'handler' => function ($row) {
                 return $row['is_external'];
             }
-        )
-    );
+        ]
+    ];
 
-    return array(
+    return [
         'options' => $options,
         'columns' => $columns,
         'actions' => $actions
-    );
-
+    ];
 }

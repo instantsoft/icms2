@@ -30,11 +30,7 @@ class modelAdmin extends cmsModel {
             $item['title'] = string_lang($item['name'] . '_CONTROLLER', $item['title']);
 
             return $item;
-        });
-    }
-
-    public function getInstalledControllersCount() {
-        return $this->getCount('controllers');
+        }) ?: [];
     }
 
     public function getControllerInfo($controller_name){
@@ -116,21 +112,11 @@ class modelAdmin extends cmsModel {
 //==========================    ПЛАНИРОВЩИК    ===============================//
 //============================================================================//
 
-    public function getSchedulerTasksCount() {
-
-        return $this->getCount('scheduler_tasks');
-    }
-
-    public function getSchedulerTasks() {
-
-        return $this->get('scheduler_tasks');
-    }
-
     public function getPendingSchedulerTasks() {
 
         $tasks = $this->filterEqual('is_active', 1)->
                 orderBy('ordering', 'asc')->
-                getSchedulerTasks();
+                get('scheduler_tasks');
 
         $pending = [];
 
@@ -178,11 +164,6 @@ class modelAdmin extends cmsModel {
             'is_new'        => 0,
             'date_last_run' => ($task['is_strict_period'] ? date('Y-m-d H:i:s', (strtotime($task['date_last_run']) + ($task['period'] * 60))) : null)
         ]);
-    }
-
-    public function deleteSchedulerTask($id) {
-
-        return $this->delete('scheduler_tasks', $id);
     }
 
     public function toggleSchedulerPublication($id, $is_active) {

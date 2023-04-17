@@ -2,63 +2,57 @@
 
 function grid_regions($controller) {
 
-    $options = array(
-        'is_sortable'   => true,
+    $options = [
+        'is_sortable'   => false,
         'is_filter'     => true,
         'is_pagination' => true,
         'is_draggable'  => true,
-        'drag_save_url' => $controller->cms_template->href_to('regions_reorder'),
+        'drag_save_url' => href_to('admin', 'reorder', 'geo_regions'),
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
-        'show_id'       => true
-    );
+        'show_id'       => false
+    ];
 
-    $columns = array(
-        'id' => array(
-            'title'  => 'ID',
-            'class'  => 'd-none d-lg-table-cell',
-            'width'  => 20,
-            'filter' => 'exact'
-        ),
-        'name' => array(
+    $columns = [
+        'id' => [
+            'title' => 'ID'
+        ],
+        'name' => [
             'title'    => LANG_TITLE,
-            'href'     => href_to($controller->root_url, 'cities', array('{id}', '{country_id}')),
+            'href'     => href_to($controller->root_url, 'cities', ['{id}', '{country_id}']),
             'filter'   => 'like',
-            'editable' => array(
-                'table' => 'geo_regions'
-            )
-        ),
-        'ordering' => array(
-            'title' => LANG_GEO_POSITION,
-            'class' => 'd-none d-lg-table-cell',
-            'width' => 60
-        ),
-        'is_enabled' => array(
+            'editable' => [
+                'rules' => [
+                    ['required'],
+                    ['max_length', 64]
+                ]
+            ]
+        ],
+        'is_enabled' => [
             'title'       => LANG_IS_ENABLED,
             'flag'        => true,
-            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'geo_regions', 'is_enabled')),
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', ['{id}', 'geo_regions', 'is_enabled']),
             'width'       => 80
-        )
-    );
+        ]
+    ];
 
-    $actions = array(
-        array(
+    $actions = [
+        [
             'title' => LANG_EDIT,
             'class' => 'edit',
-            'href'  => href_to($controller->root_url, 'region', array('{country_id}', '{id}'))
-        ),
-        array(
+            'href'  => href_to($controller->root_url, 'region', ['{country_id}', '{id}'])
+        ],
+        [
             'title'   => LANG_DELETE,
             'class'   => 'delete',
-            'href'    => href_to($controller->root_url, 'delete', array('region', '{id}')),
+            'href'    => href_to($controller->root_url, 'delete', ['region', '{id}']),
             'confirm' => LANG_GEO_DELETE_REGION
-        )
-    );
+        ]
+    ];
 
-    return array(
+    return [
         'options' => $options,
         'columns' => $columns,
         'actions' => $actions
-    );
-
+    ];
 }

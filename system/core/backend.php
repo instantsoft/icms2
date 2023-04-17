@@ -9,12 +9,6 @@ class cmsBackend extends cmsController {
     protected $backend_menu = [];
     protected $backend_sub_menu = [];
 
-    public $queue = [
-        'queues'           => [],
-        'queue_name'       => '',
-        'use_queue_action' => false
-    ];
-
     protected $useDefaultModerationAction = false;
 
     protected $useModerationTrash = false;
@@ -34,16 +28,6 @@ class cmsBackend extends cmsController {
             $admin_controller_url = $controller_alias;
         }
         $this->setRootURL($admin_controller_url . '/controllers/edit/' . $this->name);
-
-        if (!empty($this->queue['use_queue_action'])) {
-            $this->backend_menu[] = [
-                'title' => sprintf(LANG_CP_QUEUE_TITLE, $this->queue['queue_name']),
-                'url'   => href_to($this->root_url, 'queue'),
-                'options' => [
-                    'icon' => 'recycle'
-                ]
-            ];
-        }
 
         if (!empty($this->useDefaultModerationAction)) {
             $this->backend_menu[] = [
@@ -237,6 +221,10 @@ class cmsBackend extends cmsController {
 
                 cmsEventsManager::hook("controller_{$this->name}_after_save_options", $options);
 
+                if (!$this->isActionExists('index')) {
+                    return $this->redirectToAction();
+                }
+
                 return $this->redirectToAction('options');
             }
 
@@ -359,102 +347,6 @@ class cmsBackend extends cmsController {
         cmsUser::addSessionMessage(LANG_CP_PERMISSIONS_SUCCESS, 'success');
 
         cmsPermissions::savePermissions($subject, $values);
-
-        return $this->redirectBack();
-    }
-
-//============================================================================//
-//=========                           Очереди                        =========//
-//============================================================================//
-
-    /**
-     * Экшен очереди
-     *
-     * @return string
-     */
-    public function actionQueue() {
-
-        if (empty($this->queue['use_queue_action'])) {
-            return cmsCore::error404();
-        }
-
-        $grid = $this->controller_admin->loadDataGrid('queue', ['contex_controller' => $this]);
-
-        if ($this->request->isAjax()) {
-
-            $filter     = [];
-            $filter_str = $this->request->get('filter', '');
-
-            if ($filter_str) {
-                parse_str($filter_str, $filter);
-            }
-
-            $this->controller_admin->model->filterIn('queue', $this->queue['queues']);
-
-            $total = $this->controller_admin->model->getCount(cmsQueue::getTableName());
-
-            $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
-            $page    = isset($filter['page']) ? intval($filter['page']) : 1;
-
-            $pages = ceil($total / $perpage);
-
-            $this->controller_admin->model->limitPage($page, $perpage);
-
-            $this->controller_admin->model->orderByList([
-                ['by' => 'date_started', 'to' => 'asc'],
-                ['by' => 'priority', 'to' => 'desc'],
-                ['by' => 'date_created', 'to' => 'asc']
-            ]);
-
-            $jobs = $this->controller_admin->model->get(cmsQueue::getTableName());
-
-            $this->cms_template->renderGridRowsJSON($grid, $jobs, $total, $pages);
-
-            $this->halt();
-        }
-
-        return $this->cms_template->getRenderedAsset('ui/grid', [
-            'grid'       => $grid,
-            'page_title' => sprintf(LANG_CP_QUEUE_TITLE, $this->queue['queue_name']),
-            'source_url' => href_to($this->root_url, 'queue'),
-        ]);
-    }
-
-    /**
-     * Экшен рестарта задания очереди
-     *
-     * @param integer $job_id
-     * @return type
-     */
-    public function actionQueueRestart($job_id) {
-
-        if (empty($this->queue['use_queue_action'])) {
-            return cmsCore::error404();
-        }
-
-        cmsQueue::restartJob(['id' => $job_id]);
-
-        return $this->redirectBack();
-    }
-
-    /**
-     * Экшен удаления задания очереди
-     *
-     * @param integer $job_id
-     * @return type
-     */
-    public function actionQueueDelete($job_id) {
-
-        if (empty($this->queue['use_queue_action'])) {
-            return cmsCore::error404();
-        }
-
-        $csrf_token = $this->request->get('csrf_token', '');
-        if (!cmsForm::validateCSRFToken($csrf_token)) {
-            return cmsCore::error404();
-        }
-
-        cmsQueue::deleteJob(['id' => $job_id]);
 
         return $this->redirectBack();
     }

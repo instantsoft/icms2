@@ -179,7 +179,10 @@ function get_templates() {
             continue;
         }
 
-        $list[$dir . '/' . $next] = $next;
+        // не даём выбрать устаревший шаблон
+        if($next !== 'default'){
+            $list[$dir . '/' . $next] = $next;
+        }
     }
 
     return $list;

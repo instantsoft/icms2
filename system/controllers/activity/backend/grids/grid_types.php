@@ -21,13 +21,13 @@ function grid_types($controller) {
             'title'  => LANG_EVENTS_LISTENER,
             'width'  => 200,
             'class' => 'd-none d-lg-table-cell',
-            'filter' => 'like',
+            'filter' => 'exact',
             'filter_select' => [
                 'items' => function($name){
                     $admin_model = cmsCore::getModel('admin');
                     $admin_model->join('activity_types', 'e', 'e.controller = i.name');
                     $controllers = $admin_model->groupBy('i.id')->getInstalledControllers();
-                    $items = ['' => ''];
+                    $items = ['' => LANG_ALL];
                     foreach($controllers as $controller){
                         $items[$controller['name']] = $controller['title'];
                     }
@@ -57,7 +57,7 @@ function grid_types($controller) {
             $columns[$name] = [
                 'title' => LANG_ACTIVITY_DESC.' ['.$lang.']',
                 'editable' => [
-                    'save_action' => href_to('admin', 'inline_save', [urlencode('activity_types'), '{id}', 1])
+                    'language_context' => true
                 ]
             ];
         }
@@ -66,9 +66,7 @@ function grid_types($controller) {
 
         $columns['description'] = [
             'title' => LANG_ACTIVITY_DESC,
-            'editable' => [
-                'table' => 'activity_types'
-            ]
+            'editable' => []
         ];
     }
 

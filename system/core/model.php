@@ -2143,86 +2143,47 @@ class cmsModel {
 
     /**
      * Пересчитывает порядковые номера в таблице
-     * @param string $table_name
-     * @param string $where
-     * @return bool
+     *
+     * @param string $table_name Таблица БД
+     * @return boolean
      */
-    public function reorder($table_name){
+    public function reorder($table_name) {
 
-        $sql = "SELECT i.id as id, i.ordering as ordering
-                FROM {#}{$table_name} i
-                ";
+        $list = $this->limit(false)->
+            orderBy('ordering', 'asc')->selectOnly('id')->
+            get($table_name, function ($item, $model) {
+            return $item['id'];
+        }, false) ?: [];
 
-        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
-
-        $sql .= 'ORDER BY ordering';
-
-        $result = $this->db->query($sql);
-
-        $this->resetFilters();
-
-        if (!$this->db->numRows($result)){
-            $this->db->freeResult($result);
-            return false;
-        }
-
-        $ordering = 0;
-
-        while($item = $this->db->fetchAssoc($result)){
-
-            $ordering += 1;
-            $this->db->query("UPDATE {#}{$table_name} SET ordering = {$ordering} WHERE id = '{$item['id']}'");
-
-        }
-
-        $this->db->freeResult($result);
-
-        return true;
-
+        return $this->reorderByList($table_name, $list);
     }
 
     /**
      * Расставляет порядковые номера для списка из ID записей
-     * @param string $table_name
-     * @param string $list
+     *
+     * @param string $table_name Таблица БД
+     * @param array $list Массив id записей в нужном порядке
      * @param array $additional_fields Список дополнительных полей и их значений, которые нужно обновлять вместе с ordering
-     * @return bool
+     * @return boolean
      */
-    public function reorderByList($table_name, $list, $additional_fields=false){
+    public function reorderByList($table_name, $list, $additional_fields = []) {
 
         $ordering = 0;
 
-        $additional_set = array();
+        $update_data = [];
 
-        if (is_array($additional_fields)){
-            foreach($additional_fields as $field=>$value){
-                $value = $this->db->escape($value);
-                $additional_set[] = "{$field} = '{$value}'";
+        foreach ($list as $id) {
+
+            if (is_array($id) || !is_numeric($id)) {
+                continue;
             }
-        }
-
-        if ($additional_set){
-            $additional_set = ', ' . implode(', ', $additional_set);
-        } else {
-            $additional_set = '';
-        }
-
-        foreach($list as $id){
 
             $ordering += 1;
 
-            $id = $this->db->escape($id);
-
-            $query = "UPDATE {#}{$table_name}
-                      SET ordering = '{$ordering}' {$additional_set}
-                      WHERE id = '{$id}'";
-
-            $this->db->query($query);
-
+            $this->update($table_name, $id, array_merge($additional_fields, ['ordering' => $ordering]));
         }
 
-        return true;
-
+        return $ordering > 0 ? true : false;
     }
 
 //============================================================================//
@@ -2231,62 +2192,14 @@ class cmsModel {
     /**
      * Применяет к модели фильтры, переданные из просмотра
      * таблицы со списком записей
-     * @param array $grid
+     *
+     * @param cmsGrid $grid Объект грида
      * @param array $filter
-     * @return boolean
+     * @return $this
      */
-    public function applyGridFilter($grid, $filter) {
+    public function applyGridFilter(cmsGrid $grid, $filter) {
 
-        // применяем сортировку
-        if (!empty($filter['order_by'])) {
-            if (!empty($grid['columns'][$filter['order_by']]['order_by'])) {
-                $filter['order_by'] = $grid['columns'][$filter['order_by']]['order_by'];
-            }
-            $this->orderBy($filter['order_by'], $filter['order_to']);
-        }
-
-        // устанавливаем страницу
-        if (!empty($filter['page'])) {
-            $perpage = !empty($filter['perpage']) ? (int) $filter['perpage'] : $this->perpage;
-            $this->limitPage((int) $filter['page'], $perpage);
-        }
-
-        //
-        // проходим по каждой колонке таблицы
-        // и проверяем не передан ли фильтр для нее
-        //
-        foreach ($grid['columns'] as $field => $column) {
-            if (!empty($column['filter']) && $column['filter'] !== 'none' && isset($filter[$field])) {
-
-                if (!is_empty_value($filter[$field])) {
-
-                    if (!empty($column['filter_by'])) {
-                        $filter_field = $column['filter_by'];
-                    } else {
-                        $filter_field = $field;
-                    }
-
-                    switch ($column['filter']) {
-                        case 'nn': $this->filterNotNull($filter_field);
-                            break;
-                        case 'ni': $this->filterIsNull($filter_field);
-                            break;
-                        case 'in': $this->filterIn($filter_field, explode(',', $filter[$field]));
-                            break;
-                        case 'filled': ($filter[$field] ? $this->filterNotNull($filter_field) : $this->filterIsNull($filter_field));
-                            break;
-                        case 'exact': $this->filterEqual($filter_field, $filter[$field]);
-                            break;
-                        case 'like': $this->filterLike($filter_field, "%{$filter[$field]}%");
-                            break;
-                        case 'date':
-                            $date = date('Y-m-d', strtotime($filter[$field]));
-                            $this->filterLike($filter_field, "%{$date}%");
-                            break;
-                    }
-                }
-            }
-        }
+        $grid->applyGridFilter($this, $filter);
 
         return $this;
     }

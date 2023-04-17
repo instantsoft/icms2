@@ -6,8 +6,4 @@ class backendWall extends cmsBackend {
 
     protected $useOptions = true;
 
-    public function actionIndex() {
-        $this->redirectToAction('options');
-    }
-
 }

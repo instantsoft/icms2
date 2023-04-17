@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @property \modelComments $model
+ * @property \moderation $controller_moderation
+ */
 class actionCommentsApprove extends cmsAction {
 
     public function run() {
@@ -12,15 +15,15 @@ class actionCommentsApprove extends cmsAction {
         if (!$comment_id) {
             return $this->cms_template->renderJSON([
                 'error'   => true,
-                'message' => LANG_COMMENT_ERROR
+                'message' => sprintf(LANG_REQUEST_PARAMS_ERROR, 'id')
             ]);
         }
 
         $comment = $this->model->getComment($comment_id);
-        if (!$comment) {
+        if (!$comment || $comment['is_approved']) {
             return $this->cms_template->renderJSON([
                 'error'   => true,
-                'message' => LANG_COMMENT_ERROR
+                'message' => LANG_COMMENT_DELETED
             ]);
         }
 
@@ -29,7 +32,7 @@ class actionCommentsApprove extends cmsAction {
         if (!$is_moderator) {
             return $this->cms_template->renderJSON([
                 'error'   => true,
-                'message' => LANG_COMMENT_ERROR
+                'message' => ERR_FORBIDDEN
             ]);
         }
 
@@ -67,6 +70,7 @@ class actionCommentsApprove extends cmsAction {
 
         return $this->cms_template->renderJSON([
             'error'     => false,
+            'is_on'     => 1, // для одобрения с админки
             'message'   => '',
             'id'        => $comment['id'],
             'parent_id' => $comment['parent_id'],

@@ -2,7 +2,7 @@
 
 namespace icms\traits\controllers\actions;
 
-use cmsUser;
+use cmsUser, cmsGrid, cmsForm;
 
 /**
  * Трейт для экшена вывода грида
@@ -11,6 +11,7 @@ use cmsUser;
  * @property \cmsUser $cms_user
  * @property \cmsRequest $request
  * @property \cmsModel $model
+ * @property \cmsGrid $grid
  *
  */
 trait listgrid {
@@ -54,6 +55,12 @@ trait listgrid {
     protected $tool_buttons = [];
 
     /**
+     * Имя хука для тулбара
+     * @var ?string
+     */
+    protected $toolbar_hook = null;
+
+    /**
      * Коллбэк для модели где получается список данных
      * @var callable
      */
@@ -61,9 +68,21 @@ trait listgrid {
 
     /**
      * Коллбэк для полученого списка записей
-     * @var callable
+     * @var ?callable
      */
     protected $items_callback = null;
+
+    /**
+     * Коллбэк, передаваемый в метод get модели
+     * @var ?callable
+     */
+    protected $item_callback = null;
+
+    /**
+     * Коллбэк для фильтра
+     * @var callable
+     */
+    protected $filter_callback = null;
 
     /**
      * Префикс действия, если надо передать управление другому экшену
@@ -75,7 +94,7 @@ trait listgrid {
      * Ключ UPS
      * @var string
      */
-    protected $ups_key;
+    protected $ups_key = '';
 
     /**
      * Грид
@@ -89,7 +108,19 @@ trait listgrid {
      */
     protected $default_perpage = 30;
 
-    public function run($do = false){
+    /**
+     * Запускается перед логикой в run
+     */
+    public function prepareRun() {}
+
+    /**
+     * Основной метод запуска экшена
+     *
+     * @param mixed $do
+     * @param mixed $param_two
+     * @return string
+     */
+    public function run($do = null, $param_two = null){
 
         // если нужно, передаем управление другому экшену
         if ($do && !is_numeric($do)) {
@@ -98,35 +129,155 @@ trait listgrid {
             return;
         }
 
+        $this->prepareRun();
+
         $this->setListGridParams();
 
         if ($this->request->isAjax()) {
 
-            return $this->getListItems();
+            header('X-Frame-Options: DENY');
+
+            // Если надо сохранить значение из строки
+            if ($this->request->has('save_row_field')) {
+
+                return $this->cms_template->renderJSON($this->saveRowField($this->request->getAll()));
+            }
+
+            // Вывод всего списка
+            return $this->cms_template->renderJSON($this->getListItems());
         }
 
         return $this->renderListItemsGrid();
     }
 
-    public function setListGridParams() {
+    /**
+     * Сохраняет значение ячейки строки грида
+     *
+     * @param array $field_data
+     * @return array
+     */
+    public function saveRowField($field_data) {
 
-        $this->ups_key = 'grid_filter.' . $this->name .'_'. $this->grid_name;
+        if (empty($field_data['csrf_token']) || !cmsForm::validateCSRFToken($field_data['csrf_token'])) {
+            return ['error' => LANG_ERROR . ' #csrf_token'];
+        }
 
-        $this->grid = $this->loadDataGrid($this->grid_name, $this->grid_args, $this->ups_key);
+        if (!$field_data) {
+            return ['error' => LANG_ERROR . ' #empty data'];
+        }
 
+        if (empty($field_data['name']) || !is_string($field_data['name'])) {
+
+            return $this->cms_template->renderJSON([
+                'error' => LANG_ERROR . ' #empty data name'
+            ]);
+        }
+
+        if (!array_key_exists('value', $field_data) || is_array($field_data['value'])) {
+
+            return $this->cms_template->renderJSON([
+                'error' => LANG_ERROR . ' #empty data value'
+            ]);
+        }
+
+        if (empty($field_data['id']) || !is_numeric($field_data['id'])) {
+            return ['error' => LANG_ERROR . ' #empty id'];
+        }
+
+        $i = $this->model->getItemByField($this->table_name, 'id', $field_data['id']);
+        if (!$i) {
+            return ['error' => LANG_ERROR . ' #404'];
+        }
+
+        if (!array_key_exists($field_data['name'], $i)) {
+            return ['error' => LANG_ERROR . ' #no field'];
+        }
+
+        $error = $this->grid->validateColumnValue($field_data['name'], $field_data['value']);
+
+        if ($error !== true) {
+            return ['error' => $error];
+        }
+
+        $field_name = $field_data['name'];
+
+        $disable_language_context = $this->grid->getGridValue('columns:' . $field_name . ':editable:language_context');
+
+        if (!$disable_language_context) {
+
+            // Ищем поле на текущем языке
+            $field_name = $this->model->getTranslatedFieldName($field_name, $this->table_name);
+
+            // Могло быть не включено в настройках
+            if (!array_key_exists($field_name, $i)) {
+                return ['error' => LANG_ERROR . ' #no translated field'];
+            }
+        }
+
+        $this->model->update($this->table_name, $i['id'], [
+            $field_name => strip_tags($field_data['value'])
+        ]);
+
+        $this->model->limit(1)->filterEqual('id', $field_data['id']);
+
+        $row_data = $this->getListItems(true);
+
+        if (empty($row_data['rows'][0])) {
+            return ['error' => LANG_ERROR . ' #no row data'];
+        }
+
+        return [
+            'error' => false,
+            'row'   => $row_data['rows'][0]
+        ];
     }
 
+    /**
+     * Загружает грид
+     *
+     * @return void
+     */
+    public function setListGridParams() {
+
+        $this->ups_key = 'grid_filter.' . $this->ups_key . $this->name . '_' . $this->grid_name;
+
+        $this->grid = new cmsGrid($this->controller, $this->grid_name, $this->grid_args);
+
+        if (!$this->grid->isLoaded()) {
+
+            return cmsCore::error($this->grid->getError());
+        }
+
+        $this->grid->source_url = $this->grid_url ? $this->grid_url : $this->cms_template->href_to($this->current_action, $this->params);
+    }
+
+    /**
+     * Возвращает HTML грида
+     *
+     * @return string
+     */
     public function getListItemsGridHtml(){
 
         $this->cms_template->addToolButtons($this->tool_buttons);
 
-        return $this->cms_template->getRenderedAsset('ui/grid', [
+        if ($this->toolbar_hook) {
+
+            $this->cms_template->applyToolbarHook($this->toolbar_hook);
+        }
+
+        return $this->cms_template->getRenderedAsset('ui/grid-data', [
             'grid'       => $this->grid,
-            'page_title' => $this->title,
-            'source_url' => $this->grid_url ? $this->grid_url : $this->cms_template->href_to($this->current_action)
+            'rows'       => $this->getListItems(),
+            'page_title' => $this->title
         ]);
     }
 
+    /**
+     * Печатает грид и подключает при необходимости
+     * CSS контроллера контекста вызова
+     *
+     * @return string
+     */
     public function renderListItemsGrid(){
 
         $html = $this->getListItemsGridHtml();
@@ -144,16 +295,50 @@ trait listgrid {
         return $html;
     }
 
-    public function getListItems(){
+    /**
+     * Возвращает подготовленные данные записей для грида
+     *
+     * @param boolean $ignore_field Игнорировать фильтр
+     * @return type
+     */
+    public function getListItems($ignore_field = false){
 
-        $this->model->setPerPage($this->default_perpage);
+        if (!$ignore_field) {
 
-        $filter     = [];
-        $filter_str = cmsUser::getUPSActual($this->ups_key, $this->request->get('filter', ''));
+            $this->model->setPerPage($this->default_perpage);
 
-        if ($filter_str){
-            parse_str($filter_str, $filter);
-            $this->model->applyGridFilter($this->grid, $filter);
+            $visible_columns = cmsUser::getUPSActual($this->ups_key.'.visible_columns', $this->request->get('visible_columns', []));
+
+            if ($visible_columns) {
+
+                $switchable_columns = $this->grid->getSwitchableColumns();
+
+                if ($switchable_columns) {
+                    foreach ($switchable_columns as $name => $column) {
+                        if (!in_array($name, $visible_columns)) {
+                            $this->grid->disableColumn($name);
+                        } else {
+                            $this->grid->enableColumn($name);
+                        }
+                    }
+                }
+            }
+
+            $filter     = $this->grid->filter;
+            $pre_filter = cmsUser::getUPSActual($this->ups_key, $this->request->get('filter', ''));
+
+            if ($pre_filter) {
+                parse_str($pre_filter, $filter);
+            }
+
+            if ($filter) {
+
+                if ($this->filter_callback) {
+                    $filter = call_user_func_array($this->filter_callback, [$filter]);
+                }
+
+                $this->grid->applyGridFilter($this->model, $filter);
+            }
         }
 
         if($this->list_callback){
@@ -162,17 +347,14 @@ trait listgrid {
 
         $total   = $this->model->getCount($this->table_name);
         $perpage = isset($filter['perpage']) ? $filter['perpage'] : $this->default_perpage;
-        $pages   = ceil($total / $perpage);
 
-        $data = $this->model->get($this->table_name);
+        $data = $this->model->get($this->table_name, $this->item_callback) ?: [];
 
         if($this->items_callback){
             $data = call_user_func_array($this->items_callback, [$data]);
         }
 
-        $this->cms_template->renderGridRowsJSON($this->grid, $data, $total, $pages);
-
-        return $this->halt();
+        return $this->grid->makeGridRows($data, $total, $perpage);
     }
 
 }

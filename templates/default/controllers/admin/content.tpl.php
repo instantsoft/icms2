@@ -180,7 +180,7 @@
                             }else{
                                 icms.datagrid.loadRows();
                             }
-                            $('.datagrid > tbody > tr.filter > td:last').html('<a title="<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>" class="columns_settings" href="<?php echo $this->href_to('content', array('grid_columns')); ?>/'+key[0]+'" onclick="return icms.modal.openAjax($(this).attr(\'href\'), {}, undefined, \'<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>\')"></a>');
+                            $('.datagrid > tbody > tr.filter > td:last').html('<a title="<?php echo LANG_GRID_COLYMNS_SETTINGS; ?>" class="columns_settings" href="<?php echo $this->href_to('content', array('grid_columns')); ?>/'+key[0]+'" onclick="return icms.modal.openAjax($(this).attr(\'href\'), {}, undefined, \'<?php echo LANG_GRID_COLYMNS_SETTINGS; ?>\')"></a>');
                         },
 
                         onLazyRead: function(node){

@@ -114,7 +114,7 @@
                 </ul>
                 <div class="tab-content border-right-0 border-bottom-0 border-left-0">
                     <div class="tab-pane p-0 pt-2 show active" id="datatree" role="tabpanel">
-                        <ul id="treeData">
+                        <ul id="treeData" class="skeleton-tree">
                             <li id="core" class="folder">
                                 <?php echo LANG_WP_SYSTEM; ?>
                                 <ul>

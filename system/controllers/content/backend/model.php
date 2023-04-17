@@ -525,21 +525,6 @@ class modelBackendContent extends modelContent {
 
     }
 
-	public function toggleContentDatasetVisibility($id, $is_visible){
-		return $this->update('content_datasets', $id, array(
-			'is_visible' => $is_visible
-		));
-	}
-
-    public function reorderContentDatasets($fields_ids_list){
-
-        $this->reorderByList('content_datasets', $fields_ids_list);
-
-        cmsCache::getInstance()->clean('content.datasets');
-
-        return true;
-    }
-
 //============================================================================//
 //=============================   Фильтры   ==================================//
 //============================================================================//
@@ -646,16 +631,6 @@ class modelBackendContent extends modelContent {
         cmsCache::getInstance()->clean('content.relations');
 
         return $this->delete('content_relations', $id);
-
-    }
-
-    public function reorderContentRelation($fields_ids_list){
-
-        $this->reorderByList('content_relations', $fields_ids_list);
-
-        cmsCache::getInstance()->clean('content.relations');
-
-        return true;
 
     }
 

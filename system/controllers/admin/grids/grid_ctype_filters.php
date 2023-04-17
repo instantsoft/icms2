@@ -1,8 +1,8 @@
 <?php
 
-function grid_ctype_filters($controller, $ctype = []){
+function grid_ctype_filters($controller, $ctype = []) {
 
-    $options = array(
+    $options = [
         'is_sortable'   => false,
         'is_filter'     => false,
         'is_pagination' => false,
@@ -10,46 +10,52 @@ function grid_ctype_filters($controller, $ctype = []){
         'order_by'      => 'id',
         'order_to'      => 'asc',
         'show_id'       => false
-    );
+    ];
 
-    $columns = array(
-        'id' => array(
-            'title' => 'id',
-            'width' => 30
-        ),
-        'title' => array(
-            'title'    => LANG_TITLE,
-            'href'     => href_to($controller->name, 'ctypes', array('filters_add', $ctype['id'], '{id}', 'edit'))
-        ),
-        'slug' => array(
+    $columns = [
+        'id' => [
+            'title' => 'id'
+        ],
+        'title' => [
+            'title' => LANG_TITLE,
+            'href'  => href_to($controller->name, 'ctypes', ['filters_add', $ctype['id'], '{id}', 'edit']),
+            'editable' => [
+                'attributes' => ['placeholder' => '{title}'],
+                'rules' => [
+                    ['required'],
+                    ['max_length', 100]
+                ]
+            ]
+        ],
+        'slug' => [
             'title' => LANG_SYSTEM_NAME,
             'width' => 350
-        )
-    );
+        ]
+    ];
 
-    $actions = array(
-        array(
-            'title' => LANG_VIEW,
-            'class' => 'view',
-            'href'  => href_to(((cmsConfig::get('ctype_default') && in_array($ctype['name'], cmsConfig::get('ctype_default'))) ? '' : $ctype['name']), '{slug}')
-        ),
-        array(
+    $actions = [
+        [
+            'title'  => LANG_VIEW,
+            'class'  => 'view',
+            'target' => '_blank',
+            'href'   => href_to(((cmsConfig::get('ctype_default') && in_array($ctype['name'], cmsConfig::get('ctype_default'))) ? '' : $ctype['name']), '{slug}')
+        ],
+        [
             'title' => LANG_EDIT,
             'class' => 'edit',
-            'href'  => href_to($controller->name, 'ctypes', array('filters_add', $ctype['id'], '{id}', 'edit'))
-        ),
-        array(
+            'href'  => href_to($controller->name, 'ctypes', ['filters_add', $ctype['id'], '{id}', 'edit'])
+        ],
+        [
             'title'   => LANG_DELETE,
             'class'   => 'delete',
-            'href'    => href_to($controller->name, 'ctypes', array('filters_delete', $ctype['id'], '{id}')),
+            'href'    => href_to($controller->name, 'ctypes', ['filters_delete', $ctype['id'], '{id}']),
             'confirm' => LANG_CP_FILTER_DELETE_CONFIRM
-        )
-    );
+        ]
+    ];
 
-    return array(
+    return [
         'options' => $options,
         'columns' => $columns,
         'actions' => $actions
-    );
-
+    ];
 }

@@ -20,7 +20,7 @@ class actionAdminReorder extends cmsAction {
 
         $this->model->reorderByList($table_name, $items);
 
-        $cache_keys = explode('_', $table_name);
+        $cache_keys = explode('_', str_replace(['{', '}'], '', $table_name));
 
         cmsCache::getInstance()->clean(implode('.', $cache_keys));
 

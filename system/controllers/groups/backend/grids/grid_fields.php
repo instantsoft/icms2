@@ -7,7 +7,7 @@ function grid_fields($controller){
         'is_filter'     => true,
         'is_pagination' => false,
         'is_draggable'  => true,
-        'drag_save_url' => $controller->cms_template->href_to('fields_reorder'),
+        'drag_save_url' => href_to('admin', 'reorder', 'groups_fields'),
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => false
@@ -15,15 +15,12 @@ function grid_fields($controller){
 
     $columns = [
         'id'  => [
-            'title' => 'id',
-            'width' => 30
+            'title' => 'id'
         ],
         'title' => [
             'title'    => LANG_CP_FIELD_TITLE,
             'href'     => href_to($controller->root_url, 'fields_edit', ['groups', '{id}']),
-            'editable' => [
-                'table' => 'groups_fields'
-            ]
+            'editable' => []
         ],
         'fieldset' => [
             'title'   => LANG_CP_FIELD_FIELDSET,

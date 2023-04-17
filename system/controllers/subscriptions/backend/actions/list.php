@@ -21,19 +21,16 @@ class actionSubscriptionsList extends cmsAction {
             ]
         ];
 
-        $this->items_callback = function($items){
+        $this->item_callback = function ($item, $model) {
 
-            if($items){
+            $item['params'] = cmsModel::stringToArray($item['params']);
 
-                foreach ($items as $key => $item) {
+            return $item;
+        };
 
-                    $items[$key]['params'] = cmsModel::stringToArray($item['params']);
-                }
-            }
+        $this->items_callback = function ($items) {
 
-            $items = cmsEventsManager::hook('admin_subscriptions_list', $items);
-
-            return $items;
+            return cmsEventsManager::hook('admin_subscriptions_list', $items);
         };
     }
 

@@ -306,16 +306,6 @@ class modelMenu extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function reorderMenuItems($items_ids_list){
-
-        $this->reorderByList('menu_items', $items_ids_list);
-
-        cmsCache::getInstance()->clean('menu.items');
-
-        return true;
-
-    }
-
     public function addMenuItem($item){
 
         $this->filterEqual('parent_id', $item['parent_id']);

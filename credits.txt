@@ -10,6 +10,10 @@ Third-party plugins, libraries and resources included in InstantCMS:
         by Twitter, Inc
         https://getbootstrap.com
 
+    VueJS
+        by TEvan You && Core Team
+        https://vuejs.org/
+
     Font Awesome Free
         by Fonticons, Inc.
         https://fontawesome.com

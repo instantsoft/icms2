@@ -7,7 +7,7 @@ function grid_fields($controller) {
         'is_filter'     => true,
         'is_pagination' => false,
         'is_draggable'  => true,
-        'drag_save_url' => $controller->cms_template->href_to('fields_reorder'),
+        'drag_save_url' => href_to('admin', 'reorder', '{users}_fields'),
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => false
@@ -21,9 +21,7 @@ function grid_fields($controller) {
         'title' => [
             'title'    => LANG_CP_FIELD_TITLE,
             'href'     => href_to($controller->root_url, 'fields_edit', ['users', '{id}']),
-            'editable' => [
-                'table' => '{users}_fields'
-            ]
+            'editable' => []
         ],
         'fieldset' => [
             'title'   => LANG_CP_FIELD_FIELDSET,

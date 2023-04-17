@@ -35,9 +35,11 @@ class actionAdminCtypesPropsBind extends cmsAction {
 
         $this->model_backend_content->bindContentProp($ctype['name'], $prop_id, $cats);
 
-        cmsUser::addSessionMessage(LANG_CP_PROPS_BIND_SC, 'success');
-
-        return $this->redirectToAction('ctypes', ['props', $ctype_id]);
+        return $this->cms_template->renderJSON([
+            'errors'       => false,
+            'success_text' => LANG_CP_PROPS_BIND_SC,
+            'callback'     => 'icms.adminProps.propBinded'
+        ]);
     }
 
 }

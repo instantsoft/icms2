@@ -2,6 +2,42 @@
 
 class actionGroupsDatasets extends cmsAction {
 
+    use icms\traits\controllers\actions\listgrid {
+        run as private traitRun;
+    }
+
+    public function __construct($controller, $params = []) {
+
+        parent::__construct($controller, $params);
+
+        $this->table_name = 'content_datasets';
+        $this->grid_name  = 'ctype_datasets';
+        $this->grid_args  = [$this->cms_template->href_to('datasets', ['edit', '{id}'])];
+        $this->title      = LANG_CP_CTYPE_DATASETS;
+
+        $this->tool_buttons = [
+            [
+                'class' => 'add',
+                'title' => LANG_CP_DATASET_ADD,
+                'href'  => $this->cms_template->href_to('datasets', 'add')
+            ],
+            [
+                'class'  => 'help',
+                'title'  => LANG_HELP,
+                'target' => '_blank',
+                'href'   => LANG_HELP_URL_CTYPES_DATASETS
+            ],
+        ];
+
+        $this->list_callback = function ($model) {
+
+            $model->filterEqual('target_controller', 'groups');
+
+            return $model;
+        };
+
+    }
+
     public function run($do = false, $id = 0){
 
         $admin = cmsCore::getController('admin', $this->request);
@@ -18,26 +54,10 @@ class actionGroupsDatasets extends cmsAction {
             return $html;
         }
 
-        $grid = $admin->loadDataGrid('ctype_datasets', [href_to('admin', 'ctypes', array('datasets_reorder', 'groups')), $this->cms_template->href_to('datasets', ['edit', '{id}'])]);
+        // Меняем контекст контроллера для экшена
+        $this->controller = $admin;
 
-        if ($this->request->isAjax()) {
-
-            $content_model = cmsCore::getModel('content');
-
-            $content_model->orderBy('ordering', 'asc');
-
-            $datasets = $content_model->getContentDatasets('groups');
-
-            $this->cms_template->renderGridRowsJSON($grid, $datasets);
-
-            $this->halt();
-
-        }
-
-        return $this->cms_template->render('backend/datasets', array(
-            'grid' => $grid
-        ));
-
+        return $this->traitRun();
     }
 
 }

@@ -7,10 +7,6 @@ class backendPhotos extends cmsBackend {
     public $maintained_ctype = 'albums';
     public $useSeoOptions    = true;
 
-    public function actionIndex() {
-        $this->redirectToAction('options');
-    }
-
     public function getOptionsToolbar() {
 
         cmsCore::loadControllerLanguage('images');
@@ -24,7 +20,6 @@ class backendPhotos extends cmsBackend {
         ]);
 
         return [];
-
     }
 
 }

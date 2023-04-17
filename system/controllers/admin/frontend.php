@@ -1076,114 +1076,13 @@ class admin extends cmsFrontend {
         return $data;
     }
 
-    public function getContentGridColumnsSettings($ctype_id){
-
-        $ctype = $this->model_backend_content->getContentType($ctype_id);
-        if (!$ctype) { return false; }
-
-        $fields = $this->model_backend_content->getContentFields($ctype['name']);
-        $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
-
-        $items = array(
-            'system' => array(
-                'title' => array('title' => LANG_TITLE,'filters' => array('exact'=>LANG_CP_GRID_COLYMNS_EXACT,'like'=>LANG_CP_GRID_COLYMNS_LIKE)),
-                'date_pub' => array('title' => LANG_DATE,'filters' => array('date'=>LANG_CP_GRID_COLYMNS_DATE)),
-                'is_approved' => array('title' => LANG_MODERATION),
-                'is_pub' => array('title' => LANG_ON,'filters' => array('select'=>LANG_CP_GRID_COLYMNS_SELECT),'filter_select' => array('items'=>array(''=>LANG_SELECT,'1'=>LANG_ON,'0'=>LANG_OFF))),
-                'user_nickname' => array('title' => LANG_AUTHOR,'filters' => array('exact'=>LANG_CP_GRID_COLYMNS_EXACT,'like'=>LANG_CP_GRID_COLYMNS_LIKE))
-            ),
-            'user' => array()
-        );
-		if($ctype['is_rating']){
-			$items['system']['rating'] = array('title' => LANG_RATING,'filters' => array('exact'=>LANG_CP_GRID_COLYMNS_EXACT,'like'=>LANG_CP_GRID_COLYMNS_LIKE));
-		}
-		if($ctype['is_comments']){
-			$items['system']['comments'] = array('title' => LANG_COMMENTS,'filters' => array('exact'=>LANG_CP_GRID_COLYMNS_EXACT,'like'=>LANG_CP_GRID_COLYMNS_LIKE));
-		}
-		if(!empty($ctype['options']['hits_on'])){
-			$items['system']['hits_count'] = array('title' => LANG_HITS,'filters' => array('exact'=>LANG_CP_GRID_COLYMNS_EXACT,'like'=>LANG_CP_GRID_COLYMNS_LIKE));
-		}
-        foreach($fields as $key => $field){
-            if(($field['is_fixed'] && isset($items['system'][$key])) || $key === 'user'){continue;}
-
-            $type = $field['is_fixed'] ? 'system' : 'user';
-            $items[$type][$key] = array('title' => $field['title'],'filters' => array(),'handlers' => array());
-            if(in_array($field['type'], array('number','string','url','user'))){
-                $items[$type][$key]['filters']['exact'] = LANG_CP_GRID_COLYMNS_EXACT;
-            }
-            if(in_array($field['type'], array('html','number','string','text','url','user'))){
-                $items[$type][$key]['filters']['like'] = LANG_CP_GRID_COLYMNS_LIKE;
-            }
-            if(in_array($field['type'], array('html','text'))){
-                $items[$type][$key]['handlers_only'] = LANG_CP_GRID_COLYMNS_CUT_TEXT;
-                $items[$type][$key]['handler_only'] = function($value, $item){return mb_substr(strip_tags($value), 0, 100);};
-            }
-            if(strpos($key, 'date_') === 0){
-                $items[$type][$key]['filters']['date'] = LANG_CP_GRID_COLYMNS_DATE;
-            }
-            if($field['type'] === 'checkbox'){
-                $items[$type][$key]['filters']['select'] = LANG_CP_GRID_COLYMNS_SELECT;
-                $items[$type][$key]['filter_select'] = array('items'=>array(''=>LANG_SELECT,'1'=>LANG_ON,'0'=>LANG_OFF));
-                $items[$type][$key]['handlers']['flag'] = LANG_CP_GRID_COLYMNS_FLAG;
-            }else
-            if($field['type'] === 'string'){
-                $items[$type][$key]['handlers']['to_filter'] = LANG_CP_GRID_COLYMNS_TO_FILTER;
-                $items[$type][$key]['handler_to_filter'] = function($value, $item) use($key){return '<a class="ajaxlink" href="#" onclick="return icms.datagrid.fieldValToFilter(this, \''.$key.'\');">'.$value.'</a>';};
-            }else
-            if($field['type'] === 'images'){
-                $items[$type][$key]['handlers_only'] = LANG_CP_GRID_COLYMNS_IMAGES_NMB;
-                $items[$type][$key]['handler_only'] = function($value, $item){return $value ? count(!is_array($value) ? cmsModel::yamlToArray($value) : $value) : 0;};
-            }else
-            if($field['type'] === 'image'){
-                $items[$type][$key]['handlers_only'] = LANG_CP_GRID_COLYMNS_PREVIEW;
-                $presets = array($field['handler']->getOption('size_teaser'), $field['handler']->getOption('size_full'));
-                $items[$type][$key]['handler_only'] = function($value, $item) use($presets){
-                    if(!$value){return '';}
-                    $value = !is_array($value) ? cmsModel::yamlToArray($value) : $value;
-                    return html_image($value, $presets, '', array('class' => 'grid_image_preview img-thumbnail'));
-                };
-            }else
-            if(in_array($field['type'], ['list', 'listbitmask', 'listmultiple'])){
-                $items[$type][$key]['handlers_only'] = '&mdash;';
-                $items[$type][$key]['handler_only'] = function($value, $item)use($field,$ctype){
-                    if(!$value){return '';}
-                    $item['ctype'] = $ctype;
-                    $item['ctype_name'] = $ctype['name'];
-                    $field['handler']->setItem($item);
-                    return $field['handler']->parseTeaser($value);
-                };
-            }else
-            if($field['handler']->is_denormalization){
-                $items[$type][$key]['handlers_only'] = '&mdash;';
-                $items[$type][$key]['handler_only'] = function($value, $item)use($field){
-                    if(!$value){return '';}
-                    return $item[$field['handler']->getDenormalName()];
-                };
-            }
-        }
-        return $items;
-    }
-
-    public function getContentGridColumnsSettingsDefault(){
-        return array(
-            'system' => array(
-                'title' => array('enabled' => true,'filter' => 'like'),
-                'date_pub' => array('enabled' => true),
-                'is_approved' => array('enabled' => true),
-                'is_pub' => array('enabled' => true),
-                'user_nickname' => array('enabled' => true)
-            ),
-            'user' => array()
-        );
-    }
-
-    public function getSchemeColForm($do, $row, $col = []){
+    public function getSchemeColForm($do, $row, $col = []) {
 
         $form = $this->getForm('widgets_cols', [$do, (!empty($col['id']) ? $col['id'] : 0), $row]);
 
         $col_scheme_options = cmsEventsManager::hookAll('admin_col_scheme_options', ['add', $row, []]);
 
-        if($col_scheme_options){
+        if ($col_scheme_options) {
             foreach ($col_scheme_options as $controller_name => $fields) {
                 foreach ($fields as $field) {
                     $form->addField('basic', $field);
@@ -1192,16 +1091,15 @@ class admin extends cmsFrontend {
         }
 
         return $form;
-
     }
 
-    public function getSchemeRowForm($do, $row, $col = []){
+    public function getSchemeRowForm($do, $row, $col = []) {
 
         $form = $this->getForm('widgets_rows', [$do]);
 
         $row_scheme_options = cmsEventsManager::hookAll('admin_row_scheme_options', [$do, $row, $col]);
 
-        if($row_scheme_options){
+        if ($row_scheme_options) {
             foreach ($row_scheme_options as $controller_name => $fields) {
                 foreach ($fields as $field) {
                     $form->addField('basic', $field);
@@ -1210,7 +1108,6 @@ class admin extends cmsFrontend {
         }
 
         return $form;
-
     }
 
 }

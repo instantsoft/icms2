@@ -5,7 +5,11 @@
  */
 class actionAdminMenuEdit extends cmsAction {
 
-    public function run($id) {
+    public function run($id = false) {
+
+        if (!$id) {
+            return cmsCore::error404();
+        }
 
         $form = $this->getForm('menu', ['edit']);
 

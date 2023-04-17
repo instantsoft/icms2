@@ -2,72 +2,69 @@
 
 function grid_countries($controller) {
 
-    $options = array(
-        'is_sortable'   => true,
+    $options = [
+        'is_sortable'   => false,
         'is_filter'     => true,
         'is_pagination' => true,
         'is_draggable'  => true,
-        'drag_save_url' => $controller->cms_template->href_to('countries_reorder'),
+        'drag_save_url' => href_to('admin', 'reorder', 'geo_countries'),
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
-        'show_id'       => true
-    );
+        'show_id'       => false
+    ];
 
-    $columns = array(
-        'id' => array(
-            'title'  => 'ID',
-            'width'  => 20,
-            'class'  => 'd-none d-lg-table-cell',
-            'filter' => 'exact'
-        ),
-        'name' => array(
+    $columns = [
+        'id' => [
+            'title' => 'ID'
+        ],
+        'name' => [
             'title'    => LANG_TITLE,
-            'href'     => href_to($controller->root_url, 'regions', array('{id}')),
+            'href'     => href_to($controller->root_url, 'regions', ['{id}']),
             'filter'   => 'like',
-            'editable' => array(
-                'table' => 'geo_countries'
-            )
-        ),
-        'alpha2' => array(
+            'editable' => [
+                'rules' => [
+                    ['required'],
+                    ['max_length', 128]
+                ]
+            ]
+        ],
+        'alpha2' => [
             'title'    => LANG_GEO_ALPHA2,
             'class'    => 'd-none d-sm-table-cell',
             'width'    => 250,
             'filter'   => 'like',
-            'editable' => array(
-                'table' => 'geo_countries'
-            )
-        ),
-        'ordering' => array(
-            'title' => LANG_GEO_POSITION,
-            'class' => 'd-none d-lg-table-cell',
-            'width' => 60
-        ),
-        'is_enabled' => array(
+            'editable' => [
+                'rules' => [
+                    ['required'],
+                    ['max_length', 2]
+                ]
+            ]
+        ],
+        'is_enabled' => [
             'title'       => LANG_IS_ENABLED,
             'flag'        => true,
-            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'geo_countries', 'is_enabled')),
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', ['{id}', 'geo_countries', 'is_enabled']),
             'width'       => 80
-        )
-    );
+        ]
+    ];
 
-    $actions = array(
-        array(
+    $actions = [
+        [
             'title' => LANG_EDIT,
             'class' => 'edit',
-            'href'  => href_to($controller->root_url, 'country', array('{id}'))
-        ),
-        array(
+            'href'  => href_to($controller->root_url, 'country', ['{id}'])
+        ],
+        [
             'title'   => LANG_DELETE,
             'class'   => 'delete',
-            'href'    => href_to($controller->root_url, 'delete', array('country', '{id}')),
+            'href'    => href_to($controller->root_url, 'delete', ['country', '{id}']),
             'confirm' => LANG_GEO_DELETE_COUNTRY
-        )
-    );
+        ]
+    ];
 
-    return array(
+    return [
         'options' => $options,
         'columns' => $columns,
         'actions' => $actions
-    );
-
+    ];
 }

@@ -441,36 +441,39 @@ class cmsController {
 
     /**
      * Проверяет существование экшена
-     * @param string $action_name
+     *
+     * @param string $action_name Имя экшена
      * @return boolean
      */
-    public function isActionExists($action_name){
+    public function isActionExists($action_name) {
 
         $method_name = 'action' . string_to_camel('_', $action_name);
 
-        if(method_exists($this, $method_name)){
+        if (method_exists($this, $method_name)) {
             return true;
         }
 
         $action_file = $this->getExternalActionPath($action_name);
 
-        if (is_readable($action_file)){
+        if (is_readable($action_file)) {
             return true;
         }
 
         return false;
-
     }
 
     /**
      * Запускает требуемый экшен
-     * @param string $action_name
-     * @param array $params
+     *
+     * @param string $action_name Имя экшена
+     * @param array $params Параметры в метод запуска экшена
      * @return mixed
      */
-    public function runAction($action_name, $params = array()){
+    public function runAction($action_name, $params = []) {
 
-        if ($this->before($action_name) === false) { return false; }
+        if ($this->before($action_name) === false) {
+            return false;
+        }
 
         $this->current_params = $params;
 
@@ -481,64 +484,61 @@ class cmsController {
         $this->after($action_name);
 
         return $result;
-
     }
 
     /**
      * Находит и выполняет требуемый экшен
-     * @param string $action_name
-     * @param array $params
+     *
+     * @param string $action_name Имя экшена
+     * @param array $params Параметры в метод запуска экшена
      * @return mixed
      */
-    public function executeAction($action_name, $params = array()) {
+    public function executeAction($action_name, $params = []) {
 
         $method_name = 'action' . string_to_camel('_', $action_name);
 
         // проверяем наличие экшена его в отдельном файле
         $action_file = $this->getExternalActionPath($action_name);
 
-        if(is_readable($action_file)){
+        if (is_readable($action_file)) {
 
             // вызываем экшен из отдельного файла
             $result = $this->runExternalAction($action_name, $params);
-
         } else {
 
             // Если файла нет, ищем метод класса
-            if (method_exists($this, $method_name)){
+            if (method_exists($this, $method_name)) {
 
-                if (!$this->validateParamsCount($this, $method_name, $params)) { cmsCore::error404(); }
+                if (!$this->validateParamsCount($this, $method_name, $params)) {
+                    return cmsCore::error404();
+                }
 
                 // сохраняем название текущего экшена
                 $this->setCurrentAction($action_name);
 
                 // если есть нужный экшен, то вызываем его
-                $result = call_user_func_array(array($this, $method_name), $params);
-
+                $result = call_user_func_array([$this, $method_name], $params);
             } else {
 
                 // если нет экшена в отдельном файле,
                 // проверяем метод route()
-                if(method_exists($this, 'route')){
+                if (method_exists($this, 'route')) {
 
                     $route_uri = $action_name;
-                    if ($params) { $route_uri .= '/' . implode('/', $params); }
-                    $result = call_user_func(array($this, 'route'), $route_uri);
-
+                    if ($params) {
+                        $route_uri .= '/' . implode('/', $params);
+                    }
+                    $result = call_user_func([$this, 'route'], $route_uri);
                 } else {
 
                     // если метода route() тоже нет,
                     // то 404
-                    cmsCore::error404();
-
+                    return cmsCore::error404();
                 }
-
             }
-
         }
 
         return $result;
-
     }
 
     /**
@@ -587,27 +587,30 @@ class cmsController {
 
     /**
      * Выполняет экшен, находящийся в отдельном файле
+     *
      * @param string $action_name Название экшена
      * @param array $params Параметры
      * @return mixed
      */
-    public function runExternalAction($action_name, $params = array()){
+    public function runExternalAction($action_name, $params = []) {
 
         $action_file = $this->getExternalActionPath($action_name);
 
         $class_name = 'action' . string_to_camel('_', $this->name) . string_to_camel('_', $action_name);
 
-        if (!is_readable($action_file)){
-            cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $action_file));
+        if (!is_readable($action_file)) {
+            return cmsCore::error(ERR_FILE_NOT_FOUND . ': ' . str_replace(PATH, '', $action_file));
         }
 
         include_once $action_file;
 
-        if(!class_exists($class_name, false)){
-            cmsCore::error(sprintf(ERR_CLASS_NOT_DEFINED, str_replace(PATH, '', $action_file), $class_name));
+        if (!class_exists($class_name, false)) {
+            return cmsCore::error(sprintf(ERR_CLASS_NOT_DEFINED, str_replace(PATH, '', $action_file), $class_name));
         }
 
-        if (!$this->validateParamsCount($class_name, 'run', $params)) { cmsCore::error404(); }
+        if (!$this->validateParamsCount($class_name, 'run', $params)) {
+            return cmsCore::error404();
+        }
 
         // сохраняем название текущего экшена
         $this->setCurrentAction($action_name);
@@ -615,22 +618,23 @@ class cmsController {
         $action_object = new $class_name($this, $params);
 
         // проверяем разрешен ли прямой вызов экшена
-        if($action_object->lock_explicit_call === true && $this->lock_explicit_call !== false && !$this->request->isInternal()){
-            cmsCore::error404();
+        if ($action_object->lock_explicit_call === true && $this->lock_explicit_call !== false && !$this->request->isInternal()) {
+            return cmsCore::error404();
         }
 
         // проверяем параметры если нужно
         $params_error = $this->validateRequestParams($action_object);
-        if($params_error !== false){
-            if ($this->request->isAjax()){
-                return $this->cms_template->renderJSON(array('error' => true, 'errors' => $params_error, 'message' => sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error)))));
+        if ($params_error !== false) {
+
+            if ($this->request->isAjax()) {
+
+                return $this->cms_template->renderJSON(['error' => true, 'errors' => $params_error, 'message' => sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error)))]);
             } else {
-                cmsCore::error(LANG_ERROR, sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error))));
+                return cmsCore::error(LANG_ERROR, sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error))));
             }
         }
 
-        return call_user_func_array(array($action_object, 'run'), $params);
-
+        return call_user_func_array([$action_object, 'run'], $params);
     }
 
     /**
@@ -856,142 +860,34 @@ class cmsController {
 //============================================================================//
 
     /**
-     * Возвращает параметры грида
-     *
-     * @param string $grid_name
-     * @param mixed $params
-     * @return array
-     */
-    public function getDataGrid($grid_name, $params = false) {
-
-        $default_options = [
-            'order_by'      => 'id',
-            'order_to'      => 'asc',
-            'show_id'       => true,
-            'is_auto_init'  => true,
-            'is_sortable'   => true,
-            'is_filter'     => true,
-            'is_actions'    => true,
-            'is_pagination' => true,
-            'perpage'       => 30,
-            'is_toolbar'    => true,
-            'is_draggable'  => false,
-            'drag_save_url' => '',
-            'is_selectable' => false,
-            'load_columns'  => false
-        ];
-
-        $grid_file = $this->root_path . 'grids/grid_' . $grid_name . '.php';
-
-        if (!is_readable($grid_file)) {
-            return [false, []];
-        }
-
-        include_once ($grid_file);
-
-        $args = [$this];
-        if ($params) {
-            if (!is_array($params)) {
-                $params = [$params];
-            }
-            foreach ($params as $p) {
-                $args[] = $p;
-            }
-        }
-
-        $grid = call_user_func_array('grid_' . $grid_name, $args);
-
-        if (!isset($grid['options'])) {
-            $grid['options'] = $default_options;
-        } else {
-            $grid['options'] = array_merge($default_options, $grid['options']);
-        }
-
-        return [$grid, $args];
-    }
-
-    /**
-     * Возвращает отключаемые колонки грида
-     *
-     * @param string $grid_name
-     * @param mixed $params
-     * @return type
-     */
-    public function getDataGridSwitchableColumns($grid_name, $params = false) {
-
-        list($grid, $args) = $this->getDataGrid($grid_name, $params);
-
-        if (!$grid){
-            return [];
-        }
-
-        $columns = [];
-
-        foreach ($grid['columns'] as $key => $item) {
-            if(!empty($item['switchable'])){
-                $columns[$key] = $item['title'];
-            }
-        }
-
-        return $columns;
-    }
-
-    /**
      * Загружает и возвращает описание структуры grid таблицы
+     *
      * @param string $grid_name Название
-     * @param array $params Параметры для передачи в функцию описания grid-а
-     * @param mixed $ups_key Ключ UPS или готовый массив параметров
-     * @return array || false
+     * @param ?array $params Параметры для передачи в функцию описания грида
+     * @param type $ups_key Ключ UPS
+     * @return \cmsGrid
      */
-    public function loadDataGrid($grid_name, $params = false, $ups_key = '') {
+    public function loadDataGrid($grid_name, $params = null, $ups_key = '') : cmsGrid {
 
-        list($grid, $args) = $this->getDataGrid($grid_name, $params);
+        $grid = new cmsGrid($this, $grid_name, $params);
 
-        if (!$grid){
-            return cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $this->root_path . 'grids/grid_' . $grid_name . '.php'));
+        if (!$grid->isLoaded()) {
+
+            return cmsCore::error($this->grid->getError());
         }
-
-        $grid = cmsEventsManager::hook('grid_' . $this->name . '_' . $grid_name, $grid);
-        list($grid, $args) = cmsEventsManager::hook('grid_' . $this->name . '_' . $grid_name . '_args', array($grid, $args));
 
         if ($ups_key) {
-            $filter_str = is_array($ups_key) ? $ups_key : cmsUser::getUPS($ups_key);
-            if ($filter_str) {
-                $filter = [];
-                if(is_array($filter_str)){
 
-                    if(!empty($filter_str['filter'])){
-                        parse_str($filter_str['filter'], $filter);
-                    }
+            $filter = [];
 
-                    if(!empty($filter_str['columns'])){
-                        foreach ($filter_str['columns'] as $key => $is_enabled) {
-                            if(!$is_enabled && isset($grid['columns'][$key])){
-                                unset($grid['columns'][$key]);
-                            }
-                        }
-                        $grid['options']['load_columns'] = true;
-                    }
-                } else {
-                    parse_str($filter_str, $filter);
-                }
-                $grid['filter'] = $filter;
+            $pre_filter = cmsUser::getUPSActual($ups_key, $this->request->get('filter', ''));
+
+            if ($pre_filter) {
+                parse_str($pre_filter, $filter);
             }
-        }
 
-        if ($this->request->isAjax() && $this->request->has('heads')) {
-
-            $heads = $this->request->get('heads', array());
-            natsort($heads);
-
-            $grid_heads = array_keys($grid['columns']);
-            if ($grid['actions']) {
-                $grid_heads[] = 'dg_actions';
-            }
-            natsort($grid_heads);
-
-            if ($heads !== $grid_heads) {
-                $grid['options']['load_columns'] = true;
+            if ($filter) {
+                $grid->addToFilter($filter);
             }
         }
 

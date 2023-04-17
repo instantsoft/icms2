@@ -2,46 +2,40 @@
 
 class actionGeoRegions extends cmsAction {
 
-    public function run($country_id = null){
+    use icms\traits\controllers\actions\listgrid;
 
-		if(!$country_id){ cmsCore::error404(); }
+    public function __construct($controller, $params = []) {
 
-		$country = $this->model->getItemById('geo_countries', $country_id);
-		if(!$country){ cmsCore::error404(); }
+        parent::__construct($controller, $params);
 
-		$grid = $this->loadDataGrid('regions');
+        $this->table_name = 'geo_regions';
+        $this->grid_name  = 'regions';
 
-        if($this->request->isAjax()){
+        $country_id = $params[0] ?? 0;
 
-            $this->model->setPerPage(admin::perpage);
-
-            $filter     = array();
-            $filter_str = $this->request->get('filter', '');
-
-            if ($filter_str){
-                parse_str($filter_str, $filter);
-                $this->model->applyGridFilter($grid, $filter);
-            }
-
-            $total = $this->model->filterEqual('country_id', $country_id)->getCount('geo_regions');
-
-            $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
-            $pages = ceil($total / $perpage);
-
-            $regions = $this->model->get('geo_regions');
-
-            $this->cms_template->renderGridRowsJSON($grid, $regions, $total, $pages);
-
-            $this->halt();
-
+        $country = $this->model->getItemById('geo_countries', $country_id);
+        if (!$country) {
+            return cmsCore::error404();
         }
+
+        $this->list_callback = function ($model) use ($country_id) {
+
+            $model->filterEqual('country_id', $country_id);
+
+            return $model;
+        };
 
         $this->cms_template->setPageH1($country['name']);
 
-        return $this->cms_template->render('backend/regions', array(
-			'grid'    => $grid,
-            'country' => $country
-        ));
+        $this->cms_template->addBreadcrumb($country['name']);
 
+        $this->tool_buttons = [
+            [
+                'class' => 'add',
+                'title' => LANG_GEO_ADD_REGION,
+                'href'  => $this->cms_template->href_to('region', $country['id'])
+            ]
+        ];
     }
+
 }

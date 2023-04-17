@@ -5,6 +5,7 @@ class fieldAge extends cmsFormField {
     public $title       = LANG_PARSER_AGE;
     public $sql         = 'datetime NULL DEFAULT NULL';
     public $filter_type = 'date';
+    public $filter_hint = LANG_PARSER_DATE_FILTER_HINT;
     public $var_type    = 'string';
 
     public function getOptions() {

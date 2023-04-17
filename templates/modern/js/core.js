@@ -842,7 +842,7 @@ icms.events = (function ($) {
         params = params || {};
         for(var event_name in this.listeners[name]) {
             if(this.listeners[name].hasOwnProperty(event_name)){
-                if (typeof(this.listeners[name][event_name]) == 'function') {
+                if (typeof(this.listeners[name][event_name]) === 'function') {
                     this.listeners[name][event_name](params);
                 }
             }

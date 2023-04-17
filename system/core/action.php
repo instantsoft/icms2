@@ -26,7 +26,7 @@ class cmsAction {
         }
     }
 
-    public function __get($name) {
+    public function &__get($name) {
         return $this->controller->$name;
     }
 

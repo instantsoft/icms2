@@ -2,8 +2,14 @@
 
 class backendMessages extends cmsBackend {
 
+    use \icms\controllers\admin\traits\queueActions;
+
     public $useDefaultOptionsAction = true;
 
+    /**
+     * Для трейта queueActions
+     * @var array
+     */
     public $queue = [
         'queues'           => ['email'],
         'queue_name'       => LANG_EMAIL,
@@ -17,7 +23,7 @@ class backendMessages extends cmsBackend {
         array_unshift($this->backend_menu,
             [
                 'title' => LANG_OPTIONS,
-                'url'   => href_to($this->root_url, 'options'),
+                'url'   => href_to($this->root_url),
                 'options' => [
                     'icon' => 'cog'
                 ]
@@ -31,10 +37,6 @@ class backendMessages extends cmsBackend {
             ]
         );
 
-    }
-
-    public function actionIndex() {
-        $this->redirectToAction('options');
     }
 
 }

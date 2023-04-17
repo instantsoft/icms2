@@ -91,12 +91,14 @@ $(function() {
         connectToSortable: "#cp-widgets-layout .position",
         handle: '.title',
         helper: "clone",
-        zIndex: 100,
+        zIndex: 9999,
         revert: "invalid",
         start: function( event, ui ) {
             if($('#left-quickview.open').length > 0){
                 $('#left-quickview .quickview-toggle.close').trigger('click');
             }
+            let width = $('#accordion').width();
+            $('.ui-draggable-dragging').css('min-width', width+'px');
         }
     }).disableSelection();
 
@@ -169,11 +171,11 @@ function widgetsLoad(page_id){
     var load_url = $('#cp-widgets-layout').data('load-url');
     var template = $('#cp-widgets-layout').data('template');
 
-    $('#cp-widgets-layout .position:not([rel="_copy"])').html('<div class="spinner mr-2"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
+    $('#cp-widgets-layout .position:not([rel="_copy"])').addClass('skeleton skeleton-loading');
 
     $.post(load_url, {page_id: page_id, template: template}, function(result){
 
-        $('#cp-widgets-layout .position:not([rel="_copy"])').html('');
+        $('#cp-widgets-layout .position:not([rel="_copy"])').removeClass('skeleton skeleton-loading').html('');
 
         if (!result.is_exists){return;}
 

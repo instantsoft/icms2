@@ -6,7 +6,48 @@
     .quickview-wrapper .quickview-wrapper__sticky-wraper {
         position: sticky;
         top: calc(1rem + 101px);
+        z-index: 800;
     }
+}
+.skeleton-tree li {
+    list-style: none;
+    margin: 5px 0 0 1px;
+    font-weight: bold;
+}
+.skeleton-tree li > ul {
+    padding-left: 15px;
+}
+.skeleton-tree li > ul li {
+    font-weight: normal;
+}
+.row > [class*="col-"] {
+    min-width: 0;
+}
+[v-cloak]:not(.skeleton) {
+    display: none !important;
+}
+.skeleton[v-cloak], .skeleton.skeleton-loading {
+    position: relative;
+    overflow: hidden;
+}
+.skeleton[v-cloak] > *, .skeleton.skeleton-loading > * {
+    opacity: 0;
+}
+.skeleton[v-cloak]::after, .skeleton.skeleton-loading::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.2) 20%, rgb(228, 229, 230) 60%, rgba(255, 255, 255, 0));
+    animation: shimmer 1.5s infinite;
+    content: '';
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 .col-xxl-1, .col-xxl-2, .col-xxl-3, .col-xxl-4, .col-xxl-5, .col-xxl-6, .col-xxl-7, .col-xxl-8, .col-xxl-9, .col-xxl-10, .col-xxl-11, .col-xxl-12, .col-xxl, .col-xxl-auto {
     position: relative;
@@ -588,7 +629,8 @@ form .child_field{margin-left: 20px}
     width: 270px;
     top: 2rem;
     left: 0.75rem;
-    z-index: 1;
+    z-index: 2;
+    cursor: default;
 }
 .grid_field_value {
     display: flex;
@@ -673,7 +715,7 @@ form .child_field{margin-left: 20px}
     list-style: none;
     padding: 0.5rem;
     border: dashed 1px #17a2b8;
-    min-height: 2.5rem;
+    min-height: 3.1rem;
     background: #FFF;
 }
 #cp-widgets-layout .widgets-layout-scheme-col .position {
@@ -893,18 +935,14 @@ th.sortable {
     height: 31px;
 }
 .datagrid tr td {
-    transition:all .5s ease;
+    transition:background .5s ease;
     vertical-align: middle;
 }
 .datagrid tr.selected td,
 .datagrid tr.current-edit-line td,
 .datagrid tr.selected:hover td {
     background:#ffe79d;
-}
-.datagrid tr.dragged td {
-    background: #e4e7ea;
-    box-shadow:inset 0 1px 2px #acb4bc !important;
-    cursor:move !important;
+    position: relative;
 }
 .datagrid .empty{
     color:#8f9ba6;
@@ -1201,6 +1239,9 @@ td > .spinner > div {
 }
 .icms-svg-icon.w-16 {
     width: 1em;
+}
+.cp_toolbar .icms-svg-icon.w-16 {
+    width: 1.2em;
 }
 .icms-svg-icon {
     display: inline-block;

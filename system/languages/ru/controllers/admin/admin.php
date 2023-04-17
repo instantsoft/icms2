@@ -80,7 +80,6 @@
     define('LANG_CP_CTYPE_FILTERS',             'Фильтры');
     define('LANG_CP_CTYPE_DATASET',             'Набор');
 
-    define('LANG_CP_GRID_COLYMNS_SETTINGS',     'Настройки столбцов');
     define('LANG_CP_GRID_COLYMNS_SYSTEM',       'Системные');
     define('LANG_CP_GRID_COLYMNS_USER',         'Пользовательские');
     define('LANG_CP_GRID_COLYMNS_FILTER',       'Фильтр');
@@ -90,7 +89,6 @@
     define('LANG_CP_GRID_COLYMNS_DATE',         'Дата');
     define('LANG_CP_GRID_COLYMNS_SELECT',       'Список');
     define('LANG_CP_GRID_COLYMNS_FLAG',         'Переключатель');
-    define('LANG_CP_GRID_COLYMNS_RESET',        'Сбросить');
     define('LANG_CP_GRID_COLYMNS_CUT_TEXT',     'Первые 100 символов');
     define('LANG_CP_GRID_COLYMNS_IMAGES_NMB',   'Кол-во изображений');
     define('LANG_CP_GRID_COLYMNS_PREVIEW',      'Превью');
@@ -118,7 +116,6 @@
     define('LANG_CP_CONTENT_CATS_TITLES',       'Название категории или дерево категорий');
     define('LANG_CP_CONTENT_CATS_TITLES_HINT',  'Для создания сразу нескольких категорий каждая из них должна быть на новой строке.<br>Дополнительная вложенность задается знаком дефис перед названием категории<br><a href="https://docs.instantcms.ru/manual/content/cats" target="_blank">Подробная инструкция</a>');
     define('LANG_CP_CONTENT_CATS_BIND',         'Привязать все свойства родительской категории');
-    define('LANG_CP_SELECT_HINT',               'Кликните на строку, чтобы выделить или ');
 
     define('LANG_CP_BASIC',                     'Общие настройки');
     define('LANG_CP_IS_COLLAPSED',              'Сворачиваемые блоки в форме создания/редактирования записи');

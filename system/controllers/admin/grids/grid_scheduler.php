@@ -22,7 +22,7 @@ function grid_scheduler($controller) {
             'title'         => LANG_CP_SCHEDULER_TASK_CONTROLLER,
             'class'         => 'd-none d-lg-table-cell',
             'width'         => 150,
-            'filter'        => 'like',
+            'filter'        => 'exact',
             'filter_select' => [
                 'items' => function ($name)use ($controller) {
 
@@ -31,7 +31,7 @@ function grid_scheduler($controller) {
                         return $item['controller'];
                     }, 'controller');
 
-                    $items = ['' => ''];
+                    $items = ['' => LANG_ALL];
                     foreach ($controllers as $cont) {
                         if(!empty($tasks_controllers[$cont['name']])){
                             $items[$cont['name']] = $cont['title'];
@@ -51,7 +51,7 @@ function grid_scheduler($controller) {
             'class'       => 'd-none d-sm-table-cell',
             'flag'        => true,
             'width'       => 60,
-            'flag_toggle' => href_to($controller->name, 'settings/scheduler', ['toggle', '{id}'])
+            'flag_toggle' => href_to($controller->name, 'toggle_item', ['{id}', 'scheduler_tasks', 'is_active']),
         ],
         'period' => [
             'title' => LANG_CP_SCHEDULER_TASK_PERIOD,

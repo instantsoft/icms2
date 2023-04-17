@@ -42,7 +42,7 @@
     <div class="col-auto quickview-wrapper" id="left-quickview">
         <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
         <div id="datatree" class="bg-white h-100 pt-3 pb-3 pr-3">
-            <ul id="treeData">
+            <ul id="treeData" class="skeleton-tree">
                 <li id="0.0" class="folder"><?php echo LANG_ALL; ?></li>
                 <?php foreach($cats as $cat){ ?>
                     <li id="<?php echo $cat['id'];?>.0" class="folder"><?php echo $cat['title']; ?></li>

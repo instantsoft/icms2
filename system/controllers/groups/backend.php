@@ -8,13 +8,6 @@ class backendGroups extends cmsBackend {
     public $useSeoOptions = true;
     public $useItemSeoOptions = true;
 
-    public function routeAction($action_name){
-        if($action_name == 'index'){
-            return 'fields';
-        }
-        return $action_name;
-    }
-
     public function getBackendMenu(){
         return array(
             array(

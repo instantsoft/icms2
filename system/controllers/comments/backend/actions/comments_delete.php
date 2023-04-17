@@ -12,10 +12,12 @@ class actionCommentsCommentsDelete extends cmsAction {
             $items = $this->request->get('selected', []);
         }
 
-        if (!$items) { cmsCore::error404(); }
+        if (!$items) {
+            return cmsCore::error404();
+        }
 
         if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         foreach ($items as $comment_id) {
@@ -26,7 +28,7 @@ class actionCommentsCommentsDelete extends cmsAction {
 
         cmsUser::addSessionMessage(html_spellcount($this->delete_count, LANG_COMMENT1, LANG_COMMENT2, LANG_COMMENT10) . LANG_COMMENTS_DELETED, 'success');
 
-        $this->redirectToAction('comments_list');
+        return $this->redirectToAction('');
     }
 
     private function deleteComment($id) {

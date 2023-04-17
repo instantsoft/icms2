@@ -18,10 +18,10 @@ function grid_presets($controller){
         'wysiwyg_name' => [
             'title'   => LANG_PARSER_HTML_EDITOR,
             'width'   => 150,
-            'filter'  => 'like',
+            'filter'  => 'exact',
             'filter_select' => array(
                 'items' => function($name){
-                    $items = ['' => ''];
+                    $items = ['' => LANG_ALL];
                     $editors = cmsCore::getWysiwygs();
                     foreach($editors as $editor){
                         $items[$editor] = $editor;
@@ -37,9 +37,7 @@ function grid_presets($controller){
             'title'  => LANG_WW_PRESET_TITLE,
             'filter' => 'like',
             'href'   => href_to($controller->root_url, 'presets_edit', ['{id}']),
-            'editable' => [
-                'table' => 'wysiwygs_presets'
-            ]
+            'editable' => []
         ]
     ];
 

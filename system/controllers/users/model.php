@@ -1187,15 +1187,6 @@ class modelUsers extends cmsModel {
         }, $by_field);
     }
 
-    public function reorderUsersProfilesTabs($fields_ids_list) {
-
-        $this->reorderByList('{users}_tabs', $fields_ids_list);
-
-        cmsCache::getInstance()->clean('users.tabs');
-
-        return true;
-    }
-
 //============================================================================//
 //==============================    СТАТУСЫ   ================================//
 //============================================================================//
