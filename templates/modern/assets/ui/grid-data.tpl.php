@@ -1,6 +1,6 @@
 <?php
 $this->addMainTplJSName([
-    'vendors/vue/vue',
+    'vendors/vue/vue.min',
     'datagrid-vue',
 ]);
 
