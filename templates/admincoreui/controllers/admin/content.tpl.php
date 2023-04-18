@@ -61,13 +61,13 @@ icms.events.on('datagrid_mounted', function(gridApp){
             node.expand();
             $.cookie('icms[content_tree_path]', node.getKeyPath(), {expires: 7, path: '/'});
             let key = node.data.key.split('.');
-            if (is_init && !icms.datagrid.setURL('<?php echo $this->href_to('content'); ?>/' + key[0] + '/' + key[1])) {
+            icms.datagrid.setURL('<?php echo $this->href_to('content'); ?>/' + key[0] + '/' + key[1]);
+            if (is_init) {
                 if(key[0] !== current_ctype_id){
                     current_ctype_id = key[0];
                     gridApp.filter = {};
-                } else {
-                    icms.datagrid.loadRows();
                 }
+                icms.datagrid.loadRows();
             }
             is_init = true;
             gridApp.select_actions_items_map = key;

@@ -146,6 +146,7 @@
     define('LANG_PARSER_TEXT_MAX_LEN',       'Максимальная длина');
     define('LANG_PARSER_TEXT_MIN_LEN',       'Минимальная длина');
     define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Показывать количество символов при вводе');
+    define('LANG_PARSER_PLACEHOLDER',        'Подсказка (placeholder) для поля');
     define('LANG_PARSER_USE_INPUTMASK',      'Использовать маску для ввода');
     define('LANG_PARSER_INPUTMASK',          'Маска для ввода');
     define('LANG_PARSER_INPUTMASK_HINT',     '9 - цифра, a - буква, * - буквы и цифры. Подробнее в <a target="_blank" href="https://docs.instantcms.ru/manual/ctypes/fields/types#строковое-поле">документации</a>');
@@ -475,6 +476,7 @@
     define('LANG_DELETE_FOLDER',             'Удалить папку');
     define('LANG_DELETE_FOLDER_CONFIRM',     'Вы уверены что хотите удалить папку?\nВсе содержимое также будет удалено!');
     define('LANG_CP_ACTIONS',                'Действия');
+    define('LANG_SELECTED_ACTIONS',          'Действия над выделенными');
     define('LANG_BY_DEFAULT',                'По умолчанию');
     define('LANG_BASIC_OPTIONS',             'Общие');
     define('LANG_YES',                       'Да');
@@ -542,7 +544,7 @@
     define('LANG_CANCEL',					 'Отменить');
     define('LANG_BACK',					 	 'Назад');
     define('LANG_IN_QUEUE',					 'Объектов на очереди');
-    define('LANG_SELECT',                    'Выбрать');
+    define('LANG_SELECT',                    'дейть');
     define('LANG_SELECT_MULTIPLE',           'Выбрать несколько');
     define('LANG_SELECT_ALL',				 'Выделить все');
     define('LANG_DESELECT_ALL',				 'Снять все');

@@ -47,7 +47,8 @@ icms.adminProps = (function ($) {
                     hidden_menu.removeClass('d-none');
                 }
 
-                if (is_init && !icms.datagrid.setURL(self.datagrid_url +'/' + cat_id)) {
+                if (is_init) {
+                    icms.datagrid.setURL(self.datagrid_url +'/' + cat_id);
                     icms.datagrid.loadRows();
                 } else {
                     self.filterPropsList();

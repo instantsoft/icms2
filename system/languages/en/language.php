@@ -147,6 +147,7 @@
     define('LANG_PARSER_TEXT_MAX_LEN',       'Maximum length');
     define('LANG_PARSER_TEXT_MIN_LEN',       'Minimum length');
     define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Show characters count');
+    define('LANG_PARSER_PLACEHOLDER',        'Field placeholder');
     define('LANG_PARSER_USE_INPUTMASK',      'Use the input mask');
     define('LANG_PARSER_INPUTMASK',          'Input mask');
     define('LANG_PARSER_INPUTMASK_HINT',     '9 - numeric, a - alphabetical, * - alphanumeric. Read more in the <a target="_blank" href="https://docs.instantcms.ru/manual/ctypes/fields/types#строковое-поле">documentation</a>');
@@ -476,6 +477,7 @@
     define('LANG_DELETE_FOLDER',             'Delete Folder');
     define('LANG_DELETE_FOLDER_CONFIRM',     'Are you sure you want to delete the folder?\nIts contents will be deleted too!');
     define('LANG_CP_ACTIONS',                'Actions');
+    define('LANG_SELECTED_ACTIONS',          'Actions on selected');
     define('LANG_BY_DEFAULT',                'Default');
     define('LANG_BASIC_OPTIONS',             'Basic');
     define('LANG_YES',                       'Yes');

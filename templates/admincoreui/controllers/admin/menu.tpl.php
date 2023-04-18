@@ -56,7 +56,8 @@
                 });
             },
             onActivate: function(node){
-                if (is_init && !icms.datagrid.setURL("<?php echo $this->href_to('menu'); ?>/" + node.data.key)) {
+                if (is_init) {
+                    icms.datagrid.setURL("<?php echo $this->href_to('menu'); ?>/" + node.data.key);
                     icms.datagrid.loadRows();
                 }
                 is_init = true;

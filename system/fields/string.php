@@ -21,6 +21,9 @@ class fieldString extends cmsFormField {
                     ['min', 1]
                 ]
             ]),
+            new fieldString('placeholder', [
+                'title' => LANG_PARSER_PLACEHOLDER
+            ]),
             new fieldCheckbox('use_inputmask', [
                 'title' => LANG_PARSER_USE_INPUTMASK
             ]),
@@ -169,6 +172,7 @@ class fieldString extends cmsFormField {
             }
         }
 
+        $this->data['attributes']['placeholder'] = $this->data['attributes']['placeholder'] ?? $this->getOption('placeholder', false);
         $this->data['attributes']['id'] = $this->id;
         $this->data['attributes']['required'] = (array_search(['required'], $this->getRules()) !== false);
 

@@ -22,6 +22,9 @@ class fieldCaption extends cmsFormField {
                 'title'   => LANG_PARSER_TEXT_MAX_LEN,
                 'default' => 255
             ]),
+            new fieldString('placeholder', [
+                'title' => LANG_PARSER_PLACEHOLDER
+            ]),
             new fieldCheckbox('show_symbol_count', [
                 'title' => LANG_PARSER_SHOW_SYMBOL_COUNT
             ]),
@@ -77,6 +80,7 @@ class fieldCaption extends cmsFormField {
     public function getInput($value) {
 
         $this->data['attributes'] = $this->getProperty('attributes') ?: ['autocomplete' => 'off'];
+        $this->data['attributes']['placeholder'] = $this->data['attributes']['placeholder'] ?? $this->getOption('placeholder', false);
         $this->data['attributes']['id'] = $this->id;
         $this->data['attributes']['required'] = (array_search(['required'], $this->getRules()) !== false);
 

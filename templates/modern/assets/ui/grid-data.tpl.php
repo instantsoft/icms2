@@ -1,6 +1,6 @@
 <?php
 $this->addMainTplJSName([
-    'vendors/vue/vue.min',
+    'vendors/vue/vue',
     'datagrid-vue',
 ]);
 
@@ -43,8 +43,8 @@ if(!empty($page_title)) {
             </thead>
             <tbody>
                 <tr class="filter table-align-middle" v-if="options.is_filter" key="-2">
-                    <th class="p-2 skeleton" v-cloak v-for="column in columns" :key="column.name" :class="[(filter[column.name] && filter[column.name].length > 0) ? 'with_filter' : '', column.class]">
-                        <component v-if="column.filter" :is="column.filter.component" v-model="filter[column.name]" :params="column.filter.params" save_delayed="true" @changeoverflow="toggleOverflow">text for v-cloak</component>
+                    <th class="p-2 skeleton" v-cloak v-for="column in columns" :key="column.name" :class="filterClass(column)">
+                        <component v-if="column.filter" :is="column.filter.component" v-model="filter[column.name]" @applyfilter="applyFilter" :params="column.filter.params" save_delayed="true" @changeoverflow="toggleOverflow">text for v-cloak</component>
                     </th>
                 </tr>
                 <tr class="empty_tr" v-if="rows.length === 0" key="-1">
@@ -61,13 +61,13 @@ if(!empty($page_title)) {
             </tbody>
         </table>
     </div>
-    <div class="row skeleton" v-if="options.is_pagination || options.is_selectable" v-cloak>
+    <div class="row" v-if="options.is_pagination || options.is_selectable" v-cloak>
         <div class="col-auto col-lg-5 d-flex" v-if="options.is_pagination">
-            <pagination v-model="filter.page" :is_loading="is_loading" :perpage="filter.perpage" :total="total" lang_first="<?php echo LANG_PAGE_FIRST; ?>" lang_last="<?php echo LANG_PAGE_LAST; ?>"></pagination>
+            <pagination v-model="filter.page" @applyfilter="applyFilter" :is_loading="is_loading" :perpage="filter.perpage" :total="total" lang_first="<?php echo LANG_PAGE_FIRST; ?>" lang_last="<?php echo LANG_PAGE_LAST; ?>"></pagination>
             <div class="dataTables_length datagrid_resize">
                 <label>
                     <small class="text-muted mr-2"><?php echo LANG_PAGES_SHOW_PERPAGE; ?></small>
-                    <select class="custom-select custom-select-sm form-control form-control-sm" v-model="filter.perpage">
+                    <select class="custom-select custom-select-sm form-control form-control-sm" v-model="filter.perpage" @change="applyFilter">
                         <?php
                         $perpages = [15,30,50,100,200,500];
                         foreach($perpages as $p){ ?>

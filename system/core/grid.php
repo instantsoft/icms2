@@ -247,8 +247,8 @@ class cmsGrid {
 
         if($this->grid['options']['select_actions']){
             array_unshift($this->grid['options']['select_actions'], [
-                'title' => 'Действия над выбранными',
-                'url' => ''
+                'title' => LANG_SELECTED_ACTIONS,
+                'url'   => ''
             ]);
         }
 
@@ -838,6 +838,7 @@ class cmsGrid {
                         $filter['params']['items'] = is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name);
                         if(!$filter['params']['items']){
                             $filter['component'] = 'form-input';
+                            $filter['params']['attributes']['type'] = 'search';
                         }
                         break;
                 }

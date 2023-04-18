@@ -26,15 +26,17 @@ table.dataTable {
     max-width: none !important;
     border-collapse: separate !important;
     border-spacing: 0;
+    tr, td,  th {
+        transition: background .5s ease;
+    }
     td,  th {
         box-sizing: content-box;
-        transition: $transition-base;
         vertical-align: middle;
         &.with_filter {
-            background-color: $gray-400;
+            background-color: rgba($cyan, 0.5);
         }
     }
-    &.nowrap th, &.nowrap td {
+    th {
         white-space: nowrap;
     }
     > thead > tr > th:active,
@@ -120,6 +122,9 @@ table.dataTable {
     th.sortable {
         cursor: pointer;
     }
+    .filter input.form-control {
+        min-width: 80px;
+    }
 }
 .dataTables_wrapper {
     div.dataTables_length {
@@ -150,7 +155,134 @@ table.dataTable {
         text-align: center;
     }
 }
+[v-cloak]:not(.skeleton) {
+    display: none !important;
+}
+.skeleton-tree {
+    li {
+        list-style: none;
+        margin: 5px 0 0 1px;
+        font-weight: bold;
+        > ul {
+            padding-left: 15px;
+            li {
+                font-weight: normal;
+            }
+        }
+    }
+}
+.skeleton {
+    &[v-cloak], &.skeleton-loading {
+        position: relative;
+        overflow: hidden;
+        > * {
+            opacity: 0;
+        }
+        &::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            transform: translateX(-100%);
+            background-image: linear-gradient(90deg, rgba($white, 0) 0, rgba($white, 0.2) 20%, rgba($gray-300, 0.8) 60%, rgba($white, 0));
+            animation: shimmer 1.5s infinite;
+            content: '';
+        }
+    }
+}
+.animated-row {
+    animation-duration: 0.5s;
+    animation-name: fadeRow;
+}
+
+.dropdown-multiselect {
+    input {
+        background: $white $custom-select-background !important;
+        appearance: none;
+        padding: $custom-select-padding-y ($custom-select-padding-x + $custom-select-indicator-padding) $custom-select-padding-y $custom-select-padding-x;
+        cursor: pointer;
+    }
+    .dropdown-menu {
+        transform: scaleY(0.8);
+        display: block;
+        transition: transform 0.2s, opacity 0.2s;
+        max-height: 0;
+        overflow-y: auto;
+        opacity: 0;
+        visibility: hidden;
+        &.show_menu {
+            visibility: visible;
+            max-height: 330px;
+            transform: scaleY(1);
+            opacity: 1;
+        }
+    }
+}
 .datagrid {
+
+    tr {
+        &.dragged_over {
+            background: rgba($success, 0.3) !important;
+        }
+        &.dragged_end {
+            animation: background-fade-highlight 2.5s ease-out;
+        }
+        &.dragged {
+            background: $gray-300 !important;
+        }
+        &.dragged td {
+            border-style: dashed;
+            border-bottom-width: 1px !important;
+            border-color: $primary;
+            cursor:move !important;
+        }
+        &.dragged + tr td {
+            border-top-width: 0;
+        }
+        .datagrid-editable__link {
+            transition: opacity 0.3s;
+            color: $gray-500;
+            opacity: 0;
+        }
+        &:hover .datagrid-editable__link {
+            opacity: 1;
+        }
+        &.selected, &.current-edit-line {
+            td, &:hover td {
+                background-color: $yellow;
+                position: relative;
+            }
+        }
+        &:hover {
+            .grid_field_value::after {
+                opacity: 1;
+            }
+        }
+    }
+
+    &.table-striped tbody tr.dragged_end:nth-of-type(odd) {
+        animation: background-fade-highlight-striped 2.5s ease-out;
+    }
+
+    .datagrid-column-html {
+        &__link {
+            display: inline-block;
+        }
+    }
+
+    &-backdrop {
+        cursor: default;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba($gray-100, 0.3);
+        z-index: 1;
+        -webkit-backdrop-filter: blur(1px);
+        backdrop-filter: blur(1px);
+    }
     .actions {
         display: flex;
         align-items: center;
@@ -232,18 +364,7 @@ table.dataTable {
             }
         }
     }
-    tr {
-        &.selected, &.current-edit-line {
-            td, &:hover td {
-                background-color: $yellow;
-            }
-        }
-        &:hover {
-            .grid_field_value::after {
-                opacity: 1;
-            }
-        }
-    }
+
     .grid_field {
         &_edit {
             display: none;
@@ -255,7 +376,8 @@ table.dataTable {
             top: $spacer*2;
             left: 5%;
             border: $border-width solid $border-color;
-            z-index: 1;
+            z-index: 2;
+            cursor: default;
             > .button {
                 margin: $spacer 0 0 0;
             }
@@ -279,3 +401,11 @@ table.dataTable {
         }
     }
 }
+@keyframes fadeRow{from{opacity:0.5}to{opacity:1}}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+@keyframes background-fade-highlight{0%{background-color:rgba($success, 0.3);box-shadow: 0px 0px 10px -1px rgba($success, 0.3);}100%{background-color:$white;box-shadow: 0px 0px 10px -1px $white;}}
+@keyframes background-fade-highlight-striped{0%{background-color:rgba($success, 0.3);box-shadow: 0px 0px 10px -1px rgba($success, 0.3);}100%{background-color:$table-accent-bg;box-shadow: 0px 0px 10px -1px $table-accent-bg;}}

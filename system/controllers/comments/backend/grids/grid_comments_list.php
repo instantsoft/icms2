@@ -27,7 +27,6 @@ function grid_comments_list($controller) {
         ],
         'date_pub' => [
             'title'   => LANG_DATE,
-            'class'   => 'd-none d-lg-table-cell',
             'handler' => function ($value, $item) {
                 return html_date($value, true);
             },

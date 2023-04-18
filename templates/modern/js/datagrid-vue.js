@@ -24,7 +24,7 @@ icms.datagrid = (function () {
                 };
             },
             mounted() {
-                for (var key in this.columns) {
+                for (let key in this.columns) {
                     if(this.switchable.columns[this.columns[key].name]){
                         this.switchable_columns_names.push(this.columns[key].name);
                     }
@@ -74,14 +74,6 @@ icms.datagrid = (function () {
                     handler: function (new_value, old_value) {
                         self.loadRows();
                     }
-                },
-                filter: {
-                    handler: function (new_value, old_value) {
-                        this.$nextTick(function () {
-                            self.loadRows();
-                        });
-                    },
-                    deep: true
                 }
             },
             computed: {
@@ -122,6 +114,9 @@ icms.datagrid = (function () {
                 }
             },
             methods: {
+                applyFilter() {
+                    self.loadRows();
+                },
                 prepareDragStart(ev) {
                     if (!this.options.is_draggable) {
                         return;
@@ -208,6 +203,13 @@ icms.datagrid = (function () {
                     }
 
                     this.filter = {...this.filter, order_by: column.name, order_to: order_to};
+                    this.applyFilter();
+                },
+                filterClass (column){
+                    return [
+                        !is_empty(this.filter[column.name]) ? 'with_filter' : '',
+                        column.class
+                    ];
                 },
                 toggleOverflow (){
                     this.change_overflow = !this.change_overflow;
@@ -225,9 +227,19 @@ icms.datagrid = (function () {
             }
         });
 
+        const saveMixin = {
+            methods: {
+                save: function(value) {
+                    this.$emit('update:modelValue', value);
+                    this.$emit('applyfilter');
+                }
+            }
+        };
+
         const rangeMixin = {
             props: ['params', 'modelValue'],
-            emits: ['update:modelValue'],
+            emits: ['update:modelValue', 'applyfilter'],
+            mixins: [saveMixin],
             computed: {
                 from: {
                     get() {
@@ -236,7 +248,7 @@ icms.datagrid = (function () {
                     },
                     set(value) {
                         const payload = this.modelValue || {};
-                        this.$emit('update:modelValue', {...payload, from: value});
+                        this.save({...payload, from: value});
                     }
                 },
                 to: {
@@ -246,7 +258,7 @@ icms.datagrid = (function () {
                     },
                     set(value) {
                         const payload = this.modelValue || {};
-                        this.$emit('update:modelValue', {...payload, to: value});
+                        this.save({...payload, to: value});
                     }
                 }
             }
@@ -254,10 +266,11 @@ icms.datagrid = (function () {
 
         app.component('form-checkbox', {
             props: ['params', 'modelValue'],
-            emits: ['update:modelValue'],
+            emits: ['update:modelValue', 'applyfilter'],
+            mixins: [saveMixin],
             template: `
             <div class="custom-control custom-switch">
-                <input type="checkbox" class="form-check-input input-checkbox custom-control-input" :id="'filter_'+params.attributes.name" @click="$emit('update:modelValue', ($event.target.checked ? 1 : 0))" :checked="modelValue>0" v-bind="params.attributes">
+                <input type="checkbox" class="form-check-input input-checkbox custom-control-input" :id="'filter_'+params.attributes.name" @click="save(($event.target.checked ? 1 : 0))" :checked="modelValue>0" v-bind="params.attributes">
                 <label class="custom-control-label" :for="'filter_'+params.attributes.name" v-if="params.title">{{params.title}}</label>
             </div>
             `
@@ -297,13 +310,15 @@ icms.datagrid = (function () {
 
         app.component('form-date', {
             props: ['params', 'modelValue'],
-            emits: ['update:modelValue'],
-            template: `<input type="date" class="form-control form-control-sm" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" v-bind="params.attributes">`
+            emits: ['update:modelValue', 'applyfilter'],
+            mixins: [saveMixin],
+            template: `<input type="date" class="form-control form-control-sm" :value="modelValue" @input="save($event.target.value)" v-bind="params.attributes">`
         });
 
         app.component('form-input', {
             props: ['params', 'modelValue', 'save_delayed'],
-            emits: ['update:modelValue'],
+            emits: ['update:modelValue', 'applyfilter'],
+            mixins: [saveMixin],
             methods: {
                 debounce: function(fn, delay) {
                     let id = null;
@@ -315,9 +330,6 @@ icms.datagrid = (function () {
                             fn.apply(that, args);
                         }, delay);
                     };
-                },
-                save: function(value) {
-                    this.$emit('update:modelValue', value);
                 }
             },
             computed: {
@@ -333,21 +345,23 @@ icms.datagrid = (function () {
 
         app.component('form-select', {
             props: ['params', 'modelValue'],
-            emits: ['update:modelValue'],
-            template: `<select class="form-control custom-select custom-select-sm" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" v-bind="params.attributes ? params.attributes : {}">
+            emits: ['update:modelValue', 'applyfilter'],
+            mixins: [saveMixin],
+            template: `<select class="form-control custom-select custom-select-sm" :value="modelValue" @input="save($event.target.value)" v-bind="params.attributes ? params.attributes : {}">
                 <option v-for="(title, value) in params.items" :value="value">{{title}}</option>
             </select>`
         });
 
         app.component('form-filter', {
             props: ['params', 'modelValue'],
-            emits: ['update:modelValue'],
+            emits: ['update:modelValue', 'applyfilter'],
+            mixins: [saveMixin],
             methods: {
                 open: function() {
                     icms.modal.openAjax(this.params.href,{},false, this.params.lang_filter);
                 },
                 cancel: function() {
-                    this.$emit('update:modelValue', '');
+                    this.save('');
                 }
             },
             template: `
@@ -355,7 +369,7 @@ icms.datagrid = (function () {
                     <a v-if="!modelValue" href="#" @click.prevent="open" class="btn btn-link text-decoration-none btn-sm">
                         <span v-html="params.icon_filter"></span> {{params.lang_filter}}
                     </a>
-                    <a v-if="modelValue" href="#" @click.prevent="cancel" class="btn btn-link text-decoration-none btn-sm">
+                    <a v-if="modelValue" href="#" @click.prevent="cancel" class="btn btn-link text-white text-decoration-none btn-sm">
                         <span v-html="params.icon_cancel"></span> {{params.lang_cancel}}
                     </a>
                 </div>
@@ -374,7 +388,8 @@ icms.datagrid = (function () {
                     default: false
                 }
             },
-            emits: ['update:modelValue', 'changeoverflow'],
+            mixins: [saveMixin],
+            emits: ['update:modelValue', 'changeoverflow', 'applyfilter'],
             data() {
                 return {
                     is_show: false
@@ -397,7 +412,7 @@ icms.datagrid = (function () {
                         return this.modelValue;
                     },
                     set(value) {
-                        this.$emit('update:modelValue', value);
+                        this.save(value);
                     }
                 }
             },
@@ -415,11 +430,11 @@ icms.datagrid = (function () {
             },
             template: `
             <div class="dropdown dropdown-multiselect" v-clickaway="close">
-                <div v-if="use_slot" @click="toggle">
+                <div v-if="use_slot" @click.prevent="toggle">
                     <slot></slot>
                 </div>
                 <input v-if="!use_slot" class="input form-control form-control-sm" v-model="selectedTitles" type="text" readonly="true" @click="toggle" v-bind="params.attributes">
-                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left shadow px-2 pt-2" :class="{show_menu: isShow}">
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left shadow px-2 pt-2 pb-0" :class="{show_menu: isShow}">
                     <div class="custom-control custom-checkbox pb-2" v-for="(title, index) in params.items" :key="index">
                         <input class="custom-control-input" type="checkbox" :id="'dgselect-'+index" :value="index" v-model="selected">
                         <label class="custom-control-label" :for="'dgselect-'+index">
@@ -597,7 +612,8 @@ icms.datagrid = (function () {
 
         app.component('pagination', {
             props: ['modelValue', 'total', 'perpage', 'lang_first', 'lang_last', 'is_loading'],
-            emits: ['update:modelValue'],
+            emits: ['update:modelValue', 'applyfilter'],
+            mixins: [saveMixin],
             data() {
                 return {
                     max_show_pages: 3,
@@ -654,7 +670,7 @@ icms.datagrid = (function () {
                     }
                 },
                 setPage: function(page) {
-                    this.$emit('update:modelValue', page);
+                    this.save(page);
                 }
             },
             template: `
@@ -715,18 +731,15 @@ icms.datagrid = (function () {
     };
 
     this.setPage = function (page, perpage) {
-        if(self.app.filter.page !== page){
-            self.app.filter.page = page;
-            if (typeof perpage !== 'undefined') {
-                self.app.filter.perpage = +perpage;
-            }
-            return true;
+        self.app.filter.page = page;
+        if (typeof perpage !== 'undefined') {
+            self.app.filter.perpage = +perpage;
         }
-        return false;
     };
 
     this.applyAdvancedFilter = function(form){
         self.app.filter = {...self.app.filter, advanced_filter: new URLSearchParams(new FormData(form)).toString(), page: 1};
+        self.loadRows();
         icms.modal.close();
         return false;
     };
@@ -827,9 +840,6 @@ icms.datagrid = (function () {
 
             for(let key in result) {
                 if(result.hasOwnProperty(key)){
-                    if(key === 'filter'){
-                        continue;
-                    }
                     if (typeof(self[key]) === 'function') {
                         setTimeout(function () {
                             self[key](result[key]);
@@ -900,6 +910,30 @@ icms.datagrid = (function () {
     return this;
 }).call(icms.datagrid || {});
 
+function is_empty(e) {
+    if(Array.isArray(e)){
+        return e.length === 0;
+    }
+    if(typeof e === 'object'){
+        for(let prop in e) {
+            if(!is_empty(e[prop])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    switch (e) {
+        case "":
+        case 0:
+        case "0":
+        case null:
+        case false:
+        case undefined:
+            return true;
+            default:
+            return false;
+    }
+}
 
 function urlencode(str) {
     str = (str + '');
