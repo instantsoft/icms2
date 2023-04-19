@@ -2,58 +2,60 @@
 
 class actionFormsFieldsAdd extends cmsAction {
 
-    public function run($form_id){
+    public function run($form_id, $copy_id = null) {
 
         $form_data = $this->model->getForm($form_id);
-        if(!$form_data){ cmsCore::error404(); }
+        if (!$form_data) {
+            cmsCore::error404();
+        }
 
-        $form = $this->getForm('field', array('add', $form_data['id']));
+        $form = $this->getForm('field', ['add', $form_data['id']]);
 
         $field = ['form_id' => $form_id];
 
+        if ($copy_id) {
+
+            $field = $this->model->localizedOff()->getFormField($copy_id);
+
+            if (!$field) {
+                return cmsCore::error404();
+            }
+
+            $this->model->localizedRestore();
+
+            $field['title'] .= ' (copy)';
+
+            unset($field['id']);
+        }
+
         list($form, $form_data, $field) = cmsEventsManager::hook('forms_field_form', [$form, $form_data, $field]);
 
-        if ($this->request->has('submit')){
+        if ($this->request->has('submit')) {
 
             // добавляем поля настроек типа поля в общую форму
             // чтобы они были обработаны парсером и валидатором
             // вместе с остальными полями
-            $field_type    = $this->request->get('type', '');
-            $field_class   = 'field' . string_to_camel('_', $field_type);
-            $field_object  = new $field_class(null, null);
-            $field_options = $field_object->getOptions();
-            $form->addFieldsetAfter('type', LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
-            foreach ($field_options as $option_field) {
-                $option_field->setName("options:{$option_field->name}");
-                $form->addField('field_settings', $option_field);
-            }
+            $this->addFieldOptionsToForm($form);
 
             $field = array_merge($field, $form->parse($this->request, true));
 
-            $errors = $form->validate($this,  $field);
+            $errors = $form->validate($this, $field);
 
-            if (!$errors){
-
-                // если не выбрана группа, обнуляем поле группы
-                if (!$field['fieldset']) { $field['fieldset'] = null; }
-
-                // если создается новая группа, то выбираем ее
-                if ($field['new_fieldset']) { $field['fieldset'] = $field['new_fieldset']; }
-                unset($field['new_fieldset']);
+            if (!$errors) {
 
                 // сохраняем поле
                 $field_id = $this->model->addFormField($field);
 
-                if ($field_id){ cmsUser::addSessionMessage(sprintf(LANG_CP_FIELD_CREATED, $field['title']), 'success'); }
+                if ($field_id) {
+                    cmsUser::addSessionMessage(sprintf(LANG_CP_FIELD_CREATED, $field['title']), 'success');
+                }
 
-                $this->redirectToAction('form_fields', array($form_data['id']));
-
+                return $this->redirectToAction('form_fields', [$form_data['id']]);
             }
 
-            if ($errors){
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
         return $this->cms_template->render([
@@ -64,7 +66,6 @@ class actionFormsFieldsAdd extends cmsAction {
             'form'      => $form,
             'errors'    => isset($errors) ? $errors : false
         ]);
-
     }
 
 }

@@ -1,4 +1,5 @@
 <?php
+
 class formFormsForm extends cmsForm {
 
     public $is_tabbed = true;
@@ -13,145 +14,156 @@ class formFormsForm extends cmsForm {
             'ip'         => 'IP'
         ];
 
-        if($fields){
+        if ($fields) {
             foreach ($fields as $field) {
                 $meta_fields[$field['name']] = $field['title'];
             }
         }
 
-        return array(
-
-            'basic' => array(
-                'title' => LANG_CP_BASIC,
-                'type' => 'fieldset',
-                'childs' => array(
-                    new fieldString('name', array(
-                        'title' => LANG_SYSTEM_NAME,
-                        'hint' => LANG_FORMS_CP_NAME_HINT,
-                        'options'=>array(
-                            'max_length' => 32,
+        return [
+            'basic' => [
+                'title'  => LANG_CP_BASIC,
+                'type'   => 'fieldset',
+                'childs' => [
+                    new fieldString('name', [
+                        'title'   => LANG_SYSTEM_NAME,
+                        'hint'    => LANG_FORMS_CP_NAME_HINT,
+                        'options' => [
+                            'max_length'        => 32,
                             'show_symbol_count' => true
-                        ),
-                        'rules' => array(
-                            array('required'),
-                            array('sysname'),
-                            (in_array($do, ['add', 'copy']) ? array('unique', 'forms', 'name') : array('unique_exclude', 'forms', 'name', $form_data['id']))
-                        )
-                    )),
-                    new fieldString('title', array(
+                        ],
+                        'rules' => [
+                            ['required'],
+                            ['sysname'],
+                            (in_array($do, ['add', 'copy']) ? ['unique', 'forms', 'name'] : ['unique_exclude', 'forms', 'name', $form_data['id']])
+                        ]
+                    ]),
+                    new fieldString('title', [
                         'title' => LANG_FORMS_CP_TITLE,
-                        'options'=>array(
-                            'max_length' => 255,
+                        'can_multilanguage'    => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table'          => 'forms'
+                        ],
+                        'options' => [
+                            'max_length'        => 255,
                             'show_symbol_count' => true
-                        ),
-                        'rules' => array(
-                            array('required')
-                        )
-                    )),
-                    new fieldHtml('description', array(
-                        'title' => LANG_DESCRIPTION
-                    )),
-                    new fieldList('tpl_form', array(
-                        'title' => LANG_FORMS_CP_TPL_FORM,
-                        'generator' => function($item) {
+                        ],
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldHtml('description', [
+                        'title' => LANG_DESCRIPTION,
+                        'can_multilanguage'    => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table'          => 'forms'
+                        ]
+                    ]),
+                    new fieldList('tpl_form', [
+                        'title'     => LANG_FORMS_CP_TPL_FORM,
+                        'generator' => function ($item) {
                             return cmsTemplate::getInstance()->getAvailableTemplatesFiles('assets/ui', 'form*.tpl.php', false, ['form_fields']);
-                       }
-                    ))
-                )
-            ),
-            'options' => array(
-                'title' => LANG_OPTIONS,
-                'type' => 'fieldset',
-                'childs' => array(
-                    new fieldCheckbox('options:show_title', array(
+                        }
+                    ])
+                ]
+            ],
+            'options' => [
+                'title'  => LANG_OPTIONS,
+                'type'   => 'fieldset',
+                'childs' => [
+                    new fieldCheckbox('options:show_title', [
                         'title' => LANG_SHOW_TITLE
-                    )),
-                    new fieldCheckbox('options:available_by_link', array(
+                    ]),
+                    new fieldCheckbox('options:available_by_link', [
                         'title' => LANG_FORMS_CP_AVAILABLE_BY_LINK
-                    )),
-                    new fieldCheckbox('options:hide_after_submit', array(
+                    ]),
+                    new fieldCheckbox('options:hide_after_submit', [
                         'title' => LANG_FORMS_CP_HIDE_AFTER_SUBMIT
-                    )),
-                    new fieldString('options:submit_title', array(
-                        'title' => LANG_FORMS_CP_SUBMIT_TITLE,
-                        'hint' => LANG_FORMS_CP_SUBMIT_TITLE_HINT
-                    )),
-                    new fieldList('options:send_type', array(
-                        'title' => LANG_FORMS_CP_SEND_TYPE,
-                        'hint' => LANG_FORMS_CP_SEND_TYPE_HINT,
+                    ]),
+                    new fieldString('options:submit_title', [
+                        'title'             => LANG_FORMS_CP_SUBMIT_TITLE,
+                        'hint'              => LANG_FORMS_CP_SUBMIT_TITLE_HINT,
+                        'can_multilanguage' => true
+                    ]),
+                    new fieldList('options:send_type', [
+                        'title'              => LANG_FORMS_CP_SEND_TYPE,
+                        'hint'               => LANG_FORMS_CP_SEND_TYPE_HINT,
                         'is_chosen_multiple' => true,
                         'items' => [
                             'notice' => LANG_FORMS_CP_SEND_TYPE1,
                             'email'  => LANG_FORMS_CP_SEND_TYPE2,
                             'author' => LANG_FORMS_CP_SEND_TYPE3
                         ]
-                    )),
-                    new fieldString('options:send_type_notice', array(
-                        'title' => LANG_USERS,
-                        'hint' => LANG_FORMS_CP_SEND_USERS_HINT,
-                        'autocomplete' => array('url' => href_to('admin', 'users', 'autocomplete'), 'multiple' => true),
-                        'visible_depend' => array('options:send_type:' => array('show' => array('notice')))
-                    )),
-                    new fieldHtml('options:notify_text', array(
-                        'title' => LANG_FORMS_CP_FORM_NOTIFY_TEXT,
-                        'hint' => LANG_FORMS_CP_SEND_TEXT_FORM_HINT,
-                        'visible_depend' => array('options:send_type:' => array('show' => array('notice'))),
-                        'patterns_hint' => [
-                            'patterns' =>  $meta_fields,
-                            'text_panel' => '',
-                            'always_show' => true,
-                            'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN
+                    ]),
+                    new fieldString('options:send_type_notice', [
+                        'title'          => LANG_USERS,
+                        'hint'           => LANG_FORMS_CP_SEND_USERS_HINT,
+                        'autocomplete'   => ['url' => href_to('admin', 'users', 'autocomplete'), 'multiple' => true],
+                        'visible_depend' => ['options:send_type:' => ['show' => ['notice']]]
+                    ]),
+                    new fieldHtml('options:notify_text', [
+                        'title'             => LANG_FORMS_CP_FORM_NOTIFY_TEXT,
+                        'hint'              => LANG_FORMS_CP_SEND_TEXT_FORM_HINT,
+                        'can_multilanguage' => true,
+                        'visible_depend'    => ['options:send_type:' => ['show' => ['notice']]],
+                        'patterns_hint'     => [
+                            'patterns'     => $meta_fields,
+                            'text_panel'   => '',
+                            'always_show'  => true,
+                            'text_pattern' => LANG_CP_SEOMETA_HINT_PATTERN
                         ]
-                    )),
-                    new fieldString('options:send_type_email', array(
-                        'title' => LANG_EMAIL,
-                        'hint' => LANG_FORMS_CP_SEND_EMAIL_HINT,
-                        'visible_depend' => array('options:send_type:' => array('show' => array('email')))
-                    )),
-                    new fieldHtml('options:letter', array(
-                        'title' => LANG_FORMS_CP_FORM_LETTER,
-                        'hint' => LANG_FORMS_CP_SEND_TEXT_FORM_HINT,
+                    ]),
+                    new fieldString('options:send_type_email', [
+                        'title'          => LANG_EMAIL,
+                        'hint'           => LANG_FORMS_CP_SEND_EMAIL_HINT,
+                        'visible_depend' => ['options:send_type:' => ['show' => ['email']]]
+                    ]),
+                    new fieldHtml('options:letter', [
+                        'title'             => LANG_FORMS_CP_FORM_LETTER,
+                        'hint'              => LANG_FORMS_CP_SEND_TEXT_FORM_HINT,
+                        'can_multilanguage' => true,
                         'options' => [
                             'editor' => 'ace'
                         ],
-                        'visible_depend' => array('options:send_type:' => array('show' => array('email'))),
+                        'visible_depend' => ['options:send_type:' => ['show' => ['email']]],
                         'patterns_hint' => [
-                            'patterns' =>  $meta_fields,
-                            'text_panel' => '',
-                            'always_show' => true,
-                            'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN
+                            'patterns'     => $meta_fields,
+                            'text_panel'   => '',
+                            'always_show'  => true,
+                            'text_pattern' => LANG_CP_SEOMETA_HINT_PATTERN
                         ]
-                    )),
-                    new fieldString('options:action', array(
+                    ]),
+                    new fieldString('options:action', [
                         'title' => LANG_FORMS_CP_ACTION,
-                        'hint' => LANG_FORMS_CP_ACTION_HINT
-                    )),
-                    new fieldList('options:method', array(
+                        'hint'  => LANG_FORMS_CP_ACTION_HINT
+                    ]),
+                    new fieldList('options:method', [
                         'title' => LANG_FORMS_CP_METHOD,
-                        'hint' => LANG_FORMS_CP_METHOD_HINT,
+                        'hint'  => LANG_FORMS_CP_METHOD_HINT,
                         'items' => [
                             'ajax' => 'POST ajax',
                             'post' => 'POST',
                             'get'  => 'GET'
                         ],
-                        'visible_depend' => array('options:action' => array('hide' => array('')))
-                    )),
-                    new fieldText('options:send_text', array(
-                        'title' => LANG_FORMS_CP_SEND_TEXT_FORM,
-                        'hint' => LANG_FORMS_CP_SEND_TEXT_FORM_HINT,
-                        'patterns_hint' => [
-                            'patterns' => $meta_fields,
+                        'visible_depend' => ['options:action' => ['hide' => ['']]]
+                    ]),
+                    new fieldText('options:send_text', [
+                        'title'             => LANG_FORMS_CP_SEND_TEXT_FORM,
+                        'hint'              => LANG_FORMS_CP_SEND_TEXT_FORM_HINT,
+                        'can_multilanguage' => true,
+                        'patterns_hint'     => [
+                            'patterns'     => $meta_fields,
                             'text_pattern' => LANG_CP_SEOMETA_HINT_PATTERN
                         ]
-                    )),
-                    new fieldString('options:continue_link', array(
+                    ]),
+                    new fieldString('options:continue_link', [
                         'title' => LANG_FORMS_CP_CONTINUE_LINK
-                    ))
-                )
-            )
-
-        );
-
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

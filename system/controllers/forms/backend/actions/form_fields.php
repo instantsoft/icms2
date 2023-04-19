@@ -18,6 +18,7 @@ class actionFormsFormFields extends cmsAction {
 
         $this->table_name = 'forms_fields';
         $this->grid_name  = 'form_fields';
+        $this->grid_args  = [$form_data];
 
         $this->tool_buttons = [
             [

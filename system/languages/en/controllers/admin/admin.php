@@ -250,6 +250,7 @@
     define('LANG_CP_FIELD_LABELS',              'Label position');
     define('LANG_CP_FIELD_LABELS_IN_LIST',      'In list view');
     define('LANG_CP_FIELD_LABELS_IN_ITEM',      'In entry view');
+    define('LANG_CP_FIELD_LABELS_IN_FORM',      'In form');
     define('LANG_CP_FIELD_LABEL_NONE',          'Hide');
     define('LANG_CP_FIELD_LABEL_LEFT',          'Left');
     define('LANG_CP_FIELD_LABEL_TOP',           'Top');

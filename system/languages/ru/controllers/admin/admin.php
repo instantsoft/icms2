@@ -266,6 +266,7 @@
     define('LANG_CP_FIELD_LABELS',              'Положение заголовков');
     define('LANG_CP_FIELD_LABELS_IN_LIST',      'При просмотре списка');
     define('LANG_CP_FIELD_LABELS_IN_ITEM',      'При просмотре записи');
+    define('LANG_CP_FIELD_LABELS_IN_FORM',      'В форме');
     define('LANG_CP_FIELD_LABEL_NONE',          'Не показывать');
     define('LANG_CP_FIELD_LABEL_LEFT',          'Слева');
     define('LANG_CP_FIELD_LABEL_TOP',           'Сверху');

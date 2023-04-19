@@ -1,6 +1,6 @@
 <?php
 
-function grid_form_fields($controller) {
+function grid_form_fields($controller, $form_data) {
 
     $options = [
         'is_sortable'   => false,
@@ -35,8 +35,8 @@ function grid_form_fields($controller) {
             },
             'filter' => 'exact',
             'filter_select' => [
-                'items' => function($name) {
-                    $fieldsets = cmsCore::getModel('content')->setTablePrefix('')->getContentFieldsets('forms');
+                'items' => function($name) use ($form_data) {
+                    $fieldsets = cmsCore::getModel('forms')->getFormFieldsets($form_data['id']);
                     $items = ['' => LANG_ALL];
                     foreach($fieldsets as $fieldset) { $items[$fieldset] = $fieldset; }
                     return $items;
@@ -71,6 +71,11 @@ function grid_form_fields($controller) {
     ];
 
     $actions = [
+        [
+            'title' => LANG_COPY,
+            'class' => 'copy',
+            'href'  => href_to($controller->root_url, 'fields_add', ['{form_id}', '{id}'])
+        ],
         [
             'title' => LANG_EDIT,
             'class' => 'edit',

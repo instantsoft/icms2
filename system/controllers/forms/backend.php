@@ -65,6 +65,38 @@ class backendForms extends cmsBackend {
         return $menu;
     }
 
+    public function addFieldOptionsToForm(cmsForm $form) {
+
+        $field_type  = $this->request->get('type', '');
+        $field_class = 'field' . string_to_camel('_', $field_type);
+
+        if (!class_exists($field_class)) {
+            return cmsCore::error(ERR_CLASS_NOT_FOUND);
+        }
+
+        $field_object = new $field_class(null, [
+            'subject_name' => 'forms'
+        ]);
+
+        $field_options = $field_object->getOptions();
+
+        $form->mergeForm($this->makeForm(function($form) use($field_options){
+
+            $form->addFieldset(LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
+
+            foreach ($field_options as $field_field) {
+
+                $field_field->setName("options:{$field_field->name}");
+
+                $form->addField('field_settings', $field_field);
+            }
+
+            return $form;
+        }));
+
+        return $form;
+    }
+
     public function validate_unique_field($form_id, $value){
 
         if (empty($value)) { return true; }

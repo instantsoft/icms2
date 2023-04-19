@@ -921,7 +921,7 @@ th[rel="id"] {
 th[rel="is_enabled"] {
     width: 90px;
 }
-th[rel="dg_actions"] {
+th[rel="advanced_filter"] {
     width: 70px;
 }
 th.sortable {

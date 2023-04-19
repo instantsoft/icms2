@@ -4,6 +4,15 @@
     &.show {
         background-color: rgba(0, 0, 0, 0.25);
     }
+    .nav-link {
+        color: $navbar-light-color;
+        @include hover-focus() {
+            color: $navbar-light-hover-color;
+        }
+        &.disabled {
+            color: $navbar-light-disabled-color;
+        }
+    }
 }
 .mobile-menu-wrapper {
     @include media-breakpoint-down(lg) {

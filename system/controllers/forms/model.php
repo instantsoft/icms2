@@ -27,24 +27,31 @@ class modelForms extends cmsModel {
         return $this->delete('forms', $id);
     }
 
-    public function getForm($id){
+    public function getForm($id) {
 
         $this->useCache('forms.form');
 
-        if(is_numeric($id)){
+        if (is_numeric($id)) {
+
             $this->filterEqual('id', $id);
         } else {
-            if(strlen($id) === 128){
+            if (strlen($id) === 128) {
                 $this->filterEqual('hash', $id);
             } else {
                 $this->filterEqual('name', $id);
             }
         }
 
-        $form = $this->getItem('forms');
-        if(!$form){ return false; }
+        $form = $this->getItem('forms', function ($item, $model) {
 
-        $form['options'] = cmsModel::stringToArray($form['options']);
+            $item['options'] = cmsModel::stringToArray($item['options']);
+
+            return $item;
+        });
+
+        if (!$form) {
+            return false;
+        }
 
         $form['params'] = [
             'action'        => !empty($form['options']['action']) ? $form['options']['action'] : href_to('forms', 'send_ajax', $form['hash']),
@@ -135,22 +142,29 @@ class modelForms extends cmsModel {
         });
     }
 
-    public function getFormFieldsets($form_id){
+    public function getFormFieldsets($form_id) {
+
+        $name = $this->getTranslatedFieldName('fieldset', 'forms_fields');
 
         $this->useCache('forms.fields');
 
         $this->filterEqual('form_id', $form_id);
 
-        $this->groupBy('fieldset');
+        $this->groupBy($name);
 
-        if (!$this->order_by){ $this->orderBy('fieldset'); }
+        if (!$this->order_by) {
+            $this->orderBy($name);
+        }
 
-        $fieldsets = $this->selectOnly('fieldset')->get('forms_fields', function($item, $model){
-            if(!$item['fieldset']){ return false; }
+        $this->selectOnly($name, 'fieldset');
+
+        return $this->get('forms_fields', function ($item, $model) {
+
+            if (!$item['fieldset']) {
+                return false;
+            }
             return $item['fieldset'];
-        }, false);
-
-        return (array)$fieldsets;
+        }, false) ?: [];
     }
 
     public function addFormField($field){
@@ -158,6 +172,11 @@ class modelForms extends cmsModel {
         $this->filterEqual('form_id', $field['form_id']);
 
         $field['ordering'] = $this->getNextOrdering('forms_fields');
+
+        // если создается новая группа, то выбираем ее
+        if ($field['new_fieldset']) {
+            $field[$this->getTranslatedFieldName('fieldset', 'forms_fields')] = $field['new_fieldset'];
+        }
 
         $field['id'] = $this->insert('forms_fields', $field, true);
 
@@ -167,6 +186,18 @@ class modelForms extends cmsModel {
     }
 
     public function updateFormField($id, $field){
+
+        // Если не выбрана группа, обнуляем поля групп
+        foreach ($field as $key => $value) {
+            if(strpos($key, 'fieldset') === 0 && !$value){
+                $field[$key] = null;
+            }
+        }
+
+        // если создается новая группа, то выбираем ее
+        if ($field['new_fieldset']) {
+            $field[$this->getTranslatedFieldName('fieldset', 'forms_fields')] = $field['new_fieldset'];
+        }
 
         $result = $this->update('forms_fields', $id, $field, false, true);
 

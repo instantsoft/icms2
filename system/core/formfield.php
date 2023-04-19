@@ -325,16 +325,20 @@ class cmsFormField {
      *
      * @param array $options
      */
-    public function setOptions($options){
-        if (is_array($options)){
-            foreach($options as $option=>$value){
-				if ($option === 'id') {
+    public function setOptions($options) {
+        if (is_array($options)) {
+            foreach ($options as $option => $value) {
+                if ($option === 'id') {
                     $this->field_id = $value;
                     continue;
                 }
                 $this->{$option} = $value;
             }
-            if (isset($options['title'])){
+            $show_title = true;
+            if (array_key_exists('show_title', ($options['options'] ?? []))) {
+                $show_title = $options['options']['show_title'];
+            }
+            if (isset($options['title']) && $show_title) {
                 $this->element_title = $options['title'];
             }
         }

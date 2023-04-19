@@ -225,6 +225,14 @@ class formAdminCtypesField extends cmsForm {
                             'top'  => LANG_CP_FIELD_LABEL_TOP,
                             'none' => LANG_CP_FIELD_LABEL_NONE
                         ]
+                    ]),
+                    new fieldList('options:show_title', [
+                        'title'   => LANG_CP_FIELD_LABELS_IN_FORM,
+                        'default' => 1,
+                        'items'   => [
+                            1 => LANG_CP_FIELD_LABEL_TOP,
+                            0 => LANG_CP_FIELD_LABEL_NONE
+                        ]
                     ])
                 ]
             ],

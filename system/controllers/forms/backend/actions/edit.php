@@ -6,8 +6,13 @@ class actionFormsEdit extends cmsAction {
 
         $do = 'edit';
 
-        $form_data = $this->model->getForm($id);
-        if(!$form_data){ cmsCore::error404(); }
+        $form_data = $this->model->localizedOff()->getForm($id);
+
+        if (!$form_data) {
+            return cmsCore::error404();
+        }
+
+        $this->model->localizedRestore();
 
         $fields = $this->model->filterEqual('form_id', $form_data['id'])->getFormFields();
 
@@ -15,26 +20,24 @@ class actionFormsEdit extends cmsAction {
 
         $is_submitted = $this->request->has('submit');
 
-        if ($is_submitted){
+        if ($is_submitted) {
 
             $form_data = array_merge($form_data, $form->parse($this->request, $is_submitted));
 
             $errors = $form->validate($this, $form_data);
 
-            if (!$errors){
+            if (!$errors) {
 
                 $id = $this->model->updateForm($form_data['id'], $form_data);
 
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
-                $this->redirectToAction('');
-
+                return $this->redirectToAction('');
             }
 
-            if ($errors){
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
         return $this->cms_template->render('backend/add', [
@@ -44,7 +47,6 @@ class actionFormsEdit extends cmsAction {
             'form'      => $form,
             'errors'    => isset($errors) ? $errors : false
         ]);
-
     }
 
 }

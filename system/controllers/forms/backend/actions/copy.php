@@ -4,8 +4,13 @@ class actionFormsCopy extends cmsAction {
 
     public function run($form_id = 0) {
 
-        $form_data = $this->model->getForm($form_id);
-        if(!$form_data){ cmsCore::error404(); }
+        $form_data = $this->model->localizedOff()->getForm($form_id);
+
+        if (!$form_data) {
+            return cmsCore::error404();
+        }
+
+        $this->model->localizedRestore();
 
         $do = 'copy';
 
@@ -13,13 +18,13 @@ class actionFormsCopy extends cmsAction {
 
         $is_submitted = $this->request->has('submit');
 
-        if ($is_submitted){
+        if ($is_submitted) {
 
             $form_data = array_merge($form_data, $form->parse($this->request, $is_submitted));
 
             $errors = $form->validate($this, $form_data);
 
-            if (!$errors){
+            if (!$errors) {
 
                 unset($form_data['id']);
 
@@ -27,28 +32,25 @@ class actionFormsCopy extends cmsAction {
 
                 $fields = $this->model->filterEqual('form_id', $form_id)->orderBy('ordering', 'asc')->get('forms_fields');
 
-                if($fields){
-                    foreach ($fields as $field){
+                if ($fields) {
+                    foreach ($fields as $field) {
 
                         unset($field['id']);
 
                         $field['form_id'] = $id;
 
                         $this->model->addFormField($field);
-
                     }
                 }
 
                 cmsUser::addSessionMessage(sprintf(LANG_FORMS_CP_FORMS_COPY_CREATED, $form_data['title']), 'success');
 
-                $this->redirectToAction('form_fields', array($id));
-
+                return $this->redirectToAction('form_fields', [$id]);
             }
 
-            if ($errors){
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
         return $this->cms_template->render('backend/add', [
@@ -58,7 +60,6 @@ class actionFormsCopy extends cmsAction {
             'form'      => $form,
             'errors'    => isset($errors) ? $errors : false
         ]);
-
     }
 
 }

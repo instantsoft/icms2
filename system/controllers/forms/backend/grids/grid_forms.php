@@ -7,18 +7,15 @@ function grid_forms($controller) {
     $columns = [
         'id' => [
             'title'  => 'id',
-            'width'  => 30,
             'filter' => 'exact'
         ],
         'title' => [
             'title'  => LANG_TITLE,
-            'width'  => 150,
             'href'   => href_to($controller->root_url, 'edit', '{id}'),
             'filter' => 'like'
         ],
         'name' => [
             'title'  => LANG_SYSTEM_NAME,
-            'width'  => 150,
             'filter' => 'like'
         ]
     ];

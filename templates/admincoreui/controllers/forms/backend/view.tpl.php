@@ -10,8 +10,4 @@
     <?php echo $form_data['description']; ?>
 <?php } ?>
 <?php
-    $this->renderForm($form, [], [
-        'action' => '',
-        'submit' => ['title' => LANG_SEND],
-        'method' => 'post'
-    ], $errors);
+    $this->renderForm($form, [], $form_data['params'], $errors);

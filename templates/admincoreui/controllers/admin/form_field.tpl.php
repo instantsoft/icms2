@@ -10,7 +10,7 @@
 <script>
 
     var filter_options_el = $('#fset_visibility > .field').length === 1 ? '#tab-visibility' : '#f_is_in_filter, #tab-filter_access';
-    var virtual_options_el = '#tab-group, #f_options_visible_depend, #tab-format, #tab-profile, #tab-add_access, #tab-edit_access, #tab-author_access';
+    var virtual_options_el = '#tab-format, #tab-profile, #tab-add_access, #tab-edit_access, #tab-author_access';
 
     function loadFieldTypeOptions(field){
 

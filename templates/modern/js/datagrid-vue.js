@@ -403,9 +403,6 @@ icms.datagrid = (function () {
                     }
                     return titles.join(', ');
                 },
-                isShow: function() {
-                    return this.is_show;
-                },
                 selected: {
                     get() {
                         if (!this.modelValue) { return []; }
@@ -434,7 +431,7 @@ icms.datagrid = (function () {
                     <slot></slot>
                 </div>
                 <input v-if="!use_slot" class="input form-control form-control-sm" v-model="selectedTitles" type="text" readonly="true" @click="toggle" v-bind="params.attributes">
-                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left shadow px-2 pt-2 pb-0" :class="{show_menu: isShow}">
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left shadow px-2 pt-2 pb-0" :class="{show_menu: is_show}">
                     <div class="custom-control custom-checkbox pb-2" v-for="(title, index) in params.items" :key="index">
                         <input class="custom-control-input" type="checkbox" :id="'dgselect-'+index" :value="index" v-model="selected">
                         <label class="custom-control-label" :for="'dgselect-'+index">
