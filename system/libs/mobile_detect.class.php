@@ -219,7 +219,7 @@ class Mobile_Detect
         // Prestigio Tablets http://www.prestigio.com/support
         'PrestigioTablet'   => 'PMP3170B|PMP3270B|PMP3470B|PMP7170B|PMP3370B|PMP3570C|PMP5870C|PMP3670B|PMP5570C|PMP5770D|PMP3970B|PMP3870C|PMP5580C|PMP5880D|PMP5780D|PMP5588C|PMP7280C|PMP7280C3G|PMP7280|PMP7880D|PMP5597D|PMP5597|PMP7100D|PER3464|PER3274|PER3574|PER3884|PER5274|PER5474|PMP5097CPRO|PMP5097|PMP7380D|PMP5297C|PMP5297C_QUAD|PMP812E|PMP812E3G|PMP812F|PMP810E|PMP880TD|PMT3017|PMT3037|PMT3047|PMT3057|PMT7008|PMT5887|PMT5001|PMT5002',
         // http://support.lenovo.com/en_GB/downloads/default.page?#
-        'LenovoTablet'      => 'Lenovo TAB|Idea(Tab|Pad)( A1|A10| K1|)|ThinkPad([ ]+)?Tablet|YT3-850M|YT3-X90L|YT3-X90F|YT3-X90X|Lenovo.*(S2109|S2110|S5000|S6000|K3011|A3000|A3500|A1000|A2107|A2109|A1107|A5500|A7600|B6000|B8000|B8080)(-|)(FL|F|HV|H|)|TB-X103F|TB-X304X|TB-X304F|TB-X304L|TB-X505F|TB-X505L|TB-X505X|TB-X605F|TB-X605L|TB-8703F|TB-8703X|TB-8703N|TB-8704N|TB-8704F|TB-8704X|TB-8704V|TB-7304F|TB-7304I|TB-7304X|Tab2A7-10F|Tab2A7-20F|TB2-X30L|YT3-X50L|YT3-X50F|YT3-X50M|YT-X705F|YT-X703F|YT-X703L|YT-X705L|YT-X705X|TB2-X30F|TB2-X30L|TB2-X30M|A2107A-F|A2107A-H|TB3-730F|TB3-730M|TB3-730X|TB-7504F|TB-7504X|TB-X704F|TB-X104F|TB3-X70F|TB-X705F|TB-8504F|TB3-X70L|TB3-710F|TB-X704L|TB-J606F|TB-X606F|TB-X306X|YT-J706X',
+        'LenovoTablet'      => 'Lenovo TAB|Idea(Tab|Pad)( A1|A10| K1|)|ThinkPad([ ]+)?Tablet|YT3-850M|YT3-X90L|YT3-X90F|YT3-X90X|Lenovo.*(S2109|S2110|S5000|S6000|K3011|A3000|A3500|A1000|A2107|A2109|A1107|A5500|A7600|B6000|B8000|B8080)(-|)(FL|F|HV|H|)|TB-X103F|TB-X304X|TB-X304F|TB-X304L|TB-X505F|TB-X505L|TB-X505X|TB-X605F|TB-X605L|TB-8703F|TB-8703X|TB-8703N|TB-8704N|TB-8704F|TB-8704X|TB-8704V|TB-7304F|TB-7304I|TB-7304X|Tab2A7-10F|Tab2A7-20F|TB2-X30L|YT3-X50L|YT3-X50F|YT3-X50M|YT-X705F|YT-X703F|YT-X703L|YT-X705L|YT-X705X|TB2-X30F|TB2-X30L|TB2-X30M|A2107A-F|A2107A-H|TB3-730F|TB3-730M|TB3-730X|TB-7504F|TB-7504X|TB-X704F|TB-X104F|TB3-X70F|TB-X705F|TB-8504F|TB3-X70L|TB3-710F|TB-X704L|TB-J606F|TB-X606F|TB-X306X|YT-J706X|TB128FU',
         // http://www.dell.com/support/home/us/en/04/Products/tab_mob/tablets
         'DellTablet'        => 'Venue 11|Venue 8|Venue 7|Dell Streak 10|Dell Streak 7',
         'XiaomiTablet'      => '21051182G',
@@ -633,7 +633,7 @@ class Mobile_Detect
      *
      * @param array|null $headers Specify the headers as injection. Should be PHP _SERVER flavored.
      *                          If left empty, will use the global _SERVER['HTTP_*'] vars instead.
-     * @param null $userAgent Inject the User-Agent header. If null, will use HTTP_USER_AGENT
+     * @param string|null $userAgent Inject the User-Agent header. If null, will use HTTP_USER_AGENT
      *                          from the $headers array instead.
      */
     public function __construct(array $headers = null, $userAgent = null)
@@ -747,7 +747,7 @@ class Mobile_Detect
      *
      * @param array|null $cfHeaders List of HTTP headers
      *
-     * @return  boolean If there were CloudFront headers to be set
+     * @return bool If there were CloudFront headers to be set
      */
     public function setCfHeaders(array $cfHeaders = null): bool
     {
@@ -971,8 +971,8 @@ class Mobile_Detect
     /**
      * Find a detection rule that matches the current User-agent.
      *
-     * @param  null    $userAgent deprecated
-     * @return boolean
+     * @param string|null $userAgent deprecated
+     * @return bool
      */
     protected function matchDetectionRulesAgainstUA($userAgent = null): bool
     {
@@ -997,7 +997,7 @@ class Mobile_Detect
      *
      * @param string $key
      *
-     * @return boolean
+     * @return bool
      */
     protected function matchUAAgainstKey(string $key): bool
     {
@@ -1022,8 +1022,8 @@ class Mobile_Detect
     /**
      * Check if the device is mobile.
      * Returns true if any type of mobile device detected, including special ones
-     * @param  null $userAgent   deprecated
-     * @param  null $httpHeaders deprecated
+     * @param string|null $userAgent  deprecated
+     * @param array|null $httpHeaders deprecated
      * @return bool
      */
     public function isMobile($userAgent = null, $httpHeaders = null): bool
@@ -1090,8 +1090,8 @@ class Mobile_Detect
      * @param string|null $userAgent   deprecated
      * @param array|null $httpHeaders deprecated
      * @return bool
-     *@todo: The httpHeaders part is not yet used.
      *
+     * @todo: The httpHeaders part is not yet used.
      */
     public function is(string $key, string $userAgent = null, array $httpHeaders = null): bool
     {
@@ -1116,7 +1116,7 @@ class Mobile_Detect
      * This method will be used to check custom regexes against
      * the User-Agent string.
      *
-     * @param $regex
+     * @param string $regex
      * @param string|null $userAgent
      * @return bool
      *
@@ -1158,8 +1158,8 @@ class Mobile_Detect
      * @param string $ver The string version, like "2.6.21.2152";
      *
      * @return float
-          *@todo Remove the error suppression from str_replace() call.
      *
+     * @todo Remove the error suppression from str_replace() call.
      */
     public function prepareVersionNo(string $ver): float
     {

@@ -680,14 +680,15 @@ class admin extends cmsFrontend {
 
     }
 
-    private function getPackageContentsList(){
+    public function getPackageContentsList() {
 
         $path = $this->cms_config->upload_path . $this->installer_upload_path . '/' . 'package';
 
-        if (!is_dir($path)) { return false; }
+        if (!is_dir($path)) {
+            return false;
+        }
 
         return files_tree_to_array($path);
-
     }
 
     /**

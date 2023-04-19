@@ -1,5 +1,40 @@
 <?php
+/**
+ * Копирует директорию
+ *
+ * @param string $directory_from Полный путь к директории, которую копируем
+ * @param string $directory_to Полный путь к директории, куда копируем
+ * @return bool
+ */
+function files_copy_directory($directory_from, $directory_to) {
 
+    if (!is_dir($directory_from)) {
+        return false;
+    }
+
+    if (!is_dir($directory_to)) {
+        mkdir($directory_to, 0755, true);
+    }
+
+    $items = new FilesystemIterator($directory_from);
+
+    foreach ($items as $item) {
+
+        $target = $directory_to.'/'.$item->getBasename();
+
+        if ($item->isDir()) {
+
+            if (!files_copy_directory($item->getPathname(), $target)) {
+                return false;
+            }
+        }
+        elseif (!copy($item->getPathname(), $target)) {
+            return false;
+        }
+    }
+
+    return true;
+}
 /**
  * Рекурсивно удаляет директорию
  * @param string $directory
