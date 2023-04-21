@@ -352,6 +352,13 @@ icms.datagrid = (function () {
             </select>`
         });
 
+        app.component('form-textarea', {
+            props: ['params', 'modelValue'],
+            emits: ['update:modelValue', 'applyfilter'],
+            mixins: [saveMixin],
+            template: `<textarea class="form-control" :value="modelValue" @input="save($event.target.value)" v-bind="params.attributes ? params.attributes : {}"></textarea>`
+        });
+
         app.component('form-filter', {
             props: ['params', 'modelValue'],
             emits: ['update:modelValue', 'applyfilter'],

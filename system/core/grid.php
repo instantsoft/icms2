@@ -71,6 +71,8 @@ class cmsGrid {
         'filter_attributes' => [],    // Атрибуты тега фильтрации
         'editable' => [               // Может редактироваться из списка
             'rules'            => [],      // Массив правил валидации при сохранении
+            'renderer'         => null,    // Компонент vue поля редактирования, по умолчанию form-input
+            'items'            => null,    // Массив списка для селекта, если renderer form-select
             'language_context' => false,   // Если выключено, будет искать языковое поле для текущей локали
             'save_action'      => '',      // URL для сохранения
             'attributes'       => []       // Атрибуты тега быстрого редактирования
@@ -922,6 +924,7 @@ class cmsGrid {
 
         return [
             'component'   => $column['editable']['renderer'] ?? 'form-input',
+            'items'       => $column['editable']['items'] ?? [],
             'edit_icon'   => html_svg_icon('solid', 'pen', 16, false),
             'value'       => $row[$field] ?? '',
             'attributes'  => $attributes,

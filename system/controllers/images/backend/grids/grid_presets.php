@@ -36,7 +36,16 @@ function grid_presets($controller) {
             'switchable' => true,
             'handler'    => function ($val, $row) {
                 return $val ?: LANG_IMAGES_PRESET_OUT_ASIS;
-            }
+            },
+            'editable' => [
+                'renderer' => 'form-select',
+                'items' => [
+                    ''     => LANG_IMAGES_PRESET_OUT_ASIS,
+                    'jpg'  => 'JPG',
+                    'png'  => 'PNG',
+                    'webp' => 'WEBP'
+                ]
+            ]
         ],
         'quality' => [
             'title'      => LANG_IMAGES_PRESET_QUALITY,
