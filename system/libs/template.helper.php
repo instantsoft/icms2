@@ -7,7 +7,15 @@
  * @param integer $size Размер
  * @param boolean $print Печатать или возвращать строку
  */
-function html_svg_icon($file, $name, $size = 16, $print = true){
+function html_svg_icon($file, $name = false, $size = 16, $print = true){
+    if (!$name && preg_match('~{([^%]+)%([^}|]+)~', $file)) {
+	if($print){
+		echo string_replace_svg_icons($file);
+		return false;
+	} else {
+		return string_replace_svg_icons($file);
+	}
+    }
     static $template_path = [];
     if(!isset($template_path[$file])){
         $template_path[$file] = cmsTemplate::getInstance()->getTemplateFilePath('images/icons/'.$file.'.svg', true);
