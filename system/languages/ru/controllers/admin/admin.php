@@ -216,6 +216,7 @@
     define('LANG_CP_ITEMVIEW_ON',               'Просмотр записи включен');
     define('LANG_CP_ITEMVIEW_FIELDS_GROUP',     'Группировать поля');
     define('LANG_CP_ITEMVIEW_HITS_ON',			'Считать количество просмотров');
+    define('LANG_CP_ITEMVIEW_HITS_GROUPS_VIEW', 'Показывать счётчик просмотров');
     define('LANG_CP_ITEMVIEW_OFF_INFO_BLOCK',	'Не показывать инфо-блок');
     define('LANG_CP_ITEMVIEW_APPEND_HTML',      'Выводить HTML в конце записи');
     define('LANG_CP_ITEMVIEW_APPEND_HTML_HINT', 'Введенный здесь HTML код будет выводиться под каждой записью');

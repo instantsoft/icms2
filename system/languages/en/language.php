@@ -467,6 +467,7 @@
     define('LANG_NO_ITEMS', 		 		 'No elements to display');
 
     //ACTIONS
+    define('LANG_TRANSLATE',                 'Translate');
     define('LANG_ADD_CATEGORY',              'Add Category');
     define('LANG_ADD_CATEGORY_QUICK',        'or create a category inside the selected');
     define('LANG_EDIT_CATEGORY',             'Edit Category');

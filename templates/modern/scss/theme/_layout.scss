@@ -3,7 +3,7 @@
     color: $white;
     text-shadow: none;
 }
-*, :after, :before {
+body, html {
     scroll-behavior: smooth;
 }
 .icms-header {

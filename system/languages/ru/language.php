@@ -254,7 +254,7 @@
     define('LANG_PARSER_FORMS',              'Формы');
     define('LANG_PARSER_TOOLBAR',            'Тулбар');
     define('LANG_PARSER_TOOLBAR_FL_TITLE',   'Поля для вывода');
-    define('LANG_PARSER_TOOLBAR_FL_HINT',    'Иконку можно указывать через двоеточие, например solid:user, где solid нзвание svg файла спрайта в директории templates/шаблон/images/icons. Если через второе двоеточие будет что-то еще указано, то это уже будет названии CSS класса контейнера, например solid:user:btn.');
+    define('LANG_PARSER_TOOLBAR_FL_HINT',    'Иконку можно указывать через двоеточие, например solid:user, где solid название svg файла спрайта в директории templates/шаблон/images/icons. Если через второе двоеточие будет что-то еще указано, то это уже будет название CSS класса контейнера, например solid:user:btn.');
     define('LANG_PARSER_TOOLBAR_FL_SEL',     'Выберите поле и укажите иконку, если необходимо');
 
     //USERS
@@ -466,6 +466,7 @@
     define('LANG_NO_ITEMS', 		 		 'Нет элементов для просмотра');
 
     //ACTIONS
+    define('LANG_TRANSLATE',                 'Перевести');
     define('LANG_ADD_CATEGORY',              'Создать категорию');
     define('LANG_ADD_CATEGORY_QUICK',        'или создать новую категорию внутри выбранной');
     define('LANG_EDIT_CATEGORY',             'Редактировать категорию');

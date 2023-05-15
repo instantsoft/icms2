@@ -199,6 +199,7 @@
     define('LANG_CP_ITEMVIEW_ON',               'Entry view enabled');
     define('LANG_CP_ITEMVIEW_FIELDS_GROUP',     'Group the fields');
 	define('LANG_CP_ITEMVIEW_HITS_ON',			'Count views (hits)');
+    define('LANG_CP_ITEMVIEW_HITS_GROUPS_VIEW', 'Show view counter');
     define('LANG_CP_ITEMVIEW_OFF_INFO_BLOCK',	'Do not show info block');
     define('LANG_CP_ITEMVIEW_APPEND_HTML',      'Append HTML');
     define('LANG_CP_ITEMVIEW_APPEND_HTML_HINT', 'Appended HTML code will be shown under each entry');

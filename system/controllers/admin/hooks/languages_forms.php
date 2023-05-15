@@ -11,6 +11,9 @@ class onAdminLanguagesForms extends cmsAction {
                     'title' => LANG_CP_SECTION_SETTINGS
                 ],
                 'menu_item' => [
+                    'title' => LANG_CP_MENU_ITEM
+                ],
+                'menu' => [
                     'title' => LANG_CP_SECTION_MENU
                 ],
                 'users_group' => [

@@ -2164,13 +2164,12 @@ class cmsModel {
      * @param string $table_name Таблица БД
      * @param array $list Массив id записей в нужном порядке
      * @param array $additional_fields Список дополнительных полей и их значений, которые нужно обновлять вместе с ordering
+     * @param string $field_name Название поля
      * @return boolean
      */
-    public function reorderByList($table_name, $list, $additional_fields = []) {
+    public function reorderByList($table_name, $list, $additional_fields = [], $field_name = 'ordering') {
 
         $ordering = 0;
-
-        $update_data = [];
 
         foreach ($list as $id) {
 
@@ -2180,7 +2179,7 @@ class cmsModel {
 
             $ordering += 1;
 
-            $this->update($table_name, $id, array_merge($additional_fields, ['ordering' => $ordering]));
+            $this->update($table_name, $id, array_merge($additional_fields, [$field_name => $ordering]));
         }
 
         return $ordering > 0 ? true : false;

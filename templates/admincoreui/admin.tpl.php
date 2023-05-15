@@ -210,8 +210,7 @@
             <?php } ?>
         </div>
         <div class="ml-auto mr-auto mr-md-0">
-            <a href="https://instantcms.ru/">InstantCMS</a> &mdash;
-            <a href="http://www.instantsoft.ru/">InstantSoft</a> &copy;  <?php echo date('Y'); ?> &mdash;
+            <a href="https://instantcms.ru/">InstantCMS</a> &copy;  <?php echo date('Y'); ?> &mdash;
             <a href="<?php echo href_to('admin', 'credits'); ?>"><?php echo LANG_CP_3RDPARTY_CREDITS; ?></a>
         </div>
     </footer>

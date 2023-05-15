@@ -572,13 +572,18 @@ class content extends cmsFrontend {
             ];
         }
 
-        if (!empty($ctype['options']['hits_on'])){
-            $bar['hits'] = [
-                'css'   => 'bi_hits',
-                'icon'  => 'eye',
-                'html'  => html_views_format($item['hits_count']),
-                'title' => html_spellcount($item['hits_count'], LANG_HITS_SPELL)
-            ];
+        if (!empty($ctype['options']['hits_on'])) {
+
+            $ctype['options']['hits_groups_view'] = $ctype['options']['hits_groups_view'] ?? [];
+
+            if ($this->cms_user->isInGroups($ctype['options']['hits_groups_view'])) {
+                $bar['hits'] = [
+                    'css'   => 'bi_hits',
+                    'icon'  => 'eye',
+                    'html'  => html_views_format($item['hits_count']),
+                    'title' => html_spellcount($item['hits_count'], LANG_HITS_SPELL)
+                ];
+            }
         }
 
         if (!empty($fields['user']['is_in_'.$subject]) && $this->cms_user->isInGroups($fields['user']['groups_read'])){

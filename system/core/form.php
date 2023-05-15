@@ -269,11 +269,11 @@ class cmsForm {
 
                 foreach ($langs as $lang) {
 
+                    $_field = clone $field;
+
+                    $_field->lang = $lang;
+
                     if($default_lang !== $lang) {
-
-                        $_field = clone $field;
-
-                        $_field->lang = $lang;
 
                         if(!empty($_field->multilanguage_params['unset_required'])){
 
@@ -286,18 +286,6 @@ class cmsForm {
                                 unset($_field->classes[$class_key]);
                             }
                         }
-
-                    } else {
-                        $_field = $field;
-                    }
-
-                    if(!$first){
-                        $_field->styles[] = 'display:none';
-                    }
-
-                    $_field->element_title = $_field->title.' ['.strtoupper($lang).']';
-
-                    if($default_lang !== $lang) {
 
                         if($is_array){
 
@@ -313,7 +301,18 @@ class cmsForm {
                             $_field->setName($name.'_'.$lang);
                         }
 
+                    } else {
+
+                        $_field->classes[] = 'multilanguage-base';
                     }
+
+                    if(!$first){
+                        $_field->styles[] = 'display:none';
+                    }
+
+                    $_field->element_title = $_field->title.' ['.strtoupper($lang).']';
+
+                    $_field->rel = $lang;
 
                     $_field->field_tab_title = strtoupper($lang);
 
@@ -326,7 +325,6 @@ class cmsForm {
             }
 
             $structure[$fid]['childs'] = $childs;
-
         }
 
         return $structure;

@@ -5,4 +5,4 @@ ALTER TABLE `{#}activity_types` CHANGE `description` `description` VARCHAR(200) 
 
 DELETE FROM `{#}controllers` WHERE `name` = 'languages';
 INSERT INTO `{#}controllers` (`id`, `title`, `name`, `slug`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES
-(25, 'Мультиязычность', 'languages', NULL, 1, '---\r\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
+(25, 'Мультиязычность', 'languages', NULL, 1, '---\nservice: google\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);

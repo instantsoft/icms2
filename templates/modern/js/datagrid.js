@@ -1,5 +1,5 @@
 var icms = icms || {};
-
+/**устаревшее*/
 icms.datagrid = (function ($) {
 
     var _this = this;

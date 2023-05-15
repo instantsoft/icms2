@@ -24,6 +24,17 @@ class formLanguagesOptions extends cmsForm {
                 'type'   => 'fieldset',
                 'title'  => LANG_LANGUAGES_CP_FORMS_OPT,
                 'childs' => $childs
+            ],
+            [
+                'type'   => 'fieldset',
+                'title'  => LANG_LANGUAGES_CP_SERVICES,
+                'childs' => [
+                    new fieldList('service', [
+                        'items' => [
+                            'google' => 'Google'
+                        ]
+                    ])
+                ]
             ]
         ];
     }

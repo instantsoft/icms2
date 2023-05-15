@@ -1,4 +1,5 @@
 <?php $this->addTplJSNameFromContext('jquery-cookie'); ?>
+<?php $this->addTplJSNameFromContext('form-translate'); ?>
 <?php if ((!isset($attributes['toolbar']) || $attributes['toolbar']) && $this->isToolbar() && empty($attributes['hide_toolbar'])){ ?>
     <?php $this->toolbar('menu-toolbar'); ?>
 <?php } ?>
@@ -69,7 +70,8 @@
 </form>
 <?php ob_start(); ?>
 <script>
-    <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT', 'LANG_SUBMIT_NOT_SAVE'); ?>
+    <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT', 'LANG_SUBMIT_NOT_SAVE', 'LANG_TRANSLATE'); ?>
+    icms.translate.url = '<?php echo href_to('languages', 'tr'); ?>';
     $(function (){
         <?php if ($form->show_unsave_notice){ ?>
             icms.forms.initUnsaveNotice();

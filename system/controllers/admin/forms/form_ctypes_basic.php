@@ -329,6 +329,11 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_ITEMVIEW_HITS_ON,
                         'visible_depend' => ['options:item_on' => ['show' => ['1']]]
                     ]),
+                    new fieldListGroups('options:hits_groups_view', [
+                        'title' => LANG_CP_ITEMVIEW_HITS_GROUPS_VIEW,
+                        'show_all' => true,
+                        'visible_depend' => ['options:item_on' => ['show' => ['1']]]
+                    ]),
                     new fieldCheckbox('options:disable_info_block', [
                         'title' => LANG_CP_ITEMVIEW_OFF_INFO_BLOCK,
                         'visible_depend' => ['options:item_on' => ['show' => ['1']]]
