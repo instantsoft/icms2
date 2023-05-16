@@ -62,4 +62,41 @@ class languages extends cmsFrontend {
         return;
     }
 
+    /**
+     * Добавляет теги hreflang в HEAD страницы
+     * https://developers.google.com/search/docs/specialty/international/localized-versions?hl=ru
+     *
+     * @return void
+     */
+    public function addHreflangTags() {
+
+        if(!$this->cms_config->is_user_change_lang){
+            return;
+        }
+
+        $langs = cmsCore::getLanguages();
+
+        $uri = $this->cms_core->uri.($this->cms_core->uri_query ? '?'.http_build_query($this->cms_core->uri_query) : '');
+
+        foreach ($langs as $lang) {
+
+            $lang_prefix = '/';
+
+            if ($this->cms_config->language !== $lang) {
+
+                $lang_prefix .= $lang;
+
+                if ($uri) {
+                    $lang_prefix .= '/';
+                }
+            }
+
+            $this->cms_template->addHead('<link rel="alternate" href="'.html($this->cms_config->host . $lang_prefix . $uri, false).'" hreflang="'.$lang.'" />');
+        }
+
+        $this->cms_template->addHead('<link rel="alternate" href="'.html($this->cms_config->host . '/' . $uri, false).'" hreflang="x-default" />');
+
+        return;
+    }
+
 }
