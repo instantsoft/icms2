@@ -58,6 +58,8 @@ class actionAdminUsersEdit extends cmsAction {
 
                     $back_url = $this->getRequestBackUrl();
 
+                    list($back_url, $id, $user) = cmsEventsManager::hook('users_after_edit_admin', [$back_url, $id, $user], null, $this->request);
+
                     if ($back_url) {
                         $this->redirect($back_url);
                     } else {

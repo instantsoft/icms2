@@ -121,6 +121,7 @@
     define('LANG_PARSER_STRING_CHECKBOX',    'Not empty field checkbox');
     define('LANG_PARSER_HIDDEN',             'Hidden field');
     define('LANG_PARSER_NUMBER',             'Number');
+    define('LANG_PARSER_NUMBER_TYPE',        'Input field type');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Filter by range');
     define('LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE','Range as slider');
     define('LANG_PARSER_NUMBER_FILTER_STEP', 'Slider step');

@@ -142,7 +142,10 @@
     define('LANG_USERS_NOTIFY_FRIEND_ACCEPT',  'Notify on friendship request acceptance');
     define('LANG_USERS_NOTIFY_FRIEND_DELETE',  'Notify on cancelled friendship');
 
-    define('LANG_USERS_PRIVACY_FRIENDSHIP',    'Who can send me requests for friendship?');
+    define('LANG_USERS_PRIVACY_FRIENDSHIP',    'Who can send you requests for friendship?');
+    define('LANG_USERS_PRIVACY_SHOW_REG_DATA', 'Who can see your registration date?');
+    define('LANG_USERS_PRIVACY_SHOW_LAST_VISIT', 'Who can see your last visit?');
+    define('LANG_USERS_PRIVACY_SHOW_USER_GROUPS', 'Who can see your groups?');
     define('LANG_USERS_PRIVACY_PROFILE_VIEW',  'Who can view your profile?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL',  'Who can write on your wall?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL_REPLY', 'Who can comment on my wall posts?');

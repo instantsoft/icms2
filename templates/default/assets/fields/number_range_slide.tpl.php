@@ -9,9 +9,9 @@
 <div class="slider-range-hint">
 <?php if($field->getOption('filter_range_show_input')){ ?>
     <?php echo LANG_FROM; ?>
-    <?php echo html_input('text', $field->element_name.'[from]', $field->data['slide_params']['values'][0], ['class'=>'input-small', 'id' => $field->id.'_from']); ?>
+    <?php echo html_input($field->data['type'], $field->element_name.'[from]', $field->data['slide_params']['values'][0], ['class'=>'input-small', 'id' => $field->id.'_from', 'step' => 'any']); ?>
     <?php echo LANG_TO; ?>
-    <?php echo html_input('text', $field->element_name.'[to]', $field->data['slide_params']['values'][1], ['class'=>'input-small', 'id' => $field->id.'_to']); ?>
+    <?php echo html_input($field->data['type'], $field->element_name.'[to]', $field->data['slide_params']['values'][1], ['class'=>'input-small', 'id' => $field->id.'_to', 'step' => 'any']); ?>
     <?php if($field->data['units']){ ?><span class="input-number-units"><?php echo $field->data['units']; ?></span><?php } ?>
 <?php } else { ?>
     <?php echo LANG_FROM; ?>

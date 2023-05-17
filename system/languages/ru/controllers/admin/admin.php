@@ -895,6 +895,7 @@
     define('LANG_CP_FIELD_EDITING',       'Изменение');
     define('LANG_WD_CONTENT_FILTER_DETECT', 'Определять автоматически');
     define('LANG_CP_TEMPLATE_NO_ICONS_SELECT', 'Шаблон не поддерживает выбор иконок.');
+    define('LANG_CP_TEMPLATE_ICONS_PHP', 'Копировать как PHP код');
     define('LANG_CP_TEMPLATE_ICONS', 'Список иконок шаблона');
     define('LANG_CP_COMPILE_TIME', 'Время компиляции %s сек.');
     define('LANG_CP_FORMAT', 'Формат');

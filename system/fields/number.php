@@ -8,6 +8,14 @@ class fieldNumber extends cmsFormField {
 
     public function getOptions() {
         return [
+            new fieldList('input_type', [
+                'title'   => LANG_PARSER_NUMBER_TYPE,
+                'default' => 'text',
+                'items' => [
+                    'text'   => 'text',
+                    'number' => 'number'
+                ]
+            ]),
             new fieldCheckbox('is_abs', [
                 'title'   => LANG_PARSER_NUMBER_IS_ABS,
                 'default' => false
@@ -294,6 +302,8 @@ class fieldNumber extends cmsFormField {
                 $this->title = false;
             }
 
+            $this->data['type'] = $this->getOption('input_type') ?: 'text';
+
             $this->data['units'] = $this->getProperty('units') ?: $this->getOption('units');
 
             $tpl_name = $this->class . '_range';
@@ -402,12 +412,16 @@ class fieldNumber extends cmsFormField {
 
     public function getInput($value) {
 
+        $this->data['type'] = $this->getOption('input_type') ?: 'text';
+
         $this->data['units'] = $this->getProperty('units') ?: $this->getOption('units');
         $this->data['prefix'] = $this->getProperty('prefix') ?: $this->getOption('prefix', '');
 
         $this->data['attributes']             = $this->getProperty('attributes') ?: [];
         $this->data['attributes']['size']     = ($this->getOption('size') ?: $this->getProperty('size')) ?: 5;
         $this->data['attributes']['id']       = $this->id;
+        $this->data['attributes']['step']     = 'any';
+        $this->data['attributes']['inputmode'] = $this->getOption('is_ceil') ? 'numeric' : 'decimal';
         $this->data['attributes']['required'] = (array_search(['required'], $this->getRules()) !== false);
 
         if(empty($this->data['attributes']['class'])){

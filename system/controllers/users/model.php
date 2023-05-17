@@ -335,9 +335,9 @@ class modelUsers extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function addUser($user){
+    public function addUser($user) {
 
-        if ($user['password1'] !== $user['password2']){
+        if ($user['password1'] !== $user['password2']) {
 
             return [
                 'success' => false,
@@ -346,7 +346,6 @@ class modelUsers extends cmsModel {
                     'password2' => LANG_REG_PASS_NOT_EQUAL
                 ]
             ];
-
         }
 
         $user['password_hash'] = password_hash($user['password1'], PASSWORD_BCRYPT);
@@ -360,65 +359,62 @@ class modelUsers extends cmsModel {
                     'password2' => LANG_ERROR
                 ]
             ];
-
         }
 
         $date_reg = date('Y-m-d H:i:s');
         $date_log = $date_reg;
 
-        $groups = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
+        $groups = !empty($user['groups']) ? $user['groups'] : [DEF_GROUP_ID];
 
-        $user = array_merge($user, array(
+        $user = array_merge($user, [
             'groups'         => $groups,
             'date_reg'       => $date_reg,
             'date_log'       => $date_log,
             'time_zone'      => cmsConfig::get('time_zone'),
             'notify_options' => $this->getUserNotifyTypes(true)
-        ));
+        ]);
 
         $id = $this->insert('{users}', $user);
 
-        if ($id){
+        if ($id) {
             $this->saveUserGroupsMembership($id, $groups);
         }
 
         cmsCache::getInstance()->clean('users.list');
 
-        return array(
+        return [
             'success' => $id !== false,
             'errors'  => false,
             'id'      => $id
-        );
-
+        ];
     }
 
 //============================================================================//
 //============================================================================//
 
-    public function updateUser($id, $user){
+    public function updateUser($id, $user) {
 
         $success = false;
-        $errors  = false;
+        $errors  = [];
 
-        if (!empty($user['email'])){
+        if (!empty($user['email'])) {
 
-            $email_exists_id = $this->db->getField('{users}', "email = '{$user['email']}'", 'id');
+            $email_exists_user = $this->getItemByField('{users}', 'email', $user['email']);
 
-            if ($email_exists_id && ($email_exists_id != $id)){
+            if ($email_exists_user && ($email_exists_user['id'] != $id)) {
                 $errors['email'] = LANG_REG_EMAIL_EXISTS;
             }
-
         }
 
-        unset($user['password']);
+        unset($user['password'], $user['password_hash']);
 
-        if (!empty($user['password1']) && !$errors){
+        if (!empty($user['password1']) && !$errors) {
 
             if (mb_strlen($user['password1']) < 6) {
                 $errors['password1'] = sprintf(ERR_VALIDATE_MIN_LENGTH, 6);
             }
 
-            if ($user['password1'] !== $user['password2']){
+            if ($user['password1'] !== $user['password2']) {
                 $errors['password2'] = LANG_REG_PASS_NOT_EQUAL;
             }
 
@@ -432,32 +428,28 @@ class modelUsers extends cmsModel {
             if ($user['password_hash'] === false) {
                 $errors['password1'] = LANG_ERROR;
             }
-
         }
 
-        if (!$errors){
+        if (!$errors) {
 
-            if(isset($user['groups'])){
+            if (isset($user['groups'])) {
 
                 $user['groups'] = is_array($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
 
                 $this->saveUserGroupsMembership($id, $user['groups']);
-
             }
 
             $success = $this->update('{users}', $id, $user);
-
         }
 
         cmsCache::getInstance()->clean('users.list');
-        cmsCache::getInstance()->clean('users.user.'.$id);
+        cmsCache::getInstance()->clean('users.user.' . $id);
 
-        return array(
+        return [
             'success' => $success,
             'errors'  => $errors,
             'id'      => $id
-        );
-
+        ];
     }
 
     public function updateUserTheme($id, $theme){

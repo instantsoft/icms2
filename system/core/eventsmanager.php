@@ -17,10 +17,10 @@ class cmsEventsManager {
      * Входящие данные $data передаются каждому слушателю по очереди,
      * на выходе возвращается измененный слушателями параметр $data
      *
-     * @param mixed $event_name Название события/массив событий
+     * @param array|string $event_name Название события/массив событий
      * @param mixed $data Параметр события
-     * @param mixed $default_return Значение, возвращаемое по умолчанию если у события нет слушателей
-     * @param object $_request Объект запроса
+     * @param ?mixed $default_return Значение, возвращаемое по умолчанию если у события нет слушателей
+     * @param cmsRequest|false $_request Объект запроса
      * @return array Обработанный массив данных
      */
     public static function hook($event_name, $data = false, $default_return = null, $_request = false) {

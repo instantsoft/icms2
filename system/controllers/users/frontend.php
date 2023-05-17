@@ -34,21 +34,23 @@ class users extends cmsFrontend {
     public $tabs = [];
     public $tabs_controllers = [];
 
-    public function routeAction($action_name){
+    public function routeAction($action_name) {
 
         if (is_numeric($action_name)) {
 
             // $action_name это id пользователя
             $profile = $this->model->getUser($action_name, 'join_inviter');
-            if (!$profile) { cmsCore::error404(); }
+            if (!$profile) {
+                return cmsCore::error404();
+            }
 
-            if($profile['slug'] != $action_name){
+            if ($profile['slug'] !== $action_name) {
                 return $this->redirectTo($this->name, $profile['slug'], $this->current_params, $this->cms_core->uri_query, 301);
             }
 
         } else {
 
-            if ($this->isActionExists($action_name)){
+            if ($this->isActionExists($action_name)) {
                 return $action_name;
             }
 
@@ -67,11 +69,11 @@ class users extends cmsFrontend {
 
         $this->setCurrentProfile($profile);
 
-        if (!$this->cms_user->is_logged && $this->options['is_auth_only']){
-            cmsUser::goLogin();
+        if (!$this->cms_user->is_logged && $this->options['is_auth_only']) {
+            return cmsUser::goLogin();
         }
 
-        if ($this->options['is_themes_on']){
+        if ($this->options['is_themes_on']) {
             $this->cms_template->applyProfileStyle($this->profile);
         }
 
@@ -83,27 +85,30 @@ class users extends cmsFrontend {
         // Нет параметров после названия экшена (/users/id) - значит
         // это главная страница профиля, первым параметром добавляем
         // сам профиль
-        if (!$this->cms_core->uri_params){
+        if (!$this->cms_core->uri_params) {
 
-            $this->cms_template->addHead('<link rel="canonical" href="'.href_to_profile($profile, false, true).'"/>');
+            $this->cms_template->addHead('<link rel="canonical" href="' . href_to_profile($profile, false, true) . '"/>');
 
             array_unshift($this->current_params, $this->profile);
+
             return 'profile';
         }
 
         // Ищем экшен внутри профиля
-        if ($this->isActionExists('profile_'.$this->cms_core->uri_params[0])){
+        if ($this->isActionExists('profile_' . $this->cms_core->uri_params[0])) {
 
-            $this->cms_template->addHead('<link rel="canonical" href="'.href_to_profile($profile, [$this->cms_core->uri_params[0], $this->cms_core->uri_params[1]??null], true).'"/>');
+            $this->cms_template->addHead('<link rel="canonical" href="' . href_to_profile($profile, [$this->cms_core->uri_params[0], $this->cms_core->uri_params[1] ?? null], true) . '"/>');
 
             $this->current_params[0] = $this->profile;
-            return 'profile_'.$this->cms_core->uri_params[0];
+
+            return 'profile_' . $this->cms_core->uri_params[0];
         }
 
         // Если дошли сюда, значит это неизвестный экшен, возможно вкладка
         // от другого контроллера, тогда первым параметром добавляем
         // сам профиль
         array_unshift($this->current_params, $this->profile);
+
         return 'profile_tab';
     }
 
@@ -116,18 +121,17 @@ class users extends cmsFrontend {
 
         // Репутация
         $profile['is_can_vote_karma'] = $this->cms_user->is_logged &&
-                                        cmsUser::isAllowed('users', 'vote_karma') &&
-                                        ($this->cms_user->id != $profile['id']) &&
-                                        $this->model->isUserCanVoteKarma($this->cms_user->id, $profile['id'], $this->options['karma_time']);
+                cmsUser::isAllowed('users', 'vote_karma') &&
+                ($this->cms_user->id != $profile['id']) &&
+                $this->model->isUserCanVoteKarma($this->cms_user->id, $profile['id'], $this->options['karma_time']);
 
         $this->profile = $profile;
 
-        $this->is_own_profile = $this->cms_user->id == $profile['id'];
-        $this->is_friend_profile = $this->cms_user->isFriend($profile['id']);
+        $this->is_own_profile       = $this->cms_user->id == $profile['id'];
+        $this->is_friend_profile    = $this->cms_user->isFriend($profile['id']);
         $this->is_subscribe_profile = $this->cms_user->isSubscribe($profile['id']);
 
         return $this;
-
     }
 
     public function getProfileMenu($profile) {
@@ -198,50 +202,52 @@ class users extends cmsFrontend {
         return $menu;
     }
 
-    public function getProfileEditMenu($profile){
+    public function getProfileEditMenu($profile) {
 
         $menu = [];
 
-        $menu[] = array(
+        $menu[] = [
             'title' => LANG_USERS_EDIT_PROFILE_MAIN,
             'url'   => href_to_profile($profile, ['edit'])
-        );
+        ];
 
-        if ($this->cms_template->hasProfileThemesOptions() && $this->options['is_themes_on']){
-            $menu[] = array(
+        if ($this->cms_template->hasProfileThemesOptions() && $this->options['is_themes_on']) {
+
+            $menu[] = [
                 'title' => LANG_USERS_EDIT_PROFILE_THEME,
                 'url'   => href_to_profile($profile, ['edit', 'theme'])
-            );
+            ];
         }
 
-        if(cmsEventsManager::getEventListeners('user_notify_types')){
-            $menu[] = array(
+        if (cmsEventsManager::getEventListeners('user_notify_types')) {
+
+            $menu[] = [
                 'title' => LANG_USERS_EDIT_PROFILE_NOTICES,
                 'url'   => href_to_profile($profile, ['edit', 'notices'])
-            );
+            ];
         }
 
-        if (!empty($this->options['is_friends_on'])){
-            $menu[] = array(
+        if (!empty($this->options['is_friends_on'])) {
+
+            $menu[] = [
                 'title' => LANG_USERS_EDIT_PROFILE_PRIVACY,
                 'url'   => href_to_profile($profile, ['edit', 'privacy'])
-            );
+            ];
         }
 
-        $menu[] = array(
+        $menu[] = [
             'title' => LANG_SECURITY,
             'url'   => href_to_profile($profile, ['edit', 'password'])
-        );
+        ];
 
-        $menu[] = array(
+        $menu[] = [
             'title' => LANG_USERS_SESSIONS,
             'url'   => href_to_profile($profile, ['edit', 'sessions'])
-        );
+        ];
 
-        list($menu, $profile) = cmsEventsManager::hook('profile_edit_menu', array($menu, $profile));
+        list($menu, $profile) = cmsEventsManager::hook('profile_edit_menu', [$menu, $profile]);
 
         return $menu;
-
     }
 
     public function renderProfilesList($page_url, $dataset_name = false, $actions = false) {

@@ -853,6 +853,7 @@
     define('LANG_CP_FIELD_EDITING',       'Editing');
     define('LANG_WD_CONTENT_FILTER_DETECT', 'Autodetect');
     define('LANG_CP_TEMPLATE_NO_ICONS_SELECT', 'The template does not support icon selection.');
+    define('LANG_CP_TEMPLATE_ICONS_PHP', 'Copy as PHP code');
     define('LANG_CP_TEMPLATE_ICONS', 'List of template icons');
     define('LANG_CP_COMPILE_TIME', 'Compile time %s sec.');
     define('LANG_CP_FORMAT', 'Format');

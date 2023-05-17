@@ -120,6 +120,7 @@
     define('LANG_PARSER_STRING_CHECKBOX',    'Флаг заполненности поля');
     define('LANG_PARSER_HIDDEN',             'Скрытое поле');
     define('LANG_PARSER_NUMBER',             'Число');
+    define('LANG_PARSER_NUMBER_TYPE',        'Тип поля ввода');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');
     define('LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE','Выбор диапазона ползунком');
     define('LANG_PARSER_NUMBER_FILTER_STEP', 'Шаг ползунка');

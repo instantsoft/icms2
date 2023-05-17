@@ -116,7 +116,8 @@ class actionUsersProfile extends cmsAction {
         $fields = [];
 
         // Если включена опция "просмотр даты регистрации"
-        if (!empty($this->options['show_reg_data'])) {
+        if (!empty($this->options['show_reg_data']) &&
+                $this->cms_user->isPrivacyAllowed($profile, 'users_show_reg_data')) {
 
             $fields['date_reg'] = [
                 'title' => LANG_USERS_PROFILE_REGDATE,
@@ -125,7 +126,9 @@ class actionUsersProfile extends cmsAction {
         }
 
         // Если включена опция "показать последний визит пользователя"
-        if (!empty($this->options['show_last_visit'])) {
+        if (!empty($this->options['show_last_visit']) &&
+                $this->cms_user->isPrivacyAllowed($profile, 'users_show_last_visit')) {
+
             // Если пользователь не в сети
             if (!$profile['is_online']) {
                 $fields['date_log'] = [
@@ -136,7 +139,8 @@ class actionUsersProfile extends cmsAction {
         }
 
         // Если включена опция "показывать группы пользователя"
-        if (!empty($this->options['show_user_groups'])) {
+        if (!empty($this->options['show_user_groups']) &&
+                $this->cms_user->isPrivacyAllowed($profile, 'users_show_user_groups')) {
 
             // Получаем группы пользователя
             $groups = $this->model->getGroups();

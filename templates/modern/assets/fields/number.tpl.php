@@ -5,7 +5,7 @@
             <span class="input-group-text"><?php echo $field->data['prefix']; ?></span>
         </div>
     <?php } ?>
-    <?php echo html_input('text', $field->element_name, $value, $field->data['attributes']); ?>
+    <?php echo html_input($field->data['type'], $field->element_name, $value, $field->data['attributes']); ?>
     <?php if($field->data['units']){ ?>
         <div class="input-group-append">
             <span class="input-group-text input-number-units"><?php echo $field->data['units']; ?></span>

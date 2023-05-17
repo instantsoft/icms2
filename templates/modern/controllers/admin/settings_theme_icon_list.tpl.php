@@ -28,6 +28,12 @@ $this->addTplJSNameFromContext(['vendors/list.min']);
             </a>
         </li>
     <?php } ?>
+    <li class="nav-item ml-auto align-items-center d-flex">
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="copy-dev">
+            <label class="custom-control-label" for="copy-dev"><?php echo LANG_CP_TEMPLATE_ICONS_PHP; ?></label>
+        </div>
+    </li>
 </ul>
 <div class="tab-content<?php if(!$is_ajax){ ?> mb-4<?php } ?>">
 <?php foreach($icon_list as $tab_name => $list) { ?>
@@ -54,7 +60,11 @@ $this->addTplJSNameFromContext(['vendors/list.min']);
 </div>
 <?php ob_start(); ?>
 <script>
+    var copy_as_php = false;
     $(function (){
+        $('#copy-dev').on('click', function (){
+            copy_as_php = $(this).is(':checked');
+        });
         setTimeout(function (){
         <?php foreach($icon_list as $tab_name => $tab) { ?>
             new List('tab-<?php echo $tab_name; ?>', {valueNames: ['icon-name']});
@@ -62,7 +72,12 @@ $this->addTplJSNameFromContext(['vendors/list.min']);
         }, 300);
         <?php if(!$is_ajax){ ?>
             $('.icon-select').on('click', function (){
-                icms.admin.copyToBuffer('{'+$(this).data('name').replace(':', '%')+'}');
+                if(!copy_as_php){
+                    icms.admin.copyToBuffer('{'+$(this).data('name').replace(':', '%')+'}');
+                } else {
+                    let icon = $(this).data('name').split(':');
+                    icms.admin.copyToBuffer("<?php echo '<?php'; ?> html_svg_icon('"+icon[0]+"', '"+icon[1]+"'); <?php echo '?>'; ?>");
+                }
                 return false;
             });
         <?php } ?>
