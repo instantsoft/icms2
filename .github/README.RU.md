@@ -41,5 +41,5 @@
 ## Ссылки
 
 * [Официальный сайт](https://instantcms.ru/)
-* [Дополнения](https://addons.instantcms.ru/)
+* [Дополнения](https://instantcms.ru/addons)
 * [Документация](https://docs.instantcms.ru/)

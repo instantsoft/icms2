@@ -99,7 +99,7 @@ icms.modal = (function ($) {
                     if(url.charAt(0) === '#'){
                         self.open(url, title, style);
                     } else {
-                        self.openAjax(url, params, false, title);
+                        self.openAjax(url, params, false, title, style);
                     }
 
                     return false;
@@ -137,9 +137,10 @@ icms.modal = (function ($) {
         this.openHtml('<div class="embed-responsive"><iframe class="embed-responsive-item" src="'+url+'"></iframe></div>', title, false, 'p-0');
     };
 
-    this.openAjax = function(url, data, open_callback, title){
+    this.openAjax = function(url, data, open_callback, title, style){
 
         open_callback = open_callback || false;
+        style = style || false;
         title = title || false;
         data = data || {};
 
@@ -157,7 +158,7 @@ icms.modal = (function ($) {
                 request.setRequestHeader('ICMS-Request-Type', 1);
             },
             success: function(result){
-                self.showContent(title, result);
+                self.showContent(title, result, style);
                 if(open_callback){
                     open_callback();
                 }

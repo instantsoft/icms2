@@ -211,6 +211,14 @@ class formGroupsField extends cmsForm {
                     new fieldCheckbox('options:is_url', [
                         'title' => LANG_VALIDATE_URL,
                     ]),
+                    new fieldCheckbox('options:is_regexp', [
+                        'title' => LANG_CP_FIELD_REGEX
+                    ]),
+                    new fieldString('options:rules_regexp_str', [
+                        'title' => LANG_CP_FIELD_REGEX_TEXT,
+                        'hint' => LANG_CP_FIELD_REGEX_TEXT_HINT,
+                        'visible_depend' => ['options:is_regexp' => ['show' => ['1']]]
+                    ]),
                     new fieldCheckbox('options:is_unique', [
                         'title' => LANG_VALIDATE_UNIQUE,
                     ])

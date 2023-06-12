@@ -361,6 +361,9 @@ class modelContent extends cmsModel {
             if ($item['options']['is_alphanumeric']) { $rules[] = ['alphanumeric']; }
             if ($item['options']['is_email']) { $rules[] = ['email']; }
             if (!empty($item['options']['is_url'])) { $rules[] = ['url']; }
+            if (!empty($item['options']['is_regexp']) && !empty($item['options']['rules_regexp_str'])) {
+                $rules[] = ['regexp', $item['options']['rules_regexp_str']];
+            }
 
             if ($item['options']['is_unique']) {
                 if (!$item_id) {
@@ -1434,9 +1437,12 @@ class modelContent extends cmsModel {
         $pattern = trim($pattern, '/');
 
         foreach ($names as $idx => $field_name) {
-            if (!empty($item[$field_name])) {
 
-                $value = str_replace('/', '', $item[$field_name]);
+            $value = get_localized_value($field_name, $item);
+
+            if ($value) {
+
+                $value = str_replace('/', '', $value);
 
                 if (isset($fields[$field_name])) {
 

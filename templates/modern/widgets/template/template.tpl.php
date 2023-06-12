@@ -56,7 +56,7 @@
         </span>
     <?php } ?>
 <?php } elseif($widget->options['type'] === 'lang_select') { ?>
-        <ul class="nav">
+        <ul class="nav nav-lang-select">
             <li class="nav-item dropdown">
                 <a class="nav-link text-warning font-weight-bold dropdown-toggle" data-toggle="dropdown" href="#">
                     <?php echo strtoupper($current_lang); ?>

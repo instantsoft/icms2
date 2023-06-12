@@ -48,7 +48,7 @@ This software is distributed under the GPL-2.0 license. Please read license.en.t
 
 * [Official site](https://instantcms.io/)
 * [Official site (ru)](https://instantcms.ru/)
-* [Add-ons for CMS](https://addons.instantcms.ru/)
+* [Add-ons for CMS](https://instantcms.ru/addons)
 * [Documentation](https://docs.instantcms.ru/en)
 * [Russian documentation](https://docs.instantcms.ru/)
 * [Russian README](https://github.com/instantsoft/icms2/blob/master/.github/README.RU.md)

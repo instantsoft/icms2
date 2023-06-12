@@ -374,6 +374,12 @@ class cmsModel {
 
         cmsCache::getInstance()->clean('content.categories');
 
+        // Если текущий язык не по умолчанию, не пытаемся менять slug
+        if ($this->lang !== $this->default_lang) {
+
+            return $this->getCategory($ctype_name, $id);
+        }
+
         $category['id'] = $id;
 
         if(!$first_level_slug){
@@ -1536,10 +1542,64 @@ class cmsModel {
 
     }
 
-    public function groupBy($field){
-        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        $this->group_by = $field;
+    /**
+     * Устанавливает группировку запроса
+     *
+     * @param array|string $field Имя поля или массив полей
+     * @return $this
+     */
+    public function groupBy($field) {
+
+        $group_by = [];
+
+        if (!is_array($field)) {
+            $field = [$field];
+        }
+
+        foreach ($field as $field_name) {
+
+            if (strpos($field_name, '.') === false) {
+                $field_name = 'i.' . $field_name;
+            }
+
+            $group_by[] = $field_name;
+        }
+
+        $this->group_by = implode(', ', $group_by);
+
         return $this;
+    }
+
+    /**
+     * Добавляет необработанное HAVING к запросу с группировкой
+     *
+     * @param string $condition Выражение
+     * @return $this
+     */
+    public function havingRaw($condition) {
+
+        if (!$this->group_by) {
+            return $this;
+        }
+
+        $this->group_by .= PHP_EOL . 'HAVING ' . $condition;
+
+        return $this;
+    }
+
+    /**
+     * Добавляет HAVING к запросу с группировкой
+     *
+     * @param string $field Имя поля
+     * @param string $operator Оператор сравнения
+     * @param mixed $value Значение
+     * @return $this
+     */
+    public function having($field, $operator, $value) {
+
+        $value = $this->db->escape($value);
+
+        return $this->havingRaw("{$field} {$operator} '{$value}'");
     }
 
     /**

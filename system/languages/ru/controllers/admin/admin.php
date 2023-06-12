@@ -248,6 +248,9 @@
 
     define('LANG_CP_FIELD',                     'Поле');
     define('LANG_CP_FIELD_FORMAT',              'Формат поля');
+    define('LANG_CP_FIELD_REGEX',               'Регулярное выражение');
+    define('LANG_CP_FIELD_REGEX_TEXT',          'Напишите регулярное выражение');
+    define('LANG_CP_FIELD_REGEX_TEXT_HINT',     'Указанному регулярному выражению должно будет соответствовать значение поля.');
     define('LANG_CP_FIELD_TYPE',                'Тип поля');
     define('LANG_CP_FIELD_TYPE_HINT',           'Внимание! Существующие данные этого поля могут быть удалены!');
     define('LANG_CP_FIELD_TYPE_OPTS',           'Настройки поля');

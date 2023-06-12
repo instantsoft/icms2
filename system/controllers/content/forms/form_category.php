@@ -162,7 +162,7 @@ class formContentCategory extends cmsForm {
         }
 
         // Если ручной ввод SLUG, то добавляем поле для этого
-        if (empty($ctype['options']['is_cats_auto_url'])){
+        if (empty($ctype['options']['is_cats_auto_url']) && cmsCore::getLanguageName() === cmsConfig::get('language')){
 
             $fieldsets['cat_seo_slug'] = [
                 'type'   => 'fieldset',
