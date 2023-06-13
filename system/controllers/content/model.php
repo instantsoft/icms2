@@ -1794,15 +1794,17 @@ class modelContent extends cmsModel {
 
     public function getContentItems($ctype_name, $callback = null) {
 
+        $cat_table = $this->getContentCategoryTableName($ctype_name);
+
         $this->joinUser();
 
         $this->select('f.title', 'folder_title');
         $this->joinLeft('content_folders', 'f', 'f.id = i.folder_id');
 
-        $this->select('cat.title', 'cat_title');
+        $this->selectTranslatedField('cat.title', $cat_table, 'cat_title');
         $this->select('cat.slug', 'cat_slug');
         $this->select('cat.id', 'category_id');
-        $this->joinLeft($this->getContentCategoryTableName($ctype_name), 'cat', 'cat.id = i.category_id');
+        $this->joinLeft($cat_table, 'cat', 'cat.id = i.category_id');
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
         if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
