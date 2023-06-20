@@ -460,6 +460,11 @@ class cmsGrid {
             $model->limitPage($filter['page'], $filter['perpage']);
         }
 
+        // Пагинация отключена
+        if(!$this->grid['options']['is_pagination']){
+            $model->limit(false);
+        }
+
         //
         // проходим по каждой колонке таблицы
         // и проверяем не передан ли фильтр для нее

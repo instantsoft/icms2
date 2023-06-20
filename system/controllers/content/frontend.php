@@ -844,9 +844,16 @@ class content extends cmsFrontend {
 
             $fieldset_id = $form->addFieldset(LANG_SEO, 'seo_wrap', ['is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('seo_wrap', $ctype['options']['is_collapsed'])]);
 
+            $table_name = $this->model->getContentTypeTableName($ctype['name']);
+
             if ($ctype['options']['is_manual_title']) {
                 $form->addField($fieldset_id, new fieldString('seo_title', [
                     'title'   => LANG_SEO_TITLE,
+                    'can_multilanguage' => true,
+                    'multilanguage_params' => [
+                        'is_table_field' => true,
+                        'table' => $table_name
+                    ],
                     'options' => [
                         'max_length'        => 256,
                         'show_symbol_count' => true
@@ -858,6 +865,11 @@ class content extends cmsFrontend {
                 $form->addField($fieldset_id, new fieldString('seo_keys', [
                     'title'   => LANG_SEO_KEYS,
                     'hint'    => LANG_SEO_KEYS_HINT,
+                    'can_multilanguage' => true,
+                    'multilanguage_params' => [
+                        'is_table_field' => true,
+                        'table' => $table_name
+                    ],
                     'options' => [
                         'max_length'        => 256,
                         'show_symbol_count' => true
@@ -870,6 +882,11 @@ class content extends cmsFrontend {
                     'title'         => LANG_SEO_DESC,
                     'hint'          => LANG_SEO_DESC_HINT,
                     'is_strip_tags' => true,
+                    'can_multilanguage' => true,
+                    'multilanguage_params' => [
+                        'is_table_field' => true,
+                        'table' => $table_name
+                    ],
                     'options'       => [
                         'max_length'        => 256,
                         'show_symbol_count' => true
@@ -944,7 +961,7 @@ class content extends cmsFrontend {
             }
 
             if ($action === 'edit') {
-                $is_expired = (strtotime($item['date_pub_end']) - time()) <= 0;
+                $is_expired = !empty($item['date_pub_end']) && (strtotime($item['date_pub_end']) - time()) <= 0;
             }
 
             if (($action === 'add' && $is_pub_end_days) || ($action === 'edit' && $is_expired && $is_pub_ext && $is_pub_end_days)) {

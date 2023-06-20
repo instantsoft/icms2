@@ -345,8 +345,7 @@ trait listgrid {
             $this->model = call_user_func_array($this->list_callback, [$this->model]);
         }
 
-        $total   = $this->model->getCount($this->table_name);
-        $perpage = isset($filter['perpage']) ? $filter['perpage'] : $this->default_perpage;
+        $total = $this->model->getCount($this->table_name);
 
         $data = $this->model->get($this->table_name, $this->item_callback) ?: [];
 
@@ -354,7 +353,7 @@ trait listgrid {
             $data = call_user_func_array($this->items_callback, [$data]);
         }
 
-        return $this->grid->makeGridRows($data, $total, $perpage);
+        return $this->grid->makeGridRows($data, $total);
     }
 
 }

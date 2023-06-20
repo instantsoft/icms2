@@ -17,6 +17,11 @@ if (PHP_SAPI !== 'cli') {
 // Инициализация
 require_once 'bootstrap.php';
 
+// Заходим в рабочую директорию
+if (function_exists('chdir')) {
+    chdir(PATH);
+}
+
 // Локализация по умолчанию
 $core->initLanguage();
 
