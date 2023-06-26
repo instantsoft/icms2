@@ -1256,6 +1256,8 @@ class modelUsers extends cmsModel {
     public function addKarmaVote($vote) {
 
         cmsCache::getInstance()->clean('users.karma');
+	cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$vote['profile_id']);
 
         $result = $this->insert('{users}_karma', $vote);
 
