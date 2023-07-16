@@ -36,3 +36,4 @@ define('LANG_IMAGES_PRESET_ALLOW_ENLARGE', 'Allow enlarge');
 define('LANG_IMAGES_PRESET_OUT_FORMAT', 'Converted image format');
 define('LANG_IMAGES_PRESET_OUT_ASIS', 'As an original');
 define('LANG_IMAGES_PRESET_GIF_TO_GIF', 'Convert GIF as GIF, preserving the animation');
+define('LANG_IMAGES_CROP_IMG', 'Crop the image');

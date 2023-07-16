@@ -34,7 +34,7 @@ define('LANG_MODERN_THEME_AVATAR_INLIST_SIZE_HINT', 'Должен совпада
 define('LANG_MODERN_THEME_PAGINATION_TPL', 'Шаблон блока нумерации страниц');
 define('LANG_MODERN_THEME_ENABLE_MODAL_BLUR', 'Размывать подложку при открытии модальных окон');
 define('LANG_MODERN_THEME_BODY_CLASSES', 'Дополнительные CSS классы для тега body');
-define('LANG_MODERN_THEME_BODY_CLASSES_HINT', 'Для всех страниц сайта. Указывать другие CSS классы можно в настройках страниц раздела "Виджеты и страницы".');
+define('LANG_MODERN_THEME_BODY_CLASSES_HINT', 'Для всех страниц сайта. Указать CSS классы для отдельных страниц можно в разделе "Виджеты и страницы".');
 define('LANG_MODERN_THEME_GRID_GUTTER_W', 'Базовый отступ сетки');
 define('LANG_MODERN_C_WHITE', 'Белый');
 define('LANG_MODERN_C_GRAY100', 'Серый 100');

@@ -140,10 +140,10 @@ class fieldString extends cmsFormField {
         }
 
         if ($this->getProperty('is_clean_disable') === true) {
-            return trim($value);
+            return trim($value, " \0");
         }
 
-        return strip_tags(trim($value));
+        return trim(strip_tags($value), " \0");
     }
 
     public function storeFilter($value) {

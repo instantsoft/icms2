@@ -55,6 +55,18 @@ class fieldImage extends cmsFormField {
             new fieldCheckbox('allow_import_link', [
                 'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK
             ]),
+            new fieldCheckbox('allow_image_cropper', [
+                'title' => LANG_PARSER_IMAGE_ALLOW_IMAGE_CROPPER
+            ]),
+            new fieldCheckbox('image_cropper_rounded', [
+                'title' => LANG_PARSER_IMAGE_IMAGE_CROPPER_ROUNDED,
+                'visible_depend' => ['options:allow_image_cropper' => ['show' => ['1']]]
+            ]),
+            new fieldNumber('image_cropper_ratio', [
+                'title' => LANG_PARSER_IMAGE_IMAGE_CROPPER_RATIO,
+                'hint' => LANG_PARSER_IMAGE_IMAGE_CROPPER_RATIO_HINT,
+                'visible_depend' => ['options:allow_image_cropper' => ['show' => ['1']], 'options:image_cropper_rounded' => ['hide' => ['1']]]
+            ]),
             new fieldImage('default_image', [
                 'title'           => LANG_PARSER_IMAGE_DEFAULT,
                 'extended_option' => true
@@ -246,6 +258,12 @@ class fieldImage extends cmsFormField {
         $this->data['id'] = $this->id;
         $this->data['sizes'] = $this->getOption('sizes');
         $this->data['allow_import_link'] = $this->getOption('allow_import_link');
+        $this->data['allow_image_cropper'] = $this->getOption('allow_image_cropper');
+        $this->data['image_cropper_rounded'] = $this->getOption('image_cropper_rounded');
+        $this->data['image_cropper_ratio'] = $this->getOption('image_cropper_ratio', 1);
+        if($this->data['image_cropper_rounded']){
+            $this->data['image_cropper_ratio'] = 1;
+        }
 
         $this->data['images_controller'] = cmsCore::getController('images', new cmsRequest($this->context_params, cmsRequest::CTX_INTERNAL));
 

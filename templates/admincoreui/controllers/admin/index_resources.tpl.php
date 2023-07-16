@@ -1,4 +1,4 @@
-<div class="row mb-3">
+<div class="row">
     <div class="col-md-6 mb-3 mb-md-0">
         <a class="btn btn-block btn-light" href="https://instantcms.ru/donate.html" target="_blank"><?php echo LANG_CP_DASHBOARD_LINKS_DONATE; ?></a>
     </div>
@@ -6,7 +6,7 @@
         <a class="btn btn-block btn-warning" href="https://instantcms.ru/sponsorship.html" target="_blank"><?php echo LANG_CP_DASHBOARD_LINKS_SPONSORS; ?></a>
     </div>
 </div>
-<h4 class="mb-3"><?php echo LANG_CP_DASHBOARD_PREMIUM; ?></h4>
+<!--<h4 class="mb-3"><?php echo LANG_CP_DASHBOARD_PREMIUM; ?></h4>
 <div class="mb-3">
     <i class="float-left mr-3 mt-2 h3">
         <?php html_svg_icon('solid', 'wallet'); ?>
@@ -39,7 +39,7 @@
         </a>
     </h5>
     <p class="m-0 text-light"><?php echo LANG_CP_DASHBOARD_INMAPS_HINT; ?></p>
-</div>
+</div>-->
 <?php /*
 <hr>
 <div>

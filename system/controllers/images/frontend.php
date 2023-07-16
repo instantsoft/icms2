@@ -56,19 +56,22 @@ class images extends cmsFrontend {
 
         $preview_url = '';
         if ($is_image_exists) {
-            $preview_url = $this->cms_config->upload_host . '/' . (isset($paths['small']) ? $paths['small'] : reset($paths));
+            $preview_url = $this->cms_config->upload_host . '/' . ($paths['small'] ?? reset($paths));
         }
 
         return $this->cms_template->renderInternal($this, 'upload_single', [
-            'allowed_mime'      => $this->allowed_mime,
-            'name'              => $name,
-            'paths'             => $paths,
-            'upload_url'        => $upload_url,
-            'delete_url'        => href_to('images', 'delete'),
-            'dom_id'            => $dom_id,
-            'preview_url'       => $preview_url,
-            'is_image_exists'   => $is_image_exists,
-            'allow_import_link' => !empty($params['allow_import_link']) ? true : false
+            'allowed_mime'          => $this->allowed_mime,
+            'name'                  => $name,
+            'paths'                 => $paths,
+            'upload_url'            => $upload_url,
+            'delete_url'            => href_to('images', 'delete'),
+            'dom_id'                => $dom_id,
+            'preview_url'           => $preview_url,
+            'is_image_exists'       => $is_image_exists,
+            'allow_image_cropper'   => ($params['allow_image_cropper'] ?? false),
+            'image_cropper_rounded' => ($params['image_cropper_rounded'] ?? false),
+            'image_cropper_ratio'   => ($params['image_cropper_ratio'] ?? 1),
+            'allow_import_link'     => ($params['allow_import_link'] ?? false)
         ]);
     }
 

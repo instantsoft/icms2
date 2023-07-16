@@ -36,3 +36,4 @@ define('LANG_IMAGES_PRESET_ALLOW_ENLARGE', 'Увеличивать до разм
 define('LANG_IMAGES_PRESET_OUT_FORMAT', 'Формат конвертированного изображения');
 define('LANG_IMAGES_PRESET_OUT_ASIS', 'Как исходный');
 define('LANG_IMAGES_PRESET_GIF_TO_GIF', 'Конвертировать GIF как GIF, сохраняя анимацию');
+define('LANG_IMAGES_CROP_IMG', 'Обрезать изображение');

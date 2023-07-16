@@ -26,6 +26,10 @@ Third-party plugins, libraries and resources included in InstantCMS:
         by Ken Wheeler
         https://kenwheeler.github.io/slick/
 
+    Cropper.js
+        by Chen Fengyuan
+        https://fengyuanchen.github.io/cropperjs/
+
     FatCow Free Icons
         by FatCow Team
         http://www.fatcow.com/free-icons

@@ -206,6 +206,10 @@
     define('LANG_PARSER_IMAGES',             'Набор изображений');
     define('LANG_PARSER_IMAGE_DEFAULT',      'Изображение по умолчанию');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Разрешить добавление по ссылке');
+    define('LANG_PARSER_IMAGE_ALLOW_IMAGE_CROPPER', 'Включить редактор изображений перед загрузкой');
+    define('LANG_PARSER_IMAGE_IMAGE_CROPPER_ROUNDED', 'Круглая обрезка');
+    define('LANG_PARSER_IMAGE_IMAGE_CROPPER_RATIO', 'Соотношение сторон');
+    define('LANG_PARSER_IMAGE_IMAGE_CROPPER_RATIO_HINT', 'Разделите ширину на высоту пресета');
     define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Выделять первое изображение в записи');
     define('LANG_PARSER_IMAGE_MAX_COUNT',    'Максимальное количество изображений');
     define('LANG_PARSER_IMAGE_MAX_COUNT_HINT', 'Максимум %s');

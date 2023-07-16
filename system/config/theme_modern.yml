@@ -1,12 +1,12 @@
 ---
-owner_name:
-owner_url:
-owner_year:
+owner_name: ""
+owner_url: ""
+owner_year: ""
 show_top_btn: 1
 show_cookiealert: 1
 cookiealert_text: >
-  Используя этот сайт,
-  вы соглашаетесь с тем,
+  Посещая этот сайт, вы
+  соглашаетесь с тем,
   что мы используем
   файлы cookie.
 scss:
@@ -58,8 +58,8 @@ scss:
   green: '#33bd66'
   teal: '#3bd4c2'
   cyan: '#0abde3'
-body_classes:
-font_type:
+body_classes: ""
+font_type: ""
 font_string: >
   -apple-system, BlinkMacSystemFont,
   "Segoe UI", Roboto, "Helvetica Neue",
@@ -75,23 +75,23 @@ logo_svg: null
 logo_small: null
 logo_small_svg: null
 favicon: null
-favicon_head_html:
+favicon_head_html: ""
 custom_scss:
-  body-bg:
-  body-color:
-  link-color:
-  header-bg:
-  header-color:
-  footer-bg:
-  footer-color:
-  primary:
-  secondary:
-  success:
-  info:
-  warning:
-  danger:
-  light:
-  dark:
+  body-bg: ""
+  body-color: ""
+  link-color: ""
+  header-bg: ""
+  header-color: ""
+  footer-bg: ""
+  footer-color: ""
+  primary: ""
+  secondary: ""
+  success: ""
+  info: ""
+  warning: ""
+  danger: ""
+  light: ""
+  dark: ""
 vars:
   - 
     name: dropdown-item-padding-x

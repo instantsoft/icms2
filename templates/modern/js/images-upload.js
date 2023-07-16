@@ -114,33 +114,154 @@ icms.images = (function ($) {
         }, 'json');
     };
 
-    this.upload = function(field_name, upload_url){
+    this.getRoundedCanvas = function (sourceCanvas) {
+        let canvas = document.createElement('canvas');
+        let context = canvas.getContext('2d');
+        let width = sourceCanvas.width;
+        let height = sourceCanvas.height;
 
-        var uploader = new qq.FileUploader({
-            element: document.getElementById('file-uploader-'+field_name),
+        canvas.width = width;
+        canvas.height = height;
+        context.imageSmoothingEnabled = true;
+        context.drawImage(sourceCanvas, 0, 0, width, height);
+        context.globalCompositeOperation = 'destination-in';
+        context.beginPath();
+        context.arc(width / 2, height / 2, Math.min(width, height) / 2, 0, 2 * Math.PI, true);
+        context.fill();
+        return canvas;
+    };
+
+    this.initCropper = function (field_name, upload_url) {
+
+        let wrapper = document.getElementById('file-uploader-' + field_name);
+        let input = wrapper.querySelector('.qq-input');
+        let image = document.getElementById('cropper-img-' + field_name);
+        let modal = $('#modal-crop-' + field_name);
+        let image_cropper_rounded = modal.data('image_cropper_rounded');
+        let image_cropper_ratio = +modal.data('image_cropper_ratio');
+        let cropper;
+        let file_name;
+
+        modal.on('shown.bs.modal', function () {
+            cropper = new Cropper(image, {
+                aspectRatio: image_cropper_ratio,
+                viewMode: 2
+            });
+        }).on('hidden.bs.modal', function () {
+            cropper.destroy();
+            cropper = null;
+        });
+
+        $('#crop-actions-' + field_name+' button').on('click', function () {
+            let method = $(this).data('method');
+            let option = $(this).data('option');
+            cropper[method](option);
+            switch (method) {
+                case 'scaleX':
+                case 'scaleY':
+                  $(this).data('option', -option);
+                  break;
+            }
+        });
+
+        $('#crop-' + field_name).on('click', function () {
+
+            let canvas = cropper.getCroppedCanvas();
+
+            if(image_cropper_rounded){
+                canvas = self.getRoundedCanvas(canvas);
+            }
+
+            canvas.toBlob(function (blob) {
+
+                self._onSubmit(field_name);
+
+                let formData = new FormData();
+
+                formData.append(field_name, blob, file_name);
+
+                let ftitle = $('#title').val();
+                if (ftitle) {
+                    formData.append('file_name', $('#title').val() + ' ' + field_name);
+                }
+
+                $.ajax(upload_url, {
+                    method: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        self._onComplete(field_name, result);
+                    },
+                    error: function () {
+                        icms.modal.alert('Upload error');
+                    }
+                });
+
+                modal.modal('hide');
+            });
+
+        });
+
+        input.addEventListener('change', function (e) {
+
+            let files = e.target.files;
+
+            let done = function (url) {
+
+                input.value = '';
+                image.src = url;
+
+                modal.modal('show');
+            };
+
+            if (files && files.length > 0) {
+
+                let file = files[0];
+
+                file_name = file.name;
+
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    done(reader.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    };
+
+    this.upload = function (field_name, upload_url, allow_image_cropper) {
+
+        if(allow_image_cropper){
+
+            this.initCropper(field_name, upload_url);
+
+            return;
+        }
+
+        return new qq.FileUploader({
+            element: document.getElementById('file-uploader-' + field_name),
             action: upload_url,
             allowedMime: this.allowed_mime,
             multiple: false,
             debug: false,
-            showMessage: function(message){
+            showMessage: function (message) {
                 icms.modal.alert(message);
             },
-            onSubmit: function(id, fileName){
+            onSubmit: function (id, fileName) {
                 var ftitle = $('#title').val();
-                if(ftitle){
+                if (ftitle) {
                     this.params = {
-                        file_name: $('#title').val()+' '+field_name
+                        file_name: $('#title').val() + ' ' + field_name
                     };
                 }
                 self._onSubmit(field_name);
             },
-
-            onComplete: function(id, file_name, result){
+            onComplete: function (id, file_name, result) {
                 self._onComplete(field_name, result);
             }
-
         });
-
     };
 
     this.incrementUploadedCount = function (field_name){
