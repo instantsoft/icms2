@@ -277,13 +277,15 @@ class cmsUser {
      * @param boolean $complete_login
      * @return integer|array
      */
-    public static function login($email, $password, $remember = false, $complete_login = true) {
+    public static function login($email, $password, $remember = false, $complete_login = true, $model = null) {
 
         if (!$email || !$password) {
             return 0;
         }
 
-        $model = cmsCore::getModel('users');
+        if($model === null) {
+            $model = cmsCore::getModel('users');
+        }
 
         $user = $model->getUserByAuth($email, $password);
 

@@ -5,7 +5,7 @@
     </div>
 <?php } ?>
 
-<form id="<?php html($attributes['form_id']); ?>" action="<?php echo $attributes['action']; ?>"
+<form id="<?php html($attributes['form_id']); ?>" action="<?php html($attributes['action']); ?>"
       method="<?php echo $attributes['method']; ?>"
       <?php if ($this->controller->request->isAjax()){ ?>
         class="modal"

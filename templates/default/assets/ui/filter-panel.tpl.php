@@ -10,7 +10,7 @@
 		<div class="filter-close">
             <a href="javascript:toggleFilter();"><span><?php echo LANG_CLOSE; ?></span></a>
         </div>
-        <form action="<?php echo $form_url; ?>" method="get" id="<?php echo $form_id; ?>" accept-charset="utf-8">
+        <form action="<?php html($form_url); ?>" method="get" id="<?php echo $form_id; ?>" accept-charset="utf-8">
             <?php echo html_input('hidden', 'page', 1); ?>
             <?php if(!empty($ext_hidden_params)){ ?>
                 <?php foreach($ext_hidden_params as $fname => $fvalue){ ?>

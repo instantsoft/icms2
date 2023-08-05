@@ -28,7 +28,7 @@
             <ul id="treeData" class="skeleton-tree">
                 <?php foreach ($menus as $id => $menu) { ?>
                     <li id="<?php echo $menu['id'];?>.0" class="lazy folder">
-                        <?php echo $menu['title']; ?>
+                        <?php html($menu['title']); ?>
                     </li>
                 <?php } ?>
             </ul>

@@ -25,7 +25,7 @@ class actionAdminMenuTreeAjax extends cmsAction {
         if ($items) {
             foreach ($items as $item) {
                 $tree_nodes[] = [
-                    'title'  => $item['title'],
+                    'title'  => html($item['title'], false),
                     'key'    => "{$menu_id}.{$item['id']}",
                     'isLazy' => ($item['childs_count'] > 0)
                 ];

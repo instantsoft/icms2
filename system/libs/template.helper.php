@@ -63,7 +63,7 @@ function html_pagebar($page, $perpage, $total, $base_uri = false, $query = [], $
  */
 function html_input($type = 'text', $name = '', $value = '', $attributes = []) {
 
-    if ($type === 'password') {
+    if ($type === 'password' && empty($attributes['autocomplete'])) {
         $attributes['autocomplete'] = 'off';
     }
     $attributes['type']  = $type;

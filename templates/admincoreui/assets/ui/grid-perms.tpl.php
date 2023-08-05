@@ -2,7 +2,7 @@
     <?php $this->toolbar('menu-toolbar'); ?>
 <?php } ?>
 
-<form action="<?php echo $submit_url; ?>" method="post">
+<form action="<?php html($submit_url); ?>" method="post">
 
     <div class="datagrid_wrapper perms_grid table-responsive dataTables_wrapper dt-bootstrap4">
         <table id="datagrid" class="datagrid table table-striped table-bordered dataTable bg-white">

@@ -12,13 +12,13 @@ class actionTagsAutocomplete extends cmsAction {
 
         $result = [];
 
-        $term = $this->request->get('term', '');
+        $term = strip_tags($this->request->get('term', ''));
         if (!$term) {
             return $this->cms_template->renderJSON($result);
         }
 
         $tags = $this->model->filterLike('tag', "%{$term}%")->
-                select("(LEFT(`tag`, " . mb_strlen($term) . ") = '{$term}')", 'tag_order')->
+                select("(LEFT(`tag`, " . mb_strlen($term) . ") = '".$this->model->db->escape($term)."')", 'tag_order')->
                 orderByList([
                     ['by' => 'tag_order', 'to' => 'desc', 'strict' => true],
                     ['by' => 'tag', 'to' => 'asc']

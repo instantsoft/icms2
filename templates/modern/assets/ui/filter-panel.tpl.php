@@ -16,7 +16,7 @@ $form_url_sep = strpos($form_url, '?') === false ? '?' : '&';
         <button type="button" class="close position-absolute icms-filter-link__close" title="<?php echo LANG_CLOSE; ?>">
             <span>&times;</span>
         </button>
-        <form action="<?php echo $form_url; ?>" method="get" id="<?php echo $form_id; ?>" accept-charset="utf-8">
+        <form action="<?php html($form_url); ?>" method="get" id="<?php html($form_id); ?>" accept-charset="utf-8">
             <?php echo html_input('hidden', 'page', 1); ?>
             <?php if(!empty($ext_hidden_params)){ ?>
                 <?php foreach($ext_hidden_params as $fname => $fvalue){ ?>

@@ -140,6 +140,15 @@ class fieldString extends cmsFormField {
         }
 
         if ($this->getProperty('is_clean_disable') === true) {
+
+            // Разрешены HTML теги, - прогоняем через типограф
+            $value = cmsEventsManager::hook('html_filter', [
+                'text'                => $value,
+                'is_auto_br'          => false,
+                'build_smiles'        => false,
+                'build_redirect_link' => false
+            ]);
+
             return trim($value, " \0");
         }
 
