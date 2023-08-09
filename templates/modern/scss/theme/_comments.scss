@@ -25,6 +25,11 @@ $comment-rating-size: 30px;
         }
     }
 }
+.justify-content-between {
+    ~ #comments_add_form {
+        margin-top: $spacer;
+    }
+}
 .icms-comments {
     &__tabs {
         &-tab {

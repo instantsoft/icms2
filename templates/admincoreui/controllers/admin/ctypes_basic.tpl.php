@@ -37,7 +37,7 @@
 <script>
     $(function(){
         $('#f_name .input').on('input', function(){
-            $('#f_url_pattern .prefix').html('/'+$(this).val()+'/');
+            $('#f_url_pattern .prefix').text('/'+$(this).val()+'/');
         });
     });
 </script>
