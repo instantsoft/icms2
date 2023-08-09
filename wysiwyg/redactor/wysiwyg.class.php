@@ -109,7 +109,7 @@ class cmsWysiwygRedactor {
 
         $template = cmsTemplate::getInstance();
 
-        $template->addJSFromContext('wysiwyg/redactor/files/redactor.js');
+        $template->addJSFromContext('wysiwyg/redactor/files/redactor.min.js');
         $template->addTplJSNameFromContext('files');
 
         $css_file = 'wysiwyg/redactor/files/redactor.css';

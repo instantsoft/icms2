@@ -780,6 +780,7 @@
 			html = html.replace(/&amp;#36;/g, '$');
 
 			html = this.cleanEmpty(html);
+			html = this.sanitizeHTML(html);
 
 			this.$editor.html(html);
 
@@ -788,6 +789,41 @@
 
 			this.sync();
 		},
+        sanitizeHTML:  function(htmlStr)
+		{
+            function stringToHTML () {
+                let parser = new DOMParser();
+                let doc = parser.parseFromString(htmlStr, 'text/html');
+                return doc.body;
+            }
+            function clean (html) {
+                let nodes = html.children;
+                for (let node of nodes) {
+                    removeAttributes(node);
+                    clean(node);
+                }
+            }
+            function removeAttributes (elem) {
+                let atts = elem.attributes;
+                for (let {name, value} of atts) {
+                    if (!isPossiblyDangerous(name, value)) { continue };
+                    elem.removeAttribute(name);
+                }
+
+            }
+            function isPossiblyDangerous (name, value) {
+                let val = value.replace(/\s+/g, '').toLowerCase();
+                if (['src', 'href', 'xlink:href'].includes(name)) {
+                    if (val.includes('javascript:') || val.includes('data:text/html')) { return true; }
+                }
+                if (name.startsWith('on')) { return true; }
+            }
+            let html = stringToHTML();
+
+            clean(html);
+
+            return html.innerHTML;
+        },
 		setCodeIframe: function(html)
 		{
 			var doc = this.iframePage();
@@ -822,6 +858,7 @@
 			html = this.cleanSavePreCode(html, true);
 			html = this.cleanConverters(html);
 			html = this.cleanEmpty(html);
+            html = this.sanitizeHTML(html);
 
 			this.$editor.html(html);
 
