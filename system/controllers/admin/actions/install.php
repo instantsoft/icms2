@@ -285,7 +285,9 @@ class actionAdminInstall extends cmsAction {
 
         files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
 
-        $result = $this->cms_uploader->upload($this->upload_name, $this->upload_exts, 0, $this->installer_upload_path);
+        $result = $this->cms_uploader->setAllowedMime([
+            'application/zip'
+        ])->upload($this->upload_name, $this->upload_exts, 0, $this->installer_upload_path);
 
         if (!$result['success']){
             cmsUser::addSessionMessage($result['error'], 'error');
@@ -293,7 +295,6 @@ class actionAdminInstall extends cmsAction {
         }
 
         return $result['name'];
-
     }
 
 }
