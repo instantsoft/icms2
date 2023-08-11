@@ -12,6 +12,11 @@ class actionMessagesWrite extends cmsAction {
             return cmsCore::error404();
         }
 
+        // Самому себе нельзя
+        if ($this->cms_user->id == $contact_id) {
+            return cmsCore::error404();
+        }
+
         $contact_exists_id = $this->model->isContactExists($this->cms_user->id, $contact_id);
 
         if (!$contact_exists_id) {

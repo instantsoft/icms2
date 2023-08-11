@@ -99,7 +99,16 @@ class messages extends cmsFrontend {
     public function sendMessage($content) {
 
         // Создаем контакты получателям
-        foreach ($this->recipients as $contact_id) {
+        foreach ($this->recipients as $key => $contact_id) {
+
+            // Контакт сам с собой невозможен
+            if ($contact_id == $this->sender_id) {
+
+                unset($this->recipients[$key]);
+
+                continue;
+            }
+
             if (!$this->model->isContactExists($contact_id, $this->sender_id)) {
                 $this->model->addContact($contact_id, $this->sender_id);
             }

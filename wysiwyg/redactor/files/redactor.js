@@ -765,6 +765,8 @@
 		setEditor: function(html, strip)
 		{
 
+            html = this.sanitizeHTML(html);
+
 			if (strip !== false)
 			{
 				html = this.cleanSavePreCode(html);
@@ -778,9 +780,7 @@
 			}
 
 			html = html.replace(/&amp;#36;/g, '$');
-
-			html = this.cleanEmpty(html);
-			html = this.sanitizeHTML(html);
+            html = this.cleanEmpty(html);
 
 			this.$editor.html(html);
 
@@ -791,6 +791,9 @@
 		},
         sanitizeHTML:  function(htmlStr)
 		{
+            if(htmlStr.length === 0){
+                return htmlStr;
+            }
             function stringToHTML () {
                 let parser = new DOMParser();
                 let doc = parser.parseFromString(htmlStr, 'text/html');
@@ -849,6 +852,7 @@
 		},
 		setFullpageOnInit: function(html)
 		{
+            html = this.sanitizeHTML(html);
 			this.fullpageDoctype = html.match(/^<\!doctype[^>]*>/i);
 			if (this.fullpageDoctype && this.fullpageDoctype.length == 1)
 			{
@@ -858,7 +862,6 @@
 			html = this.cleanSavePreCode(html, true);
 			html = this.cleanConverters(html);
 			html = this.cleanEmpty(html);
-            html = this.sanitizeHTML(html);
 
 			this.$editor.html(html);
 
