@@ -315,6 +315,11 @@ function file_get_contents_from_url($url, $timeout = 5, $json_decode = false, $p
         return null;
     }
 
+    // По IP адресу не разрешаем
+    if (preg_match('#^(?:(?:https?):\/\/)([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}).*#ui', $url)) {
+        return null;
+    }
+
     $curl = curl_init();
 
     if (strpos($url, 'https') === 0) {
@@ -342,6 +347,7 @@ function file_get_contents_from_url($url, $timeout = 5, $json_decode = false, $p
             $headers[] = $key . ': ' . $value;
         }
     }
+    curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS | CURLPROTO_HTTP);
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
@@ -368,17 +374,20 @@ function file_get_contents_from_url($url, $timeout = 5, $json_decode = false, $p
  * @param string $destination Полный путь куда сохраненить файл
  * @return boolean
  */
-function file_save_from_url($url, $destination){
+function file_save_from_url($url, $destination) {
 
-    if (!function_exists('curl_init')){ return false; }
+    if (!function_exists('curl_init')) {
+        return false;
+    }
 
     $dest_file = @fopen($destination, "w");
 
     $curl = curl_init();
-    if(strpos($url, 'https') === 0){
+    if (strpos($url, 'https') === 0) {
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
     }
+    curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS | CURLPROTO_HTTP);
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_FILE, $dest_file);
@@ -388,8 +397,8 @@ function file_save_from_url($url, $destination){
     fclose($dest_file);
 
     return true;
-
 }
+
 /**
  * Накладывает ваттермарк на изображение
  *

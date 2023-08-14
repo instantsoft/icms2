@@ -341,8 +341,25 @@ class cmsUploader {
 
         $link = $file_name = trim($_POST[$post_filename]);
 
+
+        if (
+            // Валидный URL с PATH
+            filter_var($link, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED) !== $link ||
+            // По IP адресу не разрешаем
+            preg_match('#^(?:(?:https?):\/\/)([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}).*#ui', $link)
+            ) {
+
+            return [
+                'success' => false,
+                'error'   => 'Not allowed',
+                'name'    => '',
+                'path'    => ''
+            ];
+        }
+
         // проверяем редирект и имя файла
         $curl = curl_init();
+        curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS | CURLPROTO_HTTP);
         curl_setopt($curl, CURLOPT_URL, $link);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, true);
