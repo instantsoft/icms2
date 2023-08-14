@@ -8,9 +8,14 @@ class actionUsersProfileEditPassword extends cmsAction {
 
     public function run($profile) {
 
-        // проверяем наличие доступа
+        // Владельцы и админы могут редактировать
         if (!$this->is_own_profile && !$this->cms_user->is_admin) {
-            cmsCore::error404();
+            return cmsCore::error404();
+        }
+
+        // Администраторы тут могут редактировать только свои профили
+        if ($this->cms_user->is_admin && !$this->is_own_profile && $profile['is_admin']) {
+            return cmsCore::error404();
         }
 
         $form = $this->getForm('password', [$profile]);
@@ -153,7 +158,7 @@ class actionUsersProfileEditPassword extends cmsAction {
                     $result = $this->model->updateUser($profile['id'], $profile);
 
                     if ($result['success']) {
-                        
+
                         list($profile, $data, $form) = cmsEventsManager::hook('users_after_edit_password', [$profile, $data, $form]);
 
                         if (!empty($data['password1'])) {

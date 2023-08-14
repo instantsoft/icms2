@@ -235,15 +235,18 @@ class users extends cmsFrontend {
             ];
         }
 
-        $menu[] = [
-            'title' => LANG_SECURITY,
-            'url'   => href_to_profile($profile, ['edit', 'password'])
-        ];
+        if ($this->is_own_profile || (!$profile['is_admin'] && $this->cms_user->is_admin)) {
 
-        $menu[] = [
-            'title' => LANG_USERS_SESSIONS,
-            'url'   => href_to_profile($profile, ['edit', 'sessions'])
-        ];
+            $menu[] = [
+                'title' => LANG_SECURITY,
+                'url'   => href_to_profile($profile, ['edit', 'password'])
+            ];
+
+            $menu[] = [
+                'title' => LANG_USERS_SESSIONS,
+                'url'   => href_to_profile($profile, ['edit', 'sessions'])
+            ];
+        }
 
         list($menu, $profile) = cmsEventsManager::hook('profile_edit_menu', [$menu, $profile]);
 

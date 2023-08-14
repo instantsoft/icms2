@@ -11,6 +11,10 @@ class actionUsersProfileEditSessions extends cmsAction {
             return cmsCore::error404();
         }
 
+        if ($this->cms_user->is_admin && !$this->is_own_profile && $profile['is_admin']) {
+            return cmsCore::error404();
+        }
+
         return $this->cms_template->render('profile_edit_sessions', [
             'id'       => $profile['id'],
             'profile'  => $profile,
