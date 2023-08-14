@@ -635,7 +635,7 @@ class cmsGrid {
                 'class'    => implode(' ', $class),
                 'editable' => $this->getEditableParams($row, $column, $field),
                 'href'     => false,
-                'renderer' => 'basic' // basic, flag, html, actions
+                'renderer' => $column['renderer'] ?? 'basic' // basic, flag, html, actions
             ];
 
             // Это скорее чтобы не было ошибки при рендере

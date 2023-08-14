@@ -19,13 +19,23 @@ class actionAuthRegister extends cmsAction {
             $reg_email = false;
         }
 
-        list($form, $fieldsets) = $this->getRegistrationForm();
-
         $user = [];
 
-        if ($this->request->hasInQuery('inv')){
-            $user['inv'] = $this->request->get('inv','');
+        // Есть ли кука инвайта
+        $cookie_inv = cmsUser::getCookie('inv');
+        if ($cookie_inv) {
+            $user['inv'] = $cookie_inv;
         }
+
+        // Если есть в урле, заменяем
+        if ($this->request->hasInQuery('inv')) {
+
+            $user['inv'] = $this->request->get('inv', '');
+
+            cmsUser::setCookie('inv', $user['inv'], 604800); // Неделя
+        }
+
+        list($form, $fieldsets) = $this->getRegistrationForm(($user['inv'] ?? false));
 
         if ($this->request->has('submit')){
 

@@ -125,7 +125,7 @@ class auth extends cmsFrontend {
         return $url;
     }
 
-    public function getRegistrationForm() {
+    public function getRegistrationForm($has_inv_code = false) {
 
         $form = $this->getForm('registration');
 
@@ -133,7 +133,7 @@ class auth extends cmsFrontend {
         // Добавляем поле для кода приглашения,
         // если регистрация доступна только по приглашениям
         //
-        if ($this->options['is_reg_invites'] || $this->request->has('inv')) {
+        if ($this->options['is_reg_invites'] || $has_inv_code) {
 
             $fieldset_id = $form->addFieldsetToBeginning(!$this->options['is_reg_invites'] ? '' : LANG_REG_INVITED_ONLY);
 
