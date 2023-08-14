@@ -1,6 +1,6 @@
 <h1><?php echo LANG_STEP_PHP_CHECK; ?></h1>
 
-<h2><?php echo LANG_PHP_VERSION; ?></h1>
+<h2><?php echo LANG_PHP_VERSION; ?></h2>
 <p><?php echo LANG_PHP_VERSION_REQ ?></p>
 <table class="grid">
     <tr>
