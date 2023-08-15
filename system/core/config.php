@@ -144,7 +144,7 @@ class cmsConfig extends cmsConfigs {
             $replace_upload_host_protocol = true;
         }
 
-        $this->set('document_root', rtrim(PATH, $this->root));
+        $this->set('document_root', preg_replace('#(.*)('.preg_quote($this->root).')$#u', '$1', PATH . DIRECTORY_SEPARATOR));
         $this->set('root_path', PATH . DIRECTORY_SEPARATOR);
         $this->set('system_path', $this->root_path . 'system/');
         $this->set('upload_path', $this->document_root . $this->upload_root);

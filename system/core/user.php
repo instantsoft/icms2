@@ -265,6 +265,8 @@ class cmsUser {
 
         self::setUserSession($user, $user['ip']);
 
+        self::sessionRegenerate();
+
         return intval($user['id']);
     }
 
@@ -343,6 +345,8 @@ class cmsUser {
         self::getInstance()->id = $user['id'];
         self::getInstance()->is_logged = true;
 
+        self::sessionRegenerate();
+
         return true;
     }
 
@@ -383,6 +387,8 @@ class cmsUser {
         }
 
         self::sessionUnset('user');
+
+        self::sessionRegenerate();
 
         return true;
     }
@@ -486,6 +492,19 @@ class cmsUser {
         }
     }
 
+    public static function sessionRegenerate() {
+
+        session_regenerate_id(false);
+
+        $id = session_id();
+
+        session_write_close();
+
+        session_id($id);
+
+        session_start();
+    }
+
     public static function sessionSet($key, $value) {
 
         if (strpos($key, ':') === false) {
@@ -568,7 +587,7 @@ class cmsUser {
                 'path'     => $path,
                 'domain'   => $domain,
                 'samesite' => 'Lax',
-                'secure'   => false,
+                'secure'   => cmsConfig::isSecureProtocol(),
                 'httponly' => $http_only
             ]);
         }
