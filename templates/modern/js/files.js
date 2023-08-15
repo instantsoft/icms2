@@ -6,7 +6,7 @@ icms.files = (function ($) {
 
     this.onDocumentReady = function(){
         $('.custom-file-input').on('change',function(){
-            $(this).next('.custom-file-label').html($(this).val().replace('C:\\fakepath\\', ''));
+            $(this).next('.custom-file-label').text($(this).val().replace('C:\\fakepath\\', ''));
         });
     };
 
