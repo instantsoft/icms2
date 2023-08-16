@@ -461,6 +461,7 @@
     define('ERR_NICKNAME_EXISTS', 			 'Никнейм &laquo;%s&raquo; занят');
     define('ERR_WRONG_OLD_PASS', 		 	 'Ошибка изменения пароля: Старый пароль указан неверно');
     define('ERR_NEW_PASS_MISMATCH', 		 'Ошибка изменения пароля: Пароли не совпали');
+    define('ERR_NEW_PASS_AS_OLD', 		     'Новый пароль не может быть таким же, как старый');
     define('ERR_NEW_PASS_REQUIRED', 		 'Нужно указать новый пароль дважды!');
 
     //CAPTCHA

@@ -462,6 +462,7 @@
     define('ERR_NICKNAME_EXISTS', 			 'Nickname &laquo;%s&raquo; is already used');
     define('ERR_WRONG_OLD_PASS', 		 	 'Password change error: Old password is incorrect');
     define('ERR_NEW_PASS_MISMATCH', 		 'Password change error: Passwords do not match');
+    define('ERR_NEW_PASS_AS_OLD', 		     'The new password cannot be the same as the old password');
     define('ERR_NEW_PASS_REQUIRED', 		 'Enter your new password twice!');
 
     //CAPTCHA

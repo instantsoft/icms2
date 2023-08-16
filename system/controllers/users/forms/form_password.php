@@ -4,55 +4,67 @@ class formUsersPassword extends cmsForm {
 
     public function init($profile) {
 
-        return array(
-
-            'basic' => array(
-                'type' => 'fieldset',
-                'title' => LANG_PASSWORD,
-                'childs' => array(
-                    new fieldString('password', array(
-                        'title' => LANG_OLD_PASS,
+        return [
+            'basic' => [
+                'type'   => 'fieldset',
+                'title'  => LANG_PASSWORD,
+                'childs' => [
+                    new fieldString('password', [
+                        'title'       => LANG_OLD_PASS,
                         'is_password' => true,
-                        'options'=>array(
-                            'min_length'=> 6,
-                            'max_length'=> 72
-                        ),
-                        'rules' => array(
-                            array('required'),
-                            array(function($controller, $data, $value)use($profile){
+                        'options'     => [
+                            'min_length' => 6,
+                            'max_length' => 72
+                        ],
+                        'rules' => [
+                            ['required'],
+                            [function ($controller, $data, $value)use ($profile) {
 
                                 $user = cmsCore::getModel('users')->getUserByAuth($profile['email'], $value);
 
-                                if (!$user){
+                                if (!$user) {
                                     return LANG_OLD_PASS_INCORRECT;
                                 }
 
                                 return true;
-
-                            })
-                        )
-                    )),
-                    new fieldString('password1', array(
-                        'title' => LANG_NEW_PASS,
+                            }]
+                        ]
+                    ]),
+                    new fieldString('password1', [
+                        'title'       => LANG_NEW_PASS,
                         'is_password' => true,
-                        'options'=>array(
-                            'min_length'=> 6,
-                            'max_length'=> 72
-                        )
-                    )),
-                    new fieldString('password2', array(
-                        'title' => LANG_RETYPE_NEW_PASS,
-                        'is_password' => true,
-                        'options'=>array(
-                            'min_length'=> 6,
-                            'max_length'=> 72
-                        )
-                    ))
-                )
-            )
+                        'options'     => [
+                            'min_length' => 6,
+                            'max_length' => 72
+                        ],
+                        'rules' => [
+                            [function ($controller, $data, $value)use ($profile) {
 
-        );
+                                if (!$value) {
+                                    return true;
+                                }
+
+                                $user = cmsCore::getModel('users')->getUserByAuth($profile['email'], $value);
+
+                                if ($user) {
+                                    return ERR_NEW_PASS_AS_OLD;
+                                }
+
+                                return true;
+                            }]
+                        ]
+                    ]),
+                    new fieldString('password2', [
+                        'title'       => LANG_RETYPE_NEW_PASS,
+                        'is_password' => true,
+                        'options'     => [
+                            'min_length' => 6,
+                            'max_length' => 72
+                        ]
+                    ])
+                ]
+            ]
+        ];
 
     }
-
 }
