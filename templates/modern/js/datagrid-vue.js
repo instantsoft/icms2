@@ -315,6 +315,20 @@ icms.datagrid = (function () {
             template: `<input type="date" class="form-control form-control-sm" :value="modelValue" @input="save($event.target.value)" v-bind="params.attributes">`
         });
 
+        app.component('form-time', {
+            props: ['params', 'modelValue'],
+            emits: ['update:modelValue', 'applyfilter'],
+            mixins: [saveMixin],
+            template: `<input type="time" class="form-control form-control-sm" :value="modelValue" @input="save($event.target.value)" v-bind="params.attributes">`
+        });
+
+        app.component('form-datetime', {
+            props: ['params', 'modelValue'],
+            emits: ['update:modelValue', 'applyfilter'],
+            mixins: [saveMixin],
+            template: `<input type="datetime-local" class="form-control form-control-sm" :value="modelValue" @input="save($event.target.value)" v-bind="params.attributes">`
+        });
+
         app.component('form-input', {
             props: ['params', 'modelValue', 'save_delayed'],
             emits: ['update:modelValue', 'applyfilter'],
