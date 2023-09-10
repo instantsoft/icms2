@@ -421,7 +421,7 @@
     define('LANG_CP_WIDGETS_IMPORT_SCHEME',     'Импортировать схему');
     define('LANG_CP_WIDGETS_IMPORT_TYPE',       'Откуда импортируем?');
     define('LANG_CP_WIDGETS_IMPORT_TYPE_EX',    'Существующий шаблон');
-    define('LANG_CP_WIDGETS_LFILE',             'Файл схемы');
+    define('LANG_CP_WIDGETS_LFILE',             'Текстовый файл схемы в YAML формате');
     define('LANG_CP_WIDGETS_LFILE_HINT',        'Если схема уже существует, будет заменена на импортированную. При необходимости сделайте резервную копию.');
     define('LANG_CP_WIDGETS_EXPORT_SCHEME',     'Экспортировать схему');
     define('LANG_CP_WIDGETS_FROM_TEMPLATE',     'Шаблон, с которого импортировать схему');

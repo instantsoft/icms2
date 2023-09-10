@@ -292,7 +292,7 @@ class cmsUploader {
         $dest_size  = (int) $_FILES[$filename]['size'];
         $dest_name  = files_sanitize_name($_FILES[$filename]['name']);
 
-        $file = new cmsUploadfile($source, $this->allowed_mime);
+        $file = cmsUploadfile::fromPath($source, $this->allowed_mime);
 
         if (!$file->isAllowed()) {
             return [
@@ -341,14 +341,40 @@ class cmsUploader {
 
         $link = $file_name = trim($_POST[$post_filename]);
 
+        $url_data = parse_url($link);
 
+        // Валидный URL с PATH
         if (
-            // Валидный URL с PATH
             filter_var($link, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED) !== $link ||
-            // По IP адресу не разрешаем
-            preg_match('#^(?:(?:https?):\/\/)([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}).*#ui', $link)
+            empty($url_data['host'])
             ) {
 
+            return [
+                'success' => false,
+                'error'   => 'Not allowed',
+                'name'    => '',
+                'path'    => ''
+            ];
+        }
+
+        // Узнаём ipv4 адрес хоста, gethostbyname умеет только ipv4
+        $host_ip = gethostbyname($url_data['host']);
+        // Не зарезольвили
+        if ($host_ip === $url_data['host']) {
+            return [
+                'success' => false,
+                'error'   => 'Not allowed',
+                'name'    => '',
+                'path'    => ''
+            ];
+        }
+
+        // Проверяем вхождение в зарезервированные сети
+        if(filter_var(
+            $host_ip,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE |  FILTER_FLAG_NO_RES_RANGE
+        ) !== $host_ip){
             return [
                 'success' => false,
                 'error'   => 'Not allowed',
@@ -374,8 +400,7 @@ class cmsUploader {
             $url = trim($matches[1]);
 
             if (strpos($url, 'http') !== 0) {
-                $url_data = parse_url($link);
-                $link     = $url_data['scheme'] . '://' . $url_data['host'] . $url;
+                $link = $url_data['scheme'] . '://' . $url_data['host'] . $url;
             } else {
                 $link = $url;
             }
@@ -442,7 +467,7 @@ class cmsUploader {
      */
     private function saveFileFromString($file_bin, $allowed_size, $destination, $dest_name) {
 
-        $file = new cmsUploadfile($file_bin, $this->allowed_mime);
+        $file = cmsUploadfile::fromString($file_bin, $this->allowed_mime);
 
         if (!$file->isAllowed()) {
             return [

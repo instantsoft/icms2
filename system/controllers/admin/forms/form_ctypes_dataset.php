@@ -67,6 +67,7 @@ class formAdminCtypesDataset extends cmsForm {
                     ]),
                     new fieldHtml('description', [
                         'title' => LANG_DESCRIPTION,
+                        'store_via_html_filter' => true,
                         'can_multilanguage' => true,
                         'multilanguage_params' => [
                             'is_table_field' => true,

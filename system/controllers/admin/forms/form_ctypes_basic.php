@@ -82,6 +82,7 @@ class formAdminCtypesBasic extends cmsForm {
                     new fieldHtml('description', [
                         'title' => LANG_DESCRIPTION,
                         'can_multilanguage' => true,
+                        'store_via_html_filter' => true,
                         'multilanguage_params' => [
                             'is_table_field' => true,
                             'table' => 'content_types'

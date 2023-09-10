@@ -963,7 +963,7 @@ function nf_amount($value, $decimals = 2, $thousands_sep = ' ') {
 
     $value = number_format(floatval($value), $decimals, '.', $thousands_sep);
 
-    return rtrim(rtrim($value, '0'), '.');
+    return strpos($value, '.') !== false ? rtrim(rtrim($value, '0'), '.') : $value;
 }
 
 /**

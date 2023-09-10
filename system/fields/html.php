@@ -203,6 +203,21 @@ class fieldHtml extends cmsFormField {
         return $model->filterLike($this->name, "%{$value}%");
     }
 
+    public function store($value, $is_submitted, $old_value = null) {
+
+        if($this->getProperty('store_via_html_filter')){
+
+            $value = cmsEventsManager::hook('html_filter', [
+                'text'                => $value,
+                'is_auto_br'          => false,
+                'build_smiles'        => $this->getOption('editor') === 'markitup',
+                'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
+            ]);
+        }
+
+        return $value;
+    }
+
     public function afterStore($item, $model, $action) {
 
         if ($action === 'add' && !empty($item[$this->name])) {

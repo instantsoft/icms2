@@ -21,7 +21,7 @@
         <div class="w-100 d-md-none"></div>
     <?php } ?>
     <div class="col-sm-12 layout-row-body <?php if(!$row['parent_id'] ){ ?>layout-row-parent<?php } ?> <?php if(!$row['parent_id'] && $rows_titles_pos == 'left'){ ?>col-lg-10<?php } ?> bg-white">
-        <div class="row no-gutters widgets-layout-scheme-col-wrap <?php echo $row['options']['vertical_align']; ?> <?php echo $row['options']['horizontal_align']; ?>">
+        <div class="row no-gutters widgets-layout-scheme-col-wrap <?php html($row['options']['vertical_align']); ?> <?php html($row['options']['horizontal_align']); ?>">
         <?php foreach ($row['cols'] as $col) { ?>
             <?php if(!empty($col['options']['cut_before'])){ ?>
                 <div class="w-100"></div>
@@ -49,7 +49,7 @@
                 <?php if(!empty($col['rows']['before'])){ ?>
                     <?php $this->renderChild('widgets_scheme', ['rows' => $col['rows']['before'], 'rows_titles_pos' => $rows_titles_pos]); ?>
                 <?php } ?>
-                <div class="layout-col-title d-flex justify-content-between" data-toggle="tooltip" data-placement="top" title="<?php echo $col['name'].($col_width_list ? ': '.implode(', ', $col_width_list) : ''); ?>">
+                <div class="layout-col-title d-flex justify-content-between" data-toggle="tooltip" data-placement="top" title="<?php html($col['name'].($col_width_list ? ': '.implode(', ', $col_width_list) : '')); ?>">
                     <span><?php echo $col['title']; ?> (<?php echo $width_hint; ?>)</span>
                     <div class="layout-scheme-actions d-flex align-items-center">
                         <?php if(!$row['parent_id']){ ?>

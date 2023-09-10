@@ -20,6 +20,7 @@ class formAdminWidgetsCols extends cmsForm {
                         'hint' => LANG_CP_WIDGETS_COL_NAME_HINT,
                         'rules' => array(
                             array('max_length', 50),
+                            array('sysname'),
                             array(function($controller, $data, $value) use($do, $col_id, $row){
 
                                 if (empty($value)) { return true; }

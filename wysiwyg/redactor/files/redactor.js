@@ -1,6 +1,7 @@
 /*
 	Redactor v9.2.6
 	Updated: Jul 19, 2014
+    Modified By InstantCMS Team
 	http://imperavi.com/redactor/
 	Copyright (c) 2009-2014, Imperavi LLC.
 	License: http://imperavi.com/redactor/license/
@@ -370,9 +371,9 @@
 
 					if ($.inArray('p', this.opts.allowedTags) === '-1') this.opts.allowedTags.push('p');
 
-					for (i in arrSearch)
+					for (let i in arrSearch)
 					{
-						if ($.inArray(arrSearch[i], this.opts.allowedTags) != '-1') this.opts.allowedTags.push(arrAdd[i]);
+						if ($.inArray(arrSearch[i], this.opts.allowedTags) != '-1')  { this.opts.allowedTags.push(arrAdd[i]); }
 					}
 				}
 
@@ -666,7 +667,7 @@
 					title: lang.horizontalrule
 				}
 
-			}
+			};
 		},
 
 		callback: function(type, event, data)
@@ -947,7 +948,7 @@
 			if (this.start === false)
 			{
 
-				if (typeof e != 'undefined')
+				if (typeof e !== 'undefined')
 				{
 					switch(e.which)
 					{
@@ -980,7 +981,7 @@
 			html = html.replace(/<\/a>&nbsp;/gi, '<\/a> ');
 			html = html.replace(/\u200B/g, '');
 
-			if (html == '<p></p>' || html == '<p> </p>' || html == '<p>&nbsp;</p>')
+			if (html === '<p></p>' || html === '<p> </p>' || html === '<p>&nbsp;</p>')
 			{
 				html = '';
 			}
@@ -1200,7 +1201,7 @@
 			});
 			this.$editor.on('blur.redactor', $.proxy(function(e)
 			{
-				if (!$(clickedElement).hasClass('redactor_toolbar') && $(clickedElement).parents('.redactor_toolbar').length == 0)
+				if (!$(clickedElement).hasClass('redactor_toolbar') && $(clickedElement).parents('.redactor_toolbar').length === 0)
 				{
 					this.selectall = false;
 					if ($.isFunction(this.opts.blurCallback)) this.callback('blur', e);
@@ -1215,13 +1216,13 @@
 			if (window.FormData === undefined || !e.dataTransfer) return true;
 
 		    var length = e.dataTransfer.files.length;
-		    if (length == 0) return true;
+		    if (length === 0) return true;
 
 		    e.preventDefault();
 
 	        var file = e.dataTransfer.files[0];
 
-	        if (this.opts.dnbImageTypes !== false && this.opts.dnbImageTypes.indexOf(file.type) == -1)
+	        if (this.opts.dnbImageTypes !== false && this.opts.dnbImageTypes.indexOf(file.type) === -1)
 	        {
 		        return true;
 	        }
@@ -1367,11 +1368,11 @@
 				if (parent && $(parent)[0].tagName === 'BLOCKQUOTE') this.insertAfterLastElement(parent);
 				if (current && $(current)[0].tagName === 'BLOCKQUOTE') this.insertAfterLastElement(current);
 
-				if (parent && $(parent)[0].tagName === 'P' && $(parent).parent()[0].tagName == 'BLOCKQUOTE')
+				if (parent && $(parent)[0].tagName === 'P' && $(parent).parent()[0].tagName === 'BLOCKQUOTE')
 				{
 					this.insertAfterLastElement(parent, $(parent).parent()[0]);
 				}
-				if (current && $(current)[0].tagName === 'P' && parent && $(parent)[0].tagName == 'BLOCKQUOTE')
+				if (current && $(current)[0].tagName === 'P' && parent && $(parent)[0].tagName === 'BLOCKQUOTE')
 				{
 					this.insertAfterLastElement(current, parent);
 				}
@@ -1388,11 +1389,11 @@
 			else if (ctrl && key === 90 && e.shiftKey && !e.altKey)
 			{
 				e.preventDefault();
-				if (this.opts.rebuffer.length != 0) this.bufferRedo();
+				if (this.opts.rebuffer.length !== 0) this.bufferRedo();
 				else this.document.execCommand('redo', false, false);
 				return;
 			}
-			if (key == 32)
+			if (key === 32)
 			{
 				this.bufferSet();
 			}
@@ -1401,11 +1402,11 @@
 				this.bufferSet();
 				this.selectall = true;
 			}
-			else if (key != this.keyCode.LEFT_WIN && !ctrl)
+			else if (key !== this.keyCode.LEFT_WIN && !ctrl)
 			{
 				this.selectall = false;
 			}
-			if (key == this.keyCode.ENTER && !e.shiftKey && !e.ctrlKey && !e.metaKey)
+			if (key === this.keyCode.ENTER && !e.shiftKey && !e.ctrlKey && !e.metaKey)
 			{
 
 				var range = this.getRange();
@@ -1417,7 +1418,7 @@
 						range.deleteContents();
 					}
 				}
-				if (this.browser('msie') && (parent.nodeType == 1 && (parent.tagName == 'TD' || parent.tagName == 'TH')))
+				if (this.browser('msie') && (parent.nodeType == 1 && (parent.tagName === 'TD' || parent.tagName === 'TH')))
 				{
 					e.preventDefault();
 					this.bufferSet();
@@ -1425,7 +1426,7 @@
 					this.callback('enter', e);
 					return false;
 				}
-				if (block && (block.tagName == 'BLOCKQUOTE' || $(block).parent()[0].tagName == 'BLOCKQUOTE'))
+				if (block && (block.tagName === 'BLOCKQUOTE' || $(block).parent()[0].tagName === 'BLOCKQUOTE'))
 				{
 					if (this.isEndOfElement())
 					{
@@ -1433,7 +1434,7 @@
 						{
 							var element;
 							var last;
-							if (block.tagName == 'BLOCKQUOTE')
+							if (block.tagName === 'BLOCKQUOTE')
 							{
 								last = 'br';
 								element = block;
@@ -1448,7 +1449,7 @@
 							this.insertingAfterLastElement(element);
 							this.dblEnter = 0;
 
-							if (last == 'p')
+							if (last === 'p')
 							{
 								$(block).parent().find('p').last().remove();
 							}
@@ -1473,7 +1474,7 @@
 					if (!this.opts.linebreaks)
 					{
 
-						if (block && block.tagName == 'LI')
+						if (block && block.tagName === 'LI')
 						{
 							var listCurrent = this.getBlock();
 							if (listCurrent !== false || listCurrent.tagName === 'LI')
@@ -1482,8 +1483,8 @@
 								var listCurrentText = $.trim($(listCurrent).text());
 								if (listText == ''
 									&& listCurrentText == ''
-									&& $(listCurrent).next('li').length == 0
-									&& $(listCurrent).parents('li').length == 0)
+									&& $(listCurrent).next('li').length === 0
+									&& $(listCurrent).parents('li').length === 0)
 								{
 									this.bufferSet();
 
@@ -1553,7 +1554,7 @@
 							return this.buildEventKeydownInsertLineBreak(e);
 						}
 					}
-					if (block.tagName == 'BLOCKQUOTE' || block.tagName == 'FIGCAPTION')
+					if (block.tagName === 'BLOCKQUOTE' || block.tagName === 'FIGCAPTION')
 					{
 						return this.buildEventKeydownInsertLineBreak(e);
 					}
@@ -1582,7 +1583,7 @@
 			this.bufferSet();
 			var html = $(current).parent().text();
 			this.insertNode(document.createTextNode('\n'));
-			if (html.search(/\s$/) == -1)
+			if (html.search(/\s$/) === -1)
 			{
 				this.insertNode(document.createTextNode('\n'));
 			}
@@ -1624,8 +1625,8 @@
 		buildEventKeydownBackspace: function(e, current, parent)
 		{
 
-			if (parent && current && parent.parentNode.tagName == 'TD'
-				&& parent.tagName == 'UL' && current.tagName == 'LI' && $(parent).children('li').length == 1)
+			if (parent && current && parent.parentNode.tagName === 'TD'
+				&& parent.tagName === 'UL' && current.tagName === 'LI' && $(parent).children('li').length === 1)
 			{
 				var text = $(current).text().replace(/[\u200B-\u200D\uFEFF]/g, '');
 				if (text == '')
@@ -1673,12 +1674,12 @@
 			var key = e.which;
 			var parent = this.getParent();
 			var current = this.getCurrent();
-			if (!this.opts.linebreaks && current.nodeType == 3 && (parent == false || parent.tagName == 'BODY'))
+			if (!this.opts.linebreaks && current.nodeType == 3 && (parent == false || parent.tagName === 'BODY'))
 			{
 				var node = $('<p>').append($(current).clone());
 				$(current).replaceWith(node);
 				var next = $(node).next();
-				if (typeof(next[0]) !== 'undefined' && next[0].tagName == 'BR')
+				if (typeof(next[0]) !== 'undefined' && next[0].tagName === 'BR')
 				{
 					next.remove();
 				}

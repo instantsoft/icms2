@@ -128,6 +128,7 @@ class formAdminCtypesFilter extends cmsForm {
                     new fieldHtml('description', [
                         'title' => LANG_DESCRIPTION,
                         'hint' => LANG_CP_FILTER_DESC_HINT,
+                        'store_via_html_filter' => true,
                         'can_multilanguage' => true,
                         'multilanguage_params' => [
                             'is_table_field' => true,

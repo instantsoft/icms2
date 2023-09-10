@@ -105,66 +105,69 @@ class cmsWysiwygRedactor {
 
     private function loadRedactor() {
 
-        if(self::$redactor_loaded){ return false; }
-
         $template = cmsTemplate::getInstance();
 
-        $template->addJSFromContext('wysiwyg/redactor/files/redactor.min.js');
-        $template->addTplJSNameFromContext('files');
+        if (!empty($this->options['plugins'])) {
 
-        $css_file = 'wysiwyg/redactor/files/redactor.css';
-        $tpl_css_file = $template->getTplFilePath('css/wysiwyg/redactor/styles.css', false);
-        if($tpl_css_file){
-            $css_file = $tpl_css_file;
-        }
-        $template->addCSSFromContext($css_file);
-
-        if(!empty($this->options['plugins'])){
-            foreach($this->options['plugins'] as $plugin){
-                $template->addJSFromContext('wysiwyg/redactor/files/plugins/'.$plugin.'/'.$plugin.'.js');
+            foreach ($this->options['plugins'] as $plugin) {
+                $template->addJSFromContext('wysiwyg/redactor/files/plugins/' . $plugin . '/' . $plugin . '.js');
             }
 
-            if (in_array('clips', $this->options['plugins'])){
+            if (in_array('clips', $this->options['plugins'])) {
                 $this->options['clipsUrl'] = href_to('wysiwyg/redactor/files/plugins/clips/index.html');
             }
         }
 
-        if($this->lang !== 'en'){
-            $template->addJSFromContext('wysiwyg/redactor/files/lang/'.$this->lang.'.js');
+        if (self::$redactor_loaded) {
+            return false;
         }
 
-        ob_start(); ?>
+        $template->addJSFromContext('wysiwyg/redactor/files/redactor.min.js');
+        $template->addTplJSNameFromContext('files');
 
-        <script>
-            var redactor_global_options = {};
-            function init_redactor (dom_id){
-                var imperavi_options = {};
-                if(redactor_global_options.hasOwnProperty('field_'+dom_id)){
-                    imperavi_options = redactor_global_options['field_'+dom_id];
-                } else if(redactor_global_options.hasOwnProperty('default')) {
-                    imperavi_options = redactor_global_options.default;
-                }
-                icms.files.url_delete = '<?php echo href_to('files', 'delete'); ?>';
-                imperavi_options.imageDeleteCallback = function (element){
-                    if(confirm('<?php echo LANG_PARSER_IMAGE_DELETE; ?>')){
-                        icms.files.deleteByPath($(element).attr('src'));
+        $css_file     = 'wysiwyg/redactor/files/redactor.css';
+        $tpl_css_file = $template->getTplFilePath('css/wysiwyg/redactor/styles.css', false);
+        if ($tpl_css_file) {
+            $css_file = $tpl_css_file;
+        }
+        $template->addCSSFromContext($css_file);
+
+        if ($this->lang !== 'en') {
+            $template->addJSFromContext('wysiwyg/redactor/files/lang/' . $this->lang . '.js');
+        }
+
+        ob_start();
+        ?>
+            <script>
+                var redactor_global_options = {};
+                function init_redactor (dom_id){
+                    var imperavi_options = {};
+                    if(redactor_global_options.hasOwnProperty('field_'+dom_id)){
+                        imperavi_options = redactor_global_options['field_'+dom_id];
+                    } else if(redactor_global_options.hasOwnProperty('default')) {
+                        imperavi_options = redactor_global_options.default;
                     }
-                };
-                $('#'+dom_id).redactor(imperavi_options);
-                icms.forms.addWysiwygsInsertPool(dom_id, function(field_element, text){
-                    $('#'+field_element).redactor('set', text);
-                    $('#'+field_element).redactor('focus');
-                });
-                icms.forms.addWysiwygsAddPool(dom_id, function(field_element, text){
-                    $('#'+field_element).redactor('insertHtml', text);
-                });
-            }
-        </script>
+                    icms.files.url_delete = '<?php echo href_to('files', 'delete'); ?>';
+                    imperavi_options.imageDeleteCallback = function (element){
+                        if(confirm('<?php echo LANG_PARSER_IMAGE_DELETE; ?>')){
+                            icms.files.deleteByPath($(element).attr('src'));
+                        }
+                    };
+                    $('#'+dom_id).redactor(imperavi_options);
+                    icms.forms.addWysiwygsInsertPool(dom_id, function(field_element, text){
+                        $('#'+field_element).redactor('set', text);
+                        $('#'+field_element).redactor('focus');
+                    });
+                    icms.forms.addWysiwygsAddPool(dom_id, function(field_element, text){
+                        $('#'+field_element).redactor('insertHtml', text);
+                    });
+                }
+            </script>
+        <?php
 
-        <?php $template->addBottom(ob_get_clean());
+        $template->addBottom(ob_get_clean());
 
         self::$redactor_loaded = true;
-
     }
 
 }

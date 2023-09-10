@@ -29,3 +29,13 @@
         <div class="hint text-muted small"><?php printf(LANG_PARSER_FILE_SIZE_FIELD_HINT, files_format_bytes($field->data['max_size_mb'])); ?></div>
     <?php } ?>
 </div>
+
+<?php ob_start(); ?>
+<script>
+    $(function(){
+        $('#<?php echo $field->id; ?>').on('change',function(){
+            $(this).next('.custom-file-label').text($(this).val().replace('C:\\fakepath\\', ''));
+        });
+    });
+</script>
+<?php $this->addBottom(ob_get_clean()); ?>

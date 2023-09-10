@@ -239,8 +239,9 @@ class modelMenu extends cmsModel {
                 }
 
                 $is_external = mb_strpos($item['url'], '://') !== false;
+                $is_hash = mb_strpos($item['url'], '#') === 0;
 
-                if (!$is_root_added && !$is_external) {
+                if (!$is_root_added && !$is_external && !$is_hash) {
                     $item['url'] = href_to($item['url']);
                 }
             }

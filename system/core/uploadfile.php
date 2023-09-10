@@ -6,22 +6,45 @@ class cmsUploadfile {
     private $mime_types;
     private $allowed_mime;
 
-    public function __construct($file_path, $allowed_mime = null) {
+    public static function fromPath($file_path, $allowed_mime = null) {
+
+        $self = new self($allowed_mime);
+
+        $self->loadMimeFromPath($file_path);
+
+        return $self;
+    }
+
+    public static function fromString($file_str, $allowed_mime = null) {
+
+        $self = new self($allowed_mime);
+
+        $self->loadMimeFromString($file_str);
+
+        return $self;
+    }
+
+    public function __construct($allowed_mime = null) {
 
         $this->allowed_mime = $allowed_mime;
 
         $this->mime_types = (new cmsConfigs('mimetypes.php'))->getAll();
+    }
+
+    public function loadMimeFromPath($file_path) {
 
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
 
-        if(strpos($file_path, DIRECTORY_SEPARATOR) === 0){
+        $this->file_mime = finfo_file($finfo, $file_path);
 
-            $this->file_mime = finfo_file($finfo, $file_path);
+        finfo_close($finfo);
+    }
 
-        } else {
+    public function loadMimeFromString($file_str) {
 
-            $this->file_mime = finfo_buffer($finfo, $file_path);
-        }
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+
+        $this->file_mime = finfo_buffer($finfo, $file_str);
 
         finfo_close($finfo);
     }

@@ -101,18 +101,18 @@ class actionAdminWidgets extends cmsAction {
 
                 list($type, $value) = explode(':', $block);
 
-                if ($type == 'position') {
-                    $replace_html = '<ul class="position" rel="' . $value . '" id="pos-' . $value . '"></ul>';
+                if ($type === 'position') {
+                    $replace_html = '<ul class="position" rel="' . html($value, false) . '" id="pos-' . html($value, false) . '"></ul>';
                 }
 
-                if ($type == 'block') {
+                if ($type === 'block') {
                     if (mb_strpos($value, 'LANG_') === 0) {
                         $value = constant($value);
                     }
                     $replace_html = '<div class="block"><span>' . $value . '</span></div>';
                 }
 
-                if ($type == 'cell') {
+                if ($type === 'cell') {
                     if (mb_strpos($value, 'LANG_') === 0) {
                         $value = constant($value);
                     }

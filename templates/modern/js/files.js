@@ -4,12 +4,6 @@ icms.files = (function ($) {
 
     this.url_delete = '';
 
-    this.onDocumentReady = function(){
-        $('.custom-file-input').on('change',function(){
-            $(this).next('.custom-file-label').text($(this).val().replace('C:\\fakepath\\', ''));
-        });
-    };
-
     this.remove = function(file_id){
 
         $('#f_'+file_id+' #file_'+file_id).remove();
