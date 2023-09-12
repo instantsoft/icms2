@@ -1196,11 +1196,36 @@ class cmsModel {
         return $this->filterNotNull('online.user_id')->filterTimestampYounger('online.date_created', cmsUser::USER_ONLINE_INTERVAL, 'SECOND');
     }
 
-    public function applyDatasetFilters($dataset, $ignore_sorting = false, $allowed_fields = []) {
+    /**
+     * Применяет набор фильтров из массива
+     *
+     * @param array $dataset Массив фильтров/сортировки
+     * @param boolean $only_filters Применять только фильтры
+     * @param array $allowed_fields Разрешённые поля для фильтрации
+     * @param string $table_name Имя таблицы: если передано, все поля проверяются на доступность в ней
+     * @return boolean true, если что-либо применилось, false, если ничего
+     */
+    public function applyDatasetFilters($dataset, $only_filters = false, $allowed_fields = [], $table_name = '') {
 
-        if (!empty($dataset['filters'])) {
+        $success = false;
+
+        if (!empty($dataset['filters']) && is_array($dataset['filters'])) {
 
             foreach ($dataset['filters'] as $filter) {
+
+                // Небольшая валидация
+                if (
+                    empty($filter['field']) || !is_string($filter['field']) ||
+                    empty($filter['condition'] || !is_string($filter['condition'])) ||
+                    !array_key_exists('value', $filter) || (!is_string($filter['value']) && $filter['condition'] !== 'in')
+                    ) {
+                    continue;
+                }
+
+                // Есть ли такое поле в таблице
+                if ($table_name && !$this->db->isFieldExists($table_name, $filter['field'])) {
+                    continue;
+                }
 
                 // Если заданы разрешенные поля, проверяем
                 // валидация
@@ -1208,24 +1233,21 @@ class cmsModel {
                     continue;
                 }
 
-                if (isset($filter['callback']) && is_callable($filter['callback'])) {
+                // Таблица передаётся, когда field в $dataset могут быть переданы любые
+                if (!$table_name && isset($filter['callback']) && is_callable($filter['callback'])) {
                     $filter['callback']($this, $dataset);
                     continue;
                 }
 
-                if (!isset($filter['value'])) {
-                    continue;
-                }
                 if (($filter['value'] === '') && !in_array($filter['condition'], ['nn', 'ni'])) {
-                    continue;
-                }
-                if (empty($filter['condition'])) {
                     continue;
                 }
 
                 if ($filter['value'] !== '' && !is_array($filter['value'])) {
                     $filter['value'] = string_replace_user_properties($filter['value']);
                 }
+
+                $success = true;
 
                 switch ($filter['condition']) {
 
@@ -1272,15 +1294,21 @@ class cmsModel {
             }
         }
 
-        if (!empty($dataset['sorting']) && !$ignore_sorting) {
+        if (!empty($dataset['sorting']) && !$only_filters) {
+
+            $success = true;
+
             $this->orderByList($dataset['sorting']);
         }
 
-        if (!empty($dataset['index'])) {
+        if (!empty($dataset['index']) && !$only_filters) {
+
+            $success = true;
+
             $this->forceIndex($dataset['index'], 2);
         }
 
-        return true;
+        return $success;
     }
 
     /**
@@ -2251,14 +2279,16 @@ class cmsModel {
     /**
      * Применяет к модели фильтры, переданные из просмотра
      * таблицы со списком записей
+     * Метод совместимости, не используйте его
      *
      * @param cmsGrid $grid Объект грида
      * @param array $filter
+     * @param string $table_name
      * @return $this
      */
-    public function applyGridFilter(cmsGrid $grid, $filter) {
+    public function applyGridFilter(cmsGrid $grid, $filter, $table_name = '') {
 
-        $grid->applyGridFilter($this, $filter);
+        $grid->applyGridFilter($this, $filter, $table_name);
 
         return $this;
     }

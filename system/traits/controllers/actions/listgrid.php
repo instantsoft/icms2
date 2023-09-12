@@ -337,7 +337,7 @@ trait listgrid {
                     $filter = call_user_func_array($this->filter_callback, [$filter]);
                 }
 
-                $this->grid->applyGridFilter($this->model, $filter);
+                $this->grid->applyGridFilter($this->model, $filter, $this->table_name);
             }
         }
 

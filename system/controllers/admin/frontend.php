@@ -707,11 +707,19 @@ class admin extends cmsFrontend {
 
         foreach ($controllers as $controller_name) {
 
-            $ctrl_file = $this->cms_config->root_path . 'system/controllers/'.$controller_name.'/frontend.php';
-            if(!is_readable($ctrl_file)){ continue; }
+            if (!cmsController::enabled($controller_name)) {
+                continue;
+            }
+
+            $ctrl_file = $this->cms_config->root_path . 'system/controllers/' . $controller_name . '/frontend.php';
+            if (!is_readable($ctrl_file)) {
+                continue;
+            }
 
             $hooks = cmsCore::getFilesList('system/controllers/' . $controller_name . '/hooks', '*.php', true, true);
-            if (!$hooks) { continue; }
+            if (!$hooks) {
+                continue;
+            }
 
             $controller_object = cmsCore::getController($controller_name);
 
@@ -724,7 +732,7 @@ class admin extends cmsFrontend {
                 // Некоторые хуки не требуют регистрации в базе данных,
                 // Например, хуки для CRON или иные, которые вызываются напрямую
                 // Свойство $disallow_event_db_register в классе хука регулирует это поведение
-                if(empty($hook_object->disallow_event_db_register)){
+                if (empty($hook_object->disallow_event_db_register)) {
 
                     $events[$controller_name][$index] = $event_name;
 

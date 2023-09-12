@@ -239,7 +239,7 @@ class cmsGrid {
 
         foreach ($grid as $key => $data) {
 
-            $this->grid[$key] = array_merge(($this->grid[$key] ?? []), $data);
+            $this->grid[$key] = is_array($data) ? array_merge(($this->grid[$key] ?? []), $data) : $data;
         }
 
         // Фильтр по умолчанию
@@ -429,9 +429,10 @@ class cmsGrid {
      *
      * @param cmsModel $model Объект модели, где выбираем записи
      * @param array $filter Массив фильтрации
+     * @param array $table_name Таблица, где ищем поля фильтра
      * @return cmsModel
      */
-    public function applyGridFilter(cmsModel $model, $filter) {
+    public function applyGridFilter(cmsModel $model, $filter, $table_name) {
 
         // применяем сортировку
         if (!empty($filter['order_by']) && !empty($filter['order_to'])) {
@@ -539,9 +540,14 @@ class cmsGrid {
         // Дополнительный фильтр
         if (!empty($filter['advanced_filter']) && is_string($filter['advanced_filter'])) {
 
+            $dataset_filters = [];
+
             parse_str($filter['advanced_filter'], $dataset_filters);
 
-            $model->applyDatasetFilters($dataset_filters);
+            if (!$model->applyDatasetFilters($dataset_filters, true, [], $table_name)) {
+
+                $this->grid['filter']['advanced_filter'] = '';
+            }
         }
 
         return $model;
