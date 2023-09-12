@@ -2722,7 +2722,8 @@ class cmsTemplate {
 
             if (!empty($ctype['options']['list_style'])) {
                 if (is_array($ctype['options']['list_style'])) {
-                    $style = $ctype['options']['list_style'][0] ? '_' . $ctype['options']['list_style'][0] : '';
+                    // Проверка на дефис - совместимость, библиотека yaml обновлена была в 2.16.1
+                    $style = ($ctype['options']['list_style'][0] && $ctype['options']['list_style'][0] !== '-') ? '_' . $ctype['options']['list_style'][0] : '';
                 } else {
                     $style = '_' . $ctype['options']['list_style'];
                 }
