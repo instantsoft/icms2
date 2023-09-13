@@ -153,7 +153,7 @@ class cmsForm {
         $structure = $form->getStructure();
 
         foreach($structure as $fid => $fieldset){
-            $this->addStructure($fid, $fieldset);
+            $this->addStructure($fid, $fieldset, true);
         }
     }
 
@@ -392,15 +392,16 @@ class cmsForm {
      *
      * @param string $id ID добавляемого набора
      * @param array $structure
+     * @param boolean $is_overwrite
      * @return string $id
      */
-    private function addStructure($id, $structure) {
+    private function addStructure($id, $structure, $is_overwrite = false) {
 
         if ($id === null) {
             $id = count($this->structure);
         }
 
-        if ($this->isFieldsetExists($id)) {
+        if (!$is_overwrite && $this->isFieldsetExists($id)) {
             return $id;
         }
 

@@ -41,18 +41,16 @@ class actionAdminCtypesFieldsOptions extends cmsAction {
 
         if ($field_id) {
 
-            $content_model = cmsCore::getModel('content');
-
-            if (!$content_model->getContentTypeByName($ctype_name)) {
-                $content_model->setTablePrefix('');
+            if (!$this->model_backend_content->getContentTypeByName($ctype_name)) {
+                $this->model_backend_content->setTablePrefix('');
             }
 
-            $field = $content_model->localizedOff()->getContentField($ctype_name, $field_id);
+            $field = $this->model_backend_content->localizedOff()->getContentField($ctype_name, $field_id);
             if (!$field) {
                 return $this->halt();
             }
 
-            $content_model->localizedRestore();
+            $this->model_backend_content->localizedRestore();
 
             $values['options'] = $field['options'];
         }

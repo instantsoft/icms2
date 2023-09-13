@@ -187,7 +187,9 @@ trait formFieldItem {
 
             $field_options = $field_object->getOptions();
 
-            $form->mergeForm($this->makeForm(function($form) use($field_options){
+            $form->addFieldsetAfter('type', LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
+
+            $form->mergeForm($this->makeForm(function ($form) use ($field_options) {
 
                 $form->addFieldset(LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
 
