@@ -1,22 +1,22 @@
 <?php
-
+/**
+ * @property \modelUsers $model_users
+ */
 class actionAuthVerify extends cmsAction {
 
     public function run($pass_token = null) {
 
         if (!$this->options['is_reg_enabled']) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         if (empty($this->options['verify_email'])) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         if ($this->cms_user->is_logged && !$this->cms_user->is_admin) {
-            $this->redirectToHome();
+            return $this->redirectToHome();
         }
-
-        $users_model = cmsCore::getModel('users');
 
         $reg_email = cmsUser::getCookie('reg_email');
 
@@ -24,7 +24,7 @@ class actionAuthVerify extends cmsAction {
 
         if ($reg_email && $this->validate_email($reg_email) === true) {
 
-            $reg_user = $users_model->filterNotNull('pass_token')->
+            $reg_user = $this->model_users->filterNotNull('pass_token')->
                     filterEqual('is_locked', 1)->
                     getUserByEmail($reg_email);
 
@@ -37,7 +37,9 @@ class actionAuthVerify extends cmsAction {
             }
 
         } else {
+
             cmsUser::unsetCookie('reg_email');
+
             $reg_email = false;
         }
 
@@ -53,7 +55,7 @@ class actionAuthVerify extends cmsAction {
 
             if (!$errors) {
 
-                $user = $users_model->getUserByPassToken($data['reg_token']);
+                $user = $this->model_users->getUserByPassToken($data['reg_token']);
 
                 if (!$user) {
                     $errors['reg_token'] = LANG_VERIFY_EMAIL_ERROR;
@@ -64,7 +66,7 @@ class actionAuthVerify extends cmsAction {
 
                 cmsUser::unsetCookie('reg_email');
 
-                $users_model->unlockUser($user['id'])->clearUserPassToken($user['id']);
+                $this->model_users->unlockUser($user['id'])->clearUserPassToken($user['id']);
 
                 $user = cmsEventsManager::hook('user_registered', $user);
 
@@ -77,14 +79,14 @@ class actionAuthVerify extends cmsAction {
 
                     cmsUser::setUserSession($user);
 
-                    $users_model->updateUserIp($user['id']);
+                    $this->model_users->updateUserIp($user['id']);
 
                     cmsEventsManager::hook('auth_login', $user['id']);
                 }
 
                 $this->sendGreetMsg($user);
 
-                $this->redirect($this->getAuthRedirectUrl($this->options['first_auth_redirect']));
+                return $this->redirect($this->getAuthRedirectUrl($this->options['first_auth_redirect']));
             }
 
             if ($errors) {

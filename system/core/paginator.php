@@ -20,9 +20,9 @@ class cmsPaginator {
 
     public function __construct($total, $perpage, $current_page, $base_uri, $query = []) {
 
-        $this->total        = $total;
-        $this->perpage      = $perpage;
-        $this->current_page = $current_page;
+        $this->total        = (int)$total;
+        $this->perpage      = (int)$perpage;
+        $this->current_page = (int)$current_page;
 
         $this->updatePagesCount();
 

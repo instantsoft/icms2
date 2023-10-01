@@ -2,7 +2,7 @@
 
 function step($is_submit) {
 
-    $is_external_users = $_SESSION['install']['db']['users_exists'];
+    $is_external_users = !empty($_SESSION['install']['db']['users_exists']);
 
     if ($is_submit) {
 
@@ -25,6 +25,13 @@ function step($is_submit) {
 
 function check_admin(){
 
+    if (empty($_SESSION['install']['db'])) {
+        return [
+            'error' => true,
+            'message' => 'Empty database params'
+        ];
+    }
+
     $nickname = trim(strip_tags(get_post('nickname')));
     $email    = get_post('email');
     $pass1    = get_post('pass1');
@@ -45,10 +52,10 @@ function check_admin(){
     }
 
     if ($pass1 !== $pass2){
-        return array(
+        return [
             'error' => true,
             'message' => LANG_ADMIN_PASS_ERROR
-        );
+        ];
     }
 
     if (mb_strlen($pass1) < 6){
@@ -88,6 +95,9 @@ function create_admin($nickname, $email, $pass_hash) {
     $mysqli = @new mysqli($db['host'], $db['user'], $db['pass'], $db['base']);
 
     $mysqli->set_charset('utf8');
+
+    $nickname = $mysqli->real_escape_string($nickname);
+    $email = $mysqli->real_escape_string($email);
 
     $sql = "UPDATE {$db['prefix']}users SET nickname='{$nickname}', email='{$email}', password_hash = '{$pass_hash}' WHERE id = 1";
 

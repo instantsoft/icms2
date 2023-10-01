@@ -77,46 +77,53 @@ class geo extends cmsFrontend {
 
     }
 
-    public function actionGetItems(){
+    public function actionGetItems() {
 
-        if (!$this->request->isAjax()) { cmsCore::error404(); }
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
 
-        $type = $this->request->get('type', '');
+        $type      = $this->request->get('type', '');
         $parent_id = $this->request->get('parent_id', 0);
 
-        if (!$type || !in_array($type, array('regions', 'cities'))) { cmsCore::error404(); }
-        if (!$parent_id) { cmsCore::error404(); }
-
-        switch ( $type ){
-
-            case 'regions': $items = $this->model->getRegions( $parent_id );
-                            $select_text = LANG_GEO_SELECT_REGION;
-                            break;
-
-            case 'cities':  $items = $this->model->getCities( $parent_id );
-                            $select_text = LANG_GEO_SELECT_CITY;
-                            break;
-
-            default: $items = false;
-
+        if (!$type || !in_array($type, ['regions', 'cities'])) {
+            return cmsCore::error404();
         }
 
-        if (is_array($items)){
-            $items = array('0'=>$select_text) + $items;
+        if (!$parent_id) {
+            return cmsCore::error404();
         }
 
-        foreach ($items as $id => $name){
-            $data[] = array(
-                'id' => $id,
+        $items = []; $data = [];
+
+        switch ($type) {
+
+            case 'regions':
+                $items = $this->model->getRegions($parent_id);
+                $select_text = LANG_GEO_SELECT_REGION;
+                break;
+
+            case 'cities':
+                $items = $this->model->getCities($parent_id);
+                $select_text = LANG_GEO_SELECT_CITY;
+                break;
+        }
+
+        if ($items) {
+            $items = ['0' => $select_text] + $items;
+        }
+
+        foreach ($items as $id => $name) {
+            $data[] = [
+                'id'   => $id,
                 'name' => $name,
-            );
+            ];
         }
 
-        return $this->cms_template->renderJSON(array(
-           'error' => $data ? false : true,
-           'items' => $data
-        ));
-
+        return $this->cms_template->renderJSON([
+            'error' => $data ? false : true,
+            'items' => $data
+        ]);
     }
 
     public function getGeoByIp() {

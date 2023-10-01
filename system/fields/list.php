@@ -177,7 +177,7 @@ class fieldList extends cmsFormField {
         }
 
         foreach ($value as $val) {
-            if (isset($items[$val])) {
+            if (!is_array($val) && isset($items[$val])) {
                 $item[] = $items[$val];
             }
         }
@@ -331,6 +331,9 @@ class fieldList extends cmsFormField {
 
         if (isset($this->multiple_keys)) {
             foreach ($value as $val) {
+                if (!is_array($val)) {
+                    return ERR_VALIDATE_INVALID;
+                }
                 foreach ($this->multiple_keys as $name => $type) {
                     if (!array_key_exists($name, $val)) {
                         return ERR_VALIDATE_INVALID;
@@ -354,6 +357,9 @@ class fieldList extends cmsFormField {
                     if (!isset($items['field'][$k])) {
                         return ERR_VALIDATE_INVALID;
                     }
+                }
+                if (is_array($val)) {
+                    return ERR_VALIDATE_INVALID;
                 }
                 if (!isset($items['field_select'][$val])) {
                     return ERR_VALIDATE_INVALID;

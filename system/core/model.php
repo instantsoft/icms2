@@ -852,21 +852,35 @@ class cmsModel {
         return $this;
     }
 
-    public function filterIn($field, $value){
-        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        if (is_array($value)){
-            if(!$value){ return $this; }
-            foreach($value as $k=>$v){
-                $v = $this->db->escape(strval($v));
-                $value[$k] = "'{$v}'";
-            }
-            $value = implode(',', $value);
-        } else {
-            $value = $this->db->escape($value);
-            $value = "'{$value}'";
+    public function filterIn($field, $value) {
+
+        if (strpos($field, '.') === false) {
+            $field = 'i.' . $field;
         }
-        $this->filter("{$field} IN ({$value})");
-        return $this;
+
+        if (is_array($value)) {
+
+            $values = [];
+
+            foreach ($value as $v) {
+                if (!is_array($v)) {
+                    $v = $this->db->escape(strval($v));
+                    $values[] = "'{$v}'";
+                }
+            }
+
+            if (!$values) {
+                return $this->filter('1 = 0');
+            }
+
+            $value = implode(',', $values);
+
+        } else {
+
+            $value = $this->db->escape($value);
+        }
+
+        return $this->filter("{$field} IN ({$value})");
     }
 
     public function filterNotIn($field, $value){
@@ -1217,7 +1231,7 @@ class cmsModel {
                 if (
                     empty($filter['field']) || !is_string($filter['field']) ||
                     empty($filter['condition'] || !is_string($filter['condition'])) ||
-                    !array_key_exists('value', $filter) || (!is_string($filter['value']) && $filter['condition'] !== 'in')
+                    !array_key_exists('value', $filter) || (is_array($filter['value']) && $filter['condition'] !== 'in')
                     ) {
                     continue;
                 }

@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @property \modelMessages $model_messages
+ * @property \modelContent $model_content
+ * @property \modelUsers $model_users
+ */
 class auth extends cmsFrontend {
 
     protected $useOptions = true;
@@ -36,22 +40,33 @@ class auth extends cmsFrontend {
         cmsUser::logout();
 
         if (!function_exists('get_headers')) {
-            $this->redirectToHome();
+            return $this->redirectToHome();
         }
 
         $back_url = $this->getBackURL();
 
-        if ($back_url != $this->cms_config->root) {
+        if ($back_url !== $this->cms_config->root) {
 
-            $h    = get_headers($back_url, true);
+            $parsed = parse_url($back_url);
+
+            if (!$parsed || empty($parsed['scheme'])) {
+                return $this->redirectToHome();
+            }
+
+            $h = get_headers($back_url, true);
+
+            if (!$h || empty($h[0])) {
+                return $this->redirectToHome();
+            }
+
             $code = intval(substr($h[0], 9, 3));
 
             if ($code < 400) {
-                $this->redirect($back_url);
+                return $this->redirect($back_url);
             }
         }
 
-        $this->redirectToHome();
+        return $this->redirectToHome();
     }
 
 //============================================================================//

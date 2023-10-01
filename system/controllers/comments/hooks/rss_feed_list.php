@@ -6,7 +6,7 @@ class onCommentsRssFeedList extends cmsAction {
 
     public function run($feed) {
 
-        $category = $author   = [];
+        $category = $author = [];
 
         $target_controller = $this->request->get('tc', '');
         $target_subject    = $this->request->get('ts', '');
@@ -29,7 +29,9 @@ class onCommentsRssFeedList extends cmsAction {
                     cmsCore::isControllerExists($target_controller) &&
                     cmsCore::isModelExists($target_controller);
 
-            if (!$is_valid) { cmsCore::error404(); }
+            if (!$is_valid) {
+                return cmsCore::error404();
+            }
 
             $comments = $this->model->filterCommentTarget(
                     $target_controller,
@@ -39,10 +41,13 @@ class onCommentsRssFeedList extends cmsAction {
 
             $target_model = cmsCore::getModel($target_controller);
 
-            $target_info = $target_model->getTargetItemInfo($target_subject, $target_id);
+            if (method_exists($target_model, 'getTargetItemInfo')) {
 
-            if ($target_info) {
-                $category['title'] = $target_info['title'];
+                $target_info = $target_model->getTargetItemInfo($target_subject, $target_id);
+
+                if ($target_info) {
+                    $category['title'] = $target_info['title'];
+                }
             }
         }
 

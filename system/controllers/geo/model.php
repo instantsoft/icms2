@@ -1,56 +1,57 @@
 <?php
+
 class modelGeo extends cmsModel {
 
-    public $limit = '';
+    public $limit = false;
 
-    public function getCountries(){
+    public function getCountries() {
 
         $this->useCache('geo.countries');
 
         return $this->filterEqual('is_enabled', true)->
-            orderByList(array(
-                array('by' => 'ordering', 'to' => 'asc'),
-                array('by' => 'name', 'to' => 'asc')
-            ))->get('geo_countries', function($item){
-                return $item['name'];
-        });
+                orderByList([
+                    ['by' => 'ordering', 'to' => 'asc'],
+                    ['by' => 'name', 'to' => 'asc']
+                ])->get('geo_countries', function ($item) {
+            return $item['name'];
+        }) ?: [];
     }
 
-    public function getRegions($country_id=false){
+    public function getRegions($country_id = false) {
 
         $this->useCache('geo.regions');
 
-        if ($country_id){
+        if ($country_id) {
             $this->filterEqual('country_id', $country_id);
         }
 
         return $this->filterEqual('is_enabled', true)->
-            orderByList(array(
-                array('by' => 'ordering', 'to' => 'asc'),
-                array('by' => 'name', 'to' => 'asc')
-            ))->get('geo_regions', function($item){
-                return $item['name'];
-        });
+                orderByList([
+                    ['by' => 'ordering', 'to' => 'asc'],
+                    ['by' => 'name', 'to' => 'asc']
+                ])->get('geo_regions', function ($item) {
+            return $item['name'];
+        }) ?: [];
     }
 
-    public function getCities($region_id=false){
+    public function getCities($region_id = false) {
 
         $this->useCache('geo.cities');
 
-        if ($region_id){
+        if ($region_id) {
             $this->filterEqual('region_id', $region_id);
         }
 
         return $this->filterEqual('is_enabled', true)->
-            orderByList(array(
-                array('by' => 'ordering', 'to' => 'asc'),
-                array('by' => 'name', 'to' => 'asc')
-            ))->get('geo_cities', function($item){
-                return $item['name'];
-        });
+                orderByList([
+                    ['by' => 'ordering', 'to' => 'asc'],
+                    ['by' => 'name', 'to' => 'asc']
+                ])->get('geo_cities', function ($item) {
+            return $item['name'];
+        }) ?: [];
     }
 
-    public function getCityParents($city_id){
+    public function getCityParents($city_id) {
 
         $this->useCache('geo.cities.parents');
 
@@ -65,10 +66,9 @@ class modelGeo extends cmsModel {
         $this->filterEqual('id', $city_id);
 
         return $this->getItem('geo_cities');
-
     }
 
-    public function getRegionParents($region_id){
+    public function getRegionParents($region_id) {
 
         $this->useCache('geo.regions.parents');
 
@@ -82,15 +82,13 @@ class modelGeo extends cmsModel {
         $this->filterEqual('id', $region_id);
 
         return $this->getItem('geo_regions');
-
     }
 
-    public function getCity($id){
+    public function getCity($id) {
 
         $this->useCache('geo.city');
 
         return $this->getItemById('geo_cities', $id);
-
     }
 
 }

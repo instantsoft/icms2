@@ -64,7 +64,7 @@ class fieldImages extends cmsFormField {
             ]),
             new fieldList('template', [
                 'title'     => LANG_PARSER_TEMPLATE,
-                'hint'      => sprintf(LANG_PARSER_TEMPLATE_HINT, 'assets/fields/', $this->field_type),
+                'hint'      => sprintf(LANG_PARSER_TEMPLATE_HINT, 'assets/fields/', $this->field_type.'_view'),
                 'generator' => function () {
                     return cmsTemplate::getInstance()->getAvailableTemplatesFiles('assets/fields', $this->field_type.'_view*.tpl.php');
                 }
@@ -164,21 +164,13 @@ class fieldImages extends cmsFormField {
             }
         }
 
-        $result = [];
-
-        if (is_array($value)) {
-            foreach ($value as $paths) {
-                $result[] = $paths;
-            }
-        }
-
-        if (empty($result)) {
+        if (!$value) {
             return null;
         }
 
         $sizes = $this->getOption('sizes');
-        if (empty($sizes)) {
-            $this->delete($result);
+        if (!$sizes) {
+            $this->delete($value);
             return null;
         }
 
@@ -186,15 +178,25 @@ class fieldImages extends cmsFormField {
 
         $upload_path = cmsConfig::get('upload_path');
 
-        foreach ($result as $key => $image) {
+        foreach ($value as $key => $image) {
+
+            if (!is_array($image)) {
+                continue;
+            }
 
             $images = [];
 
             foreach ($image as $size => $image_rel_path) {
 
+                if (is_array($image_rel_path)) {
+                    continue;
+                }
+
                 $image_rel_path = str_replace(['"', "'", ' ', '#'], '', html_entity_decode($image_rel_path));
 
-                if (!is_file($upload_path . $image_rel_path)) {
+                $image_path = realpath($upload_path . $image_rel_path);
+
+                if (strpos($image_path, $upload_path) !== 0 || !is_file($image_path)) {
                     continue;
                 }
 
@@ -255,18 +257,38 @@ class fieldImages extends cmsFormField {
 
     public function delete($value) {
 
-        if (empty($value)) {
+        if (!$value) {
             return true;
         }
 
         if (!is_array($value)) {
+
             $value = cmsModel::yamlToArray($value);
+
+            if (!$value) {
+                return true;
+            }
         }
+
+        $upload_path = cmsConfig::get('upload_path');
 
         $files_model = cmsCore::getModel('files');
 
         foreach ($value as $images) {
+            if (!is_array($images)) {
+                continue;
+            }
             foreach ($images as $image_rel_path) {
+
+                if (is_array($image_rel_path)) {
+                    continue;
+                }
+
+                $image_path = realpath($upload_path . $image_rel_path);
+
+                if (strpos($image_path, $upload_path) !== 0 || !is_file($image_path)) {
+                    continue;
+                }
 
                 $file = $files_model->getFileByPath($image_rel_path);
                 if (!$file) {

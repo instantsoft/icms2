@@ -12,12 +12,12 @@
 
         <div class="field">
             <label><?php echo LANG_PATHS_ROOT_PATH; ?></label>
-            <input autocomplete="off" type="text" class="input input-icon icon-folder" name="paths[root]" value="<?php echo $paths['root']; ?>" />
+            <input autocomplete="off" type="text" class="input input-icon icon-folder" name="paths[root]" value="<?php echo htmlspecialchars($paths['root']); ?>" />
         </div>
 
         <div class="field">
             <label><?php echo LANG_PATHS_ROOT_HOST; ?></label>
-            <input autocomplete="off" type="text" class="input input-icon icon-url" name="hosts[root]" value="<?php echo $hosts['root']; ?>" />
+            <input autocomplete="off" type="text" class="input input-icon icon-url" name="hosts[root]" value="<?php echo htmlspecialchars($hosts['root']); ?>" />
         </div>
 
     </fieldset>
@@ -29,12 +29,12 @@
         <div class="field">
             <div class="hint"><?php echo LANG_PATHS_MUST_WRITABLE; ?></div>
             <label><?php echo LANG_PATHS_UPLOAD_PATH; ?></label>
-            <input autocomplete="off" type="text" class="input input-icon icon-folder" name="paths[upload]" value="<?php echo $paths['upload']; ?>" />
+            <input autocomplete="off" type="text" class="input input-icon icon-folder" name="paths[upload]" value="<?php echo htmlspecialchars($paths['upload']); ?>" />
         </div>
 
         <div class="field">
             <label><?php echo LANG_PATHS_UPLOAD_HOST; ?></label>
-            <input autocomplete="off" type="text" class="input input-icon icon-url" name="hosts[upload]" value="<?php echo $hosts['upload']; ?>" />
+            <input autocomplete="off" type="text" class="input input-icon icon-url" name="hosts[upload]" value="<?php echo htmlspecialchars($hosts['upload']); ?>" />
         </div>
 
     </fieldset>
@@ -46,7 +46,7 @@
         <div class="field">
             <div class="hint"><?php echo LANG_PATHS_MUST_WRITABLE; ?></div>
             <label><?php echo LANG_PATHS_CACHE_PATH; ?></label>
-            <input autocomplete="off" type="text" class="input input-icon icon-folder" name="paths[cache]" value="<?php echo $paths['cache']; ?>" />
+            <input autocomplete="off" type="text" class="input input-icon icon-folder" name="paths[cache]" value="<?php echo htmlspecialchars($paths['cache']); ?>" />
         </div>
 
     </fieldset>
@@ -58,7 +58,7 @@
         <div class="field">
             <div class="hint"><?php echo LANG_PATHS_MUST_WRITABLE; ?></div>
             <label><?php echo LANG_PATHS_SESSION_PATH; ?></label>
-            <input autocomplete="off" type="text" class="input input-icon icon-folder" name="paths[session_save_path]" value="<?php echo $paths['session_save_path']; ?>" />
+            <input autocomplete="off" type="text" class="input input-icon icon-folder" name="paths[session_save_path]" value="<?php echo htmlspecialchars($paths['session_save_path']); ?>" />
             <?php if($open_basedir_hint){ ?>
                 <div class="hint"><?php echo $open_basedir_hint; ?></div>
             <?php } ?>

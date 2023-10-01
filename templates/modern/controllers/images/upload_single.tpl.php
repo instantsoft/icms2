@@ -52,7 +52,7 @@
     </div>
 
     <?php if($allow_image_cropper){ ?>
-        <div class="modal" tabindex="-1" role="dialog" id="modal-crop-<?php echo $dom_id; ?>" data-image_cropper_rounded="<?php echo $image_cropper_rounded ? 1 : 0; ?>" data-image_cropper_ratio="<?php echo $image_cropper_ratio; ?>">
+        <div class="modal" tabindex="-1" role="dialog" data-backdrop="static" id="modal-crop-<?php echo $dom_id; ?>" data-image_cropper_rounded="<?php echo $image_cropper_rounded ? 1 : 0; ?>" data-image_cropper_ratio="<?php echo $image_cropper_ratio; ?>">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">

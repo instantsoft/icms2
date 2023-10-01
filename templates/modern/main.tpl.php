@@ -39,7 +39,7 @@
         <link rel="icon" href="<?php echo $this->getTemplateFilePath('images/favicons/favicon.ico'); ?>" type="image/x-icon">
     <?php } ?>
     </head>
-    <body id="<?php echo $device_type; ?>_device_type" data-device="<?php echo $device_type; ?>" class="d-flex flex-column min-vh-100<?php if(!empty($body_classes)) { ?> <?php echo implode(' ', $body_classes); ?><?php } ?> <?php echo $this->options['body_classes'] ?? ''; ?>">
+    <body id="<?php echo $device_type; ?>_device_type" data-device="<?php echo $device_type; ?>" class="d-flex flex-column min-vh-100<?php if(!empty($body_classes)) { ?> <?php html(implode(' ', $body_classes)); ?><?php } ?> <?php html($this->options['body_classes'] ?? ''); ?>">
         <?php $this->renderLayoutChild('scheme', ['rows' => $rows]); ?>
         <?php if (!empty($this->options['show_top_btn'])){ ?>
             <a class="btn btn-secondary btn-lg" href="#<?php echo $device_type; ?>_device_type" id="scroll-top">

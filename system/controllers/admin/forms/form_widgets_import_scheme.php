@@ -70,7 +70,7 @@ class formAdminWidgetsImportScheme extends cmsForm {
                         'title' => LANG_CP_WIDGETS_LFILE,
                         'hint'  => LANG_CP_WIDGETS_LFILE_HINT,
                         'options' => [
-                            'extensions' => 'yaml'
+                            'extensions' => 'txt'
                         ],
                         'visible_depend' => ['import_type' => ['show' => ['file']]]
                     ])

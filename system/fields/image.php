@@ -141,41 +141,49 @@ class fieldImage extends cmsFormField {
 
     public function getStringValue($value){ return ''; }
 
-    public function store($value, $is_submitted, $old_value=null){
+    public function store($value, $is_submitted, $old_value = null) {
 
-        if (!is_null($old_value) && !is_array($old_value)){
+        if (!is_null($old_value) && !is_array($old_value)) {
 
             $old_value = cmsModel::yamlToArray($old_value);
 
-            if ($old_value != $value){
-                foreach($old_value as $image_url){
+            if ($old_value != $value) {
+                foreach ($old_value as $image_url) {
                     files_delete_file($image_url, 2);
                 }
             }
-
         }
 
         $sizes = $this->getOption('sizes');
 
-        if (empty($sizes) || empty($value)) { return $value; }
+        if (empty($sizes) || empty($value)) {
+            return $value;
+        }
 
         $upload_path = cmsConfig::get('upload_path');
 
         $image_urls = [];
 
-        foreach($value as $size => $image_url){
+        foreach ($value as $size => $image_rel_path) {
 
-            $image_url = str_replace(['"', "'", ' ', '#'], '', html_entity_decode($image_url));
-
-            if(!is_file($upload_path.$image_url)){
+            if (is_array($image_rel_path)) {
                 continue;
             }
 
-            if (!in_array($size, $sizes)){
-                files_delete_file($image_url, 2); continue;
+            $image_rel_path = str_replace(['"', "'", ' ', '#'], '', html_entity_decode($image_rel_path));
+
+            $image_path = realpath($upload_path . $image_rel_path);
+
+            if (strpos($image_path, $upload_path) !== 0 || !is_file($image_path)) {
+                continue;
             }
 
-            $image_urls[$size] = $image_url;
+            if (!in_array($size, $sizes)) {
+                files_delete_file($image_rel_path, 2);
+                continue;
+            }
+
+            $image_urls[$size] = $image_rel_path;
         }
 
         return $image_urls ?: null;

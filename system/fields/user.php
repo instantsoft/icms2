@@ -7,6 +7,7 @@ class fieldUser extends cmsFormField {
     public $sql         = 'varchar(255) NULL DEFAULT NULL';
     public $filter_type = 'int';
     public $filter_hint = LANG_PARSER_USER_FILTER_HINT;
+    public $var_type    = 'string';
     public $allow_index = false;
 
     public function getInput($value) {
