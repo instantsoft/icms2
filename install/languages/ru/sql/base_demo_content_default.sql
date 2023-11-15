@@ -911,7 +911,6 @@ INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `orde
 (8, 1, 7, 'Яндекс', 'https://www.yandex.ru', 10, NULL, NULL, NULL),
 (9, 1, 7, 'InstantSoft', NULL, 11, NULL, NULL, NULL),
 (10, 1, 9, 'InstantVideo', 'https://instantvideo.ru/software/instantvideo2.html', 14, NULL, NULL, NULL),
-(11, 1, 9, 'InstantMaps', 'http://www.instantmaps.ru/', 12, NULL, NULL, NULL),
 (18, 3, 0, 'О проекте', 'pages/about.html', 1, '---\nclass: \n', '---\n- 0\n', NULL),
 (19, 3, 0, 'Правила сайта', 'pages/rules.html', 2, '---\nclass: \n', '---\n- 0\n', NULL),
 (27, 1, 0, 'Блоги', 'posts', 3, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),

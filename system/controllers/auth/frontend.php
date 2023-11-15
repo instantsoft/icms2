@@ -35,6 +35,10 @@ class auth extends cmsFrontend {
 
     public function actionLogout() {
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return $this->redirectToHome();
+        }
+
         cmsEventsManager::hook('auth_logout', $this->cms_user->id);
 
         cmsUser::logout();

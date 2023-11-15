@@ -136,7 +136,7 @@
                     <a class="dropdown-item" href="<?php echo href_to('admin', 'users', ['edit', $user->id]); ?>">
                         <?php html_svg_icon('solid', 'edit'); ?> <?php echo LANG_EDIT; ?>
                     </a>
-                    <a class="dropdown-item" href="<?php echo href_to('auth', 'logout'); ?>">
+                    <a class="dropdown-item" href="<?php echo href_to('auth', 'logout', false, ['csrf_token' => cmsForm::getCSRFToken()]); ?>">
                         <?php html_svg_icon('solid', 'sign-out-alt'); ?> <?php echo LANG_LOG_OUT; ?>
                     </a>
                 </div>

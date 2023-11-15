@@ -1,0 +1,1 @@
+UPDATE `{#}menu_items` SET `url`='auth/logout?csrf_token={csrf_token}' WHERE `url` = 'auth/logout';

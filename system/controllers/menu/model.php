@@ -2,11 +2,11 @@
 
 class modelMenu extends cmsModel {
 
-    private static $all_menus = null;
+    private static $all_menus      = null;
     private static $rendered_menus = [];
 
     private static function loadAllMenus() {
-        if(self::$all_menus === null){
+        if (self::$all_menus === null) {
 
             $model = new self();
 
@@ -18,9 +18,9 @@ class modelMenu extends cmsModel {
 
         self::loadAllMenus();
 
-        if(!empty(self::$all_menus[$menu_name])){
+        if (!empty(self::$all_menus[$menu_name])) {
 
-            if(!in_array($menu_name, self::$rendered_menus)){
+            if (!in_array($menu_name, self::$rendered_menus)) {
 
                 self::$rendered_menus[] = $menu_name;
 
@@ -33,120 +33,74 @@ class modelMenu extends cmsModel {
         return [];
     }
 
-    public function addMenu($item){
-
-        $id = $this->insert('menu', $item);
+    public function addMenu($item) {
 
         cmsCache::getInstance()->clean('menu.items');
 
-        return $id;
-
+        return $this->insert('menu', $item);
     }
 
-    public function updateMenu($id, $item){
+    public function updateMenu($id, $item) {
 
         cmsCache::getInstance()->clean('menu.items');
 
         return $this->update('menu', $id, $item);
-
     }
 
-    public function deleteMenu($id){
-
-        $this->delete('menu', $id);
-
-        $this->filterEqual('menu_id', $id)->deleteFiltered('menu_items');
+    public function deleteMenu($id) {
 
         cmsCache::getInstance()->clean('menu.items');
 
+        $this->delete('menu', $id);
+
+        return $this->filterEqual('menu_id', $id)->deleteFiltered('menu_items');
     }
 
-//============================================================================//
-//============================================================================//
+    public function getMenus() {
 
-    public function getMenus(){
-
-        $items = array();
-
-        $sql = "SELECT *
-                FROM {#}menu
-                ORDER BY id ASC";
-
-        $result = $this->db->query($sql);
-
-        // если запрос ничего не вернул, возвращаем ложь
-        if (!$this->db->numRows($result)){ return false; }
-
-        // перебираем все вернувшиеся строки
-        while($item = $this->db->fetchAssoc($result)){
-
-            // добавляем обработанную строку в результирующий массив
-            $items[$item['id']] = $item;
-
-        }
-
-        // возвращаем строки
-        return $items;
-
+        return $this->limit(false)->orderBy('id', 'asc')->get('menu') ?: [];
     }
 
-//============================================================================//
-//============================================================================//
-
-    public function getMenu($id, $by_field = 'id'){
+    public function getMenu($id, $by_field = 'id') {
 
         $this->useCache('menu.menus');
 
         return $this->getItemByField('menu', $by_field, $id);
-
     }
 
-//============================================================================//
-//============================================================================//
+    public function getMenuItems($menu_id = false, $parent_id = false) {
 
-    public function getMenuItems($menu_id = false, $parent_id = false){
+        $this->useCache('menu.items');
 
         $this->select('COUNT(childs.id)', 'childs_count');
 
         $this->joinLeft('menu_items', 'childs', 'childs.parent_id = i.id AND childs.is_enabled = 1');
 
-        if($menu_id !== false){
+        if ($menu_id !== false) {
             $this->filterEqual('menu_id', $menu_id);
         }
 
-        if ($parent_id !== false){
+        if ($parent_id !== false) {
             $this->filterEqual('parent_id', $parent_id);
         }
 
-        $this->groupBy('id');
+        $this->groupBy('id')->orderBy('ordering', 'asc');
 
-        $this->orderBy('ordering', 'asc');
-
-        $this->useCache('menu.items');
-
-        return $this->get('menu_items', function($item, $model){
-            if ($item['options']){
-                $item['options'] = cmsModel::yamlToArray($item['options']);
-            } else {
-                $item['options'] = array();
-            }
+        return $this->get('menu_items', function ($item, $model) {
+            $item['options'] = cmsModel::yamlToArray($item['options']);
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
             return $item;
         });
-
     }
-
-//============================================================================//
-//============================================================================//
 
     public function getAllMenuItemsTree() {
 
         $menus = $this->select('menu.name', 'menu_name')->joinLeft('menu', 'menu', 'menu.id = i.menu_id')->getMenuItems();
 
-        $result = array();
+        $result = [];
 
-        if($menus){
+        if ($menus) {
             $menus = cmsEventsManager::hook('menu_before_list', $menus);
             foreach ($menus as $menu) {
                 $result[$menu['menu_name']][$menu['id']] = $menu;
@@ -154,10 +108,13 @@ class modelMenu extends cmsModel {
         }
 
         return $result;
-
     }
 
     public static function buildMenu($menus, $parse_hooks = true) {
+
+        $replaced = [
+            'csrf_token' => cmsForm::getCSRFToken()
+        ];
 
         $items = [];
         $delta = [];
@@ -194,6 +151,9 @@ class modelMenu extends cmsModel {
             if ($item['url'] && $parse_hooks) {
 
                 $matches = [];
+
+                // Общие замены
+                $item['url'] = string_replace_keys_values($item['url'], $replaced);
 
                 // если URL пункта меню содержит свойство пользователя
                 if (strpos($item['url'], '{user.') !== false) {
@@ -239,7 +199,7 @@ class modelMenu extends cmsModel {
                 }
 
                 $is_external = mb_strpos($item['url'], '://') !== false;
-                $is_hash = mb_strpos($item['url'], '#') === 0;
+                $is_hash     = mb_strpos($item['url'], '#') === 0;
 
                 if (!$is_root_added && !$is_external && !$is_hash) {
                     $item['url'] = href_to($item['url']);
@@ -276,60 +236,46 @@ class modelMenu extends cmsModel {
         return $tree;
     }
 
-    public function getMenuItemsTree($menu_id, $parse_hooks = true){
+    public function getMenuItemsTree($menu_id, $parse_hooks = true) {
 
         $result = $this->getMenuItems($menu_id);
 
-        if (!$result){ return false; }
+        if (!$result) {
+            return false;
+        }
 
         return self::buildMenu($result, $parse_hooks);
-
     }
 
-//============================================================================//
-//============================================================================//
+    public function getMenuItem($id) {
 
-    public function getMenuItem($id){
-
-        return $this->getItemById('menu_items', $id, function($item, $model){
-            if ($item['options']){
-                $item['options'] = cmsModel::yamlToArray($item['options']);
-            } else {
-                $item['options'] = array();
-            }
+        return $this->getItemById('menu_items', $id, function ($item, $model) {
+            $item['options'] = cmsModel::yamlToArray($item['options']);
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
             return $item;
         });
-
     }
 
-//============================================================================//
-//============================================================================//
-
-    public function addMenuItem($item){
+    public function addMenuItem($item) {
 
         $this->filterEqual('parent_id', $item['parent_id']);
 
         $item['ordering'] = $this->getNextOrdering('menu_items');
 
-        $id = $this->insert('menu_items', $item);
-
         cmsCache::getInstance()->clean('menu.items');
 
-        return $id;
-
+        return $this->insert('menu_items', $item);
     }
 
-    public function updateMenuItem($id, $item){
+    public function updateMenuItem($id, $item) {
 
         cmsCache::getInstance()->clean('menu.items');
 
         return $this->update('menu_items', $id, $item);
-
     }
 
-    public function deleteMenuItem($id){
+    public function deleteMenuItem($id) {
 
         $item = $this->getMenuItem($id);
 
@@ -337,18 +283,18 @@ class modelMenu extends cmsModel {
 
         $level      = false;
         $node_start = false;
-        $to_delete  = array($id);
-        $to_reorder = array();
+        $to_delete  = [$id];
+        $to_reorder = [];
 
-        foreach($tree as $item){
+        foreach ($tree as $item) {
 
-            if ($item['id']==$id){
+            if ($item['id'] == $id) {
                 $node_start = true;
-                $level = $item['level'];
+                $level      = $item['level'];
                 continue;
             }
 
-            if ($node_start){
+            if ($node_start) {
                 if ($item['level'] > $level) {
                     $to_delete[] = $item['id'];
                     continue;
@@ -358,10 +304,9 @@ class modelMenu extends cmsModel {
             }
 
             $to_reorder[] = $item['id'];
-
         }
 
-        foreach($to_delete as $item_id){
+        foreach ($to_delete as $item_id) {
             $this->delete('menu_items', $item_id);
         }
 
@@ -370,7 +315,6 @@ class modelMenu extends cmsModel {
         cmsCache::getInstance()->clean('menu.items');
 
         return true;
-
     }
 
 }
