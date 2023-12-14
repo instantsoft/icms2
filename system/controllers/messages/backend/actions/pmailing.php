@@ -6,7 +6,7 @@ class actionMessagesPmailing extends cmsAction {
 
         $form = $this->getForm('pmailing');
 
-        $mailing = array('groups' => array($group_id));
+        $mailing = ['groups' => [$group_id]];
 
         if ($this->request->has('submit')) {
 
@@ -14,19 +14,18 @@ class actionMessagesPmailing extends cmsAction {
 
             $errors = $form->validate($this, $mailing);
 
-            if($mailing['sender_user_email']){
+            if ($mailing['sender_user_email']) {
 
                 $user = $this->model_users->getUserByEmail($mailing['sender_user_email']);
-                if(!$user && !$errors){
+                if (!$user && !$errors) {
                     $errors['sender_user_email'] = ERR_USER_NOT_FOUND;
                 }
-
             }
 
             if (!$errors) {
 
-                $sender = !empty($user['id']) ? $user : $this->cms_user;
-                $sender_id = is_object($sender) ? $sender->id : $sender['id'];
+                $sender          = !empty($user['id']) ? $user : $this->cms_user;
+                $sender_id       = is_object($sender) ? $sender->id : $sender['id'];
                 $sender_nickname = is_object($sender) ? $sender->nickname : $sender['nickname'];
 
                 if ($mailing['groups']) {
@@ -34,9 +33,9 @@ class actionMessagesPmailing extends cmsAction {
                 }
 
                 $recipients = $this->model_users->
-                        filterIsNull('is_locked')->
-                        filterIsNull('is_deleted')->
-                        limit(false)->getUsersIds();
+                                filterIsNull('is_locked')->
+                                filterIsNull('is_deleted')->
+                                limit(false)->getUsersIds();
 
                 if ($recipients) {
                     if (isset($recipients[$sender_id])) {
@@ -48,51 +47,48 @@ class actionMessagesPmailing extends cmsAction {
 
                     $this->controller_messages->addRecipients(array_keys($recipients))->setSender($sender_id);
 
+                    $mailing['message_text'] = cmsEventsManager::hook('html_filter', $mailing['message_text']);
+
                     if ($mailing['type'] === 'message') {
 
                         $messages_ids = $this->controller_messages->sendMessage($mailing['message_text']);
 
                         $count = is_array($messages_ids) ? count($messages_ids) : ($messages_ids ? 1 : 0);
 
-                        if($count){
+                        if ($count) {
 
                             $this->controller_messages->clearRecipients();
 
                             foreach ($recipients as $user_id) {
 
-                                if($this->model->getNewMessagesCount($user_id) == 1){
+                                if ($this->model->getNewMessagesCount($user_id) == 1) {
                                     $this->controller_messages->addRecipient($user_id);
                                 }
-
                             }
 
-                            $this->controller_messages->sendNoticeEmail('messages_new', array(
+                            $this->controller_messages->sendNoticeEmail('messages_new', [
                                 'user_url'      => href_to_profile($sender, false, true),
                                 'user_nickname' => $sender_nickname,
                                 'message'       => strip_tags($mailing['message_text'])
-                            ));
-
+                            ]);
                         }
-
                     }
 
                     if ($mailing['type'] === 'notify') {
-
-                        $mailing['message_text'] = cmsEventsManager::hook('html_filter', $mailing['message_text']);
 
                         $notices_ids = $this->controller_messages->sendNoticePM(array(
                             'content' => $mailing['message_text']
                         ));
 
                         $count = is_array($notices_ids) ? count($notices_ids) : ($notices_ids ? 1 : 0);
-
                     }
 
                     if ($mailing['type'] === 'email') {
 
                         $emails = $this->model_users->
                             filterIn('id', array_keys($recipients))->
-                            limit(false)->selectOnly('i.email', 'email')->select('nickname')->get('{users}', function($user){
+                            limit(false)->selectOnly('i.email', 'email')->select('nickname')->
+                            get('{users}', function ($user) {
                                 return $user['nickname'];
                             }, 'email');
 
@@ -107,17 +103,15 @@ class actionMessagesPmailing extends cmsAction {
 
                     cmsUser::addSessionMessage(sprintf(
                         LANG_PM_PMAILING_SENDED,
-                        html_spellcount($count, string_lang('LANG_PM_'.$mailing['type']), false, false, 0)
+                        html_spellcount($count, string_lang('LANG_PM_' . $mailing['type']), false, false, 0)
                     ), ($count ? 'success' : 'info'));
-
                 }
 
                 if (!$recipients) {
                     cmsUser::addSessionMessage(LANG_PM_PMAILING_NOT_RECIPIENTS, 'info');
                 }
 
-                $this->redirectToAction('pmailing', ($group_id ? $group_id : false));
-
+                return $this->redirectToAction('pmailing', ($group_id ? $group_id : false));
             }
 
             if ($errors) {
@@ -125,11 +119,10 @@ class actionMessagesPmailing extends cmsAction {
             }
         }
 
-        return $this->cms_template->render('backend/pmailing', array(
+        return $this->cms_template->render('backend/pmailing', [
             'mailing' => $mailing,
             'form'    => $form,
             'errors'  => isset($errors) ? $errors : false
-        ));
+        ]);
     }
-
 }
