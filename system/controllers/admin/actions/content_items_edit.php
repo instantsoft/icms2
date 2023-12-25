@@ -214,7 +214,18 @@ class actionAdminContentItemsEdit extends cmsAction {
                                     $content_fields[$fname] = $_items[$item_id][$fname].$content_fields[$fname];
                                 }
                             }
-
+                            
+                            //Доп категории       
+                            $_items[$item_id]['add_cats'] = $this->model_content->getContentItemCategories($ctype['name'], $item_id);
+                            if ($_items[$item_id]['add_cats']) {
+                                foreach ($_items[$item_id]['add_cats'] as $index => $cat_id) {
+                                    if ($cat_id == $_items[$item_id]['category_id']) {
+                                        unset($_items[$item_id]['add_cats'][$index]);
+                                        break;
+                                    }
+                                }
+                            }
+                            
                             $this->model_content->updateContentItem($ctype, $item_id, array_merge($_items[$item_id], $content_fields), $fields);
 
                         }
