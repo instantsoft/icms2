@@ -19,8 +19,8 @@ class fieldParent extends cmsFormField {
                 'title'   => LANG_PARSER_PARENT_STYLE,
                 'default' => 'ctype_list',
                 'items'   => [
-                    'ctype_list' => LANG_PARSER_PARENT_STYLE2,
-                    'links_list' => LANG_PARSER_PARENT_STYLE1
+                    'ctype_list' => LANG_PARSER_PARENT_STYLE1,
+                    'links_list' => LANG_PARSER_PARENT_STYLE2
                 ]
             ])
         ];

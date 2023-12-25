@@ -128,6 +128,8 @@ class cmsController {
 
         if ($this->model === null && cmsCore::isModelExists($this->name)){
             $this->model = cmsCore::getModel($this->name);
+        } else {
+            unset($this->model);
         }
     }
 
@@ -159,6 +161,10 @@ class cmsController {
         } else if (strpos($name, 'model_') === 0) {
 
             $this->{$name} = cmsCore::getModel(str_replace('model_', '', $name));
+
+        } else if ($name === 'model') {
+
+            $this->{$name} = new cmsModel();
 
         } else {
             trigger_error('Undefined property: '.$name, E_USER_WARNING);

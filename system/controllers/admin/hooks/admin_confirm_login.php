@@ -39,6 +39,8 @@ class onAdminAdminConfirmLogin extends cmsAction {
 
                         $data['allow'] = true;
 
+                        $this->request->set('submit', null);
+
                     } else {
 
                         $data['errors']['password'] = LANG_OLD_PASS_INCORRECT;
@@ -59,7 +61,6 @@ class onAdminAdminConfirmLogin extends cmsAction {
         }
 
         return $data;
-
     }
 
 }

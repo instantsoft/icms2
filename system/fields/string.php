@@ -145,7 +145,6 @@ class fieldString extends cmsFormField {
             $value = cmsEventsManager::hook('html_filter', [
                 'text'                => $value,
                 'is_auto_br'          => false,
-                'build_smiles'        => false,
                 'build_redirect_link' => false
             ]);
 

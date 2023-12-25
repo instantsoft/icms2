@@ -64,7 +64,7 @@
                         }
                     }
 
-                    if ($error){
+                    if ($error && !is_array($error)){
                         $field->classes[] = 'field_error';
                     }
 
@@ -111,7 +111,7 @@
                                 <?php } ?>
                             </div>
                         <?php } ?>
-                        <?php if ($error){ ?><div class="invalid-feedback w-auto ml-auto"><?php echo $error; ?></div><?php } ?>
+                        <?php if ($error && !is_array($error)){ ?><div class="invalid-feedback w-auto ml-auto"><?php echo $error; ?></div><?php } ?>
                         </div>
                     <?php } ?>
                 </div>

@@ -223,7 +223,7 @@ trait formFieldItem {
 
                     $field_id = $this->model_content->addContentField($ctype['name'], $_field, $field_object->is_virtual);
 
-                    cmsUser::addSessionMessage(sprintf(LANG_CP_FIELD_CREATED, $field['title']), 'success');
+                    cmsUser::addSessionMessage(sprintf(LANG_CP_FIELD_CREATED, $_field['title']), 'success');
                 }
 
                 $this->redirect(string_replace_keys_values($this->success_url, $ctype));

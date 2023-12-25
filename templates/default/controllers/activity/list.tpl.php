@@ -34,7 +34,7 @@
             <div class="item">
                 <?php if ($is_can_delete) { ?>
                     <div class="actions">
-                        <a class="delete" href="<?php echo $this->href_to('delete', $item['id']); ?>" title="<?php html(LANG_DELETE); ?>"></a>
+                        <a class="delete" href="<?php echo $this->href_to('delete', $item['id'], ['csrf_token' => cmsForm::getCSRFToken()]); ?>" title="<?php html(LANG_DELETE); ?>"></a>
                     </div>
                 <?php } ?>
                 <div class="icon">

@@ -32,6 +32,20 @@ class fieldText extends cmsFormField {
                 'title'           => LANG_PARSER_HTML_FILTERING,
                 'extended_option' => true
             ]),
+            new fieldList('typograph_id', [
+                'title'     => LANG_PARSER_TYPOGRAPH,
+                'generator' => function ($item) {
+                    $items   = [];
+                    $presets = (new cmsModel())->get('typograph_presets') ?: [];
+                    foreach ($presets as $preset) {
+                        $items[$preset['id']] = $preset['title'];
+                    }
+                    return $items;
+                },
+                'rules' => [
+                    ['required']
+                ]
+            ]),
             new fieldCheckbox('parse_patterns', [
                 'title' => LANG_PARSER_PARSE_PATTERNS,
                 'hint'  => LANG_PARSER_PARSE_PATTERNS_HINT
@@ -121,7 +135,8 @@ class fieldText extends cmsFormField {
 
             return cmsEventsManager::hook('html_filter', [
                 'text'                => $value,
-                'is_auto_br'          => true,
+                'typograph_id'        => $this->getOption('typograph_id'),
+                // Эта опция есть в пресете, перезапишет
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ]);
 
@@ -130,6 +145,7 @@ class fieldText extends cmsFormField {
             if($this->getProperty('is_strip_tags') === true || $this->getOption('is_strip_tags')){
                 return nl2br($value);
             }
+
             return nl2br(html($value, false));
         }
     }
@@ -157,7 +173,7 @@ class fieldText extends cmsFormField {
             $value = string_replace_keys_values_extended($value, $this->item);
         }
 
-        return trim(strip_tags($value));
+        return trim(strip_tags($value), " \0");
     }
 
     public function store($value, $is_submitted, $old_value = null) {
@@ -167,7 +183,7 @@ class fieldText extends cmsFormField {
         }
 
         if ($this->getProperty('is_strip_tags') === true || $this->getOption('is_strip_tags')) {
-            return trim(strip_tags($value));
+            return trim(strip_tags($value), " \0");
         }
 
         return parent::store($value, $is_submitted, $old_value);

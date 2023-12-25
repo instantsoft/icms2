@@ -70,103 +70,103 @@ class cmsTemplate {
      * Массив путей к js/css для загрузки со страницы по требованию
      * @var array
      */
-	protected $on_demand = ['root' => '', 'css' => [], 'js' => []];
+    protected $on_demand = ['root' => '', 'css' => [], 'js' => []];
     /**
      * Массив головных (<head>) тегов страницы
      * @var array
      */
-	protected $head = [];
+    protected $head = [];
     /**
      * Массив тегов, выводящихся в самом низу страницы, перед </body>
      * @var array
      */
-	protected $bottom = [];
+    protected $bottom = [];
     /**
      * Массив CSS файлов, подключаемых выше всех остальных
      * @var array
      */
-	protected $head_main_css = [];
+    protected $head_main_css = [];
     /**
      * Массив подключаемых CSS файлов
      * @var array
      */
-	protected $head_css = [];
+    protected $head_css = [];
     /**
      * Массив JS файлов к подключению на странице выше остальных JS-тегов
      * @var array
      */
-	protected $head_main_js = [];
+    protected $head_main_js = [];
     /**
      * Массив подключаемых JS файлов
      * @var array
      */
-	protected $head_js = [];
+    protected $head_js = [];
     /**
      * Массив JS файлов, которые при подключении сразу печатаются на странице
      * @var array
      */
-	protected $insert_js = [];
+    protected $insert_js = [];
     /**
      * Массив CSS файлов, которые при подключении сразу печатаются на странице
      * @var array
      */
-	protected $insert_css = [];
+    protected $insert_css = [];
     /**
      * Массив подключаемых JS файлов, которые не участвуют в объединении
      * @var array
      */
-	protected $head_js_no_merge = [];
+    protected $head_js_no_merge = [];
     /**
      * Массив подключаемых CSS файлов, которые не участвуют в объединении
      * @var array
      */
-	protected $head_css_no_merge = [];
+    protected $head_css_no_merge = [];
     /**
      * Массив предзагрузки контента
      * https://developer.mozilla.org/ru/docs/Web/HTML/Preloading_content
      * @var array
      */
-	protected $head_preload = [];
+    protected $head_preload = [];
     /**
      * Тег <h1> страницы
      * @var string
      */
-	public $page_h1;
+    public $page_h1;
     /**
      * Массив данных, которые используются в SEO паттернах
      * @var array
      */
-	public $page_h1_item;
+    public $page_h1_item;
     /**
      * Тег <title> страницы
      * @var string
      */
-	public $title;
+    public $title;
     /**
      * Массив данных, которые используются в SEO паттернах
      * @var array
      */
-	public $title_item;
+    public $title_item;
     /**
      * Тег <meta name="description"> страницы
      * @var string
      */
-	public $metadesc;
+    public $metadesc;
     /**
      * Массив данных, которые используются в SEO паттернах
      * @var array
      */
-	public $metadesc_item;
+    public $metadesc_item;
     /**
      * Тег <meta name="keywords"> страницы
      * @var string
      */
-	public $metakeys;
+    public $metakeys;
     /**
      * Массив данных, которые используются в SEO паттернах
      * @var array
      */
-	public $metakeys_item;
+    public $metakeys_item;
     /**
      * Хлебные крошки
      * @var array
@@ -268,18 +268,60 @@ class cmsTemplate {
     }
 
     /**
-	 * Выводит тело страницы
-	 */
-	public function body() {
+     * Выводит тело страницы
+     */
+    public function body() {
         $this->output_is_displayed = true;
+        $this->printOutput();
+    }
+
+    /**
+     * Принудительно печатает тело страницы
+     */
+    public function printOutput() {
         echo $this->output;
+    }
+
+    /**
+     * Добавляет переданный код к выводу тела страницы
+     * @param string $html
+     */
+    public function addOutput($html){
+        $this->output .= $html;
+    }
+
+    /**
+     * Заменяет вывод тела страницы переданным кодом
+     * @param string $html
+     */
+    public function setOutput($html){
+        $this->output = $html;
+    }
+
+    /**
+     * Добавляет HTML на позицию блока
+     *
+     * @param string $position  Название позиции блок
+     * @param string $html      HTML блока
+     * @param boolean $begining Добавить в начало блока
+     */
+    public function addToBlock($position, $html, $begining = false){
+        if(isset($this->blocks[$position])){
+            if($begining){
+                $this->blocks[$position] = $html.$this->blocks[$position];
+            } else {
+                $this->blocks[$position] .= $html;
+            }
+        } else {
+            $this->blocks[$position] = $html;
+        }
     }
 
     /**
      * Выводит HTML блока
      * @param string $position
      */
-	public function block($position) {
+    public function block($position) {
         echo !empty($this->blocks[$position]) ? $this->blocks[$position] : '';
     }
 
@@ -425,9 +467,9 @@ class cmsTemplate {
     }
 
     /**
-	 * Выводит заголовок текущей страницы
-	 */
-	public function title() {
+     * Выводит заголовок текущей страницы
+     */
+    public function title() {
 
         $t = !empty($this->title_item) ? string_replace_keys_values_extended($this->title, $this->title_item) : $this->title;
 
@@ -444,9 +486,9 @@ class cmsTemplate {
     }
 
     /**
-	 * Выводит название сайта
-	 */
-	public function sitename() {
+     * Выводит название сайта
+     */
+    public function sitename() {
         html($this->site_config->sitename);
     }
 
@@ -481,7 +523,7 @@ class cmsTemplate {
      * @param string $wrapper Название шаблона обертки
      * @return boolean
      */
-	public function widgets($position, $is_titles = true, $wrapper = '') {
+    public function widgets($position, $is_titles = true, $wrapper = '') {
 
         if (!$this->hasWidgetsOn($position)) {
             return false;
@@ -583,7 +625,15 @@ class cmsTemplate {
      * @param string $template Название файла шаблона меню в assets/ui/
      * @param string $menu_title Название(подпись) меню
      */
-    public function menu($menu_name, $detect_active_id = true, $css_class = 'menu nav', $max_items = 0, $is_allow_multiple_active = false, $template = 'menu', $menu_title = '') {
+    public function menu(
+        $menu_name,
+        $detect_active_id = true,
+        $css_class = 'menu nav',
+        $max_items = 0,
+        $is_allow_multiple_active = false,
+        $template = 'menu',
+        $menu_title = ''
+    ) {
 
         if (!$this->hasMenu($menu_name)) {
             return;
@@ -762,59 +812,24 @@ class cmsTemplate {
 
     /**
      * Формирует ссылку в контексте текущего контроллера
-     * @param string $action Экшен
+     *
+     * @param string $action       Экшен
      * @param string|array $params Параметры экшена
-     * @return type
+     * @param array $query         Параметры строки запроса
+     * @return string
      */
-    public function href_to($action, $params = false) {
+    public function href_to($action, $params = false, $query = []) {
 
         if (isset($this->controller)) {
             if (!isset($this->controller->root_url)) {
-                return href_to($this->controller->name, $action, $params);
+                return href_to($this->controller->name, $action, $params, $query);
             } else {
-                return href_to($this->controller->root_url, $action, $params);
+                return href_to($this->controller->root_url, $action, $params, $query);
             }
         } else {
-            return href_to($this->site_config->root, $action, $params);
+            return href_to($this->site_config->root, $action, $params, $query);
         }
 
-    }
-
-//============================================================================//
-//============================================================================//
-
-    /**
-     * Добавляет переданный код к выводу
-     * @param string $html
-     */
-    public function addOutput($html){
-        $this->output .= $html;
-    }
-
-    /**
-     * Добавляет HTML на позицию блока
-     *
-     * @param string $position  Название позиции блок
-     * @param string $html      HTML блока
-     * @param boolean $begining Добавить в начало блока
-     */
-    public function addToBlock($position, $html, $begining = false){
-        if(isset($this->blocks[$position])){
-            if($begining){
-                $this->blocks[$position] = $html.$this->blocks[$position];
-            } else {
-                $this->blocks[$position] .= $html;
-            }
-        } else {
-            $this->blocks[$position] = $html;
-        }
-    }
-
-    /**
-     * Принудительно печатает вывод
-     */
-    public function printOutput() {
-        echo $this->output;
     }
 
 // ========================================================================== //
@@ -824,16 +839,23 @@ class cmsTemplate {
      * Проверяет наличие тега h1
      * @return boolean
      */
-	public function hasPageH1(){
-    	return !empty($this->page_h1);
-	}
+    public function hasPageH1() {
+        return !empty($this->page_h1);
+    }
 
     /**
      * Печатает значение тега h1 страницы
      */
-	public function pageH1(){
-    	echo !empty($this->page_h1_item) ? string_replace_keys_values_extended($this->page_h1, $this->page_h1_item) : $this->page_h1;
-	}
+    public function pageH1() {
+        echo $this->getPageH1();
+    }
+
+    /**
+     * Возвращает значение тега h1 страницы
+     */
+    public function getPageH1() {
+        return !empty($this->page_h1_item) ? string_replace_keys_values_extended($this->page_h1, $this->page_h1_item) : $this->page_h1;
+    }
 
     /**
      * Устанавливает значение тега h1 страницы
@@ -843,12 +865,13 @@ class cmsTemplate {
      */
     public function setPageH1($title) {
 
-        if (is_array($title)){ $title = implode(', ', $title); }
+        if (is_array($title)) {
+            $title = implode(', ', $title);
+        }
 
         $this->page_h1 = $title;
 
         return $this;
-
     }
 
     /**
@@ -858,37 +881,43 @@ class cmsTemplate {
      * @param string $separator Разделитель
      * @return $this
      */
-	public function addToPageH1($title, $separator = ', '){
-        if (is_array($title)){ $title = implode($separator, $title); }
-        $this->page_h1 .= ($this->page_h1 ? $separator : '').$separator.$title;
+    public function addToPageH1($title, $separator = ', ') {
+        if (is_array($title)) {
+            $title = implode($separator, $title);
+        }
+        $this->page_h1 .= ($this->page_h1 ? $separator : '') . $separator . $title;
         return $this;
-	}
+    }
 
-	public function setPageH1Item($item){
+    public function setPageH1Item($item){
         $this->page_h1_item = $item; return $this;
-	}
+    }
 
-	/**
-	 * Устанавливает заголовок страницы
+    /**
+     * Устанавливает заголовок страницы
      * Если передано несколько аргументов, склеивает их в одну строку
      * через разделитель
      *
-	 * @param string $pagetitle Заголовок
-	 */
-	public function setPageTitle($pagetitle){
-        if (func_num_args() > 1){ $pagetitle = implode(' · ', array_filter(func_get_args())); }
-        if (is_array($pagetitle)){ $pagetitle = implode(' ', $pagetitle); }
+     * @param string $pagetitle Заголовок
+     */
+    public function setPageTitle($pagetitle) {
+        if (func_num_args() > 1) {
+            $pagetitle = implode(' · ', array_filter(func_get_args()));
+        }
+        if (is_array($pagetitle)) {
+            $pagetitle = implode(' ', $pagetitle);
+        }
         $this->title = $pagetitle;
-        if($this->site_config->is_sitename_in_title){
-            $this->title .= ' — '.$this->site_config->sitename;
+        if ($this->site_config->is_sitename_in_title) {
+            $this->title .= ' — ' . $this->site_config->sitename;
         }
         return $this;
-	}
+    }
 
-	public function addToPageTitle($title){
-        $this->title .= ' '.$title;
+    public function addToPageTitle($title) {
+        $this->title .= ' ' . $title;
         return $this;
-	}
+    }
 
     /**
      * Устанавливает заголовок странице по паттерну в настройках контроллера
@@ -897,59 +926,61 @@ class cmsTemplate {
      * @param string $default Ключ по умолчанию, если паттерн не задан
      * @return \cmsTemplate
      */
-	public function setPagePatternTitle($item, $default = 'title'){
+    public function setPagePatternTitle($item, $default = 'title'){
         if (!empty($this->controller->options['tag_title'])) {
             $this->setPageTitle(string_replace_keys_values_extended($this->controller->options['tag_title'], $item));
         } else {
             $this->setPageTitle($item[$default]);
         }
         return $this;
-	}
-
-	public function setPageTitleItem($item){
-        $this->title_item = $item; return $this;
-	}
-
-	public function setFrontPageTitle($pagetitle){
-		$this->title = $pagetitle; return $this;
-	}
-
-	/**
-	 * Устанавливает ключевые слова и описание страницы
-	 * @param string $keywords Ключевые слова
-	 * @param string $description Описание
-	 */
-	public function setMeta($keywords, $description){
-		$this->metakeys = $keywords;
-		$this->metadesc = $description;
-        return $this;
-	}
-
-	/**
-	 * Устанавливает ключевые слова страницы
-	 * @param string $keywords Ключевые слова
-	 */
-    public function setPageKeywords($keywords){
-        $this->metakeys = $keywords; return $this;
     }
 
-	public function setPageKeywordsItem($item){
-        $this->metakeys_item= $item; return $this;
-	}
+    public function setPageTitleItem($item){
+        $this->title_item = $item; return $this;
+    }
 
-	/**
-	 * Устанавливает описание страницы
-	 * @param string $description Описание
-	 */
+    public function setFrontPageTitle($pagetitle){
+        $this->title = $pagetitle; return $this;
+    }
+
+    /**
+     * Устанавливает ключевые слова и описание страницы
+     * @param string $keywords Ключевые слова
+     * @param string $description Описание
+     */
+    public function setMeta($keywords, $description) {
+        $this->metakeys = $keywords;
+        $this->metadesc = $description;
+        return $this;
+    }
+
+    /**
+     * Устанавливает ключевые слова страницы
+     * @param string $keywords Ключевые слова
+     */
+    public function setPageKeywords($keywords) {
+        $this->metakeys = $keywords;
+        return $this;
+    }
+
+    public function setPageKeywordsItem($item) {
+        $this->metakeys_item = $item;
+        return $this;
+    }
+
+    /**
+     * Устанавливает описание страницы
+     * @param string $description Описание
+     */
     public function setPageDescription($description){
         $this->metadesc = $description; return $this;
     }
 
-	public function setPageDescriptionItem($item){
+    public function setPageDescriptionItem($item){
         $this->metadesc_item= $item; return $this;
-	}
+    }
 
-	public function setPagePatternDescription($item, $default = 'description'){
+    public function setPagePatternDescription($item, $default = 'description') {
 
         if (!empty($this->controller->options['tag_desc'])) {
             $this->setPageDescription(string_replace_keys_values_extended($this->controller->options['tag_desc'], $item));
@@ -958,8 +989,7 @@ class cmsTemplate {
         }
 
         return $this;
-
-	}
+    }
 
 // ========================================================================== //
 // ========================================================================== //
@@ -1119,17 +1149,17 @@ class cmsTemplate {
      * @param string $tag
      * @param boolean $is_include_once
      */
-	public function addHead($tag, $is_include_once = true) {
+    public function addHead($tag, $is_include_once = true) {
         if($is_include_once){
-        	$hash = md5($tag);
+            $hash = md5($tag);
         } else {
             $hash = count($this->head);
         }
-		$this->head[$hash] = $tag;
+        $this->head[$hash] = $tag;
         return $this;
-	}
+    }
 
-	public function addBottom($tag, $request = false){
+    public function addBottom($tag, $request = false){
         if(!$request){ $request = cmsCore::getInstance()->request; }
         if($request->isAjax()){
             echo $tag;
@@ -1137,7 +1167,7 @@ class cmsTemplate {
             $this->bottom[] = $tag;
         }
         return $this;
-	}
+    }
 
     public function getTemplateFilePath($path, $with_inheritance = false) {
         if($with_inheritance){
@@ -1232,7 +1262,7 @@ class cmsTemplate {
      * @param boolean $allow_merge Использовать в объединении
      * @return boolean
      */
-	public function addCSS($file, $allow_merge = true) {
+    public function addCSS($file, $allow_merge = true) {
 
         if (!$file) { return false; }
 
@@ -1267,7 +1297,7 @@ class cmsTemplate {
      * @param boolean $at_begin Поместить в самое начало?
      * @return boolean
      */
-	public function addMainJS($file, $at_begin = false) {
+    public function addMainJS($file, $at_begin = false) {
 
         if (!$file) { return false; }
 
@@ -1311,7 +1341,7 @@ class cmsTemplate {
      * @param boolean $allow_merge Использовать в объединении
      * @return boolean
      */
-	public function addJS($file, $comment = '', $allow_merge = true) {
+    public function addJS($file, $comment = '', $allow_merge = true) {
 
         if (!$file) { return false; }
 
@@ -1616,7 +1646,7 @@ class cmsTemplate {
         }
 
         return true;
-	}
+    }
 
     public function insertCSS($file){
 
@@ -2382,12 +2412,12 @@ class cmsTemplate {
     /**
      * Формирует HTML код шаблона и возвращает его
      * в виде строки
-	 *
+     *
      * @param string $tpl_file Название файла шаблона
      * @param array $data Массив параметров, передаваемых в шаблон
      * @return string
      */
-	public function getRenderedChild($tpl_file, $data = []) {
+    public function getRenderedChild($tpl_file, $data = []) {
 
         ob_start();
 

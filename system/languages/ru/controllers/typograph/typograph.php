@@ -1,0 +1,26 @@
+<?php
+define('LANG_TYPOGRAPH_CONTROLLER', 'Типограф');
+define('LANG_TYP_PRESETS', 'Пресеты типографа');
+define('LANG_TYP_PRESET_TITLE', 'Название пресета');
+define('LANG_HELP_URL_COM_TYPOGRAPH', 'https://docs.instantcms.ru/manual/components/typograph');
+define('LANG_TYP_PRESET_DELETE_CONFIRM', 'Удалить пресет "{title}"?');
+define('LANG_TYP_ATTR_TAG', 'Атрибуты для тега &lt;%s&gt;');
+define('LANG_TYP_TAG_CALLBACK', 'Колбэк тега');
+define('LANG_TYP_TAG_CALLBACK_HINT', 'Введите контроллер и метод колбэка через черту, например typograph|parseYouTubeVideo');
+define('LANG_TYP_ADD_ATTR', 'Добавить атрибут');
+define('LANG_TYP_ATTR_TYPE', 'Тип атрибута');
+define('LANG_TYP_DOMAINS', 'Список доменов');
+define('LANG_TYP_ARRAY', 'Список значений');
+define('LANG_TYP_PATH', 'Путь к ресурсу');
+define('LANG_TYP_ATTR_NAME', 'Имя атрибута');
+define('LANG_TYP_ATTR_PARAMS', 'Возможные значения атрибута, каждый с новой строки.');
+define('LANG_TYP_IS_AUTO_BR', 'Автоматический перенос строк');
+define('LANG_TYP_IS_AUTO_LINK_MODE', 'Автоматически определять ссылки');
+define('LANG_TYP_BUILD_REDIRECT_LINK', 'Внешние ссылки через редирект');
+define('LANG_TYP_BUILD_SMILES', 'Преобразовывать символы смайлов в gif изображения');
+define('LANG_TYP_BUILD_SMILES_HINT', 'Например :smile: :laugh: :-P  :) и т.п.');
+define('LANG_TYP_IS_PROCESS_CALLBACK', 'Включить обработку тегов заданными колбэками');
+define('LANG_TYP_AUTOREPLACE', 'Автозамена');
+define('LANG_TYP_AUTOREPLACE_FROM', 'Что меняем');
+define('LANG_TYP_AUTOREPLACE_TO', 'На что меняем');
+define('LANG_TYP_ALLOWED_TAGS', 'Разрешённые HTML теги');

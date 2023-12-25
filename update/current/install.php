@@ -56,6 +56,8 @@ function install_package(){
         }
     }
 
+    save_controller_options(['comments', 'messages', 'photos', 'wall']);
+
     //compile_scss_if_necessary();
 
     return true;

@@ -82,7 +82,7 @@ class modelContent extends cmsModel {
             $this->orderBy('ordering');
         }
 
-        return $this->get('content_types', [$this, 'contentTypesCallback']);
+        return $this->get('content_types', [$this, 'contentTypesCallback']) ?: [];
     }
 
     private function makeContentTypeLabels($labels) {

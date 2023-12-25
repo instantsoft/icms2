@@ -7,70 +7,70 @@ class actionCommentsSubmit extends cmsAction {
     /**
      * @var array Описание правил валидации входных данных
      */
-    public $request_params = array(
-        'tc' => array(
+    public $request_params = [
+        'tc' => [
             'default' => '',
-            'rules'   => array(
-                array('required'),
-                array('sysname'),
-                array('max_length', 32)
-            )
-        ),
-        'ts' => array(
+            'rules'   => [
+                ['required'],
+                ['sysname'],
+                ['max_length', 32]
+            ]
+        ],
+        'ts' => [
             'default' => '',
-            'rules'   => array(
-                array('required'),
-                array('sysname'),
-                array('max_length', 32)
-            )
-        ),
-        'ti' => array(
+            'rules'   => [
+                ['required'],
+                ['sysname'],
+                ['max_length', 32]
+            ]
+        ],
+        'ti' => [
             'default' => 0,
-            'rules'   => array(
-                array('required'),
-                array('digits')
-            )
-        ),
-        'parent_id' => array(
+            'rules'   => [
+                ['required'],
+                ['digits']
+            ]
+        ],
+        'parent_id' => [
             'default' => 0,
-            'rules'   => array(
-                array('digits')
-            )
-        ),
-        'tud' => array(
+            'rules'   => [
+                ['digits']
+            ]
+        ],
+        'tud' => [
             'default' => 0,
-            'rules'   => array(
-                array('digits')
-            )
-        ),
-        'id' => array(
+            'rules'   => [
+                ['digits']
+            ]
+        ],
+        'id' => [
             'default' => 0,
-            'rules'   => array(
-                array('digits')
-            )
-        ),
-        'author_email' => array(
+            'rules'   => [
+                ['digits']
+            ]
+        ],
+        'author_email' => [
             'default' => '',
-            'rules'   => array(
-                array('email'),
-                array('max_length', 100)
-            )
-        ),
-        'author_name' => array(
+            'rules'   => [
+                ['email'],
+                ['max_length', 100]
+            ]
+        ],
+        'author_name' => [
             'default' => '',
-            'rules'   => array(
-                array('localealphanumeric'),
-                array('max_length', 100)
-            )
-        ),
-        'action' => array(
+            'rules'   => [
+                ['localealphanumeric'],
+                ['max_length', 100]
+            ]
+        ],
+        'action' => [
             'default' => '',
-            'rules'   => array(
-                array('required'),
-                array('array_key', array('add' => 'add', 'preview' => 'preview', 'update' => 'update'))
-            )
-        )
-    );
+            'rules'   => [
+                ['required'],
+                ['array_key', ['add' => 'add', 'preview' => 'preview', 'update' => 'update']]
+            ]
+        ]
+    ];
 
     public function run() {
 
@@ -109,21 +109,33 @@ class actionCommentsSubmit extends cmsAction {
             ]);
         }
 
+        $typograph_id = $this->options['typograph_id'] ?? 1;
+
         $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
             'editor'  => $this->options['editor'],
             'presets' => $this->options['editor_presets']
         ]);
 
-        // Типографируем текст
+        // Типографируем текст для вывода
         $this->content_html = cmsEventsManager::hook('html_filter', [
             'text'         => $this->content,
-            'is_auto_br'   => (!$editor_params['editor'] || $editor_params['editor'] == 'markitup'),
-            'build_smiles' => $editor_params['editor'] == 'markitup'
+            'typograph_id' => $typograph_id,
+            'is_auto_br'   => !$editor_params['editor'] ? true : null
+        ]);
+
+        // Типографируем исходный текст без колбэков
+        $this->content = cmsEventsManager::hook('html_filter', [
+            'text'         => $this->content,
+            'is_process_callback' => false,
+            'typograph_id' => $typograph_id,
+            'is_auto_br'   => false
         ]);
 
         // Если редактор не указан, то это textarea, вырезаем все теги
         if (!$editor_params['editor']) {
-            $this->content_html = strip_tags($this->content_html, '<br>');
+
+            $this->content_html = trim(strip_tags($this->content_html, '<br>'));
+            $this->content = strip_tags($this->content, '<br>');
         }
 
         if (!$this->content_html) {

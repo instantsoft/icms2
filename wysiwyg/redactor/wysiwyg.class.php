@@ -122,6 +122,7 @@ class cmsWysiwygRedactor {
             return false;
         }
 
+        $template->addJSFromContext('wysiwyg/redactor/files/htmlsanitizer.js');
         $template->addJSFromContext('wysiwyg/redactor/files/redactor.min.js');
         $template->addTplJSNameFromContext('files');
 

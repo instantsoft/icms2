@@ -110,7 +110,7 @@ class geo extends cmsFrontend {
         }
 
         if ($items) {
-            $items = ['0' => $select_text] + $items;
+            $items = ['' => $select_text] + $items;
         }
 
         foreach ($items as $id => $name) {

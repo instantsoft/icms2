@@ -104,13 +104,13 @@ class actionMessagesSend extends cmsAction {
         // Типографируем текст
         $content_html = cmsEventsManager::hook('html_filter', [
             'text'         => $content,
-            'is_auto_br'   => (!$editor_params['editor'] || $editor_params['editor'] == 'markitup'),
-            'build_smiles' => $editor_params['editor'] == 'markitup'
+            'typograph_id' => ($this->options['typograph_id'] ?? 1),
+            'is_auto_br'   => !$editor_params['editor'] ? true : null
         ]);
 
         // Если редактор не указан, то это textarea, вырезаем все теги
         if(!$editor_params['editor']){
-            $content_html = strip_tags($content_html, '<br>');
+            $content_html = trim(strip_tags($content_html, '<br>'));
         }
 
         if (!$content_html) {

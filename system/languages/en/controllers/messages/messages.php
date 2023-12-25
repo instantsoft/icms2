@@ -36,6 +36,7 @@
     define('LANG_PM_CLEAR_NOTICE',          'Clear all notifications');
     define('LANG_PM_CLEAR_NOTICE_CONFIRM',  'Really clear all notifications?');
     define('LANG_PM_PMAILING',              'Mass send messages');
+    define('LANG_PM_PMAILING_TYPOGRAPH',    'The message will be processed by the default typograph preset');
     define('LANG_PM_PMAILING_GROUPS',       'User groups for mailing');
     define('LANG_PM_PMAILING_TYPE',         'How to send a message');
     define('LANG_PM_PMAILING_TYPE_NOTIFY',  'As notification');

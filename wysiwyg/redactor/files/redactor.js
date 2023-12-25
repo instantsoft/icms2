@@ -792,41 +792,7 @@
 		},
         sanitizeHTML:  function(htmlStr)
 		{
-            if(htmlStr.length === 0){
-                return htmlStr;
-            }
-            function stringToHTML () {
-                let parser = new DOMParser();
-                let doc = parser.parseFromString(htmlStr, 'text/html');
-                return doc.body;
-            }
-            function clean (html) {
-                let nodes = html.children;
-                for (let node of nodes) {
-                    removeAttributes(node);
-                    clean(node);
-                }
-            }
-            function removeAttributes (elem) {
-                let atts = elem.attributes;
-                for (let {name, value} of atts) {
-                    if (!isPossiblyDangerous(name, value)) { continue };
-                    elem.removeAttribute(name);
-                }
-
-            }
-            function isPossiblyDangerous (name, value) {
-                let val = value.replace(/\s+/g, '').toLowerCase();
-                if (['src', 'href', 'xlink:href'].includes(name)) {
-                    if (val.includes('javascript:') || val.includes('data:text/html')) { return true; }
-                }
-                if (name.startsWith('on')) { return true; }
-            }
-            let html = stringToHTML();
-
-            clean(html);
-
-            return html.innerHTML;
+            return HtmlSanitizer.SanitizeHtml(htmlStr);
         },
 		setCodeIframe: function(html)
 		{
@@ -974,6 +940,7 @@
 		syncClean: function(html)
 		{
 			if (!this.opts.fullpage) html = this.cleanStripTags(html);
+            html = this.sanitizeHTML(html);
 			html = $.trim(html);
 			html = this.placeholderRemoveFromCode(html);
 			html = html.replace(/&#x200b;/gi, '');
@@ -5968,9 +5935,9 @@
 			this.selectionRestore();
 
 			var current = this.getBlock() || this.getCurrent();
-
-			if (current) $(current).after(data)
-			else this.insertHtmlAdvanced(data, false);
+            data = this.sanitizeHTML(data);
+			if (current) { $(current).after(data); }
+            else { this.insertHtmlAdvanced(data, false); }
 
 			this.sync();
 			this.modalClose();

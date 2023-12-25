@@ -32,6 +32,7 @@
     define('LANG_PM_CLEAR_NOTICE',          'Очистить все уведомления');
     define('LANG_PM_CLEAR_NOTICE_CONFIRM',  'Очистить все уведомления, уверены?');
     define('LANG_PM_PMAILING',              'Массовая рассылка');
+    define('LANG_PM_PMAILING_TYPOGRAPH',    'Сообщение будет обработано типографом по умолчанию');
     define('LANG_PM_PMAILING_GROUPS',       'Группы пользователей для рассылки');
     define('LANG_PM_PMAILING_TYPE',         'Как отправлять сообщение');
     define('LANG_PM_REALTIME_MODE',         'Режим реального времени');

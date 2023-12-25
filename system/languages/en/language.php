@@ -93,6 +93,7 @@
 
     //PARSERS
     define('LANG_PARSER_TEMPLATE',           'Field template');
+    define('LANG_PARSER_FIELDSGROUP',        'Field group');
     define('LANG_PARSER_TEMPLATE_HINT',	     'A file in the <b>%s</b> directory of your template, starting with <b>%s</b>');
     define('LANG_PARSER_PREFIX',             'Prefix');
     define('LANG_PARSER_LIST_WHERE', 'From where to form the list');
@@ -156,6 +157,7 @@
     define('LANG_PARSER_HTML',               'HTML text');
     define('LANG_PARSER_HTML_EDITOR',        'WYSIWYG editor');
     define('LANG_PARSER_HTML_EDITOR_GR',     'WYSIWYG editors for groups');
+    define('LANG_PARSER_TYPOGRAPH',          'Typograph preset');
     define('LANG_PARSER_HTML_FILTERING',     'Sanitize input');
     define('LANG_PARSER_PARSE_PATTERNS',     'Process special templates');
     define('LANG_PARSER_PARSE_PATTERNS_HINT', 'Use the entry fields by inserting their names in curly braces. For example, for content types: <strong>{title}</strong>, <strong>{category}</strong> etc. You can use the processing of values, more in <a target="_blank" href="https://docs.instantcms.ru/en/manual/settings/seo-patterns">documentation</a>');

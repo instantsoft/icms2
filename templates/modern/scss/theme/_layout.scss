@@ -3,9 +3,6 @@
     color: $white;
     text-shadow: none;
 }
-body, html {
-    scroll-behavior: smooth;
-}
 .icms-header {
     &__top {
         background-color: darken($header-bg, 10%);

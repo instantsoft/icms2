@@ -68,6 +68,20 @@ class fieldHtml extends cmsFormField {
                 'title'           => LANG_PARSER_HTML_FILTERING,
                 'extended_option' => true
             ]),
+            new fieldList('typograph_id', [
+                'title'     => LANG_PARSER_TYPOGRAPH,
+                'generator' => function ($item) {
+                    $items   = [];
+                    $presets = (new cmsModel())->get('typograph_presets') ?: [];
+                    foreach ($presets as $preset) {
+                        $items[$preset['id']] = $preset['title'];
+                    }
+                    return $items;
+                },
+                'rules' => [
+                    ['required']
+                ]
+            ]),
             new fieldCheckbox('parse_patterns', [
                 'title' => LANG_PARSER_PARSE_PATTERNS,
                 'hint'  => LANG_PARSER_PARSE_PATTERNS_HINT
@@ -150,8 +164,8 @@ class fieldHtml extends cmsFormField {
         if ($this->getOption('is_html_filter')){
             $value = cmsEventsManager::hook('html_filter', [
                 'text'                => $value,
-                'is_auto_br'          => $this->getOption('editor') === 'markitup',
-                'build_smiles'        => $this->getOption('editor') === 'markitup', // пока что только так
+                'typograph_id'        => $this->getOption('typograph_id'),
+                // Эта опция есть в пресете, перезапишет
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ]);
             $value = string_replace_svg_icons($value);
@@ -186,8 +200,7 @@ class fieldHtml extends cmsFormField {
         } else if ($this->getOption('is_html_filter')){
             $value = cmsEventsManager::hook('html_filter', [
                 'text'                => $value,
-                'is_auto_br'          => false,
-                'build_smiles'        => $this->getOption('editor') === 'markitup', // пока что только так
+                'typograph_id'        => $this->getOption('typograph_id'),
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ]);
         }
@@ -205,13 +218,14 @@ class fieldHtml extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value = null) {
 
-        if($this->getProperty('store_via_html_filter')){
+        // Сохраняем через типограф если поле в типе контента или передана опция
+        if($this->getProperty('store_via_html_filter') || ($this->getOption('is_html_filter') && $this->field_id)){
 
             $value = cmsEventsManager::hook('html_filter', [
                 'text'                => $value,
-                'is_auto_br'          => false,
-                'build_smiles'        => $this->getOption('editor') === 'markitup',
-                'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
+                // Отключаем обработку колбэков
+                'is_process_callback' => false,
+                'typograph_id'        => $this->getOption('typograph_id')
             ]);
         }
 

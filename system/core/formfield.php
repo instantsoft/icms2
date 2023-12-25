@@ -21,6 +21,11 @@ class cmsFormField {
      */
     public $element_name = '';
     /**
+     * Класс CSS для родительского элемента поля
+     * @var string
+     */
+    public $css_class = '';
+    /**
      * Тип фильтрации для поля
      * true, false, int, str или date
      * @var string | boolean
@@ -216,6 +221,12 @@ class cmsFormField {
     protected $use_language = false;
 
     /**
+     * Последняя ошибка поля
+     * @var mixed
+     */
+    protected $last_error;
+
+    /**
      * @param string $name Имя поля
      * @param array $options Массив опций
      */
@@ -237,6 +248,26 @@ class cmsFormField {
         if ($options) {
             $this->setOptions($options);
         }
+    }
+
+    /**
+     * Возвращает последнюю ошибку поля
+     *
+     * @return mixed
+     */
+    public function getError() {
+        return $this->last_error;
+    }
+
+    /**
+     * Устанавливает ошибку поля
+     *
+     * @param mixed $last_error
+     * @return $last_error
+     */
+    public function setError($last_error) {
+        $this->last_error = $last_error;
+        return $last_error;
     }
 
     /**

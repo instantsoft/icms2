@@ -225,8 +225,8 @@ class cmsForm {
                 $is_array = strpos($name, ':');
 
                 $field->classes = [
-                    'field',
-                    'ft_'.strtolower(substr(get_class($field), 5))
+                    'field' . ($field->css_class ? ' ' . $field->css_class : ''),
+                    'ft_' . strtolower(substr(get_class($field), 5))
                 ];
 
                 if(array_search(['required'], $field->rules) !== false){ $field->classes[] = 'reguired_field'; }
@@ -872,16 +872,16 @@ class cmsForm {
      *                       Если ошибки найдены, возвращает их массив
      *                       в формате [имя_поля => текст_ошибки]
      */
-    public function validate($controller, $data, $is_check_csrf = true){
+    public function validate($controller, $data, $is_check_csrf = true) {
 
         $errors = [];
 
         //
         // Проверяем CSRF-token
         //
-        if ($is_check_csrf){
+        if ($is_check_csrf) {
             $csrf_token = $controller->request->get('csrf_token', '');
-            if (!self::validateCSRFToken( $csrf_token )){
+            if (!self::validateCSRFToken($csrf_token)) {
                 return ['csrf_token' => ERR_VALIDATE_INVALID];
             }
         }
@@ -889,26 +889,36 @@ class cmsForm {
         //
         // Перебираем поля формы
         //
-        foreach($this->getFormStructure($data) as $fieldset){
+        foreach ($this->getFormStructure($data) as $fieldset) {
 
-            if (!isset($fieldset['childs'])) { continue; }
+            if (!isset($fieldset['childs'])) {
+                continue;
+            }
 
-            foreach($fieldset['childs'] as $field){
+            foreach ($fieldset['childs'] as $field) {
 
-                if(!is_array($field)){ $_field = [$field]; } else { $_field = $field; }
+                if (!is_array($field)) {
+                    $_field = [$field];
+                } else {
+                    $_field = $field;
+                }
 
                 foreach ($_field as $field) {
 
                     $name = $field->getName();
 
                     // если поле отключено, пропускаем поле
-                    if (in_array($name, $this->disabled_fields)){ continue; }
+                    if (in_array($name, $this->disabled_fields)) {
+                        continue;
+                    }
 
                     // правила
                     $rules = $field->getRules();
 
                     // если нет правил, пропускаем поле
-                    if (!$rules){ continue; }
+                    if (!$rules) {
+                        continue;
+                    }
 
                     // проверяем является ли поле элементом массива
                     $is_array = strpos($name, ':');
@@ -916,11 +926,11 @@ class cmsForm {
                     //
                     // получаем значение поля из массива данных
                     //
-                    if ($is_array === false){
+                    if ($is_array === false) {
                         $value = array_key_exists($name, $data) ? $data[$name] : '';
                     }
 
-                    if ($is_array !== false){
+                    if ($is_array !== false) {
                         $value = array_value_recursive($name, $data);
                     }
 
@@ -928,17 +938,19 @@ class cmsForm {
                     // перебираем правила для поля
                     // и проверяем каждое из них
                     //
-                    foreach($rules as $rule){
+                    foreach ($rules as $rule) {
 
-                        if (!$rule) { continue; }
+                        if (!$rule) {
+                            continue;
+                        }
 
                         // если правило - это колбэк
-                        if (is_callable($rule[0]) && ($rule[0] instanceof Closure)){
+                        if (is_callable($rule[0]) && ($rule[0] instanceof Closure)) {
 
                             $result = $rule[0]($controller, $data, $value);
 
                             if ($result !== true) {
-                                $errors[$name] = $result;
+                                $errors[$name] = $field->setError($result);
                                 break;
                             }
 
@@ -962,7 +974,7 @@ class cmsForm {
                         // в классе формы, в классе поля, в контроллерах
                         if (method_exists($this, $validate_function)) {
                             $result = call_user_func_array([$this, $validate_function], $rule);
-                        } elseif (method_exists($field, $validate_function)){
+                        } elseif (method_exists($field, $validate_function)) {
                             $result = call_user_func_array([$field, $validate_function], $rule);
                         } else {
                             $result = call_user_func_array([$controller, $validate_function], $rule);
@@ -971,15 +983,12 @@ class cmsForm {
                         // если получилось false, то дальше не проверяем, т.к.
                         // ошибка уже найдена
                         if ($result !== true) {
-                            $errors[$name] = $result;
+                            $errors[$name] = $field->setError($result);
                             break;
                         }
                     }
-
                 }
-
             }
-
         }
 
         return $errors;

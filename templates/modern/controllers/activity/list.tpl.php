@@ -85,7 +85,7 @@
                         <?php html_svg_icon('solid', 'ellipsis-v'); ?>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item text-danger" href="<?php echo $this->href_to('delete', $item['id']); ?>">
+                        <a class="dropdown-item text-danger" href="<?php echo $this->href_to('delete', $item['id'], ['csrf_token' => cmsForm::getCSRFToken()]); ?>">
                             <?php html_svg_icon('solid', 'trash'); ?>
                             <?php html(LANG_DELETE); ?>
                         </a>

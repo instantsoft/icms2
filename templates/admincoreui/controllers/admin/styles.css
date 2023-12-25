@@ -563,6 +563,7 @@ form .child_field{margin-left: 20px}
 .alert .card.form-tabs {
     border: none;
     background-color: transparent;
+    box-shadow: none;
 }
 .alert .card.form-tabs .card-body {
     padding: 0;

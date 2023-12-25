@@ -411,6 +411,9 @@
     define('LANG_CP_WIDGETS_LAYOUT_ISUCCESS',   'Schema imported successfully');
     define('LANG_CP_WIDGETS_ADD_ROW_P',         'Add nested row');
     define('LANG_CP_WIDGETS_ROW_NO_GUTTERS',    'No gutters');
+    define('LANG_CP_WIDGETS_ROW_NESTED_POSITION', 'Output position');
+    define('LANG_CP_WIDGETS_ROW_NESTED_POSITION1', 'At first');
+    define('LANG_CP_WIDGETS_ROW_NESTED_POSITION2', 'At the end');
     define('LANG_CP_WIDGETS_ROW_CONT',          'Row container');
     define('LANG_CP_WIDGETS_ROW_CONT_TAG',      'Row container tag');
     define('LANG_CP_WIDGETS_ROW_CONT_CSS',      'Row container CSS class');

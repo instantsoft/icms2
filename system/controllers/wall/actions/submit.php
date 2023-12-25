@@ -61,13 +61,22 @@ class actionWallSubmit extends cmsAction {
         // Типографируем текст
         $content_html = cmsEventsManager::hook('html_filter', [
             'text'         => $content,
-            'is_auto_br'   => (!$editor_params['editor'] || $editor_params['editor'] == 'markitup'),
-            'build_smiles' => $editor_params['editor'] == 'markitup'
+            'typograph_id' => $this->options['typograph_id'],
+            'is_auto_br'   => !$editor_params['editor'] ? true : null
+        ]);
+
+        // Типографируем исходный текст без колбэков
+        $content = cmsEventsManager::hook('html_filter', [
+            'text'         => $content,
+            'is_process_callback' => false,
+            'typograph_id' => $this->options['typograph_id'],
+            'is_auto_br'   => false
         ]);
 
         // Если редактор не указан, то это textarea, вырезаем все теги
         if (!$editor_params['editor']) {
             $content_html = strip_tags($content_html, '<br>');
+            $content = strip_tags($this->content, '<br>');
         }
 
         if ($this->validate_required($content_html) !== true) {
@@ -77,7 +86,7 @@ class actionWallSubmit extends cmsAction {
         //
         // Превью записи
         //
-        if ($action == 'preview') {
+        if ($action === 'preview') {
 
             return $this->cms_template->renderJSON([
                 'error' => false,
@@ -88,7 +97,7 @@ class actionWallSubmit extends cmsAction {
         //
         // Редактирование записи
         //
-        if ($action == 'update') {
+        if ($action === 'update') {
 
             $entry = $this->model->getEntry($entry_id);
 
@@ -106,7 +115,7 @@ class actionWallSubmit extends cmsAction {
         //
         // Добавление записи
         //
-        if ($action == 'add') {
+        if ($action === 'add') {
 
             // проверяем права на добавление
             if (!$parent_id) {

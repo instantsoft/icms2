@@ -84,6 +84,22 @@ class formMessagesOptions extends cmsForm {
                         },
                         'visible_depend' => ['is_enable_pm' => ['show' => ['1']]]
                     ]),
+                    new fieldList('typograph_id', [
+                        'title'     => LANG_PARSER_TYPOGRAPH,
+                        'default'   => 2,
+                        'generator' => function ($item) {
+                            $items   = [];
+                            $presets = (new cmsModel())->get('typograph_presets') ?: [];
+                            foreach ($presets as $preset) {
+                                $items[$preset['id']] = $preset['title'];
+                            }
+                            return $items;
+                        },
+                        'rules' => [
+                            ['required']
+                        ],
+                        'visible_depend' => ['is_enable_pm' => ['show' => ['1']]]
+                    ]),
                     new fieldNumber('limit', [
                         'title'          => LANG_PM_LIMIT,
                         'default'        => 5,

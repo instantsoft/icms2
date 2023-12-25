@@ -1,6 +1,6 @@
 <?php
 /*************************************************************************************
- * html5.php
+ * html.php
  * ---------------
  * Author: Nigel McNie (nigel@geshi.org)
  * Copyright: (c) 2004 Nigel McNie (http://qbnz.com/highlighter/)
@@ -50,7 +50,7 @@
  ************************************************************************************/
 
 $language_data = array (
-    'LANG_NAME' => 'HTML5',
+    'LANG_NAME' => 'HTML',
     'COMMENT_SINGLE' => array(),
     'COMMENT_MULTI' => array(),
     'CASE_KEYWORDS' => GESHI_CAPS_NO_CHANGE,

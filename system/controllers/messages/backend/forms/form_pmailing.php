@@ -4,45 +4,46 @@ class formMessagesPmailing extends cmsForm {
 
     public function init() {
 
-        return array(
-            array(
+        return [
+            [
                 'type'   => 'fieldset',
                 'title'  => LANG_PM_PMAILING_GROUPS,
-                'childs' => array(
-                    new fieldListGroups('groups', array(
+                'childs' => [
+                    new fieldListGroups('groups', [
                         'show_all' => true
-                    ))
-                )
-            ),
-            array(
+                    ])
+                ]
+            ],
+            [
                 'type'   => 'fieldset',
-                'childs' => array(
-                    new fieldHtml('message_text', array(
-                        'title' => LANG_MESSAGE,
+                'childs' => [
+                    new fieldHtml('message_text', [
+                        'title'   => LANG_MESSAGE,
+                        'hint'    => LANG_PM_PMAILING_TYPOGRAPH,
                         'options' => ['editor' => 'ace'],
-                        'rules' => array(
-                            array('required')
-                        )
-                    )),
-                    new fieldList('type', array(
+                        'rules'   => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldList('type', [
                         'title' => LANG_PM_PMAILING_TYPE,
-                        'items' => array(
+                        'items' => [
                             'notify'  => LANG_PM_PMAILING_TYPE_NOTIFY,
                             'message' => LANG_PM_PMAILING_TYPE_MESSAGE,
-                            'email' => LANG_PM_PMAILING_TYPE_EMAIL
-                        )
-                    )),
-                    new fieldString('sender_user_email', array(
+                            'email'   => LANG_PM_PMAILING_TYPE_EMAIL
+                        ]
+                    ]),
+                    new fieldString('sender_user_email', [
                         'title'        => LANG_PM_SENDER_USER_ID,
                         'hint'         => LANG_PM_SENDER_USER_ID_HINT,
-                        'autocomplete' => array('url' => href_to('admin', 'users', 'autocomplete')),
-                        'rules'        => array(
-                            array('email')
-                        )
-                    ))
-                )
-            )
-        );
+                        'autocomplete' => ['url' => href_to('admin', 'users', 'autocomplete')],
+                        'rules'        => [
+                            ['email']
+                        ]
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

@@ -1,12 +1,16 @@
 <?php
 
-class actionActivityDelete extends cmsAction{
+class actionActivityDelete extends cmsAction {
 
-    public function run($id = false){
+    public function run($id) {
 
-        if (!$id) { cmsCore::error404(); }
+        if (!cmsUser::isAllowed('activity', 'delete')) {
+            return cmsCore::error404();
+        }
 
-        if (!cmsUser::isAllowed('activity', 'delete')){ cmsCore::error404(); }
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
 
         $this->model->deleteEntryById($id);
 
@@ -14,8 +18,7 @@ class actionActivityDelete extends cmsAction{
 
         cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
-        $this->redirectBack();
-
+        return $this->redirectBack();
     }
 
 }

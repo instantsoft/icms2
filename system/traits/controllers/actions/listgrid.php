@@ -2,7 +2,7 @@
 
 namespace icms\traits\controllers\actions;
 
-use cmsUser, cmsGrid, cmsForm;
+use cmsUser, cmsGrid, cmsForm, cmsCore;
 
 /**
  * Трейт для экшена вывода грида

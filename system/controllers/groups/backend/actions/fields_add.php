@@ -10,7 +10,7 @@ class actionGroupsFieldsAdd extends cmsAction {
 
         $this->form_name   = 'field';
         $this->tpl_name    = 'backend/field';
-        $this->success_url = $this->cms_template->href_to('fields');
+        $this->success_url = $this->cms_template->href_to('');
 
         $this->form_hooks = ['group_field_form'];
 

@@ -113,11 +113,11 @@ class fieldCity extends cmsFormField {
 
         if ($location_type === 'countries') {
 
-            $items = ['0' => ''] + $model->getCountries();
+            $items = ['' => ''] + $model->getCountries();
 
         } elseif (!$location_group && $location_type === 'regions') {
 
-            $items = ['0' => ''] + $model->getRegions();
+            $items = ['' => ''] + $model->getRegions();
         }
 
         return $items;

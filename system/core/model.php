@@ -12,16 +12,12 @@ class cmsModel {
     /**
      * Типы MySQL JOIN
      */
-	const LEFT_JOIN                = 'LEFT JOIN';
+    const LEFT_JOIN                = 'LEFT JOIN';
     const RIGHT_JOIN               = 'RIGHT JOIN';
     const INNER_JOIN               = 'INNER JOIN';
     const STRAIGHT_JOIN            = 'STRAIGHT_JOIN';
-    const LEFT_OUTER_JOIN          = 'LEFT OUTER JOIN';
-    const RIGHT_OUTER_JOIN         = 'RIGHT OUTER JOIN';
     const NATURAL_LEFT_JOIN        = 'NATURAL LEFT JOIN';
-    const NATURAL_LEFT_OUTER_JOIN  = 'NATURAL LEFT OUTER JOIN';
     const NATURAL_RIGHT_JOIN       = 'NATURAL RIGHT JOIN';
-    const NATURAL_RIGHT_OUTER_JOIN = 'NATURAL RIGHT OUTER JOIN';
 
     /**
      * Уровни изоляций транзакций
@@ -99,11 +95,11 @@ class cmsModel {
     protected $lang;
     protected $default_lang;
 
-    public function __construct() {
+    public function __construct($db = null) {
 
         $this->name = strtolower(str_replace('model', '', get_called_class()));
 
-        $this->db = cmsCore::getInstance()->db;
+        $this->db = $db ?? cmsCore::getInstance()->db;
 
         $this->lang         = cmsCore::getLanguageName();
         $this->default_lang = cmsConfig::get('language');
@@ -600,9 +596,9 @@ class cmsModel {
         $this->straight_join = '';
         $this->joined_session_online = [];
 
-		if ($this->keep_filters) { return $this; }
+        if ($this->keep_filters) { return $this; }
 
-		$this->filter_on          = false;
+        $this->filter_on          = false;
         $this->where              = '';
         $this->privacy_filtered   = false;
         $this->privacy_filter_value = 0;
@@ -1473,60 +1469,128 @@ class cmsModel {
         return $field_name;
     }
 
-    public function joinQuery($query, $as, $on, $join_type = self::INNER_JOIN){
-        $this->join .= $join_type.' '.$query.' as '.$as.' ON '.$on.PHP_EOL;
-        return $this;
+    /**
+     * Проверяет, присоединена ли была таблица с таким псевдонимом
+     *
+     * @param string $table_name Имя таблицы
+     * @param string $as         Краткий псевдоним
+     * @return boolean
+     */
+    public function isJoined($table_name, $as) {
+        return strpos($this->join, '{#}' . $table_name . ' as ' . $as) !== false;
     }
 
-    public function join($table_name, $as, $on){
-        return $this->joinInner($table_name, $as, $on);
-    }
-
-    public function joinInner($table_name, $as, $on){
-        $this->join .= self::INNER_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
-        return $this;
-    }
-
-    public function joinLeft($table_name, $as, $on){
-        $this->join .= self::LEFT_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
-        return $this;
-    }
-
-    public function joinExcludingLeft($table_name, $as, $right_key, $left_key, $join_where = ''){
-        $this->join .= self::LEFT_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$left_key.'='.$right_key.($join_where ? ' AND '.$join_where : '').PHP_EOL;
-        $this->filter($right_key.' IS NULL');
-        return $this;
-    }
-
-    public function joinRight($table_name, $as, $on){
-        $this->join .= self::RIGHT_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
-        return $this;
-    }
-
-    public function joinExcludingRight($table_name, $as, $right_key, $left_key, $join_where = ''){
-        $this->join .= self::RIGHT_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$left_key.'='.$right_key.($join_where ? ' AND '.$join_where : '').PHP_EOL;
-        $this->filter($left_key.' IS NULL');
-        return $this;
-    }
-
-    public function joinLeftOuter($table_name, $as, $on){
-        $this->join .= self::LEFT_OUTER_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
-        return $this;
-    }
-
-    public function joinRightOuter($table_name, $as, $on){
-        $this->join .= self::RIGHT_OUTER_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
+    /**
+     * Присоединяет результат подзапроса
+     *
+     * @param string $query     Подзапрос
+     * @param string $as        Краткий псевдоним
+     * @param string $on        Условия присоединения
+     * @param string $join_type Тип присоединения
+     * @return \cmsModel
+     */
+    public function joinQuery($query, $as, $on, $join_type = self::INNER_JOIN) {
+        $this->join .= $join_type . ' ' . $query . ' as ' . $as . ' ON ' . $on . PHP_EOL;
         return $this;
     }
 
     /**
-     *  Присоединяет к выборке таблицу пользователей
+     * Простое присоединение (псевдоним joinInner)
      *
-     * @param string $on_field Имя поля основной таблицы, содержащее id пользователя
-     * @param array $user_fields Поля, необходимые для выборки из таблицы пользователей
+     * @param string $table_name Имя таблицы
+     * @param string $as         Краткий псевдоним
+     * @param string $on         Условие связи по полям
+     * @return \cmsModel
+     */
+    public function join($table_name, $as, $on) {
+        return $this->joinInner($table_name, $as, $on);
+    }
+
+    /**
+     * Простое присоединение (затмение)
+     * (данные, которые есть в основной и присоединяемой таблицах)
+     *
+     * @param string $table_name Имя таблицы
+     * @param string $as         Краткий псевдоним
+     * @param string $on         Условие связи по полям
+     * @return \cmsModel
+     */
+    public function joinInner($table_name, $as, $on) {
+        $this->join .= self::INNER_JOIN . ' {#}' . $table_name . ' as ' . $as . ' ON ' . $on . PHP_EOL;
+        return $this;
+    }
+
+    /**
+     * Левостороннее присоединение (полнолуние)
+     *
+     * @param string $table_name Имя таблицы
+     * @param string $as         Краткий псевдоним
+     * @param string $on         Условие связи по полям
+     * @return \cmsModel
+     */
+    public function joinLeft($table_name, $as, $on) {
+        $this->join .= self::LEFT_JOIN . ' {#}' . $table_name . ' as ' . $as . ' ON ' . $on . PHP_EOL;
+        return $this;
+    }
+
+    /**
+     * Левостороннее присоединение, исключая данные справа, которые есть по связи
+     * (полумесяц слева)
+     *
+     * @param string $table_name  Имя таблицы
+     * @param string $as          Краткий псевдоним
+     * @param string $right_key   Имя поля связи присоединяемой таблицы
+     * @param string $left_key    Имя поля связи основной таблицы
+     * @param string $join_where  Дополнительные условия присоединения
+     * @return \cmsModel
+     */
+    public function joinExcludingLeft($table_name, $as, $right_key, $left_key, $join_where = '') {
+        $this->join .= self::LEFT_JOIN . ' {#}' . $table_name . ' as ' . $as .
+                ' ON ' . $left_key . '=' . $right_key . ($join_where ? ' AND ' . $join_where : '') . PHP_EOL;
+        $this->filter($right_key . ' IS NULL');
+        return $this;
+    }
+
+    /**
+     * Правостороннее присоединение (полнолуние в отражении)
+     * Данные будут браться из этой таблицы и сравниваться с основной
+     *
+     * @param string $table_name Имя таблицы
+     * @param string $as         Краткий псевдоним
+     * @param string $on         Условие связи по полям
+     * @return \cmsModel
+     */
+    public function joinRight($table_name, $as, $on) {
+        $this->join .= self::RIGHT_JOIN . ' {#}' . $table_name . ' as ' . $as . ' ON ' . $on . PHP_EOL;
+        return $this;
+    }
+
+    /**
+     * Правостороннее присоединение, исключая данные слева, которые есть по связи
+     * (полумесяц справа)
+     *
+     * @param string $table_name  Имя таблицы
+     * @param string $as          Краткий псевдоним
+     * @param string $right_key   Имя поля связи присоединяемой таблицы
+     * @param string $left_key    Имя поля связи основной таблицы
+     * @param string $join_where  Дополнительные условия присоединения
+     * @return \cmsModel
+     */
+    public function joinExcludingRight($table_name, $as, $right_key, $left_key, $join_where = '') {
+        $this->join .= self::RIGHT_JOIN . ' {#}' . $table_name . ' as ' . $as .
+                ' ON ' . $left_key . '=' . $right_key . ($join_where ? ' AND ' . $join_where : '') . PHP_EOL;
+        $this->filter($left_key . ' IS NULL');
+        return $this;
+    }
+
+    /**
+     * Присоединяет к выборке таблицу пользователей
+     *
+     * @param string $on_field        Имя поля основной таблицы, содержащее id пользователя
+     * @param array $user_fields      Поля, необходимые для выборки из таблицы пользователей
      * @param boolean $join_direction Как присоединять таблицу: left|right|inner
-     * @param string $as Псевдоним присоединяемой таблицы
-     * @return $this
+     * @param string $as              Псевдоним присоединяемой таблицы
+     * @return \cmsModel
      */
     public function joinUser($on_field = 'user_id', $user_fields = [], $join_direction = false, $as = 'u') {
 
@@ -1556,32 +1620,53 @@ class cmsModel {
                 break;
 
             default:
-                $this->join('{users}', $as, $as . '.id = i.' . $on_field);
+                $this->joinInner('{users}', $as, $as . '.id = i.' . $on_field);
                 break;
         }
 
         return $this;
     }
 
-    public function joinUserLeft($on_field='user_id', $user_fields=array()){
-		return $this->joinUser($on_field, $user_fields, 'left');
-	}
+    /**
+     * Присоединяет к выборке таблицу пользователей слева
+     *
+     * @param string $on_field   Имя поля основной таблицы, содержащее id пользователя
+     * @param array $user_fields Поля, необходимые для выборки из таблицы пользователей
+     * @return \cmsModel
+     */
+    public function joinUserLeft($on_field = 'user_id', $user_fields = []) {
+        return $this->joinUser($on_field, $user_fields, 'left');
+    }
 
-	public function joinUserRight($on_field='user_id', $user_fields=array()){
-		return $this->joinUser($on_field, $user_fields, 'right');
-	}
+    /**
+     * Присоединяет к выборке таблицу пользователей справа
+     *
+     * @param string $on_field   Имя поля основной таблицы, содержащее id пользователя
+     * @param array $user_fields Поля, необходимые для выборки из таблицы пользователей
+     * @return \cmsModel
+     */
+    public function joinUserRight($on_field = 'user_id', $user_fields = []) {
+        return $this->joinUser($on_field, $user_fields, 'right');
+    }
 
+    /**
+     * Присоединяет таблицу онлайн пользователей
+     *
+     * @param string $as Псевдоним таблицы пользователей
+     * @return \cmsModel
+     */
     public function joinSessionsOnline($as = 'u') {
 
-        if(!empty($this->joined_session_online[$as])){ return $this; }
+        if (!empty($this->joined_session_online[$as])) {
+            return $this;
+        }
 
-        $this->joinLeft('sessions_online', 'online', 'online.user_id = '.$as.'.id');
-        $this->select('IF(online.date_created IS NOT NULL AND TIMESTAMPDIFF(SECOND, online.date_created, NOW()) <= '.cmsUser::USER_ONLINE_INTERVAL.', 1, 0)', 'is_online');
+        $this->joinLeft('sessions_online', 'online', 'online.user_id = ' . $as . '.id');
+        $this->select('IF(online.date_created IS NOT NULL AND TIMESTAMPDIFF(SECOND, online.date_created, NOW()) <= ' . cmsUser::USER_ONLINE_INTERVAL . ', 1, 0)', 'is_online');
 
         $this->joined_session_online[$as] = true;
 
         return $this;
-
     }
 
     /**
@@ -2320,7 +2405,7 @@ class cmsModel {
      */
     public function increment($table, $field, $step = 1) {
 
-        $step = intval($step);
+        $step = (float)$step;
 
         $sign = $step > 0 ? '+' : '-';
         $step = abs($step);
@@ -2358,10 +2443,10 @@ class cmsModel {
      */
     public function deleteController($name) {
 
-		if(is_numeric($name)){
+        if(is_numeric($name)){
             $controller = $this->getItemById('controllers', $name);
             $name = $controller['name'];
-		}
+        }
 
         $this->filterEqual('controller', $name)->deleteFiltered('{users}_tabs');
         $this->filterEqual('listener', $name)->deleteFiltered('events');

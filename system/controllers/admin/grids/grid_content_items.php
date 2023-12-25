@@ -238,7 +238,7 @@ function grid_content_items($controller, $ctype) {
             'href'    => href_to($ctype['name'], 'trash_put', '{id}') . '?back=' . href_to($controller->name, 'content'),
             'confirm' => LANG_CP_CONTENT_ITEM_BASKET_DELETE_CONFIRM,
             'handler' => function ($row) {
-                return !$row['is_deleted'];
+                return !$row['is_deleted'] && $row['is_approved'];
             }
         ],
         [

@@ -63,7 +63,7 @@
                         }
                     }
 
-                    if ($error){
+                    if ($error && !is_array($error)){
                         $field->classes[] = 'field_error';
                     }
 
@@ -77,7 +77,7 @@
 
                     <?php if (!$field->is_hidden && !$field->getOption('is_hidden')) { ?>
 
-                        <?php if ($error){ ?><div class="error_text"><?php echo $error; ?></div><?php } ?>
+                        <?php if ($error && !is_array($error)){ ?><div class="error_text"><?php echo $error; ?></div><?php } ?>
 
                         <?php echo $field->{$field->display_input}($value); ?>
 

@@ -76,7 +76,7 @@
         <?php if ($form->show_unsave_notice){ ?>
             icms.forms.initUnsaveNotice();
         <?php } ?>
-        icms.forms.initCollapsedFieldset();
+        icms.forms.initCollapsedFieldset('<?php echo $attributes['form_id']; ?>');
         icms.forms.initFormHelpers();
     <?php if (!empty($attributes['is_ajax'])){ ?>
         $('#<?php echo $attributes['form_id']; ?>').on('submit', function (){
