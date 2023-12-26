@@ -37,12 +37,14 @@ function grid_content_items($controller, $ctype) {
         ],
         'order_by'        => 'date_pub',
         'order_to'        => 'desc',
-        'show_id'         => false
+        'show_id'         => true
     ];
 
     $columns = [
         'id' => [
-            'title' => 'id'
+            'title'      => 'id',
+            'switchable' => true,
+            'disable'    => true
         ],
         'title' => [
             'title'  => LANG_TITLE,

@@ -22,7 +22,8 @@ class fieldString extends cmsFormField {
                 ]
             ]),
             new fieldString('placeholder', [
-                'title' => LANG_PARSER_PLACEHOLDER
+                'title' => LANG_PARSER_PLACEHOLDER,
+                'can_multilanguage' => true
             ]),
             new fieldCheckbox('use_inputmask', [
                 'title' => LANG_PARSER_USE_INPUTMASK

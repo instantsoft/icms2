@@ -303,26 +303,26 @@ trait listgrid {
      */
     public function getListItems($ignore_field = false){
 
-        if (!$ignore_field) {
+        $visible_columns = cmsUser::getUPSActual($this->ups_key.'.visible_columns', $this->request->get('visible_columns', []));
 
-            $this->model->setPerPage($this->default_perpage);
+        if ($visible_columns) {
 
-            $visible_columns = cmsUser::getUPSActual($this->ups_key.'.visible_columns', $this->request->get('visible_columns', []));
+            $switchable_columns = $this->grid->getSwitchableColumns();
 
-            if ($visible_columns) {
-
-                $switchable_columns = $this->grid->getSwitchableColumns();
-
-                if ($switchable_columns) {
-                    foreach ($switchable_columns as $name => $column) {
-                        if (!in_array($name, $visible_columns)) {
-                            $this->grid->disableColumn($name);
-                        } else {
-                            $this->grid->enableColumn($name);
-                        }
+            if ($switchable_columns) {
+                foreach ($switchable_columns as $name => $column) {
+                    if (!in_array($name, $visible_columns)) {
+                        $this->grid->disableColumn($name);
+                    } else {
+                        $this->grid->enableColumn($name);
                     }
                 }
             }
+        }
+
+        if (!$ignore_field) {
+
+            $this->model->setPerPage($this->default_perpage);
 
             $filter     = $this->grid->filter;
             $pre_filter = cmsUser::getUPSActual($this->ups_key, $this->request->get('filter', ''));

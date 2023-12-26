@@ -20,7 +20,8 @@ class fieldText extends cmsFormField {
                 'default' => 4096
             ]),
             new fieldString('placeholder', [
-                'title' => LANG_PARSER_PLACEHOLDER
+                'title' => LANG_PARSER_PLACEHOLDER,
+                'can_multilanguage' => true
             ]),
             new fieldCheckbox('show_symbol_count', [
                 'title' => LANG_PARSER_SHOW_SYMBOL_COUNT
