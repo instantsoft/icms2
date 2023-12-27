@@ -11,7 +11,7 @@
 <div id="widget_image_<?php echo $dom_id; ?>"
      class="widget_image_multi"
      data-field_name="<?php echo $name; ?>"
-     data-delete_url="<?php echo $delete_url; ?>">
+     data-delete_url="<?php html($delete_url); ?>">
 
     <div class="data" style="display:none">
         <?php if ($images){ ?>
@@ -61,6 +61,7 @@
 
     <script>
         <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR'); ?>
+        icms.images.delete_url = "<?php html($delete_url); ?>";
         icms.images.createUploader('<?php echo $dom_id; ?>', '<?php echo $upload_url; ?>', <?php echo $max_photos; ?>, '<?php echo sprintf(LANG_PARSER_IMAGE_MAX_COUNT_HINT, html_spellcount($max_photos, LANG_PARSER_IMAGE_SPELL)); ?>');
         <?php if($allow_import_link){ ?>
             $(function(){

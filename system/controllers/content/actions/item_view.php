@@ -82,8 +82,10 @@ class actionContentItemView extends cmsAction {
         }
 
         // Проверяем публикацию
-        if (!$item['is_pub']){
-            if (!$is_moderator && $this->cms_user->id != $item['user_id']){ return cmsCore::error404(); }
+        if ($item['is_pub'] < 1) {
+            if (!$is_moderator && $this->cms_user->id != $item['user_id']) {
+                return cmsCore::error404();
+            }
         }
 
         // Проверяем, что не удалено

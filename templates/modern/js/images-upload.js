@@ -4,9 +4,23 @@ icms.images = (function ($) {
 
     var self = this;
 
+    this.delete_url = '';
+
     this.uploadCallback = null;
     this.removeCallback = null;
     this.allowed_mime = [];
+
+    this.uploaded_imgs = [];
+
+    this.onDocumentReady = function() {
+        $(window).on('beforeunload', function(e) {
+            if (!icms.forms.submitted && self.uploaded_imgs.length > 0) {
+                for (let key in self.uploaded_imgs) {
+                    $.post(self.delete_url, {paths: self.uploaded_imgs[key], csrf_token: icms.forms.getCsrfToken()}, function(result){}, 'json');
+                }
+            }
+        });
+    };
 
     this._onMultiSubmit = function(field_name){
         var widget = $('#widget_image_'+field_name);
@@ -52,6 +66,8 @@ icms.images = (function ($) {
         $('.preview', widget).show().data('paths', image_data);
         $('.loading', widget).hide();
 
+        self.uploaded_imgs.push(image_data);
+
         if (typeof(self.uploadCallback) === 'function'){
             self.uploadCallback(field_name, result);
         }
@@ -83,6 +99,8 @@ icms.images = (function ($) {
             $('.data', widget).append('<input type="hidden" name="'+_input_name+'['+idx+']['+path+']" value="'+result.paths[path].path+'" rel="'+idx+'" />');
             image_data[path] = result.paths[path].path;
         }
+
+        self.uploaded_imgs.push(image_data);
 
         $(preview_block).data('paths', image_data);
         $('img', preview_block).attr('src', preview_img_src);

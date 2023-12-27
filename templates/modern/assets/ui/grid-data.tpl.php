@@ -52,7 +52,7 @@ if(!empty($page_title)) {
                         <span class="empty"><?php echo LANG_LIST_EMPTY; ?></span>
                     </td>
                 </tr>
-                <tr v-cloak :class="{selected: (row.selected || row.edited)}" v-for="(row, key) in rows" :key="key" @click="selectRow(row)" @dragstart="dragStart(key, $event)" @dragover.prevent @dragend="dragEnd($event)" @dragenter.prevent="dragEnter(key, $event)" @dragleave="dragLeave($event)" @drop="dragFinish(key, $event)" @mousedown="prepareDragStart($event)" @mouseup="cancelDragStart($event)" class="animated-row">
+                <tr v-cloak :class="{selected: (row.selected || row.edited)}" v-for="(row, key) in rows" :key="key" @click="selectRow(row)" @dragstart="dragStart(key, $event)" @dragover.prevent @dragend="dragEnd($event)" @dragenter.prevent="dragEnter(key, $event)" @dragleave="dragLeave($event)" @drop="dragFinish(key, $event)" @mousedown="prepareDragStart($event)" @touchstart="prepareDragStart($event)" @mouseup="cancelDragStart($event)" class="animated-row">
                     <td v-for="(col, index) in row.columns" :key="index" :class="col.class">
                         <component :is="'row-column-'+col.renderer" :col="col" :col_key="index" :row_key="key" v-tooltip="col.tooltip" :title="col.tooltip"></component>
                         <inline-save-form v-if="col.editable" :col="col" :col_key="index" :row_key="key" @changeoverflow="toggleOverflow"></inline-save-form>

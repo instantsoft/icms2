@@ -13,6 +13,7 @@
 	define('LANG_CONTENT_PUB_LONG_EXT',		 'Extend publication period, days');
 	define('LANG_CONTENT_PUB_LONG_NOW',		 'Currently published till %s');
 	define('LANG_CONTENT_IS_PUB',			 'Publish %s on site');
+    define('LANG_CONTENT_IS_PUB_HINT',       'If the "No, hide" option is selected, the %s will not be published even when the publication date arrives.');
 	define('LANG_CONTENT_IS_PUB_OFF',		 'Publication by date was disabled');
     define('LANG_CONTENT_WRONG_PARENT',		 'Wrong parent selected');
     define('LANG_CONTENT_TEMPLATE',		     'Item view template');

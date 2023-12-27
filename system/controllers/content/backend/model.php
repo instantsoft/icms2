@@ -266,7 +266,7 @@ class modelBackendContent extends modelContent {
             'date_pub'           => ['type' => 'timestamp', 'index' => ['date_pub', 'parent_id', 'user_id'], 'composite_index' => [4, 3, 2, 1], 'default_current' => true],
             'date_last_modified' => ['type' => 'timestamp'],
             'date_pub_end'       => ['type' => 'timestamp', 'index' => true],
-            'is_pub'             => ['type' => 'bool', 'index' => 'date_pub', 'composite_index' => 0, 'default' => 1],
+            'is_pub'             => ['type' => 'tinyint', 'size' => 1, 'index' => 'date_pub', 'composite_index' => 0, 'default' => 1],
             'hits_count'         => ['type' => 'int', 'default' => 0, 'unsigned' => true],
             'user_id'            => ['type' => 'int', 'index' => 'user_id', 'composite_index' => 0, 'unsigned' => true],
             'parent_id'          => ['type' => 'int', 'index' => 'parent_id', 'composite_index' => 0, 'unsigned' => true],

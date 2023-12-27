@@ -211,7 +211,7 @@ class actionContentItemEdit extends cmsAction {
                 if (!$is_pub_control) {
                     unset($item['is_pub']);
                 }
-                if (!isset($item['is_pub']) || !empty($item['is_pub'])) {
+                if (!isset($item['is_pub']) || $item['is_pub'] >= 1) {
                     $item['is_pub'] = $is_pub;
                     if (!$is_pub) {
                         cmsUser::addSessionMessage(LANG_CONTENT_IS_PUB_OFF);

@@ -15,7 +15,7 @@ class onActivityContentAfterRestore extends cmsAction {
             'group_id'         => isset($item['parent_id']) ? $item['parent_id'] : null,
             'is_parent_hidden' => $item['is_parent_hidden'],
             'date_pub'         => $item['date_pub'],
-            'is_pub'           => $item['is_pub']
+            'is_pub'           => $item['is_pub'] <= 0 ? 0 : 1
         ]);
 
         return [$ctype_name, $item];

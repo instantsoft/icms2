@@ -564,7 +564,7 @@ class content extends cmsFrontend {
             ];
         }
 
-        if (!$item['is_pub']){
+        if ($item['is_pub'] < 1){
             $bar['is_pub'] = [
                 'css'   => 'bi_not_pub',
                 'icon'  => 'calendar-alt',
@@ -918,11 +918,13 @@ class content extends cmsFrontend {
             $pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset(LANG_CONTENT_PUB, 'pub_wrap', ['is_collapsed' => $is_pub_collapsed]);
 
             $form->addField($pub_fieldset_id, new fieldList('is_pub', [
-                'title'   => sprintf(LANG_CONTENT_IS_PUB, $ctype['labels']['create']),
+                'title' => sprintf(LANG_CONTENT_IS_PUB, $ctype['labels']['create']),
+                'hint'  => sprintf(LANG_CONTENT_IS_PUB_HINT, $ctype['labels']['create']),
                 'default' => 1,
                 'items'   => [
-                    1 => LANG_YES,
-                    0 => LANG_NO
+                    1  => LANG_YES,
+                    0  => LANG_NO,
+                    -1 => LANG_NO.', '.mb_strtolower(LANG_HIDE)
                 ]
             ]));
         }

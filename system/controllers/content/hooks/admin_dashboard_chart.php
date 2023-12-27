@@ -61,8 +61,8 @@ class onContentAdminDashboardChart extends cmsAction {
                 'progress' => 'danger',
                 'filters'  => [
                     [
-                        'condition' => 'eq',
-                        'value'     => 0,
+                        'condition' => 'lt',
+                        'value'     => 1,
                         'field'     => 'is_pub'
                     ]
                 ]

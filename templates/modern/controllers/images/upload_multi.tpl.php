@@ -8,16 +8,16 @@
     $this->addTplCSSFromContext('controllers/images/styles');
 ?>
 
-<div id="widget_image_<?php echo $dom_id; ?>"
+<div id="widget_image_<?php html($dom_id); ?>"
      class="widget_image_multi"
-     data-field_name="<?php echo $name; ?>"
-     data-delete_url="<?php echo $delete_url; ?>">
+     data-field_name="<?php html($name); ?>"
+     data-delete_url="<?php html($delete_url); ?>">
 
     <div class="data" style="display:none">
         <?php if ($images){ ?>
             <?php foreach($images as $idx => $paths){ ?>
                 <?php foreach($paths as $path_name => $path){ ?>
-                    <input type="hidden" name="<?php echo $name; ?>[<?php echo $idx; ?>][<?php echo $path_name; ?>]" value="<?php echo $path; ?>" rel="<?php echo $idx; ?>"/>
+                    <input type="hidden" name="<?php html($name); ?>[<?php html($idx); ?>][<?php html($path_name); ?>]" value="<?php html($path); ?>" rel="<?php html($idx); ?>"/>
                 <?php } ?>
             <?php } ?>
         <?php } ?>
@@ -26,11 +26,11 @@
     <div class="previews_list d-flex flex-wrap">
         <?php if ($images){ ?>
             <?php foreach($images as $idx => $paths){ ?>
-                <div class="preview multi-block" rel="<?php echo $idx; ?>" data-paths="<?php html(json_encode($paths)); ?>">
+                <div class="preview multi-block" rel="<?php html($idx); ?>" data-paths="<?php html(json_encode($paths)); ?>">
 					<?php if (!empty($paths)) { ?>
-                        <div><img src="<?php echo cmsConfig::get('upload_host') . '/' . reset($paths); ?>" /></div>
+                        <div><img src="<?php html(cmsConfig::get('upload_host') . '/' . reset($paths)); ?>" /></div>
                     <?php } ?>
-                        <a class="btn btn-danger btn-sm py-0 px-1" href="#" data-id="<?php echo $idx; ?>" onclick="return icms.images.removeOne('<?php echo $dom_id; ?>', this);" title="<?php echo LANG_DELETE; ?>">
+                        <a class="btn btn-danger btn-sm py-0 px-1" href="#" data-id="<?php html($idx); ?>" onclick="return icms.images.removeOne('<?php html($dom_id); ?>', this);" title="<?php echo LANG_DELETE; ?>">
                         <?php html_svg_icon('solid', 'minus-circle'); ?>
                     </a>
                 </div>
@@ -46,7 +46,7 @@
     </div>
 
     <div class="upload row align-items-center">
-        <div id="file-uploader-<?php echo $dom_id; ?>" data-uploaded_count="<?php echo ($max_photos && $images && count($images)) ? count($images) : 0; ?>" class="col-sm-auto"></div>
+        <div id="file-uploader-<?php html($dom_id); ?>" data-uploaded_count="<?php echo ($max_photos && $images && count($images)) ? count($images) : 0; ?>" class="col-sm-auto"></div>
         <?php if($allow_import_link){ ?>
             <span class="col-sm-auto my-1"><?php echo LANG_OR; ?></span>
             <span class="col-sm-auto image_link">
@@ -68,20 +68,21 @@
 <script>
     <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR'); ?>
     icms.images.allowed_mime = <?php echo json_encode($allowed_mime); ?>;
-    icms.images.createUploader('<?php echo $dom_id; ?>', '<?php echo $upload_url; ?>', <?php echo $max_photos; ?>, '<?php echo sprintf(LANG_PARSER_IMAGE_MAX_COUNT_HINT, html_spellcount($max_photos, LANG_PARSER_IMAGE_SPELL)); ?>');
+    icms.images.delete_url = "<?php html($delete_url); ?>";
+    icms.images.createUploader('<?php html($dom_id); ?>', '<?php html($upload_url); ?>', <?php echo $max_photos; ?>, '<?php html(sprintf(LANG_PARSER_IMAGE_MAX_COUNT_HINT, html_spellcount($max_photos, LANG_PARSER_IMAGE_SPELL))); ?>');
     <?php if($allow_import_link){ ?>
         $(function(){
-            $('#widget_image_<?php echo $dom_id; ?> .image_link a').on('click', function (){
+            $('#widget_image_<?php html($dom_id); ?> .image_link a').on('click', function (){
                 var link = prompt('<?php echo LANG_PARSER_ENTER_IMAGE_LINK; ?>');
                 if(link){
-                    icms.images.uploadMultyByLink('<?php echo $dom_id; ?>', '<?php echo $upload_url; ?>', link, <?php echo $max_photos; ?>, '<?php echo sprintf(LANG_PARSER_IMAGE_MAX_COUNT_HINT, html_spellcount($max_photos, LANG_PARSER_IMAGE_SPELL)); ?>');
+                    icms.images.uploadMultyByLink('<?php html($dom_id); ?>', '<?php html($upload_url); ?>', link, <?php echo $max_photos; ?>, '<?php html(sprintf(LANG_PARSER_IMAGE_MAX_COUNT_HINT, html_spellcount($max_photos, LANG_PARSER_IMAGE_SPELL))); ?>');
                 }
                 return false;
             });
         });
     <?php } ?>
     $(function(){
-        icms.images.initSortable('<?php echo $dom_id; ?>');
+        icms.images.initSortable('<?php html($dom_id); ?>');
     });
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

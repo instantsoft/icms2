@@ -8,7 +8,7 @@
 <div id="widget_image_<?php echo $dom_id; ?>"
      class="widget_image_single"
      data-field_name="<?php echo $name; ?>"
-     data-delete_url="<?php echo $delete_url; ?>">
+     data-delete_url="<?php html($delete_url); ?>">
 
     <div class="data" style="display:none">
         <?php if ($is_image_exists) { ?>
@@ -39,7 +39,7 @@
 
     <script>
         <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR'); ?>
-
+        icms.images.delete_url = "<?php html($delete_url); ?>";
         $(function(){
             icms.images.upload('<?php echo $dom_id; ?>', '<?php echo $upload_url; ?>');
             <?php if($allow_import_link){ ?>

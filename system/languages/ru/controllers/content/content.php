@@ -13,6 +13,7 @@
 	define('LANG_CONTENT_PUB_LONG_EXT',		 'Продлить срок публикации, дней');
 	define('LANG_CONTENT_PUB_LONG_NOW',		 'Сейчас опубликовано до %s');
 	define('LANG_CONTENT_IS_PUB',			 'Публиковать %s на сайте');
+	define('LANG_CONTENT_IS_PUB_HINT',       'Если выбрана опция "Нет, скрыть", %s не будет опубликована даже по наступлению даты публикации.');
 	define('LANG_CONTENT_IS_PUB_OFF',		 'Публикация отключена по дате');
 	define('LANG_CONTENT_TEMPLATE',		     'Шаблон записи для вывода');
     define('LANG_CONTENT_WRONG_PARENT',		 'Выбран неверный родитель');

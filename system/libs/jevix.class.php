@@ -509,6 +509,10 @@ class Jevix {
 
 	function parse($text, &$errors) {
 
+        if($text === null){
+            return '';
+        }
+
         $this->curPos       = -1;
         $this->curCh        = null;
         $this->curChOrd     = 0;

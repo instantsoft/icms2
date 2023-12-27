@@ -758,29 +758,65 @@ class cmsModel {
         return $this;
     }
 
-    public function filterGt($field, $value){
-        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+    /**
+     * Фильтр "поле > значение"
+     *
+     * @param string $field Имя поля
+     * @param mixed $value Значение
+     * @return $this
+     */
+    public function filterGt($field, $value) {
+        if (strpos($field, '.') === false) {
+            $field = 'i.' . $field;
+        }
         $value = $this->db->escape($value);
         $this->filter("$field > '$value'");
         return $this;
     }
 
-    public function filterLt($field, $value){
-        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+    /**
+     * Фильтр "поле < значение"
+     *
+     * @param string $field Имя поля
+     * @param mixed $value Значение
+     * @return $this
+     */
+    public function filterLt($field, $value) {
+        if (strpos($field, '.') === false) {
+            $field = 'i.' . $field;
+        }
         $value = $this->db->escape($value);
         $this->filter("$field < '$value'");
         return $this;
     }
 
-    public function filterGtEqual($field, $value){
-        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+    /**
+     * Фильтр "поле >= значение"
+     *
+     * @param string $field Имя поля
+     * @param mixed $value Значение
+     * @return $this
+     */
+    public function filterGtEqual($field, $value) {
+        if (strpos($field, '.') === false) {
+            $field = 'i.' . $field;
+        }
         $value = $this->db->escape($value);
         $this->filter("$field >= '$value'");
         return $this;
     }
 
-    public function filterLtEqual($field, $value){
-        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+    /**
+     * Фильтр "поле <= значение"
+     *
+     * @param string $field Имя поля
+     * @param mixed $value Значение
+     * @return $this
+     */
+    public function filterLtEqual($field, $value) {
+        if (strpos($field, '.') === false) {
+            $field = 'i.' . $field;
+        }
         $value = $this->db->escape($value);
         $this->filter("$field <= '$value'");
         return $this;

@@ -1175,7 +1175,7 @@ class modelContent extends cmsModel {
 
         $this->pub_filtered = true;
 
-        return $this->filterEqual('is_pub', 1);
+        return $this->filterGtEqual('is_pub', 1);
 
 	}
 
@@ -1968,73 +1968,69 @@ class modelContent extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-	public function publishDelayedContentItems($ctype_name){
+	public function publishDelayedContentItems($ctype_name, $pub_item_ids) {
 
-		return $this->filterIsNull('is_deleted')->
-					filterNotEqual('is_pub', 1)->
-					filter('i.date_pub <= NOW()')->
-					updateFiltered($this->table_prefix.$ctype_name, array(
-						'is_pub' => 1
-					));
+        return $this->filterIn('id', $pub_item_ids)->
+                updateFiltered($this->getContentTypeTableName($ctype_name), [
+                    'is_pub' => 1
+                ]);
+    }
 
-	}
+    public function hideExpiredContentItems($ctype_name) {
 
-	public function hideExpiredContentItems($ctype_name){
+        return $this->filterIsNull('is_deleted')->
+                filterGtEqual('is_pub', 1)->
+                filterNotNull('date_pub_end')->
+                filter('i.date_pub_end <= NOW()')->
+                updateFiltered($this->getContentTypeTableName($ctype_name), [
+                    'is_pub' => 0
+                ]);
+    }
 
-		return $this->filterIsNull('is_deleted')->
-					filterEqual('is_pub', 1)->
-					filterNotNull('date_pub_end')->
-					filter('i.date_pub_end <= NOW()')->
-					updateFiltered($this->table_prefix.$ctype_name, array(
-						'is_pub' => 0
-					));
+    public function deleteExpiredContentItems($ctype_name) {
 
-	}
+        return $this->selectOnly('id')->
+                filterIsNull('is_deleted')->
+                filterGtEqual('is_pub', 1)->
+                filterNotNull('date_pub_end')->
+                filter('i.date_pub_end <= NOW()')->
+                get($this->getContentTypeTableName($ctype_name), function ($item, $model) use ($ctype_name) {
+                    $model->deleteContentItem($ctype_name, $item['id']);
+                    return $item['id'];
+                });
+    }
 
-	public function deleteExpiredContentItems($ctype_name){
+    public function toTrashExpiredContentItems($ctype_name) {
 
-        return $this->
-                    filterNotNull('date_pub_end')->
-                    filter('i.date_pub_end <= NOW()')->
-                    get($this->table_prefix.$ctype_name, function($item, $model) use($ctype_name){
-                        $model->deleteContentItem($ctype_name, $item['id']);
-                        return $item['id'];
-                    });
+        return $this->selectOnly('id')->
+                filterIsNull('is_deleted')->
+                filterGtEqual('is_pub', 1)->
+                filterNotNull('date_pub_end')->
+                filter('i.date_pub_end <= NOW()')->
+                get($this->getContentTypeTableName($ctype_name), function ($item, $model) use ($ctype_name) {
+                    $model->toTrashContentItem($ctype_name, $item);
+                    return $item['id'];
+                });
+    }
 
-	}
+    public function toggleContentItemPublication($ctype_name, $id, $is_pub) {
 
-	public function toTrashExpiredContentItems($ctype_name){
+        $this->update($this->getContentTypeTableName($ctype_name), $id, [
+            'is_pub' => $is_pub
+        ]);
 
-        return $this->
-                    filterNotNull('date_pub_end')->
-                    filter('i.date_pub_end <= NOW()')->
-                    get($this->table_prefix.$ctype_name, function($item, $model) use($ctype_name){
-                        $model->toTrashContentItem($ctype_name, $item);
-                        return $item['id'];
-                    });
-
-	}
-
-	public function toggleContentItemPublication($ctype_name, $id, $is_pub){
-
-		$this->update($this->table_prefix.$ctype_name, $id, array(
-			'is_pub' => $is_pub
-		));
-
-        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
-        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.list.' . $ctype_name);
+        cmsCache::getInstance()->clean('content.item.' . $ctype_name);
 
         return true;
+    }
 
-	}
+    public function incrementHitsCounter($ctype_name, $id) {
 
-	public function incrementHitsCounter($ctype_name, $id){
+        cmsCache::getInstance()->clean('content.item.' . $ctype_name);
 
-        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
-
-		return $this->filterEqual('id', $id)->increment($this->table_prefix.$ctype_name, 'hits_count');
-
-	}
+        return $this->filterEqual('id', $id)->increment($this->getContentTypeTableName($ctype_name), 'hits_count');
+    }
 
 //============================================================================//
 //============================================================================//

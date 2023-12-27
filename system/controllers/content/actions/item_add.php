@@ -241,9 +241,14 @@ class actionContentItemAdd extends cmsAction {
 				}
 
 				unset($item['pub_days']);
-				if (!$is_pub_control) { unset($item['is_pub']); }
-				if (!isset($item['is_pub'])) { $item['is_pub'] = $is_pub; }
-				if (!empty($item['is_pub'])) { $item['is_pub'] = $is_pub; }
+
+                if (!$is_pub_control) {
+                    unset($item['is_pub']);
+                }
+
+                if (!isset($item['is_pub']) || $item['is_pub'] >= 1) {
+                    $item['is_pub'] = $is_pub;
+                }
 
                 $item = cmsEventsManager::hook('content_before_add', $item);
                 $item = cmsEventsManager::hook("content_{$ctype['name']}_before_add", $item);

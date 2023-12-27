@@ -847,7 +847,7 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
-    public function createTable($table_name, $structure, $engine='MYISAM'){
+    public function createTable($table_name, $structure, $engine = 'MYISAM') {
 
         $sql = "CREATE TABLE IF NOT EXISTS `{#}{$table_name}` (\n";
 
@@ -856,7 +856,7 @@ class cmsDatabase {
 
         $indexes = $fulltext = $unique = $indexes_created = [];
 
-        foreach ($structure as $name=>$field){
+        foreach ($structure as $name => $field) {
 
             $fcount++;
             $sep = ($fcount === $ftotal) ? "\n" : ",\n";
@@ -867,105 +867,115 @@ class cmsDatabase {
             // обычный индекс
             if (isset($field['index'])) {
 
-                if($field['index'] === true){
+                if ($field['index'] === true) {
                     $indexes[$name] = array($name);
-                } else if(is_string($field['index'])) {
+                } else if (is_string($field['index'])) {
                     $indexes[$field['index']][$field['composite_index']] = $name;
-                } else if(is_array($field['index'])){
+                } else if (is_array($field['index'])) {
                     foreach ($field['index'] as $k => $i_name) {
                         $indexes[$i_name][$field['composite_index'][$k]] = $name;
                     }
                 }
-
             }
             // уникальный индекс
-            if (isset($field['unique'])) { $unique[] = $name; }
+            if (isset($field['unique'])) {
+                $unique[] = $name;
+            }
             // полнотекстовый индекс
             if (isset($field['fulltext'])) {
 
-                if($field['fulltext'] === true){
+                if ($field['fulltext'] === true) {
                     $fulltext[$name] = array($name);
                 }
-
             }
 
-            switch ($field['type']){
+            switch ($field['type']) {
 
                 case 'primary':
                     $sql .= "\t`{$name}` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY{$sep}";
-                break;
+                    break;
 
                 case 'bool':
                     $sql .= "\t`{$name}` tinyint(1) UNSIGNED {$default}{$sep}";
-                break;
+                    break;
 
                 case 'timestamp':
-                    $current = (isset($field['default_current']) && $field['default_current']==true) ? "NOT NULL DEFAULT CURRENT_TIMESTAMP" : 'NULL';
-                    $sql .= "\t`{$name}` TIMESTAMP {$current}{$sep}";
-                break;
+                    $current = (isset($field['default_current']) && $field['default_current'] == true) ? "NOT NULL DEFAULT CURRENT_TIMESTAMP" : 'NULL';
+                    $sql     .= "\t`{$name}` TIMESTAMP {$current}{$sep}";
+                    break;
 
                 case 'tinyint':
-                    $sql .= "\t`{$name}` TINYINT {$unsigned} {$default}{$sep}";
-                break;
+                    if (!isset($field['size'])) {
+                        $field['size'] = 4;
+                    }
+                    $sql .= "\t`{$name}` TINYINT( {$field['size']} ) {$unsigned} {$default}{$sep}";
+                    break;
 
                 case 'int':
-                    if (!isset($field['size'])){ $field['size'] = 11; }
+                    if (!isset($field['size'])) {
+                        $field['size'] = 11;
+                    }
                     $sql .= "\t`{$name}` INT( {$field['size']} ) {$unsigned} {$default}{$sep}";
-                break;
+                    break;
 
                 case 'varchar':
-                    if (!isset($field['size'])){ $field['size'] = 255; }
+                    if (!isset($field['size'])) {
+                        $field['size'] = 255;
+                    }
                     $sql .= "\t`{$name}` VARCHAR( {$field['size']} ) {$default}{$sep}";
-                break;
+                    break;
 
                 case 'text':
                     $sql .= "\t`{$name}` TEXT NULL{$sep}";
-                break;
+                    break;
 
                 case 'set':
-                    $values = array_map(function($item){ return '"'.$item.'"'; }, $field['items']);
+                    $values = array_map(function ($item) {
+                        return '"' . $item . '"';
+                    }, $field['items']);
                     $values = implode(',', $values);
-                    $sql .= "\t`{$name}` SET ({$values}) {$default}{$sep}";
-                break;
+                    $sql    .= "\t`{$name}` SET ({$values}) {$default}{$sep}";
+                    break;
 
                 default: break;
-
             }
-
         }
 
         $sql .= ") ENGINE={$engine} DEFAULT CHARSET={$this->options['db_charset']}";
 
         $this->query($sql);
 
-        foreach($indexes as $index_name=>$fields){
+        foreach ($indexes as $index_name => $fields) {
 
-            if (in_array($index_name, $indexes_created)) { continue; }
+            if (in_array($index_name, $indexes_created)) {
+                continue;
+            }
 
             $this->addIndex($table_name, $fields, $index_name);
 
             $indexes_created[] = $index_name;
-
         }
 
-        foreach($unique as $field){
+        foreach ($unique as $field) {
 
-            if (in_array($field, $indexes_created)) { continue; }
+            if (in_array($field, $indexes_created)) {
+                continue;
+            }
 
             $this->addIndex($table_name, $field, $field, 'UNIQUE');
 
             $indexes_created[] = $field;
-
         }
 
-        foreach($fulltext as $index_name=>$fields){
+        foreach ($fulltext as $index_name => $fields) {
 
-            if (in_array($index_name, $indexes_created)) { continue; }
+            if (in_array($index_name, $indexes_created)) {
+                continue;
+            }
 
             $this->addIndex($table_name, $fields, $index_name, 'FULLTEXT');
 
             $indexes_created[] = $index_name;
-
         }
 
     }

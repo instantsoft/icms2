@@ -22,11 +22,11 @@ class onContentCronPublicationNotify extends cmsAction {
                 continue;
             }
 
-            $items = $this->model->filterEqual('is_pub', 1)->
+            $items = $this->model->filterGtEqual('is_pub', 1)->
                     filterIsNull('is_deleted')->
                     filterNotNull('date_pub_end')->
                     filter('i.date_pub_end <= DATE_ADD(NOW(), INTERVAL ' . $ctype['options']['notify_end_date_days'] . ' DAY)')->
-                    get($this->model->table_prefix . $ctype['name']);
+                    get($this->model->getContentTypeTableName($ctype['name']));
 
             if (!$items) {
                 continue;
@@ -35,6 +35,16 @@ class onContentCronPublicationNotify extends cmsAction {
             $notify_items[$ctype['name']] = $items;
 
             foreach ($items as $item) {
+
+                $ups_key = 'notify_expired_'.$ctype['name'].'_'.$item['id'];
+
+                $is_send = cmsUser::getUPS($ups_key, $item['user_id']);
+
+                if ($is_send) {
+                    continue;
+                }
+
+                cmsUser::setUPS($ups_key, 1, $item['user_id']);
 
                 $notice_data = [
                     'page_url'     => href_to_abs($ctype['name'], $item['slug'] . '.html'),

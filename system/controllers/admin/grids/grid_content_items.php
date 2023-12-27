@@ -62,7 +62,6 @@ function grid_content_items($controller, $ctype) {
         ],
         'is_approved' => [
             'title'      => LANG_MODERATION,
-            'class'      => 'd-none d-sm-table-cell',
             'width'      => 150,
             'switchable' => true,
             'handler' => function ($value, $item) use ($controller, $ctype) {
@@ -93,7 +92,6 @@ function grid_content_items($controller, $ctype) {
         ],
         'is_pub' => [
             'title'       => LANG_ON,
-            'class'       => 'd-none d-sm-table-cell',
             'width'       => 40,
             'flag'        => true,
             'switchable'  => true,

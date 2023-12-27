@@ -2,26 +2,27 @@
 
 class actionImagesUpload extends cmsAction {
 
-    public function run($name){
+    public function run($name) {
 
         if (!$this->cms_user->is_logged) {
-            return $this->cms_template->renderJSON(array(
+
+            return $this->cms_template->renderJSON([
                 'success' => false,
                 'error'   => 'auth error'
-            ));
+            ]);
         }
 
         // Разрешаем загрузку по ссылке
         // устанавливаем разрешенные типы изображений
         $this->cms_uploader->enableRemoteUpload()->setAllowedMime($this->allowed_mime);
 
-        cmsEventsManager::hook('images_before_upload', array($name, $this->cms_uploader), null, $this->request);
+        cmsEventsManager::hook('images_before_upload', [$name, $this->cms_uploader], null, $this->request);
 
         // Непосредственно загружаем
         $result = $this->cms_uploader->upload($name);
 
         // Начинаем работу с изображением
-        if ($result['success']){
+        if ($result['success']) {
 
             try {
                 $image = new cmsImages($result['path']);
@@ -29,26 +30,27 @@ class actionImagesUpload extends cmsAction {
                 $result['success'] = false;
                 $result['error']   = LANG_UPLOAD_ERR_MIME;
             }
-
         }
 
         // Не получилось, удаляем исходник, показываем ошибку
-        if (!$result['success']){
-            if(!empty($result['path'])){
+        if (!$result['success']) {
+
+            if (!empty($result['path'])) {
                 files_delete_file($result['path'], 2);
             }
+
             return $this->cms_template->renderJSON($result);
         }
 
         // Переданные пресеты
-		$sizes = $this->request->get('sizes', '');
+        $sizes = $this->request->get('sizes', '');
         // Желаемое имя файла
-		$file_name = str_replace('.', '', $this->request->get('file_name', ''));
+        $file_name = str_replace('.', '', $this->request->get('file_name', ''));
 
-		if (!empty($sizes) && preg_match('/([a-z0-9_,]+)$/i', $sizes)){
-			$sizes = explode(',', $sizes);
-		} else {
-            $sizes = array_keys((array)$this->model->getPresetsList());
+        if (!empty($sizes) && preg_match('/([a-z0-9_,]+)$/i', $sizes)) {
+            $sizes = explode(',', $sizes);
+        } else {
+            $sizes   = array_keys((array) $this->model->getPresetsList());
             $sizes[] = 'original';
         }
 
@@ -56,20 +58,21 @@ class actionImagesUpload extends cmsAction {
         $result['paths'] = [];
 
         // Дополняем оригиналом, если нужно
-		if (in_array('original', $sizes, true)){
-			$result['paths']['original'] = array(
-				'path' => $result['url'],
+        if (in_array('original', $sizes, true)) {
+
+            $result['paths']['original'] = [
+                'path' => $result['url'],
                 'url'  => $this->cms_config->upload_host . '/' . $result['url']
-            );
-		}
+            ];
+        }
 
         // Получаем пресеты
-		$presets = $this->model->orderByList(array(
+        $presets = $this->model->orderByList([
             ['by' => 'is_square', 'to' => 'asc'],
             ['by' => 'width', 'to' => 'desc']
-        ))->getPresets();
+        ])->getPresets();
 
-        list($result, $presets, $sizes) = cmsEventsManager::hook('images_after_upload', array($result, $presets, $sizes), null, $this->request);
+        list($result, $presets, $sizes) = cmsEventsManager::hook('images_after_upload', [$result, $presets, $sizes], null, $this->request);
 
         $file_context = [
             'target_controller' => $this->request->get('target_controller', ''),
@@ -78,35 +81,47 @@ class actionImagesUpload extends cmsAction {
         ];
 
         // Создаём изображения по пресетам
-		foreach($presets as $p){
+        foreach ($presets as $p) {
 
-			if (!in_array($p['name'], $sizes, true)){
-				continue;
-			}
+            if (!in_array($p['name'], $sizes, true)) {
+                continue;
+            }
 
             $resized_path = $image->resizeByPreset($p, $file_name);
 
-            if (!$resized_path) { continue; }
+            if (!$resized_path) {
+                continue;
+            }
 
             $result['paths'][$p['name']] = [
-				'path' => $resized_path,
+                'path' => $resized_path,
                 'url'  => $this->cms_config->upload_host . '/' . $resized_path
             ];
 
-            if($file_context['target_controller']){
+            if ($file_context['target_controller']) {
                 $this->registerUploadFile($file_context);
             }
 
             $this->registerFile(['path' => $resized_path]);
-		}
+        }
 
-        list($result, $presets, $sizes) = cmsEventsManager::hook('images_after_resize', array($result, $presets, $sizes), null, $this->request);
+        list($result, $presets, $sizes) = cmsEventsManager::hook('images_after_resize', [$result, $presets, $sizes], null, $this->request);
 
-		if (!in_array('original', $sizes, true)){
-			files_delete_file($result['path'], 2);
-		}
+        // Удаляем или регистрируем оригинал
+        if (!in_array('original', $sizes, true)) {
 
-        if ($this->request->isInternal()){
+            files_delete_file($result['path'], 2);
+
+        } else {
+
+            if ($file_context['target_controller']) {
+                $this->registerUploadFile($file_context);
+            }
+
+            $this->registerFile(['path' => $result['url']]);
+        }
+
+        if ($this->request->isInternal()) {
             return $result;
         }
 
@@ -114,5 +129,4 @@ class actionImagesUpload extends cmsAction {
 
         return $this->cms_template->renderJSON($result);
     }
-
 }

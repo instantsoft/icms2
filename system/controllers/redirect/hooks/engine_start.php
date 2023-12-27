@@ -21,10 +21,16 @@ class onRedirectEngineStart extends cmsAction {
 
             //перебираем правила
             foreach ($rules as $rule) {
-                //небольшая валидация правила
-                if (!$rule['source'] || !$rule['target'] || !$rule['action']) {
+
+                if(!is_array($rule)){
                     continue;
                 }
+
+                //небольшая валидация правила
+                if (empty($rule['source']) || empty($rule['target']) || empty($rule['action'])) {
+                    continue;
+                }
+
                 $matches = [];
                 //проверяем совпадение выражения source с текущим uri
                 if (preg_match($rule['source'], $checked_uri, $matches)) {

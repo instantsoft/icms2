@@ -19,7 +19,7 @@ class actionAdminContentItemToggle extends cmsAction {
             ]);
         }
 
-        $is_pub = $item['is_pub'] ? 0 : 1;
+        $is_pub = $item['is_pub'] > 0 ? -1 : 1;
 
         $this->model_backend_content->toggleContentItemPublication($ctype_name, $item_id, $is_pub);
 

@@ -9,6 +9,13 @@ function install_package(){
 
     $content_model = cmsCore::getModel('content');
 
+    $ctypes = $content_model->get('content_types') ?: [];
+
+	foreach($ctypes as $ctype){
+        // Убираем UNSIGNED
+        $core->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}` CHANGE `is_pub` `is_pub` TINYINT(1) NOT NULL DEFAULT '1';");
+	}
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

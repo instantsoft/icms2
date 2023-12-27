@@ -16,7 +16,7 @@ class onContentCronPublication extends cmsAction {
                 continue;
             }
 
-            $pub_items = $this->model->filterNotEqual('is_pub', 1)->
+            $pub_items = $this->model->filterEqual('is_pub', 0)->
                     filterIsNull('is_deleted')->
                     filter('i.date_pub <= NOW()')->
                     filterStart()->
@@ -24,10 +24,13 @@ class onContentCronPublication extends cmsAction {
                     filterOr()->
                     filterIsNull('i.date_pub_end')->
                     filterEnd()->
-                    get($this->model->table_prefix . $ctype['name']);
+                    limit(false)->
+                    get($this->model->getContentTypeTableName($ctype['name']));
 
             if ($pub_items) {
-                $this->model->publishDelayedContentItems($ctype['name']);
+
+                $this->model->publishDelayedContentItems($ctype['name'], array_keys($pub_items));
+
                 $is_pub_items[$ctype['name']] = $pub_items;
             }
 
