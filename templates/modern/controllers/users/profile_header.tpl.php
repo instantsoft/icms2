@@ -18,7 +18,7 @@
                 <?php html($profile['nickname']); ?>
             <?php } ?>
             <?php if ($profile['is_locked']){ ?>
-                <span class="is_locked" title="<?php echo LANG_USERS_LOCKED_NOTICE_PUBLIC; ?>">
+                <span class="is_locked" title="<?php html(LANG_USERS_LOCKED_NOTICE_PUBLIC.($profile['lock_reason'] ? ': '.$profile['lock_reason'] : '').($profile['lock_until'] ? "\n ".sprintf(LANG_USERS_LOCKED_NOTICE_UNTIL, strip_tags(html_date($profile['lock_until']))) : '')); ?>" data-toggle="tooltip" data-placement="top">
                     <?php html_svg_icon('solid', 'lock'); ?>
                 </span>
             <?php } ?>

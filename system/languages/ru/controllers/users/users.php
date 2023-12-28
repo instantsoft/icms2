@@ -15,6 +15,7 @@
     define('LANG_RULE_USERS_DELETE',        'Удалять профиль');
     define('LANG_RULE_USERS_BIND_TO_PARENT', 'Привязка записей типов контента');
     define('LANG_RULE_USERS_BIND_OFF_PARENT', 'Отвязка записей типов контента');
+    define('LANG_RULE_USERS_BAN',           'Блокировка пользователей');
     define('LANG_PERM_OPTION_MY',           'Только свой');
     define('LANG_PERM_OPTION_ANYUSER',      'Любой');
     define('LANG_USERS_DELETE_CONFIRM',     'Удалить профиль "%s"?');
@@ -155,6 +156,7 @@
 
     define('LANG_USERS_ACTIVITY_FRIENDS',       'и %s становятся друзьями');
 
+    define('LANG_USERS_LOCK_USER',              'Блокировка пользователя');
     define('LANG_USERS_LOCKED_NOTICE',          'Ваш профиль заблокирован.');
     define('LANG_USERS_LOCKED_NOTICE_PUBLIC',   'Заблокирован');
     define('LANG_USERS_LOCKED_NOTICE_UNTIL',    'Блокировка истекает: %s');

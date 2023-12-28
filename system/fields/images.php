@@ -176,7 +176,7 @@ class fieldImages extends cmsFormField {
 
         $results = [];
 
-        $upload_path = cmsConfig::get('upload_path');
+        $upload_path = realpath(cmsConfig::get('upload_path')).DIRECTORY_SEPARATOR;
 
         foreach ($value as $key => $image) {
 

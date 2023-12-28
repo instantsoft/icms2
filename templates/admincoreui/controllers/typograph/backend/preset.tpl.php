@@ -19,7 +19,7 @@
     $this->addToolButton([
         'class' => 'cancel',
         'title' => LANG_CANCEL,
-        'href'  => $this->href_to('presets')
+        'href'  => $this->href_to('')
     ]);
 
     $this->renderForm($form, $preset, [

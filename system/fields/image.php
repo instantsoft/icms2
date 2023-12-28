@@ -160,7 +160,7 @@ class fieldImage extends cmsFormField {
             return $value;
         }
 
-        $upload_path = cmsConfig::get('upload_path');
+        $upload_path = realpath(cmsConfig::get('upload_path')).DIRECTORY_SEPARATOR;
 
         $image_urls = [];
 

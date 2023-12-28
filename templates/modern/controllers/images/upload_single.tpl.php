@@ -98,12 +98,12 @@
     icms.images.allowed_mime = <?php echo json_encode($allowed_mime); ?>;
     icms.images.delete_url = "<?php html($delete_url); ?>";
     $(function(){
-        icms.images.upload("<?php html($dom_id); ?>", "<?php html($upload_url); ?>", <?php echo $allow_image_cropper ? 'true' : 'false'; ?>);
+        icms.images.upload("<?php html($dom_id); ?>", "<?php echo $upload_url; ?>", <?php echo $allow_image_cropper ? 'true' : 'false'; ?>);
         <?php if($allow_import_link){ ?>
             $('#widget_image_<?php html($dom_id); ?> a.image_link').on('click', function (){
                 var link = prompt('<?php echo LANG_PARSER_ENTER_IMAGE_LINK; ?>');
                 if(link){
-                    icms.images.uploadByLink("<?php html($dom_id); ?>", "<?php html($upload_url); ?>", link);
+                    icms.images.uploadByLink("<?php html($dom_id); ?>", "<?php echo $upload_url; ?>", link);
                 }
                 return false;
             });

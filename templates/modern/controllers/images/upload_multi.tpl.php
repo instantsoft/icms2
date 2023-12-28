@@ -69,13 +69,13 @@
     <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR'); ?>
     icms.images.allowed_mime = <?php echo json_encode($allowed_mime); ?>;
     icms.images.delete_url = "<?php html($delete_url); ?>";
-    icms.images.createUploader('<?php html($dom_id); ?>', '<?php html($upload_url); ?>', <?php echo $max_photos; ?>, '<?php html(sprintf(LANG_PARSER_IMAGE_MAX_COUNT_HINT, html_spellcount($max_photos, LANG_PARSER_IMAGE_SPELL))); ?>');
+    icms.images.createUploader('<?php html($dom_id); ?>', '<?php echo $upload_url; ?>', <?php echo $max_photos; ?>, '<?php html(sprintf(LANG_PARSER_IMAGE_MAX_COUNT_HINT, html_spellcount($max_photos, LANG_PARSER_IMAGE_SPELL))); ?>');
     <?php if($allow_import_link){ ?>
         $(function(){
             $('#widget_image_<?php html($dom_id); ?> .image_link a').on('click', function (){
                 var link = prompt('<?php echo LANG_PARSER_ENTER_IMAGE_LINK; ?>');
                 if(link){
-                    icms.images.uploadMultyByLink('<?php html($dom_id); ?>', '<?php html($upload_url); ?>', link, <?php echo $max_photos; ?>, '<?php html(sprintf(LANG_PARSER_IMAGE_MAX_COUNT_HINT, html_spellcount($max_photos, LANG_PARSER_IMAGE_SPELL))); ?>');
+                    icms.images.uploadMultyByLink('<?php html($dom_id); ?>', '<?php echo $upload_url; ?>', link, <?php echo $max_photos; ?>, '<?php html(sprintf(LANG_PARSER_IMAGE_MAX_COUNT_HINT, html_spellcount($max_photos, LANG_PARSER_IMAGE_SPELL))); ?>');
                 }
                 return false;
             });

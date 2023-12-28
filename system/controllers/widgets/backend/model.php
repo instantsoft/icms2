@@ -465,6 +465,7 @@ class modelBackendWidgets extends modelWidgets {
 
         cmsCache::getInstance()->clean('widgets.bind_pages');
         cmsCache::getInstance()->clean('widgets.bind');
+        cmsCache::getInstance()->clean('widgets.pages');
 
         return $this->insert('widgets_bind_pages', [
             'template'   => $template,
@@ -482,6 +483,7 @@ class modelBackendWidgets extends modelWidgets {
     public function updateWidgetBindPosition($old_pos, $new_pos, $template) {
         cmsCache::getInstance()->clean('widgets.bind');
         cmsCache::getInstance()->clean('widgets.bind_pages');
+        cmsCache::getInstance()->clean('widgets.pages');
         $this->filterEqual('template', $template);
         $this->filterEqual('position', $old_pos);
         return $this->updateFiltered('widgets_bind_pages', ['position' => $new_pos], true);
@@ -490,12 +492,14 @@ class modelBackendWidgets extends modelWidgets {
     public function updateWidgetBindPage($id, $item) {
         cmsCache::getInstance()->clean('widgets.bind_pages');
         cmsCache::getInstance()->clean('widgets.bind');
+        cmsCache::getInstance()->clean('widgets.pages');
         return $this->update('widgets_bind_pages', $id, $item);
     }
 
     public function deleteWidgetPageBind($id, $by = 'id') {
         cmsCache::getInstance()->clean('widgets.bind_pages');
         cmsCache::getInstance()->clean('widgets.bind');
+        cmsCache::getInstance()->clean('widgets.pages');
         return $this->filterEqual($by, $id)->deleteFiltered('widgets_bind_pages');
     }
 
@@ -514,6 +518,7 @@ class modelBackendWidgets extends modelWidgets {
         $this->filterEqual('widget_id', $id);
         $this->deleteFiltered('widgets_bind');
 
+        cmsCache::getInstance()->clean('widgets.pages');
         cmsCache::getInstance()->clean('widgets.bind');
 
         return $this->delete('widgets', $id);

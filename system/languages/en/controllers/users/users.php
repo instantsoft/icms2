@@ -15,6 +15,7 @@
     define('LANG_RULE_USERS_DELETE',        'Delete profile');
     define('LANG_RULE_USERS_BIND_TO_PARENT', 'Bind content type items');
     define('LANG_RULE_USERS_BIND_OFF_PARENT', 'Unbind content type items');
+    define('LANG_RULE_USERS_BAN',           'Blocking users');
     define('LANG_PERM_OPTION_MY',           'Only own');
     define('LANG_PERM_OPTION_ANYUSER',      'Any');
     define('LANG_USERS_DELETE_CONFIRM',     'Delete the %s\'profile?');
@@ -155,6 +156,7 @@
 
     define('LANG_USERS_ACTIVITY_FRIENDS',   'and %s become friends');
 
+    define('LANG_USERS_LOCK_USER',              'Blocking profile');
     define('LANG_USERS_LOCKED_NOTICE',          'Your profile was blocked.');
     define('LANG_USERS_LOCKED_NOTICE_PUBLIC',   'Blocked');
     define('LANG_USERS_LOCKED_NOTICE_UNTIL',    'Blocking expires: %s');

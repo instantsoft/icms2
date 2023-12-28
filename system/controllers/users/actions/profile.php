@@ -194,7 +194,7 @@ class actionUsersProfile extends cmsAction {
 
     private function getToolButtons($profile) {
 
-        $tool_buttons = array();
+        $tool_buttons = [];
 
         if ($this->cms_user->is_logged && !$profile['is_deleted']) {
 
@@ -203,97 +203,112 @@ class actionUsersProfile extends cmsAction {
             if (!$this->is_own_profile &&
                     !$profile['is_locked'] &&
                     (!$this->options['is_friends_on'] ||
-                        ($this->options['is_friends_on'] && !$allowed_user_friendship))
-                    ){
+                    ($this->options['is_friends_on'] && !$allowed_user_friendship))
+            ) {
 
-                if(!$this->is_subscribe_profile){
-                    $tool_buttons['subscribe'] = array(
+                if (!$this->is_subscribe_profile) {
+
+                    $tool_buttons['subscribe'] = [
                         'title' => LANG_USERS_SUBSCRIBE,
-                        'class' => 'subscribe ajax-modal', 'icon' => 'bell',
+                        'class' => 'subscribe ajax-modal', 'icon'  => 'bell',
                         'href'  => href_to('users', 'subscribe', $profile['id'])
-                    );
+                    ];
+
                 } else {
-                    $tool_buttons['unsubscribe'] = array(
+
+                    $tool_buttons['unsubscribe'] = [
                         'title' => LANG_USERS_UNSUBSCRIBE,
-                        'class' => 'unsubscribe ajax-modal', 'icon' => 'bell-slash',
+                        'class' => 'unsubscribe ajax-modal', 'icon'  => 'bell-slash',
                         'href'  => href_to('users', 'unsubscribe', $profile['id'])
-                    );
+                    ];
                 }
-
             }
 
-            if ($this->options['is_friends_on'] && !$this->is_own_profile && !$profile['is_locked']){
+            if ($this->options['is_friends_on'] && !$this->is_own_profile && !$profile['is_locked']) {
 
-                if ($allowed_user_friendship){
+                if ($allowed_user_friendship) {
 
-                    if ($this->is_friend_profile){
-                        $tool_buttons['friend_delete'] = array(
+                    if ($this->is_friend_profile) {
+
+                        $tool_buttons['friend_delete'] = [
                             'title' => LANG_USERS_FRIENDS_DELETE,
-                            'class' => 'user_delete ajax-modal', 'icon' => 'user-minus',
+                            'class' => 'user_delete ajax-modal', 'icon'  => 'user-minus',
                             'href'  => href_to('users', 'friend_delete', $profile['id'])
-                        );
-                    } else if(!$this->is_friend_req) {
-                        $tool_buttons['friend_add'] = array(
+                        ];
+
+                    } else if (!$this->is_friend_req) {
+
+                        $tool_buttons['friend_add'] = [
                             'title' => LANG_USERS_FRIENDS_ADD,
-                            'class' => 'user_add ajax-modal', 'icon' => 'user-plus',
+                            'class' => 'user_add ajax-modal', 'icon'  => 'user-plus',
                             'href'  => href_to('users', 'friend_add', $profile['id'])
-                        );
+                        ];
                     }
-
                 }
-
             }
 
-            if ($this->is_own_profile && $profile['invites_count']){
-                $tool_buttons['invites'] = array(
+            if ($this->is_own_profile && $profile['invites_count']) {
+
+                $tool_buttons['invites'] = [
                     'title'   => LANG_USERS_MY_INVITES,
-                    'class'   => 'invites', 'icon' => 'user-tag',
+                    'class'   => 'invites', 'icon'    => 'user-tag',
                     'counter' => $profile['invites_count'],
                     'href'    => href_to_profile($profile, ['invites'])
-                );
+                ];
             }
 
-            if ($this->is_own_profile || $this->cms_user->is_admin){
-                $tool_buttons['settings'] = array(
+            if ($this->is_own_profile || $this->cms_user->is_admin) {
+
+                $tool_buttons['settings'] = [
                     'title' => LANG_USERS_EDIT_PROFILE,
-                    'class' => 'settings', 'icon' => 'edit',
+                    'class' => 'settings', 'icon'  => 'edit',
                     'href'  => href_to_profile($profile, ['edit'])
-                );
+                ];
             }
 
-            if ($this->cms_user->is_admin){
-                $tool_buttons['edit'] = array(
+            if ($this->cms_user->is_admin) {
+
+                $tool_buttons['edit'] = [
                     'title' => LANG_USERS_EDIT_USER,
-                    'class' => 'edit', 'icon' => 'user-edit',
-                    'href'  => href_to('admin', 'users', array('edit', $profile['id'])) . "?back=" . href_to('users', $profile['id'])
-                );
+                    'class' => 'edit', 'icon'  => 'user-edit',
+                    'href'  => href_to('admin', 'users', ['edit', $profile['id']]) . "?back=" . href_to('users', $profile['id'])
+                ];
             }
 
-            if (cmsUser::isAllowed('users', 'delete', 'any', true) && !$this->is_own_profile){
-                $tool_buttons['delete'] = array(
+            if (cmsUser::isAllowed('users', 'delete', 'any', true) && !$this->is_own_profile) {
+
+                $tool_buttons['delete'] = [
                     'title' => LANG_USERS_DELETE_PROFILE,
-                    'class' => 'user_delete ajax-modal', 'icon' => 'minus-circle',
+                    'class' => 'user_delete ajax-modal', 'icon'  => 'minus-circle',
                     'href'  => href_to_profile($profile, ['delete'])
-                );
+                ];
             }
-
         }
 
         if ($profile['is_deleted'] && cmsUser::isAllowed('users', 'delete', 'any')) {
-                $tool_buttons['restore'] = array(
-                    'title' => LANG_USERS_RESTORE_PROFILE,
-                    'class' => 'basket_remove ajax-modal', 'icon' => 'trash-restore',
-                    'href'  => href_to_profile($profile, ['restore'])
-                );
+
+            $tool_buttons['restore'] = [
+                'title' => LANG_USERS_RESTORE_PROFILE,
+                'class' => 'basket_remove ajax-modal', 'icon'  => 'trash-restore',
+                'href'  => href_to_profile($profile, ['restore'])
+            ];
         }
 
-        $buttons_hook = cmsEventsManager::hook('user_profile_buttons', array(
+        if (cmsUser::isAllowed('users', 'ban') && !$this->is_own_profile) {
+
+            $tool_buttons['ban'] = [
+                'title' => LANG_USERS_LOCK_USER,
+                'class' => 'ajax-modal', 'icon'  => 'user-lock',
+                'href'  => href_to_profile($profile, ['lock'])
+            ];
+        }
+
+        $buttons_hook = cmsEventsManager::hook('user_profile_buttons', [
             'profile' => $profile,
             'buttons' => $tool_buttons
-        ));
+        ]);
 
         return $buttons_hook['buttons'];
-
     }
 
 }
