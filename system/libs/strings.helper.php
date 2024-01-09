@@ -1059,7 +1059,7 @@ function string_html_get_images_path($text) {
 
     $matches = $paths = [];
 
-    preg_match_all('#<img src="([^"]+)"#uis', $text, $matches, PREG_SET_ORDER);
+    preg_match_all('#<img[^>]+src="?\'?([^"\']+)"?\'?[^>]*#uis', $text, $matches, PREG_SET_ORDER);
 
     if($matches){
         foreach($matches as $match){

@@ -24,14 +24,16 @@ class cmsWidget {
     protected $template;
     protected $wrapper = '';
 
-    public function __construct($widget){
+    public function __construct($widget) {
 
-        foreach($widget as $field => $value){
+        cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
+
+        foreach ($widget as $field => $value) {
             // кэшированием можно управлять из класса виджета
             // свойство там - приоритетное
-            if($field === 'is_cacheable'){
-                if($this->is_cacheable === null){
-                    $this->is_cacheable = boolval($value);
+            if ($field === 'is_cacheable') {
+                if ($this->is_cacheable === null) {
+                    $this->is_cacheable = (bool) ($value);
                 } else {
                     $this->allow_cacheable_option = false;
                 }
@@ -45,13 +47,13 @@ class cmsWidget {
         $this->css_class_wrap  = empty($widget['class_wrap']) ? '' : $widget['class_wrap'];
         $this->template        = $this->name;
 
-        if (!empty($widget['tpl_wrap'])){
-			$this->setWrapper($widget['tpl_wrap']);
-		}
+        if (!empty($widget['tpl_wrap'])) {
+            $this->setWrapper($widget['tpl_wrap']);
+        }
 
-		if (!empty($widget['tpl_body'])){
-			$this->setTemplate($widget['tpl_body']);
-		}
+        if (!empty($widget['tpl_body'])) {
+            $this->setTemplate($widget['tpl_body']);
+        }
 
     }
 

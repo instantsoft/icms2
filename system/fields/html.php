@@ -252,7 +252,7 @@ class fieldHtml extends cmsFormField {
 
     public function delete($value) {
 
-        if (is_empty_value($value)) {
+        if (is_empty_value($value) || empty($this->item['id'])) {
             return true;
         }
 
@@ -265,7 +265,8 @@ class fieldHtml extends cmsFormField {
             foreach ($paths as $path) {
 
                 $file = $files_model->getFileByPath($path);
-                if (!$file) {
+                // Нет файла или он от другой записи
+                if (!$file || $this->item['id'] != $file['target_id']) {
                     continue;
                 }
 

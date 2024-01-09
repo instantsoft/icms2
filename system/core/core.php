@@ -1164,8 +1164,6 @@ class cmsCore {
         if (!class_exists($class, false)) {
 
             self::includeFile($file);
-
-            self::loadWidgetLanguage($widget['name'], $widget['controller']);
         }
 
         return new $class($widget);
