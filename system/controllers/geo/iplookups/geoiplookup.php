@@ -1,30 +1,47 @@
 <?php
-
+/**
+ * Провайдер сервиса ip.nf
+ * Имя класса оставлено для совместимости
+ */
 class icmsGeoiplookup {
 
-    public static $title = 'geoiplookup.net';
+    /**
+     * Название провайдера для селекта формы
+     * Должен возвращать массив с ячейками:
+     * [
+     *      'city'         => Название города,
+     *      'country'      => Название страны,
+     *      'country_code' => ISO код страны,
+     *      'latitude'     => Широта,
+     *      'longitude'    => Долгота
+     *  ]
+     * Или пустой массив
+     *
+     * @var string
+     */
+    public static $title = 'ip.nf';
 
+    /**
+     * Основной метод, возвращающий массив с данными
+     *
+     * @param string $ip ip адрес
+     * @return array
+     */
     public static function detect($ip) {
 
-        $xml = file_get_contents_from_url('http://api.geoiplookup.net/?query=' . $ip);
-        if (!$xml) { return false; }
+        $result = file_get_contents_from_url('https://ip.nf/' . $ip . '.json', 3, true);
 
-        libxml_use_internal_errors(true);
-        $out = simplexml_load_string($xml);
-        libxml_clear_errors();
-
-        if (!$out) { return false; }
-
-        $data = [];
-
-        foreach ((array) $out->results->result as $key => $value) {
-            $key        = ($key == 'countrycode' ? 'country' : $key);
-            $key        = ($key == 'latitude' ? 'lat' : $key);
-            $key        = ($key == 'longitude' ? 'lng' : $key);
-            $data[$key] = (string) $value;
+        if (!$result || empty($result['ip'])) {
+            return [];
         }
 
-        return $data;
+        return [
+            'city'         => $result['ip']['city'],
+            'country'      => $result['ip']['country'],
+            'country_code' => $result['ip']['country_code'],
+            'latitude'     => $result['ip']['latitude'],
+            'longitude'    => $result['ip']['longitude']
+        ];
     }
 
 }

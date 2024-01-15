@@ -55,9 +55,13 @@ class cmsUploadfile {
 
     public function getExt() {
 
-        if ($this->file_mime && isset($this->mime_types[$this->file_mime])) {
+        if ($this->file_mime) {
 
-            return $this->mime_types[$this->file_mime];
+            $ext = array_search($this->file_mime, $this->mime_types, true);
+
+            if ($ext !== false) {
+                return $ext;
+            }
         }
 
         return 'bin';

@@ -172,8 +172,13 @@ class formWysiwygTinymceOptions extends cmsForm {
 
     private function getMimeTypes() {
 
-        if($this->mimetypes === null){
+        if ($this->mimetypes === null) {
+
             $this->mimetypes = (new cmsConfigs('mimetypes.php'))->getAll();
+
+            $exts = array_keys($this->mimetypes);
+
+            $this->mimetypes = array_combine($exts, $exts);
         }
 
         return $this->mimetypes;

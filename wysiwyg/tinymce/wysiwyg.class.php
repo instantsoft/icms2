@@ -157,34 +157,32 @@ class cmsWysiwygTinymce {
 
             $this->options['image_list'] = href_to('files', 'files_list', ['image']).$upload_params_string;
 
-            if(!empty($this->options['allow_mime_types'])){
+            // В allow_mime_types расширения файлов, так уж получилось :)
+            if (!empty($this->options['allow_mime_types'])) {
 
-                $allowed_mime_types = [];
+                $allowed_ext = [];
 
                 foreach ($user->groups as $group_id) {
-                    if(!empty($this->options['allow_mime_types'][$group_id])){
-                        foreach ($this->options['allow_mime_types'][$group_id] as $mime_type) {
-                            if(!in_array($mime_type, $allowed_mime_types)){
-                                $allowed_mime_types[] = $mime_type;
+                    if (!empty($this->options['allow_mime_types'][$group_id])) {
+                        foreach ($this->options['allow_mime_types'][$group_id] as $file_ext) {
+                            if (!in_array($file_ext, $allowed_ext)) {
+                                $allowed_ext[] = $file_ext;
                             }
                         }
                     }
                 }
 
-                if($allowed_mime_types){
+                if ($allowed_ext) {
 
                     unset($upload_params['csrf_token']);
 
-                    cmsUser::sessionSet('ww_allowed_mime_types'.($upload_params ? ':'.implode(':', $upload_params) : ''), $allowed_mime_types);
+                    cmsUser::sessionSet('ww_allowed_file_ext' . ($upload_params ? ':' . implode(':', $upload_params) : ''), $allowed_ext);
 
                     $this->options['file_upload'] = [
-                        'url' => href_to('files', 'upload_with_wysiwyg', ['inline_upload_file']).$upload_params_string
+                        'url' => href_to('files', 'upload_with_wysiwyg', ['inline_upload_file']) . $upload_params_string
                     ];
-
                 }
-
             }
-
         }
 
         $this->options['smiles_url'] = href_to('typograph', 'get_smiles');

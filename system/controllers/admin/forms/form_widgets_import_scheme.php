@@ -38,7 +38,7 @@ class formAdminWidgetsImportScheme extends cmsForm {
                             'title' => LANG_CP_WIDGETS_LFILE,
                             'hint'  => LANG_CP_WIDGETS_LFILE_HINT,
                             'options' => [
-                                'extensions' => 'txt'
+                                'extensions' => 'yaml'
                             ]
                         ])
                     ]

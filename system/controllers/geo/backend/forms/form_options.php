@@ -4,22 +4,21 @@ class formGeoOptions extends cmsForm {
 
     public function init() {
 
-        return array(
-
-            array(
-                'type' => 'fieldset',
-                'title' => '',
-                'childs' => array(
-                    new fieldCheckbox('auto_detect', array(
-                        'title' => LANG_PARSER_CITY_AUTO_DETECT,
+        return [
+            [
+                'type'   => 'fieldset',
+                'title'  => '',
+                'childs' => [
+                    new fieldCheckbox('auto_detect', [
+                        'title'   => LANG_PARSER_CITY_AUTO_DETECT,
                         'default' => 1
-                    )),
-                    new fieldList('auto_detect_provider', array(
-                        'title' => LANG_GEO_AUTO_DETECT_PROVIDER,
-                        'default' => 'geoiplookup',
-                        'generator' => function ($item){
+                    ]),
+                    new fieldList('auto_detect_provider', [
+                        'title'     => LANG_GEO_AUTO_DETECT_PROVIDER,
+                        'default'   => 'geoiplookup',
+                        'generator' => function ($item) {
 
-                            $items = array();
+                            $items = [];
                             $files = cmsCore::getFilesList('system/controllers/geo/iplookups', '*.php', true, true);
 
                             foreach ($files as $name) {
@@ -27,26 +26,22 @@ class formGeoOptions extends cmsForm {
                                 $class = 'icms' . string_to_camel('_', $name);
 
                                 $items[$name] = $class::$title;
-
                             }
 
                             return $items;
-
                         },
-                        'visible_depend' => array('auto_detect' => array('show' => array('1')))
-                    )),
-                    new fieldCity('default_country_id', array(
-                        'title' => LANG_GEO_DEFAULT_COUNTRY_ID,
+                        'visible_depend' => ['auto_detect' => ['show' => ['1']]]
+                    ]),
+                    new fieldCity('default_country_id', [
+                        'title'   => LANG_GEO_DEFAULT_COUNTRY_ID,
                         'default' => 0,
-                        'options' => array(
+                        'options' => [
                             'location_type' => 'countries'
-                        )
-                    ))
-                )
-            )
-
-        );
-
+                        ]
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

@@ -44,8 +44,9 @@ class cmsUploader {
         $this->allowed_mime = $types;
 
         foreach ($this->allowed_mime as $mime) {
-            if (isset($this->mime_types[$mime])) {
-                $this->allowed_mime_ext[] = $this->mime_types[$mime];
+            $mime_key = array_search($mime, $this->mime_types, true);
+            if ($mime_key) {
+                $this->allowed_mime_ext[] = $mime_key;
             }
         }
 
@@ -58,7 +59,7 @@ class cmsUploader {
      * @param array|string $allowed_ext
      * @return $this
      */
-    private function setAllowedMimeByExt($allowed_ext) {
+    public function setAllowedMimeByExt($allowed_ext) {
 
         // Если установлено ранее, то ничего не делаем
         if ($this->allowed_mime) {
@@ -79,13 +80,11 @@ class cmsUploader {
                 continue;
             }
 
-            $mime_key = array_search($aext, $this->mime_types, true);
-
-            if(!$mime_key){
+            if(!isset($this->mime_types[$aext])){
                 continue;
             }
 
-            $this->allowed_mime[] = $mime_key;
+            $this->allowed_mime[] = $this->mime_types[$aext];
 
             $this->allowed_mime_ext[] = $aext;
         }
