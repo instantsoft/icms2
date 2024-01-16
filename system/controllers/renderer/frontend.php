@@ -3,7 +3,7 @@ class renderer extends cmsFrontend {
 
     private $middleware;
 
-	public function __construct($request){
+    public function __construct($request){
 
         parent::__construct($request);
 

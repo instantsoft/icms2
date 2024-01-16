@@ -2,38 +2,34 @@
 
 class onSubscriptionsPublishDelayedContent extends cmsAction {
 
-    public function run($data){
+    public function run($data) {
 
-		foreach($data as $ctype_name => $items){
+        foreach ($data as $ctype_name => $items) {
 
-            $result = array();
+            $result = [];
 
-			foreach($items as $item){
+            foreach ($items as $item) {
 
-                if(!empty($item['is_private'])){
+                if (!empty($item['is_private'])) {
                     continue;
                 }
 
                 $result[] = $item;
-
             }
 
-            if($result){
+            if ($result) {
 
-                cmsQueue::pushOn('subscriptions', array(
+                cmsQueue::pushOn('subscriptions', [
                     'controller' => $this->name,
                     'hook'       => 'send_letters',
-                    'params'     => array(
+                    'params'     => [
                         'content', $ctype_name, $result
-                    )
-                ));
-
+                    ]
+                ]);
             }
-
-		}
+        }
 
         return $data;
-
     }
 
 }

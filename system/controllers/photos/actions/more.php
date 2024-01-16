@@ -4,7 +4,7 @@ class actionPhotosMore extends cmsAction{
 
     public function run($target = null, $id = null){
 
-		if (!$this->request->isAjax()) { cmsCore::error404(); }
+        if (!$this->request->isAjax()) { cmsCore::error404(); }
 
         if($target === 'album_id'){
 

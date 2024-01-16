@@ -230,7 +230,7 @@ class cmsFormField {
      * @param string $name Имя поля
      * @param array $options Массив опций
      */
-	public function __construct($name, $options = false) {
+    public function __construct($name, $options = false) {
 
         $this->lang = cmsConfig::get('language');
 

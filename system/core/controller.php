@@ -16,7 +16,7 @@ class cmsController {
 
     public $name;
     public $title;
-	public $model = null;
+    public $model = null;
     public $request;
     public $current_action;
     public $current_template_name;
@@ -1014,56 +1014,56 @@ class cmsController {
         $routes = $this->loadRoutes();
 
         // Флаг удачного перебора
-		$is_found = false;
+        $is_found = false;
 
         // Название найденного экшена
         $action_name = false;
 
         //перебираем все маршруты
-		if($routes){
-			foreach($routes as $route){
+        if($routes){
+            foreach($routes as $route){
 
-				//сравниваем шаблон маршрута с текущим URI
-				preg_match($route['pattern'], $uri, $matches);
+                //сравниваем шаблон маршрута с текущим URI
+                preg_match($route['pattern'], $uri, $matches);
 
-				//Если найдено совпадение
-				if ($matches){
+                //Если найдено совпадение
+                if ($matches){
 
                     $action_name = $route['action'];
 
-					// удаляем шаблон и экшен из параметров маршрута,
+                    // удаляем шаблон и экшен из параметров маршрута,
                     // чтобы не мешали при переборе параметров запроса
-					unset($route['pattern']);
-					unset($route['action']);
+                    unset($route['pattern']);
+                    unset($route['action']);
 
-					//перебираем параметры маршрута в виде ключ=>значение
-					foreach($route as $key=>$value){
-						if (is_integer($key)){
+                    //перебираем параметры маршрута в виде ключ=>значение
+                    foreach($route as $key=>$value){
+                        if (is_integer($key)){
 
                             //Если ключ - целое число, то значением является сегмент URI
                             $this->request->set($value, $matches[$key]);
 
-						} else {
+                        } else {
 
-							//иначе, значение берется из маршрута
+                            //иначе, значение берется из маршрута
                             $this->request->set($key, $value);
 
-						}
-					}
+                        }
+                    }
 
-					// совпадение есть
-					$is_found = true;
+                    // совпадение есть
+                    $is_found = true;
 
-					//раз найдено совпадение, прерываем цикл
-					break;
+                    //раз найдено совпадение, прерываем цикл
+                    break;
 
-				}
+                }
 
-			}
-		}
+            }
+        }
 
-		// Если в маршруте нет совпадений
-		if(!$is_found) { return false; }
+        // Если в маршруте нет совпадений
+        if(!$is_found) { return false; }
 
         return $action_name;
 
@@ -1334,11 +1334,11 @@ class cmsController {
     }
 
     public function validate_array_keys($array, $values){
-		if (empty($values)) { return true; }
+        if (empty($values)) { return true; }
         if (!is_array($values)) { return ERR_VALIDATE_INVALID; }
-		foreach($values as $value){
-			if (!isset($array[$value])) { return ERR_VALIDATE_INVALID; }
-		}
+        foreach($values as $value){
+            if (!isset($array[$value])) { return ERR_VALIDATE_INVALID; }
+        }
         return true;
     }
 

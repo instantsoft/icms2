@@ -412,7 +412,7 @@ class groups extends cmsFrontend {
             if (!$value) { continue; }
 
             $value = $field['handler']->storeFilter($value);
-			if (!$value) { continue; }
+            if (!$value) { continue; }
 
             if($field['handler']->applyFilter($this->model, $value) !== false){
                 $filters[$name] = $value;

@@ -142,7 +142,7 @@ class actionAdminSettingsCheckNested extends cmsAction {
 
         // Шаг 4
         $sql = "SELECT `id`, `ns_right`, `ns_left`
-				FROM {#}{$table}
+                FROM {#}{$table}
                 WHERE MOD((`ns_right`-`ns_left`), 2) = 0 AND `ns_differ` = '{$differ}'";
 
         $result = $db->query($sql, false, true);
@@ -154,8 +154,8 @@ class actionAdminSettingsCheckNested extends cmsAction {
 
         // Шаг 5
         $sql = "SELECT `id`
-				FROM {#}{$table}
-				WHERE MOD((`ns_left`-`ns_level`+2), 2) = 0 AND `ns_differ` = '$differ'";
+                FROM {#}{$table}
+                WHERE MOD((`ns_left`-`ns_level`+2), 2) = 0 AND `ns_differ` = '$differ'";
 
         $result = $db->query($sql, false, true);
         if ($result !== false) {
@@ -165,14 +165,14 @@ class actionAdminSettingsCheckNested extends cmsAction {
         }
 
         // Шаг 6
-        $sql = "SELECT 	t1.id,
-						COUNT(t1.id) AS rep,
-						MAX(t3.ns_right) AS max_right
-				FROM {#}{$table} AS t1, {#}{$table} AS t2, {#}{$table} AS t3
-				WHERE t1.ns_left <> t2.ns_left AND t1.ns_left <> t2.ns_right AND t1.ns_right <> t2.ns_left AND t1.ns_right <> t2.ns_right
+        $sql = "SELECT t1.id,
+                        COUNT(t1.id) AS rep,
+                        MAX(t3.ns_right) AS max_right
+                FROM {#}{$table} AS t1, {#}{$table} AS t2, {#}{$table} AS t3
+                WHERE t1.ns_left <> t2.ns_left AND t1.ns_left <> t2.ns_right AND t1.ns_right <> t2.ns_left AND t1.ns_right <> t2.ns_right
                         AND t1.ns_differ = '{$differ}' AND t2.ns_differ = '{$differ}' AND t3.ns_differ = '{$differ}'
-				GROUP BY t1.id
-				HAVING max_right <> SQRT(4 * rep + 1) + 1";
+                GROUP BY t1.id
+                HAVING max_right <> SQRT(4 * rep + 1) + 1";
 
         $result = $db->query($sql, false, true);
         if ($result !== false) {

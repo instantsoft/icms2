@@ -72,7 +72,7 @@ class cmsWysiwygRedactor {
 
     }
 
-	public function displayEditor($field_name, $content = '', $config = []){
+    public function displayEditor($field_name, $content = '', $config = []){
 
         $this->loadRedactor();
 
@@ -101,7 +101,7 @@ class cmsWysiwygRedactor {
 
         <?php cmsTemplate::getInstance()->addBottom(ob_get_clean());
 
-	}
+    }
 
     private function loadRedactor() {
 

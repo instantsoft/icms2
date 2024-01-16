@@ -127,6 +127,6 @@ class actionContentItemChildsView extends cmsAction {
             'seo_desc'        => $seo_desc
         ));
 
-	}
+    }
 
 }

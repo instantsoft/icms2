@@ -2,7 +2,7 @@
 
 class onUsersAdminDashboardChart extends cmsAction {
 
-	public function run(){
+    public function run(){
 
         $data = [
             'id' => 'users',

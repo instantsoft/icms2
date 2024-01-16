@@ -8,7 +8,7 @@
  by Vojtech Semecky, webmaster @ webdot . cz
 
  Latest version, features, manual and examples:
- 	http://lastrss.webdot.cz/
+    http://lastrss.webdot.cz/
 
     modifed by https://instantcms.ru/
 
@@ -35,7 +35,7 @@
 */
 class lastRSS {
 
-	public $default_cp  = 'UTF-8';
+    public $default_cp  = 'UTF-8';
     public $CDATA       = 'content';
     public $cp          = '';
     public $rsscp       = '';
@@ -135,7 +135,7 @@ class lastRSS {
      * @param string $subject
      * @return string
      */
-	private function pregMatch($pattern, $subject) {
+    private function pregMatch($pattern, $subject) {
 
         // start regullar expression
         preg_match($pattern, $subject, $out);
@@ -168,7 +168,7 @@ class lastRSS {
      * @param string $string
      * @return string
      */
-	private function unhtmlentities($string) {
+    private function unhtmlentities($string) {
 
         // Get HTML entities table
         $trans_tbl = get_html_translation_table(HTML_ENTITIES, ENT_QUOTES);
@@ -186,7 +186,7 @@ class lastRSS {
      * @param string $rss_url
      * @return array
      */
-	private function parse($rss_url) {
+    private function parse($rss_url) {
 
         $result = [];
 

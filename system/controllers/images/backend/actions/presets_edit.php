@@ -10,9 +10,9 @@ class actionImagesPresetsEdit extends cmsAction {
 
         $preset = $original_preset = $this->model->getPreset($id);
 
-		if ($preset['is_internal']){
-			$form->removeFieldset('basic');
-		}
+        if ($preset['is_internal']){
+            $form->removeFieldset('basic');
+        }
 
         if ($this->request->has('submit')){
 
@@ -51,7 +51,7 @@ class actionImagesPresetsEdit extends cmsAction {
 
             if ($errors){
 
-				cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
+                cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
 
             }
 

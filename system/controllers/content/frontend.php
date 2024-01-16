@@ -224,7 +224,7 @@ class content extends cmsFrontend {
         // Получаем поля для данного типа контента
         $fields = cmsCore::getModel('content')->getContentFields($ctype['name']);
 
-		list($ctype, $fields) = cmsEventsManager::hook(
+        list($ctype, $fields) = cmsEventsManager::hook(
             ['content_list_fields', 'content_'.$ctype['name'].'_list_fields'],
             [$ctype, $fields], null, $this->request
         );
@@ -247,21 +247,21 @@ class content extends cmsFrontend {
             $props_fields = $this->getPropsFields($props);
         }
 
-		// проверяем запросы фильтрации по полям
-		foreach($fields as $name => $field){
+        // проверяем запросы фильтрации по полям
+        foreach($fields as $name => $field){
 
             $field['handler']->setItem(['ctype_name' => $ctype['name'], 'id' => null])->setContext('filter');
 
             $fields[$name] = $field;
 
-			if (!$this->request->has($name)){ continue; }
+            if (!$this->request->has($name)){ continue; }
 
-			$value = $this->request->get($name, false, $field['handler']->getDefaultVarType());
+            $value = $this->request->get($name, false, $field['handler']->getDefaultVarType());
 
             $value = $field['handler']->storeFilter($value);
-			if (is_empty_value($value)) { continue; }
+            if (is_empty_value($value)) { continue; }
 
-			if($field['handler']->applyFilter($this->model, $value) !== false){
+            if($field['handler']->applyFilter($this->model, $value) !== false){
 
                 $this->active_filters[$name] = $value;
 
@@ -273,13 +273,13 @@ class content extends cmsFrontend {
 
             }
 
-		}
+        }
 
-		// проверяем запросы фильтрации по свойствам
-		if (isset($props) && is_array($props)){
-			foreach($props as $key => $prop){
+        // проверяем запросы фильтрации по свойствам
+        if (isset($props) && is_array($props)){
+            foreach($props as $key => $prop){
 
-				$name = "p{$prop['id']}";
+                $name = "p{$prop['id']}";
 
                 $prop['handler'] = $props_fields[$prop['id']];
 
@@ -287,14 +287,14 @@ class content extends cmsFrontend {
 
                 $props[$key] = $prop;
 
-				if (!$this->request->has($name)){ continue; }
+                if (!$this->request->has($name)){ continue; }
 
-				$value = $this->request->get($name, false, $prop['handler']->getDefaultVarType());
+                $value = $this->request->get($name, false, $prop['handler']->getDefaultVarType());
 
                 $value = $prop['handler']->storeFilter($value);
-				if (is_empty_value($value)) { continue; }
+                if (is_empty_value($value)) { continue; }
 
-				if($this->model->filterPropValue($ctype['name'], $prop, $value) !== false){
+                if($this->model->filterPropValue($ctype['name'], $prop, $value) !== false){
 
                     $this->active_filters[$name] = $value;
 
@@ -306,8 +306,8 @@ class content extends cmsFrontend {
 
                 }
 
-			}
-		}
+            }
+        }
 
         // Активный фильтры из GET параметров
         $filter_query = $this->getActiveFiltersQuery();
@@ -329,7 +329,7 @@ class content extends cmsFrontend {
             $this->model->limitPage($page, $perpage);
         }
 
-		list($ctype, $this->model) = cmsEventsManager::hook(
+        list($ctype, $this->model) = cmsEventsManager::hook(
             ['content_list_filter', 'content_'.$ctype['name'].'_list_filter'],
             [$ctype, $this->model], null, $this->request
         );
@@ -528,7 +528,7 @@ class content extends cmsFrontend {
         parse_str($filter_query, $filter_active);
 
         $html = $this->cms_template->renderContentList($ctype, [
-			'category_id'       => $category_id,
+            'category_id'       => $category_id,
             'page_url'          => $page_url,
             'ctype'             => $ctype,
             'fields'            => $fields,

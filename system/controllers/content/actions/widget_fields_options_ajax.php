@@ -13,12 +13,12 @@ class actionContentWidgetFieldsOptionsAjax extends cmsAction {
 
         $form_id = $this->request->get('form_id', '');
 
-		$ctype = $this->model->getContentType($ctype_id);
-		if (!$ctype) { return $this->halt(); }
+        $ctype = $this->model->getContentType($ctype_id);
+        if (!$ctype) { return $this->halt(); }
 
         cmsCore::loadWidgetLanguage('list', 'content');
 
-		$fields = $this->model->getContentFields($ctype['name']);
+        $fields = $this->model->getContentFields($ctype['name']);
 
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 

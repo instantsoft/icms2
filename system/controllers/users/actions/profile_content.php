@@ -133,8 +133,8 @@ class actionUsersProfileContent extends cmsAction {
 
         if ($this->cms_user->id == $profile['id'] || $this->cms_user->is_admin){
             $this->controller_content->model->disableApprovedFilter()->joinModerationsTasks($ctype['name']);
-			$this->controller_content->model->disablePubFilter();
-			$this->controller_content->model->disablePrivacyFilter();
+            $this->controller_content->model->disablePubFilter();
+            $this->controller_content->model->disablePrivacyFilter();
         }
 
         list($ctype, $profile) = cmsEventsManager::hook('content_before_profile', [$ctype, $profile]);

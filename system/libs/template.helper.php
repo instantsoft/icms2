@@ -12,7 +12,7 @@ function html_svg_icon($file, $name, $size = 16, $print = true){
     if(!isset($template_path[$file])){
         $template_path[$file] = cmsTemplate::getInstance()->getTemplateFilePath('images/icons/'.$file.'.svg', true);
     }
-	$icon = '<svg class="icms-svg-icon w-'.$size.'" fill="currentColor"><use href="'.$template_path[$file].'#'.$name.'"></use></svg>';
+    $icon = '<svg class="icms-svg-icon w-'.$size.'" fill="currentColor"><use href="'.$template_path[$file].'#'.$name.'"></use></svg>';
     if($print){
         echo $icon;
     } else {
@@ -25,7 +25,7 @@ function html_svg_icon($file, $name, $size = 16, $print = true){
  * @param string $href Ссылка
  */
 function html_link($title, $href){
-	echo '<a href="'.html($href, false).'">'.html($title, false).'</a>';
+    echo '<a href="'.html($href, false).'">'.html($title, false).'</a>';
 }
 
 /**
@@ -274,7 +274,7 @@ function html_button($caption, $name, $onclick = '', $attributes = []) {
     if (!empty($attributes['class'])) { $class .= ' '.$attributes['class']; }
     else { $class .= ' btn-secondary'; }
 
-	return '<button value="'.html($value, false).'" class="'.$class.'" name="'.$name.'" onclick="'.html($onclick, false).'" '.$attr_str.'><span>'.html($caption, false).'</span></button>';
+    return '<button value="'.html($value, false).'" class="'.$class.'" name="'.$name.'" onclick="'.html($onclick, false).'" '.$attr_str.'><span>'.html($caption, false).'</span></button>';
 }
 
 /**

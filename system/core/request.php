@@ -236,9 +236,9 @@ class cmsRequest {
 
             if (is_array($value) && $var_type !== 'array') {
                 $value = '';
-            } else {
-                settype($value, $var_type);
             }
+
+            settype($value, $var_type);
         }
 
         return $value;
@@ -260,7 +260,7 @@ class cmsRequest {
      * Устанавливает параметры текущего запроса
      * @param array $data
      */
-	public function setData($data) {
+    public function setData($data) {
 
         $this->data = $data;
 

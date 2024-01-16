@@ -185,12 +185,12 @@ class formModernTemplateOptions extends cmsForm {
                         'default' => '30px'
                     )),
 
-					new fieldList('font_type', array(
+                    new fieldList('font_type', array(
                         'title'   => LANG_MODERN_FONT_TYPE,
                         'default' => '',
                         'items'   => array(
                             '' => LANG_MODERN_FONT_TYPE_STR,
-							'gfont' => 'Google'
+                            'gfont' => 'Google'
                         )
                     )),
 
@@ -200,12 +200,12 @@ class formModernTemplateOptions extends cmsForm {
                         'visible_depend' => array('font_type' => array('show' => array('')))
                     )),
 
-					new fieldList('gfont', array(
+                    new fieldList('gfont', array(
                         'title'   => LANG_MODERN_FONT_GOOGLE,
                         'default' => 'Roboto',
                         'visible_depend' => array('font_type' => array('show' => array('gfont'))),
                         'items'   => array(
-							'Alegreya'                  => 'Alegreya',
+                            'Alegreya'                  => 'Alegreya',
                             'Alegreya+Sans'             => 'Alegreya Sans',
                             'Alegreya+Sans+SC'          => 'Alegreya Sans SC',
                             'Arimo'                     => 'Arimo',
@@ -255,7 +255,7 @@ class formModernTemplateOptions extends cmsForm {
                         }
                     )),
 
-					new fieldCheckbox('js_print_head', array(
+                    new fieldCheckbox('js_print_head', array(
                         'title'   => LANG_MODERN_JS_PRINT_HEAD,
                         'default' => false
                     ))

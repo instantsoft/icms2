@@ -2,22 +2,19 @@
 
 class onCommentsAdminDashboardChart extends cmsAction {
 
-	public function run(){
+    public function run() {
 
-        $data = array(
-            'id' => 'comments',
-            'title' => LANG_COMMENTS,
-            'sections' => array(
-                'comments' => array(
+        return [
+            'id'       => 'comments',
+            'title'    => LANG_COMMENTS,
+            'sections' => [
+                'comments' => [
                     'title' => LANG_COMMENTS,
                     'table' => 'comments',
-                    'key' => 'date_pub'
-                ),
-            )
-        );
-
-        return $data;
-
+                    'key'   => 'date_pub'
+                ]
+            ]
+        ];
     }
 
 }

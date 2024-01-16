@@ -362,9 +362,9 @@ class actionContentItemView extends cmsAction {
         // счетчик просмотров увеличивается, если включен в настройках,
         // не запрещён в записи (флаг disable_increment_hits, который может быть определён ранее в хуках)
         // и если смотрит не автор
-		if (!empty($ctype['options']['hits_on']) && empty($item['disable_increment_hits']) && $this->cms_user->id != $item['user_id']){
-			$this->model->incrementHitsCounter($ctype['name'], $item['id']);
-		}
+        if (!empty($ctype['options']['hits_on']) && empty($item['disable_increment_hits']) && $this->cms_user->id != $item['user_id']){
+            $this->model->incrementHitsCounter($ctype['name'], $item['id']);
+        }
 
         // строим поля записи
         $item['fields'] = [];
@@ -699,13 +699,13 @@ class actionContentItemView extends cmsAction {
             }
 
             // редиректы на новые урлы
-			if ($this->cms_config->ctype_default &&
+            if ($this->cms_config->ctype_default &&
                     empty($this->cms_core->no_uri_change_redirect) &&
                     in_array($this->cms_core->uri_action, $this->cms_config->ctype_default)){
 
-				$this->redirect(href_to($item['slug'] . '.html'), 301);
+                $this->redirect(href_to($item['slug'] . '.html'), 301);
 
-			} elseif(!$this->cms_config->ctype_default || !in_array($ctype['name'], $this->cms_config->ctype_default)) {
+            } elseif(!$this->cms_config->ctype_default || !in_array($ctype['name'], $this->cms_config->ctype_default)) {
 
                 // если название переопределено, то редиректим со оригинального на переопределенный
                 if($mapping){

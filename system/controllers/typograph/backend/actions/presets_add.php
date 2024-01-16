@@ -65,7 +65,7 @@ class actionTypographPresetsAdd extends cmsAction {
                     $preset['id'] = $id;
                 }
 
-				cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
+                cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
 
         }

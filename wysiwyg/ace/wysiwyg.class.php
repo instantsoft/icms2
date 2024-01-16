@@ -23,7 +23,7 @@ class cmsWysiwygAce {
         $this->options = array_replace_recursive($this->options, $config);
     }
 
-	public function displayEditor($field_name, $content = '', $config = []){
+    public function displayEditor($field_name, $content = '', $config = []){
 
         $this->loadRedactor();
 
@@ -51,7 +51,7 @@ class cmsWysiwygAce {
         </script>
 
        <?php cmsTemplate::getInstance()->addBottom(ob_get_clean());
-	}
+    }
 
     private function loadRedactor() {
 

@@ -110,7 +110,7 @@ function href_to($controller, $action = '', $params = false, $query = []){
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
-	return cmsConfig::get('root') .($lang_href ? $lang_href.'/' : ''). href_to_rel($controller, $action, $params, $query);
+    return cmsConfig::get('root') .($lang_href ? $lang_href.'/' : ''). href_to_rel($controller, $action, $params, $query);
 }
 
 /**
@@ -125,7 +125,7 @@ function href_to_abs($controller, $action = '', $params = false, $query = []){
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
-	return cmsConfig::get('host') . '/' .($lang_href ? $lang_href.'/' : ''). href_to_rel($controller, $action, $params, $query);
+    return cmsConfig::get('host') . '/' .($lang_href ? $lang_href.'/' : ''). href_to_rel($controller, $action, $params, $query);
 }
 
 /**
@@ -141,21 +141,21 @@ function href_to_rel($controller, $action = '', $params = false, $query = []){
 
     $controller = trim($controller, '/ ');
 
-	$ctype_default = cmsConfig::get('ctype_default');
+    $ctype_default = cmsConfig::get('ctype_default');
 
-	if ($ctype_default && $action && in_array($controller, $ctype_default)){
-		if (preg_match('/([a-z0-9\-\/{}]+)(\.html|\/view\-[a-z0-9\-_]+)$/i', $action)){
-			$controller = '';
-		}
-	}
+    if ($ctype_default && $action && in_array($controller, $ctype_default)){
+        if (preg_match('/([a-z0-9\-\/{}]+)(\.html|\/view\-[a-z0-9\-_]+)$/i', $action)){
+            $controller = '';
+        }
+    }
 
-	$controller_alias = cmsCore::getControllerAliasByName($controller);
-	if ($controller_alias) { $controller = $controller_alias; }
+    $controller_alias = cmsCore::getControllerAliasByName($controller);
+    if ($controller_alias) { $controller = $controller_alias; }
 
     $href = $controller;
 
-	if($action){ $href .= '/' . $action; }
-	if($params){
+    if($action){ $href .= '/' . $action; }
+    if($params){
         if (is_array($params)){
             $href .= '/' . implode('/', $params);
         } else {
@@ -445,9 +445,9 @@ function html_spellcount($num, $one, $two = false, $many = false, $zero_text = L
         list($one, $two, $many) = explode('|', $one);
     }
 
-	if (!$num){
-		return $zero_text.' '.$many;
-	}
+    if (!$num){
+        return $zero_text.' '.$many;
+    }
 
     return nf($num, 0, ' ').' '.html_spellcount_only($num, $one, $two, $many);
 }

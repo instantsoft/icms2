@@ -13,7 +13,7 @@ class fieldCategory extends cmsFormField {
 
     protected $use_language = true;
 
-	public function __construct($name, $options = false) {
+    public function __construct($name, $options = false) {
 
         parent::__construct($name, $options);
 

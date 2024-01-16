@@ -168,14 +168,14 @@ class modelBackendContent extends modelContent {
         $this->disableDeleteFilter()->disableApprovedFilter()->
                 disablePubFilter()->disablePrivacyFilter();
 
-		$items = $this->getContentItems($ctype['name']);
-		if ($items){
-			foreach($items as $item){
-				$this->deleteContentItem($ctype['name'], $item['id']);
-			}
-		}
+        $items = $this->getContentItems($ctype['name']);
+        if ($items){
+            foreach($items as $item){
+                $this->deleteContentItem($ctype['name'], $item['id']);
+            }
+        }
 
-		cmsCore::getModel('tags')->recountTagsFrequency();
+        cmsCore::getModel('tags')->recountTagsFrequency();
 
         $this->delete('content_types', $id);
         $this->delete('content_datasets', $id, 'ctype_id');
@@ -768,14 +768,14 @@ class modelBackendContent extends modelContent {
         return $prop['id'];
     }
 
-	public function toggleContentPropFilter($ctype_name, $id, $is_in_filter){
+    public function toggleContentPropFilter($ctype_name, $id, $is_in_filter){
 
-		$table_name = $this->table_prefix . $ctype_name . '_props';
+        $table_name = $this->table_prefix . $ctype_name . '_props';
 
-		return $this->update($table_name, $id, array(
-			'is_in_filter' => $is_in_filter
-		));
-	}
+        return $this->update($table_name, $id, array(
+            'is_in_filter' => $is_in_filter
+        ));
+    }
 
     public function bindContentProp($ctype_name, $prop_id, $cats_list){
 

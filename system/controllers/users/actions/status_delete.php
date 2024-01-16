@@ -2,27 +2,26 @@
 
 class actionUsersStatusDelete extends cmsAction {
 
-    public function run($user_id){
-		
-		if (!cmsUser::isLogged()) { cmsCore::error404(); }
+    public function run($user_id) {
 
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
+        if (!cmsUser::isLogged()) {
+            return cmsCore::error404();
+        }
 
-        $user = cmsUser::getInstance();
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
 
-        if ($user->id != $user_id && !$user->is_admin){
-            $result = array( 'error' => true, 'message' => LANG_ERROR );
-            cmsTemplate::getInstance()->renderJSON($result);
+        if ($this->cms_user->id != $user_id && !$this->cms_user->is_admin) {
+
+            return $this->cms_template->renderJSON(['error' => true, 'message' => LANG_ERROR]);
         }
 
         $this->model->clearUserStatus($user_id);
 
-        $result = array(
-            'error' => false,
-        );
-
-        cmsTemplate::getInstance()->renderJSON($result);
-
+        return $this->cms_template->renderJSON([
+            'error' => false
+        ]);
     }
 
 }

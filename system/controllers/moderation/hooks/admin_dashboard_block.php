@@ -13,7 +13,7 @@ class onModerationAdminDashboardBlock extends cmsAction {
 
     }
 
-	public function run($options){
+    public function run($options){
 
         if(!empty($options['only_titles'])){
 

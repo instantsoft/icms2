@@ -16,7 +16,7 @@ class admin extends cmsFrontend {
 
     public $install_folder_exists = false;
 
-	public function routeAction($action_name) {
+    public function routeAction($action_name) {
 
         if ($this->request->isStandard()) {
 
@@ -589,8 +589,8 @@ class admin extends cmsFrontend {
                 }
             }
         } else {
-			$manifest['contents'] = false;
-		}
+            $manifest['contents'] = false;
+        }
 
         if (isset($manifest['info']['image'])){
             $manifest['info']['image'] = $this->cms_config->upload_host . '/' .

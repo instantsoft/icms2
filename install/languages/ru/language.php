@@ -34,10 +34,10 @@
     define('LANG_PHP_VERSION',              'Версия интерпретатора');
     define('LANG_PHP_VERSION_REQ',          'Требуется PHP 7.0 или выше');
     define('LANG_PHP_VERSION_DESC',         'Установленная версия');
-	define('LANG_PHP_VARIABLES',            'Опции настройки PHP');
-	define('LANG_PHP_VARIABLES_HINT',       'Серым цветом указано требуемое значение');
-	define('LANG_PHP_VARIABLES_ON',			'Вкл');
-	define('LANG_PHP_VARIABLES_OFF',		'Выкл');
+    define('LANG_PHP_VARIABLES',            'Опции настройки PHP');
+    define('LANG_PHP_VARIABLES_HINT',       'Серым цветом указано требуемое значение');
+    define('LANG_PHP_VARIABLES_ON',         'Вкл');
+    define('LANG_PHP_VARIABLES_OFF',        'Выкл');
     define('LANG_PHP_EXTENSIONS',           'Требуемые расширения');
     define('LANG_PHP_EXTENSIONS_REQ',       'Данные расширения необходимы для работы InstantCMS');
     define('LANG_PHP_EXTENSIONS_EXTRA',     'Рекомендуемые расширения');

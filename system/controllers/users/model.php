@@ -454,20 +454,20 @@ class modelUsers extends cmsModel {
 
     public function updateUserTheme($id, $theme){
 
-		$user = cmsUser::getInstance();
+        $user = cmsUser::getInstance();
 
-		$old_bg_img = isset($user->theme['bg_img']) ? $user->theme['bg_img'] : array();
-		$new_bg_img = isset($theme['bg_img']) ? $theme['bg_img'] : array();
+        $old_bg_img = isset($user->theme['bg_img']) ? $user->theme['bg_img'] : array();
+        $new_bg_img = isset($theme['bg_img']) ? $theme['bg_img'] : array();
 
-		if (($old_bg_img != $new_bg_img) && isset($old_bg_img['original'])){
+        if (($old_bg_img != $new_bg_img) && isset($old_bg_img['original'])){
 
-			$config = cmsConfig::getInstance();
+            $config = cmsConfig::getInstance();
 
             foreach($old_bg_img as $path){
                 @unlink($config->upload_path . $path);
             }
 
-		}
+        }
 
         $res = $this->update('{users}', $id, array('theme' => $theme), true);
 

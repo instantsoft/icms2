@@ -1,21 +1,21 @@
 <?php
 class widgetAuthAuth extends cmsWidget {
 
-	public $is_cacheable = false;
+    public $is_cacheable = false;
 
-    public function run(){
+    public function run() {
 
-        if (cmsUser::isLogged()){ return false; }
+        if (cmsUser::isLogged()) {
+            return false;
+        }
 
         $auth = cmsCore::getController('auth');
 
         $form = $auth->getForm('login');
 
-        return array(
-            'form' => $form,
+        return [
+            'form'       => $form,
             'hooks_html' => cmsEventsManager::hookAll('login_form_html')
-        );
-
+        ];
     }
-
 }

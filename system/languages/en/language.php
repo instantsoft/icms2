@@ -18,14 +18,14 @@
     define('LANG_CONTENT_DELETE_ITEM',       'Delete %s');
     define('LANG_CONTENT_DELETE_ITEM_CONFIRM',  'Are you sure you want to delete %s?');
     define('LANG_CONTENT_RETURN_CONFIRM',    'Are you sure you want to retrieve this item from the moderation?\nIt will move to your drafts.');
-    define('LANG_CONTENT_SAVE_DRAFT',		 'Save to Drafts');
-    define('LANG_CONTENT_MOVE_DRAFT',		 'Move to drafts');
-    define('LANG_CONTENT_DRAFT_NOTICE',		 'The item is hidden in drafts');
-    define('LANG_CONTENT_DRAFT_LIST',		 'Drafts');
+    define('LANG_CONTENT_SAVE_DRAFT',         'Save to Drafts');
+    define('LANG_CONTENT_MOVE_DRAFT',         'Move to drafts');
+    define('LANG_CONTENT_DRAFT_NOTICE',         'The item is hidden in drafts');
+    define('LANG_CONTENT_DRAFT_LIST',         'Drafts');
     define('LANG_CONTENT_NOT_APPROVED',      'Pending approval');
     define('LANG_CONTENT_EDITED',            'Edited');
-    define('LANG_CONTENT_NOT_IS_PUB',		 'Not published');
-    define('LANG_CONTENT_OWN_ITEMS',		 'Only my');
+    define('LANG_CONTENT_NOT_IS_PUB',         'Not published');
+    define('LANG_CONTENT_OWN_ITEMS',         'Only my');
     define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Type part of the field value');
 
     define('LANG_SHOW_FILTER',               'Show filter');
@@ -66,8 +66,8 @@
     define('LANG_GROUP',                     'Group');
     define('LANG_GROUPS',                    'Groups');
     define('LANG_WROTE_IN_GROUP',            'in');
-    define('LANG_DESIGN',					 'Design');
-    define('LANG_TABLE',					 'Table');
+    define('LANG_DESIGN',                     'Design');
+    define('LANG_TABLE',                     'Table');
 
     //WIDGETS
     define('LANG_WP_SYSTEM',                 'System');
@@ -77,16 +77,16 @@
     define('LANG_WIDGET_TAB_PREV',           'Group with the previous widget');
     define('LANG_WIDGET_TITLE_LINKS',        'Links in the widget header');
     define('LANG_WIDGET_TITLE_LINKS_HINT',   'In the <b><em>Title | URL</em></b> format, for example, <b><em>Google | http://www.google.com</em></b><br>If a link is wrapped in curly brackets <b>{ }</b>, it will be shown to authorized users only<br>One link in a line');
-    define('LANG_WIDGET_WRAPPER_TPL',		 'Container template');
+    define('LANG_WIDGET_WRAPPER_TPL',         'Container template');
     define('LANG_WIDGET_WRAPPER_TPL_NO',     'Without container template');
-    define('LANG_WIDGET_BODY',	             'Widget body');
-    define('LANG_WIDGET_WRAPPER_TPL_CUST',	 'Custom HTML container ');
-    define('LANG_WIDGET_WRAPPER_TPL_HINT',	 'File from the <b>widgets</b> directory of your template');
-    define('LANG_WIDGET_BODY_TPL',			 'Widget template');
-    define('LANG_WIDGET_BODY_TPL_HINT',	     'File from the <b>%s</b> directory of your template');
-    define('LANG_WIDGET_DEVICE',			 'Which devices show the widget');
-    define('LANG_WIDGET_LANG_SELECT',		 'For which languages will the widget be displayed?');
-    define('LANG_WIDGET_TEMPLATE_LAYOUT',	 'Display on layouts');
+    define('LANG_WIDGET_BODY',                 'Widget body');
+    define('LANG_WIDGET_WRAPPER_TPL_CUST',     'Custom HTML container ');
+    define('LANG_WIDGET_WRAPPER_TPL_HINT',     'File from the <b>widgets</b> directory of your template');
+    define('LANG_WIDGET_BODY_TPL',             'Widget template');
+    define('LANG_WIDGET_BODY_TPL_HINT',         'File from the <b>%s</b> directory of your template');
+    define('LANG_WIDGET_DEVICE',             'Which devices show the widget');
+    define('LANG_WIDGET_LANG_SELECT',         'For which languages will the widget be displayed?');
+    define('LANG_WIDGET_TEMPLATE_LAYOUT',     'Display on layouts');
     define('LANG_DESKTOP_DEVICES',  'Desktop PCs');
     define('LANG_TABLET_DEVICES',  'Tablets');
     define('LANG_MOBILE_DEVICES',  'Phones');
@@ -94,7 +94,7 @@
     //PARSERS
     define('LANG_PARSER_TEMPLATE',           'Field template');
     define('LANG_PARSER_FIELDSGROUP',        'Field group');
-    define('LANG_PARSER_TEMPLATE_HINT',	     'A file in the <b>%s</b> directory of your template, starting with <b>%s</b>');
+    define('LANG_PARSER_TEMPLATE_HINT',         'A file in the <b>%s</b> directory of your template, starting with <b>%s</b>');
     define('LANG_PARSER_PREFIX',             'Prefix');
     define('LANG_PARSER_LIST_WHERE', 'From where to form the list');
     define('LANG_PARSER_LIST_WHERE_PRE', 'From preset values');
@@ -386,28 +386,28 @@
     define('LANG_ACCESS_COUNTRY_HINT',       'This page is not viewable in your country');
 
     //AUTHORIZATION
-    define('LANG_AUTH_LOGIN',			 'Login');
-    define('LANG_AUTH_PASSWORD',		 'Password');
+    define('LANG_AUTH_LOGIN',             'Login');
+    define('LANG_AUTH_PASSWORD',         'Password');
 
     //PASSWORD RESTORE
     define('LANG_FORGOT_PASS',               'Forgot password?');
 
     //SYSTEM ERRORS
-    define('LANG_ERROR',					 'Error');
-    define('LANG_REQUEST_PARAMS_ERROR',		 'Error in parameters: %s');
-    define('LANG_FORM_ERRORS',				 'Errors in form');
-    define('LANG_TRACE_STACK',				 'Recent calls');
-    define('ERR_COMPONENT_NOT_FOUND',		 'Component not found');
-    define('ERR_MODEL_NOT_FOUND',			 'Model not found or cannot be read');
-    define('ERR_TEMPLATE_NOT_FOUND', 		 'Template not found or cannot be read');
-    define('ERR_LIBRARY_NOT_FOUND', 		 'Library not found or cannot be read');
+    define('LANG_ERROR',                     'Error');
+    define('LANG_REQUEST_PARAMS_ERROR',         'Error in parameters: %s');
+    define('LANG_FORM_ERRORS',                 'Errors in form');
+    define('LANG_TRACE_STACK',                 'Recent calls');
+    define('ERR_COMPONENT_NOT_FOUND',         'Component not found');
+    define('ERR_MODEL_NOT_FOUND',             'Model not found or cannot be read');
+    define('ERR_TEMPLATE_NOT_FOUND',          'Template not found or cannot be read');
+    define('ERR_LIBRARY_NOT_FOUND',          'Library not found or cannot be read');
     define('ERR_FILE_NOT_FOUND',             'File not found');
-    define('ERR_CLASS_NOT_FOUND', 		 	 'Class not found or cannot be read');
-    define('ERR_CLASS_NOT_DEFINED', 		 'In the %s file class <b>%s</b> not defined');
-    define('ERR_MODULE_NOT_FOUND', 		 	 'Module not found');
-    define('ERR_DATABASE_QUERY', 		 	 '<b>DB query error</b>: <div>%s</div>');
-    define('ERR_PAGE_NOT_FOUND', 		 	 'Page not found');
-    define('ERR_FORBIDDEN', 		 	     'Forbidden');
+    define('ERR_CLASS_NOT_FOUND',               'Class not found or cannot be read');
+    define('ERR_CLASS_NOT_DEFINED',          'In the %s file class <b>%s</b> not defined');
+    define('ERR_MODULE_NOT_FOUND',               'Module not found');
+    define('ERR_DATABASE_QUERY',               '<b>DB query error</b>: <div>%s</div>');
+    define('ERR_PAGE_NOT_FOUND',               'Page not found');
+    define('ERR_FORBIDDEN',                   'Forbidden');
     define('ERR_SITE_OFFLINE',               'Site is offline');
     define('ERR_SITE_OFFLINE_FULL',          'Site is offline. <a class="stretched-link text-dark" href="%s">Enable</a>');
     define('ERR_SEARCH_TITLE',               'Search');
@@ -418,13 +418,13 @@
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'File was successfully uploaded');
-    define('LANG_UPLOAD_ERR_INI_SIZE', 		 'File size exceeds the limit allowed: %s');
+    define('LANG_UPLOAD_ERR_INI_SIZE',          'File size exceeds the limit allowed: %s');
     define('LANG_UPLOAD_ERR_FORM_SIZE',      'File size exceeds the limit allowed');
-    define('LANG_UPLOAD_ERR_PARTIAL', 		 'File was uploaded partially');
-    define('LANG_UPLOAD_ERR_NO_FILE', 		 'File upload failed');
+    define('LANG_UPLOAD_ERR_PARTIAL',          'File was uploaded partially');
+    define('LANG_UPLOAD_ERR_NO_FILE',          'File upload failed');
     define('LANG_UPLOAD_ERR_NO_TMP_DIR',     'Folder for temporary files not found on the server');
     define('LANG_UPLOAD_ERR_CANT_WRITE', 'Failed to write file to disk');
-    define('LANG_UPLOAD_ERR_EXTENSION', 	 'File upload was cancelled');
+    define('LANG_UPLOAD_ERR_EXTENSION',      'File upload was cancelled');
     define('LANG_UPLOAD_ERR_MIME',           'File has wrong format');
 
     define('LANG_GRID_SELECT_HINT', 'Click on a row to select or ');
@@ -459,20 +459,20 @@
     define('LANG_VALIDATE_URL',              'URL');
     define('LANG_VALIDATE_UNIQUE',           'Unique value');
 
-    define('ERR_REQ_EMAIL', 		 	 	 'E-mail is required!');
-    define('ERR_EMPTY_FIELDS', 			 	 'All fields are required!');
-    define('ERR_NICKNAME_EXISTS', 			 'Nickname &laquo;%s&raquo; is already used');
-    define('ERR_WRONG_OLD_PASS', 		 	 'Password change error: Old password is incorrect');
-    define('ERR_NEW_PASS_MISMATCH', 		 'Password change error: Passwords do not match');
-    define('ERR_NEW_PASS_AS_OLD', 		     'The new password cannot be the same as the old password');
-    define('ERR_NEW_PASS_REQUIRED', 		 'Enter your new password twice!');
+    define('ERR_REQ_EMAIL',                    'E-mail is required!');
+    define('ERR_EMPTY_FIELDS',                   'All fields are required!');
+    define('ERR_NICKNAME_EXISTS',              'Nickname &laquo;%s&raquo; is already used');
+    define('ERR_WRONG_OLD_PASS',               'Password change error: Old password is incorrect');
+    define('ERR_NEW_PASS_MISMATCH',          'Password change error: Passwords do not match');
+    define('ERR_NEW_PASS_AS_OLD',              'The new password cannot be the same as the old password');
+    define('ERR_NEW_PASS_REQUIRED',          'Enter your new password twice!');
 
     //CAPTCHA
-    define('LANG_CAPTCHA_CODE', 		 	 'Spam protection');
-    define('LANG_CAPTCHA_ERROR', 		 	 'Spam protection code is incorrect');
+    define('LANG_CAPTCHA_CODE',               'Spam protection');
+    define('LANG_CAPTCHA_ERROR',               'Spam protection code is incorrect');
 
     //LISTS
-    define('LANG_NO_ITEMS', 		 		 'No elements to display');
+    define('LANG_NO_ITEMS',                   'No elements to display');
 
     //ACTIONS
     define('LANG_TRANSLATE',                 'Translate');
@@ -492,7 +492,7 @@
     define('LANG_YES',                       'Yes');
     define('LANG_NO',                        'No');
     define('LANG_LIST_LIMIT',                'Entries in list');
-    define('LANG_LIST_ALL',					 'Show all');
+    define('LANG_LIST_ALL',                     'Show all');
     define('LANG_LIST_EMPTY',                'No items to display');
     define('LANG_TARGET_LIST_EMPTY',         'No %s to display');
     define('LANG_LIST_NONE_SELECTED',        'Nothing selected');
@@ -506,59 +506,59 @@
     define('LANG_DECLINE',                   'Decline');
     define('LANG_CONFIRM',                   'Confirm');
     define('LANG_INVITE',                    'Invite');
-    define('LANG_ADD', 						 'New');
-    define('LANG_ADD_CONTENT',				 'New Page');
+    define('LANG_ADD',                          'New');
+    define('LANG_ADD_CONTENT',                 'New Page');
     define('LANG_ADD_USER',                  'New User');
-    define('LANG_ADD_NEWS',					 'Add news');
-    define('LANG_ADD_MENU',				 	 'New Menu');
-    define('LANG_ADD_MENUITEM',				 'New Menu Item');
+    define('LANG_ADD_NEWS',                     'Add news');
+    define('LANG_ADD_MENU',                      'New Menu');
+    define('LANG_ADD_MENUITEM',                 'New Menu Item');
     define('LANG_MENU_MORE',                 'More');
-    define('LANG_VIEW', 					 'View');
-    define('LANG_EDIT', 					 'Edit');
-    define('LANG_EDIT_SELECTED',			 'Edit selected');
-    define('LANG_SHOW', 					 'Show');
+    define('LANG_VIEW',                      'View');
+    define('LANG_EDIT',                      'Edit');
+    define('LANG_EDIT_SELECTED',             'Edit selected');
+    define('LANG_SHOW',                      'Show');
     define('LANG_SHOW_ALL',                  'Show all');
-    define('LANG_SHOW_SELECTED',			 'Show selected');
-    define('LANG_ADMIN_SELECTED', 			 'Assign selected as administrators');
-    define('LANG_UNADMIN_SELECTED',			 'Deprive selected administrator rights');
-    define('LANG_HIDE', 					 'Hide');
-    define('LANG_COPY', 					 'Copy');
-    define('LANG_HIDE_SELECTED',			 'Hide selected');
-    define('LANG_CONFIG', 					 'Settings');
-    define('LANG_RESTORE', 					 'Restore');
-    define('LANG_BASKET_TITLE', 			 'Items trash');
-    define('LANG_BASKET_DELETE', 			 'Move to trash');
-    define('LANG_BASKET_DELETE_SUCCESS', 	 'Item successfully deleted to trash');
-    define('LANG_BASKET_DELETE_LEFT_TIME', 	 'The material will be %s in the trash and then permanently deleted');
-    define('LANG_ITEM_RESTORE_SUCCESS', 	 'Item successfully restored');
-    define('LANG_DELETE', 					 'Delete');
-    define('LANG_DELETE_SUCCESS', 	         'Item successfully deleted');
-    define('LANG_DELETE_SELECTED',			 'Delete selected');
+    define('LANG_SHOW_SELECTED',             'Show selected');
+    define('LANG_ADMIN_SELECTED',              'Assign selected as administrators');
+    define('LANG_UNADMIN_SELECTED',             'Deprive selected administrator rights');
+    define('LANG_HIDE',                      'Hide');
+    define('LANG_COPY',                      'Copy');
+    define('LANG_HIDE_SELECTED',             'Hide selected');
+    define('LANG_CONFIG',                      'Settings');
+    define('LANG_RESTORE',                      'Restore');
+    define('LANG_BASKET_TITLE',              'Items trash');
+    define('LANG_BASKET_DELETE',              'Move to trash');
+    define('LANG_BASKET_DELETE_SUCCESS',      'Item successfully deleted to trash');
+    define('LANG_BASKET_DELETE_LEFT_TIME',      'The material will be %s in the trash and then permanently deleted');
+    define('LANG_ITEM_RESTORE_SUCCESS',      'Item successfully restored');
+    define('LANG_DELETE',                      'Delete');
+    define('LANG_DELETE_SUCCESS',              'Item successfully deleted');
+    define('LANG_DELETE_SELECTED',             'Delete selected');
     define('LANG_DELETE_SELECTED_CONFIRM',   'Delete selected elements?');
     define('LANG_TRASH_DELETE_SELECTED_CONFIRM', 'Are you sure you want to delete the selected items in the trash?');
     define('LANG_MOVE',                      'Move');
     define('LANG_MOVE_TO_CATEGORY',          'Move to category');
-    define('LANG_ON',	 					 'On');
-    define('LANG_OFF', 						 'Off');
-    define('LANG_SAVE',						 'Save');
-    define('LANG_PUBLISH',					 'Publish');
+    define('LANG_ON',                          'On');
+    define('LANG_OFF',                          'Off');
+    define('LANG_SAVE',                         'Save');
+    define('LANG_PUBLISH',                     'Publish');
     define('LANG_SAVE_CHANGES',              'Save changes');
     define('LANG_SAVE_ORDER',                'Save order');
     define('LANG_SAVING',                    'Saving...');
     define('LANG_PREVIEW',                   'Preview');
-    define('LANG_SEND',						 'Send');
-    define('LANG_SEND_AGAIN',				 'Send again');
-    define('LANG_SEND_AGAIN_VIA',			 'Send again via ');
-    define('LANG_INSTALL',					 'Install');
-    define('LANG_INSERT',					 'Insert');
-    define('LANG_CANCEL',					 'Cancel');
-    define('LANG_BACK',					 	 'Back');
-    define('LANG_IN_QUEUE',					 'Items in queue');
+    define('LANG_SEND',                         'Send');
+    define('LANG_SEND_AGAIN',                 'Send again');
+    define('LANG_SEND_AGAIN_VIA',             'Send again via ');
+    define('LANG_INSTALL',                     'Install');
+    define('LANG_INSERT',                     'Insert');
+    define('LANG_CANCEL',                     'Cancel');
+    define('LANG_BACK',                          'Back');
+    define('LANG_IN_QUEUE',                     'Items in queue');
     define('LANG_SELECT',                    'Select');
     define('LANG_SELECT_MULTIPLE',           'Select multiple');
-    define('LANG_SELECT_ALL',				 'Select all');
-    define('LANG_DESELECT_ALL',				 'Deselect all');
-    define('LANG_INVERT_ALL',				 'Invert');
+    define('LANG_SELECT_ALL',                 'Select all');
+    define('LANG_DESELECT_ALL',                 'Deselect all');
+    define('LANG_INVERT_ALL',                 'Invert');
     define('LANG_CLOSE',                     'Close');
     define('LANG_CONTINUE',                  'Continue');
     define('LANG_OPTIONS',                   'Options');
@@ -578,12 +578,12 @@
     //NAVIGATION
     define('LANG_HOME',                      'Home');
     define('LANG_BACK_TO_HOME',              'Back to homepage');
-    define('LANG_PAGE_NEXT', 				 'Next');
+    define('LANG_PAGE_NEXT',                  'Next');
     define('LANG_PAGE_PREV',                 'Previous');
-    define('LANG_PAGE_FIRST', 				 'First');
+    define('LANG_PAGE_FIRST',                  'First');
     define('LANG_PAGE_LAST',                 'Last');
-    define('LANG_PAGES', 					 'Pages');
-    define('LANG_PAGE', 					 'Page');
+    define('LANG_PAGES',                      'Pages');
+    define('LANG_PAGE',                      'Page');
     define('LANG_PAGE_ADD',                  'NewPage');
     define('LANG_PAGE_DELETE',               'Delete page');
     define('LANG_PAGE_CURRENT_DELETE',       'Delete current page');
@@ -593,8 +593,8 @@
     define('LANG_RETURN_TO_FIRST',           'Back to top');
 
     //FORMS
-    define('LANG_SUBMIT', 					 'Submit');
-    define('LANG_SUBMIT_NOT_SAVE',			 'Do you want to leave this page? Changes have not been saved.');
+    define('LANG_SUBMIT',                      'Submit');
+    define('LANG_SUBMIT_NOT_SAVE',             'Do you want to leave this page? Changes have not been saved.');
     define('LANG_DOT',                       'Dot');
     define('LANG_COMMA',                     'Comma');
     define('LANG_SPACE',                     'Space');
@@ -609,13 +609,13 @@
     define('LANG_PAGE_FOOTER',               'Page footer');
     define('LANG_PAGE_LOGO',                 'Logo');
     define('LANG_MENU',                      'Menu');
-    define('LANG_TITLE', 					 'Title');
+    define('LANG_TITLE',                      'Title');
     define('LANG_SHOW_TITLE',                'Show title');
     define('LANG_SYSTEM_NAME',               'System name');
-    define('LANG_SYSTEM_EDIT_NOTICE',	     '<b>Attention:</b> if you change the system name field will be re-created and all current data will be lost!');
+    define('LANG_SYSTEM_EDIT_NOTICE',         '<b>Attention:</b> if you change the system name field will be re-created and all current data will be lost!');
     define('LANG_DESCRIPTION',               'Description');
     define('LANG_INFORMATION',               'Information');
-    define('LANG_CONTENT', 					 'Contents');
+    define('LANG_CONTENT',                      'Contents');
     define('LANG_CATEGORY',                  'Category');
     define('LANG_CATEGORIES',                'Categories');
     define('LANG_CATEGORY_TITLE',            'Category title');
@@ -626,22 +626,22 @@
     define('LANG_ROOT_NODE',                 'Root node');
     define('LANG_ROOT_CATEGORY',             'Root category');
     define('LANG_PARENT_CATEGORY',           'Parent category');
-    define('LANG_ADDITIONAL_CATEGORIES',	 'Additional categories');
-    define('LANG_MESSAGE', 					 'Message text');
-    define('LANG_DATE', 					 'Date');
+    define('LANG_ADDITIONAL_CATEGORIES',     'Additional categories');
+    define('LANG_MESSAGE',                      'Message text');
+    define('LANG_DATE',                      'Date');
     define('LANG_DATE_PUB',                  'Publication date');
-    define('LANG_PUBLICATION',				 'Publication');
+    define('LANG_PUBLICATION',                 'Publication');
     define('LANG_SLUG',                      'URL');
     define('LANG_PRIVACY',                   'Privacy');
     define('LANG_PRIVACY_PUBLIC',            'For everyone');
     define('LANG_PRIVACY_HINT',              'This is private item');
     define('LANG_PRIVACY_PRIVATE',           'Show only to friends');
     define('LANG_PRIVACY_PRIVATE_HINT',      'This is a private item. Only author\'s friends can view it.');
-    define('LANG_ON_FRONT',				 	 'On the home page');
-    define('LANG_SHOWED',					 'Shown');
-    define('LANG_ORDER',					 'Order');
-    define('LANG_ORDER_DOWN',				 'Move down');
-    define('LANG_ORDER_UP',					 'Move up');
+    define('LANG_ON_FRONT',                      'On the home page');
+    define('LANG_SHOWED',                     'Shown');
+    define('LANG_ORDER',                     'Order');
+    define('LANG_ORDER_DOWN',                 'Move down');
+    define('LANG_ORDER_UP',                     'Move up');
     define('LANG_HITS_SPELL',                'views|views|views');
     define('LANG_HITS',                      'Views');
     define('LANG_GUEST',                     'Guest');
@@ -707,7 +707,7 @@
     define('LANG_YEAR2',                     'years');
     define('LANG_YEAR10',                    'years');
     define('LANG_MONTHS',                    'Months');
-    define('LANG_MONTH',				     'Month');
+    define('LANG_MONTH',                     'Month');
     define('LANG_MONTH1',                    'month');
     define('LANG_MONTH2',                    'months');
     define('LANG_MONTH10',                   'months');

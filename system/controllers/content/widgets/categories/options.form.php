@@ -7,7 +7,7 @@ class formWidgetContentCategoriesOptions extends cmsForm {
         $presets = cmsCore::getModel('images')->getPresetsList();
         $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
 
-		if (!empty($options['ctype_name'])){
+        if (!empty($options['ctype_name'])){
 
             $ctype = cmsCore::getModel('content')->getContentTypeByName($options['ctype_name']);
             if ($ctype) {
@@ -26,7 +26,7 @@ class formWidgetContentCategoriesOptions extends cmsForm {
 
             }
 
-		}
+        }
 
         return array(
 
@@ -57,10 +57,10 @@ class formWidgetContentCategoriesOptions extends cmsForm {
                     new fieldList('options:cover_preset', array(
                         'title' => LANG_CP_CAT_CONTEXT_LIST_COVER_SIZES,
                         'items' => ['' => ''] + $presets,
-						'parent' => array(
-							'list' => 'options:ctype_name',
-							'url' => href_to('content', 'widget_cats_presets_ajax')
-						)
+                        'parent' => array(
+                            'list' => 'options:ctype_name',
+                            'url' => href_to('content', 'widget_cats_presets_ajax')
+                        )
                     ))
 
                 )

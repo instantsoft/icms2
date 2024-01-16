@@ -59,10 +59,10 @@ class formRssFeed extends cmsForm {
 
                     new fieldNumber('cache_interval', array(
                         'title' => LANG_RSS_FEED_CACHE_INT,
-						'rules' => array(
-							array('digits'),
-							array('min', 1)
-						)
+                        'rules' => array(
+                            array('digits'),
+                            array('min', 1)
+                        )
                     ))
 
                 )

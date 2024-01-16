@@ -54,7 +54,7 @@ class actionContentItemAdd extends cmsAction {
             return $this->redirectBack();
         }
 
-		$item = [];
+        $item = [];
 
         if ($ctype['is_cats']){
             $category_id = $this->request->get('to_id', 0);
@@ -139,7 +139,7 @@ class actionContentItemAdd extends cmsAction {
         $is_moderator = $this->controller_moderation->userIsContentModerator($ctype['name'], $this->cms_user->id, $item);
         $is_premoderation = cmsUser::isAllowed($ctype['name'], 'add', 'premod', true);
 
-		$ctype = cmsEventsManager::hook('content_add', $ctype);
+        $ctype = cmsEventsManager::hook('content_add', $ctype);
         list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", [$form, $item]);
 
         // Форма отправлена?
@@ -159,7 +159,7 @@ class actionContentItemAdd extends cmsAction {
         }
 
         $item['ctype_name'] = $ctype['name'];
-		$item['ctype_id']   = $ctype['id'];
+        $item['ctype_id']   = $ctype['id'];
         $item['ctype_data'] = $ctype;
 
         if ($is_submitted){
@@ -201,7 +201,7 @@ class actionContentItemAdd extends cmsAction {
 
             }
 
-			list($item, $errors) = cmsEventsManager::hook('content_validate', [$item, $errors], null, $this->request);
+            list($item, $errors) = cmsEventsManager::hook('content_validate', [$item, $errors], null, $this->request);
             list($item, $errors, $ctype, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_validate", [$item, $errors, $ctype, $fields], null, $this->request);
 
             if (!$errors){
@@ -212,35 +212,35 @@ class actionContentItemAdd extends cmsAction {
                     $item['is_approved'] = !$is_premoderation || $is_moderator;
                 }
 
-				$is_pub_control = cmsUser::isAllowed($ctype['name'], 'pub_on');
-				$is_date_pub_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_late');
-				$is_date_pub_end_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'any');
-				$is_date_pub_days_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'days');
+                $is_pub_control = cmsUser::isAllowed($ctype['name'], 'pub_on');
+                $is_date_pub_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_late');
+                $is_date_pub_end_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'any');
+                $is_date_pub_days_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'days');
 
-				$date_pub_time = isset($item['date_pub']) ? strtotime($item['date_pub']) : time();
-				$now_time = time();
+                $date_pub_time = isset($item['date_pub']) ? strtotime($item['date_pub']) : time();
+                $now_time = time();
                 $now_date = strtotime(date('Y-m-d', $now_time));
-				$is_pub = true;
+                $is_pub = true;
 
-				if ($is_date_pub_allowed){
-					$time_to_pub = $date_pub_time - $now_time;
-					$is_pub = $is_pub && ($time_to_pub < 0);
-				}
-				if ($is_date_pub_end_allowed && !empty($item['date_pub_end'])){
-					$date_pub_end_time = strtotime($item['date_pub_end']);
-					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
-					$is_pub = $is_pub && ($days_from_pub < 1);
-				} else if ($is_date_pub_days_allowed && !$this->cms_user->is_admin) {
-					$days = $item['pub_days'];
-					$date_pub_end_time = $date_pub_time + 60*60*24*$days;
-					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
-					$is_pub = $is_pub && ($days_from_pub < 1);
-					$item['date_pub_end'] = date('Y-m-d', $date_pub_end_time);
-				} else {
-					$item['date_pub_end'] = false;
-				}
+                if ($is_date_pub_allowed){
+                    $time_to_pub = $date_pub_time - $now_time;
+                    $is_pub = $is_pub && ($time_to_pub < 0);
+                }
+                if ($is_date_pub_end_allowed && !empty($item['date_pub_end'])){
+                    $date_pub_end_time = strtotime($item['date_pub_end']);
+                    $days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
+                    $is_pub = $is_pub && ($days_from_pub < 1);
+                } else if ($is_date_pub_days_allowed && !$this->cms_user->is_admin) {
+                    $days = $item['pub_days'];
+                    $date_pub_end_time = $date_pub_time + 60*60*24*$days;
+                    $days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
+                    $is_pub = $is_pub && ($days_from_pub < 1);
+                    $item['date_pub_end'] = date('Y-m-d', $date_pub_end_time);
+                } else {
+                    $item['date_pub_end'] = false;
+                }
 
-				unset($item['pub_days']);
+                unset($item['pub_days']);
 
                 if (!$is_pub_control) {
                     unset($item['is_pub']);
@@ -295,11 +295,11 @@ class actionContentItemAdd extends cmsAction {
                         return $this->redirectTo('moderation', 'draft');
                     }
 
-					if ($ctype['options']['item_on']){
-						return $this->redirectTo($ctype['name'], $item['slug'] . '.html');
-					} else {
-						return $this->redirectTo($ctype['name']);
-					}
+                    if ($ctype['options']['item_on']){
+                        return $this->redirectTo($ctype['name'], $item['slug'] . '.html');
+                    } else {
+                        return $this->redirectTo($ctype['name']);
+                    }
 
                 }
             }

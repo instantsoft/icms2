@@ -2,7 +2,7 @@
 
 class onBootstrap4WidgetMenuForm extends cmsAction {
 
-	public function run($_data){
+    public function run($_data){
 
         list($form, $widget, $widget_object, $template_name) = $_data;
 

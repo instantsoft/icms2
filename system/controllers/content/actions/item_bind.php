@@ -28,34 +28,34 @@ class actionContentItemBind extends cmsAction {
         $child_ctype = $this->model->getContentTypeByName($child_ctype_name);
         if (!$child_ctype) { cmsCore::error404(); }
 
-		$relation = $this->model->getContentRelationByTypes($ctype['id'], $child_ctype['id']);
-		if (!$relation) { cmsCore::error404(); }
+        $relation = $this->model->getContentRelationByTypes($ctype['id'], $child_ctype['id']);
+        if (!$relation) { cmsCore::error404(); }
 
-		$perm = cmsUser::getPermissionValue($child_ctype_name, 'bind_to_parent');
+        $perm = cmsUser::getPermissionValue($child_ctype_name, 'bind_to_parent');
 
-		foreach($selected_ids as $child_item_id){
+        foreach($selected_ids as $child_item_id){
 
-			$child_item_id = intval(trim($child_item_id));
-			if (!$child_item_id){ continue;}
+            $child_item_id = intval(trim($child_item_id));
+            if (!$child_item_id){ continue;}
 
-			$child_item = $this->model->getContentItem($child_ctype_name, $child_item_id);
-			if (!$child_item) { continue; }
+            $child_item = $this->model->getContentItem($child_ctype_name, $child_item_id);
+            if (!$child_item) { continue; }
 
-			$is_allowed_to_bind = $perm && (
-									($perm == 'all_to_all') ||
-									($perm == 'all_to_own' && $parent_item['user_id'] == $user->id) ||
-									($perm == 'all_to_other' && $parent_item['user_id'] != $user->id) ||
-									($perm == 'own_to_own' && $parent_item['user_id'] == $user->id && $child_item['user_id'] == $user->id) ||
-									($perm == 'own_to_other' && $parent_item['user_id'] != $user->id && $child_item['user_id'] == $user->id) ||
-									($perm == 'own_to_all' && $child_item['user_id'] == $user->id) ||
-									($perm == 'other_to_own' && $parent_item['user_id'] == $user->id && $child_item['user_id'] != $user->id) ||
-									($perm == 'other_to_other' && $parent_item['user_id'] != $user->id && $child_item['user_id'] != $user->id) ||
-									($perm == 'other_to_all' && $child_item['user_id'] != $user->id)
-								) || $user->is_admin;
+            $is_allowed_to_bind = $perm && (
+                                    ($perm == 'all_to_all') ||
+                                    ($perm == 'all_to_own' && $parent_item['user_id'] == $user->id) ||
+                                    ($perm == 'all_to_other' && $parent_item['user_id'] != $user->id) ||
+                                    ($perm == 'own_to_own' && $parent_item['user_id'] == $user->id && $child_item['user_id'] == $user->id) ||
+                                    ($perm == 'own_to_other' && $parent_item['user_id'] != $user->id && $child_item['user_id'] == $user->id) ||
+                                    ($perm == 'own_to_all' && $child_item['user_id'] == $user->id) ||
+                                    ($perm == 'other_to_own' && $parent_item['user_id'] == $user->id && $child_item['user_id'] != $user->id) ||
+                                    ($perm == 'other_to_other' && $parent_item['user_id'] != $user->id && $child_item['user_id'] != $user->id) ||
+                                    ($perm == 'other_to_all' && $child_item['user_id'] != $user->id)
+                                ) || $user->is_admin;
 
-			if (!$is_allowed_to_bind) { continue; }
+            if (!$is_allowed_to_bind) { continue; }
 
-			$this->model->bindContentItemRelation(array(
+            $this->model->bindContentItemRelation(array(
                 'parent_ctype_name' => $ctype['name'],
                 'parent_ctype_id'   => $ctype['id'],
                 'parent_item_id'    => $parent_item['id'],
@@ -64,9 +64,9 @@ class actionContentItemBind extends cmsAction {
                 'child_item_id'     => $child_item['id']
             ));
 
-		}
+        }
 
-		$this->redirectBack();
+        $this->redirectBack();
 
     }
 

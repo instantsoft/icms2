@@ -11,15 +11,15 @@ class onPhotosSubscribeListTitle extends cmsAction {
 
         if (!empty($target['params']['filters'])) {
 
-            $filter_panel = array(
+            $filter_panel = [
                 'type'        => (!empty($this->options['types']) ? (['' => LANG_PHOTOS_ALL] + $this->options['types']) : []),
                 'orientation' => modelPhotos::getOrientationList(),
                 'width'       => LANG_PHOTOS_MORE_THAN . ' %s px ' . LANG_PHOTOS_BYWIDTH,
                 'height'      => LANG_PHOTOS_MORE_THAN . ' %s px ' . LANG_PHOTOS_BYHEIGHT
-            );
+            ];
 
             // альбом
-            if ($target['params']['filters'][0]['field'] == 'album_id') {
+            if ($target['params']['filters'][0]['field'] === 'album_id') {
 
                 $album = $this->model->getAlbum($target['params']['filters'][0]['value']);
 
@@ -32,9 +32,15 @@ class onPhotosSubscribeListTitle extends cmsAction {
             }
 
             foreach ($target['params']['filters'] as $filters) {
+
+                if (!isset($filter_panel[$filters['field']])) {
+                    continue;
+                }
+
                 if (is_array($filter_panel[$filters['field']]) && isset($filter_panel[$filters['field']][$filters['value']])) {
                     $titles[] = $filter_panel[$filters['field']][$filters['value']];
                 }
+
                 if (is_string($filter_panel[$filters['field']]) && is_numeric($filters['value'])) {
                     $titles[] = sprintf($filter_panel[$filters['field']], $filters['value']);
                 }

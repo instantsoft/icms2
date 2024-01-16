@@ -1,7 +1,7 @@
 <?php
 class modelPhotos extends cmsModel{
 
-	public $config = array();
+    public $config = array();
 
     public function __construct() {
 
@@ -13,7 +13,7 @@ class modelPhotos extends cmsModel{
             $this->config['types'] = string_explode_list($this->config['types']);
         }
 
-	}
+    }
 
     public static function getOrderList(){
         return array(
@@ -245,19 +245,19 @@ class modelPhotos extends cmsModel{
 
     }
 
-	public function incrementCounter($id, $field = 'hits_count'){
+    public function incrementCounter($id, $field = 'hits_count'){
 
         if(cmsUser::hasCookie($field.$id)){
             return false;
         }
 
-		$this->filterEqual('id', $id)->increment('photos', $field);
+        $this->filterEqual('id', $id)->increment('photos', $field);
 
         cmsUser::setCookie($field.$id, 1, 2592000);
 
         return true;
 
-	}
+    }
 
     /**************************************************************************/
 
@@ -349,10 +349,10 @@ class modelPhotos extends cmsModel{
 
         $photos = $this->getPhotos($album_id, 'album_id', array('image'));
 
-		if ($photos){
+        if ($photos){
             shuffle($photos);
-			$first_photo = array_shift($photos);
-		} else {
+            $first_photo = array_shift($photos);
+        } else {
             $first_photo = array('image' => null);
         }
 

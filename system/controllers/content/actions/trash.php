@@ -44,7 +44,7 @@ class actionContentTrash extends cmsAction {
 
         $ctype = $ctypes[$ctype_name];
 
-		$list_html = $this->filterDeleted($ctype)->setListContext('trash')->renderItemsList($ctype, $page_url, true);
+        $list_html = $this->filterDeleted($ctype)->setListContext('trash')->renderItemsList($ctype, $page_url, true);
 
         return $this->cms_template->render('trash', array(
             'is_index'   => $is_index,
@@ -87,8 +87,8 @@ class actionContentTrash extends cmsAction {
             $this->model->filterEqual('user_id', $this->cms_user->id);
 
             $this->model->disableApprovedFilter();
-			$this->model->disablePubFilter();
-			$this->model->disablePrivacyFilter();
+            $this->model->disablePubFilter();
+            $this->model->disablePrivacyFilter();
 
         }
 

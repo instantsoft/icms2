@@ -382,10 +382,10 @@ class cmsForm {
      */
     public function getLastFieldsetId(){
 
-		$ids = array_keys($this->structure);
+        $ids = array_keys($this->structure);
 
-		return $ids[count($ids)-1];
-	}
+        return $ids[count($ids)-1];
+    }
 
     /**
      * Добавляет набор в конец формы

@@ -53,6 +53,6 @@ class actionUsersItemChildsView extends cmsAction {
             'seo_desc'    => $seo_desc
         ));
 
-	}
+    }
 
 }

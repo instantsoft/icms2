@@ -188,7 +188,7 @@ class modelModeration extends cmsModel {
 
     }
 
-	public function deleteExpiredTrashContentItems(){
+    public function deleteExpiredTrashContentItems(){
 
         return $this->filterNotNull('date_expired')->
                     filterEqual('i.action', self::LOG_TRASH_ACTION)->
@@ -199,7 +199,7 @@ class modelModeration extends cmsModel {
                         return $item['id'];
                     });
 
-	}
+    }
 
     public function getNextModeratorId($controller_name){
 

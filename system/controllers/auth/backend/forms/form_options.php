@@ -49,7 +49,7 @@ class formAuthOptions extends cmsForm {
                     new fieldListGroups('def_groups', array(
                         'title' => LANG_REG_CFG_DEF_GROUP_ID,
                         'show_all' => false,
-						'default' => array(3),
+                        'default' => array(3),
                         'rules' => array(
                             array(function($controller, $data, $value) {
                                 if($value){

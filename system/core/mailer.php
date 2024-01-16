@@ -60,9 +60,9 @@ class cmsMailer {
             $this->mailer->Username      = $config->mail_smtp_user;
             $this->mailer->Password      = $config->mail_smtp_pass;
 
-			if (!empty($config->mail_smtp_enc)){
-				$this->mailer->SMTPSecure = $config->mail_smtp_enc;
-			}
+            if (!empty($config->mail_smtp_enc)){
+                $this->mailer->SMTPSecure = $config->mail_smtp_enc;
+            }
 
         } else
 
@@ -101,17 +101,17 @@ class cmsMailer {
         return $this;
     }
 
-	/**
-	 * Устанавливает обратный адрес
-	 * @param string $email
-	 * @param string $name
-	 * @return \cmsMailer
-	 */
-	public function setReplyTo($email, $name=''){
-		$this->mailer->ClearReplyTos();
-		$this->mailer->AddReplyTo($email, $name);
-		return $this;
-	}
+    /**
+     * Устанавливает обратный адрес
+     * @param string $email
+     * @param string $name
+     * @return \cmsMailer
+     */
+    public function setReplyTo($email, $name=''){
+        $this->mailer->ClearReplyTos();
+        $this->mailer->AddReplyTo($email, $name);
+        return $this;
+    }
 
     /**
      * Добавляет адрес получателя

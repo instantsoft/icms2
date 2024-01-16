@@ -689,18 +689,18 @@ class modelContent extends cmsModel {
         return false;
     }
 
-	public function toggleContentFieldVisibility($ctype_name, $id, $mode, $is_visible){
+    public function toggleContentFieldVisibility($ctype_name, $id, $mode, $is_visible){
 
-		$fields_table_name = $this->table_prefix . $ctype_name . '_fields';
+        $fields_table_name = $this->table_prefix . $ctype_name . '_fields';
 
-		$result = $this->update($fields_table_name, $id, array(
-			$mode => $is_visible
-		));
+        $result = $this->update($fields_table_name, $id, array(
+            $mode => $is_visible
+        ));
 
         cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
 
         return $result;
-	}
+    }
 
     public function deleteContentField($ctype_name_or_id, $id, $by_field = 'id', $is_forced = false) {
 
@@ -1169,19 +1169,19 @@ class modelContent extends cmsModel {
         return $this;
     }
 
-	public function filterPublishedOnly(){
+    public function filterPublishedOnly(){
 
-		if ($this->pub_filtered) { return $this; }
+        if ($this->pub_filtered) { return $this; }
 
         $this->pub_filtered = true;
 
         return $this->filterGtEqual('is_pub', 1);
 
-	}
+    }
 
     public function isFiltersTableExists($ctype_name) {
 
-		$table_name = $this->getContentTypeTableName($ctype_name).'_filters';
+        $table_name = $this->getContentTypeTableName($ctype_name).'_filters';
 
         return $this->db->isTableExists($table_name);
 
@@ -1471,19 +1471,19 @@ class modelContent extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-	public function getContentItemCategories($ctype_name, $id){
+    public function getContentItemCategories($ctype_name, $id){
 
-		$table_name = $this->table_prefix . $ctype_name . '_cats_bind';
+        $table_name = $this->table_prefix . $ctype_name . '_cats_bind';
 
-		return $this->filterEqual('item_id', $id)->get($table_name, function($item, $model){
-			return $item['category_id'];
-		}, false);
+        return $this->filterEqual('item_id', $id)->get($table_name, function($item, $model){
+            return $item['category_id'];
+        }, false);
 
-	}
+    }
 
-	public function getContentItemCategoriesList($ctype_name, $id){
+    public function getContentItemCategoriesList($ctype_name, $id){
 
-		$bind_table_name = $this->table_prefix . $ctype_name . '_cats_bind';
+        $bind_table_name = $this->table_prefix . $ctype_name . '_cats_bind';
         $cats_table_name = $this->table_prefix . $ctype_name . '_cats';
 
         $this->join($bind_table_name, 'b', 'b.category_id = i.id');
@@ -1494,53 +1494,53 @@ class modelContent extends cmsModel {
 
         $this->useCache('content.categories');
 
-		return $this->get($cats_table_name);
+        return $this->get($cats_table_name);
 
-	}
+    }
 
     public function moveContentItemsToCategory($ctype, $from_id, $to_id, $items_ids, $fields) {
 
         $table_name = $this->table_prefix . $ctype['name'];
         $binds_table_name = $this->table_prefix . $ctype['name'] . '_cats_bind';
 
-		$items = $this->filterIn('id', $items_ids)->get($table_name);
+        $items = $this->filterIn('id', $items_ids)->get($table_name);
 
-		foreach($items as $item){
+        foreach($items as $item){
 
             $this->
                     filterEqual('item_id', $item['id'])->
                     filterEqual('category_id', $from_id)->
                     deleteFiltered($binds_table_name);
 
-			$this->
-				filterEqual('item_id', $item['id'])->
-				filterEqual('category_id', $item['category_id'])->
-				deleteFiltered($binds_table_name);
+            $this->
+                filterEqual('item_id', $item['id'])->
+                filterEqual('category_id', $item['category_id'])->
+                deleteFiltered($binds_table_name);
 
-			$is_bind_exists = $this->
-								filterEqual('item_id', $item['id'])->
+            $is_bind_exists = $this->
+                                filterEqual('item_id', $item['id'])->
                     filterEqual('category_id', $to_id)->
-								getCount($binds_table_name, 'item_id');
+                                getCount($binds_table_name, 'item_id');
 
-			$this->resetFilters();
+            $this->resetFilters();
 
-			if (!$is_bind_exists){
+            if (!$is_bind_exists){
 
                 $this->insert($binds_table_name, [
-					'item_id' => $item['id'],
+                    'item_id' => $item['id'],
                     'category_id' => $to_id
                 ]);
-			}
+            }
 
             $item['category_id'] = $to_id;
 
-			if (!$ctype['is_fixed_url'] && $ctype['is_auto_url']){
+            if (!$ctype['is_fixed_url'] && $ctype['is_auto_url']){
 
-				$item['slug'] = $this->getItemSlug($ctype, $item, $fields);
+                $item['slug'] = $this->getItemSlug($ctype, $item, $fields);
 
                 $this->update($table_name, $item['id'], ['slug' => $item['slug']]);
             }
-		}
+        }
 
         $this->filterIn('id', $items_ids)->updateFiltered($table_name, [
             'category_id' => $to_id
@@ -1552,47 +1552,47 @@ class modelContent extends cmsModel {
         return true;
     }
 
-	public function updateContentItemCategories($ctype_name, $id, $category_id, $add_cats){
+    public function updateContentItemCategories($ctype_name, $id, $category_id, $add_cats){
 
-		$table_name = $this->table_prefix . $ctype_name . '_cats_bind';
+        $table_name = $this->table_prefix . $ctype_name . '_cats_bind';
 
-		$new_cats = empty($add_cats) ? array() : $add_cats;
+        $new_cats = empty($add_cats) ? array() : $add_cats;
 
-		if (!$category_id) { $category_id = 1; }
+        if (!$category_id) { $category_id = 1; }
 
-		if (!in_array($category_id, $new_cats)){
-			$new_cats[] = $category_id;
-		}
+        if (!in_array($category_id, $new_cats)){
+            $new_cats[] = $category_id;
+        }
 
-		$current_cats = $this->
-							filterEqual('item_id', $id)->
-							get($table_name, function($item, $model){
-								return $item['category_id'];
-							}, false);
+        $current_cats = $this->
+                            filterEqual('item_id', $id)->
+                            get($table_name, function($item, $model){
+                                return $item['category_id'];
+                            }, false);
 
-		if ($current_cats){
-			foreach($current_cats as $current_cat_id){
+        if ($current_cats){
+            foreach($current_cats as $current_cat_id){
 
-				if (!in_array($current_cat_id, $new_cats)){
-					$this->
-						filterEqual('item_id', $id)->
-						filterEqual('category_id', $current_cat_id)->
-						deleteFiltered($table_name);
-				}
+                if (!in_array($current_cat_id, $new_cats)){
+                    $this->
+                        filterEqual('item_id', $id)->
+                        filterEqual('category_id', $current_cat_id)->
+                        deleteFiltered($table_name);
+                }
 
-			}
-		}
+            }
+        }
 
-		foreach($new_cats as $new_cat_id){
-			if (!$current_cats || !in_array($new_cat_id, $current_cats)){
-				$this->insert($table_name, array(
-					'item_id' => $id,
-					'category_id' => $new_cat_id
-				));
-			}
-		}
+        foreach($new_cats as $new_cat_id){
+            if (!$current_cats || !in_array($new_cat_id, $current_cats)){
+                $this->insert($table_name, array(
+                    'item_id' => $id,
+                    'category_id' => $new_cat_id
+                ));
+            }
+        }
 
-	}
+    }
 
 //============================================================================//
 //============================================================================//
@@ -1899,7 +1899,7 @@ class modelContent extends cmsModel {
 
         $this->filterEqual('user_id', $user_id);
 
-		if (!$is_only_approved) { $this->approved_filter_disabled = true; }
+        if (!$is_only_approved) { $this->approved_filter_disabled = true; }
 
         $count = $this->getContentItemsCount( $ctype_name );
 
@@ -1931,7 +1931,7 @@ class modelContent extends cmsModel {
 
         if (!$is_filter_hidden){
             $this->disableApprovedFilter();
-			$this->disablePubFilter();
+            $this->disablePubFilter();
             $this->disablePrivacyFilter();
         }
 
@@ -1968,7 +1968,7 @@ class modelContent extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-	public function publishDelayedContentItems($ctype_name, $pub_item_ids) {
+    public function publishDelayedContentItems($ctype_name, $pub_item_ids) {
 
         return $this->filterIn('id', $pub_item_ids)->
                 updateFiltered($this->getContentTypeTableName($ctype_name), [

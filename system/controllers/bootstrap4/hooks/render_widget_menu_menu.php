@@ -2,7 +2,7 @@
 
 class onBootstrap4RenderWidgetMenuMenu extends cmsAction {
 
-	public function run($_data){
+    public function run($_data){
 
         list($widget, $tpl_file, $data) = $_data;
 

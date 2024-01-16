@@ -53,9 +53,9 @@ class actionUsersProfile extends cmsAction {
         }
 
         // Контент
-		$content->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
+        $content->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
 
-		$is_filter_hidden = (!$this->is_own_profile && !$this->cms_user->is_admin);
+        $is_filter_hidden = (!$this->is_own_profile && !$this->cms_user->is_admin);
 
         $content_counts = $content->model->getUserContentCounts($profile['id'], $is_filter_hidden, function($ctype) use ($profile, $content){
             if(!cmsUser::isAllowed($ctype['name'], 'add') &&

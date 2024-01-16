@@ -4,7 +4,7 @@ class actionPhotosSetCover extends cmsAction{
 
     public function run($photo_id = 0){
 
-		if (!$photo_id) { cmsCore::error404(); }
+        if (!$photo_id) { cmsCore::error404(); }
 
         $photo = $this->model->getPhoto($photo_id);
         if (!$photo) { cmsCore::error404(); }

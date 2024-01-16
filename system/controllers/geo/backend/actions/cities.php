@@ -19,7 +19,7 @@ class actionGeoCities extends cmsAction {
             return cmsCore::error404();
         }
 
-		$region = $this->model->getItemById('geo_regions', $region_id);
+        $region = $this->model->getItemById('geo_regions', $region_id);
         if (!$region) {
             return cmsCore::error404();
         }

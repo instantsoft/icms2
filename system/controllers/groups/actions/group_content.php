@@ -48,7 +48,7 @@ class actionGroupsGroupContent extends cmsAction {
 
         if (($this->cms_user->id == $group['owner_id']) || $this->cms_user->is_admin){
             $this->controller_content->model->disableApprovedFilter()->joinModerationsTasks($ctype['name']);
-			$this->controller_content->model->disablePubFilter();
+            $this->controller_content->model->disablePubFilter();
             $this->controller_content->model->disablePrivacyFilter();
         }
 

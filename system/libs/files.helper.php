@@ -256,7 +256,7 @@ function files_user_file_hash($file_path = ''){
  */
 function files_sanitize_name($filename, $convert_slug = true){
 
-	$path_parts = pathinfo($filename);
+    $path_parts = pathinfo($filename);
     if($convert_slug){
         $filename = lang_slug($path_parts['filename']) . ((isset($path_parts['extension']) ?  '.' . $path_parts['extension'] : ''));
     } else {
@@ -269,7 +269,7 @@ function files_sanitize_name($filename, $convert_slug = true){
     $filename = preg_replace('/[^\w\-\.]+/u', '', $filename);
     $filename = preg_replace('/[\-]+/', '-', $filename);
 
-	return $filename;
+    return $filename;
 }
 
 /**

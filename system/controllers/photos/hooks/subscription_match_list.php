@@ -28,7 +28,7 @@ class onPhotosSubscriptionMatchList extends cmsAction {
                 foreach ($params as $key => $value) {
 
                     // для ширины и высоты отдельные фильтры
-                    if (in_array($key, array('width', 'height'))) {
+                    if (in_array($key, ['width', 'height'])) {
                         if ($photo[$key] >= $value) {
                             $found[] = $key;
                         }

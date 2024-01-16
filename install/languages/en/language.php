@@ -34,10 +34,10 @@
     define('LANG_PHP_VERSION',              'PHP version');
     define('LANG_PHP_VERSION_REQ',          'PHP 7.0 or higher is required');
     define('LANG_PHP_VERSION_DESC',         'Installed version');
-	define('LANG_PHP_VARIABLES',            'PHP configuration');
-	define('LANG_PHP_VARIABLES_HINT',       'Required conditions are marked gray');
-	define('LANG_PHP_VARIABLES_ON',			'On');
-	define('LANG_PHP_VARIABLES_OFF',		'Off');
+    define('LANG_PHP_VARIABLES',            'PHP configuration');
+    define('LANG_PHP_VARIABLES_HINT',       'Required conditions are marked gray');
+    define('LANG_PHP_VARIABLES_ON',         'On');
+    define('LANG_PHP_VARIABLES_OFF',        'Off');
     define('LANG_PHP_EXTENSIONS',           'Required extensions');
     define('LANG_PHP_EXTENSIONS_REQ',       'These extensions are essential for InstantCMS');
     define('LANG_PHP_EXTENSIONS_EXTRA',     'Recommended extensions');

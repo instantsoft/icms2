@@ -7,15 +7,15 @@ class actionModerationEditTrashLeftTime extends cmsAction {
         $mod = $this->model->getTargetModeratorData($mod_id);
         if(!$mod){ cmsCore::error404(); }
 
-		$form = $this->getForm('trash_left_time');
-		if (!$form) { cmsCore::error404(); }
+        $form = $this->getForm('trash_left_time');
+        if (!$form) { cmsCore::error404(); }
 
-		if ($this->request->has('trash_left_time')){
+        if ($this->request->has('trash_left_time')){
 
-			$trash = $form->parse($this->request, true);
-			$errors = $form->validate($this, $trash);
+            $trash = $form->parse($this->request, true);
+            $errors = $form->validate($this, $trash);
 
-			if (!$errors){
+            if (!$errors){
 
                 $this->model->update('moderators', $mod['id'], $trash);
 
@@ -36,19 +36,19 @@ class actionModerationEditTrashLeftTime extends cmsAction {
                     'callback'        => 'leftTimeSuccess'
                 ));
 
-			}
+            }
 
-			if ($errors){
+            if ($errors){
                 $this->cms_template->renderJSON(array(
                     'errors' => $errors
                 ));
-			}
+            }
 
-		}
+        }
 
-		return $this->cms_template->render('backend/trash_left_time', array(
-			'errors' => (isset($errors) ? $errors : array()),
-			'mod'    => $mod,
+        return $this->cms_template->render('backend/trash_left_time', array(
+            'errors' => (isset($errors) ? $errors : array()),
+            'mod'    => $mod,
             'form'   => $form
         ));
 

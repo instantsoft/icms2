@@ -145,7 +145,7 @@ class actionAuthRegister extends cmsAction {
 
                 if ($result['success']){
 
-					$user['id'] = $result['id'];
+                    $user['id'] = $result['id'];
 
                     $this->model_users->fieldsAfterStore($user, $fields, 'add');
 
@@ -194,7 +194,7 @@ class actionAuthRegister extends cmsAction {
 
                     } else {
 
-						$user = cmsEventsManager::hook('user_registered', $user);
+                        $user = cmsEventsManager::hook('user_registered', $user);
 
                         $this->sendGreetMsg($user);
 
@@ -211,7 +211,7 @@ class actionAuthRegister extends cmsAction {
 
                             }
                         }
-					}
+                    }
 
                     $back_url = cmsUser::sessionGet('auth_back_url') ?
                                 cmsUser::sessionGet('auth_back_url', true) :

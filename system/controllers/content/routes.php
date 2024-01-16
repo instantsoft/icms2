@@ -23,7 +23,7 @@ function routes_content(){
             1           => 'ctype_name',
             2           => 'child_ctype_name',
             3           => 'id',
-			4			=> 'mode'
+            4           => 'mode'
         ),
 
         array(

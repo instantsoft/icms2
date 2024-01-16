@@ -19,7 +19,7 @@ class onPhotosSubscribeItemUrl extends cmsAction {
             ];
 
             // альбом
-            if ($subscription['params']['filters'][0]['field'] == 'album_id') {
+            if ($subscription['params']['filters'][0]['field'] === 'album_id') {
 
                 $album = $this->model->getAlbum($subscription['params']['filters'][0]['value']);
 
@@ -33,9 +33,15 @@ class onPhotosSubscribeItemUrl extends cmsAction {
             }
 
             foreach ($subscription['params']['filters'] as $filters) {
+
+                if (!isset($filter_panel[$filters['field']])) {
+                    continue;
+                }
+
                 if (is_array($filter_panel[$filters['field']]) && isset($filter_panel[$filters['field']][$filters['value']])) {
                     $params[$filters['field']] = $filters['value'];
                 }
+
                 if (is_string($filter_panel[$filters['field']]) && is_numeric($filters['value'])) {
                     $params[$filters['field']] = $filters['value'];
                 }

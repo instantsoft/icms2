@@ -98,6 +98,6 @@ class actionGroupsItemChildsView extends cmsAction {
             'seo_desc'        => $seo_desc
         ));
 
-	}
+    }
 
 }
