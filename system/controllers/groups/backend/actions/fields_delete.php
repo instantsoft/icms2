@@ -20,7 +20,7 @@ class actionGroupsFieldsDelete extends cmsAction {
 
         cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
-        return $this->redirectToAction('fields');
+        return $this->redirectToAction('');
     }
 
 }

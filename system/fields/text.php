@@ -166,7 +166,7 @@ class fieldText extends cmsFormField {
 
     public function getStringValue($value){
 
-        if (is_empty_value($value)) {
+        if (is_empty_value($value) || is_array($value)) {
             return '';
         }
 

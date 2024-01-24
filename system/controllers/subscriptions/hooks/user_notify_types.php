@@ -2,16 +2,15 @@
 
 class onSubscriptionsUserNotifyTypes extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        return array(
-            'subscriptions' => array(
+        return [
+            'subscriptions' => [
                 'title'   => LANG_SBSCR_NOTIFY_NEW,
                 'default' => 'both',
-                'options' => array('', 'email', 'pm', 'both')
-            )
-        );
-
+                'options' => ['', 'email', 'pm', 'both']
+            ]
+        ];
     }
 
 }

@@ -31,7 +31,7 @@ class actionRatingVote extends cmsAction {
                 ($this->validate_sysname($target_subject) === true) &&
                 is_numeric($target_id) &&
                 (
-                ($direction && in_array($direction, array('up', 'down'))) ||
+                ($direction && in_array($direction, ['up', 'down'])) ||
                 ($score && is_numeric($score))
                 );
 
@@ -63,7 +63,7 @@ class actionRatingVote extends cmsAction {
         // приоритет за $score
         if (!$score) {
 
-            $score = ($direction == 'up' ? 1 : -1);
+            $score = ($direction === 'up' ? 1 : -1);
 
             $average_rating = false;
 

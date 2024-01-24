@@ -2,11 +2,11 @@
 
 class onSubscriptionsContentPhotosAfterAdd extends cmsAction {
 
-    public function run($data){
+    public function run($data) {
 
         list($photos, $album, $ctype) = $data;
 
-        if(!empty($album['is_private'])){
+        if (!empty($album['is_private'])) {
             return $data;
         }
 
@@ -15,7 +15,7 @@ class onSubscriptionsContentPhotosAfterAdd extends cmsAction {
                 filterGt('subscribers_count', 0)->
                 getSubscriptionsList();
 
-        if(!$subscriptions_list){
+        if (!$subscriptions_list) {
             return $data;
         }
 
@@ -25,16 +25,15 @@ class onSubscriptionsContentPhotosAfterAdd extends cmsAction {
          * Списки соответствия формирует хук make_subscription_match_list исполняющего контроллера
          * Создание очереди => формирование списка соответствия => выборка подписчиков => рассылка уведомлений
          */
-        cmsQueue::pushOn('subscriptions', array(
+        cmsQueue::pushOn('subscriptions', [
             'controller' => $this->name,
             'hook'       => 'send_letters',
-            'params'     => array(
+            'params'     => [
                 'photos', 'album', $photos
-            )
-        ));
+            ]
+        ]);
 
         return $data;
-
     }
 
 }

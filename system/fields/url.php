@@ -42,7 +42,7 @@ class fieldUrl extends cmsFormField {
 
     public function getStringValue($value){
 
-        if (!$value) {
+        if (!$value || is_array($value)) {
             return '';
         }
 

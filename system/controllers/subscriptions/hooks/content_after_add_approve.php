@@ -2,21 +2,21 @@
 
 class onSubscriptionsContentAfterAddApprove extends cmsAction {
 
-    public function run($data){
+    public function run($data) {
 
-        if(!empty($data['item']['is_private'])){
+        if (!empty($data['item']['is_private'])) {
             return $data;
         }
 
         $is_pub = (isset($data['item']['is_pub']) ? $data['item']['is_pub'] : 1);
 
-        if(empty($is_pub)){
+        if (empty($is_pub)) {
             return $data;
         }
 
         // здесь только типы контента
         $ctype = cmsCore::getModel('content')->getContentTypeByName($data['ctype_name']);
-        if(!$ctype){
+        if (!$ctype) {
             return $data;
         }
 
@@ -25,20 +25,19 @@ class onSubscriptionsContentAfterAddApprove extends cmsAction {
                 filterGt('subscribers_count', 0)->
                 getSubscriptionsList();
 
-        if(!$subscriptions_list){
+        if (!$subscriptions_list) {
             return $data;
         }
 
-        cmsQueue::pushOn('subscriptions', array(
+        cmsQueue::pushOn('subscriptions', [
             'controller' => $this->name,
             'hook'       => 'send_letters',
-            'params'     => array(
-                'content', $data['ctype_name'], array($data['item'])
-            )
-        ));
+            'params'     => [
+                'content', $data['ctype_name'], [$data['item']]
+            ]
+        ]);
 
         return $data;
-
     }
 
 }

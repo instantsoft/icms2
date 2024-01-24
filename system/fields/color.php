@@ -49,7 +49,7 @@ class fieldColor extends cmsFormField {
     }
 
     public function getStringValue($value) {
-        return $value ? $value : '';
+        return ($value && !is_array($value)) ? $value : '';
     }
 
     public function applyFilter($model, $value) {

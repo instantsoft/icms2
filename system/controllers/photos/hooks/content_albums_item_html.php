@@ -2,37 +2,37 @@
 
 class onPhotosContentAlbumsItemHtml extends cmsAction {
 
-    public function run($album){
+    public function run($album) {
 
-        $this->model->orderByList(array(
-            array(
+        $this->model->orderByList([
+            [
                 'by' => $album['filter_values']['ordering'],
                 'to' => $album['filter_values']['orderto']
-            ),
-            array(
+            ],
+            [
                 'by' => 'id',
                 'to' => $album['filter_values']['orderto']
-            )
-        ));
+            ]
+        ]);
 
         if (cmsUser::isAllowed('albums', 'view_all') || $this->cms_user->id == $album['user_id']) {
             $this->model->disablePrivacyFilter();
             $this->model->disableApprovedFilter();
         }
 
-        if($album['filter_values']['type']){
+        if ($album['filter_values']['type']) {
             $this->model->filterEqual('type', $album['filter_values']['type']);
         }
 
-        if($album['filter_values']['orientation']){
+        if ($album['filter_values']['orientation']) {
             $this->model->filterEqual('orientation', $album['filter_values']['orientation']);
         }
 
-        if($album['filter_values']['width']){
+        if ($album['filter_values']['width']) {
             $this->model->filterGtEqual('width', $album['filter_values']['width']);
         }
 
-        if($album['filter_values']['height']){
+        if ($album['filter_values']['height']) {
             $this->model->filterGtEqual('height', $album['filter_values']['height']);
         }
 
@@ -45,7 +45,6 @@ class onPhotosContentAlbumsItemHtml extends cmsAction {
         }
 
         return $this->renderPhotosList($album, 'album_id', $page, $perpage);
-
     }
 
 }

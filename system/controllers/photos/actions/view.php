@@ -168,6 +168,14 @@ class actionPhotosView extends cmsAction {
         $ordering = $this->request->get('ordering', $this->options['ordering']);
         $orderto  = $this->request->get('orderto', $this->options['orderto']);
 
+        if (!in_array($ordering, array_keys(modelPhotos::getOrderList()))) {
+            return cmsCore::error404();
+        }
+
+        if (!in_array($orderto, ['asc', 'desc'])) {
+            return cmsCore::error404();
+        }
+
         $photos_url_params = [];
         if ($ordering != $this->options['ordering']) {
             $photos_url_params['ordering'] = $ordering;
@@ -179,19 +187,8 @@ class actionPhotosView extends cmsAction {
             $photos_url_params = http_build_query($photos_url_params);
         }
 
-        if ($orderto == 'asc') {
-
-            $prev_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
-                    getNextPhoto($photo, $ordering, ($orderto == 'asc' ? 'desc' : 'asc'));
-            $next_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
-                    getPrevPhoto($photo, $ordering, $orderto);
-        } else {
-
-            $next_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
-                    getNextPhoto($photo, $ordering, $orderto);
-            $prev_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
-                    getPrevPhoto($photo, $ordering, ($orderto == 'asc' ? 'desc' : 'asc'));
-        }
+        // Навигация
+        list($prev_photo, $next_photo) = $this->getNavPhotos($photo, $ordering, $orderto);
 
         $tpl    = 'view';
         $preset = $this->getBigPreset($photo['sizes']);
@@ -228,6 +225,33 @@ class actionPhotosView extends cmsAction {
             'hooks_html'        => cmsEventsManager::hookAll('photos_item_html', $photo),
             'full_size_img'     => ($full_size_img_preset ? $available_downloads[$full_size_img_preset]['image'] : '')
         ]);
+    }
+
+    private function getNavPhotos($photo, $ordering, $orderto) {
+
+        switch ($orderto) {
+            case 'asc':
+
+                $prev_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
+                        getNextPhoto($photo, $ordering, 'desc');
+                $next_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
+                        getPrevPhoto($photo, $ordering, $orderto);
+                break;
+
+            case 'desc':
+
+                $next_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
+                        getNextPhoto($photo, $ordering, $orderto);
+                $prev_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
+                        getPrevPhoto($photo, $ordering, 'asc');
+                break;
+            default:
+                $prev_photo = [];
+                $next_photo = [];
+                break;
+        }
+
+        return [$prev_photo, $next_photo];
     }
 
     private function getDownloadImages($photo) {

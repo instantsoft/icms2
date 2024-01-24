@@ -160,7 +160,7 @@ class fieldString extends cmsFormField {
     }
 
     public function getStringValue($value) {
-        return $value;
+        return ($value && !is_array($value)) ? $value : '';
     }
 
     public function getInput($value) {

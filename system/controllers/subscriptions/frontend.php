@@ -148,4 +148,106 @@ class subscriptions extends cmsFrontend {
         }
     }
 
+    /**
+     * Валидирует параметры подписок
+     *
+     * @param array $params
+     * @return bool
+     */
+    public function validate_subscribe_params($params) {
+
+        if (!$params) {
+            return true;
+        }
+
+        $names = array_keys($params);
+
+        if (count($names) > 3) {
+            return ERR_VALIDATE_INVALID;
+        }
+
+        foreach ($names as $name) {
+            if (!in_array($name, ['field_filters', 'filters', 'dataset'], true)) {
+                return ERR_VALIDATE_INVALID;
+            }
+        }
+
+        if (!empty($params['filters'])) {
+
+            if(!is_array($params['filters'])) {
+                return ERR_VALIDATE_INVALID;
+            }
+
+            foreach ($params['filters'] as $filter) {
+                if (!is_array($filter) || isset($filter['callback'])) {
+                    return ERR_VALIDATE_INVALID;
+                }
+                if (count($filter) !== 3) {
+                    return ERR_VALIDATE_INVALID;
+                }
+                if (empty($filter['field']) || empty($filter['condition']) || !isset($filter['value'])) {
+                    return ERR_VALIDATE_INVALID;
+                }
+                if ($this->validate_sysname($filter['field']) !== true) {
+                    return ERR_VALIDATE_INVALID;
+                }
+                if ($this->validate_sysname($filter['condition']) !== true) {
+                    return ERR_VALIDATE_INVALID;
+                }
+                if (is_array($filter['value'])) {
+                    foreach ($filter['value'] as $vkey => $vvalue) {
+                        if ($this->validate_sysname($vkey) !== true) {
+                            return ERR_VALIDATE_INVALID;
+                        }
+                        if (!is_string($vvalue)) {
+                            return ERR_VALIDATE_INVALID;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!empty($params['field_filters'])) {
+
+            if(!is_array($params['field_filters'])) {
+                return ERR_VALIDATE_INVALID;
+            }
+
+            foreach ($params['field_filters'] as $field => $value) {
+                if ($this->validate_sysname($field) !== true) {
+                    return ERR_VALIDATE_INVALID;
+                }
+            }
+        }
+
+        if (!empty($params['dataset']) && is_array($params['dataset'])) {
+
+            if(!is_array($params['dataset'])) {
+                return ERR_VALIDATE_INVALID;
+            }
+
+            if (count($params['dataset']) > 2) {
+                return ERR_VALIDATE_INVALID;
+            }
+
+            if(!isset($params['dataset']['id']) || !isset($params['dataset']['fields'])) {
+                return ERR_VALIDATE_INVALID;
+            }
+
+            if(!is_string($params['dataset']['id']) ||
+                    !is_numeric($params['dataset']['id']) ||
+                    !is_array($params['dataset']['fields'])) {
+                return ERR_VALIDATE_INVALID;
+            }
+
+            foreach ($params['dataset']['fields'] as $dfield) {
+                if ($this->validate_sysname($dfield) !== true) {
+                    return ERR_VALIDATE_INVALID;
+                }
+            }
+        }
+
+        return true;
+    }
+
 }

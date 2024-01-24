@@ -715,23 +715,25 @@ class cmsController {
      * @param mixed $default Умолчания, если хука нет
      * @return mixed
      */
-    public function runHook($event_name, $params = array(), $default = null){
+    public function runHook($event_name, $params = [], $default = null) {
 
-        if ($this->beforeHook($event_name) === false) { return false; }
+        if ($this->beforeHook($event_name) === false) {
+            return false;
+        }
 
         $method_name = 'on' . string_to_camel('_', $event_name);
 
-        if(method_exists($this, $method_name)){
+        if (method_exists($this, $method_name)) {
 
             // если есть нужный хук, то вызываем его
-            $result = call_user_func_array(array($this, $method_name), $params);
+            $result = call_user_func_array([$this, $method_name], $params);
 
         } else {
 
             // если метода хука нет, проверяем наличие его в отдельном файле
             $hook_file = $this->root_path . 'hooks/' . $event_name . '.php';
 
-            if (is_readable($hook_file)){
+            if (is_readable($hook_file)) {
 
                 // вызываем хук из отдельного файла
                 $result = $this->runExternalHook($event_name, $params);
@@ -739,20 +741,17 @@ class cmsController {
             } else {
 
                 // хука нет вообще, возвращаем данные запроса без изменений
-                if($default === null){
+                if ($default === null) {
                     return $this->request->getData();
                 } else {
                     return $default;
                 }
-
             }
-
         }
 
         $this->afterHook($event_name);
 
         return $result;
-
     }
 
     /**

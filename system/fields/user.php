@@ -29,7 +29,10 @@ class fieldUser extends cmsFormField {
             return '';
         }
         if (is_array($value)) {
-            return htmlspecialchars($value['nickname']);
+            if(!empty($value['nickname']) && is_string($value['nickname'])) {
+                return htmlspecialchars($value['nickname']);
+            }
+            return '';
         }
         return htmlspecialchars($value);
     }

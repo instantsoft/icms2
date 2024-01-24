@@ -1851,23 +1851,25 @@ class modelContent extends cmsModel {
     public function getContentItem($ctype_name, $id, $by_field = 'id') {
 
         if (is_numeric($ctype_name)) {
-
             $ctype = $this->getContentType($ctype_name);
-            if (!$ctype) { return false; }
-
-            $ctype_name = $ctype['name'];
+        } else {
+            $ctype = $this->getContentTypeByName($ctype_name);
         }
 
-        $table_name = $this->table_prefix . $ctype_name;
+        if (!$ctype) {
+            return false;
+        }
+
+        $table_name = $this->getContentTypeTableName($ctype['name']);
 
         $this->select('f.title', 'folder_title');
 
         $this->joinUser();
         $this->joinLeft('content_folders', 'f', 'f.id = i.folder_id');
 
-        $this->useCache("content.item.{$ctype_name}");
+        $this->useCache("content.item.{$ctype['name']}");
 
-        return $this->getItemByField($table_name, $by_field, $id, function ($item, $model) use ($ctype_name) {
+        return $this->getItemByField($table_name, $by_field, $id, function ($item, $model) use ($ctype) {
 
             $item['user'] = [
                 'id'              => $item['user_id'],
@@ -1881,7 +1883,7 @@ class modelContent extends cmsModel {
             $item['is_draft'] = false;
 
             if (!$item['is_approved']) {
-                $item['is_draft'] = $model->isDraftContentItem($ctype_name, $item);
+                $item['is_draft'] = $model->isDraftContentItem($ctype['name'], $item);
             }
 
             return $item;
@@ -2072,72 +2074,95 @@ class modelContent extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getRatingTarget($ctype_name, $id){
+    public function getRatingTarget($ctype_name, $id) {
 
-        $table_name = $this->table_prefix . $ctype_name;
+        $ctype = $this->getContentTypeByName($ctype_name);
+
+        if (!$ctype) {
+            return false;
+        }
+
+        $table_name = $this->getContentTypeTableName($ctype['name']);
 
         $item = $this->getItemById($table_name, $id);
 
-        if($item){
-            $item['page_url'] = href_to($ctype_name, $item['slug'].'.html');
+        if ($item) {
+            $item['page_url'] = href_to($ctype_name, $item['slug'] . '.html');
         }
 
         return $item;
-
     }
 
-    public function updateRating($ctype_name, $id, $rating){
+    public function updateRating($ctype_name, $id, $rating) {
 
-        $table_name = $this->table_prefix . $ctype_name;
+        $ctype = $this->getContentTypeByName($ctype_name);
 
-        $this->update($table_name, $id, array('rating' => $rating));
+        if (!$ctype) {
+            return false;
+        }
 
-        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
-        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
+        $table_name = $this->getContentTypeTableName($ctype['name']);
 
+        cmsCache::getInstance()->clean('content.list.' . $ctype['name']);
+        cmsCache::getInstance()->clean('content.item.' . $ctype['name']);
+
+        return $this->update($table_name, $id, ['rating' => $rating]);
     }
 
 //============================================================================//
 //============================================================================//
 
-    public function updateCommentsCount($ctype_name, $id, $comments_count){
+    public function updateCommentsCount($ctype_name, $id, $comments_count) {
 
-        $table_name = $this->table_prefix . $ctype_name;
+        $ctype = $this->getContentTypeByName($ctype_name);
 
-        $this->update($table_name, $id, array('comments' => $comments_count));
+        if (!$ctype) {
+            return false;
+        }
 
-        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
-        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
+        $table_name = $this->getContentTypeTableName($ctype['name']);
 
-        return true;
+        cmsCache::getInstance()->clean('content.list.' . $ctype['name']);
+        cmsCache::getInstance()->clean('content.item.' . $ctype['name']);
 
+        return $this->update($table_name, $id, ['comments' => $comments_count]);
     }
 
     public function getCommentsOptions($ctype_name) {
 
         $ctype = $this->getContentTypeByName($ctype_name);
 
-        return [
-            'enable' => $ctype['is_comments'],
-            'title_pattern' => (!empty($ctype['options']['comments_title_pattern']) ? $ctype['options']['comments_title_pattern'] : ''),
-            'labels' => (!empty($ctype['options']['comments_labels']) ? $ctype['options']['comments_labels'] : []),
-            'template' => (!empty($ctype['options']['comments_template']) ? $ctype['options']['comments_template'] : '')
-        ];
+        if (!$ctype) {
+            return [];
+        }
 
+        return [
+            'enable'        => $ctype['is_comments'],
+            'title_pattern' => (!empty($ctype['options']['comments_title_pattern']) ? $ctype['options']['comments_title_pattern'] : ''),
+            'labels'        => (!empty($ctype['options']['comments_labels']) ? $ctype['options']['comments_labels'] : []),
+            'template'      => (!empty($ctype['options']['comments_template']) ? $ctype['options']['comments_template'] : '')
+        ];
     }
 
-    public function getTargetItemInfo($ctype_name, $id){
+    public function getTargetItemInfo($ctype_name, $id) {
 
-        $item = $this->getContentItem($ctype_name, $id);
+        $ctype = $this->getContentTypeByName($ctype_name);
 
-        if (!$item){ return false; }
+        if (!$ctype) {
+            return false;
+        }
 
-        return array(
-            'url' => href_to_rel($ctype_name, $item['slug'].'.html'),
-            'title' => $item['title'],
+        $item = $this->getContentItem($ctype['name'], $id);
+
+        if (!$item) {
+            return false;
+        }
+
+        return [
+            'url'        => href_to_rel($ctype_name, $item['slug'] . '.html'),
+            'title'      => $item['title'],
             'is_private' => $item['is_private'] || $item['is_parent_hidden']
-        );
-
+        ];
     }
 
 //============================================================================//

@@ -11,6 +11,8 @@ class onPhotosSubscribeListTitle extends cmsAction {
 
         if (!empty($target['params']['filters'])) {
 
+            $is_params_set = [];
+
             $filter_panel = [
                 'type'        => (!empty($this->options['types']) ? (['' => LANG_PHOTOS_ALL] + $this->options['types']) : []),
                 'orientation' => modelPhotos::getOrientationList(),
@@ -18,23 +20,36 @@ class onPhotosSubscribeListTitle extends cmsAction {
                 'height'      => LANG_PHOTOS_MORE_THAN . ' %s px ' . LANG_PHOTOS_BYHEIGHT
             ];
 
-            // альбом
-            if ($target['params']['filters'][0]['field'] === 'album_id') {
+            foreach ($target['params']['filters'] as $filters) {
 
-                $album = $this->model->getAlbum($target['params']['filters'][0]['value']);
+                // В нормальных условиях массива быть не должно
+                if (is_array($filters['value'])) {
+                    return false;
+                }
 
-                if ($album) {
+                // Один параметр - один раз
+                if(!empty($is_params_set[$filters['field']])) {
+                    return false;
+                }
+                $is_params_set[$filters['field']] = true;
+
+                // Альбом
+                if($filters['field'] === 'album_id') {
+
+                    $album = $this->model->getAlbum((int)$filters['value']);
+
+                    if (!$album) {
+                        return false;
+                    }
 
                     $titles[] = $album['title'];
 
-                    unset($target['params']['filters'][0]);
-                }
-            }
-
-            foreach ($target['params']['filters'] as $filters) {
-
-                if (!isset($filter_panel[$filters['field']])) {
                     continue;
+                }
+
+                // Только заданные параметры
+                if (!isset($filter_panel[$filters['field']])) {
+                    return false;
                 }
 
                 if (is_array($filter_panel[$filters['field']]) && isset($filter_panel[$filters['field']][$filters['value']])) {

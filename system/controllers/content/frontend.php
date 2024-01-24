@@ -233,6 +233,11 @@ class content extends cmsFrontend {
 
         $perpage = (empty($ctype['options']['limit']) ? self::perpage : $ctype['options']['limit']);
 
+        // Ограничения от набора
+        if ($this->max_items_count) {
+            $perpage = $this->max_items_count;
+        }
+
         if ($hide_filter) { $ctype['options']['list_show_filter'] = false; }
 
         if ($category_id && $category_id>1){

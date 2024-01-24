@@ -195,23 +195,22 @@ class modelPhotos extends cmsModel{
             filterEnd()->
         filterEnd();
 
-        $this->orderByList(array(
-            array(
+        $this->orderByList([
+            [
                 'by' => $order_field,
                 'to' => $orderto
-            ),
-            array(
+            ],
+            [
                 'by' => 'id',
                 'to' => $orderto
-            )
-        ));
+            ]
+        ]);
 
-        return $this->getItem('photos', function($item, $model){
+        return $this->getItem('photos', function ($item, $model) {
             $item['image'] = cmsModel::yamlToArray($item['image']);
             $item['sizes'] = cmsModel::yamlToArray($item['sizes']);
             return $item;
         });
-
     }
 
     public function getNextPhoto($item, $order_field, $orderto) {
@@ -226,23 +225,22 @@ class modelPhotos extends cmsModel{
             filterEnd()->
         filterEnd();
 
-        $this->orderByList(array(
-            array(
+        $this->orderByList([
+            [
                 'by' => $order_field,
                 'to' => $orderto
-            ),
-            array(
+            ],
+            [
                 'by' => 'id',
                 'to' => $orderto
-            )
-        ));
+            ]
+        ]);
 
-        return $this->getItem('photos', function($item, $model){
+        return $this->getItem('photos', function ($item, $model) {
             $item['image'] = cmsModel::yamlToArray($item['image']);
             $item['sizes'] = cmsModel::yamlToArray($item['sizes']);
             return $item;
         });
-
     }
 
     public function incrementCounter($id, $field = 'hits_count'){

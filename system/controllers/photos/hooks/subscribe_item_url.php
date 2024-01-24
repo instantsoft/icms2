@@ -18,21 +18,24 @@ class onPhotosSubscribeItemUrl extends cmsAction {
                 'height'      => ''
             ];
 
-            // альбом
-            if ($subscription['params']['filters'][0]['field'] === 'album_id') {
+            foreach ($subscription['params']['filters'] as $filters) {
 
-                $album = $this->model->getAlbum($subscription['params']['filters'][0]['value']);
-
-                if (!$album) {
-                    return false;
+                if (is_array($filters['value'])) {
+                    continue;
                 }
 
-                $url = href_to_rel($album['ctype']['name'], $album['slug'] . '.html');
+                if($filters['field'] === 'album_id') {
 
-                unset($subscription['params']['filters'][0]);
-            }
+                    $album = $this->model->getAlbum((int)$filters['value']);
 
-            foreach ($subscription['params']['filters'] as $filters) {
+                    if (!$album) {
+                        return false;
+                    }
+
+                    $url = href_to_rel($album['ctype']['name'], $album['slug'] . '.html');
+
+                    continue;
+                }
 
                 if (!isset($filter_panel[$filters['field']])) {
                     continue;

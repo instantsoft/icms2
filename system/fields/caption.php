@@ -67,7 +67,7 @@ class fieldCaption extends cmsFormField {
     }
 
     public function getStringValue($value) {
-        return $value ? $value : '';
+        return ($value && !is_array($value)) ? $value : '';
     }
 
     public function store($value, $is_submitted, $old_value = null) {
