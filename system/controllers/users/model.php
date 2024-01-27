@@ -1328,9 +1328,11 @@ class modelUsers extends cmsModel {
 //============================================================================//
 
     public function setUPS($key, $data, $user_id) {
+
         if (is_array($data)) {
             $data = self::arrayToYaml($data);
         }
+
         $insert = [
             'user_id'  => $user_id,
             'skey'     => $key,
@@ -1340,10 +1342,9 @@ class modelUsers extends cmsModel {
             'settings' => $data
         ];
 
-        $ret = $this->insertOrUpdate('{users}_personal_settings', $insert, $update);
         cmsCache::getInstance()->clean('users.ups');
 
-        return $ret;
+        return $this->insertOrUpdate('{users}_personal_settings', $insert, $update);
     }
 
     public function getSetUPS($key) {
@@ -1357,12 +1358,7 @@ class modelUsers extends cmsModel {
 
         $this->filterEqual('skey', $key);
 
-        return $this->get('{users}_personal_settings', function ($item, $model) {
-            if (strpos($item['settings'], '---') === 0) {
-                $item['settings'] = cmsModel::yamlToArray($item['settings']);
-            }
-            return $item['settings'];
-        }, 'user_id');
+        return $this->get('{users}_personal_settings', [$this, 'applyUPSCallback'], 'user_id');
     }
 
     public function getUPS($key, $user_id) {
@@ -1371,15 +1367,11 @@ class modelUsers extends cmsModel {
 
         $this->filterEqual('user_id', $user_id)->filterEqual('skey', $key);
 
-        return $this->getItem('{users}_personal_settings', function ($item, $model) {
-            if (strpos($item['settings'], '---') === 0) {
-                $item['settings'] = cmsModel::yamlToArray($item['settings']);
-            }
-            return $item['settings'];
-        });
+        return $this->getItem('{users}_personal_settings', [$this, 'applyUPSCallback']);
     }
 
     public function deleteUPS($key, $user_id = null) {
+
         if ($user_id && $key) {
             $this->filterEqual('user_id', $user_id)->filterEqual('skey', $key);
         } elseif ($user_id) {
@@ -1389,10 +1381,18 @@ class modelUsers extends cmsModel {
         } else {
             return false;
         }
-        $ret = $this->deleteFiltered('{users}_personal_settings');
+
         cmsCache::getInstance()->clean('users.ups');
 
-        return $ret;
+        return $this->deleteFiltered('{users}_personal_settings');
     }
 
+    protected function applyUPSCallback($item, $model) {
+
+        if ($item['settings'] && strpos($item['settings'], '---') === 0) {
+            return cmsModel::yamlToArray($item['settings']);
+        }
+
+        return $item['settings'] ? $item['settings'] : '';
+    }
 }
