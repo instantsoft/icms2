@@ -1096,7 +1096,7 @@ class content extends cmsFrontend {
                     continue;
                 }
 
-                $items[$c['id']] = str_repeat('-- ', $c['ns_level'] - $level_offset) . ' ' . $c['title'];
+                $items[$c['id']] = str_repeat('-- ', $c['ns_level'] - $level_offset) . ' ' . $c['title'].($c['is_hidden'] ? ' ⚡️' : '');
 
                 continue;
             }

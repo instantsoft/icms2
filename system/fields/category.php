@@ -78,19 +78,23 @@ class fieldCategory extends cmsFormField {
 
         $base_url = ($ctype_default && in_array($this->item['ctype_name'], $ctype_default)) ? '' : $this->item['ctype_name'];
 
-        $cats = [
-            $this->item['category']['id'] => [
+        $cats = [];
+
+        if (empty($this->item['category']['is_hidden'])) {
+            $cats[$this->item['category']['id']] = [
                 'title' => $this->item['category']['title'],
                 'href'  => href_to($base_url, $this->item['category']['slug'])
-            ]
-        ];
+            ];
+        }
 
         if (!empty($this->item['categories'])) {
             foreach ($this->item['categories'] as $category) {
-                $cats[$category['id']] = [
-                    'title' => $category['title'],
-                    'href'  => href_to($base_url, $category['slug'])
-                ];
+                if (empty($category['is_hidden'])) {
+                    $cats[$category['id']] = [
+                        'title' => $category['title'],
+                        'href'  => href_to($base_url, $category['slug'])
+                    ];
+                }
             }
         }
 
@@ -164,7 +168,7 @@ class fieldCategory extends cmsFormField {
 
         $this->data['items'] = ['' => ''];
 
-        $tree = cmsCore::getModel('content')->limit(0)->getCategoriesTree($this->item['ctype_name']) ?: [];
+        $tree = cmsCore::getModel('content')->limit(0)->filterIsNull('is_hidden')->getCategoriesTree($this->item['ctype_name']) ?: [];
 
         foreach ($tree as $c) {
             $this->data['items'][$c['id']] = str_repeat('-- ', $c['ns_level']) . ' ' . $c['title'];

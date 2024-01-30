@@ -29,7 +29,7 @@ class actionContentWidgetCatsAjax extends cmsAction {
                     $cat['title'] = str_repeat('-', $cat['ns_level']) . ' ' . $cat['title'];
                 }
 
-                $list[] = ['title' => $cat['title'], 'value' => $cat['id']];
+                $list[] = ['title' => $cat['title'].($cat['is_hidden'] ? ' ⚡️' : ''), 'value' => $cat['id']];
             }
         }
 

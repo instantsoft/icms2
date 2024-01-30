@@ -477,6 +477,8 @@ icms.forms = (function ($) {
             current_value = [current_value];
         }
 
+        current_value = current_value.map(String);
+
         $.post(url, {value: value, filter_field_name: filter_field_name}, function (result) {
 
             for (var k in result) {

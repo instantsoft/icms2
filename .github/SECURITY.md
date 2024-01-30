@@ -9,6 +9,6 @@
 
 ## Reporting a Vulnerability
 
-For critical vulnerabilities, please inform us by email fuze@instantcms.ru, r2@instantsoft.ru.
+For critical vulnerabilities, please inform us by email fuze@instantcms.ru.
 
-For other vulnerabilities, open a new issues https://github.com/instantsoft/icms2/issues/new
+Or, open a draft security advisory https://github.com/instantsoft/icms2/security/advisories/new

@@ -30,7 +30,7 @@ class actionAdminContentTreeAjax extends cmsAction {
         if ($items) {
             foreach ($items as $item) {
                 $tree_nodes[] = [
-                    'title'    => $item['title'],
+                    'title'    => $item['title'].($item['is_hidden'] ? ' ⚡️' : ''),
                     'key'      => "{$ctype_id}.{$item['id']}",
                     'isLazy'   => ($item['ns_right'] - $item['ns_left'] > 1),
                     'isFolder' => true

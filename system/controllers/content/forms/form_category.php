@@ -42,7 +42,7 @@ class formContentCategory extends cmsForm {
                                             continue;
                                         }
                                     }
-                                    $items[$item['id']] = str_repeat('- ', $item['ns_level']) . ' ' . $item['title'];
+                                    $items[$item['id']] = str_repeat('- ', $item['ns_level']) . ' ' . $item['title'].($item['is_hidden'] ? ' ⚡️' : '');
                                 }
                             }
 
