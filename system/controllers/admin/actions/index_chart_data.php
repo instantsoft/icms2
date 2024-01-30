@@ -55,7 +55,15 @@ class actionAdminIndexChartData extends cmsAction {
 
             list($period, $this->interval) = explode(':', $this->interval);
 
+            if (!is_numeric($period)) {
+                return cmsCore::error404();
+            }
+
             $this->interval = strtoupper($this->interval);
+
+            if (!isset($this->date_formates[$this->interval])) {
+                return cmsCore::error404();
+            }
 
         } else {
 
