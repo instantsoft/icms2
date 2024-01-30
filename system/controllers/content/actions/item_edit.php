@@ -6,17 +6,23 @@ class actionContentItemEdit extends cmsAction {
 
         // Получаем название типа контента и сам тип
         $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name', ''));
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype) {
+            return cmsCore::error404();
+        }
 
         $id = $this->request->get('id', 0);
-        if (!$id) { cmsCore::error404(); }
+        if (!$id) {
+            return cmsCore::error404();
+        }
 
         // Получаем нужную запись
         // принудительно отключаем локализацию, должны быть чистые данные
         $item = $this->model->localizedOff()->getContentItem($ctype['name'], $id);
-        if (!$item) { cmsCore::error404(); }
+        if (!$item) {
+            return cmsCore::error404();
+        }
 
-        if ($ctype['is_cats'] && $item['category_id'] > 1){
+        if ($ctype['is_cats'] && $item['category_id'] > 1) {
             $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
         }
 
@@ -38,13 +44,13 @@ class actionContentItemEdit extends cmsAction {
 
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype['name'], 'edit') && !$permissions['can_edit']) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
         if (!cmsUser::isAllowed($ctype['name'], 'edit', 'all') &&
                 !cmsUser::isAllowed($ctype['name'], 'edit', 'premod_all') &&
                 !$permissions['can_edit'] &&
                 ((cmsUser::isAllowed($ctype['name'], 'edit', 'own') || cmsUser::isAllowed($ctype['name'], 'edit', 'premod_own')) && !$is_owner)) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         // модерация
@@ -58,7 +64,7 @@ class actionContentItemEdit extends cmsAction {
         $is_moderator = $this->controller_moderation->userIsContentModerator($ctype['name'], $this->cms_user->id, $item);
 
         if (!$item['is_approved'] && !$is_moderator && !$item['is_draft']) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         if ($item['is_deleted']) {
@@ -67,14 +73,16 @@ class actionContentItemEdit extends cmsAction {
                     (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $is_owner));
 
             if (!$is_moderator && !$allow_restore) {
-                cmsCore::error404();
+                return cmsCore::error404();
             }
         }
 
         // Не вышло ли время для редактирования
-        if (cmsUser::isPermittedLimitReached($ctype['name'], 'edit_times', ((time() - strtotime($item['date_pub']))/60))){
+        if (cmsUser::isPermittedLimitReached($ctype['name'], 'edit_times', ((time() - strtotime($item['date_pub'])) / 60))) {
+
             cmsUser::addSessionMessage(LANG_CONTENT_PERMS_TIME_UP_EDIT, 'error');
-            $this->redirectTo($ctype['name'], $item['slug'] . '.html');
+
+            return $this->redirectTo($ctype['name'], $item['slug'] . '.html');
         }
 
         // Получаем родительский тип, если он задан
@@ -95,15 +103,15 @@ class actionContentItemEdit extends cmsAction {
         }
 
         // Получаем поля для данного типа контента
-        $fields = $this->model->orderBy('ordering')->getContentFields($ctype['name'], $id);
+        $fields = $this->model->getContentFields($ctype['name'], $id);
 
         // Строим форму
         $form = $this->getItemForm($ctype, $fields, 'edit', [
             'folders_list' => $folders_list
         ], $id, $item);
 
-        list($ctype, $item) = cmsEventsManager::hook('content_edit', array($ctype, $item));
-        list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
+        list($ctype, $item) = cmsEventsManager::hook('content_edit', [$ctype, $item]);
+        list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", [$form, $item]);
 
         // Категории записи
         $item['add_cats'] = $item_cats = $this->model->getContentItemCategories($ctype['name'], $id);
@@ -155,8 +163,13 @@ class actionContentItemEdit extends cmsAction {
             // Проверям правильность заполнения
             $errors = $form->validate($this, $item);
 
-            list($item, $errors) = cmsEventsManager::hook('content_validate', array($item, $errors), null, $this->request);
-            list($item, $errors, $ctype, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_validate", array($item, $errors, $ctype, $fields), null, $this->request);
+            list($item, $errors) = cmsEventsManager::hook('content_validate', [$item, $errors], null, $this->request);
+            list($item, $errors, $ctype, $fields) = cmsEventsManager::hook(
+                "content_{$ctype['name']}_validate",
+                [$item, $errors, $ctype, $fields],
+                null,
+                $this->request
+            );
 
             if (!$errors) {
 
@@ -180,15 +193,16 @@ class actionContentItemEdit extends cmsAction {
                     $item['approved_by'] = null;
                 }
 
-                $date_pub_time     = strtotime($item['date_pub']);
-                $now_time          = time();
-                $now_date          = strtotime(date('Y-m-d', $now_time));
-                $is_pub            = true;
+                $date_pub_time = strtotime($item['date_pub']);
+                $now_time      = time();
+                $now_date      = strtotime(date('Y-m-d', $now_time));
+                $is_pub        = true;
 
                 if ($is_date_pub_allowed) {
                     $time_to_pub = $date_pub_time - $now_time;
                     $is_pub      = $is_pub && ($time_to_pub < 0);
                 }
+
                 if ($is_date_pub_end_allowed && !empty($item['date_pub_end'])) {
 
                     $date_pub_end_time = strtotime($item['date_pub_end']);
@@ -241,11 +255,11 @@ class actionContentItemEdit extends cmsAction {
 
                         // новая запись, например из черновика
                         if (empty($item['date_approved'])) {
-                            cmsEventsManager::hook('content_after_add_approve', array('ctype_name' => $ctype['name'], 'item' => $item));
+                            cmsEventsManager::hook('content_after_add_approve', ['ctype_name' => $ctype['name'], 'item' => $item]);
                             cmsEventsManager::hook("content_{$ctype['name']}_after_add_approve", $item);
                         }
 
-                        cmsEventsManager::hook('content_after_update_approve', array('ctype_name' => $ctype['name'], 'item' => $item));
+                        cmsEventsManager::hook('content_after_update_approve', ['ctype_name' => $ctype['name'], 'item' => $item]);
                         cmsEventsManager::hook("content_{$ctype['name']}_after_update_approve", $item);
 
                         cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
@@ -260,6 +274,7 @@ class actionContentItemEdit extends cmsAction {
                             cmsUser::addSessionMessage($succes_text, 'info');
                         }
                     }
+
                 } else {
 
                     if ($show_save_button && $is_moderator && !$is_owner) {
@@ -276,9 +291,9 @@ class actionContentItemEdit extends cmsAction {
                 $back_url = $this->getRequestBackUrl();
 
                 if ($back_url) {
-                    $this->redirect($back_url);
+                    return $this->redirect($back_url);
                 } else {
-                    $this->redirectTo($ctype['name'], $item['slug'] . '.html');
+                    return $this->redirectTo($ctype['name'], $item['slug'] . '.html');
                 }
             }
 
@@ -321,7 +336,7 @@ class actionContentItemEdit extends cmsAction {
             'show_save_button'  => $show_save_button,
             'button_save_text'  => (($is_premoderation && !$is_moderator) ? LANG_MODERATION_SEND : ($item['is_approved'] ? LANG_SAVE : LANG_PUBLISH)),
             'button_draft_text' => $button_draft_text,
-            'hide_draft_btn'    => !empty($ctype['options']['disable_drafts']),
+            'hide_draft_btn'    => !empty($ctype['options']['disable_drafts']) && (!$is_moderator && $is_owner),
             'is_load_props'     => false,
             'errors'            => isset($errors) ? $errors : false
         ]);
