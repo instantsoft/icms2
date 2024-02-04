@@ -353,7 +353,8 @@ function file_get_contents_from_url($url, $timeout = 5, $json_decode = false, $p
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_HEADER, false);
-    curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+    curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);    
+	curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
     $data = curl_exec($curl);
     curl_close($curl);
 
@@ -391,7 +392,8 @@ function file_save_from_url($url, $destination) {
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_FILE, $dest_file);
-    curl_setopt($curl, CURLOPT_HEADER, false);
+    curl_setopt($curl, CURLOPT_HEADER, false);    
+	curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
     curl_exec($curl);
     curl_close($curl);
     fclose($dest_file);
