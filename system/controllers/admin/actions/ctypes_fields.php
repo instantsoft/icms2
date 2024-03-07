@@ -21,7 +21,7 @@ class actionAdminCtypesFields extends cmsAction {
             return cmsCore::error404();
         }
 
-        $this->table_name = $this->model->getContentTypeTableName($this->ctype['name']) . '_fields';
+        $this->table_name = $this->model->getContentTypeTableName($this->ctype['name'], '_fields');
         $this->grid_name  = 'ctype_fields';
         $this->grid_args  = $this->ctype['name'];
         $this->title      = LANG_CP_CTYPE_FIELDS;

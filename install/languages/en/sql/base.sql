@@ -461,7 +461,7 @@ CREATE TABLE `{#}con_albums` (
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
   KEY `date_pub_end` (`date_pub_end`),
-  FULLTEXT KEY `title` (`title`)
+  FULLTEXT KEY `fulltext_search` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}con_albums_cats`;
@@ -614,7 +614,7 @@ CREATE TABLE `{#}con_pages` (
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
   KEY `date_pub_end` (`date_pub_end`),
-  FULLTEXT KEY `title` (`title`)
+  FULLTEXT KEY `fulltext_search` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}con_pages_cats`;
@@ -1005,7 +1005,7 @@ CREATE TABLE `{#}groups` (
   KEY `rating` (`rating`),
   KEY `owner_id` (`owner_id`,`members_count`),
   KEY `slug` (`slug`),
-  FULLTEXT KEY `title` (`title`)
+  FULLTEXT KEY `fulltext_search` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='Groups (communities)';
 
 DROP TABLE IF EXISTS `{#}groups_fields`;

@@ -284,8 +284,9 @@ class modelGroups extends cmsModel {
         return $this->getGroup($id);
     }
 
-    public function getContentTypeTableName($name){
-        return 'groups';
+    public function getContentTypeTableName(...$names) {
+        unset($names[0]);
+        return 'groups' . implode('', $names);
     }
 
     public function getGroupBySlug($slug){

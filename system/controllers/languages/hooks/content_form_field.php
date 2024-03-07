@@ -13,7 +13,7 @@ class onLanguagesContentFormField extends cmsAction {
             ]));
 
             if($ctype['id']){
-                $table_name = $this->model->getContentTypeTableName($ctype['name']).'_fields';
+                $table_name = $this->model->getContentTypeTableName($ctype['name'], '_fields');
             } else {
                 $table_name = $ctype['name'].'_fields';
             }

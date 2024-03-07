@@ -21,7 +21,7 @@ class actionAdminCtypesFiltersEnable extends cmsAction {
 
         if (!$table_exists) {
 
-            $table_name = $this->model_content->getContentTypeTableName($ctype['name']) . '_filters';
+            $table_name = $this->model_content->getContentTypeTableName($ctype['name'], '_filters');
 
             $sql = "CREATE TABLE `{#}{$table_name}` (
                     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,

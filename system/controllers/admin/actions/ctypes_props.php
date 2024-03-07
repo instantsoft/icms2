@@ -23,7 +23,7 @@ class actionAdminCtypesProps extends cmsAction {
             return cmsCore::error404();
         }
 
-        $this->table_name = $this->model->getContentTypeTableName($this->ctype['name']) . '_props_bind';
+        $this->table_name = $this->model->getContentTypeTableName($this->ctype['name'], '_props_bind');
         $this->grid_name  = 'ctype_props';
         $this->grid_args  = $this->cms_template->href_to('ctypes', ['props_reorder', $this->ctype['name']]);
 

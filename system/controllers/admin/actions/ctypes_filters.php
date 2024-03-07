@@ -22,7 +22,7 @@ class actionAdminCtypesFilters extends cmsAction {
             return cmsCore::error404();
         }
 
-        $this->table_name = $this->model->getContentTypeTableName($this->ctype['name']) . '_filters';
+        $this->table_name = $this->model->getContentTypeTableName($this->ctype['name'], '_filters');
         $this->grid_name  = 'ctype_filters';
         $this->grid_args  = ['ctype' => $this->ctype];
         $this->title      = LANG_CP_CTYPE_FILTERS;

@@ -2,6 +2,7 @@
 /**
  * Класс работы с базой данных
  */
+#[\AllowDynamicProperties]
 class cmsDatabase {
 
     private static $instance;
@@ -1225,11 +1226,12 @@ class cmsDatabase {
     /**
      * Возвращает поля, участвующие в индексе или false, если индекса нет
      * если индекс составной, то поля будут упорядочены в массиве как в индексе
+     *
      * @param string $table Название таблицы без префикса
      * @param string $index_name Название индекса
      * @return array|boolean
      */
-    public function getIndex($table, $index_name) {
+    public function getIndex(string $table, string $index_name) {
 
         $result = $this->query("SHOW INDEX FROM  `{#}{$table}` WHERE `Key_name` =  '{$index_name}'");
 
@@ -1246,11 +1248,13 @@ class cmsDatabase {
 
     /**
      * Возвращает все индексы таблицы
+     *
      * @param string $table Название таблицы без префикса
-     * @param string $index_type Тип индекса
-     * @return boolean|array
+     * @param ?string $index_type Тип индекса
+     * @param bool $with_type Возвращать вместе с типом индекса
+     * @return array
      */
-    public function getTableIndexes($table, $index_type = null) {
+    public function getTableIndexes(string $table, $index_type = null) {
 
         $sql = "SHOW INDEX FROM `{#}{$table}`";
         if ($index_type) {
@@ -1264,68 +1268,106 @@ class cmsDatabase {
             $indexes = [];
 
             while ($i = $this->fetchAssoc($result)) {
-                $indexes[$i['Key_name']][] = $i['Column_name'];
+                $indexes[$i['Key_name']]['fields'][] = $i['Column_name'];
+                $indexes[$i['Key_name']]['type'] = $i['Index_type'];
             }
 
             return $indexes;
         }
 
-        return false;
+        return [];
     }
 
     /**
      * Проверяет, есть ли указанный индекс в таблице
+     *
      * @param string $table Название таблицы без префикса
      * @param string $index_name Название индекса
      * @return boolean
      */
-    public function isIndexExists($table, $index_name) {
+    public function isIndexExists(string $table, string $index_name) {
         return $this->getIndex($table, $index_name) !== false;
     }
 
     /**
      * Удаляет индекс из таблицы, если он там есть
+     *
      * @param string $table Название таблицы без префикса
      * @param string $index_name Название индекса
      * @return boolean
      */
-    public function dropIndex($table, $index_name) {
+    public function dropIndex(string $table, string $index_name) {
         if($this->isIndexExists($table, $index_name)){
-            $this->query("ALTER TABLE `{#}{$table}` DROP INDEX `{$index_name}`");
-            return true;
+            return $this->query("ALTER TABLE `{#}{$table}` DROP INDEX `{$index_name}`");
         }
         return false;
     }
 
     /**
+     * Удаляет поле из всех индексов
+     *
+     * @param string $table Название таблицы без префикса
+     * @param string $field_name Имя поля
+     * @param type $index_type Тип индекса
+     * @return void
+     */
+    public function dropFieldFromIndex(string $table, string $field_name, $index_type = null) {
+
+        $indexes = $this->getTableIndexes($table, $index_type, true);
+
+        foreach ($indexes as $name => $fields) {
+
+            $key = array_search($field_name, $fields['fields']);
+
+            if ($key !== false) {
+
+                unset($fields['fields'][$key]);
+
+                $this->dropIndex($table, $name);
+
+                if ($fields['fields']) {
+                    $this->addIndex($table, $fields['fields'], $name, $fields['type']);
+                }
+            }
+        }
+
+        return;
+    }
+
+    /**
      * Добавляет индекс к таблице
+     *
      * @param string $table Название таблицы без префикса
      * @param array|string $fields Поле или поля, участвующие в индексе
      * @param string $index_name Название индекса. Если не передано, название будет по последнему элементу
      * @param string $index_type Тип индекса
-     * @return boolean FALSE если индекс с таким названием уже есть
+     * @param bool $force Пересоздать, если существует
+     * @return bool FALSE если индекс с таким названием уже есть
      */
-    public function addIndex($table, $fields, $index_name='', $index_type='INDEX') {
+    public function addIndex(string $table, $fields, $index_name = '', $index_type = 'INDEX', $force = false) {
 
-        if(is_string($fields)){
-            $fields = array($fields);
+        if (is_string($fields)) {
+            $fields = [$fields];
         }
 
-        if(!$index_name){
+        if (!$index_name) {
             $index_name = end($fields);
         }
 
-        if($this->isIndexExists($table, $index_name)){
-            return false;
+        if ($this->isIndexExists($table, $index_name)) {
+
+            if ($force) {
+                $this->query("ALTER TABLE `{#}{$table}` DROP INDEX `{$index_name}`");
+            } else {
+                return false;
+            }
         }
 
         ksort($fields);
 
-        $fields_str = '`'.implode('`, `', $fields).'`';
+        $fields_str = '`' . implode('`, `', $fields) . '`';
 
-        $this->query("ALTER TABLE `{#}{$table}` ADD {$index_type} `{$index_name}` ({$fields_str})");
-
-        return true;
+        return $this->query("ALTER TABLE `{#}{$table}` ADD {$index_type} `{$index_name}` ({$fields_str})", false, true);
     }
 
 //============================================================================//

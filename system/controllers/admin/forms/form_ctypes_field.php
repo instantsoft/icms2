@@ -11,6 +11,8 @@ class formAdminCtypesField extends cmsForm {
 
         $model = cmsCore::getModel('content');
 
+        $table = $model->getContentTypeTableName($ctype_name, '_fields');
+
         return [
             'basic' => [
                 'type'   => 'fieldset',
@@ -39,7 +41,7 @@ class formAdminCtypesField extends cmsForm {
                         'can_multilanguage' => true,
                         'multilanguage_params' => [
                             'is_table_field' => true,
-                            'table' => $model->getContentTypeTableName($ctype_name).'_fields'
+                            'table' => $table
                         ],
                         'rules' => [
                             ['required'],
@@ -51,7 +53,7 @@ class formAdminCtypesField extends cmsForm {
                         'can_multilanguage' => true,
                         'multilanguage_params' => [
                             'is_table_field' => true,
-                            'table' => $model->getContentTypeTableName($ctype_name).'_fields'
+                            'table' => $table
                         ],
                         'is_clean_disable' => true,
                         'rules' => [
@@ -86,7 +88,7 @@ class formAdminCtypesField extends cmsForm {
                         'can_multilanguage' => true,
                         'multilanguage_params' => [
                             'is_table_field' => true,
-                            'table' => $model->getContentTypeTableName($ctype_name).'_fields'
+                            'table' => $table
                         ],
                         'generator' => function ($field, $request, $formfield) use ($ctype_name) {
                             $model = cmsCore::getModel('content');
@@ -301,7 +303,7 @@ class formAdminCtypesField extends cmsForm {
                         'can_multilanguage' => true,
                         'multilanguage_params' => [
                             'is_table_field' => true,
-                            'table' => $model->getContentTypeTableName($ctype_name).'_fields'
+                            'table' => $table
                         ],
                         'size' => 8
                     ])

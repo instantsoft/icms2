@@ -125,8 +125,17 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getContentTypeTableName($name){
-        return $this->table_prefix . $name;
+    /**
+     * Формирует имя таблиц, работающих как тип контента
+     * В том числе и их вспомогательных
+     * Первым аргументом всегда должно быть имя типа контента
+     * В своих моделях вы можете переопределить этот метод
+     *
+     * @param string $names
+     * @return string
+     */
+    public function getContentTypeTableName(...$names){
+        return $this->table_prefix . implode('', $names);
     }
 
     public function setTablePrefix($prefix){
@@ -140,7 +149,7 @@ class cmsModel {
     }
 
     public function getContentCategoryTableName($name){
-        return $this->getContentTypeTableName($name).$this->table_category_postfix;
+        return $this->getContentTypeTableName($name, $this->table_category_postfix);
     }
 
     public function checkCorrectEqualSlug($table_name, $slug, $item_id, $max_len = 255) {

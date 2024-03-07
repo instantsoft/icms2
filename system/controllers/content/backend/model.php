@@ -175,8 +175,6 @@ class modelBackendContent extends modelContent {
             }
         }
 
-        cmsCore::getModel('tags')->recountTagsFrequency();
-
         $this->delete('content_types', $id);
         $this->delete('content_datasets', $id, 'ctype_id');
 
@@ -354,34 +352,38 @@ class modelBackendContent extends modelContent {
 
     public function addContentDatasetIndex($dataset, $ctype_name) {
 
-        $content_table_name = $this->table_prefix.$ctype_name;
-        $index_name         = 'dataset_'.$dataset['name'];
+        $content_table_name = $this->getContentTypeTableName($ctype_name);
+        $index_name = 'dataset_' . $dataset['name'];
 
         // поля для индекса
-        $filters_fields = $sorting_fields = $fields = array();
+        $filters_fields = $sorting_fields = $fields = [];
 
         // создаем индекс
         // параметры выборки
-        if($dataset['filters']){
+        if ($dataset['filters']) {
+
             foreach ($dataset['filters'] as $filters) {
-                if($filters && !in_array($filters['condition'], array('gt','lt','ge','le','nn','ni'))){
+                if ($filters && !in_array($filters['condition'], ['gt', 'lt', 'ge', 'le', 'nn', 'ni'])) {
                     $filters_fields[] = $filters['field'];
                 }
             }
+
             $filters_fields = array_unique($filters_fields);
         }
+
         // добавим условия, которые в каждой выборке
         // только для записей типов контента
-        if($this->table_prefix){
+        if ($this->table_prefix) {
             $filters_fields[] = 'is_pub';
             $filters_fields[] = 'is_parent_hidden';
             $filters_fields[] = 'is_deleted';
             $filters_fields[] = 'is_approved';
         }
+
         // сортировка
-        if($dataset['sorting']){
+        if ($dataset['sorting']) {
             foreach ($dataset['sorting'] as $sorting) {
-                if($sorting){
+                if ($sorting) {
                     $sorting_fields[] = $sorting['by'];
                 }
             }
@@ -389,9 +391,9 @@ class modelBackendContent extends modelContent {
         }
 
         // если поле присутствует и в выборке и в сортировке, оставляем только в сортировке
-        if($filters_fields){
+        if ($filters_fields) {
             foreach ($filters_fields as $key => $field) {
-                if(in_array($field, $sorting_fields)){
+                if (in_array($field, $sorting_fields)) {
                     unset($filters_fields[$key]);
                 }
             }
@@ -399,37 +401,37 @@ class modelBackendContent extends modelContent {
 
         $fields = array_merge($filters_fields, $sorting_fields);
 
-        if(!$fields){ return null; }
+        if (!$fields) {
+            return null;
+        }
 
-        if($fields == array('date_pub')){
+        if ($fields == ['date_pub']) {
             $index_name = 'date_pub';
-        } elseif($fields == array('user_id','date_pub') || $fields == array('user_id')){
+        } elseif ($fields == ['user_id', 'date_pub'] || $fields == ['user_id']) {
             $index_name = 'user_id';
         } else {
 
             // ищем индекс с таким же набором полей
             $is_found = false;
-            $indexes = $this->db->getTableIndexes($content_table_name);
+            $indexes  = $this->db->getTableIndexes($content_table_name);
             foreach ($indexes as $_index_name => $_index_fields) {
-                if($fields == $_index_fields){
-                    $is_found = $_index_name; break;
+                if ($fields == $_index_fields['fields']) {
+                    $is_found = $_index_name;
+                    break;
                 }
             }
 
             // нашли - используем его
-            if($is_found){
+            if ($is_found) {
                 $index_name = $is_found;
             } else {
 
                 // если нет, то создаем новый
                 $this->db->addIndex($content_table_name, $fields, $index_name);
-
             }
-
         }
 
         return $index_name;
-
     }
 
     public function addContentDataset($dataset, $ctype){
@@ -531,7 +533,7 @@ class modelBackendContent extends modelContent {
 
     public function addContentFilter($filter, $ctype){
 
-        $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
+        $table_name = $this->getContentTypeTableName($ctype['name'], '_filters');
 
         $filter['cats'] = array_filter($filter['cats']);
         $filter['filters'] = array_filter_recursive($filter['filters']);
@@ -554,7 +556,7 @@ class modelBackendContent extends modelContent {
         list($filter, $ctype) = cmsEventsManager::hook('ctype_filter_update', array($filter, $ctype));
         list($filter, $ctype) = cmsEventsManager::hook('ctype_filter_'.$ctype['name'].'_update', array($filter, $ctype));
 
-        $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
+        $table_name = $this->getContentTypeTableName($ctype['name'], '_filters');
 
         $filter['cats'] = array_filter($filter['cats']);
         $filter['filters'] = array_filter_recursive($filter['filters']);
@@ -571,7 +573,7 @@ class modelBackendContent extends modelContent {
 
     public function deleteContentFilter($ctype, $id){
 
-        $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
+        $table_name = $this->getContentTypeTableName($ctype['name'], '_filters');
 
         $this->delete($table_name, $id);
 
