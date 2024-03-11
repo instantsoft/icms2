@@ -38,6 +38,9 @@
             <li class="breadcrumb-menu d-sm-down-none">
                 <div class="btn-group" role="group">
                     <?php foreach($this->menus['breadcrumb-menu'] as $item){ ?>
+                        <?php if ($this->site_config->disable_copyright && strpos($item['url'], 'https://') === 0) { ?>
+                            <?php continue; ?>
+                        <?php } ?>
                         <a <?php if (isset($item['options']['title'])) { ?>title="<?php html($item['options']['title']); ?>"<?php } ?> <?php if (isset($item['options']['target'])) { ?>target="<?php echo $item['options']['target']; ?>"<?php } ?> class="btn<?php if (!empty($item['options']['class'])) { ?> <?php echo $item['options']['class']; ?><?php } ?>" href="<?php html($item['url']); ?>">
                             <?php if (!empty($item['options']['icon'])) {
                                 $icon_params = explode(':', $item['options']['icon']);

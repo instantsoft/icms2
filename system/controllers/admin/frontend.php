@@ -252,14 +252,17 @@ class admin extends cmsFrontend {
             ]
         ];
 
-        $menu[] = [
-            'title' => LANG_CP_OFICIAL_ADDONS,
-            'url' => href_to($this->name, 'addons_list'),
-            'options' => [
-                'class' => 'item-addons',
-                'icon'  => 'puzzle-piece'
-            ]
-        ];
+        if (!$this->cms_config->disable_copyright) {
+
+            $menu[] = [
+                'title' => LANG_CP_OFICIAL_ADDONS,
+                'url' => href_to($this->name, 'addons_list'),
+                'options' => [
+                    'class' => 'item-addons',
+                    'icon'  => 'puzzle-piece'
+                ]
+            ];
+        }
 
         $menu[] = [
             'title' => LANG_CP_SECTION_USERS,
@@ -498,14 +501,7 @@ class admin extends cmsFrontend {
 
     public function getAddonsMenu() {
 
-        return cmsEventsManager::hook('admin_addons_menu', [
-            [
-                'title'   => LANG_CP_OFICIAL_ADDONS,
-                'url'     => href_to($this->name, 'addons_list'),
-                'options' => [
-                    'icon' => 'puzzle-piece'
-                ]
-            ],
+        $menu = [
             [
                 'title'   => LANG_CP_INSTALL_PACKAGE,
                 'url'     => href_to($this->name, 'install'),
@@ -527,7 +523,20 @@ class admin extends cmsFrontend {
                     'icon' => 'business-time'
                 ]
             ]
-        ]);
+        ];
+
+        if (!$this->cms_config->disable_copyright) {
+
+            array_unshift($menu, [
+                'title'   => LANG_CP_OFICIAL_ADDONS,
+                'url'     => href_to($this->name, 'addons_list'),
+                'options' => [
+                    'icon' => 'puzzle-piece'
+                ]
+            ]);
+        }
+
+        return cmsEventsManager::hook('admin_addons_menu', $menu);
     }
 
 //============================================================================//

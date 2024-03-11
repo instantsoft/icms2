@@ -55,15 +55,21 @@
         </button>
         <ul class="nav navbar-nav d-md-down-none">
             <li class="nav-item px-3">
-                <?php if (!empty($update['version'])) { ?>
-                    <a class="nav-link text-warning" href="<?php echo href_to('admin', 'update'); ?>">
-                        <span class="sk-spinner sk-spinner-pulse bg-warning"></span>
-                        <?php printf(LANG_CP_UPDATE_AVAILABLE, $update['version']); ?>
-                    </a>
+                <?php if (!$config->disable_copyright) { ?>
+                    <?php if (!empty($update['version'])) { ?>
+                        <a class="nav-link text-warning" href="<?php echo href_to('admin', 'update'); ?>">
+                            <span class="sk-spinner sk-spinner-pulse bg-warning"></span>
+                            <?php printf(LANG_CP_UPDATE_AVAILABLE, $update['version']); ?>
+                        </a>
+                    <?php } else { ?>
+                        <a class="nav-link" data-toggle="tooltip" data-placement="bottom" href="<?php echo href_to('admin', 'update'); ?>" title="<?php echo LANG_CP_UPDATE_CHECK; ?>">
+                            <?php html_svg_icon('solid', 'code-branch'); ?> <?php echo cmsCore::getVersion(); ?>
+                        </a>
+                    <?php } ?>
                 <?php } else { ?>
-                    <a class="nav-link" data-toggle="tooltip" data-placement="bottom" href="<?php echo href_to('admin', 'update'); ?>" title="<?php echo LANG_CP_UPDATE_CHECK; ?>">
+                    <span class="text-info">
                         <?php html_svg_icon('solid', 'code-branch'); ?> <?php echo cmsCore::getVersion(); ?>
-                    </a>
+                    </span>
                 <?php } ?>
             </li>
             <?php if (!$config->is_site_on){ ?>
@@ -113,11 +119,13 @@
                     <?php html_svg_icon('solid', 'share-square'); ?>
                 </a>
             </li>
-            <li class="nav-item d-md-down-none">
-                <a class="nav-link d-flex justify-content-center text-light" href="<?php echo LANG_HELP_URL; ?>" target="_blank" title="<?php echo LANG_HELP; ?>" data-toggle="tooltip" data-placement="bottom">
-                    <?php html_svg_icon('solid', 'question-circle'); ?>
-                </a>
-            </li>
+            <?php if (!$config->disable_copyright) { ?>
+                <li class="nav-item d-md-down-none">
+                    <a class="nav-link d-flex justify-content-center text-light" href="<?php echo LANG_HELP_URL; ?>" target="_blank" title="<?php echo LANG_HELP; ?>" data-toggle="tooltip" data-placement="bottom">
+                        <?php html_svg_icon('solid', 'question-circle'); ?>
+                    </a>
+                </li>
+            <?php } ?>
             <li class="nav-item dropdown">
                 <a class="nav-link icms-user-avatar ml-3 mr-4 d-flex align-items-center" data-toggle="dropdown" href="#">
                     <?php if($user->avatar){ ?>
@@ -148,9 +156,11 @@
             <nav class="sidebar-nav">
                 <?php $this->menu('cp_main', true, '', 0, true); ?>
                 <div class="nav-title mt-3">
-                    <a class="ajax-modal text-white" href="<?php echo href_to('admin', 'settings', ['sys_info']); ?>" title="<?php echo LANG_CP_DASHBOARD_SYSINFO; ?>">
-                        <?php echo LANG_CP_SU; ?> <?php html_svg_icon('solid', 'info-circle'); ?>
-                    </a>
+                    <?php if (!$config->disable_sys_info) { ?>
+                        <a class="ajax-modal text-white" href="<?php echo href_to('admin', 'settings', ['sys_info']); ?>" title="<?php echo LANG_CP_DASHBOARD_SYSINFO; ?>">
+                            <?php echo LANG_CP_SU; ?> <?php html_svg_icon('solid', 'info-circle'); ?>
+                        </a>
+                    <?php } ?>
                 </div>
                 <?php foreach ($su as $sukey => $su_item) { ?>
                     <div class="nav-item px-3 d-compact-none d-minimized-none" id="su-<?php echo $sukey; ?>">
@@ -210,8 +220,12 @@
             <?php } ?>
         </div>
         <div class="ml-auto mr-auto mr-md-0">
-            <a href="https://instantcms.ru/">InstantCMS</a> &copy;  <?php echo date('Y'); ?> &mdash;
-            <a href="<?php echo href_to('admin', 'credits'); ?>"><?php echo LANG_CP_3RDPARTY_CREDITS; ?></a>
+            <?php if (!$config->disable_copyright) { ?>
+                <a href="https://instantcms.ru/">InstantCMS</a> &copy;  <?php echo date('Y'); ?> &mdash;
+                <a href="<?php echo href_to('admin', 'credits'); ?>"><?php echo LANG_CP_3RDPARTY_CREDITS; ?></a>
+            <?php } else { ?>
+                &copy;  <?php echo date('Y'); ?>
+            <?php } ?>
         </div>
     </footer>
     <?php if ($config->debug){ ?>

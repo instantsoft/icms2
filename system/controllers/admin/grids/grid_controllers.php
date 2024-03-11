@@ -53,15 +53,19 @@ function grid_controllers($controller) {
             'class'  => 'd-none d-lg-table-cell',
             'width'  => 70,
             'filter' => 'like'
-        ],
-        'author'  => [
-            'title'  => LANG_AUTHOR,
-            'class'  => 'd-none d-lg-table-cell',
-            'width'  => 200,
-            'href'   => '{url}',
-            'filter' => 'like'
         ]
     ];
+
+    if (!cmsConfig::get('disable_copyright')) {
+
+        $columns['author'] = [
+            'title'   => LANG_AUTHOR,
+            'class'   => 'd-none d-lg-table-cell',
+            'width'   => 200,
+            'href'    => '{url}',
+            'filter'  => 'like'
+        ];
+    }
 
     $actions = [
         [

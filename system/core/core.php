@@ -156,7 +156,10 @@ class cmsCore {
     public function runHttp($request_uri) {
 
         header('Content-type:text/html; charset=utf-8');
-        header('X-Powered-By: InstantCMS');
+
+        if (!cmsConfig::get('disable_copyright')) {
+            header('X-Powered-By: InstantCMS');
+        }
 
         // Имитация задержки для отладки
         if (cmsConfig::get('emulate_lag')) {

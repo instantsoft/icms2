@@ -64,14 +64,16 @@
                             <?php echo LANG_CP_INSTALL_PACKAGE_FILE_HINT; ?>
                         </div>
                     </div>
-                    <p><?php echo mb_strtoupper(LANG_OR); ?></p>
-                    <div class="field form-group">
-                        <label><?php echo LANG_CP_INSTALL_BY_LINK; ?></label>
-                        <?php echo html_input('text', 'package', ''); ?>
-                        <div class="form-text hint text-muted small mt-1">
-                            <?php echo LANG_CP_INSTALL_PACKAGE_LINK_HINT; ?>
+                    <?php if (!$this->site_config->disable_copyright) { ?>
+                        <p><?php echo mb_strtoupper(LANG_OR); ?></p>
+                        <div class="field form-group">
+                            <label><?php echo LANG_CP_INSTALL_BY_LINK; ?></label>
+                            <?php echo html_input('text', 'package', ''); ?>
+                            <div class="form-text hint text-muted small mt-1">
+                                <?php echo LANG_CP_INSTALL_PACKAGE_LINK_HINT; ?>
+                            </div>
                         </div>
-                    </div>
+                    <?php } ?>
                 </fieldset>
 
             <?php } else { ?>
