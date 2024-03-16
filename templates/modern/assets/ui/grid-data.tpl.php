@@ -15,6 +15,14 @@ if(!empty($page_title)) {
     <h1><?php echo $h1_title; ?></h1>
 <?php } ?>
 
+<?php if(!empty($description)) { ?>
+    <div class="alert alert-info">
+        <p class="mb-0">
+            <?php echo nl2br($description); ?>
+        </p>
+    </div>
+<?php } ?>
+
 <?php if ($grid->options['is_toolbar'] && $this->isToolbar()){ ?>
     <?php $this->toolbar('menu-toolbar'); ?>
 <?php } ?>
@@ -24,8 +32,22 @@ if(!empty($page_title)) {
         <div v-if="options.select_actions">
             <form-select v-model="select_action_key" :params="{items: selectActionsItems}" :disabled="selectedRows.length === 0"></form-select>
         </div>
-        <div class="ml-auto" v-if="switchable.columns">
-            <form-multiselect use_slot="true" v-model="switchable_columns_names" :params="{items: switchable.columns}">
+        <div class="ml-auto d-flex" v-if="switchable.columns || editable">
+            <div :class="{'mr-3': switchable.columns && editable}" v-if="editable">
+                <button class="btn btn-light btn-sm" @click="enableEditMode" v-if="!edit_mode_enable">
+                    <?php echo html_svg_icon('solid', 'pen'); ?><span class="d-none d-lg-inline"> <?php echo LANG_CP_EDIT_MODE; ?></span>
+                </button>
+                <button class="btn btn-success btn-sm mr-1" @click="saveEditMode" v-if="edit_mode_enable" :disabled="save_is_busy" :class="{'is-busy': save_is_busy}">
+                    <span>
+                        <?php echo html_svg_icon('solid', 'save'); ?>
+                        <span class="d-none d-lg-inline"> <?php echo LANG_SAVE; ?></span>
+                    </span>
+                </button>
+                <button class="btn btn-light btn-sm" @click="disableEditMode" v-if="edit_mode_enable">
+                    <?php echo html_svg_icon('solid', 'reply'); ?><span class="d-none d-lg-inline"> <?php echo LANG_CANCEL; ?></span>
+                </button>
+            </div>
+            <form-multiselect use_slot="true" v-model="switchable_columns_names" :params="{items: switchable.columns}" v-if="switchable.columns">
                 <a class="btn btn-light btn-sm" href="#">
                     <?php echo html_svg_icon('solid', 'eye-slash'); ?> <span v-text="switchable.title"></span>
                 </a>
@@ -53,8 +75,8 @@ if(!empty($page_title)) {
                     </td>
                 </tr>
                 <tr v-cloak :class="{selected: (row.selected || row.edited)}" v-for="(row, key) in rows" :key="key" @click="selectRow(row)" @dragstart="dragStart(key, $event)" @dragover.prevent @dragend="dragEnd($event)" @dragenter.prevent="dragEnter(key, $event)" @dragleave="dragLeave($event)" @drop="dragFinish(key, $event)" @mousedown="prepareDragStart($event)" @touchstart="prepareDragStart($event)" @mouseup="cancelDragStart($event)" class="animated-row">
-                    <td v-for="(col, index) in row.columns" :key="index" :class="col.class">
-                        <component :is="'row-column-'+col.renderer" :col="col" :col_key="index" :row_key="key" v-tooltip="col.tooltip" :title="col.tooltip"></component>
+                    <td v-for="(col, index) in row.columns" :key="index" :class="colClass(col)">
+                        <component v-if="!col.editable.edit_mode" :is="'row-column-'+col.renderer" :col="col" :col_key="index" :row_key="key" v-tooltip="col.tooltip" :title="col.tooltip"></component>
                         <inline-save-form v-if="col.editable" :col="col" :col_key="index" :row_key="key" @changeoverflow="toggleOverflow"></inline-save-form>
                     </td>
                 </tr>

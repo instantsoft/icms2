@@ -2030,7 +2030,7 @@ class cmsModel {
 
         if ($encoded_fields) {
             foreach ($encoded_fields as $field) {
-                $item[$field] = base64_decode($item[$field]);
+                $item[$field] = $item[$field] ? base64_decode($item[$field]) : null;
                 unset($item['enc_' . $field]);
             }
         }
@@ -2228,7 +2228,7 @@ class cmsModel {
 
             if ($encoded_fields) {
                 foreach ($encoded_fields as $efield) {
-                    $item[$efield] = base64_decode($item[$efield]);
+                    $item[$efield] = $item[$efield] ? base64_decode($item[$efield]) : null;
                     unset($item['enc_' . $efield]);
                 }
             }

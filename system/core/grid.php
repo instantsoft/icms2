@@ -25,6 +25,7 @@ class cmsGrid {
             'is_toolbar'      => true,  // выводить тулбар
             'is_draggable'    => false, // строки могут меняться местами мышью
             'drag_save_url'   => '',    // URL для сохранения при драг-эн-дроп
+            'save_action'     => '',    // URL для сохранения при инлайн редактировании
             'is_selectable'   => false, // Строки могут выделяться
             /**
              * select_actions - это массив действий над выделенными строками
@@ -74,6 +75,8 @@ class cmsGrid {
             'renderer'         => null,    // Компонент vue поля редактирования, по умолчанию form-input
             'items'            => null,    // Массив списка для селекта, если renderer form-select
             'language_context' => false,   // Если выключено, будет искать языковое поле для текущей локали
+            'id_field'         => 'id',    // Имя поля записи, по которому искать уникальное значение
+            'table'            => null,    // Таблица для сохранения
             'save_action'      => '',      // URL для сохранения
             'attributes'       => []       // Атрибуты тега быстрого редактирования
         ]
@@ -141,6 +144,18 @@ class cmsGrid {
      * @var boolean
      */
     private $is_loaded = false;
+
+    /**
+     * В гриде есть столбцы с инлайн редактированием
+     * @var array
+     */
+    private $editable = false;
+
+    /**
+     * URI для режима редактирования
+     * @var string
+     */
+    private $edit_url = '';
 
     /**
      * Текст ошибки при инициализации
@@ -245,7 +260,7 @@ class cmsGrid {
         // Фильтр по умолчанию
         $this->setDefaultFilter();
 
-        $this->grid = cmsEventsManager::hook('grid_' . $this->controller->name . '_' . $this->grid_name, $this->grid);
+        $this->grid = cmsEventsManager::hook('grid_' . $this->getGridFullName(), $this->grid);
 
         if($this->grid['options']['select_actions']){
             array_unshift($this->grid['options']['select_actions'], [
@@ -255,7 +270,7 @@ class cmsGrid {
         }
 
         list($this->grid, $args) = cmsEventsManager::hook(
-            'grid_' . $this->controller->name . '_' . $this->grid_name . '_args',
+            'grid_' . $this->getGridFullName() . '_args',
             [$this->grid, $args]
         );
 
@@ -278,6 +293,24 @@ class cmsGrid {
      */
     public function getGridValue($path) {
         return array_value_recursive($path, $this->grid);
+    }
+
+    /**
+     * Возвращает имя грида с учётом контроллера
+     *
+     * @return string
+     */
+    public function getGridFullName() {
+        return $this->controller->name . '_' . $this->grid_name;
+    }
+
+    /**
+     * Возвращает имя грида
+     *
+     * @return string
+     */
+    public function getGridName() {
+        return $this->grid_name;
     }
 
     /**
@@ -580,10 +613,12 @@ class cmsGrid {
             'is_loading' => false,
             'need_load'  => $dataset === false,
             'source_url' => $this->grid['source_url'] !== '' ? $this->grid['source_url'] : cmsCore::getInstance()->uri_absolute,
+            'edit_url'   => $this->edit_url,
             'options'    => $this->grid['options'],
             'filter'     => $this->grid['filter'],
             'rows'       => $rows,
             'total'      => $total ? $total : count(($dataset ?: [])),
+            'editable'   => $this->editable,
             'switchable' => [
                 'title'   => LANG_GRID_COLYMNS_SETTINGS,
                 'columns' => $this->getSwitchableColumns()
@@ -895,24 +930,26 @@ class cmsGrid {
 
     private function getEditableParams($row, $column, $field) {
 
-        if (!array_key_exists('editable', $column) || empty($row['id'])) {
+        $id_field = $column['editable']['id_field'] ?? 'id';
+
+        if (!array_key_exists('editable', $column) || empty($row[$id_field])) {
             return false;
         }
 
-        $save_action_query = [
-            'csrf_token' => cmsForm::getCSRFToken(),
-            'name' => $field,
-            'id' => $row['id']
-        ];
+        $save_action_query = ['csrf_token' => cmsForm::getCSRFToken()];
 
         // Экшен списка записей должен реализовывать и сохранение поля столбца
         $save_action = $this->grid['source_url'];
 
-        // @deprecated Передача таблицы устарела
-        if (!empty($column['editable']['table'])) {
-            $save_action = href_to('admin', 'inline_save', [urlencode($column['editable']['table']), $row['id']]);
+        // Может быть указан для грида другой урл
+        if (!empty($this->grid['options']['save_action'])) {
+            $save_action = $this->grid['options']['save_action'];
         }
 
+        // Сохраняем урл для режима редактирования
+        $this->edit_url = $save_action . '?' . http_build_query($save_action_query);
+
+        // Может быть указан для конкретной колонки урл
         if (!empty($column['editable']['save_action'])) {
             $save_action = string_replace_keys_values_extended($column['editable']['save_action'], $row);
         }
@@ -933,12 +970,20 @@ class cmsGrid {
             }
         }
 
+        $this->editable = true;
+
+        // Добавляем ID строки
+        $save_action_query['id'] = $row[$id_field];
+
         return [
             'component'   => $column['editable']['renderer'] ?? 'form-input',
             'items'       => $column['editable']['items'] ?? [],
             'edit_icon'   => html_svg_icon('solid', 'pen', 16, false),
             'value'       => $row[$field] ?? '',
+            'new_value'   => null,
+            'has_error'   => false,
             'attributes'  => $attributes,
+            'edit_mode'   => false,
             'lang_edit'   => LANG_EDIT,
             'lang_save'   => LANG_SAVE,
             'save_action' => $save_action . '?' . http_build_query($save_action_query)

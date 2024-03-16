@@ -62,6 +62,7 @@
 
     define('LANG_CP_SELECTED_EDIT',             'Редактировать');
     define('LANG_CP_SELECTED_DELETE',           'Удалить');
+    define('LANG_CP_EDIT_MODE',                 'Режим редактирования');
 
     define('LANG_CP_CTYPES_ADD',                'Создать тип контента');
     define('LANG_CP_CTYPES_EDIT',               'Изменить тип контента');

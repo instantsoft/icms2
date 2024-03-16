@@ -221,6 +221,60 @@ table.dataTable {
 }
 .datagrid {
 
+    &-column__editmode {
+        position: relative;
+        .datagrid-editable__link {
+            display: none !important;
+        }
+        &:after {
+            content: '';
+            height: 3px;
+            display: block;
+            background-color: $warning;
+            position: absolute;
+            left: 3px;
+            bottom: -2px;
+            right: 3px;
+            z-index: 1;
+        }
+        &-modified:after {
+            background-color: $success;
+        }
+        &-error:after {
+            background-color: $danger;
+        }
+        &-form {
+            display: inline-block;
+            .form-control {
+                background-color: transparent;
+                appearance: none;
+                width: 100%;
+                height: 100%;
+                outline: 0px;
+                border: 0px;
+                user-select: text;
+                font-size: inherit;
+                color: inherit;
+                line-height: 16px;
+                &:focus {
+                    color: inherit;
+                    background-color: inherit;
+                    outline: 0;
+                    box-shadow: none;
+                }
+            }
+            input.form-control {
+                padding: 0;
+            }
+            select.form-control {
+                padding-top: 0;
+                padding-left: 0;
+                padding-bottom: 0;
+                vertical-align: baseline;
+            }
+        }
+    }
+
     tr {
         &.dragged_over {
             background: rgba($success, 0.3) !important;
@@ -346,9 +400,8 @@ table.dataTable {
                             display: block;
                             left: calc(100% - 20px);
                             position: absolute;
-                            top: $spacer*.85;
+                            top: calc(50% - 10px);
                             opacity: 0;
-                            position: absolute;
                             transition: opacity 0.3s;
                             will-change: opacity;
                         }

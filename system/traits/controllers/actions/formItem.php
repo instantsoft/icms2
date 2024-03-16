@@ -80,6 +80,13 @@ trait formItem {
      */
     protected $breadcrumbs = [];
 
+    /**
+     * Коллбэки после добавления/обновления записи
+     * @var ?callable
+     */
+    protected $add_callback = null;
+    protected $update_callback = null;
+
     public function run($id = null){
 
         $data = [];
@@ -111,7 +118,7 @@ trait formItem {
 
         if ($this->request->has('csrf_token')){
 
-            $data = $form->parse($this->request, true, $data);
+            $data = array_merge($data, $form->parse($this->request, true, $data));
 
             $errors = $form->validate($this, $data);
 
@@ -121,9 +128,17 @@ trait formItem {
 
                     $id = call_user_func_array([$this->model, $this->form_add_method], [$this->table_name, $data]);
 
+                    if ($this->add_callback) {
+                        call_user_func_array($this->add_callback, [$id, $data]);
+                    }
+
                 } else {
 
                     call_user_func_array([$this->model, $this->form_edit_method], [$this->table_name, $id, $data]);
+
+                    if ($this->update_callback) {
+                        call_user_func_array($this->update_callback, [$data]);
+                    }
                 }
 
                 if($this->cache_key){

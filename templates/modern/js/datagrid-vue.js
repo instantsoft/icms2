@@ -19,8 +19,10 @@ icms.datagrid = (function () {
                     switchable_columns_names: [],
                     select_actions_items_map: [],
                     select_action_key: 0,
+                    edit_mode_enable: false,
                     change_overflow: false,
-                    allow_drag_start: false
+                    allow_drag_start: false,
+                    save_is_busy: false
                 };
             },
             mounted() {
@@ -99,7 +101,7 @@ icms.datagrid = (function () {
                     return items;
                 },
                 hasToolbar: function() {
-                    return this.switchable.columns || this.options.select_actions;
+                    return this.switchable.columns || this.options.select_actions || this.editable;
                 },
                 selectedRows: function() {
                     return this.rows.filter(function(o){
@@ -114,6 +116,72 @@ icms.datagrid = (function () {
                 }
             },
             methods: {
+                enableEditMode() {
+                    for (let key in this.rows) {
+                        for (let k in this.rows[key].columns) {
+                            if (this.rows[key].columns[k].editable) {
+                                this.rows[key].columns[k].editable.edit_mode = true;
+                            }
+                        }
+                    }
+                    this.edit_mode_enable = true;
+                },
+                disableEditMode() {
+                    for (let key in this.rows) {
+                        for (let k in this.rows[key].columns) {
+                            if (this.rows[key].columns[k].editable) {
+                                this.rows[key].columns[k].editable.edit_mode = false;
+                                this.rows[key].columns[k].editable.has_error = false;
+                                this.rows[key].columns[k].editable.new_value = false;
+                            }
+                        }
+                    }
+                    this.edit_mode_enable = false;
+                },
+                saveEditMode() {
+                    let modified = {};
+                    for (let key in this.rows) {
+                        for (let k in this.rows[key].columns) {
+                            if (this.rows[key].columns[k].editable && this.rows[key].columns[k].editable.new_value) {
+                                if(!modified[this.rows[key].id]){
+                                    modified[this.rows[key].id] = {};
+                                }
+                                modified[this.rows[key].id][this.rows[key].columns[k].name] = this.rows[key].columns[k].editable.new_value;
+                            }
+                        }
+                    }
+                    if(Object.keys(modified).length === 0){
+                        this.disableEditMode();
+                        return;
+                    }
+                    this.save_is_busy = true;
+                    let vm = this;
+                    self.ajax(this.edit_url+'&'+http_build_query({rows: modified}), {
+                        save_rows_fields: 1
+                    }, function(result){
+                        vm.save_is_busy = false;
+                        if (result.error) {
+                            if (typeof(result.error) === 'object'){
+                                for (let key in vm.rows) {
+                                    if(vm.rows[key].id == result.error.id){
+                                        for (let k in vm.rows[key].columns) {
+                                            if(vm.rows[key].columns[k].name == result.error.name){
+                                                vm.rows[key].columns[k].editable.has_error = true;
+                                                break;
+                                            }
+                                        }
+                                        break;
+                                    }
+                                }
+                                self.alert(result.error.value);
+                            } else {
+                                self.alert(result.error);
+                            }
+                        } else {
+                            self.loadRows();
+                        }
+                    });
+                },
                 applyFilter() {
                     self.loadRows();
                 },
@@ -222,6 +290,14 @@ icms.datagrid = (function () {
                         column.name === this.filter.order_by ? 'sorting_'+this.filter.order_to : '',
                         'sortable sorting',
                         column.class
+                    ];
+                },
+                colClass (col){
+                    return [
+                        col.editable.edit_mode ? 'datagrid-column__editmode' : '',
+                        col.editable.new_value ? 'datagrid-column__editmode-modified' : '',
+                        col.editable.has_error ? 'datagrid-column__editmode-error' : '',
+                        col.class
                     ];
                 }
             }
@@ -354,7 +430,7 @@ icms.datagrid = (function () {
                     return this.save;
                 }
             },
-            template: `<input autocomplete="off" type="text" class="input form-control form-control-sm" :value="modelValue" @input="saveDelayed($event.target.value)" v-bind="params.attributes ? params.attributes : {}">`
+            template: `<input autocomplete="off" :size="modelValue ? modelValue.length+1 : 15" type="text" class="input form-control form-control-sm" :value="modelValue" @input="saveDelayed($event.target.value)" v-bind="params.attributes ? params.attributes : {}">`
         });
 
         app.component('form-select', {
@@ -424,6 +500,9 @@ icms.datagrid = (function () {
                     }
                     return titles.join(', ');
                 },
+                fieldUid: function() {
+                    return 'dgselect-'+this.$.uid;
+                },
                 selected: {
                     get() {
                         if (!this.modelValue) { return []; }
@@ -454,8 +533,8 @@ icms.datagrid = (function () {
                 <input v-if="!use_slot" class="input form-control form-control-sm" v-model="selectedTitles" type="text" readonly="true" @click="toggle" v-bind="params.attributes">
                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left shadow px-2 pt-2 pb-0" :class="{show_menu: is_show}">
                     <div class="custom-control custom-checkbox pb-2" v-for="(title, index) in params.items" :key="index">
-                        <input class="custom-control-input" type="checkbox" :id="'dgselect-'+index" :value="index" v-model="selected">
-                        <label class="custom-control-label" :for="'dgselect-'+index">
+                        <input class="custom-control-input" type="checkbox" :id="fieldUid+'-'+index" :value="index" v-model="selected">
+                        <label class="custom-control-label" :for="fieldUid+'-'+index">
                             {{title}}
                         </label>
                     </div>
@@ -515,7 +594,7 @@ icms.datagrid = (function () {
                 }
             },
             template: `
-            <div :class="flagClass"><a v-if="isHref" :href="col.href" @click.stop.prevent="toggle"></a></div>
+            <div :class="flagClass"><a tabindex="-1" v-if="isHref" :href="col.href" @click.stop.prevent="toggle"></a></div>
             `
         });
 
@@ -536,15 +615,40 @@ icms.datagrid = (function () {
             emits: ['changeoverflow'],
             data() {
                 return {
+                    current_value: false,
                     show_form: false,
                     is_busy: false
                 };
             },
+            mounted() {
+                this.current_value = this.col.editable.value;
+            },
+            watch: {
+                current_value: {
+                    handler: function (new_value, old_value) {
+                        if(new_value !== this.col.editable.value){
+                            this.$root.rows[this.row_key].columns[this.col_key].editable.new_value = new_value;
+                        } else {
+                            this.$root.rows[this.row_key].columns[this.col_key].editable.new_value = null;
+                        }
+                        this.$root.rows[this.row_key].columns[this.col_key].editable.has_error = false;
+                    }
+                },
+                'col.editable.edit_mode': {
+                    handler: function (new_value, old_value) {
+                        this.current_value = this.col.editable.value;
+                    }
+                }
+             },
             methods: {
                 save: function() {
                     let vm = this;
                     this.is_busy = true;
-                    self.ajax(this.col.editable.save_action, {value: (this.col.editable.value ? this.col.editable.value : ''), save_row_field: 1}, function(result){
+                    self.ajax(this.col.editable.save_action, {
+                        value: (this.current_value ? this.current_value : ''),
+                        name: this.col.name,
+                        save_row_field: 1
+                    }, function(result){
                         vm.is_busy = false;
                         if (result.error) {
                             self.alert(result.error);
@@ -567,15 +671,18 @@ icms.datagrid = (function () {
             },
             template: `
             <a class="ml-2 d-inline-block datagrid-editable__link" href="#" v-html="col.editable.edit_icon" :title="col.editable.lang_edit" @click.prevent.stop="showFrom"></a>
-            <teleport to="#icms-grid">
-                <div class="datagrid-backdrop" v-if="show_form"></div>
-            </teleport>
+            <div class="datagrid-column__editmode-form" v-if="col.editable.edit_mode">
+                <component :is="col.editable.component" v-model="current_value" :params="col.editable"></component>
+            </div>
             <div class="grid_field_edit edit_by_click d-block" v-if="show_form" v-clickaway="hideFrom">
-                <component :is="col.editable.component" v-focus @keyup.esc="hideFrom" @keyup.enter="save" v-model="col.editable.value" :params="col.editable"></component>
+                <component :is="col.editable.component" v-focus @keyup.esc="hideFrom" @keyup.enter="save" v-model="current_value" :params="col.editable"></component>
                 <button class="button btn inline_submit btn-primary" type="button" @click="save" :disabled="is_busy" :class="{'is-busy': is_busy}">
                     <span>{{col.editable.lang_save}}</span>
                 </button>
             </div>
+            <teleport to="#icms-grid">
+                <div class="datagrid-backdrop" v-if="show_form"></div>
+            </teleport>
             `
         });
 
@@ -593,7 +700,7 @@ icms.datagrid = (function () {
             },
             template: `
             <div class="actions" v-if="col.value.length > 0">
-                <a v-for="action in col.value" v-tooltip :title="action.title" :target="action.target" :class="action.class" @click.stop="confirm(action.confirm, $event)" :href="action.href">
+                <a tabindex="-1" v-for="action in col.value" v-tooltip :title="action.title" :target="action.target" :class="action.class" @click.stop="confirm(action.confirm, $event)" :href="action.href">
                     <span v-if="action.icon" v-html="action.icon"></span>
                 </a>
             </div>
@@ -855,6 +962,8 @@ icms.datagrid = (function () {
         self.app.is_loading = true;
 
         self.ajax(self.app.source_url, {filter: http_build_query(self.app.filter), visible_columns: self.app.switchable_columns_names}, function(result){
+
+            self.app.edit_mode_enable = false;
 
             for(let key in result) {
                 if(result.hasOwnProperty(key)){
