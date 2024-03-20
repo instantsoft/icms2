@@ -203,6 +203,12 @@ class formUsersField extends cmsForm {
                         'hint' => LANG_CP_FIELD_REGEX_TEXT_HINT,
                         'visible_depend' => ['options:is_regexp' => ['show' => ['1']]]
                     ]),
+                    new fieldString('options:rules_regexp_error', [
+                        'title' => LANG_CP_FIELD_REGEX_ERROR,
+                        'hint' => LANG_CP_FIELD_REGEX_ERROR_HINT,
+                        'multilanguage' => true,
+                        'visible_depend' => ['options:is_regexp' => ['show' => ['1']]]
+                    ]),
                     new fieldCheckbox('options:is_unique', [
                         'title' => LANG_VALIDATE_UNIQUE
                     ])

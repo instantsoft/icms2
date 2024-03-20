@@ -34,6 +34,13 @@ class cmsForm {
     private $structure = [];
 
     /**
+     * Подготовленная структура формы
+     *
+     * @var ?array
+     */
+    private $prepared_structure = null;
+
+    /**
      * Массив имён отключенных полей формы
      * Они не участвуют в валидации,
      * не участвуют в парсинге формы
@@ -176,49 +183,44 @@ class cmsForm {
         return $this->structure;
     }
 
-    /**
-     * Возвращает подготовленный массив полей формы
-     *
-     * @param array $item Массив данных формы
-     * @return array
-     */
-    public function getFormStructure($item = null){
+    protected function loadPreparedFormStructure() {
 
-        $default_lang = cmsConfig::get('language');
+        if ($this->prepared_structure !== null) {
+            return $this;
+        }
+
+        $default_lang   = cmsConfig::get('language');
         $is_change_lang = cmsConfig::get('is_user_change_lang');
 
         $langs = cmsCore::getLanguages();
 
         $structure = $this->structure;
 
-        foreach($structure as $fid => $fieldset){
+        foreach ($structure as $fid => $fieldset) {
 
-            if (!isset($fieldset['childs'])) { continue; }
+            if (!isset($fieldset['childs'])) {
+                continue;
+            }
 
             $childs = [];
 
-            foreach($fieldset['childs'] as $id => $field){
-
-                if($item){
-                    $field->setItem($item);
-                }
+            foreach ($fieldset['childs'] as $field) {
 
                 $name = $field->getName();
 
-                if(!empty($field->patterns_hint['patterns'])) {
+                if (!empty($field->patterns_hint['patterns'])) {
 
                     $field->patterns_hint['pattern_fields'] = [];
 
-                    $wrap_symbols = empty($field->patterns_hint['wrap_symbols']) ? ['{','}'] : $field->patterns_hint['wrap_symbols'];
+                    $wrap_symbols = empty($field->patterns_hint['wrap_symbols']) ? ['{', '}'] : $field->patterns_hint['wrap_symbols'];
 
-                    foreach($field->patterns_hint['patterns'] as $pattern => $p_title){
-                        if(is_numeric($pattern)){
-                            $field->patterns_hint['pattern_fields'][] = '<a href="#">'.$wrap_symbols[0].$p_title.$wrap_symbols[1].'</a>';
+                    foreach ($field->patterns_hint['patterns'] as $pattern => $p_title) {
+                        if (is_numeric($pattern)) {
+                            $field->patterns_hint['pattern_fields'][] = '<a href="#">' . $wrap_symbols[0] . $p_title . $wrap_symbols[1] . '</a>';
                         } else {
-                            $field->patterns_hint['pattern_fields'][] = '<a title="'.html($p_title, false).'" href="#">'.$wrap_symbols[0].$pattern.$wrap_symbols[1].'</a>';
+                            $field->patterns_hint['pattern_fields'][] = '<a title="' . html($p_title, false) . '" href="#">' . $wrap_symbols[0] . $pattern . $wrap_symbols[1] . '</a>';
                         }
                     }
-
                 }
 
                 // проверяем является ли поле элементом массива
@@ -229,12 +231,14 @@ class cmsForm {
                     'ft_' . strtolower(substr(get_class($field), 5))
                 ];
 
-                if(array_search(['required'], $field->rules) !== false){ $field->classes[] = 'reguired_field'; }
+                if (array_search(['required'], $field->rules) !== false) {
+                    $field->classes[] = 'reguired_field';
+                }
 
-                if (!empty($field->groups_edit)){
-                    if (!in_array(0, $field->groups_edit)){
+                if (!empty($field->groups_edit)) {
+                    if (!in_array(0, $field->groups_edit)) {
                         $field->classes[] = 'groups-limit';
-                        foreach($field->groups_edit as $group_id){
+                        foreach ($field->groups_edit as $group_id) {
                             $field->classes[] = 'group-' . $group_id;
                         }
                     }
@@ -242,30 +246,31 @@ class cmsForm {
 
                 $field->styles = [];
 
-                if (isset($field->is_visible)){
-                    if (!$field->is_visible){
+                if (isset($field->is_visible)) {
+                    if (!$field->is_visible) {
                         $field->styles[] = 'display:none';
                     }
                 }
 
-                if($field->visible_depend){
-                     $field->classes[] = 'child_field';
+                if ($field->visible_depend) {
+                    $field->classes[] = 'child_field';
                 }
 
                 $is_multilanguage = $field->multilanguage && $is_change_lang;
 
-                if($is_multilanguage){
-                     $field->classes[] = 'multilanguage';
+                if ($is_multilanguage) {
+                    $field->classes[] = 'multilanguage';
                 }
 
-                if(!$is_multilanguage || $field->is_hidden || $field->getOption('is_hidden')){
+                if (!$is_multilanguage || $field->is_hidden || $field->getOption('is_hidden')) {
 
                     $childs[] = $field;
 
                     continue;
                 }
 
-                $_childs = []; $first = true;
+                $_childs = [];
+                $first   = true;
 
                 foreach ($langs as $lang) {
 
@@ -273,32 +278,32 @@ class cmsForm {
 
                     $_field->lang = $lang;
 
-                    if($default_lang !== $lang) {
+                    if ($default_lang !== $lang) {
 
-                        if(!empty($_field->multilanguage_params['unset_required'])){
+                        if (!empty($_field->multilanguage_params['unset_required'])) {
 
                             $required_key = array_search(['required'], $_field->getRules());
-                            if($required_key !== false){
+                            if ($required_key !== false) {
                                 unset($_field->rules[$required_key]);
                             }
                             $class_key = array_search('reguired_field', $_field->classes);
-                            if($class_key !== false){
+                            if ($class_key !== false) {
                                 unset($_field->classes[$class_key]);
                             }
                         }
 
-                        if($is_array){
+                        if ($is_array) {
 
                             $name_parts = explode(':', $name);
 
                             $count = count($name_parts);
 
-                            $name_parts[$count-($count > 2 ? 2 : 1)] .= '_'.$lang;
+                            $name_parts[$count - ($count > 2 ? 2 : 1)] .= '_' . $lang;
 
                             $_field->setName(implode(':', $name_parts));
 
                         } else {
-                            $_field->setName($name.'_'.$lang);
+                            $_field->setName($name . '_' . $lang);
                         }
 
                     } else {
@@ -306,11 +311,11 @@ class cmsForm {
                         $_field->classes[] = 'multilanguage-base';
                     }
 
-                    if(!$first){
+                    if (!$first) {
                         $_field->styles[] = 'display:none';
                     }
 
-                    $_field->element_title = $_field->title.' ['.strtoupper($lang).']';
+                    $_field->element_title = $_field->title . ' [' . strtoupper($lang) . ']';
 
                     $_field->rel = $lang;
 
@@ -327,7 +332,40 @@ class cmsForm {
             $structure[$fid]['childs'] = $childs;
         }
 
-        return $structure;
+        $this->prepared_structure = $structure;
+
+        return $this;
+    }
+
+    /**
+     * Возвращает подготовленный массив полей формы
+     *
+     * @param ?array $item Массив данных формы
+     * @return array
+     */
+    public function getFormStructure($item = null) {
+
+        $this->loadPreparedFormStructure();
+
+        foreach ($this->prepared_structure as $fieldset) {
+
+            if (!isset($fieldset['childs'])) {
+                continue;
+            }
+
+            foreach ($fieldset['childs'] as $field) {
+
+                if(!is_array($field)){ $_field = [$field]; } else { $_field = $field; }
+
+                foreach ($_field as $field) {
+                    if ($item) {
+                        $field->setItem($item);
+                    }
+                }
+            }
+        }
+
+        return $this->prepared_structure;
     }
 
     /**

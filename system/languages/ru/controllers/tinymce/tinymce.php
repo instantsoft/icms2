@@ -12,6 +12,8 @@ define('LANG_TINYMCE_TOOLBAR_DRAWER', 'Излишки кнопок по шири
 define('LANG_TINYMCE_TOOLBAR_DRAWER0', 'Переносить на следующую строку');
 define('LANG_TINYMCE_TOOLBAR_DRAWER1', 'Показывать всплывающим меню');
 define('LANG_TINYMCE_TOOLBAR_DRAWER2', 'Показывать всплывающими на новой строке');
+define('LANG_TINYMCE_TOOLBAR_DRAWER3', 'Режим прокрутки');
+define('LANG_TINYMCE_TOOLBAR_STICKY', 'Прилипание тулбара редактора');
 define('LANG_TINYMCE_IMAGE_CAPTION', 'Разрешить подписи к фото');
 define('LANG_TINYMCE_IMAGE_TITLE', 'Разрешить ввод названия фото');
 define('LANG_TINYMCE_IMAGE_DESCRIPTION', 'Разрешить ввод описание фото');
@@ -21,7 +23,6 @@ define('LANG_TINYMCE_STATUSBAR', 'Показывать строку состоя
 define('LANG_TINYMCE_MIN_HEIGHT', 'Минимальная высота редактора');
 define('LANG_TINYMCE_MAX_HEIGHT', 'Максимальная высота редактора');
 define('LANG_TINYMCE_ALLOW_MIME_TYPES', 'Разрешенные типы файлов для группы "%s"');
-define('LANG_TINYMCE_PASTE_AS_TEXT', 'Вставлять текст, очищая форматирование (плагин paste)');
 define('LANG_TINYMCE_BLOCK_FORMATS', 'Доступные форматы');
 define('LANG_TINYMCE_P', 'Параграф');
 define('LANG_TINYMCE_SP', 'Спойлер');

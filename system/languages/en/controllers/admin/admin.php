@@ -235,6 +235,8 @@
     define('LANG_CP_FIELD_FORMAT',              'Field validation');
     define('LANG_CP_FIELD_REGEX',               'Regular expression');
     define('LANG_CP_FIELD_REGEX_TEXT',          'Enter a regular expression');
+    define('LANG_CP_FIELD_REGEX_ERROR',         'Validation error text');
+    define('LANG_CP_FIELD_REGEX_ERROR_HINT',    'If not specified, will be displayed "Wrong format"');
     define('LANG_CP_FIELD_REGEX_TEXT_HINT',     'The specified regular expression must match the value of the field.');
     define('LANG_CP_FIELD_TYPE',                'Field type');
     define('LANG_CP_FIELD_TYPE_HINT',           'Attention! Existing data in this field can be deleted!');

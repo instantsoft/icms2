@@ -29,13 +29,15 @@ class fieldFieldsgroup extends cmsFormField {
 
         foreach ($this->childs as $field) {
 
+            $form_field = clone $field;
+
             if($context_name){
-                $field->setName($this->name.'::'.$field->getName());
+                $form_field->setName($this->name.'::'.$form_field->getName());
             }
 
-            $field->setItem($this->item);
+            $form_field->setItem($this->item);
 
-            $form->addField($fieldset_id, $field);
+            $form->addField($fieldset_id, $form_field);
         }
 
         return $form;

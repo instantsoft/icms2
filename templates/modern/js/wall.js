@@ -6,7 +6,7 @@ icms.wall = (function ($) {
 
     this.add = function (parent_id) {
 
-        var form = $('#wall_add_form');
+        let form = $('#wall_add_form');
 
         if (typeof (parent_id) === 'undefined') {
             parent_id = 0;
@@ -33,7 +33,9 @@ icms.wall = (function ($) {
         $('input[name=action]', form).val('add');
         $('input[name=submit]', form).val( LANG_SEND );
 
-        icms.forms.wysiwygInit('content').wysiwygInsertText('content', '');
+        icms.forms.wysiwygInit('content', function () {
+            icms.forms.wysiwygInsertText('content', '');
+        });
 
         return false;
     };
@@ -166,7 +168,7 @@ icms.wall = (function ($) {
 
     this.edit = function (id){
 
-        var form = $('#wall_add_form');
+        let form = $('#wall_add_form');
 
         $('#wall_widget #wall_add_link').show();
         $('#wall_widget #entries_list .links *').removeClass('disabled');
@@ -181,24 +183,25 @@ icms.wall = (function ($) {
 
         $('textarea', form).prop('disabled', true);
 
-        icms.forms.wysiwygInit('content');
+        icms.forms.wysiwygInit('content', function () {
 
-        var url = $('#wall_urls').data('get-url');
+            let url = $('#wall_urls').data('get-url');
 
-        $.post(url, {id: id}, function(result){
+            $.post(url, {id: id}, function(result){
 
-            $('#wall_widget #entries_list #entry_'+id+' > .media-body > .links .edit').removeClass('is-busy');
+                $('#wall_widget #entries_list #entry_'+id+' > .media-body > .links .edit').removeClass('is-busy');
 
-            if (result.error){
-                self.error(result.message);
-                return;
-            }
+                if (result.error){
+                    self.error(result.message);
+                    return;
+                }
 
-            self.restoreForm(false);
+                self.restoreForm(false);
 
-            icms.forms.wysiwygInsertText('content', result.html);
+                icms.forms.wysiwygInsertText('content', result.html);
 
-        }, 'json');
+            }, 'json');
+        });
 
         return false;
     };

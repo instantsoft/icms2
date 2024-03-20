@@ -2,14 +2,22 @@
 
 class actionCommentsGet extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
-        if (!cmsUser::isAllowed('comments', 'edit')){ cmsCore::error404(); }
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
+        if (!cmsUser::isAllowed('comments', 'edit')) {
+
+            return $this->cms_template->renderJSON([
+                'error' => true, 'message' => LANG_ERROR
+            ]);
+        }
 
         $comment_id = $this->request->get('id', 0);
 
-        if (!$comment_id){
+        if (!$comment_id) {
+
             return $this->cms_template->renderJSON([
                 'error' => true, 'message' => LANG_ERROR
             ]);
@@ -17,7 +25,8 @@ class actionCommentsGet extends cmsAction {
 
         $comment = $this->model->getComment($comment_id);
 
-        if (!$comment){
+        if (!$comment) {
+
             return $this->cms_template->renderJSON([
                 'error' => true, 'message' => LANG_ERROR
             ]);
@@ -40,7 +49,6 @@ class actionCommentsGet extends cmsAction {
         list($result, $comment) = cmsEventsManager::hook('comment_before_render_json', [$result, $comment]);
 
         return $this->cms_template->renderJSON($result);
-
     }
 
 }

@@ -12,6 +12,8 @@ define('LANG_TINYMCE_TOOLBAR_DRAWER', 'Surplus buttons across the width of the t
 define('LANG_TINYMCE_TOOLBAR_DRAWER0', 'Move to the next line');
 define('LANG_TINYMCE_TOOLBAR_DRAWER1', 'Show as pop-up menu');
 define('LANG_TINYMCE_TOOLBAR_DRAWER2', 'Show popup on new line');
+define('LANG_TINYMCE_TOOLBAR_DRAWER3', 'Scrolling mode');
+define('LANG_TINYMCE_TOOLBAR_STICKY', 'Sticky editor toolbar');
 define('LANG_TINYMCE_IMAGE_CAPTION', 'Allow photo captions');
 define('LANG_TINYMCE_IMAGE_TITLE', 'Allow photo name');
 define('LANG_TINYMCE_IMAGE_DESCRIPTION', 'Allow photo description');
@@ -21,7 +23,6 @@ define('LANG_TINYMCE_STATUSBAR', 'Show status bar');
 define('LANG_TINYMCE_MIN_HEIGHT', 'Minimum editor height');
 define('LANG_TINYMCE_MAX_HEIGHT', 'Maximum editor height');
 define('LANG_TINYMCE_ALLOW_MIME_TYPES', 'Allowed file types for "%s" group');
-define('LANG_TINYMCE_PASTE_AS_TEXT', 'Paste text, clearing formatting (paste plugin)');
 define('LANG_TINYMCE_BLOCK_FORMATS', 'Available formats');
 define('LANG_TINYMCE_P', 'Paragraph');
 define('LANG_TINYMCE_SP', 'Spoiler');

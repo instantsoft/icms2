@@ -86,13 +86,19 @@ class formWysiwygTinymceOptions extends cmsForm {
                 'default' => ['p','h2','h3']
             )),
 
-            new fieldList('options:toolbar_drawer', array(
+            new fieldList('options:toolbar_mode', array(
                 'title' => LANG_TINYMCE_TOOLBAR_DRAWER,
                 'items' => [
-                    '' => LANG_TINYMCE_TOOLBAR_DRAWER0,
-                    'floating' => LANG_TINYMCE_TOOLBAR_DRAWER1,
-                    'sliding' => LANG_TINYMCE_TOOLBAR_DRAWER2
+                    'wrap'      => LANG_TINYMCE_TOOLBAR_DRAWER0,
+                    'floating'  => LANG_TINYMCE_TOOLBAR_DRAWER1,
+                    'sliding'   => LANG_TINYMCE_TOOLBAR_DRAWER2,
+                    'scrolling' => LANG_TINYMCE_TOOLBAR_DRAWER3
                 ]
+            )),
+
+            new fieldCheckbox('options:toolbar_sticky', array(
+                'title' => LANG_TINYMCE_TOOLBAR_STICKY,
+                'default' => false
             )),
 
             new fieldCheckbox('options:image_caption', array(
@@ -122,11 +128,6 @@ class formWysiwygTinymceOptions extends cmsForm {
 
             new fieldCheckbox('options:statusbar', array(
                 'title' => LANG_TINYMCE_STATUSBAR,
-                'default' => false
-            )),
-
-            new fieldCheckbox('options:paste_as_text', array(
-                'title' => LANG_TINYMCE_PASTE_AS_TEXT,
                 'default' => false
             )),
 

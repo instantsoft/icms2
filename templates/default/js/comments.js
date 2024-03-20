@@ -66,7 +66,9 @@ icms.comments = (function ($) {
         $('input[name=action]', form).val('add');
         $('input[name=submit]', form).val( LANG_SEND );
 
-        icms.forms.wysiwygInit('content').wysiwygInsertText('content', '');
+        icms.forms.wysiwygInit('content', function () {
+            icms.forms.wysiwygInsertText('content', '');
+        });
 
         icms.events.run('icms_comments_add_form', form);
 
@@ -340,22 +342,22 @@ icms.comments = (function ($) {
         $('.buttons', form).hide();
         $('textarea', form).prop('disabled', true);
 
-        icms.forms.wysiwygInit('content');
+        icms.forms.wysiwygInit('content', function () {
+            $.post(_this.urls.get, {id: id}, function(result){
 
-        $.post(this.urls.get, {id: id}, function(result){
+                if (result.error){
+                    _this.error(result.message);
+                    return;
+                }
 
-            if (result == null || typeof(result) === 'undefined' || result.error){
-                _this.error(result.message);
-                return;
-            }
+                _this.restoreForm(false);
 
-            _this.restoreForm(false);
+                icms.forms.wysiwygInsertText('content', result.html);
 
-            icms.forms.wysiwygInsertText('content', result.html);
+                icms.events.run('icms_comments_edit', result);
 
-            icms.events.run('icms_comments_edit', result);
-
-        }, 'json');
+            }, 'json');
+        });
 
         return false;
     };

@@ -72,7 +72,7 @@ class cmsFormField {
      * Массив записи, в которой это поле используется
      * @var array
      */
-    public $item = null;
+    public $item = [];
     /**
      * Контекст запроса
      * Устанавливается в методе parse объекта класса cmsForm

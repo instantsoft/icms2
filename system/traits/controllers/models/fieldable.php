@@ -86,9 +86,9 @@ trait fieldable {
         if ($item['options']['is_email']) { $rules[] = ['email']; }
         if (!empty($item['options']['is_url'])) { $rules[] = ['url']; }
         if (!empty($item['options']['is_regexp']) && !empty($item['options']['rules_regexp_str'])) {
-            $rules[] = ['regexp', $item['options']['rules_regexp_str']];
+            $rules[] = ['regexp', $item['options']['rules_regexp_str'], get_localized_value('rules_regexp_error', $item['options'])];
         }
-
+        ;
         if ($item['options']['is_unique']) {
             if (!$item_id) {
                 $rules[] = ['unique', $table, $item['name']];

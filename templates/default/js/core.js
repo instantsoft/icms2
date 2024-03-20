@@ -154,9 +154,11 @@ icms.forms = (function ($) {
         return this;
     };
 
-    this.wysiwygInit = function (field_name){
+    this.wysiwygInit = function (field_name, callback){
         if (typeof(this.wysiwygs_insert_pool.init[field_name]) === 'function') {
-            this.wysiwygs_insert_pool.init[field_name](field_name);
+            this.wysiwygs_insert_pool.init[field_name](field_name, callback);
+        } else if(typeof(callback) === 'function') {
+            callback();
         }
         return this;
     };

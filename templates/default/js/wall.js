@@ -31,7 +31,9 @@ icms.wall = (function ($) {
         $('input[name=action]', form).val('add');
         $('input[name=submit]', form).val( LANG_SEND );
 
-        icms.forms.wysiwygInit('content').wysiwygInsertText('content', '');
+        icms.forms.wysiwygInit('content', function () {
+            icms.forms.wysiwygInsertText('content', '');
+        });
 
         return false;
 
@@ -215,22 +217,23 @@ icms.wall = (function ($) {
         $('.buttons', form).hide();
         $('textarea', form).prop('disabled', true);
 
-        icms.forms.wysiwygInit('content');
+        icms.forms.wysiwygInit('content', function () {
 
-        var url = $('#wall_urls').data('get-url');
+            var url = $('#wall_urls').data('get-url');
 
-        $.post(url, {id: id}, function(result){
+            $.post(url, {id: id}, function(result){
 
-            if (result == null || typeof(result) == 'undefined' || result.error){
-                icms.wall.error(result.message);
-                return;
-            }
+                if (result.error){
+                    icms.wall.error(result.message);
+                    return;
+                }
 
-            icms.wall.restoreForm(false);
+                icms.wall.restoreForm(false);
 
-            icms.forms.wysiwygInsertText('content', result.html);
+                icms.forms.wysiwygInsertText('content', result.html);
 
-        }, 'json');
+            }, 'json');
+        });
 
         return false;
     };

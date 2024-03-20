@@ -105,46 +105,50 @@ icms.comments = (function ($) {
         $('input[name=action]', form).val('add');
         $('input[name=submit]', form).val( LANG_SEND );
 
-        icms.forms.wysiwygInit('content').wysiwygInsertText('content', '');
+        icms.forms.wysiwygInit('content', function () {
+            icms.forms.wysiwygInsertText('content', '');
+        });
 
         icms.events.run('icms_comments_add_form', form);
 
         return false;
     };
 
-    this.edit = function (id){
-        var form = $('#comments_add_form');
-        var comments_widget = $('#comments_widget');
+    this.edit = function (id) {
+
+        let form = $('#comments_add_form');
+        let comments_widget = $('#comments_widget');
 
         $('#comments_add_link, .icms-comment-controls .reply, .icms-comment-controls .edit', comments_widget)
                 .removeClass('disabled');
 
-        form.detach().appendTo('#comment_'+id+' .media-body').show();
+        form.detach().appendTo('#comment_' + id + ' .media-body').show();
 
         $('input[name=id]', form).val(id);
         $('input[name=action]', form).val('update');
-        $('input[name=submit]', form).val( LANG_SAVE );
+        $('input[name=submit]', form).val(LANG_SAVE);
 
-        $('#comment_'+id+' .icms-comment-controls .edit', comments_widget).addClass('is-busy');
+        $('#comment_' + id + ' .icms-comment-controls .edit', comments_widget).addClass('is-busy');
         $('textarea', form).prop('disabled', true);
 
-        icms.forms.wysiwygInit('content');
+        icms.forms.wysiwygInit('content', function () {
+            $.post(_this.urls.get, {id: id}, function (result) {
 
-        $.post(this.urls.get, {id: id}, function(result){
-            $('#comment_'+id+' .icms-comment-controls .edit', comments_widget).removeClass('is-busy');
+                $('#comment_' + id + ' .icms-comment-controls .edit', comments_widget).removeClass('is-busy');
 
-            if (result == null || typeof(result) === 'undefined' || result.error){
-                _this.error(result.message);
-                return;
-            }
+                if (result.error) {
+                    _this.error(result.message);
+                    return;
+                }
 
-            _this.restoreForm(false);
+                _this.restoreForm(false);
 
-            icms.forms.wysiwygInsertText('content', result.html);
+                icms.forms.wysiwygInsertText('content', result.html);
 
-            icms.events.run('icms_comments_edit', result);
+                icms.events.run('icms_comments_edit', result);
 
-        }, 'json');
+            }, 'json');
+        });
 
         return false;
     };

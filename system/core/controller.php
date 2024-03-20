@@ -1427,9 +1427,26 @@ class cmsController {
         return ERR_VALIDATE_INVALID;
     }
 
-    public function validate_regexp($regexp, $value){
-        if (empty($value)) { return true; }
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match($regexp, strval($value))){ return ERR_VALIDATE_REGEXP; }
+    public function validate_regexp($regexp, $value, $set_error_text = false) {
+
+        if (empty($value)) {
+            return true;
+        }
+
+        $error_text = false;
+
+        // Если передан, значит $value это $set_error_text, а $set_error_text это $value
+        // Сделано для совместимости, т.к. в валидаторы
+        // Значения передются последним аргументом
+        if($set_error_text){
+            $error_text = $value;
+            $value = $set_error_text;
+        }
+
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match($regexp, strval($value))) {
+            return $error_text ? $error_text : ERR_VALIDATE_REGEXP;
+        }
+
         return true;
     }
 

@@ -7,6 +7,27 @@ function install_package(){
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    $wysiwygs = cmsCore::getModel('wysiwygs');
+
+    $presets = $wysiwygs->filterEqual('wysiwyg_name', 'tinymce')->getPresets();
+
+    if ($presets) {
+        foreach ($presets as $preset) {
+            $preset['options']['toolbar'] = str_replace([' toc', ' hr'], '', $preset['options']['toolbar']);
+            $preset['options']['toolbar_mode'] = $preset['options']['toolbar_drawer'] ? $preset['options']['toolbar_drawer'] : 'floating';
+            unset($preset['options']['paste_as_text'], $preset['options']['toc_header']);
+            if ($preset['options']['plugins']){
+                foreach (['paste', 'toc', 'hr'] as $name) {
+                    $key = array_search($name, $preset['options']['plugins']);
+                    if ($key !== false) {
+                        unset($preset['options']['plugins'][$key]);
+                    }
+                }
+            }
+            $wysiwygs->updatePreset($preset['id'], $preset);
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

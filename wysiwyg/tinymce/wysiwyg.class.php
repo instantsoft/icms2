@@ -25,7 +25,7 @@ class cmsWysiwygTinymce {
     ];
 
     private $buttons_mapping = [
-        'wordcount','toc','nonbreaking','media','insertdatetime','image','hr','fullscreen','code',
+        'wordcount','nonbreaking','media','insertdatetime','image','fullscreen','code',
         'charmap','anchor','smiles', 'emoticons',
         'codesample' => [
             'codesample'
@@ -71,17 +71,19 @@ class cmsWysiwygTinymce {
         'relative_urls'         => false,
         'convert_urls'          => false,
         'paste_data_images'     => true,
+        'highlight_on_focus'    => true,
+        'link_quicklink'        => true,
+        'link_context_toolbar'  => true,
         'image_caption'         => false,
-        'toolbar_drawer'        => false,
+        'toolbar_mode'          => 'floating',
+        'toolbar_sticky'        => false,
         'spoiler_caption'       => LANG_TINYMCE_SP,
-        'toc_header'            => 'div',
         'resize'                => 'both',
         'theme'                 => 'silver',
         'mobile'                => [
             'theme' => 'silver'
         ],
         'smiles_url'            => false,
-        'paste_as_text'         => false,
         'file_picker_types'     => 'file media',
         'file_upload'           => [],
         'allow_mime_types'      => [],
@@ -268,7 +270,7 @@ class cmsWysiwygTinymce {
 
         <script>
             var tiny_global_options = {};
-            function init_tinymce (dom_id){
+            function init_tinymce (dom_id, callback){
                 var tinymce_options = {};
                 if(tiny_global_options.hasOwnProperty('field_'+dom_id)){
                     tinymce_options = tiny_global_options['field_'+dom_id];
@@ -286,6 +288,9 @@ class cmsWysiwygTinymce {
                             }
                         }
                     });
+                    if (typeof(callback) === 'function') {
+                        callback(editor);
+                    }
                 };
                 tinymce_options.setup = function (editor) {
                     editor.addShortcut(
@@ -304,9 +309,9 @@ class cmsWysiwygTinymce {
                 icms.forms.addWysiwygsAddPool(dom_id, function(field_element, text){
                     tinymce.activeEditor.insertContent(text);
                 });
-                icms.forms.addWysiwygsInitPool(dom_id, function(field_element){
+                icms.forms.addWysiwygsInitPool(dom_id, function(field_element, callback){
                     tinymce.remove('#'+field_element);
-                    init_tinymce(field_element);
+                    init_tinymce(field_element, callback);
                 });
                 icms.forms.addWysiwygsSavePool(dom_id, function(field_element){
                     tinymce.activeEditor.save();
