@@ -10,6 +10,11 @@ class cmsTemplate {
     const TEMPLATE_BASE_PATH = 'templates/';
 
     /**
+     * Базовый шаблон, в котором есть все файлы
+     */
+    const TEMPLATE_BASE_NAME = 'default';
+
+    /**
      * Название шаблона
      * @var string
      */
@@ -23,7 +28,7 @@ class cmsTemplate {
      * Порядок наследования шаблона
      * @var array
      */
-    protected $inherit_names = ['default'];
+    protected $inherit_names = [];
     /**
      * Параметры шаблона
      * Задаются в файле manifest.php в директории шаблона
@@ -222,6 +227,8 @@ class cmsTemplate {
 
     public function __construct($name = '') {
 
+        $this->inherit_names[] = self::TEMPLATE_BASE_NAME;
+
         $this->site_config = cmsConfig::getInstance();
 
         if (!$name) {
@@ -243,7 +250,7 @@ class cmsTemplate {
 
         $this->title = $this->site_config->sitename;
 
-        $is_no_def_meta = isset($this->site_config->is_no_meta) ? $this->site_config->is_no_meta : false;
+        $is_no_def_meta = $this->site_config->is_no_meta ?? false;
 
         if (!$is_no_def_meta) {
             $this->metakeys = $this->site_config->metakeys;
@@ -665,7 +672,7 @@ class cmsTemplate {
             // Строим атрибуты ссылок
             $menu[$id]['attributes'] = [];
 
-            $onclick = isset($item['options']['onclick']) ? $item['options']['onclick'] : false;
+            $onclick = $item['options']['onclick'] ?? false;
             $onclick = isset($item['options']['confirm']) ? "return confirm('{$item['options']['confirm']}')" : $onclick;
             if($onclick){
                 $menu[$id]['attributes']['onclick'] = $onclick;
@@ -682,8 +689,8 @@ class cmsTemplate {
             }
 
             $menu[$id]['disabled']     = !empty($item['disabled']);
-            $menu[$id]['level']        = !isset($item['level']) ? 1 : $item['level'];
-            $menu[$id]['childs_count'] = !isset($item['childs_count']) ? 0 : $item['childs_count'];
+            $menu[$id]['level']        = $item['level'] ?? 1;
+            $menu[$id]['childs_count'] = $item['childs_count'] ?? 0;
 
             if (!isset($item['url']) &&  !empty($item['controller'])) {
                 if (!isset($item['action'])) { $item['action'] = ''; }
@@ -999,22 +1006,22 @@ class cmsTemplate {
      * @param array $button
      * @return \cmsTemplate
      */
-    public function addToolButton($button){
+    public function addToolButton($button) {
 
         $item = [
             'title'        => $button['title'],
-            'url'          => isset($button['href']) ? $button['href'] : (isset($button['url']) ? $button['url'] : ''),
-            'level'        => isset($button['level']) ? $button['level'] : 1,
-            'childs_count' => isset($button['childs_count']) ? $button['childs_count'] : 0,
-            'counter'      => isset($button['counter']) ? $button['counter'] : null,
+            'url'          => $button['href'] ?? ($button['url'] ?? ''),
+            'level'        => $button['level'] ?? 1,
+            'childs_count' => $button['childs_count'] ?? 0,
+            'counter'      => $button['counter'] ?? null,
             'options'      => [
-                'icon'    => isset($button['icon']) ? $button['icon'] : null,
-                'class'   => isset($button['class']) ? $button['class'] : null,
-                'target'  => isset($button['target']) ? $button['target'] : '',
-                'onclick' => isset($button['onclick']) ? $button['onclick'] : null,
-                'confirm' => isset($button['confirm']) ? $button['confirm'] : null,
+                'icon'    => $button['icon'] ?? null,
+                'class'   => $button['class'] ?? null,
+                'target'  => $button['target'] ?? '',
+                'onclick' => $button['onclick'] ?? null,
+                'confirm' => $button['confirm'] ?? null,
             ],
-            'data'         => isset($button['data']) ? $button['data'] : ''
+            'data' => $button['data'] ?? ''
         ];
 
         return $this->addMenuItem('toolbar', $item);
@@ -1106,7 +1113,7 @@ class cmsTemplate {
 
     public function applyMenuItemsHook($menu_name, $event_name) {
 
-        $this->menus[$menu_name] = cmsEventsManager::hook($event_name, (isset($this->menus[$menu_name]) ? $this->menus[$menu_name] : []));
+        $this->menus[$menu_name] = cmsEventsManager::hook($event_name, ($this->menus[$menu_name] ?? []));
 
         return $this;
     }
@@ -2006,10 +2013,15 @@ class cmsTemplate {
 
     /**
      * Устанавливает цепочку наследования шаблона
-     * @param array $names Массив названий шаблонов в приоритетном порядке от меньшего к большему
+     * От текущего к TEMPLATE_BASE_NAME
+     * Текущий шаблон добавляется автоматически
+     *
+     * @param array $names Массив названий шаблонов в приоритетном порядке
      * @return \cmsTemplate
      */
     public function setInheritNames($names = []) {
+
+        $this->inherit_names = [self::TEMPLATE_BASE_NAME];
 
         if ($names) {
             foreach ($names as $name) {
@@ -2017,7 +2029,7 @@ class cmsTemplate {
             }
         }
 
-        if ($this->name !== 'default') {
+        if ($this->name !== self::TEMPLATE_BASE_NAME) {
             $this->inherit_names[] = $this->name;
         }
 
@@ -2026,6 +2038,10 @@ class cmsTemplate {
         return $this;
     }
 
+    /**
+     * Возвращает текущую цепочку наследования
+     * @return array
+     */
     public function getInheritNames() {
         return $this->inherit_names;
     }
@@ -2980,7 +2996,7 @@ class cmsTemplate {
 
         $this->widgets_group_index++;
 
-        $this->widgets[$position][$this->widgets_group_index][] = array(
+        $this->widgets[$position][$this->widgets_group_index][] = [
             'id'          => false,
             'bind_id'     => false,
             'title'       => false,
@@ -2990,12 +3006,10 @@ class cmsTemplate {
             'class_title' => false,
             'class_wrap'  => false,
             'body'        => $html
-        );
+        ];
 
         return $this;
-
     }
-
 
 //============================================================================//
 //============================================================================//

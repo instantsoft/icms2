@@ -15,6 +15,10 @@
 }
 .icms-footer {
     &__middle {
+        background-image: url(../images/word_map.png);
+        background-position: top;
+        background-size: cover;
+        background-repeat: no-repeat;
         background-color: $footer-bg;
         color: $footer-color;
         > .container {
