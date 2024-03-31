@@ -1170,8 +1170,8 @@ class cmsController {
 
         $back_url = trim(strip_tags($this->request->get('back', '')));
 
-        // Первый символ должен быть слэш
-        if ($back_url && strpos($back_url, '/') !== 0) {
+        // Первый символ должен быть слэш. Только внутренние страницы
+        if (!preg_match('/^\/[a-z0-9_]*/i', $back_url)) {
             $back_url = '';
         }
 

@@ -4,6 +4,7 @@ define('LANG_AUTH_CONTROLLER', 'Authorization & Registration');
 define('LANG_AUTHORIZATION', 'Authorization');
 define('LANG_RULE_AUTH_VIEW_CLOSED', 'Access to the disabled site');
 define('LANG_AUTH_RESTRICTIONS', 'Restrictions');
+define('LANG_AUTH_DISABLE_RESTORE', 'Disable password recovery');
 define('LANG_AUTH_RESTRICTED_EMAILS', "Restricted e-mails");
 define('LANG_AUTH_RESTRICTED_EMAILS_HINT', 'One address per line, you can use * as a wildcard');
 define('LANG_AUTH_RESTRICTED_EMAIL', 'E-mail <b>%s</b> is forbidden');

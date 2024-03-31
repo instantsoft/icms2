@@ -88,6 +88,7 @@
     define('LANG_CP_GRID_COLYMNS_EXACT',        'Точное соответствие');
     define('LANG_CP_GRID_COLYMNS_LIKE',         'Вхождение в строку');
     define('LANG_CP_GRID_COLYMNS_DATE',         'Дата');
+    define('LANG_CP_GRID_COLYMNS_MODIFIED',     'Изменено');
     define('LANG_CP_GRID_COLYMNS_SELECT',       'Список');
     define('LANG_CP_GRID_COLYMNS_FLAG',         'Переключатель');
     define('LANG_CP_GRID_COLYMNS_CUT_TEXT',     'Первые 100 символов');

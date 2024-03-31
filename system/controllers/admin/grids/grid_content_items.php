@@ -60,6 +60,15 @@ function grid_content_items($controller, $ctype) {
                 return html_date($value, true);
             }
         ],
+        'date_last_modified' => [
+            'title'      => LANG_CP_GRID_COLYMNS_MODIFIED,
+            'switchable' => true,
+            'disable'    => true,
+            'filter'     => 'date',
+            'handler'    => function ($value, $item) {
+                return $value ? html_date($value, true) : '-';
+            }
+        ],
         'is_approved' => [
             'title'      => LANG_MODERATION,
             'width'      => 150,

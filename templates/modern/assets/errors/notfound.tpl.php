@@ -13,14 +13,14 @@
     </head>
     <body class="d-flex min-vh-100 align-items-center">
         <div class="container">
-            <div class="row">
+            <div class="row justify-content-center">
                 <div class="col-md-6 align-self-center">
                     <img src="<?php echo $this->getTemplateFilePath('images/404.svg', true); ?>" alt="404" />
                 </div>
                 <div class="col-md-6 align-self-center">
                     <h1 class="display-1">404</h1>
                     <h2><?php echo ERR_PAGE_NOT_FOUND; ?></h2>
-                    <?php if(cmsController::enabled('search')){ ?>
+                    <?php if(cmsCore::isControllerExists('search') && cmsController::enabled('search')){ ?>
                         <form action="<?php echo href_to('search'); ?>" method="get" class="my-4">
                             <div class="input-group">
                                 <?php echo html_input('text', 'q', '', array('placeholder'=> ERR_SEARCH_QUERY_INPUT)); ?>
@@ -30,7 +30,7 @@
                             </div>
                         </form>
                     <?php } ?>
-                    <a class="btn btn-primary" href="<?php echo href_to_home(); ?>"><?php echo LANG_BACK_TO_HOME; ?></a>
+                    <a class="btn btn-primary mt-3" href="<?php echo href_to_home(); ?>"><?php echo LANG_BACK_TO_HOME; ?></a>
                 </div>
             </div>
         </div>

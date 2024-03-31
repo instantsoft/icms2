@@ -7,9 +7,10 @@ function grid_controllers($controller) {
     ];
 
     $options = [
-        'order_by'      => false,
-        'order_to'      => false,
-        'is_pagination' => false
+        'deny_mass_editing' => true,
+        'order_by'          => false,
+        'order_to'          => false,
+        'is_pagination'     => false
     ];
 
     $columns = [

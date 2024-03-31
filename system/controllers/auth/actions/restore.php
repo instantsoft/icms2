@@ -1,8 +1,15 @@
 <?php
-
+/**
+ * @property \modelUsers $model_users
+ * @property \messages $controller_messages
+ */
 class actionAuthRestore extends cmsAction {
 
     public function run() {
+
+        if (!empty($this->options['disable_restore'])) {
+            return cmsCore::error404();
+        }
 
         if ($this->cms_user->is_logged && !$this->cms_user->is_admin) {
             return $this->redirectToHome();

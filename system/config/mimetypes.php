@@ -106,6 +106,7 @@ return [
     'skt'     => 'application/x-koan',
     'smil'    => 'application/smil',
     'svg'     => 'image/svg+xml',
+    'svg'     => 'image/svg',
     'spl'     => 'application/x-futuresplash',
     'src'     => 'application/x-wais-source',
     'stc'     => 'application/vnd.sun.xml.calc.template',

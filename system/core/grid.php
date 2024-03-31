@@ -14,28 +14,29 @@ class cmsGrid {
         'source_url' => '',
         // Опции списка
         'options' => [
-            'order_by'        => 'id',  // Поле сортировки
-            'order_to'        => 'asc', // Направление сортировки
-            'show_id'         => true,  // Показывать id записи
-            'is_sortable'     => true,  // Можно сортировать
-            'is_filter'       => true,  // Поля грида можно фильтровать
-            'advanced_filter' => false, // URL для дополнительного фильтра записей
-            'is_pagination'   => true,  // показывать пагинацию
-            'perpage'         => 30,    // записей на странице по умолчанию
-            'is_toolbar'      => true,  // выводить тулбар
-            'is_draggable'    => false, // строки могут меняться местами мышью
-            'drag_save_url'   => '',    // URL для сохранения при драг-эн-дроп
-            'save_action'     => '',    // URL для сохранения при инлайн редактировании
-            'is_selectable'   => false, // Строки могут выделяться
+            'order_by'          => 'id', // Поле сортировки
+            'order_to'          => 'asc', // Направление сортировки
+            'show_id'           => true, // Показывать id записи
+            'is_sortable'       => true, // Можно сортировать
+            'is_filter'         => true, // Поля грида можно фильтровать
+            'advanced_filter'   => false, // URL для дополнительного фильтра записей
+            'is_pagination'     => true, // показывать пагинацию
+            'perpage'           => 30, // записей на странице по умолчанию
+            'is_toolbar'        => true, // выводить тулбар
+            'is_draggable'      => false, // строки могут меняться местами мышью
+            'drag_save_url'     => '', // URL для сохранения при драг-эн-дроп
+            'save_action'       => '', // URL для сохранения при инлайн редактировании
+            'is_selectable'     => false, // Строки могут выделяться
+            'deny_mass_editing' => false, // Запретить массовое редактирование списка, если включено editable
             /**
              * select_actions - это массив действий над выделенными строками
              * Пример в system/controllers/admin/grids/grid_content_items.php
-                'title'   => Название,
-                'action'  => submit || open,
-                'confirm' => Фраза подтверждения действия,
-                'url'     => URL на который отправлять выделенные записи
+              'title'   => Название,
+              'action'  => submit || open,
+              'confirm' => Фраза подтверждения действия,
+              'url'     => URL на который отправлять выделенные записи
              */
-            'select_actions'  => false
+            'select_actions'    => false
         ],
         // Колонки параметров
         'columns' => [],
@@ -970,7 +971,9 @@ class cmsGrid {
             }
         }
 
-        $this->editable = true;
+        if (empty($this->grid['options']['deny_mass_editing'])) {
+            $this->editable = true;
+        }
 
         // Добавляем ID строки
         $save_action_query['id'] = $row[$id_field];

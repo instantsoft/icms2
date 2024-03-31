@@ -4,26 +4,26 @@ class cmsWysiwygAce {
     private static $redactor_loaded = false;
 
     private $options = [
-        'theme' => 'ace/theme/dreamweaver',
-        'mode'  => 'ace/mode/html',
-        'wrap'  => true,
-        'fontSize' => 14,
+        'theme'                     => 'ace/theme/github_dark',
+        'mode'                      => 'ace/mode/html',
+        'wrap'                      => true,
+        'fontSize'                  => 14,
         'enableBasicAutocompletion' => true,
-        'enableSnippets' => true,
-        'enableEmmet' => true,
-        'showLineNumbers' => true,
-        'enableLiveAutocompletion' => true,
-        'newLineMode' => 'unix',
-        'autoScrollEditorIntoView' => true,
-        'minLines' => 20,
-        'maxLines' => 40
+        'enableSnippets'            => true,
+        'enableEmmet'               => true,
+        'showLineNumbers'           => true,
+        'enableLiveAutocompletion'  => true,
+        'newLineMode'               => 'unix',
+        'autoScrollEditorIntoView'  => true,
+        'minLines'                  => 20,
+        'maxLines'                  => 40
     ];
 
     public function __construct($config = []) {
         $this->options = array_replace_recursive($this->options, $config);
     }
 
-    public function displayEditor($field_name, $content = '', $config = []){
+    public function displayEditor($field_name, $content = '', $config = []) {
 
         $this->loadRedactor();
 
@@ -68,18 +68,18 @@ class cmsWysiwygAce {
         <script>
             var ace_global_options = {};
             function init_ace (dom_id){
-                var aceconfig = {};
+                let aceconfig = {};
                 if(ace_global_options.hasOwnProperty('field_'+dom_id)){
                     aceconfig = ace_global_options['field_'+dom_id];
                 } else if(ace_global_options.hasOwnProperty('default')) {
                     aceconfig = ace_global_options.default;
                 }
-                var textarea = $('#'+dom_id).hide();
+                let textarea = $('#'+dom_id).hide();
                 $('<pre class="ace_redactor" id="'+dom_id+'_ace">'+$(textarea).html()+'</pre><div class="scrollmargin"></div>').insertAfter(textarea);
                 ace.require('ace/ext/language_tools');
                 var editor = ace.edit(dom_id+'_ace', aceconfig);
                 editor.getSession().on('changeAnnotation', function() {
-                    var annotations = editor.getSession().getAnnotations()||[], i = len = annotations.length;
+                    let annotations = editor.getSession().getAnnotations()||[], i = len = annotations.length;
                     while (i--) {
                         if(/doctype first\. Expected/.test(annotations[i].text)) {
                             annotations.splice(i, 1);

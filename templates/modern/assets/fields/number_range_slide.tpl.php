@@ -6,7 +6,7 @@
 <?php $this->addTplCSSNameFromContext('jquery-ui'); ?>
 <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 
-<div class="slider-range-hint mb-3">
+<div class="slider-range-hint mb-3" id="slider-range-hint-<?php echo $field->id; ?>">
 <?php if($field->getOption('filter_range_show_input')){ ?>
     <div class="d-flex align-items-center">
         <div class="input-group mr-3">
@@ -43,21 +43,24 @@
 <?php ob_start(); ?>
     <script>
     $(function(){
-        $("#slider-range-<?php echo $field->id; ?>").slider($.extend(<?php echo json_encode($field->data['slide_params'], JSON_NUMERIC_CHECK); ?>, {
+        let slider = $("#slider-range-<?php echo $field->id; ?>");
+        let from   = $('#<?php echo $field->id.'_from'; ?>');
+        let to     = $('#<?php echo $field->id.'_to'; ?>');
+        let hint   = $("#slider-range-hint-<?php echo $field->id; ?>");
+        slider.slider($.extend(<?php echo json_encode($field->data['slide_params'], JSON_NUMERIC_CHECK); ?>, {
             range: true,
             slide: function( event, ui ) {
-                var hint = $(ui.handle).closest('.slider-range-wrap').next();
-                $(hint).find('.slider-range-from').text(ui.values[0]);
-                $('#<?php echo $field->id.'_from'; ?>').val(ui.values[0]).triggerHandler('input');
-                $(hint).find('.slider-range-to').text(ui.values[1]);
-                $('#<?php echo $field->id.'_to'; ?>').val(ui.values[1]).triggerHandler('input');
+                hint.find('.slider-range-from').text(ui.values[0]);
+                from.val(ui.values[0]).triggerHandler('input');
+                hint.find('.slider-range-to').text(ui.values[1]);
+                to.val(ui.values[1]).triggerHandler('input');
             }
         }));
-        $('#<?php echo $field->id.'_from'; ?>.input-small').on('keyup', function (){
-            $("#slider-range-<?php echo $field->id; ?>").slider('values', 0, $(this).val());
+        from.filter('.input-small').on('keyup', function (){
+            slider.slider('values', 0, $(this).val());
         });
-        $('#<?php echo $field->id.'_to'; ?>.input-small').on('keyup', function (){
-            $("#slider-range-<?php echo $field->id; ?>").slider('values', 1, $(this).val());
+        to.filter('.input-small').on('keyup', function (){
+            slider.slider('values', 1, $(this).val());
         });
     });
     </script>

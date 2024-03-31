@@ -46,7 +46,8 @@ class fieldNumber extends cmsFormField {
                     '’' => LANG_APOSTROPHE,
                     '.' => LANG_DOT,
                     'another' => LANG_ANOTHER,
-                ]
+                ],
+                'can_multilanguage' => true
             ]),
             new fieldString('thousands_sep_another', [
                 'title' => LANG_PARSER_NUMBER_THOUSANDS_SEP,

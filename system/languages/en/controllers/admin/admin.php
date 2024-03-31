@@ -79,6 +79,7 @@
     define('LANG_CP_GRID_COLYMNS_EXACT',        'Exact match');
     define('LANG_CP_GRID_COLYMNS_LIKE',         'Like in string');
     define('LANG_CP_GRID_COLYMNS_DATE',         'Date');
+    define('LANG_CP_GRID_COLYMNS_MODIFIED',     'Modified');
     define('LANG_CP_GRID_COLYMNS_SELECT',       'Select');
     define('LANG_CP_GRID_COLYMNS_FLAG',         'Switch');
     define('LANG_CP_GRID_COLYMNS_CUT_TEXT',     'First 100 symbols');

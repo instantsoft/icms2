@@ -13,7 +13,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
+<?php if (!$config->disable_copyright) { ?>
         <meta name="generator" content="InstantCMS" />
+<?php } ?>
 <?php
         $this->addMainTplCSSName(['theme']);
         if(!empty($this->options['font_type']) && $this->options['font_type'] === 'gfont') {
