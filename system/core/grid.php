@@ -884,7 +884,7 @@ class cmsGrid {
                         break;
                     case 'form-multiselect':
                     case 'form-select':
-                        $filter['params']['items'] = is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name);
+                        $filter['params']['items'] = is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name, $this->grid['filter']);
                         if(!$filter['params']['items']){
                             $filter['component'] = 'form-input';
                             $filter['params']['attributes']['type'] = 'search';
