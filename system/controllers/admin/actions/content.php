@@ -4,8 +4,6 @@
  */
 class actionAdminContent extends cmsAction {
 
-    use icms\traits\oneable;
-
     use icms\traits\controllers\actions\listgrid {
         getListItemsGridHtml as private traitGetListItemsGridHtml;
     }

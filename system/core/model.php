@@ -899,27 +899,24 @@ class cmsModel {
             $field = 'i.' . $field;
         }
 
-        if (is_array($value)) {
-
-            $values = [];
-
-            foreach ($value as $v) {
-                if (!is_array($v)) {
-                    $v = $this->db->escape(strval($v));
-                    $values[] = "'{$v}'";
-                }
-            }
-
-            if (!$values) {
-                return $this->filter('1 = 0');
-            }
-
-            $value = implode(',', $values);
-
-        } else {
-
-            $value = $this->db->escape($value);
+        if (!is_array($value)) {
+            $value = [$value];
         }
+
+        $values = [];
+
+        foreach ($value as $v) {
+            if (!is_array($v)) {
+                $v = $this->db->escape(strval($v));
+                $values[] = "'{$v}'";
+            }
+        }
+
+        if (!$values) {
+            return $this->filter('1 = 0');
+        }
+
+        $value = implode(',', $values);
 
         return $this->filter("{$field} IN ({$value})");
     }

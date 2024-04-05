@@ -36,6 +36,7 @@ return [
     'hqx'     => 'application/mac-binhex40',
     'html'    => 'text/html',
     'htm'     => 'text/htm',
+    'ico'     => 'image/vnd.microsoft.icon',
     'ice'     => 'x-conference/x-cooltalk',
     'ief'     => 'image/ief',
     'igs'     => 'model/iges',
