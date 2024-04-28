@@ -17,7 +17,7 @@ if(!empty($breadcrumbs)) {
 
 $this->renderForm($form, $data, [
     'action' => $action,
-    'submit' => ['title' => LANG_SAVE],
+    'submit' => ['title' => !empty($submit_title) ? $submit_title : LANG_SAVE],
     'method' => $this->controller->request->isAjax() ? 'ajax' : 'post'
 ], $errors);
 
