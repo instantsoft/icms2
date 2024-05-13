@@ -4,7 +4,7 @@ class cmsWysiwygTinymce {
     private static $redactor_loaded = false;
 
     private $buttons = [
-        '|','bold','italic','underline','strikethrough','alignleft','aligncenter','alignright','alignjustify','alignnone','styleselect','formatselect','fontselect','fontsizeselect','cut','copy','paste','outdent','indent','blockquote','undo','redo','removeformat','subscript','superscript','visualaid','insert'
+        '|','bold','italic','underline','strikethrough','alignleft','aligncenter','alignright','alignjustify','alignnone','styles','blocks','fontfamily','fontsize','cut','copy','paste','outdent','indent','blockquote','undo','redo','removeformat','subscript','superscript','visualaid','insert','forecolor','backcolor'
     ];
 
     private $block_formats = [
@@ -50,7 +50,7 @@ class cmsWysiwygTinymce {
         'plugins' => [
             'autoresize'
         ],
-        'textpattern_patterns' => [
+        'text_patterns' => [
             ['start' => '> ', 'format' => 'blockquote']
         ],
         'codesample_languages' => [
@@ -61,7 +61,7 @@ class cmsWysiwygTinymce {
             ['text' => 'SQL', 'value' => 'sql'],
             ['text' => 'Bash', 'value' => 'bash'],
         ],
-        'toolbar' => 'formatselect | bold italic strikethrough forecolor backcolor | link image media table | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat',
+        'toolbar' => 'blocks | bold italic strikethrough forecolor backcolor | link image media table | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat',
         'min_height'            => 200,
         'max_height'            => 700,
         'browser_spellcheck'    => true,
@@ -301,6 +301,7 @@ class cmsWysiwygTinymce {
                 <?php if($template_css){ ?>
                     tinymce_options.content_css = '<?php echo $template_css; ?>';
                 <?php } ?>
+                tinymce_options.license_key = 'gpl';
                 tinymce.init(tinymce_options);
                 icms.forms.addWysiwygsInsertPool(dom_id, function(field_element, text){
                     tinymce.activeEditor.setContent(text);
