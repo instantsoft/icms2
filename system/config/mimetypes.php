@@ -171,5 +171,6 @@ return [
     'ppam'    => 'application/vnd.ms-powerpoint.addin.macroEnabled.12',
     'pptm'    => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
     'potm'    => 'application/vnd.ms-powerpoint.template.macroEnabled.12',
-    'ppsm'    => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12'
+    'ppsm'    => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
+    'json'    => 'application/json'
 ];
