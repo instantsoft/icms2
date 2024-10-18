@@ -4,7 +4,7 @@
   </a>
 </p>
 
-#### Is a free open source CMS (content management system) that allows you to build websites for any purpose
+#### Is a free open source CMS that allows you to build websites for any purpose.
 
 [![LICENSE](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](./LICENSE)
 [![GitHub release](https://img.shields.io/github/release/instantsoft/icms2.svg)](https://github.com/instantsoft/icms2/releases)
@@ -30,15 +30,19 @@
 Try it out for yourself in our [online demo](https://demo.instantcms.io/)
 
 ## Requirements ##
-* PHP 7.0+
+* PHP 7.2+
 * GD, iconv, mbstring, simplexml, json and filter PHP extension
 * Mysql 5.0 or above, MariaDB and its support in PHP
-* Apache + mod_rewrite or Nginx + converted .htaccess rules
+* Apache + mod_rewrite (or FallbackResource) or Nginx + converted .htaccess rules
 
 ## Install InstantCMS ##
 
 * Check the requirements.
 * How do you [install InstantCMS](https://docs.instantcms.ru/en/manual/install)?
+
+## Security Vulnerabilities
+
+If you discover a security vulnerability within InstantCMS, please send an e-mail to Fuze via [fuze@instantcms.ru](mailto:fuze@instantcms.ru). Or, open a [draft security advisory](https://github.com/instantsoft/icms2/security/advisories/new). All security vulnerabilities will be promptly addressed.
 
 ## Licensing ##
 

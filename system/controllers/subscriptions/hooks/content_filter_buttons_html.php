@@ -11,8 +11,16 @@ class onSubscriptionsContentFilterButtonsHtml extends cmsAction {
             return '';
         }
 
+        // Включенность
         if (array_key_exists('enable_subscriptions', $ctype['options'])) {
             if (!$ctype['options']['enable_subscriptions']) {
+                return '';
+            }
+        }
+
+        // Показ кнопки подписки
+        if (array_key_exists('subscriptions_show_in_filter', $ctype['options'])) {
+            if (!$ctype['options']['subscriptions_show_in_filter']) {
                 return '';
             }
         }

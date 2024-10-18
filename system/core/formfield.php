@@ -723,12 +723,17 @@ class cmsFormField {
 
             $this->items = (!empty($this->show_empty_value) ? ['' => ''] : [])  + string_explode_list($this->getDefaultValue());
 
-            $list_sorting = $this->getOption('list_sorting', 'keys');
+            $list_sorting = $this->getOption('list_sorting', '');
 
-            if($list_sorting === 'keys'){
-                ksort($this->items, SORT_NATURAL);
-            } elseif($list_sorting === 'values') {
-                asort($this->items, SORT_NATURAL);
+            switch ($list_sorting) {
+                case 'keys':
+                    ksort($this->items, SORT_NATURAL);
+                    break;
+                case 'values':
+                    asort($this->items, SORT_NATURAL);
+                    break;
+                default:
+                    break;
             }
 
             $items = $this->items;

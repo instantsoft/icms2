@@ -47,6 +47,8 @@ trait queueActions {
 
         if ($this->request->isAjax()) {
 
+            header('X-Frame-Options: DENY');
+
             $filter     = [];
             $filter_str = $this->request->get('filter', '');
 
@@ -54,20 +56,19 @@ trait queueActions {
                 parse_str($filter_str, $filter);
             }
 
+            $grid->applyGridFilter($this->controller_admin->model, $filter, '');
+
             $this->controller_admin->model->filterIn('queue', $this->queue['queues']);
 
             $total = $this->controller_admin->model->getCount(cmsQueue::getTableName());
-
-            $perpage = isset($filter['perpage']) ? $filter['perpage'] : 30;
-            $page    = isset($filter['page']) ? intval($filter['page']) : 1;
-
-            $this->controller_admin->model->limitPage($page, $perpage);
 
             $this->controller_admin->model->orderByList([
                 ['by' => 'date_started', 'to' => 'asc'],
                 ['by' => 'priority', 'to' => 'desc'],
                 ['by' => 'date_created', 'to' => 'asc']
             ]);
+
+            $grid->source_url = href_to($this->root_url, 'queue');
 
             $jobs = $this->controller_admin->model->get(cmsQueue::getTableName());
 
@@ -77,7 +78,7 @@ trait queueActions {
         return $this->cms_template->getRenderedAsset('ui/grid', [
             'grid'       => $grid,
             'page_title' => sprintf(LANG_CP_QUEUE_TITLE, $this->queue['queue_name']),
-            'source_url' => href_to($this->root_url, 'queue'),
+            'source_url' => href_to($this->root_url, 'queue')
         ]);
     }
 

@@ -118,6 +118,8 @@
     define('LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE','Hide');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS_DEL','Delete');
     define('LANG_CP_CATEGORIES_ON',             'Enable categories');
+    define('LANG_CP_CATEGORIES_ITEMS_COUNT',    'Show items count in categories');
+    define('LANG_CP_CATEGORIES_ITEMS_COUNT_HINT', 'The number of items will be shown without taking access rights into account');
     define('LANG_CP_CATEGORIES_RECURSIVE',      'Show entries from child categories in parent category');
     define('LANG_CP_CATEGORIES_EMPTY_ROOT',     'Do not show entries in the root category');
     define('LANG_CP_CATEGORIES_MULTI',          'Allow multiple categories for a single entry');
@@ -335,6 +337,7 @@
     define('LANG_CP_RELATION_LAYOUT',           'Layout');
     define('LANG_CP_RELATION_LAYOUT_TYPE',      'Layout Type');
     define('LANG_CP_RELATION_LAYOUT_LIST',      'List');
+    define('LANG_CP_RELATION_LAYOUT_FIELD', 'List in field');
     define('LANG_CP_RELATION_LAYOUT_TAB',       'Tab');
     define('LANG_CP_RELATION_LAYOUT_HIDDEN',    'None (hidden)');
     define('LANG_CP_RELATION_LAYOUT_HIDE_EMPTY','Hide when empty');
@@ -455,6 +458,7 @@
     define('LANG_CP_WIDGET_PAGE_BODY_CSS',      'CSS classes for page body tag');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Positive masks');
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Negative masks');
+    define('LANG_CP_WIDGET_URL_MASK_NOT_HINT',  'On pages matching these masks, the widget will not be shown');
     define('LANG_CP_WIDGETS_UNUSED',            'Unused Widgets');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Here you can place the widgets that have to be temporarily hidden or moved to another page without losing their settings');
     define('LANG_CP_WIDGETS_BINDED',            'Binded widgets');
@@ -810,6 +814,7 @@
     define('LANG_HELP_URL_USERS_GROUP',             'https://docs.instantcms.ru/en/manual/users/group');
     define('LANG_HELP_URL_SETTINGS',                'https://docs.instantcms.ru/en/manual/settings');
     define('LANG_HELP_URL_SETTINGS_GLOBAL',         'https://docs.instantcms.ru/en/manual/settings/global');
+    define('LANG_HELP_URL_SETTINGS_MIME',           'https://docs.instantcms.ru/en/manual/settings/mime');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER',      'https://docs.instantcms.ru/en/manual/settings/scheduler');
     define('LANG_HELP_URL_CHECK_NESTED',            'https://docs.instantcms.ru/en/manual/settings/check_nested');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER_TASK', 'https://docs.instantcms.ru/en/manual/settings/scheduler/task');
@@ -867,3 +872,7 @@
     define('LANG_CP_TEMPLATE_ICONS', 'List of template icons');
     define('LANG_CP_COMPILE_TIME', 'Compile time %s sec.');
     define('LANG_CP_FORMAT', 'Format');
+    define('LANG_CP_MIMETYPES', 'MIME types');
+    define('LANG_CP_EXTENSION', 'File extension');
+    define('LANG_CP_MIMETYPE', 'MIME types. Each type on a new line.');
+    define('LANG_CP_MIMETYPE_ERROR', 'Only Latin letters, numbers, slash, dot, hyphen, plus.');

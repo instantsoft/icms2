@@ -59,6 +59,7 @@ class cmsConfigs {
 
     /**
      * Загружает конфигурацию
+     *
      * @param string $cfg_file Файл конфигурации из /system/config/
      */
     public function __construct($cfg_file) {
@@ -66,6 +67,15 @@ class cmsConfigs {
         $this->file = $cfg_file;
 
         $this->load();
+    }
+
+    /**
+     * Возвращает относительный путь к файлу
+     *
+     * @return string
+     */
+    public function getFilePath() {
+        return self::CONFIG_DIR . $this->file;
     }
 
     /**
@@ -98,7 +108,7 @@ class cmsConfigs {
      */
     protected function load() {
 
-        $cfg_file = PATH . self::CONFIG_DIR . $this->file;
+        $cfg_file = PATH . $this->getFilePath();
 
         if (!is_readable($cfg_file)) {
             return false;
@@ -218,8 +228,8 @@ class cmsConfigs {
      */
     public function save($values) {
 
-        $dump = "<?php\n" .
-                "return array(\n\n";
+        $dump = '<?php' . PHP_EOL . PHP_EOL .
+                'return [' . PHP_EOL;
 
         foreach ($values as $key => $value) {
 
@@ -229,16 +239,29 @@ class cmsConfigs {
 
             $value = var_export($value, true);
 
-            $tabs = 10 - ceil((mb_strlen($key) + 3) / 4);
+            $gap = 28 - strlen($key);
 
-            $dump .= "\t'{$key}'";
-            $dump .= str_repeat("\t", $tabs > 0 ? $tabs : 0);
-            $dump .= "=> $value,\n";
+            $dump .= str_repeat(' ', 4) . var_export($key, true);
+            $dump .= str_repeat(' ', $gap > 0 ? $gap : 0);
+            $dump .= '=> ' . $value . ',' . PHP_EOL;
         }
 
-        $dump .= "\n);\n";
+        $dump = rtrim($dump, ',' . PHP_EOL);
 
-        $file = PATH . self::CONFIG_DIR . $this->file;
+        $dump .= PHP_EOL . '];' . PHP_EOL;
+
+        return $this->saveFileData($dump);
+    }
+
+    /**
+     * Непосредственно сохраняет данные в файл
+     *
+     * @param string $dump
+     * @return bool
+     */
+    protected function saveFileData($dump) {
+
+        $file = PATH . $this->getFilePath();
 
         $success = false;
 

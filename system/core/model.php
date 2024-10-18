@@ -1640,6 +1640,7 @@ class cmsModel {
             $user_fields = [
                 $as . '.nickname'        => 'user_nickname',
                 $as . '.slug'            => 'user_slug',
+                $as . '.date_log'        => 'user_date_log',
                 $as . '.is_deleted'      => 'user_is_deleted',
                 $as . '.groups'          => 'user_groups',
                 $as . '.avatar'          => 'user_avatar',

@@ -926,26 +926,29 @@ function multi_array_unique($array) {
 }
 
 /**
- * Возвращает значение поля с учётом языка
+ * Возвращает значение поля с учётом языка или иного постфикса
  *
- * @param string $field Название поля без языкового префикса
+ * @param string $field_name Название поля без языкового префикса
  * @param array $data Массив данных
+ * @param ?string $lang Язык или вариативный постфикс поля
  * @return mixed
  */
-function get_localized_value($field, $data) {
+function get_localized_value($field_name, $data, $lang = null) {
 
-    $lang = cmsCore::getLanguageHrefPrefix();
+    if (!$lang) {
+        $lang = cmsCore::getLanguageHrefPrefix();
+    }
 
-    $field_lang = $field . ($lang ? '_' . $lang : '');
+    $field_name_lang = $field_name . ($lang ? '_' . $lang : '');
 
     // Есть переведённое
-    if (array_key_exists($field_lang, $data)) {
-        return $data[$field_lang];
+    if (array_key_exists($field_name_lang, $data)) {
+        return $data[$field_name_lang];
     }
 
     // Есть без перевода
-    if (array_key_exists($field, $data)) {
-        return $data[$field];
+    if (array_key_exists($field_name, $data)) {
+        return $data[$field_name];
     }
 
     return null;

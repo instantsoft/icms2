@@ -387,7 +387,7 @@ class actionContentCategoryView extends cmsAction {
             if ($slug === 'index') {
 
                 // Если просмотр главной страницы типа контента выключен
-                if (!empty($ctype['options']['list_off_index'])) {
+                if (!empty($ctype['options']['list_off_index']) && empty($_GET)) {
                     return cmsCore::error404();
                 }
 

@@ -22,6 +22,25 @@ class onSubscriptionsCtypeBasicForm extends cmsAction {
             'default' => true
         ]));
 
+        $form->addField($fieldset, new fieldCheckbox('options:subscriptions_show_in_list', [
+            'title'          => LANG_SBSCR_CTYPE_SHOW_IN_LIST,
+            'default'        => true,
+            'visible_depend' => ['options:enable_subscriptions' => ['show' => ['1']]]
+        ]));
+
+        $form->addField($fieldset, new fieldString('options:subscriptions_in_list_pos', [
+            'title'          => LANG_SBSCR_CTYPE_IN_LIST_POS,
+            'hint'           => LANG_SBSCR_CTYPE_IN_LIST_POS_HINT,
+            'default'        => 'before_body',
+            'visible_depend' => ['options:enable_subscriptions' => ['show' => ['1']]]
+        ]));
+
+        $form->addField($fieldset, new fieldCheckbox('options:subscriptions_show_in_filter', [
+            'title'          => LANG_SBSCR_CTYPE_SHOW_IN_FILTER,
+            'default'        => true,
+            'visible_depend' => ['options:enable_subscriptions' => ['show' => ['1']]]
+        ]));
+
         $form->addField($fieldset, new fieldCheckbox('options:subscriptions_recursive_categories', [
             'title'          => LANG_SBSCR_CTYPE_RECURSIVE_CATEGORIES,
             'default'        => true,

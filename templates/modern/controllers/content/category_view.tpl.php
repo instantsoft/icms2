@@ -136,6 +136,8 @@ if (!$is_frontpage){
 
 <?php echo $items_list_html; ?>
 
+<?php $this->block('after_content_items_list_html'); ?>
+
 <?php if ($hooks_html) { ?>
     <div class="sub_items_list">
         <?php echo html_each($hooks_html); ?>

@@ -428,6 +428,27 @@ h1 > span:empty {
 .sidebar .nav {
   min-height: auto;
 }
+.sidebar-nav .icms-svg-icon {
+    transition: all .3s linear;
+}
+.sidebar-nav.ps .nav-link:hover {
+    background: #3a4248;
+}
+.sidebar-nav.ps li.nav-item:before {
+    background-color: #1185af;
+    bottom: 0;
+    content: "";
+    height: 0;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    transition: all .3s ease-out;
+    width: .125rem;
+    z-index: 2;
+}
+.sidebar-nav.ps li.nav-item:hover:before, .sidebar-nav.ps li.nav-item.is-active:before {
+    height: 90%;
+}
 #admin_toolbar .nav-pills .show > .nav-link {
     background-color: rgba(32, 168, 216, 0.04);
     color: #20a8d8;
@@ -457,7 +478,7 @@ form .reguired_field>label:after {
 .ft_hidden {
     display: none;
 }
-textarea.form-control {
+textarea.form-control:not(.h-auto) {
     min-height: 150px;
 }
 .auto_copy_value {
@@ -1355,4 +1376,7 @@ td > .spinner > div {
 }
 .icms-form__password-field>input {
     padding-right: 3rem;
+}
+.sidebar {
+    background-image: linear-gradient(45deg, #374550 0%, #2f353a 100%);
 }

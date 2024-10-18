@@ -201,7 +201,7 @@ blockquote, .bb_quote {
 }
 
 @if $enable-modal-blur {
-    .modal.show ~ *:not(.ui-widget):not(.tox) > * {
+    .modal.show ~ *:not(.ui-widget):not(.tox):not(#toast-container):not(.tooltip):not(.unblured) > * {
         -webkit-filter: blur(2px);
         -moz-filter: blur(2px);
         -ms-filter: blur(2px);

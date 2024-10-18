@@ -22,6 +22,10 @@ define('LANG_SBSCR_PM_NOTIFY', 'Update in your subscription list «<a href="%s">
 define('LANG_SBSCR_UNSUBSCRIBE_SUCCESS', 'You successfully unsubscribed from the subscription');
 define('LANG_SBSCR_CTYPE_ON', 'Enable Subscriptions');
 define('LANG_SBSCR_CTYPE_RECURSIVE_CATEGORIES', 'Include nested categories');
+define('LANG_SBSCR_CTYPE_SHOW_IN_LIST', 'Show subscribe button in list');
+define('LANG_SBSCR_CTYPE_IN_LIST_POS', 'Button display position name');
+define('LANG_SBSCR_CTYPE_IN_LIST_POS_HINT', 'The position should be defined in your template by the construct <b>&lt;?php $this->block(\'before_body\'); ?&gt;</b>, where before_body is the position name');
+define('LANG_SBSCR_CTYPE_SHOW_IN_FILTER', 'Show subscribe button in filter');
 define('LANG_SBSCR_NOTIFY_TEXT', 'Notification template on the site');
 define('LANG_SBSCR_NOTIFY_TEXT_HINT', 'If not specified, generic will be used. Example text: <b class="text-danger">'. htmlspecialchars(LANG_SBSCR_PM_NOTIFY).'</b>. %s will be replaced by notification values.');
 define('LANG_SBSCR_LETTER_TPL', 'Email notification template');

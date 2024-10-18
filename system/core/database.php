@@ -1048,11 +1048,12 @@ class cmsDatabase {
      * Возвращает все названия полей для таблицы
      *
      * @param string $table_name Название таблицы
+     * @param bool $use_cache Использовать кэшированный результат списка ячеек БД
      * @return array
      */
-    public function getTableFields($table_name) {
+    public function getTableFields($table_name, $use_cache = true) {
 
-        if(isset($this->table_fields[$table_name])){
+        if($use_cache && isset($this->table_fields[$table_name])){
             return $this->table_fields[$table_name];
         }
 
@@ -1178,7 +1179,7 @@ class cmsDatabase {
      */
     public function addTableField($table_name, $field_name, $sql) {
 
-        if ($this->isFieldExists($table_name, $field_name)) {
+        if ($this->isFieldExists($table_name, $field_name, false)) {
             return false;
         }
 
@@ -1212,11 +1213,12 @@ class cmsDatabase {
      *
      * @param string $table_name Название таблицы
      * @param string $field_name Имя ячейки таблицы
-     * @return boolean
+     * @param bool $use_cache Использовать кэшированный результат списка ячеек БД
+     * @return bool
      */
-    public function isFieldExists($table_name, $field_name) {
+    public function isFieldExists($table_name, $field_name, $use_cache = true) {
 
-        $table_fields = $this->getTableFields($table_name);
+        $table_fields = $this->getTableFields($table_name, $use_cache);
 
         return in_array($field_name, $table_fields, true);
     }

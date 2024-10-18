@@ -22,6 +22,10 @@ define('LANG_SBSCR_PM_NOTIFY', 'Обновление в вашем списке 
 define('LANG_SBSCR_UNSUBSCRIBE_SUCCESS', 'Вы успешно отписались от подписки');
 define('LANG_SBSCR_CTYPE_ON', 'Включить подписки');
 define('LANG_SBSCR_CTYPE_RECURSIVE_CATEGORIES', 'Учитывать вложенные категории');
+define('LANG_SBSCR_CTYPE_SHOW_IN_LIST', 'Показывать кнопку подписки в списке');
+define('LANG_SBSCR_CTYPE_IN_LIST_POS', 'Название позиции показа кнопки');
+define('LANG_SBSCR_CTYPE_IN_LIST_POS_HINT', 'Позиция должна быть определена в вашем шаблон конструкцией <b>&lt;?php $this->block(\'before_body\'); ?&gt;</b>, где before_body это название позиции');
+define('LANG_SBSCR_CTYPE_SHOW_IN_FILTER', 'Показывать кнопку подписки в фильтре');
 define('LANG_SBSCR_NOTIFY_TEXT', 'Шаблон уведомления на сайте');
 define('LANG_SBSCR_NOTIFY_TEXT_HINT', 'Если не указан, будет использоваться общий. Пример текста: <b class="text-danger">'. htmlspecialchars(LANG_SBSCR_PM_NOTIFY).'</b>. %s будут заменены значениями.');
 define('LANG_SBSCR_LETTER_TPL', 'Шаблон email уведомлений');

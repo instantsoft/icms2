@@ -68,9 +68,7 @@ class actionFilesUploadWithWysiwyg extends cmsAction {
             return cmsCore::error404();
         }
 
-        $this->cms_uploader->setAllowedMimeByExt($allowed_file_ext);
-
-        $result = $this->cms_uploader->upload($name);
+        $result = $this->cms_uploader->upload($name, $allowed_file_ext);
 
         if (!$result['success']) {
 

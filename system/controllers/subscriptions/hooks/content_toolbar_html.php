@@ -11,8 +11,16 @@ class onSubscriptionsContentToolbarHtml extends cmsAction {
             return '';
         }
 
+        // Включенность
         if (array_key_exists('enable_subscriptions', $ctype['options'])) {
             if (!$ctype['options']['enable_subscriptions']) {
+                return '';
+            }
+        }
+
+        // Показ кнопки подписки
+        if (array_key_exists('subscriptions_show_in_list', $ctype['options'])) {
+            if (!$ctype['options']['subscriptions_show_in_list']) {
                 return '';
             }
         }
@@ -78,11 +86,20 @@ class onSubscriptionsContentToolbarHtml extends cmsAction {
             }
         }
 
-        return $this->renderSubscribeButton([
+        $button_html = $this->renderSubscribeButton([
             'controller' => 'content',
             'subject'    => $ctype_name,
             'params'     => $params
         ]);
+
+        if (!empty($ctype['options']['subscriptions_in_list_pos'])) {
+
+            $this->cms_template->addToBlock($ctype['options']['subscriptions_in_list_pos'], $button_html);
+
+            return '';
+        }
+
+        return $button_html;
     }
 
 }

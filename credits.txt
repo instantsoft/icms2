@@ -4,7 +4,7 @@ Third-party plugins, libraries and resources included in InstantCMS:
 
     SCSSPHP
         by Leaf Corcoran
-        http://scssphp.github.io/scssphp
+        https://scssphp.github.io/scssphp/
 
     Bootstrap
         by Twitter, Inc
@@ -20,7 +20,7 @@ Third-party plugins, libraries and resources included in InstantCMS:
 
     PhotoSwipe
         by Dmitry Semenov
-        http://photoswipe.com
+        https://photoswipe.com/
 
     Slick
         by Ken Wheeler
@@ -30,17 +30,13 @@ Third-party plugins, libraries and resources included in InstantCMS:
         by Chen Fengyuan
         https://fengyuanchen.github.io/cropperjs/
 
-    FatCow Free Icons
-        by FatCow Team
-        http://www.fatcow.com/free-icons
-
     jQuery
         by The jQuery Foundation
-        http://jquery.com/
+        https://jquery.com/
 
     jQuery UI
         by The jQuery Foundation
-        http://jqueryui.com/
+        https://jqueryui.com/
 
     Cookie plug-in for JQuery
         by Klaus Hartl
@@ -48,35 +44,23 @@ Third-party plugins, libraries and resources included in InstantCMS:
 
     TableDnD plug-in for JQuery
         by Denis Howlett
-        http://www.isocra.com/2008/02/table-drag-and-drop-jquery-plugin/
+        https://isocra.com/2008/02/table-drag-and-drop-jquery-plugin/
 
     DynaTree plug-in for JQuery
         by Martin Wendt
-        http://dynatree.googlecode.com/
-
-    jPaginate plug-in for JQuery
-        by Cody
-        http://tympanus.net/codrops/2009/11/17/jpaginate-a-fancy-jquery-pagination-plugin/
+        https://github.com/mar10/dynatree
 
     jQuery.ScrollTo
         by Ariel Flesler
         http://flesler.blogspot.com/2007/10/jqueryscrollto.html
 
-    Ajax Multiple file upload component
-        by Andrew Valums
-        http://valums.com/ajax-upload/
-
     nyroModal plug-in for jQuery
         by Cédric Nirousset @ nyroDev
-        http://nyromodal.nyrodev.com/
+        https://nyromodal.nyro.dev/
 
     CCelkoNastedSet class
         by Setec Astronomy
         http://www.phpclasses.org/package/1374-PHP-Manage-tree-database-structure-with-Celko-approach.html
-
-    reCAPTCHA Library
-        by Mike Crawford, Ben Maurer
-        http://www.recaptcha.net
 
     Imperavi WYSIWYG Editor
         by Imperavi Team
@@ -84,7 +68,7 @@ Third-party plugins, libraries and resources included in InstantCMS:
 
     markItUp! Universal MarkUp Engine, JQuery plugin
         by Jay Salvat
-        http://markitup.jaysalvat.com/
+        https://markitup.jaysalvat.com/home/
 
     TinyMCE The world's most popular JavaScript library for rich text editing
         by Tiny Technologies Inc.
@@ -92,31 +76,30 @@ Third-party plugins, libraries and resources included in InstantCMS:
 
     real_date_diff function
         by Oleg Savvateev
-        http://savvateev.org/blog/37/
 
     PHPMailer - PHP email class
         by Andy Prevost, Marcus Bointon, Jim Jagielski
-        https://code.google.com/a/apache-extras.org/p/phpmailer/
+        https://github.com/PHPMailer/PHPMailer
 
     Spyc - A Simple PHP YAML Class
         by Vlad Andersen
-        http://code.google.com/p/spyc/
+        https://github.com/mustangostang/spyc/
 
     Jevix - HTML filtration tool
         by ur001
-        http://code.google.com/p/jevix/
+        https://code.google.com/archive/p/jevix/
 
     Mobile Detect Library
         by Serban Ghita, Nick Ilyin, Victor Stanciu
-        http://mobiledetect.net
+        https://mobiledetect.net/
 
     Chosen
         by Patrick Filler, Matthew Lettini, @pfiller, @kenearley, @stof, @koenpunt, and @tjschuck
-        http://harvesthq.github.io/chosen/
+        https://harvesthq.github.io/chosen/
 
     Owl Carousel 2
         by Bartosz Wojciechowski
-        http://www.owlcarousel.owlgraphic.com/
+        https://github.com/OwlCarousel2/OwlCarousel2
 
     screenfull
         by Sindre Sorhus
@@ -128,7 +111,7 @@ Third-party plugins, libraries and resources included in InstantCMS:
 
     jQuery UI Touch Punch
         by David Furfero
-        http://touchpunch.furf.com/
+        https://github.com/furf/jquery-ui-touch-punch
 
     jQuery CSS Customizable Scrollbar
         by Yuriy Khabarov
@@ -136,7 +119,7 @@ Third-party plugins, libraries and resources included in InstantCMS:
 
     PHP Class for handling Google Authenticator 2-factor authentication
         by Michael Kliewe
-        http://www.phpgangsta.de/
+        https://phpgangsta.de/
 
     Free Bootstrap Admin Template
         by Łukasz Holeczek, woothu, xidedix

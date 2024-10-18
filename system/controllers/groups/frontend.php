@@ -588,62 +588,71 @@ class groups extends cmsFrontend {
         return $menu;
     }
 
-    public function getDatasets(){
+    public function getDatasets() {
 
         $list_type = $this->getListContext();
 
         $datasets = cmsCore::getModel('content')->getContentDatasets($this->name, true, function ($item, $model) use ($list_type) {
 
-            $is_view = empty($item['list']['show']) || in_array($list_type, $item['list']['show']);
+            $is_view      = empty($item['list']['show']) || in_array($list_type, $item['list']['show']);
             $is_user_hide = !empty($item['list']['hide']) && in_array($list_type, $item['list']['hide']);
 
-            if (!$is_view || $is_user_hide) { return false; }
+            if (!$is_view || $is_user_hide) {
+                return false;
+            }
 
             return $item;
-
         });
 
-        if ($this->cms_user->is_logged){
+        if ($this->cms_user->is_logged) {
 
             $logged_user_id = $this->cms_user->id;
 
-            if(!$datasets && $list_type == 'category_view'){
-                $datasets = array('all' => array(
-                        'name' => 'all',
+            if (!$datasets && $list_type == 'category_view') {
+
+                $datasets = [
+                    'all' => [
+                        'name'  => 'all',
                         'title' => LANG_ALL
-                ));
+                    ]
+                ];
             }
-            if($list_type == 'category_view'){
-                $datasets['memberships'] = array(
+
+            if ($list_type == 'category_view') {
+
+                $datasets['memberships'] = [
                     'name'    => 'memberships',
                     'title'   => LANG_GROUPS_DS_MEMBER,
-                    'filters' => array(
-                        array(
-                            'callback' => function($model, $dataset) use ($logged_user_id){
+                    'filters' => [
+                        [
+                            'field'     => 'fake_for_callback',
+                            'condition' => 'eq',
+                            'value'     => 0,
+                            'callback' => function ($model, $dataset) use ($logged_user_id) {
                                 return $model->filterByMember($logged_user_id);
                             }
-                        )
-                    )
-                );
-                $datasets['my'] = array(
+                        ]
+                    ]
+                ];
+
+                $datasets['my'] = [
                     'name'    => 'my',
                     'title'   => LANG_GROUPS_DS_MY,
-                    'sorting' => array(
-                        array(
+                    'sorting' => [
+                        [
                             'by' => 'members_count',
                             'to' => 'desc'
-                        )
-                    ),
-                    'filters' => array(
-                        array(
+                        ]
+                    ],
+                    'filters' => [
+                        [
                             'field'     => 'owner_id',
                             'condition' => 'eq',
                             'value'     => $logged_user_id
-                        )
-                    )
-                );
+                        ]
+                    ]
+                ];
             }
-
         }
 
         return cmsEventsManager::hook('group_datasets', $datasets);

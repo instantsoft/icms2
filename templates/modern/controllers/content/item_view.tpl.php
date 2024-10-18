@@ -2,7 +2,7 @@
 
     $this->addHead('<link rel="canonical" href="'.href_to_abs($ctype['name'], $item['slug'] . '.html').'"/>');
 
-    $this->renderContentItem($ctype['name'], array(
+    $this->renderContentItem($ctype['name'], [
         'item'             => $item,
         'ctype'            => $ctype,
         'fields'           => $fields,
@@ -11,7 +11,7 @@
         'props_values'     => $props_values,
         'props_fields'     => $props_fields,
         'props_fieldsets'  => $props_fieldsets,
-    ));
+    ]);
 
     if (!empty($childs['lists'])){
         foreach($childs['lists'] as $list){
@@ -31,6 +31,8 @@
         <?php echo html_date_time($item['date_approved']); ?>
     </div>
 <?php } ?>
+
+<?php $this->block('after_content_item'); ?>
 
 <?php if (!empty($item['comments_widget'])){ ?>
     <?php echo $item['comments_widget']; ?>

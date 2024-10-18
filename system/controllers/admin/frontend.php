@@ -367,27 +367,27 @@ class admin extends cmsFrontend {
 
     public function addCtypeWidgetsPages($ctype){
 
-        $this->model_backend_widgets->addPage(array(
+        $this->model_backend_widgets->addPage([
             'controller' => 'content',
             'name' => "{$ctype['name']}.all",
             'title_const' => 'LANG_WP_CONTENT_ALL_PAGES',
-            'url_mask' => array(
+            'url_mask' => [
                 "{$ctype['name']}",
                 "{$ctype['name']}-*",
                 "{$ctype['name']}/*",
-            )
-        ));
+            ]
+        ]);
 
-        $this->model_backend_widgets->addPage(array(
+        $this->model_backend_widgets->addPage([
             'controller' => 'content',
             'name' => "{$ctype['name']}.list",
             'title_const' => 'LANG_WP_CONTENT_LIST',
-            'url_mask' => array(
+            'url_mask' => [
                 "{$ctype['name']}",
                 "{$ctype['name']}-*",
                 "{$ctype['name']}/*",
-            ),
-            'url_mask_not' => array(
+            ],
+            'url_mask_not' => [
                 "{$ctype['name']}/*/view-*",
                 "{$ctype['name']}/*.html",
                 "{$ctype['name']}/add",
@@ -397,26 +397,26 @@ class admin extends cmsFrontend {
                 "{$ctype['name']}/addcat/%",
                 "{$ctype['name']}/editcat/%",
                 "{$ctype['name']}/edit/*",
-            )
-        ));
+            ]
+        ]);
 
-        $this->model_backend_widgets->addPage(array(
+        $this->model_backend_widgets->addPage([
             'controller' => 'content',
             'name' => "{$ctype['name']}.item",
             'title_const' => 'LANG_WP_CONTENT_ITEM',
             'url_mask' => "{$ctype['name']}/*.html"
-        ));
+        ]);
 
-        $this->model_backend_widgets->addPage(array(
+        $this->model_backend_widgets->addPage([
             'controller' => 'content',
             'name' => "{$ctype['name']}.edit",
             'title_const' => 'LANG_WP_CONTENT_ITEM_EDIT',
-            'url_mask' => array(
+            'url_mask' => [
                 "{$ctype['name']}/add",
                 "{$ctype['name']}/add/%",
                 "{$ctype['name']}/edit/*"
-            )
-        ));
+            ]
+        ]);
 
         return true;
     }
@@ -472,6 +472,13 @@ class admin extends cmsFrontend {
             'url'     => href_to($this->name, 'settings', ['check_nested']),
             'options' => [
                 'icon' => 'tree'
+            ]
+        ];
+        $menu[] = [
+            'title'   => LANG_CP_MIMETYPES,
+            'url'     => href_to($this->name, 'settings', ['mime']),
+            'options' => [
+                'icon' => 'file-signature'
             ]
         ];
 
@@ -542,24 +549,23 @@ class admin extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function loadControllerBackend($controller_name, $request){
+    public function loadControllerBackend($controller_name, $request) {
 
-        $ctrl_file = $this->cms_config->root_path . 'system/controllers/'.$controller_name.'/backend.php';
+        $ctrl_file = $this->cms_config->root_path . 'system/controllers/' . $controller_name . '/backend.php';
 
-        if(!file_exists($ctrl_file)){
+        if (!file_exists($ctrl_file)) {
             cmsCore::error(sprintf(LANG_CP_ERR_BACKEND_NOT_FOUND, $controller_name));
         }
 
         include_once($ctrl_file);
 
-        $controller_class = 'backend'.ucfirst($controller_name);
+        $controller_class = 'backend' . ucfirst($controller_name);
 
         $backend = new $controller_class($request);
 
         $backend->controller_admin = $this;
 
         return $backend;
-
     }
 
 //============================================================================//

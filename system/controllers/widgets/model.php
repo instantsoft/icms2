@@ -128,7 +128,7 @@ class modelWidgets extends cmsModel {
                 filterIn('page_id', $pages_list)->
                 filterEqual('template', $template)->
                 filterEqual('is_enabled', 1)->
-                orderBy('i.position, i.ordering')->forceIndex('page_id')->
+                orderBy('i.position, i.ordering')->
                 get('widgets_bind_pages', function($item, $model){
 
                     $item['options'] = cmsModel::yamlToArray($item['options']);
@@ -137,6 +137,10 @@ class modelWidgets extends cmsModel {
                     $item['languages'] = cmsModel::yamlToArray($item['languages']);
                     $item['template_layouts'] = cmsModel::yamlToArray($item['template_layouts']);
                     $item['device_types'] = cmsModel::yamlToArray($item['device_types']);
+
+                    if (!empty($item['url_mask_not'])) {
+                        $item['url_mask_not'] = explode("\n", $item['url_mask_not']);
+                    }
 
                     return $item;
                 }) ?: [];

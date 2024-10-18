@@ -21,8 +21,10 @@ class actionAdminCtypesEdit extends cmsAction {
 
         $form = $this->getForm('ctypes_basic', ['edit', $ctype]);
 
-        $form = cmsEventsManager::hook('ctype_basic_form', $form);
-        $form = cmsEventsManager::hook('ctype_basic_' . $ctype['name'] . '_form', $form);
+        $form = cmsEventsManager::hook([
+            'ctype_basic_form',
+            'ctype_basic_' . $ctype['name'] . '_form'
+        ], $form);
 
         $form->hideField('titles', 'name');
 
@@ -41,20 +43,24 @@ class actionAdminCtypesEdit extends cmsAction {
 
         if ($this->request->has('submit')) {
 
-            $ctype  = $form->parse($this->request, true);
+            $ctype  = $form->parse($this->request, true, $ctype);
             $errors = $form->validate($this, $ctype);
 
             if (!$errors) {
 
-                $ctype = cmsEventsManager::hook('ctype_before_update', $ctype);
-                $ctype = cmsEventsManager::hook("ctype_{$ctype['name']}_before_update", $ctype);
+                $ctype = cmsEventsManager::hook([
+                    'ctype_before_update',
+                    "ctype_{$ctype['name']}_before_update"
+                ], $ctype);
 
                 $this->model_backend_content->updateContentType($id, $ctype);
 
                 $ctype['id'] = $id;
 
-                cmsEventsManager::hook('ctype_after_update', $ctype);
-                cmsEventsManager::hook("ctype_{$ctype['name']}_after_update", $ctype);
+                $ctype = cmsEventsManager::hook([
+                    'ctype_after_update',
+                    "ctype_{$ctype['name']}_after_update"
+                ], $ctype);
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
