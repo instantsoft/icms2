@@ -17,7 +17,7 @@
                 <div class="col-md-6 align-self-center">
                     <img src="<?php echo $this->getTemplateFilePath('images/404.svg', true); ?>" alt="404" />
                 </div>
-                <div class="col-md-6 align-self-center">
+                <div class="col-md-6 align-self-center" id="data-wrap">
                     <h1 class="display-1">404</h1>
                     <h2><?php echo ERR_PAGE_NOT_FOUND; ?></h2>
                     <?php if(cmsCore::isControllerExists('search') && cmsController::enabled('search')){ ?>

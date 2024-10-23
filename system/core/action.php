@@ -10,11 +10,25 @@
  */
 class cmsAction {
 
+    /**
+     * Объект контроллера
+     * @var cmsController
+     */
     protected $controller;
+
+    /**
+     * Параметры экшена
+     * @var array
+     */
     protected $params;
+
+    /**
+     * Массив языков для подключения
+     * @var array
+     */
     protected $extended_langs = [];
 
-    public function __construct($controller, $params = []) {
+    public function __construct(cmsController $controller, $params = []) {
 
         $this->controller = $controller;
         $this->params     = $params;

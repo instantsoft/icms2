@@ -627,23 +627,6 @@ class cmsImages {
     }
 
     /**
-     * Выводит изображение в браузер
-     *
-     * @param string $image_type
-     * @param integer $quality
-     */
-    public function output($image_type = null, $quality = null) {
-
-        if(!$image_type){
-            $image_type = $this->source_type;
-        }
-
-        header('Content-Type: ' . image_type_to_mime_type($image_type));
-
-        $this->save(null, $image_type, $quality);
-    }
-
-    /**
      * Изменяет размер изображения в соответствии с заданной короткой стороной (пропорциональная длинная сторона)
      *
      * @param integer $max_short

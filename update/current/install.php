@@ -7,6 +7,10 @@ function install_package(){
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    if(!$core->db->isFieldExists('widgets_bind', 'url_mask_not', false)){
+        $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `url_mask_not` TEXT NULL DEFAULT NULL COMMENT 'Отрицательные маски виджета' AFTER `groups_hide`;");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

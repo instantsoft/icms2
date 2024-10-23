@@ -8,7 +8,7 @@ class actionAdminInlineSave extends cmsAction {
 
     public function run($table = null, $item_id = null, $disable_language_context = null) {
 
-        header('X-Frame-Options: DENY');
+        $this->cms_core->response->setHeader('X-Frame-Options', 'DENY');
 
         if (!$this->request->isAjax()) {
             return cmsCore::error404();

@@ -94,7 +94,9 @@ class admin extends cmsFrontend {
     private function isAllowByIp() {
 
         $allow_ips = cmsConfig::get('allow_ips');
-        if (!$allow_ips) { return true; }
+        if (!$allow_ips) {
+            return true;
+        }
 
         return string_in_mask_list(cmsUser::getIp(), $allow_ips);
     }
@@ -981,6 +983,11 @@ class admin extends cmsFrontend {
                 }
                 return $items;
             }
+        ]));
+
+        $form->addField($access_fieldset_id, new fieldText('url_mask_not', [
+            'title' => LANG_CP_WIDGET_PAGE_URL_MASK_NOT,
+            'hint'  => LANG_CP_WIDGET_URL_MASK_NOT_HINT
         ]));
 
         //

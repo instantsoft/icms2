@@ -26,26 +26,27 @@ class forms extends cmsFrontend {
 
     public function isAllowEmbed() {
 
-        if(empty($this->options['allow_embed'])){
+        if (empty($this->options['allow_embed'])) {
             return false;
         }
 
         $is_external    = true;
         $show_on_domain = true;
 
-        if(isset($_SERVER['HTTP_REFERER'])){
+        $referer = $this->request->getHeader('REFERER');
 
-            $refer      = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
-            $is_external = (($refer == $_SERVER['HTTP_HOST']) ? false : true);
+        if ($referer) {
 
-            if(!empty($this->options['allow_embed_domain_array']) && $is_external){
+            $refer       = parse_url($referer, PHP_URL_HOST);
+            $is_external = ($refer === parse_url($this->cms_config->host, PHP_URL_HOST)) ? false : true;
+
+            if (!empty($this->options['allow_embed_domain_array']) && $is_external) {
                 $show_on_domain = ($refer && in_array($refer, $this->options['allow_embed_domain_array']));
             }
 
-            if(!empty($this->options['denied_embed_domain_array']) && $is_external){
+            if (!empty($this->options['denied_embed_domain_array']) && $is_external) {
                 $show_on_domain = !($refer && in_array($refer, $this->options['denied_embed_domain_array']));
             }
-
         }
 
         return $show_on_domain;

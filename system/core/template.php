@@ -68,7 +68,7 @@ class cmsTemplate {
     protected $options = null;
     /**
      * Объект конфигурации сайта cmsConfig
-     * @var object
+     * @var cmsConfig
      */
     protected $site_config;
     /**
@@ -126,12 +126,6 @@ class cmsTemplate {
      * @var array
      */
     protected $head_css_no_merge = [];
-    /**
-     * Массив предзагрузки контента
-     * https://developer.mozilla.org/ru/docs/Web/HTML/Preloading_content
-     * @var array
-     */
-    protected $head_preload = [];
     /**
      * Тег <h1> страницы
      * @var string
@@ -384,7 +378,7 @@ class cmsTemplate {
             }
         }
 
-        foreach ($this->head as $id => $tag) {
+        foreach ($this->head as $tag) {
             echo $tag . "\n\t\t";
         }
 
@@ -394,11 +388,6 @@ class cmsTemplate {
 
         if ($print_js) {
             $this->printJavascriptTags();
-        }
-
-        if (!empty($this->site_config->set_head_preload) && $this->head_preload) {
-            header('X-DNS-Prefetch-Control: on');
-            header('Link: ' . implode(', ', $this->head_preload));
         }
 
         return $this;
@@ -435,8 +424,6 @@ class cmsTemplate {
 
             $file = $this->getHeadFilePath($file);
 
-            $this->head_preload[] = '<' . $file . '>; rel=preload; as=script';
-
             echo $this->getJSTag($file) . "\n\t\t";
         }
 
@@ -464,8 +451,6 @@ class cmsTemplate {
         foreach ($css as $file) {
 
             $file = $this->getHeadFilePath($file);
-
-            $this->head_preload[] = '<' . $file . '>; rel=preload; as=style';
 
             echo $this->getCSSTag($file) . "\n\t\t";
         }
@@ -504,7 +489,7 @@ class cmsTemplate {
      * @param string $template_name Название шаблона в assets/ui
      * @return
      */
-    public function toolbar($template_name = 'menu') {
+    public function toolbar(string $template_name = 'menu') {
         if (!$this->isToolbar()) {
             return;
         }
@@ -525,6 +510,7 @@ class cmsTemplate {
 
     /**
      * Выводит виджеты на указанной позиции
+     *
      * @param string $position Название позиции
      * @param boolean $is_titles Выводить заголовки
      * @param string $wrapper Название шаблона обертки
@@ -591,10 +577,6 @@ class cmsTemplate {
      * @return boolean
      */
     public function hasWidgetsOn($positions) {
-
-        if (!$this->widgets_rendered) {
-            cmsCore::getInstance()->runWidgets();
-        }
 
         if (func_num_args() > 1) {
             $positions = func_get_args();
@@ -786,35 +768,6 @@ class cmsTemplate {
         }
 
         $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template, $menu_title);
-    }
-
-    /**
-     * Выводит глубиномер
-     *
-     * @param array $options Опции глубиномера
-     */
-    public function breadcrumbs($options = []) {
-
-        $default_options = [
-            'home_url'   => href_to_home(),
-            'template'   => 'breadcrumbs',
-            'strip_last' => true
-        ];
-
-        $options = array_merge($default_options, $options);
-
-        if ($this->breadcrumbs) {
-            if ($options['strip_last']) {
-                unset($this->breadcrumbs[count($this->breadcrumbs) - 1]);
-            } else {
-                $this->breadcrumbs[count($this->breadcrumbs) - 1]['is_last'] = true;
-            }
-        }
-
-        $this->renderAsset('ui/' . $options['template'], [
-            'breadcrumbs' => $this->breadcrumbs,
-            'options'     => $options
-        ]);
     }
 
     /**
@@ -1054,9 +1007,6 @@ class cmsTemplate {
         return (bool) count($this->menus['toolbar']);
     }
 
-// ========================================================================== //
-// ========================================================================== //
-
     /**
      * Добавляет один пункт меню в меню
      * @param string $menu_name Название меню
@@ -1132,7 +1082,7 @@ class cmsTemplate {
     public function addBreadcrumb($title, $href = '') {
 
         if (!$href) {
-            $href = $_SERVER['REQUEST_URI'];
+            $href = cmsCore::getInstance()->request->getServer('REQUEST_URI');
         }
 
         $this->breadcrumbs[] = ['title' => $title, 'href' => $href];
@@ -1148,16 +1098,47 @@ class cmsTemplate {
         return (bool) $this->breadcrumbs;
     }
 
+
+    /**
+     * Выводит глубиномер
+     *
+     * @param array $options Опции глубиномера
+     */
+    public function breadcrumbs($options = []) {
+
+        $default_options = [
+            'home_url'   => href_to_home(),
+            'template'   => 'breadcrumbs',
+            'strip_last' => true
+        ];
+
+        $options = array_merge($default_options, $options);
+
+        if ($this->breadcrumbs) {
+            if ($options['strip_last']) {
+                unset($this->breadcrumbs[count($this->breadcrumbs) - 1]);
+            } else {
+                $this->breadcrumbs[count($this->breadcrumbs) - 1]['is_last'] = true;
+            }
+        }
+
+        $this->renderAsset('ui/' . $options['template'], [
+            'breadcrumbs' => $this->breadcrumbs,
+            'options'     => $options
+        ]);
+    }
+
 // ========================================================================== //
 // ========================================================================== //
 
     /**
      * Добавляет тег в головной раздел страницы
+     *
      * @param string $tag
      * @param boolean $is_include_once
      */
     public function addHead($tag, $is_include_once = true) {
-        if($is_include_once){
+        if ($is_include_once) {
             $hash = md5($tag);
         } else {
             $hash = count($this->head);
@@ -1166,9 +1147,18 @@ class cmsTemplate {
         return $this;
     }
 
-    public function addBottom($tag, $request = false){
-        if(!$request){ $request = cmsCore::getInstance()->request; }
-        if($request->isAjax()){
+    /**
+     * Добавлят тег в конец страницы, перед тегом body
+     *
+     * @param string $tag
+     * @param ?cmsRequest $request
+     * @return $this
+     */
+    public function addBottom($tag, $request = null) {
+        if (!$request) {
+            $request = cmsCore::getInstance()->request;
+        }
+        if ($request->isAjax()) {
             echo $tag;
         } else {
             $this->bottom[] = $tag;
@@ -1176,40 +1166,52 @@ class cmsTemplate {
         return $this;
     }
 
+    /**
+     * Возвращает URL до переданного файла в шаблоне
+     *
+     * @param string $path Путь к файлу отностительно шаблона
+     * @param bool $with_inheritance Использовать наследование
+     * @return type
+     */
     public function getTemplateFilePath($path, $with_inheritance = false) {
-        if($with_inheritance){
+        if ($with_inheritance) {
             return $this->site_config->root . $this->getTplFilePath($path, false);
         }
-        return $this->site_config->root . self::TEMPLATE_BASE_PATH. $this->name .'/'.$path;
+        return $this->site_config->root . self::TEMPLATE_BASE_PATH . $this->name . '/' . $path;
     }
 
-    public function getHeadFilePath($file){
+    /**
+     * Возвращает URL по относительному пути к файлу, добавляя тайм метку кэша
+     * Учитывая, что путь может быть передан к внешнему файлу по HTTP
+     *
+     * @param string $file Путь к файлу без учета корневой директории (начального слеша)
+     * @return string
+     */
+    public function getHeadFilePath(string $file) {
 
-        if(!preg_match('#^([a-z]*)(:?)\/\/#', $file)){
+        if (!preg_match('#^([a-z]*)(:?)\/\/#', $file)) {
 
             $arg_separator = strpos($file, '?') !== false ? '&' : '?';
 
-            $file = $this->site_config->root . $file .($this->site_config->production_time ? $arg_separator. $this->site_config->production_time : '');
-
+            $file = $this->site_config->root . $file . ($this->site_config->production_time ? $arg_separator . $this->site_config->production_time : '');
         }
 
         return $file;
-
     }
+
     /**
      * Возвращает тег <link rel="stylesheet"> для указанного файла
      *
      * @param string $file Путь к файлу без учета корневой директории (начального слеша)
      * @return string
      */
-    public function getCSSTag($file){
+    public function getCSSTag(string $file) {
 
-        if(strpos($file, '/') !== 0){
+        if (strpos($file, '/') !== 0) {
             $file = $this->getHeadFilePath($file);
         }
 
-        return '<link rel="stylesheet" type="text/css" href="'.$file.'">';
-
+        return '<link rel="stylesheet" type="text/css" href="' . $file . '">';
     }
 
     /**
@@ -1220,29 +1222,30 @@ class cmsTemplate {
      * @param array $params Параметры тега
      * @return string
      */
-    public function getJSTag($file, $comment = '', $params = array()){
+    public function getJSTag(string $file, $comment = '', $params = []) {
 
-        if(strpos($file, '/') !== 0){
+        if (strpos($file, '/') !== 0) {
             $file = $this->getHeadFilePath($file);
         }
 
-        $comment = $comment ? '<!-- '.$comment.' !-->' : '';
+        $comment = $comment ? '<!-- ' . $comment . ' !-->' : '';
 
-        return '<script src="'.$file.'" '.html_attr_str($params).'>'.$comment.'</script>';
-
+        return '<script src="' . $file . '" ' . html_attr_str($params) . '>' . $comment . '</script>';
     }
 
     /**
      * Добавляет CSS файл в головной раздел страницы выше остальных CSS-тегов
      *
-     * @param string $file Путь к файлу без указания корня
+     * @param string|array $file Путь к файлу без указания корня
      * @return boolean
      */
     public function addMainCSS($file) {
 
-        if (!$file) { return false; }
+        if (!$file) {
+            return false;
+        }
 
-        if(!is_array($file)){
+        if (!is_array($file)) {
 
             $hash = $file;
             if (isset($this->head_main_css[$hash]) || isset($this->head_css[$hash])) {
@@ -1254,26 +1257,27 @@ class cmsTemplate {
             return true;
         }
 
-        foreach($file as $f){
+        foreach ($file as $f) {
             $this->addMainCSS($f);
         }
 
         return true;
-
     }
 
     /**
      * Добавляет CSS файл в головной раздел страницы
      *
-     * @param string $file Путь к файлу без указания корня
+     * @param string|array $file Путь к файлу без указания корня
      * @param boolean $allow_merge Использовать в объединении
      * @return boolean
      */
     public function addCSS($file, $allow_merge = true) {
 
-        if (!$file) { return false; }
+        if (!$file) {
+            return false;
+        }
 
-        if(!is_array($file)){
+        if (!is_array($file)) {
 
             $hash = $file;
             if (isset($this->head_css[$hash]) || isset($this->head_main_css[$hash])) {
@@ -1289,26 +1293,27 @@ class cmsTemplate {
             return true;
         }
 
-        foreach($file as $f){
+        foreach ($file as $f) {
             $this->addCSS($f, $allow_merge);
         }
 
         return true;
-
     }
 
     /**
      * Добавляет JS файл к подключению на странице выше остальных JS-тегов
      *
-     * @param string $file Путь к файлу без указания корня
+     * @param string|array $file Путь к файлу без указания корня
      * @param boolean $at_begin Поместить в самое начало?
      * @return boolean
      */
     public function addMainJS($file, $at_begin = false) {
 
-        if (!$file) { return false; }
+        if (!$file) {
+            return false;
+        }
 
-        if(!is_array($file)){
+        if (!is_array($file)) {
 
             $hash = $file;
             if (isset($this->head_main_js[$hash])) {
@@ -1319,7 +1324,7 @@ class cmsTemplate {
                 unset($this->head_js[$hash]);
             }
 
-            if($at_begin === true){ // На случай, если здесь "Комментарий к скрипту"
+            if ($at_begin === true) { // На случай, если здесь "Комментарий к скрипту"
                 $this->head_main_js = [$hash => $file] + $this->head_main_js;
             } else {
                 $this->head_main_js[$hash] = $file;
@@ -1328,31 +1333,32 @@ class cmsTemplate {
             return true;
         }
 
-        if($at_begin === true && count($file) > 1){
+        if ($at_begin === true && count($file) > 1) {
             $file = array_reverse($file);
         }
 
-        foreach($file as $f){
+        foreach ($file as $f) {
             $this->addMainJS($f, $at_begin);
         }
 
         return true;
-
     }
 
     /**
      * Добавляет JS файл к подключению на странице
      *
-     * @param string $file Путь к файлу без указания корня
+     * @param string|array $file Путь к файлу без указания корня
      * @param string $comment Комментарий к скрипту (устаревший параметр)
      * @param boolean $allow_merge Использовать в объединении
      * @return boolean
      */
     public function addJS($file, $comment = '', $allow_merge = true) {
 
-        if (!$file) { return false; }
+        if (!$file) {
+            return false;
+        }
 
-        if(!is_array($file)){
+        if (!is_array($file)) {
 
             $hash = $file;
             if (isset($this->head_js[$hash])) {
@@ -1367,51 +1373,65 @@ class cmsTemplate {
             return true;
         }
 
-        foreach($file as $f){
+        foreach ($file as $f) {
             $this->addJS($f, '', $allow_merge);
         }
 
         return true;
-
     }
 
     /**
      * Подключает JS файл из директории шаблона controllers/CNAME/js/
      *
-     * @param string $path Путь к файлу относительно TEMPLATE_BASE_PATH.TNAME/controllers/CNAME/js/
+     * @param string|array $path Путь к файлу относительно TEMPLATE_BASE_PATH.TNAME/controllers/CNAME/js/
      * @param string $cname Название контроллера. Если не указан, берется из текущего контекста
      * @param string $comment Комментарий скрипта
      * @param boolean $allow_merge Использовать в объединении
      * @return boolean
      */
-    public function addControllerJS($path, $cname = '', $comment = '', $allow_merge = true){
+    public function addControllerJS($path, $cname = '', $comment = '', $allow_merge = true) {
 
-        if(!$cname){ $cname = $this->controller->name; }
+        if (!$cname) {
+            $cname = $this->controller->name;
+        }
 
-        if(!is_array($path)){
+        if (!is_array($path)) {
             return $this->addTplJS("controllers/{$cname}/js/{$path}", $comment, $allow_merge);
         }
 
-        foreach($path as $p){
+        foreach ($path as $p) {
             $this->addControllerJS($p, $cname, $comment, $allow_merge);
         }
 
         return true;
-
     }
 
-    public function addControllerJSFromContext($path, $cname = '', $request = false){
+    /**
+     * Подключает JS файл из директории шаблона controllers/CNAME/js/
+     * в зависимости от  контекста запроса: при AJAX запросах
+     * подключенные файлы печатаются сразу
+     *
+     * @param string|array $path Путь к файлу относительно TEMPLATE_BASE_PATH.TNAME/controllers/CNAME/js/
+     * @param string $cname Название контроллера. Если не указан, берется из текущего контекста
+     * @param ?cmsRequest $request Объект контекста запроса
+     * @return bool
+     */
+    public function addControllerJSFromContext($path, $cname = '', $request = null) {
 
-        if(!$cname){ $cname = $this->controller->name; }
-        if(!$request){ $request = cmsCore::getInstance()->request; }
+        if (!$cname) {
+            $cname = $this->controller->name;
+        }
+        if (!$request) {
+            $request = cmsCore::getInstance()->request;
+        }
 
-        if($request->isAjax()){
+        if ($request->isAjax()) {
 
-            if(!is_array($path)){
+            if (!is_array($path)) {
                 return $this->insertJS($this->getTplFilePath("controllers/{$cname}/js/{$path}.js", false));
             }
 
-            foreach($path as $p){
+            foreach ($path as $p) {
                 $this->addControllerJSFromContext($p, $cname, $request);
             }
 
@@ -1419,134 +1439,164 @@ class cmsTemplate {
         }
 
         return $this->addControllerJS($path, $cname, '', false);
-
     }
 
     /**
      * Подключает CSS файл из директории шаблона controllers/CNAME/css/
      *
-     * @param string $path Путь к файлу относительно TEMPLATE_BASE_PATH.TNAME/controllers/CNAME/css/
+     * @param string|array $path Путь к файлу относительно TEMPLATE_BASE_PATH.TNAME/controllers/CNAME/css/
      * @param string $cname Название контроллера. Если не указан, берется из текущего контекста
      * @param boolean $allow_merge Использовать в объединении
      * @return boolean
      */
-    public function addControllerCSS($path, $cname = '', $allow_merge = true){
+    public function addControllerCSS($path, $cname = '', $allow_merge = true) {
 
-        if(!$cname){ $cname = $this->controller->name; }
+        if (!$cname) {
+            $cname = $this->controller->name;
+        }
 
-        if(!is_array($path)){
+        if (!is_array($path)) {
             return $this->addTplCSS("controllers/{$cname}/css/{$path}", $allow_merge);
         }
 
-        foreach($path as $p){
+        foreach ($path as $p) {
             $this->addControllerCSS($p, $cname, $allow_merge);
         }
 
         return true;
-
     }
 
-    public function addControllerCSSFromContext($path, $cname = '', $request = false){
+    /**
+     * Подключает CSS файл из директории шаблона controllers/CNAME/css/
+     * в зависимости от  контекста запроса: при AJAX запросах
+     * подключенные файлы печатаются сразу
+     *
+     * @param string|array $path Путь к файлу относительно TEMPLATE_BASE_PATH.TNAME/controllers/CNAME/css/
+     * @param string $cname Название контроллера. Если не указан, берется из текущего контекста
+     * @param ?cmsRequest $request Объект контекста запроса
+     * @return bool
+     */
+    public function addControllerCSSFromContext($path, $cname = '', $request = null) {
 
-        if(!$cname){ $cname = $this->controller->name; }
-        if(!$request){ $request = cmsCore::getInstance()->request; }
+        if (!$cname) {
+            $cname = $this->controller->name;
+        }
+        if (!$request) {
+            $request = cmsCore::getInstance()->request;
+        }
 
-        if($request->isAjax()){
+        if ($request->isAjax()) {
 
-            if(!is_array($path)){
+            if (!is_array($path)) {
                 return $this->insertCSS($this->getTplFilePath("controllers/{$cname}/css/{$path}.css", false));
             }
 
-            foreach($path as $p){
+            foreach ($path as $p) {
                 $this->addControllerCSSFromContext($p, $cname, $request);
             }
 
             return true;
-
         }
 
         return $this->addControllerCSS($path, $cname, false);
-
     }
 
     /**
      * Подключает JS файл относительно корня шаблона
      * Ищет, начиная с текущего шаблона и по цепочке до дефолтного
      *
-     * @param string $path Путь к файлу относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/
+     * @param string|array $path Путь к файлу относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/
      * @param string $comment Комментарий скрипта
      * @param boolean $allow_merge Использовать в объединении
      * @return boolean
      */
     public function addTplJS($path, $comment = '', $allow_merge = true) {
 
-        if(!is_array($path)){
+        if (!is_array($path)) {
             return $this->addJS($this->getTplFilePath($path . '.js', false), $comment, $allow_merge);
         }
 
-        foreach($path as $p){
+        foreach ($path as $p) {
             $this->addTplJS($p, $comment, $allow_merge);
         }
 
         return true;
-
     }
 
-    public function addTplJSFromContext($path, $request = false) {
+    /**
+     * Подключает JS файл так же как addTplJS, но
+     * в зависимости от  контекста запроса: при AJAX запросах
+     * подключенные файлы печатаются сразу
+     *
+     * @param string|array $path Путь к файлу относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/
+     * @param ?cmsRequest $request Объект контекста запроса
+     * @return bool
+     */
+    public function addTplJSFromContext($path, $request = null) {
 
-        if(!$request){ $request = cmsCore::getInstance()->request; }
+        if (!$request) {
+            $request = cmsCore::getInstance()->request;
+        }
 
-        if($request->isAjax()){
+        if ($request->isAjax()) {
 
-            if(!is_array($path)){
+            if (!is_array($path)) {
                 return $this->insertJS($this->getTplFilePath($path . '.js', false));
             }
 
-            foreach($path as $p){
+            foreach ($path as $p) {
                 $this->addTplJSFromContext($p, $request);
             }
 
             return true;
-
         }
 
         return $this->addTplJS($path, '', false);
-
     }
 
     /**
      * Подключает CSS файл относительно корня шаблона
      * Ищет, начиная с текущего шаблона и по цепочке до дефолтного
      *
-     * @param string $path Путь к файлу относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/
+     * @param string|array $path Путь к файлу относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/
      * @param boolean $allow_merge Использовать в объединении
      * @return boolean
      */
     public function addTplCSS($path, $allow_merge = true) {
 
-        if(!is_array($path)){
+        if (!is_array($path)) {
             return $this->addCSS($this->getTplFilePath($path . '.css', false), $allow_merge);
         }
 
-        foreach($path as $p){
+        foreach ($path as $p) {
             $this->addTplCSS($p, $allow_merge);
         }
 
         return true;
-
     }
 
-    public function addTplCSSFromContext($path, $request = false) {
+    /**
+     * Подключает CSS файл так же как addTplCSS, но
+     * в зависимости от  контекста запроса: при AJAX запросах
+     * подключенные файлы печатаются сразу
+     *
+     * @param string|array $path Путь к файлу относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/
+     * @param ?cmsRequest $request Объект контекста запроса
+     * @return bool
+     */
+    public function addTplCSSFromContext($path, $request = null) {
 
-        if(!$request){ $request = cmsCore::getInstance()->request; }
+        if (!$request) {
+            $request = cmsCore::getInstance()->request;
+        }
 
-        if($request->isAjax()){
+        if ($request->isAjax()) {
 
-            if(!is_array($path)){
+            if (!is_array($path)) {
                 return $this->insertCSS($this->getTplFilePath($path . '.css', false));
             }
 
-            foreach($path as $p){
+            foreach ($path as $p) {
                 $this->addTplCSSFromContext($p, $request);
             }
 
@@ -1554,140 +1604,232 @@ class cmsTemplate {
         }
 
         return $this->addTplCSS($path, false);
-
     }
 
     /**
      * Подключает JS файл относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/js/
      * Ищет, начиная с текущего шаблона и по цепочке до дефолтного
      *
-     * @param string $name Имя файла без расширения
+     * @param string|array $name Имя файла без расширения
      * @return boolean
      */
     public function addTplJSName($name) {
         return $this->addJS($this->getJavascriptFileName($name));
     }
-    public function addTplJSNameFromContext($name, $request = false) {
-        if(!$request){ $request = cmsCore::getInstance()->request; }
-        if($request->isAjax()){
+
+    /**
+     * Подключает JS файл относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/js/
+     * но в зависимости от  контекста запроса: при AJAX запросах
+     * подключенные файлы печатаются сразу
+     *
+     * @param string|array $name Имя файла без расширения
+     * @param ?cmsRequest $request Объект контекста запроса
+     * @return bool
+     */
+    public function addTplJSNameFromContext($name, $request = null) {
+
+        if (!$request) {
+            $request = cmsCore::getInstance()->request;
+        }
+
+        if ($request->isAjax()) {
             return $this->insertJS($this->getJavascriptFileName($name));
         }
 
         return $this->addJS($this->getJavascriptFileName($name), '', false);
     }
+
+    /**
+     * Подключает JS файл относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/js/
+     * но выше остальных JS-тегов
+     *
+     * @param string|array $name Имя файла без расширения
+     * @param bool $at_begin Подключать в самый верх
+     * @return bool
+     */
     public function addMainTplJSName($name, $at_begin = false) {
         return $this->addMainJS($this->getJavascriptFileName($name), $at_begin);
     }
 
+    /**
+     * Управляет отложенными подключениями JS и CSS файлов
+     *
+     * @param string|array $name Имя файла без расширения относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/js|css/
+     * @param string $type Тип: js или css
+     * @return $this
+     */
     protected function onDemandTplName($name, $type) {
 
-        if($type === 'js'){
+        if ($type === 'js') {
             $files = $this->getJavascriptFileName($name);
         } else {
             $files = $this->getTemplateStylesFileName($name);
         }
 
-        if(!is_array($files)){
+        if (!is_array($files)) {
             $files = [$files];
         }
 
-        foreach($files as $key => $f){
+        foreach ($files as $key => $f) {
             $this->on_demand[$type][$key] = $f;
         }
 
         return $this;
     }
 
+    /**
+     * Добавляет отложенное подключение CSS файла
+     *
+     * @param string|array $name Имя файла без расширения относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/css/
+     * @return $this
+     */
     public function onDemandTplCSSName($name) {
         return $this->onDemandTplName($name, 'css');
     }
 
+    /**
+     * Добавляет отложенное подключение JS файла
+     *
+     * @param string|array $name Имя файла без расширения относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/js/
+     * @return $this
+     */
     public function onDemandTplJSName($name) {
         return $this->onDemandTplName($name, 'js');
     }
 
+    /**
+     * Выводит на странице JS объект со списком отложенных подключений
+     */
     public function onDemandPrint() {
         $this->on_demand['root'] = $this->site_config->root;
-        echo '<script> icms.head.on_demand = '.json_encode($this->on_demand).';</script>'."\n";
+        echo '<script> icms.head.on_demand = ' . json_encode($this->on_demand) . ';</script>' . "\n";
     }
 
     /**
      * Подключает CSS файл относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/css/
      * Ищет, начиная с текущего шаблона и по цепочке до дефолтного
      *
-     * @param string $name Имя файла без расширения
+     * @param string|array $name Имя файла без расширения
      * @return boolean
      */
     public function addTplCSSName($name) {
         return $this->addCSS($this->getTemplateStylesFileName($name));
     }
-    public function addTplCSSNameFromContext($name, $request = false) {
-        if(!$request){ $request = cmsCore::getInstance()->request; }
-        if($request->isAjax()){
+
+    /**
+     * Подключает CSS файл относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/css/
+     * но в зависимости от  контекста запроса: при AJAX запросах
+     * подключенные файлы печатаются сразу
+     *
+     * @param string|array $name Имя файла без расширения
+     * @param ?cmsRequest $request Объект контекста запроса
+     * @return bool
+     */
+    public function addTplCSSNameFromContext($name, $request = null) {
+
+        if (!$request) {
+            $request = cmsCore::getInstance()->request;
+        }
+
+        if ($request->isAjax()) {
             return $this->insertCSS($this->getTemplateStylesFileName($name));
         }
 
         return $this->addCSS($this->getTemplateStylesFileName($name), false);
     }
+
+    /**
+     * Подключает CSS файл относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/css/
+     * но выше остальных CSS-тегов
+     *
+     * @param string|array $name Имя файла без расширения
+     * @return bool
+     */
     public function addMainTplCSSName($name) {
         return $this->addMainCSS($this->getTemplateStylesFileName($name));
     }
 
-    public function insertJS($file, $comment = ''){
+    /**
+     * Подключает и печатает тег <script>
+     *
+     * @param string|array $file Путь к файлу без учета корневой директории (начального слеша)
+     * @param string $comment
+     * @return bool
+     */
+    public function insertJS($file, $comment = '') {
 
-        if (!$file) { return false; }
+        if (!$file) {
+            return false;
+        }
 
-        if(!is_array($file)){
-            $hash = $file;
-            if (isset($this->insert_js[$hash])) { return false; }
-            $this->insert_js[$hash] = $file;
+        if (!is_array($file)) {
+
+            if (isset($this->insert_js[$file])) {
+                return false;
+            }
+
+            $this->insert_js[$file] = $file;
 
             // атрибут rel="forceLoad" добавлен для nyroModal
-            echo $this->getJSTag($file, $comment, array('rel' => 'forceLoad'));
+            echo $this->getJSTag($file, $comment, ['rel' => 'forceLoad']);
 
             return true;
         }
 
-        foreach($file as $f){
+        foreach ($file as $f) {
             $this->insertJS($f, $comment);
         }
 
         return true;
     }
 
-    public function insertCSS($file){
+    /**
+     * Подключает и печатает тег <link rel="stylesheet">
+     *
+     * @param string|array $file Путь к файлу без учета корневой директории (начального слеша)
+     * @return bool
+     */
+    public function insertCSS($file) {
 
-        if (!$file) { return false; }
+        if (!$file) {
+            return false;
+        }
 
-        if(!is_array($file)){
-            $hash = $file;
-            if (isset($this->insert_css[$hash])) { return false; }
-            $this->insert_css[$hash] = $file;
+        if (!is_array($file)) {
+
+            if (isset($this->insert_css[$file])) {
+                return false;
+            }
+
+            $this->insert_css[$file] = $file;
 
             echo $this->getCSSTag($file);
 
             return true;
         }
 
-        foreach($file as $f){
+        foreach ($file as $f) {
             $this->insertCSS($f);
         }
 
         return true;
-
     }
 
     /**
      * Подключает js файл на страницу в зависимости от контекста исходного запроса
-     * @param string $file
-     * @param string $comment
+     *
+     * @param string|array $file Путь к файлу без указания корня
+     * @param string $comment Комментарий к скрипту (устаревший параметр)
+     * @param ?cmsRequest $request Объект контекста запроса
      * @return bool
      */
-    public function addJSFromContext($file, $comment='', $request = false) {
+    public function addJSFromContext($file, $comment = '', $request = null) {
 
-        if(!$request){ $request = cmsCore::getInstance()->request; }
+        if (!$request) {
+            $request = cmsCore::getInstance()->request;
+        }
 
-        if($request->isAjax()){
+        if ($request->isAjax()) {
             return $this->insertJS($file, $comment);
         }
 
@@ -1696,50 +1838,75 @@ class cmsTemplate {
 
     /**
      * Подключает css файл на страницу в зависимости от контекста исходного запрос
-     * @param string $file
+     *
+     * @param string|array $file Путь к файлу без учета корневой директории (начального слеша)
+     * @param ?cmsRequest $request Объект контекста запроса
      * @return bool
      */
-    public function addCSSFromContext($file, $request = false) {
+    public function addCSSFromContext($file, $request = null) {
 
-        if(!$request){ $request = cmsCore::getInstance()->request; }
+        if (!$request) {
+            $request = cmsCore::getInstance()->request;
+        }
 
-        if($request->isAjax()){
+        if ($request->isAjax()) {
             return $this->insertCSS($file);
         }
 
         return $this->addCSS($file, false);
     }
 
-    public function getJS($file){
+    /**
+     * Подключает и возвращает тег <script>
+     *
+     * @param string|array $file Путь к файлу без учета корневой директории (начального слеша)
+     * @param string $comment
+     * @return string
+     */
+    public function getJS($file) {
 
         ob_start();
         $this->insertJS($file);
         return ob_get_clean();
-
     }
 
-    public function getCSS($file){
+    /**
+     * Подключает и возвращает тег <link rel="stylesheet">
+     *
+     * @param string|array $file Путь к файлу без учета корневой директории (начального слеша)
+     * @return string
+     */
+    public function getCSS($file) {
 
         ob_start();
         $this->insertCSS($file);
         return ob_get_clean();
-
     }
 
-    public function getLangJS($phrases){
+    /**
+     * Возвращает значения языковых констант
+     * в формате JS переменных
+     *
+     * @param string|array $phrases Названия констант
+     * @return type
+     */
+    public function getLangJS($phrases) {
 
-        if (func_num_args()==1 && !is_array($phrases)){ $phrases = array($phrases); }
-        if (func_num_args()>1) { $phrases = func_get_args(); }
+        if (func_num_args() == 1 && !is_array($phrases)) {
+            $phrases = [$phrases];
+        }
+        if (func_num_args() > 1) {
+            $phrases = func_get_args();
+        }
 
         $output = '';
 
-        foreach($phrases as $phrase){
-            $value = var_export(htmlspecialchars(constant($phrase)), true);
+        foreach ($phrases as $phrase) {
+            $value  = var_export(htmlspecialchars(constant($phrase)), true);
             $output .= "var {$phrase} = {$value};";
         }
 
         return $output;
-
     }
 
 // ========================================================================== //
@@ -1753,23 +1920,27 @@ class cmsTemplate {
      *
      * @return string
      */
-    public function getMergedJSPath(){
+    public function getMergedJSPath() {
 
         $files = array_merge($this->head_main_js, $this->head_js);
 
-        $cache_hash = md5(serialize($files));
-        $cache_file = "cache/static/js/scripts.{$cache_hash}.js";
+        $cache_hash      = md5(serialize($files));
+        $cache_file      = "cache/static/js/scripts.{$cache_hash}.js";
         $cache_file_path = $this->site_config->root_path . $cache_file;
 
-        if (file_exists($cache_file_path)) { return $cache_file; }
+        if (file_exists($cache_file_path)) {
+            return $cache_file;
+        }
 
         $merged_contents = '';
 
-        foreach($files as $file){
-            if (in_array($file, $this->head_js_no_merge)) { continue; }
-            $file_path = $this->site_config->root_path . strtok($file, '?');
-            $contents = file_get_contents($file_path);
-            $merged_contents .= "\n".$contents;
+        foreach ($files as $file) {
+            if (in_array($file, $this->head_js_no_merge)) {
+                continue;
+            }
+            $file_path       = $this->site_config->root_path . strtok($file, '?');
+            $contents        = file_get_contents($file_path);
+            $merged_contents .= "\n" . $contents;
         }
 
         $merged_contents = preg_replace('@/\\*[\\s\\S]*?\\*/@', '', $merged_contents);
@@ -1779,7 +1950,6 @@ class cmsTemplate {
         file_put_contents($cache_file_path, trim($merged_contents));
 
         return $cache_file;
-
     }
 
     /**
@@ -1790,53 +1960,57 @@ class cmsTemplate {
      *
      * @return string
      */
-    public function getMergedCSSPath(){
+    public function getMergedCSSPath() {
 
         $files = array_merge($this->head_main_css, $this->head_css);
 
-        $cache_hash = md5(serialize($files));
-        $cache_file = "cache/static/css/styles.{$cache_hash}.css";
+        $cache_hash      = md5(serialize($files));
+        $cache_file      = "cache/static/css/styles.{$cache_hash}.css";
         $cache_file_path = $this->site_config->root_path . $cache_file;
 
-        if (file_exists($cache_file_path)) { return $cache_file; }
+        if (file_exists($cache_file_path)) {
+            return $cache_file;
+        }
 
         $merged_contents = '';
 
-        foreach($files as $file){
-            if (in_array($file, $this->head_css_no_merge)) { continue; }
-            $file_path = $this->site_config->root_path . strtok($file, '?');
-            $contents = file_get_contents($file_path);
-            $contents = $this->convertCSSUrlsToAbsolute($contents, $file);
-            $contents = string_compress($contents);
+        foreach ($files as $file) {
+            if (in_array($file, $this->head_css_no_merge)) {
+                continue;
+            }
+            $file_path       = $this->site_config->root_path . strtok($file, '?');
+            $contents        = file_get_contents($file_path);
+            $contents        = $this->convertCSSUrlsToAbsolute($contents, $file);
+            $contents        = string_compress($contents);
             $merged_contents .= $contents;
         }
 
         file_put_contents($cache_file_path, $merged_contents);
 
         return $cache_file;
-
     }
 
     /**
      * Находит в переданном CSS-коде из указанного CSS-файла выражения url(*)
      * и заменяет все пути в них на абсолютные
-     * @param string $css
-     * @param string $css_file
+     *
+     * @param string $css Содержимое из CSS файла
+     * @param string $css_file Путь к файлу
      * @return string
      */
-    public function convertCSSUrlsToAbsolute($css, $css_file){
+    public function convertCSSUrlsToAbsolute(string $css, string $css_file) {
 
-        $matches = array();
+        $matches = [];
 
         preg_match_all('/url\(([^)]+)\)/si', $css, $matches);
 
-        if ($matches){
+        if ($matches) {
 
             $css_rel_url = $this->site_config->root . dirname($css_file);
 
             list($fulls, $urls) = $matches;
 
-            foreach($urls as $i => $url){
+            foreach ($urls as $i => $url) {
 
                 $abs_url = trim($url, '\'" ');
 
@@ -1844,34 +2018,23 @@ class cmsTemplate {
                 $is_http = strpos($abs_url, 'http') === 0;
                 $is_data = strpos($abs_url, 'data:image') === 0;
 
-                if ($is_data) { continue; }
-
-                if ($is_root){
-
-                    $abs_url = $this->site_config->host . $abs_url;
-
-                } else
-
-                if ($is_http){
-
+                if ($is_data || $is_http) {
                     continue;
-
-                } else {
-
-                    $abs_url = $this->site_config->host . '/' . files_normalize_path($css_rel_url . '/' . $abs_url);
-
                 }
 
-                $tag = 'url("'.$abs_url.'")';
+                if ($is_root) {
+                    $abs_url = $this->site_config->host . $abs_url;
+                } else {
+                    $abs_url = $this->site_config->host . '/' . files_normalize_path($css_rel_url . '/' . $abs_url);
+                }
+
+                $tag = 'url("' . $abs_url . '")';
 
                 $css = str_replace($fulls[$i], $tag, $css);
-
             }
-
         }
 
         return $css;
-
     }
 
 // ========================================================================== //
@@ -1879,6 +2042,7 @@ class cmsTemplate {
 
     /**
      * Устанавливает шаблон скелета
+     *
      * @param string $layout
      * @return $this
      */
@@ -1891,6 +2055,7 @@ class cmsTemplate {
 
     /**
      * Устанавливает параметры шаблон скелета
+     *
      * @param array $layout_params
      * @return $this
      */
@@ -1903,6 +2068,7 @@ class cmsTemplate {
 
     /**
      * Возвращает название шаблона скелета
+     *
      * @param string $layout
      */
     public function getLayout() {
@@ -1911,13 +2077,17 @@ class cmsTemplate {
 
     /**
      * Возвращает HTML-разметку схемы позиций виджетов
+     *
      * @param string $name Имя шаблона
      * @return boolean|string
      */
-    public function getSchemeHTML($name = '') {
+    public function getSchemeHTML(string $name = '') {
 
         $scheme_file = $this->getSchemeHTMLFile($name);
-        if (!$scheme_file) { return false; }
+
+        if (!$scheme_file) {
+            return false;
+        }
 
         ob_start();
 
@@ -1928,17 +2098,24 @@ class cmsTemplate {
 
     /**
      * Возвращает путь к файлу схемы позиций виджетов
+     *
      * @param string $name
      * @return boolean|string
      */
-    public function getSchemeHTMLFile($name = '') {
+    public function getSchemeHTMLFile(string $name = '') {
 
-        $name = $name ? $name : $this->name;
+        if (!$name) {
+            $name = $this->name;
+        }
 
-        $scheme_file = $this->site_config->root_path.self::TEMPLATE_BASE_PATH.$name.'/scheme.';
+        $scheme_file = $this->site_config->root_path . self::TEMPLATE_BASE_PATH . $name . '/scheme.';
 
-        if (is_readable($scheme_file.'php')) { return $scheme_file.'php'; }
-        if (is_readable($scheme_file.'html')) { return $scheme_file.'html'; }
+        if (is_readable($scheme_file . 'php')) {
+            return $scheme_file . 'php';
+        }
+        if (is_readable($scheme_file . 'html')) {
+            return $scheme_file . 'html';
+        }
 
         return false;
     }
@@ -2048,40 +2225,41 @@ class cmsTemplate {
 
     /**
      * Возвращает путь к файлу шаблона
-     * @param string $relative_path Путь относительно корня шаблона. Без первого слеша
+     *
+     * @param string|array $relative_path Путь относительно корня шаблона. Без первого слеша
      * @param boolean $return_abs_path Возвращать полный путь в файловой системе, по умолчанию true
      * @param boolean $return_current_name Возвращать путь файла и имя шаблона, в котором файл нашелся, по умолчанию false
      * @return string|array|boolean
      */
     public function getTplFilePath($relative_path, $return_abs_path = true, $return_current_name = false) {
 
-        if(!is_array($relative_path)){
+        if (!is_array($relative_path)) {
 
             $exists = false;
 
             foreach ($this->inherit_names as $name) {
-                $file = self::TEMPLATE_BASE_PATH.$name.'/'.$relative_path;
-                if(is_readable($this->site_config->root_path.$file)){
-                    if($return_abs_path){
-                        $exists = $this->site_config->root_path.$file;
+                $file = self::TEMPLATE_BASE_PATH . $name . '/' . $relative_path;
+                if (is_readable($this->site_config->root_path . $file)) {
+                    if ($return_abs_path) {
+                        $exists = $this->site_config->root_path . $file;
                     } else {
                         $exists = $file;
                     }
-                    if($return_current_name){
+                    if ($return_current_name) {
                         $exists = [$name, $exists];
                     }
                     break;
                 }
             }
 
-            if(!$exists){
+            if (!$exists) {
                 $this->not_found_tpls[] = $file;
             }
 
             return $exists;
         }
 
-        foreach($relative_path as $key => $value){
+        foreach ($relative_path as $key => $value) {
             $relative_path[$key] = $this->getTplFilePath($value, $return_abs_path);
         }
 
@@ -2130,8 +2308,9 @@ class cmsTemplate {
 
     /**
      * Возвращает путь к tpl-файлу, определяя его наличие в собственном шаблоне
+     *
      * @param string $filename Путь относительно корня шаблона
-     * @param boolean $is_check Если true, то не выдаст фатальную ошибку в случае отсутствия файла
+     * @param boolean $is_check Если true, то не выдаст ошибку в случае отсутствия файла
      * @return string
      */
     public function getTemplateFileName($filename, $is_check = false) {
@@ -2140,8 +2319,11 @@ class cmsTemplate {
 
         if (!$tpl_file) {
             if (!$is_check) {
+
                 $last_not_found_tpl = end($this->not_found_tpls);
-                cmsCore::error(ERR_TEMPLATE_NOT_FOUND . ': ' . $this->site_config->root . $last_not_found_tpl);
+
+                return cmsCore::error(ERR_TEMPLATE_NOT_FOUND . ': ' . $this->site_config->root . $last_not_found_tpl);
+
             } else {
                 return false;
             }
@@ -2152,6 +2334,7 @@ class cmsTemplate {
 
     /**
      * Возвращает путь к CSS-файлу контроллера, определяя его наличие в собственном шаблоне
+     *
      * @param string $controller_name Имя контроллера
      * @param string $subfolder Подпапка в папке шаблонов контроллера
      * @return string
@@ -2170,8 +2353,10 @@ class cmsTemplate {
 
     /**
      * Возвращает путь к JavaScript-файлу, определяя его наличие в собственном шаблоне
-     * @param string $filename
-     * @return string
+     *
+     * @param string|array $filename Название файла (массив файлов) без расширения
+     *                               относительно директории /js/ шаблона
+     * @return string|array
      */
     public function getJavascriptFileName($filename) {
 
@@ -2180,7 +2365,7 @@ class cmsTemplate {
         }
 
         $filenames = [];
-        foreach ($filename as $key => $value) {
+        foreach ($filename as $value) {
             $filenames[$value] = $this->getJavascriptFileName($value);
         }
 
@@ -2189,7 +2374,9 @@ class cmsTemplate {
 
     /**
      * Возвращает путь к CSS-файлу, определяя его наличие в собственном шаблоне
+     *
      * @param string|array $filename Название файла (массив файлов) без расширения
+     *                               относительно директории /css/ шаблона
      * @return string
      */
     public function getTemplateStylesFileName($filename) {
@@ -2199,7 +2386,7 @@ class cmsTemplate {
         }
 
         $filenames = [];
-        foreach ($filename as $key => $value) {
+        foreach ($filename as $value) {
             $filenames[$value] = $this->getTemplateStylesFileName($value);
         }
 
@@ -2210,39 +2397,25 @@ class cmsTemplate {
 //============================================================================//
 
     /**
-     * Добавляет текст к выводу
-     *
+     * Синоним addOutput
+     * @deprecated
      * @param string $text
      */
     public function renderText($text) {
-        echo $this->addOutput($text);
+        return $this->addOutput($text);
     }
 
     /**
      * Выводит JSON строку и завершает работу
      *
      * @param array $data Массив для вывода
-     * @param boolean $with_header Вывод вместе с хидером Content-type
+     * @param boolean $with_header @deprecated since version 2.16.4
      */
     public function renderJSON($data, $with_header = false) {
 
         if (ob_get_length()) { ob_end_clean(); }
 
-        if ($with_header) {
-            header('Content-type: application/json; charset=utf-8');
-        }
-
-        $json = json_encode($data, JSON_UNESCAPED_UNICODE);
-
-        if ($json === false) {
-            $json = json_encode([
-                'success' => false,
-                'errors'  => true,
-                'error'   => json_last_error_msg()
-            ]);
-        }
-
-        $this->controller->halt($json);
+        cmsCore::getInstance()->response->setContent($data)->sendAndExit();
     }
 
     /**
@@ -2368,8 +2541,8 @@ class cmsTemplate {
         }, 2);
 
         if ($request->isAjax()) {
-            echo $html;
-            $this->controller->halt();
+
+            cmsCore::getInstance()->response->setContent($html)->sendAndExit();
         }
 
         if ($request->isStandard()) {
@@ -2571,9 +2744,31 @@ class cmsTemplate {
      *
      * @param string $tpl_file Название файла шаблона
      * @param array $data Массив параметров, передаваемых в шаблон
-     * @param object $request Объект запроса
+     * @param ?cmsRequest $request Объект запроса
      */
-    public function renderAsset($tpl_file, $data = [], $request = false) {
+    public function renderAsset($tpl_file, $data = [], $request = null) {
+
+        $html = $this->getRenderedAsset($tpl_file, $data, $request);
+
+        if ($request) {
+            if ($request->isAjax()) {
+                cmsCore::getInstance()->response->setContent($html)->sendAndExit();
+            }
+        }
+
+        echo $html;
+    }
+
+    /**
+     * Формирует и возвращает в виде строки HTML код assets шаблона
+     *
+     * @param string $tpl_file Название файла шаблона
+     * @param array $data Массив параметров, передаваемых в шаблон
+     * @param ?cmsRequest $request Объект запроса
+     * @param bool $min_html Сжимать HTML
+     * @return string
+     */
+    public function getRenderedAsset($tpl_file, $data = [], $request = null, $min_html = false) {
 
         cmsDebugging::pointStart('template');
 
@@ -2587,37 +2782,19 @@ class cmsTemplate {
 
         $device_type = cmsRequest::getDeviceType();
 
-        extract($data); include($tpl_file);
+        extract($data);
+
+        ob_start();
+
+        include($tpl_file);
+
+        $html = ob_get_clean();
 
         cmsDebugging::pointProcess('template', function () use($tpl_file) {
             return [
                 'data' => $this->name . ' :: renderAsset => ' . str_replace($this->site_config->root_path, '', $tpl_file)
             ];
         }, 3);
-
-        if ($request) {
-            if ($request->isAjax()) {
-                exit();
-            }
-        }
-    }
-
-    /**
-     * Формирует и возвращает в виде строки HTML код assets шаблона
-     *
-     * @param string $tpl_file Название файла шаблона
-     * @param array $data Массив параметров, передаваемых в шаблон
-     * @param object $request Объект запроса
-     * @param boolean $min_html Сжимать HTML
-     * @return string
-     */
-    public function getRenderedAsset($tpl_file, $data = [], $request = false, $min_html = false) {
-
-        ob_start();
-
-        $this->renderAsset($tpl_file, $data, $request);
-
-        $html = ob_get_clean();
 
         return ($min_html && $this->site_config->min_html) ? html_minify($html) : $html;
     }
@@ -2629,12 +2806,15 @@ class cmsTemplate {
      * @param array $data Массив параметров, передаваемых в шаблон
      * @return string
      */
-    public function renderFormField($field_type, $data = array()) {
-        $input_js_file = $this->getJavascriptFileName('fields/'.$field_type.'_input');
-        if($input_js_file){
+    public function renderFormField($field_type, $data = []) {
+
+        $input_js_file = $this->getJavascriptFileName('fields/' . $field_type . '_input');
+
+        if ($input_js_file) {
             $this->addJSFromContext($input_js_file);
         }
-        return $this->getRenderedAsset('fields/'.$field_type, $data);
+
+        return $this->getRenderedAsset('fields/' . $field_type, $data);
     }
 
 //============================================================================//
@@ -2869,8 +3049,16 @@ class cmsTemplate {
 
     /**
      * Выводит окончательный вид страницы в браузер
+     * @deprecated since version 2.16.4
      */
-    public function renderPage(){
+    public function renderPage() {
+        echo $this->getRenderedPage();
+    }
+
+    /**
+     * Возвращает окончательный вид страницы в браузер
+     */
+    public function getRenderedPage() {
 
         $core = cmsCore::getInstance();
 
@@ -2878,52 +3066,50 @@ class cmsTemplate {
 
         $layout = $this->getLayout();
 
-        $template_file = $this->getTplFilePath($layout.'.tpl.php');
+        $template_file = $this->getTplFilePath($layout . '.tpl.php');
+
+        if (!$template_file) {
+
+            return cmsCore::error(ERR_TEMPLATE_NOT_FOUND . ': ' . $this->name . ':' . $layout);
+        }
 
         $device_type = cmsRequest::getDeviceType();
 
-        if($template_file){
-
-            if($this->layout_params){
-                extract($this->layout_params);
-            }
-
-            $rows = [];
-            // Есть ли поддержка динамической схемы
-            if (!empty($this->manifest['properties']['is_dynamic_layout'])) {
-                $rows = cmsCore::getModel('widgets')->getLayoutRows($this->name);
-            }
-
-            // CSS классы для тега body
-            $body_classes = [];
-
-            $matched_pages = $core->getMatchedPages();
-            if($matched_pages && $matched_pages != [0, 1]){
-                foreach ($matched_pages as $matched_page) {
-                    if(!empty($matched_page['body_css'])){
-                        $body_classes[] = $matched_page['body_css'];
-                    }
-                }
-            } else {
-                $body_classes[] = 'icms-frontpage';
-            }
-
-            ob_start();
-
-            include($template_file);
-
-            $html = cmsEventsManager::hook('render_page', ob_get_clean());
-
-            if (!$config->min_html){
-                echo $html;
-            } else {
-                echo html_minify($html);
-            }
-
-        } else {
-            cmsCore::error(ERR_TEMPLATE_NOT_FOUND. ': '. $this->name.':'.$layout);
+        if ($this->layout_params) {
+            extract($this->layout_params);
         }
 
+        $rows = [];
+        // Есть ли поддержка динамической схемы
+        if (!empty($this->manifest['properties']['is_dynamic_layout'])) {
+            $rows = cmsCore::getModel('widgets')->getLayoutRows($this->name);
+        }
+
+        // CSS классы для тега body
+        $body_classes = [];
+
+        $matched_pages = $core->getMatchedPages();
+        if ($matched_pages && $matched_pages != [0, 1]) {
+            foreach ($matched_pages as $matched_page) {
+                if (!empty($matched_page['body_css'])) {
+                    $body_classes[] = $matched_page['body_css'];
+                }
+            }
+        } else {
+            $body_classes[] = 'icms-frontpage';
+        }
+
+        ob_start();
+
+        include($template_file);
+
+        $html = cmsEventsManager::hook('render_page', ob_get_clean());
+
+        if ($config->min_html) {
+             $html = html_minify($html);
+        }
+
+        return $html;
     }
 
 //============================================================================//
@@ -2962,18 +3148,7 @@ class cmsTemplate {
                 }
             }
 
-            $this->widgets[$widget->position][$this->widgets_group_index][] = [
-                'id'          => $widget->id,
-                'bind_id'     => $widget->bind_id,
-                'title'       => $widget->is_title ? $widget->title : false,
-                'links'       => isset($widget->links) ? $widget->links : false,
-                'wrapper'     => $widget->getWrapper(),
-                'tpl_wrap_custom' => isset($widget->tpl_wrap_custom) ? $widget->tpl_wrap_custom : '',
-                'class'       => isset($widget->css_class) ? $widget->css_class : false,
-                'class_title' => isset($widget->css_class_title) ? $widget->css_class_title : false,
-                'class_wrap'  => (!empty($widget->tpl_wrap_style) ? $widget->tpl_wrap_style : '') . (!empty($widget->css_class_wrap) ? ' ' . $widget->css_class_wrap : ''),
-                'body'        => $html
-            ];
+            $this->widgets[$widget->position][$this->widgets_group_index][] = $widget->createPositionData($html);
         }
 
         cmsDebugging::pointProcess('template', function () use($tpl_file, $widget) {

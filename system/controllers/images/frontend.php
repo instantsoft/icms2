@@ -247,10 +247,9 @@ class images extends cmsFrontend {
     }
 
     /**
-     * Этот метод устаревший, используйте класс cmsImages
+     * @deprecated используйте класс cmsImages
      */
     public function addWatermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality = 90) {
-        // функция img_add_watermark также устаревшая
         return img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality);
     }
 

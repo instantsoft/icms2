@@ -1895,6 +1895,7 @@ CREATE TABLE `{#}widgets_bind` (
   `is_tab_prev` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Объединять с предыдущим?',
   `groups_view` text COMMENT 'Показывать группам',
   `groups_hide` text COMMENT 'Не показывать группам',
+  `url_mask_not` text DEFAULT NULL COMMENT 'Отрицательные маски виджета',
   `options` text COMMENT 'Опции',
   `tpl_body` varchar(128) DEFAULT NULL,
   `tpl_wrap` varchar(128) DEFAULT NULL,

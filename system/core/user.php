@@ -37,14 +37,7 @@ class cmsUser {
     public static function getIp() {
 
         if (self::$_ip === null) {
-
-            $config = cmsConfig::getInstance();
-
-            self::$_ip = isset($_SERVER[$config->detect_ip_key]) ? $_SERVER[$config->detect_ip_key] : '127.0.0.1';
-
-            if (!filter_var(self::$_ip, FILTER_VALIDATE_IP)) {
-                self::$_ip = '127.0.0.1';
-            }
+            self::$_ip = cmsCore::getInstance()->request->getClientIp();
         }
 
         return self::$_ip;
@@ -52,7 +45,6 @@ class cmsUser {
 
     public static function setIp($ip) {
         self::$_ip = $ip;
-
     }
 
     public function __construct() {
@@ -423,6 +415,11 @@ class cmsUser {
         return self::getInstance()->is_admin;
     }
 
+    /**
+     * Используйте в контексте контроллеров $this->redirectToLogin()
+     * @deprecated
+     * @param string $back_url
+     */
     public static function goLogin($back_url = '') {
         if (!$back_url) {
             $back_url = str_replace("\r\n", '', $_SERVER['REQUEST_URI']);

@@ -4,7 +4,7 @@ class actionAdminGetTableList extends cmsAction {
 
     public function run($table, $id_field = null, $title_field = null, $default = 'zero') {
 
-        header('X-Frame-Options: DENY');
+        $this->cms_core->response->setHeader('X-Frame-Options', 'DENY');
 
         if (!$this->request->isAjax()) {
             return cmsCore::error404();

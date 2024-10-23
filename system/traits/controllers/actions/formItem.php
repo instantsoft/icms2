@@ -192,7 +192,7 @@ trait formItem {
         }
 
         if($this->request->isAjax()){
-            die($html);
+            return $this->cms_core->response->setContent($html)->sendAndExit();
         }
 
         return $html;

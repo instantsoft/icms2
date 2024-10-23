@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Основной класс InstantCMS
+ */
 class cmsCore {
 
     private static $instance;
@@ -129,6 +131,12 @@ class cmsCore {
     public $request;
 
     /**
+     * Объект ответа
+     * @var \cmsResponse
+     */
+    public $response;
+
+    /**
      * DB link
      * @var \cmsDatabase
      */
@@ -143,7 +151,9 @@ class cmsCore {
 
     private function __construct() {
 
-        $this->request = new cmsRequest($_REQUEST);
+        $this->request = new cmsRequest($_REQUEST, cmsRequest::CTX_AUTO_DETECT, $_SERVER);
+
+        $this->response = cmsResponse::getInstance();
 
         self::$language = cmsConfig::get('language');
     }
@@ -155,11 +165,7 @@ class cmsCore {
      */
     public function runHttp($request_uri) {
 
-        header('Content-type:text/html; charset=utf-8');
-
-        if (!cmsConfig::get('disable_copyright')) {
-            header('X-Powered-By: InstantCMS');
-        }
+        $this->response->setHeader('Content-type', 'text/html; charset=utf-8');
 
         // Имитация задержки для отладки
         if (cmsConfig::get('emulate_lag')) {
@@ -190,13 +196,20 @@ class cmsCore {
             $this->runController();
         }
 
-        // формируем виджеты
-        $this->runWidgets();
+        // Проверяем заголовок If-Modified-Since и
+        // ответ Last-Modified, его могут установить только контроллеры
+        if (!$this->response->isNotModified($this->request)) {
 
-        //Выводим готовую страницу
-        $template->renderPage();
+            // формируем виджеты
+            $this->runWidgets();
+
+            // Добавляем готовую страницу в ответ
+            $this->response->setContent($template->getRenderedPage());
+        }
 
         cmsEventsManager::hook('engine_stop');
+
+        return $this->response;
     }
 
 //============================================================================//
@@ -363,24 +376,6 @@ class cmsCore {
         }
 
         include_once $lib_file;
-
-        return true;
-    }
-
-    /**
-     * Загружает класс ядра из папки /system/core
-     *
-     * @param string $class
-     */
-    public static function loadCoreClass($class) {
-
-        $class_file = cmsConfig::get('root_path') . 'system/core/' . $class . '.class.php';
-
-        if (!is_readable($class_file)) {
-            self::error(ERR_CLASS_NOT_FOUND . ': ' . $class);
-        }
-
-        include_once $class_file;
 
         return true;
     }
@@ -572,7 +567,7 @@ class cmsCore {
         }
 
         if ($is_enabled) {
-            $controllers_events = $db->getRows('events FORCE INDEX (is_enabled)', '`is_enabled` = 1', '*', 'ordering ASC', true);
+            $controllers_events = $db->getRows('events', '`is_enabled` = 1', '*', 'ordering ASC', true);
         } else {
             $controllers_events = $db->getRows('events', '1', '*', 'ordering ASC', true);
         }
@@ -785,7 +780,9 @@ class cmsCore {
      */
     private function detectBrowserLanguage() {
 
-        if (empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        $accept_language = (string) $this->request->getHeader('ACCEPT_LANGUAGE', '');
+
+        if (!$accept_language) {
             return;
         }
 
@@ -796,7 +793,7 @@ class cmsCore {
             return;
         }
 
-        $user_lang = strtolower(substr((string) $_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+        $user_lang = strtolower(substr($accept_language, 0, 2));
 
         if (preg_match('/^[a-z]{2}$/', $user_lang)) {
 
@@ -826,7 +823,6 @@ class cmsCore {
 
         // если в URL присутствует знак вопроса, значит есть
         // в нем есть GET-параметры которые нужно распарсить
-        // и добавить в массив $_REQUEST
         $query_str = '';
         $pos_que = mb_strpos($uri, '?');
         if ($pos_que !== false) {
@@ -842,10 +838,6 @@ class cmsCore {
             parse_str($query_str, $query_data);
 
             $this->uri_query = $query_data;
-
-            // добавляем к полученным данным $_REQUEST
-            // именно в таком порядке, чтобы POST имел преимущество над GET
-            $_REQUEST = array_merge($query_data, $_REQUEST);
         }
 
         // Смена языка включена
@@ -1075,6 +1067,13 @@ class cmsCore {
 
         if (is_array($widgets_list)) {
 
+            $full_uri = $this->uri . ($this->uri_query ? '?' . http_build_query($this->uri_query) : '');
+
+            // Для исключения главной страницы
+            if (!$full_uri) {
+                $full_uri = '/';
+            }
+
             $device_type = cmsRequest::getDeviceType();
             $layout = $template->getLayout();
             $user = cmsUser::getInstance();
@@ -1084,6 +1083,15 @@ class cmsCore {
             }
 
             foreach ($widgets_list as $widget) {
+
+                // Проверяем отрицательные маски виджета
+                if (!empty($widget['url_mask_not'])) {
+                    foreach ($widget['url_mask_not'] as $mask) {
+                        if (preg_match("/^".string_mask_to_regular($mask)."$/iu", $full_uri)) {
+                            continue 2;
+                        }
+                    }
+                }
 
                 // не выводим виджеты контроллеров, которые отключены
                 if (!empty($widget['controller']) && !cmsController::enabled($widget['controller'])) {
@@ -1292,7 +1300,7 @@ class cmsCore {
 //============================================================================//
 
     /**
-     * Показывает сообщение об ошибке и завершает работу
+     * Показывает сообщение об ошибке 503 и завершает работу
      *
      * @param string $message
      * @param string $details
@@ -1300,24 +1308,16 @@ class cmsCore {
      */
     public static function error($message, $details = '') {
 
-        if (ob_get_length()) {
-            ob_end_clean();
-        }
-
-        http_response_code(503);
-
         $is_debug = cmsConfig::get('debug');
 
-        if (!$is_debug) {
-            $message = LANG_ERROR_503;
-            $details = LANG_ERROR_503_HINT;
-        }
-
-        die(cmsTemplate::getInstance()->getRenderedAsset('errors/error', [
-            'is_debug' => $is_debug,
-            'message'  => $message,
-            'details'  => $details
-        ], self::getInstance()->request, true));
+        self::getInstance()->displayError(
+            503,
+            cmsTemplate::getInstance()->getRenderedAsset('errors/error', [
+                'is_debug' => $is_debug,
+                'message'  => !$is_debug ? LANG_ERROR_503 : $message,
+                'details'  => !$is_debug ? LANG_ERROR_503_HINT : $details
+            ], false, true)
+        );
     }
 
     /**
@@ -1329,22 +1329,14 @@ class cmsCore {
      */
     public static function errorForbidden($message = '', $show_login_link = false) {
 
-        $result = cmsEventsManager::hook('error_403', self::getInstance()->uri);
-
-        if ($result === true) {
-            return false;
-        }
-
-        if (ob_get_length()) {
-            ob_end_clean();
-        }
-
-        http_response_code(403);
-
-        die(cmsTemplate::getInstance()->getRenderedAsset('errors/forbidden', [
-            'message'         => $message,
-            'show_login_link' => $show_login_link
-        ], false, true));
+        self::getInstance()->displayError(
+            403,
+            cmsTemplate::getInstance()->getRenderedAsset('errors/forbidden', [
+                'message'         => $message,
+                'show_login_link' => $show_login_link
+            ], false, true),
+            'error_403'
+        );
     }
 
     /**
@@ -1354,19 +1346,11 @@ class cmsCore {
      */
     public static function error404() {
 
-        $result = cmsEventsManager::hook('error_404', self::getInstance()->uri);
-
-        if ($result === true) {
-            return false;
-        }
-
-        if (ob_get_length()) {
-            ob_end_clean();
-        }
-
-        http_response_code(404);
-
-        die(cmsTemplate::getInstance()->getRenderedAsset('errors/notfound', [], false, true));
+        self::getInstance()->displayError(
+            404,
+            cmsTemplate::getInstance()->getRenderedAsset('errors/notfound', [], false, true),
+            'error_404'
+        );
     }
 
     /**
@@ -1376,60 +1360,38 @@ class cmsCore {
      */
     public static function errorMaintenance() {
 
-        if (ob_get_length()) {
-            ob_end_clean();
-        }
-
-        http_response_code(503);
-
-        die(cmsTemplate::getInstance()->getRenderedAsset('errors/offline', [
-            'reason' => cmsConfig::get('off_reason')
-        ], false, true));
+        self::getInstance()->displayError(
+            503,
+            cmsTemplate::getInstance()->getRenderedAsset('errors/offline', [
+                'reason' => cmsConfig::get('off_reason')
+            ], false, true)
+        );
     }
 
     /**
-     * Обработка запроса If-Modified-Since
-     * Сервер отправит обратно запрошенный ресурс с статусом 200, только если он был изменён после указанной даты
-     * Если запрос не был изменён после указанной даты, ответ будет 304 без какого-либо тела,
-     * заголовок Last-Modified при этом будет содержать дату последней модификации.
+     * Выводит ошибку с соответствующим кодом ответа
+     * И завершает работу
      *
-     * @param string $lastmod Дата
+     * @param int $http_code HTTP код
+     * @param string $html Тело страницы
+     * @param ?string $hook_name Имя хука
      * @return void
      */
-    public static function respondIfModifiedSince($lastmod) {
+    public function displayError(int $http_code, string $html, $hook_name = null) {
 
-        if (!$lastmod) {
-            return;
-        }
+        if ($hook_name) {
 
-        $last_modified_unix = strtotime($lastmod);
+            $result = cmsEventsManager::hook($hook_name, $this->uri);
 
-        $last_modified = gmdate("D, d M Y H:i:s \G\M\T", $last_modified_unix);
-
-        $if_modified_since = false;
-
-        if (isset($_ENV['HTTP_IF_MODIFIED_SINCE'])) {
-            $if_modified_since = strtotime(substr($_ENV['HTTP_IF_MODIFIED_SINCE'], 5));
-        }
-
-        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
-            $if_modified_since = strtotime(substr($_SERVER['HTTP_IF_MODIFIED_SINCE'], 5));
-        }
-
-        if ($if_modified_since && $if_modified_since >= $last_modified_unix) {
-
-            if (ob_get_length()) {
-                ob_end_clean();
+            if ($result === true) {
+                return;
             }
-
-            http_response_code(304);
-
-            die();
         }
 
-        header('Last-Modified: ' . $last_modified);
-
-        return;
+        $this->response->
+                setStatusCode($http_code)->
+                setContent($html)->
+                sendAndExit();
     }
 
 //============================================================================//

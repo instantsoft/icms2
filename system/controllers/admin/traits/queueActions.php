@@ -47,7 +47,7 @@ trait queueActions {
 
         if ($this->request->isAjax()) {
 
-            header('X-Frame-Options: DENY');
+            $this->cms_core->response->setHeader('X-Frame-Options', 'DENY');
 
             $filter     = [];
             $filter_str = $this->request->get('filter', '');

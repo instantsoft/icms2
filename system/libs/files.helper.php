@@ -402,128 +402,18 @@ function file_save_from_url($url, $destination) {
 /**
  * Накладывает ваттермарк на изображение
  *
- * УСТАРЕВШАЯ ФУНКЦИЯ
+ * @deprecated Используйте класс cmsImages
  *
- * @param string $src_file Путь (относительно папки upload) к файлу, на который нужно наложить ватермарк
- * @param string $wm_file Путь (относительно папки upload) к файлу ватермарка
- * @param string $wm_origin Позиция ватермарка: top-left|top|top-right|left|center|right|bottom-left|bottom|bottom-right
- * @param int $wm_margin Отступы от края изображения в px
- * @param int $quality Качество результирующего изображения от 1 до 100
  * @return boolean
  */
-function img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality=90){
-
-    $config = cmsConfig::getInstance();
-
-    $src_file = $config->upload_path.$src_file;
-    $wm_file  = $config->upload_path.$wm_file;
-
-    //
-    // Основное изображение
-    //
-    $img_size = getimagesize($src_file);
-    if ($img_size === false) { return false; }
-
-    $format = strtolower(substr($img_size['mime'], strpos($img_size['mime'], '/') + 1));
-    $icfunc = 'imagecreatefrom'.$format;
-    $igfunc = 'image'.$format;
-
-    if (!function_exists($icfunc)) { return false; }
-    if (!function_exists($igfunc)) { return false; }
-
-    $img_width  = $img_size[0];
-    $img_height = $img_size[1];
-
-    $img = $icfunc($src_file);
-
-    if ($format == 'png' || $format == 'gif') {
-        imagealphablending($img, true);
-        imagesavealpha($img, true);
-    }
-
-    //
-    // Ватермарк
-    //
-    $wm_size = getimagesize($wm_file);
-    if ($wm_size === false) { return false; }
-
-    $wm_width  = $wm_size[0];
-    $wm_height = $wm_size[1];
-
-    $wm_format = strtolower(substr($wm_size['mime'], strpos($wm_size['mime'], '/' ) + 1));
-    $wm_func   = 'imagecreatefrom'.$wm_format;
-    if (!function_exists($wm_func)) { return false; }
-
-    $wm = $wm_func($wm_file);
-
-    if (!$wm_margin) { $wm_margin = 0; }
-
-    $x = 0; $y = 0;
-
-    switch($wm_origin){
-        case 'top-left':
-            $x = $wm_margin;
-            $y = $wm_margin;
-            break;
-        case 'top-center':
-            $x = ($img_width/2) - ($wm_width/2);
-            $y = $wm_margin;
-            break;
-        case 'top-right':
-            $x = ($img_width - $wm_width - $wm_margin);
-            $y = $wm_margin;
-            break;
-        case 'left':
-            $x = $wm_margin;
-            $y = ($img_height/2) - ($wm_height/2);
-            break;
-        case 'center':
-            $x = ($img_width/2) - ($wm_width/2);
-            $y = ($img_height/2) - ($wm_height/2);
-            break;
-        case 'right':
-            $x = ($img_width - $wm_width - $wm_margin);
-            $y = ($img_height/2) - ($wm_height/2);
-            break;
-        case 'bottom-left':
-            $x = $wm_margin;
-            $y = ($img_height - $wm_height - $wm_margin);
-            break;
-        case 'bottom':
-            $x = ($img_width/2) - ($wm_width/2);
-            $y = ($img_height - $wm_height - $wm_margin);
-            break;
-        case 'bottom-right':
-            $x = ($img_width - $wm_width - $wm_margin);
-            $y = ($img_height - $wm_height - $wm_margin);
-            break;
-    }
-
-    imagecopyresampled($img, $wm, $x, $y, 0, 0, $wm_width, $wm_height, $wm_width, $wm_height);
-
-    if ($format == 'jpeg') {
-        imageinterlace($img, 1);
-    }
-
-    if ($format == 'png') {
-        $quality = (10 - ceil($quality / 10));
-    }
-    if ($format == 'gif') {
-        $quality = NULL;
-    }
-
-    $igfunc($img, $src_file, $quality);
-
-    imagedestroy($img);
-    imagedestroy($wm);
-
+function img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality = 90) {
     return true;
-
 }
+
 /**
  * Изменяет размер изображения $src, сохраняя измененное в $dest
  *
- * УСТАРЕВШАЯ ФУНКЦИЯ
+ * @deprecated Используйте класс cmsImages
  *
  * @param string $src Полный путь к исходному изображению
  * @param string $dest Полный путь куда сохранять измененное изображение
@@ -535,7 +425,9 @@ function img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality
  */
 function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false, $quality = 95) {
 
-    if (!file_exists($src)) { return false; }
+    if (!file_exists($src)) {
+        return false;
+    }
 
     $upload_dir = dirname($dest);
 
@@ -546,7 +438,6 @@ function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false
         if (!is_writable($upload_dir)) {
             return false;
         }
-
     }
 
     try {
@@ -555,15 +446,15 @@ function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false
         return false;
     }
 
-    if($is_square){
+    if ($is_square) {
 
         $image->crop($maxwidth, $maxheight, false, cmsImages::CROPCENTER);
 
     } else {
 
-        if(!$maxwidth || !$maxheight){
+        if (!$maxwidth || !$maxheight) {
 
-            if(!$maxwidth){
+            if (!$maxwidth) {
                 $image->resizeToHeight($maxheight);
             } else {
                 $image->resizeToWidth($maxwidth);
@@ -572,13 +463,11 @@ function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false
         } else {
             $image->resizeToBestFit($maxwidth, $maxheight);
         }
-
     }
 
     $image->save($dest, null, $quality);
 
     return true;
-
 }
 
 /**

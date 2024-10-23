@@ -4,17 +4,12 @@ class actionContentItemView extends cmsAction {
 
     private $viewed_moderators = false;
 
-    public function run(){
+    public function run() {
 
         list($ctype, $item) = $this->getItemAndCtype();
 
         $props = $props_values = false;
         $props_fieldsets = $props_fields = false;
-
-        // добавляем Last-Modified
-        if(!$this->cms_user->is_logged){
-            cmsCore::respondIfModifiedSince($item['date_last_modified']);
-        }
 
         // Проверяем прохождение модерации
         $is_moderator = $this->controller_moderation->userIsContentModerator($ctype['name'], $this->cms_user->id, $item);
@@ -123,7 +118,7 @@ class actionContentItemView extends cmsAction {
 
                 }
 
-                cmsUser::goLogin();
+                return $this->redirectToLogin();
             }
         }
 
@@ -479,6 +474,9 @@ class actionContentItemView extends cmsAction {
 
         $tpl_file = $this->cms_template->getTemplateFileName('controllers/content/item_view_' . $ctype['name'], true) ?
                 'item_view_' . $ctype['name'] : 'item_view';
+
+        // добавляем заголовок Last-Modified
+        $this->cms_core->response->setLastModified($item['date_last_modified']);
 
         return $this->cms_template->render($tpl_file, [
             'item_seo'         => $item_seo,

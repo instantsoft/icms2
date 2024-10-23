@@ -6,7 +6,7 @@ class redirect extends cmsFrontend {
 
     public function actionIndex() {
 
-        header('X-Frame-Options: DENY');
+        $this->cms_core->response->setHeader('X-Frame-Options', 'DENY');
 
         $url = trim(urldecode($this->request->get('url', '')));
         if (!$url) {
@@ -27,11 +27,13 @@ class redirect extends cmsFrontend {
 
         if (!empty($this->options['is_check_refer'])) {
 
-            if (empty($_SERVER['HTTP_REFERER'])) {
+            $referer = $this->request->getHeader('REFERER');
+
+            if (!$referer) {
                 return cmsCore::error404();
             }
 
-            if (strpos($_SERVER['HTTP_REFERER'], $this->cms_config->protocol . $_SERVER['HTTP_HOST']) !== 0) {
+            if (strpos($referer, $this->cms_config->host) !== 0) {
                 return cmsCore::error404();
             }
         }

@@ -923,8 +923,8 @@ class cmsController {
 //============================================================================//
 //============================================================================//
 
-    public function halt($text='') {
-        die((string)$text);
+    public function halt($text = '') {
+        $this->cms_core->response->setContent($text)->sendAndExit();
     }
 
     public function getUniqueKey($params) {
@@ -1079,24 +1079,35 @@ class cmsController {
      */
     public function redirect($url, $code = 303) {
 
-        // Не должно быть, иначе нотис
-        // CWE-113
-        $url = str_replace("\r\n", '', $url);
-
         list($url, $code) = cmsEventsManager::hook('redirect', [$url, $code]);
 
         if ($this->request->isAjax()) {
 
-            $this->cms_template->renderAsset('ui/redirect_continue', [
+            $this->cms_core->response->setContent($this->cms_template->getRenderedAsset('ui/redirect_continue', [
                 'redirect_url' => $url
-            ], $this->request);
+            ]));
 
         } else {
 
-            header('Location: ' . $url, true, $code);
+            $this->cms_core->response->redirect($url, $code);
         }
 
-        $this->halt();
+        return $this->cms_core->response->sendAndExit();
+    }
+
+    /**
+     * Выполняет редирект на страницу авторизации
+     *
+     * @param string $back_url
+     * @return void
+     */
+    public function redirectToLogin(string $back_url = '') {
+
+        if (!$back_url) {
+            $back_url = rel_to_href($this->cms_core->uri_before_remap);
+        }
+
+        return $this->redirectTo('auth', 'login', [], ['back' => $back_url]);
     }
 
     /**
@@ -1146,13 +1157,13 @@ class cmsController {
 
         $back_url = href_to_home();
 
-        if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'http') === 0) {
+        $referer = $this->request->getHeader('REFERER');
 
-            $refer = $_SERVER['HTTP_REFERER'];
+        if ($referer && strpos($referer, 'http') === 0) {
 
-            if (strpos($refer, $this->cms_config->protocol . $_SERVER['HTTP_HOST']) === 0 &&
-                    strpos($refer, '"') === false && strpos($refer, "'") === false) {
-                $back_url = $refer;
+            if (strpos($referer, $this->cms_config->host) === 0 &&
+                    strpos($referer, '"') === false && strpos($referer, "'") === false) {
+                $back_url = $referer;
             }
         }
 

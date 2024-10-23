@@ -12,7 +12,7 @@ class actionContentItemsFromFriends extends cmsAction {
         }
 
         if (!$this->cms_user->is_logged) {
-            return cmsUser::goLogin(href_to($ctype['name'], 'from_friends'));
+            return $this->redirectToLogin(href_to($ctype['name'], 'from_friends'));
         }
 
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)

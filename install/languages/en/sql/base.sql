@@ -1896,6 +1896,7 @@ CREATE TABLE `{#}widgets_bind` (
   `is_tab_prev` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Group with the previous?',
   `groups_view` text COMMENT 'Show to groups',
   `groups_hide` text COMMENT 'Do not show to groups',
+  `url_mask_not` text DEFAULT NULL COMMENT 'Negative widget masks',
   `options` text COMMENT 'Options',
   `tpl_body` varchar(128) DEFAULT NULL,
   `tpl_wrap` varchar(128) DEFAULT NULL,

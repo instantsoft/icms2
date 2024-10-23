@@ -27,7 +27,7 @@ class actionContentItemAdd extends cmsAction {
         if (!cmsUser::isAllowed($ctype['name'], 'add') && !$permissions['can_add']) {
             if (!cmsUser::isAllowed($ctype['name'], 'add_to_parent')) {
                 if(!$this->cms_user->is_logged){
-                    return cmsUser::goLogin();
+                    return $this->redirectToLogin();
                 }
                 return cmsCore::error404();
             }

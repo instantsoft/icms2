@@ -478,7 +478,7 @@
     define('LANG_CP_WIDGET_PAGE_BODY_CSS',      'CSS классы для тега body страницы');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Положительные маски');
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Отрицательные маски');
-    define('LANG_CP_WIDGET_URL_MASK_NOT_HINT',  'На страницах, соответствующим этим маскам, виджет не будет показан');
+    define('LANG_CP_WIDGET_URL_MASK_NOT_HINT',  'На страницах, соответствующим этим маскам, виджет не будет показан. Для указания главной страницы используйте косую черту (слэш).');
     define('LANG_CP_WIDGETS_UNUSED',            'Неиспользуемые виджеты');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Поместите сюда виджеты которые нужно временно скрыть или переместить на другую страницу без потери настроек');
     define('LANG_CP_WIDGETS_BINDED',            'Привязываемые виджеты');
@@ -579,7 +579,6 @@
     define('LANG_CP_SETTINGS_META_NO_DEFAULT_HINT',  'Если выключено, эти слова будут отображаться на страницах с не заданными подобными параметрами');
     define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Добавлять номера страниц в тег title и meta description при пагинации');
     define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Добавлять в тег title страницы название сайта');
-    define('LANG_CP_SETTINGS_SET_HEAD_PRELOAD',  'Формировать заголовки HTTP Preload');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');
     define('LANG_CP_SUBMIT_COMPILE',            'Сохранить и скомпилировать %s');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления по умолчанию');

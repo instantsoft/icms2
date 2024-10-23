@@ -131,39 +131,44 @@ function href_to_abs($controller, $action = '', $params = false, $query = []){
 /**
  * Возвращает ссылку на указанное действие контроллера без добавления корня URL
  *
- * @param string $controller
- * @param string $action
+ * @param string $controller Имя контроллера
+ * @param string $action Имя действия
  * @param array|string|integer $params Параметры, массив
  * @param array $query Параметры строки запроса
  * @return string
  */
-function href_to_rel($controller, $action = '', $params = false, $query = []){
+function href_to_rel($controller, $action = '', $params = false, $query = []) {
 
     $controller = trim($controller, '/ ');
 
     $ctype_default = cmsConfig::get('ctype_default');
 
-    if ($ctype_default && $action && in_array($controller, $ctype_default)){
-        if (preg_match('/([a-z0-9\-\/{}]+)(\.html|\/view\-[a-z0-9\-_]+)$/i', $action)){
+    if ($ctype_default && $action && in_array($controller, $ctype_default)) {
+        if (preg_match('/[a-z0-9\-\/{}]+(\.html|\/view\-[a-z0-9\-_]+)$/i', $action)) {
             $controller = '';
         }
     }
 
     $controller_alias = cmsCore::getControllerAliasByName($controller);
-    if ($controller_alias) { $controller = $controller_alias; }
-
-    $href = $controller;
-
-    if($action){ $href .= '/' . $action; }
-    if($params){
-        if (is_array($params)){
-            $href .= '/' . implode('/', $params);
-        } else {
-            $href .= '/' . $params;
-        }
+    if ($controller_alias) {
+        $controller = $controller_alias;
     }
 
-    $href = trim($href, '/');
+    $url_parts = [];
+
+    if ($controller) {
+        $url_parts[] = $controller;
+    }
+
+    if ($action) {
+        $url_parts[] = $action;
+    }
+
+    if ($params) {
+        $url_parts[] = is_array($params) ? implode('/', $params) : $params;
+    }
+
+    $href = implode('/', $url_parts);
 
     if ($query) {
         $href .= '?' . http_build_query($query, '', '&');
@@ -174,16 +179,26 @@ function href_to_rel($controller, $action = '', $params = false, $query = []){
 
 /**
  * Возвращает ссылку на текущую страницу
- * @param boolean $add_host
+ *
+ * @param bool $add_host Добавлять http://ваш-сайт.ру
  * @return string
  */
-function href_to_current($add_host = false){
-    $lang_href = cmsCore::getLanguageHrefPrefix();
-    $lang_href = ($lang_href ? '/'.$lang_href : '');
-    if($add_host){
-        return cmsConfig::get('host').$lang_href.$_SERVER['REQUEST_URI'];
+function href_to_current($add_host = false) {
+
+    static $rel_url = null;
+
+    if ($rel_url === null) {
+
+        $lang_href = cmsCore::getLanguageHrefPrefix();
+        $lang_href = ($lang_href ? '/' . $lang_href : '');
+
+        $rel_url = $lang_href . cmsCore::getInstance()->request->getServer('REQUEST_URI');
+    }
+
+    if ($add_host) {
+        return cmsConfig::get('host') . $rel_url;
     } else {
-        return $lang_href.$_SERVER['REQUEST_URI'];
+        return $rel_url;
     }
 }
 
@@ -197,27 +212,35 @@ function href_to_home($add_host = false){
 
 /**
  * Возвращает отформатированную строку аттрибутов тега
+ *
  * @param array $attributes Атрибуты тега название=>значение
  * @param boolean $unset_class_key Не формировать CSS класс
  * @return string
  */
 function html_attr_str($attributes, $unset_class_key = true) {
-    $attr_str = '';
-    if($unset_class_key){
+
+    if (!$attributes || !is_array($attributes)) {
+        return '';
+    }
+
+    $attr_parts = [];
+
+    if ($unset_class_key) {
         unset($attributes['class']);
     }
-    if (is_array($attributes)) {
-        foreach ($attributes as $key => $val) {
-            if (is_bool($val)) {
-                if ($val === true) {
-                    $attr_str .= "{$key} ";
-                }
-                continue;
+
+    foreach ($attributes as $key => $val) {
+        if (is_bool($val)) {
+            if ($val) {
+                $attr_parts[] = $key;
             }
-            $attr_str .= $key . '="' . html($val, false) . '" ';
+        } else {
+            // Формируем строку атрибута с экранированием значения
+            $attr_parts[] = $key . '="' . html($val, false) . '"';
         }
     }
-    return $attr_str;
+
+    return implode(' ', $attr_parts) . ' ';
 }
 
 /**

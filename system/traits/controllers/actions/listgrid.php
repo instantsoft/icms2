@@ -149,7 +149,7 @@ trait listgrid {
 
         if ($this->request->isAjax()) {
 
-            header('X-Frame-Options: DENY');
+            $this->cms_core->response->setHeader('X-Frame-Options', 'DENY');
 
             // Если надо сохранить одно значение из строки
             if ($this->request->has('save_row_field')) {

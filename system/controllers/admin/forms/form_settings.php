@@ -6,6 +6,8 @@ class formAdminSettings extends cmsForm {
 
     public function init() {
 
+        $host = parse_url(cmsConfig::get('host'), PHP_URL_HOST);
+
         $is_css_cache = cmsCore::getFilesList('cache/static/css', '*.css');
         $is_js_cache  = cmsCore::getFilesList('cache/static/js', '*.js');
         $ctypes       = cmsCore::getModel('content')->getContentTypes();
@@ -153,10 +155,6 @@ class formAdminSettings extends cmsForm {
                     ]),
                     new fieldCheckbox('page_num_in_title', [
                         'title' => LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE
-                    ]),
-                    new fieldCheckbox('set_head_preload', [
-                        'title' => LANG_CP_SETTINGS_SET_HEAD_PRELOAD,
-                        'hint'  => '<a href="https://w3c.github.io/preload/" target="_blank">HTTP Preload</a>'
                     ])
                 ]
             ],
@@ -407,7 +405,7 @@ class formAdminSettings extends cmsForm {
                     new fieldString('cookie_domain', [
                         'title'  => LANG_CP_SETTINGS_COOKIE_DOMAIN,
                         'hint'   => LANG_CP_SETTINGS_COOKIE_DOMAIN_HINT,
-                        'suffix' => '<span class="auto_copy_value ajaxlink" data-value="' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . '">' . LANG_CP_SETTINGS_CURRENT_DOMAIN . $_SERVER['HTTP_HOST'] . '</span>'
+                        'suffix' => '<span class="auto_copy_value ajaxlink" data-value="' . str_replace('www.', '', $host) . '">' . LANG_CP_SETTINGS_CURRENT_DOMAIN . $host . '</span>'
                     ])
                 ]
             ],

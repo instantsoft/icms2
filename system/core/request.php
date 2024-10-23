@@ -2,6 +2,13 @@
 /**
  * Класс для работы с запросами/параметрами,
  * передаваемыеми в контроллеры
+ *
+ * @method bool hasHeader(string $key) Проверяет наличие заголовка запроса
+ * @method bool hasServer(string $key) Проверяет наличие значение ключа в массиве $this->server
+ * @method mixed getHeader(string $key, mixed $default) Возвращает значение заголовка запроса
+ * @method mixed getServer(string $key, mixed $default) Возвращает значение в массиве $this->server
+ * @method void setHeader(string $key, mixed $value) Устанавливает заголовок запроса
+ * @method void setServer(string $key, mixed $value) Устанавливает значение в $this->server
  */
 class cmsRequest {
 
@@ -29,6 +36,24 @@ class cmsRequest {
     private $data = [];
 
     /**
+     * Массив данных сервера
+     * @var array
+     */
+    private $server = [];
+
+    /**
+     * Заголовки запроса (берутся из $_SERVER)
+     * @var array
+     */
+    private $header = [];
+
+    /**
+     * HTTP метод запроса
+     * @var ?string
+     */
+    protected $method = null;
+
+    /**
      * Текущий контекст запроса
      * @var integer
      */
@@ -49,18 +74,46 @@ class cmsRequest {
 
     /**
      * Создает объект запроса
-     * @param array $data Параметры для контроллера
+     *
+     * @param array $data Массив параметров, например $_REQUEST
      * @param integer $context Контекст (если не указан, определяется автоматически)
+     * @param array $server Массив параметров сервера, например $_SERVER
      */
-    public function __construct($data, $context = cmsRequest::CTX_AUTO_DETECT) {
+    public function __construct(array $data, int $context = self::CTX_AUTO_DETECT, array $server = []) {
 
         $this->setData($data);
 
-        if ($context == cmsRequest::CTX_AUTO_DETECT) {
+        $this->setServerData($server);
+
+        if ($context == self::CTX_AUTO_DETECT) {
             $this->context = $this->detectContext();
         } else {
             $this->context = $context;
         }
+    }
+
+    /**
+     * Ловим методы, работающие со свойствами
+     * get|set|hasHeader, get|set|hasServer
+     *
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     * @throws BadMethodCallException
+     */
+    public function __call($name, $arguments) {
+
+        $action = substr($name, 0, 3);
+
+        if (!in_array($action, ['get', 'set', 'has'], true)) {
+            throw new BadMethodCallException('No such method exists: ' . $name);
+        }
+
+        $key = strtolower(substr($name, 3));
+
+        array_unshift($arguments, $key);
+
+        return call_user_func_array([$this, $action . 'Property'], $arguments);
     }
 
 //============================================================================//
@@ -71,8 +124,8 @@ class cmsRequest {
      * @return integer
      */
     private function detectContext() {
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-                $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+
+        if ($this->getHeader('X_REQUESTED_WITH') === 'XMLHttpRequest') {
             return cmsRequest::CTX_AJAX;
         } else {
             return cmsRequest::CTX_STANDARD;
@@ -81,6 +134,7 @@ class cmsRequest {
 
     /**
      * Возвращает текущий контекст использования
+     *
      * @return integer
      */
     public function getContext() {
@@ -89,6 +143,7 @@ class cmsRequest {
 
     /**
      * Устанавливает текущий контекст использования
+     *
      * @param integer $context
      * @return $this
      */
@@ -101,6 +156,7 @@ class cmsRequest {
 
     /**
      * Возвращает true, если запрос вызван через URL
+     *
      * @return boolean
      */
     public function isStandard() {
@@ -109,6 +165,7 @@ class cmsRequest {
 
     /**
      * Возвращает true, если запрос вызван другим контроллером
+     *
      * @return boolean
      */
     public function isInternal() {
@@ -117,6 +174,9 @@ class cmsRequest {
 
     /**
      * Возвращает true, если запрос вызван через AJAX
+     *
+     * @see https://wikipedia.org/wiki/List_of_Ajax_frameworks#JavaScript
+     *
      * @return boolean
      */
     public function isAjax() {
@@ -125,11 +185,15 @@ class cmsRequest {
 
     /**
      * Возвращает тип контекста запроса
+     *
      * @return integer
      */
     public function getType() {
-        if (isset($_SERVER['HTTP_ICMS_REQUEST_TYPE']) && is_numeric($_SERVER['HTTP_ICMS_REQUEST_TYPE'])) {
-            return $_SERVER['HTTP_ICMS_REQUEST_TYPE'];
+
+        $type = $this->getHeader('ICMS_REQUEST_TYPE');
+
+        if ($type && is_numeric($type)) {
+            return $type;
         } else {
             return self::CTX_TYPE_STANDARD;
         }
@@ -137,6 +201,7 @@ class cmsRequest {
 
     /**
      * Возвращает true, если тип контекста запроса для модального окна
+     *
      * @return boolean
      */
     public function isTypeModal() {
@@ -145,6 +210,7 @@ class cmsRequest {
 
     /**
      * Возвращает true, если тип контекста запроса для API
+     *
      * @return boolean
      */
     public function isTypeApi() {
@@ -156,15 +222,17 @@ class cmsRequest {
 
     /**
      * Проверяет наличие переменной запроса
+     *
      * @param string $var Название переменной
      * @return boolean
      */
-    public function has($var) {
+    public function has(string $var) {
         return isset($this->data[$var]);
     }
 
     /**
      * Проверяет наличие переменной по переданной вложенности
+     *
      * @return boolean
      */
     public function hasInArray() {
@@ -180,10 +248,11 @@ class cmsRequest {
 
     /**
      * Проверяет наличие переменной в GET запросе
+     *
      * @param string $var Название переменной
      * @return boolean
      */
-    public function hasInQuery($var) {
+    public function hasInQuery(string $var) {
 
         $query = cmsCore::getInstance()->uri_query;
 
@@ -196,12 +265,13 @@ class cmsRequest {
 
     /**
      * Возвращает параметр из запроса
-     * @param string $var Название переменной
+     *
+     * @param string $var Название переменной путь до ключа через двоеточие
      * @param mixed $default Значение по умолчанию, если в запросе переменной нет
      * @param string $var_type Тип переменной
      * @return mixed
      */
-    public function get($var, $default = false, $var_type = null) {
+    public function get(string $var, mixed $default = false, $var_type = null) {
 
         //если значение не определено, возвращаем умолчание
 
@@ -246,21 +316,28 @@ class cmsRequest {
 
     /**
      * Возвращает все имеющиеся параметры
+     *
      * @return array
      */
     public function getAll() {
         return $this->data;
     }
 
+    /**
+     * Псевдоним getAll
+     *
+     * @return array
+     */
     public function getData() {
         return $this->getAll();
     }
 
     /**
      * Устанавливает параметры текущего запроса
+     *
      * @param array $data
      */
-    public function setData($data) {
+    public function setData(array $data) {
 
         $this->data = $data;
 
@@ -269,15 +346,143 @@ class cmsRequest {
 
     /**
      * Устанавливает значение параметра текущего запроса
+     *
      * @param string $name Название параметра
      * @param mixed $value Значение параметра
      * @return $this
      */
-    public function set($name, $value) {
+    public function set(string $name, mixed $value) {
 
         $this->data[$name] = $value;
 
         return $this;
+    }
+
+    /**
+     * Возвращает значение ключа в свойстве
+     *
+     * @param string $prop Имя свойства
+     * @param string $key Ключ в массиве
+     * @param mixed $default Значение по умолчанию
+     * @return mixed
+     */
+    private function getProperty(string $prop, string $key, mixed $default = null) {
+        return $this->hasProperty($prop, $key) ? $this->{$prop}[$key] : $default;
+    }
+
+    /**
+     * Устанавливает значение ключа в свойстве
+     *
+     * @param string $prop Имя свойства
+     * @param string $key Ключ в массиве
+     * @param mixed $value Значение
+     */
+    private function setProperty(string $prop, string $key, mixed $value) {
+        $this->{$prop}[$key] = $value;
+    }
+
+    /**
+     * Проверяет наличие ключа в свойстве
+     *
+     * @param string $prop Имя свойства
+     * @param string $key Ключ в массиве
+     * @return bool
+     */
+    private function hasProperty(string $prop, string $key) {
+        return array_key_exists($key, $this->{$prop});
+    }
+
+    /**
+     * Устанавливает массив параметров сервера и заголовки
+     *
+     * @param array $server
+     */
+    public function setServerData(array $server) {
+
+        $this->server = $server;
+
+        foreach ($server as $key => $value) {
+            if (strpos($key, 'HTTP_') === 0) {
+                $this->header[substr($key, 5)] = $value;
+            } elseif (in_array($key, ['CONTENT_TYPE', 'CONTENT_LENGTH', 'CONTENT_MD5'], true) && $value !== '') {
+                $this->header[$key] = $value;
+            }
+        }
+    }
+
+    /**
+     * Проверяет, является ли метод запроса указанного типа
+     *
+     * @param string $method Метод запроса в верхнем регистре (GET, POST и т.д.)
+     */
+    public function isMethod(string $method) {
+        return $this->getMethod() === strtoupper($method);
+    }
+
+    /**
+     * Проверяет, является ли метод безопасным
+     *
+     * @see https://tools.ietf.org/html/rfc7231#section-4.2.1
+     * @return bool
+     */
+    public function isMethodSafe() {
+        return in_array($this->getMethod(), ['GET', 'HEAD', 'OPTIONS', 'TRACE']);
+    }
+
+    /**
+     * Проверяет, является ли метод идемпотентным
+     *
+     * @return bool
+     */
+    public function isMethodIdempotent() {
+        return in_array($this->getMethod(), ['HEAD', 'GET', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'PURGE']);
+    }
+
+    /**
+     * Проверяет, является ли метод кэшируемым
+     *
+     * @see https://tools.ietf.org/html/rfc7231#section-4.2.3
+     * @return bool
+     */
+    public function isMethodCacheable() {
+        return in_array($this->getMethod(), ['GET', 'HEAD']);
+    }
+
+    /**
+     * Возвращает текущий HTTP метод запроса
+     *
+     * @return string
+     */
+    public function getMethod() {
+
+        if ($this->method === null) {
+
+            $this->method = strtoupper($this->getServer('REQUEST_METHOD', 'GET'));
+        }
+
+        return $this->method;
+    }
+
+    /**
+     * Возвращает ip адрес клиента
+     *
+     * @staticvar ?string $ip
+     * @return string
+     */
+    public function getClientIp() {
+
+        static $ip = null;
+
+        if ($ip === null) {
+
+            $ip = $this->getServer(cmsConfig::get('detect_ip_key'), '127.0.0.1');
+
+            if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+                $ip = '127.0.0.1';
+            }
+        }
+
+        return $ip;
     }
 
 //============================================================================//

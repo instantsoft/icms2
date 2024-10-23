@@ -64,7 +64,7 @@ class backendImages extends cmsBackend{
 
                 if (!isset($preset['height'])) { $preset['height'] = $preset['width']; }
 
-                img_resize($default_root.$original_file, $default_root.$file_name, $preset['width'], $preset['height'], $preset['is_square'], 30);
+                img_resize($default_root.$original_file, $default_root.$file_name, $preset['width'], $preset['height'], $preset['is_square'], 90);
 
             }
 

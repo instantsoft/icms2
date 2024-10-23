@@ -24,7 +24,7 @@ class actionAdminSettingsSysInfo extends cmsAction {
                 }
             }
 
-            $apache_v = (function_exists('apache_get_version') ? apache_get_version() : $_SERVER['SERVER_SOFTWARE']);
+            $apache_v = (function_exists('apache_get_version') ? apache_get_version() : $this->request->getServer('SERVER_SOFTWARE'));
 
             $server_data = [
                 'title' => LANG_CP_DASHBOARD_SI_WS,
@@ -35,7 +35,7 @@ class actionAdminSettingsSysInfo extends cmsAction {
 
             $server_data = [
                 'title' => LANG_CP_DASHBOARD_SI_WS,
-                'value' => $_SERVER['SERVER_SOFTWARE']
+                'value' => $this->request->getServer('SERVER_SOFTWARE')
             ];
         }
 

@@ -130,7 +130,7 @@ class actionPhotosView extends cmsAction {
                     }
                 }
 
-                return cmsUser::goLogin();
+                return $this->redirectToLogin();
             }
         }
 

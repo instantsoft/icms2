@@ -44,19 +44,9 @@ function string_lang($constant, $default = false) {
 
     $constant = strtoupper($constant);
 
-    if (!$default) { $default = $constant; }
+    $constant = (strpos($constant, 'LANG_') === 0) ? $constant : 'LANG_' . $constant;
 
-    if (strpos($constant, 'LANG_') === false) {
-        $constant = 'LANG_' . $constant;
-    }
-
-    if (defined($constant)) {
-        $string = constant($constant);
-    } else {
-        $string = $default;
-    }
-
-    return $string;
+    return defined($constant) ? constant($constant) : ($default ?: $constant);
 }
 
 /**
@@ -195,15 +185,11 @@ function string_in_mask_list($string, $mask_list) {
  */
 function string_random($length = 32, $seed = '') {
 
-    $salt = bin2hex(random_bytes(128));
+    $salt = bin2hex(random_bytes(64));
 
-    $string = md5(md5($salt . chr(random_int(0, 127)) . chr(random_int(0, 127))) . chr(random_int(0, 127)) . md5(md5($seed)));
+    $string = md5($salt . chr(random_int(0, 127)) . $seed . random_bytes(16));
 
-    if ($length < 32) {
-        $string = substr($string, 0, $length);
-    }
-
-    return $string;
+    return ($length < 32) ? substr($string, 0, $length) : $string;
 }
 
 /**
@@ -219,36 +205,44 @@ function string_random($length = 32, $seed = '') {
  */
 function string_date_age($date, $options, $is_add_back = false) {
 
-    if (!$date) { return ''; }
-
-    $date2 = !empty($options['from_date']) ? $options['from_date'] : false;
-
-    $diff = real_date_diff($date, $date2);
-
-    $diff_str = [];
-
-    if (in_array('y', $options) && $diff[0]) {
-        $diff_str[] = html_spellcount($diff[0], LANG_YEAR1, LANG_YEAR2, LANG_YEAR10);
-    }
-    if (in_array('m', $options) && $diff[1]) {
-        $diff_str[] = html_spellcount($diff[1], LANG_MONTH1, LANG_MONTH2, LANG_MONTH10);
-    }
-    if (in_array('d', $options) && $diff[2]) {
-        $diff_str[] = html_spellcount($diff[2], LANG_DAY1, LANG_DAY2, LANG_DAY10);
-    }
-    if (in_array('h', $options) && $diff[3]) {
-        $diff_str[] = html_spellcount($diff[3], LANG_HOUR1, LANG_HOUR2, LANG_HOUR10);
-    }
-    if (in_array('i', $options) && $diff[4]) {
-        $diff_str[] = html_spellcount($diff[4], LANG_MINUTE1, LANG_MINUTE2, LANG_MINUTE10);
+    if (!$date) {
+        return '';
     }
 
-    if (!$diff_str) {
+    // Определяем дату для сравнения
+    $from_date = $options['from_date'] ?? false;
+
+    // Вычисляем разницу между датами
+    $diff = real_date_diff($date, $from_date);
+
+    // Соответствие ключей и языковых констант для склонений
+    $mapping = [
+        'y' => [$diff[0], LANG_YEAR1, LANG_YEAR2, LANG_YEAR10],
+        'm' => [$diff[1], LANG_MONTH1, LANG_MONTH2, LANG_MONTH10],
+        'd' => [$diff[2], LANG_DAY1, LANG_DAY2, LANG_DAY10],
+        'h' => [$diff[3], LANG_HOUR1, LANG_HOUR2, LANG_HOUR10],
+        'i' => [$diff[4], LANG_MINUTE1, LANG_MINUTE2, LANG_MINUTE10]
+    ];
+
+    $diff_parts = [];
+
+    foreach ($mapping as $key => $map_value) {
+
+        list($value, $one, $two, $many) = $map_value;
+
+        if (in_array($key, $options, true) && $value) {
+            $diff_parts[] = html_spellcount($value, $one, $two, $many);
+        }
+    }
+
+    if (!$diff_parts) {
         return LANG_SECONDS_AGO;
-    } else {
-        $diff_str = trim(implode(' ', $diff_str));
-        return $is_add_back ? sprintf(LANG_DATE_AGO, $diff_str) : $diff_str;
     }
+
+    // Формируем финальную строку
+    $diff_str = implode(' ', $diff_parts);
+
+    return $is_add_back ? sprintf(LANG_DATE_AGO, $diff_str) : $diff_str;
 }
 
 /**
@@ -257,43 +251,42 @@ function string_date_age($date, $options, $is_add_back = false) {
  *
  * Пример вывода: "3 дня"
  *
- * @param string | array $date Дата или массив двух дат
+ * @param string|array $date Дата или массив двух дат
  * @param bool $is_add_back Добавлять к строке слово "назад"?
  * @return string
  */
 function string_date_age_max($date, $is_add_back = false) {
 
-    if (!$date) { return ''; }
-
-    if(is_array($date)){
-        $diff = real_date_diff($date[0], $date[1]);
-    } else {
-        $diff = real_date_diff($date);
+    if (!$date) {
+        return '';
     }
 
-    $diff_str = '';
+    // Вычисляем разницу, в зависимости от того, передан массив дат или одна дата
+    $diff = is_array($date) ? real_date_diff($date[0], $date[1]) : real_date_diff($date);
 
-    if ($diff[0]) {
-        $diff_str = html_spellcount($diff[0], LANG_YEAR1, LANG_YEAR2, LANG_YEAR10);
-    } else
-    if ($diff[1]) {
-        $diff_str = html_spellcount($diff[1], LANG_MONTH1, LANG_MONTH2, LANG_MONTH10);
-    } else
-    if ($diff[2]) {
-        $diff_str = html_spellcount($diff[2], LANG_DAY1, LANG_DAY2, LANG_DAY10);
-    } else
-    if ($diff[3]) {
-        $diff_str = html_spellcount($diff[3], LANG_HOUR1, LANG_HOUR2, LANG_HOUR10);
-    } else
-    if ($diff[4]) {
-        $diff_str = html_spellcount($diff[4], LANG_MINUTE_1, LANG_MINUTE2, LANG_MINUTE10);
+    $mapping = [
+        0 => [LANG_YEAR1, LANG_YEAR2, LANG_YEAR10],
+        1 => [LANG_MONTH1, LANG_MONTH2, LANG_MONTH10],
+        2 => [LANG_DAY1, LANG_DAY2, LANG_DAY10],
+        3 => [LANG_HOUR1, LANG_HOUR2, LANG_HOUR10],
+        4 => [LANG_MINUTE_1, LANG_MINUTE2, LANG_MINUTE10]
+    ];
+
+    // Перебираем разницу по убыванию, начиная с лет и заканчивая минутами
+    foreach ($mapping as $index => $map_value) {
+
+        list($one, $two, $many) = $map_value;
+
+        if (!empty($diff[$index])) {
+
+            $diff_str = html_spellcount($diff[$index], $one, $two, $many);
+
+            return $is_add_back ? sprintf(LANG_DATE_AGO, $diff_str) : $diff_str;
+        }
     }
 
-    if (!$diff_str) {
-        return LANG_JUST_NOW;
-    } else {
-        return $is_add_back ? sprintf(LANG_DATE_AGO, $diff_str) : $diff_str;
-    }
+    // Если ни одна разница не нашлась, возвращаем "только что"
+    return LANG_JUST_NOW;
 }
 
 /**
@@ -307,73 +300,46 @@ function string_date_age_max($date, $is_add_back = false) {
  *  4 => число минут
  *  5 => число секунд
  *
- * @author Олег Савватеев @ http://savvateev.org
- *
  * @param string $date1
- * @param string $date2
+ * @param ?string $date2
  * @return array
  */
 function real_date_diff($date1, $date2 = null) {
 
-    $diff = [];
+    $default = [0, 0, 0, 0, 0, 0];
 
-    if (!is_string($date1)) { return false; }
-
-    //Если вторая дата не задана принимаем ее как текущую
-    if (!$date2) {
-        $cd = getdate();
-    } else {
-        $cd = getdate(strtotime($date2));
+    // Проверяем, что $date1 это строка
+    if (!is_string($date1)) {
+        return $default;
     }
 
-    $date2 = $cd['year'] . '-' . $cd['mon'] . '-' . $cd['mday'] . ' ' . $cd['hours'] . ':' . $cd['minutes'] . ':' . $cd['seconds'];
+    try {
 
-    //Преобразуем даты в массив
-    $pattern = '/(\d+)\-(\d+)\-(\d+)(\s+(\d+)\:(\d+)\:(\d+))?/';
-    preg_match($pattern, $date1, $matches);
-    $d1 = [intval($matches[1]), intval($matches[2]), intval($matches[3]), intval($matches[5]), intval($matches[6]), intval($matches[7])];
-    preg_match($pattern, $date2, $matches);
-    $d2 = [intval($matches[1]), intval($matches[2]), intval($matches[3]), intval($matches[5]), intval($matches[6]), intval($matches[7])];
+        $datetime1 = new DateTime($date1);
+        // Если вторая дата не указана, берем текущую
+        $datetime2 = $date2 ? new DateTime($date2) : new DateTime();
 
-    //Если вторая дата меньше чем первая, меняем их местами
-    for ($i = 0; $i < count($d2); $i++) {
-        if ($d2[$i] > $d1[$i]) {
-            break;
-        }
-        if ($d2[$i] < $d1[$i]) {
-            $t  = $d1;
-            $d1 = $d2;
-            $d2 = $t;
-            break;
-        }
+        // Вычисляем разницу между датами в виде объекта DateInterval
+        $interval = $datetime1->diff($datetime2);
+
+        return [
+            $interval->y,  // Лет
+            $interval->m,  // Месяцев
+            $interval->d,  // Дней
+            $interval->h,  // Часов
+            $interval->i,  // Минут
+            $interval->s   // Секунд
+        ];
+    } catch (Exception $e) {
+        return $default;
     }
-
-    //Вычисляем разность между датами (как в столбик)
-    $md1   = [31, $d1[0] % 4 || (!($d1[0] % 100) && $d1[0] % 400) ? 28 : 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    $md2   = [31, $d2[0] % 4 || (!($d2[0] % 100) && $d2[0] % 400) ? 28 : 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    $min_v = [NULL, 1, 1, 0, 0, 0];
-    $max_v = [NULL, 12, $d2[1] == 1 ? $md2[11] : $md2[$d2[1] - 2], 23, 59, 59];
-    for ($i = 5; $i >= 0; $i--) {
-        if ($d2[$i] < $min_v[$i]) {
-            $d2[$i - 1]--;
-            $d2[$i] = $max_v[$i];
-        }
-        $diff[$i] = $d2[$i] - $d1[$i];
-        if ($diff[$i] < 0) {
-            $d2[$i - 1]--;
-            $i == 2 ? $diff[$i] += $md1[$d1[1] - 1] : $diff[$i] += $max_v[$i] - $min_v[$i] + 1;
-        }
-    }
-
-    //Возвращаем результат
-    return $diff;
 }
 
 /**
  * Форматирует дату в формат "сегодня", "вчера", "1 января 2017"
  *
  * @param string $date Исходная дата. Может быть как отформатированном виде, так и timestamp
- * @param boolean $is_time Дополнять часом и минутами
+ * @param bool $is_time Дополнять часом и минутами
  * @return string
  */
 function string_date_format($date, $is_time = false) {
@@ -382,12 +348,7 @@ function string_date_format($date, $is_time = false) {
         return '';
     }
 
-    if (!is_numeric($date)) {
-        $timestamp = strtotime($date);
-    } else {
-        $timestamp = $date;
-    }
-
+    $timestamp = is_numeric($date) ? (int)$date : strtotime($date);
     $item_date = date('j F Y', $timestamp);
 
     $today_date     = date('j F Y');
@@ -417,53 +378,44 @@ function string_date_format($date, $is_time = false) {
  * где file_name - имя svg файла по пути /templates/шаблон/images/icons/
  * icon_name - имя иконки svg спрайта
  *
- * @param string $string
+ * @param string $string Строка для поиска
  * @return string
  */
-function string_replace_svg_icons($string){
+function string_replace_svg_icons($string) {
 
-    $matches_count = preg_match_all('/{([a-z0-9_\-]+)%([a-z0-9_\-]+)}/i', $string, $matches);
-
-    if ($matches_count){
-        for($i=0; $i<$matches_count; $i++){
-
-            $tag  = $matches[0][$i];
-            $file = $matches[1][$i];
-            $name = $matches[2][$i];
-
-            $string = str_replace($tag, html_svg_icon($file, $name, 16, false), $string);
-        }
-    }
-
-    return $string;
+    return preg_replace_callback(
+        '/{([a-z0-9_\-]+)%([a-z0-9_\-]+)}/i',
+        function ($matches) {
+            return html_svg_icon($matches[1], $matches[2], 16, false);
+        },
+        $string
+    );
 }
+
 /**
  * Находит в строке все выражения вида {user.property} и заменяет property
  * на соответствующее свойство объекта cmsUser
  *
- * @param string $string
+ * @param string $string Строка для поиска
+ * @param ?cmsUser $user Объект cmsUser
  * @return string
  */
-function string_replace_user_properties($string) {
+function string_replace_user_properties($string, $user = null) {
 
-    $matches_count = preg_match_all('/{user.([a-z0-9_]+)}/i', $string, $matches);
-
-    if ($matches_count) {
-
+    if (!$user) {
         $user = cmsUser::getInstance();
-
-        for ($i = 0; $i < $matches_count; $i++) {
-
-            $tag      = $matches[0][$i];
-            $property = $matches[1][$i];
-
-            if (isset($user->$property)) {
-                $string = str_replace($tag, $user->$property, $string);
-            }
-        }
     }
 
-    return $string;
+    return preg_replace_callback(
+        '/{user\.([a-z0-9_]+)}/i',
+        function ($matches) use ($user) {
+
+            $property = $matches[1];
+
+            return isset($user->{$property}) ? $user->{$property} : $matches[0];
+        },
+        $string
+    );
 }
 
 /**
@@ -475,23 +427,21 @@ function string_replace_user_properties($string) {
  */
 function string_replace_keys_values($string, $data) {
 
-    if (!$string) {
-        return '';
+    if (!$string || strpos($string, '{') === false) {
+        return $string;
     }
 
-    if (strpos($string, '{') === false) { return $string; }
+    // Фильтруем массив $data, удаляя массивы и объекты
+    $filtered_data = array_filter($data, function($v) {
+        return !is_array($v) && !is_object($v);
+    });
 
-    foreach ($data as $k => $v) {
-        if (is_array($v) || is_object($v)) {
-            unset($data[$k]);
-        }
-    }
-
+    // Создаём массив ключей вида {key}
     $keys = array_map(function ($key) {
         return '{' . $key . '}';
-    }, array_keys($data));
+    }, array_keys($filtered_data));
 
-    return str_replace($keys, array_values($data), $string);
+    return str_replace($keys, array_values($filtered_data), $string);
 }
 
 /**

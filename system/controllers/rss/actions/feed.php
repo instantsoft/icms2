@@ -60,15 +60,13 @@ class actionRssFeed extends cmsAction {
             foreach ($feed['items'] as $key => $item) {
                 if (!empty($feed['mapping']['description']) && !empty($item[$feed['mapping']['description']])) {
                     $feed['items'][$key][$feed['mapping']['description']] = preg_replace(
-                        ['#"\/upload\/#u', '#"\/static\/#u'],
-                        ['"'.$this->cms_config->upload_host_abs.'/', '"'.$this->cms_config->host.'/static/'],
-                        $item[$feed['mapping']['description']]
+                            ['#"\/upload\/#u', '#"\/static\/#u'],
+                            ['"' . $this->cms_config->upload_host_abs . '/', '"' . $this->cms_config->host . '/static/'],
+                            $item[$feed['mapping']['description']]
                     );
                 }
             }
         }
-
-        header('Content-type: application/rss+xml; charset=utf-8');
 
         $template = $this->request->get('template');
 
@@ -80,8 +78,13 @@ class actionRssFeed extends cmsAction {
             }
         }
 
-        if ($category){ $feed['title'] .=' / '.$category['title']; }
-        if ($author){ $feed['title'] = $author['nickname'].' — '.$feed['title']; }
+        if ($category) {
+            $feed['title'] .= ' / ' . $category['title'];
+        }
+
+        if ($author) {
+            $feed['title'] = $author['nickname'] . ' — ' . $feed['title'];
+        }
 
         $rss = $this->cms_template->getRenderedChild($feed['template'], [
             'feed_title' => sprintf(LANG_RSS_FEED_TITLE_FORMAT, $feed['title'], $this->cms_config->sitename),
@@ -94,16 +97,14 @@ class actionRssFeed extends cmsAction {
             $this->cacheRss($rss);
         }
 
-        return $this->halt($rss);
+        return $this->cms_core->response->
+                setHeader('Content-Type', 'application/rss+xml; charset=utf-8')->
+                setContent($rss)->sendAndExit();
     }
 
     private function displayCached() {
 
-        header('Content-type: application/rss+xml; charset=utf-8');
-
-        echo file_get_contents($this->cache_file_path);
-
-        die;
+        return $this->cms_core->response->sendFile($this->cache_file_path, ['Content-Type' => 'application/rss+xml; charset=utf-8']);
     }
 
     private function isDisplayCached($feed) {

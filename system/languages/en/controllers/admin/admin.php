@@ -458,7 +458,7 @@
     define('LANG_CP_WIDGET_PAGE_BODY_CSS',      'CSS classes for page body tag');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Positive masks');
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Negative masks');
-    define('LANG_CP_WIDGET_URL_MASK_NOT_HINT',  'On pages matching these masks, the widget will not be shown');
+    define('LANG_CP_WIDGET_URL_MASK_NOT_HINT',  'On pages matching these masks, the widget will not be shown. Use a slash to specify the main page.');
     define('LANG_CP_WIDGETS_UNUSED',            'Unused Widgets');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Here you can place the widgets that have to be temporarily hidden or moved to another page without losing their settings');
     define('LANG_CP_WIDGETS_BINDED',            'Binded widgets');
@@ -553,7 +553,6 @@
     define('LANG_CP_SETTINGS_META_NO_DEFAULT_HINT',  'If disabled, these words will be displayed on pages with no specified parameters.');
     define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Add page numbers in the title and meta description tags when pagination');
     define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Add site name to the page title tag');
-    define('LANG_CP_SETTINGS_SET_HEAD_PRELOAD',  'Build HTTP Preload headers');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Language');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Default theme');
     define('LANG_CP_SETTINGS_TEMPLATE_ADMIN',   'Control panel theme');

@@ -70,7 +70,7 @@ class users extends cmsFrontend {
         $this->setCurrentProfile($profile);
 
         if (!$this->cms_user->is_logged && $this->options['is_auth_only']) {
-            return cmsUser::goLogin();
+            return $this->redirectToLogin();
         }
 
         if ($this->options['is_themes_on']) {

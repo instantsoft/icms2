@@ -22,7 +22,10 @@ define('VALID_RUN', microtime(true));
 define('SESSION_START', true);
 
 // Подключаем файл первоначальной инициализации окружения InstantCMS
-require_once 'bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 // Запускаем
-$core->runHttp($_SERVER['REQUEST_URI']);
+$response = $core->runHttp($core->request->getServer('REQUEST_URI'));
+
+// Отправляем ответ
+$response->send();
