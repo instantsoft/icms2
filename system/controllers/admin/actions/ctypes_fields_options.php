@@ -9,6 +9,7 @@ class actionAdminCtypesFieldsOptions extends cmsAction {
         }
 
         $ctype_name = $this->request->get('ctype_name', '');
+        $postfix    = $this->request->get('postfix', '_fields');
         $field_id   = $this->request->get('field_id', 0);
         $field_type = $this->request->get('type', '');
         $form_id    = $this->request->get('form_id', '');
@@ -45,7 +46,7 @@ class actionAdminCtypesFieldsOptions extends cmsAction {
                 $this->model_backend_content->setTablePrefix('');
             }
 
-            $field = $this->model_backend_content->localizedOff()->getContentField($ctype_name, $field_id);
+            $field = $this->model_backend_content->localizedOff()->getContentField($ctype_name, $field_id, 'id', $postfix);
             if (!$field) {
                 return $this->halt();
             }

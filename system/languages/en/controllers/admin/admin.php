@@ -311,7 +311,6 @@
     define('LANG_CP_PROP_VALUES',               'List items');
     define('LANG_CP_PROP_VALUES_HINT',          'One item per line');
     define('LANG_CP_PROP_CATS',                 'Bind property to categories');
-    define('LANG_CP_PROP_UNITS',                'Units');
     define('LANG_CP_FILTER_ADD',                'Add filter');
     define('LANG_CP_FILTER_NO_TABLE',           'Filters is disabled, <a href="%s">enable it</a>.');
     define('LANG_CP_FILTER_TABLE_SUCCESS',      'Filter engine successfully enabled');

@@ -327,7 +327,6 @@
     define('LANG_CP_PROP_VALUES',               'Элементы списка');
     define('LANG_CP_PROP_VALUES_HINT',          'Одно значение в каждой строке');
     define('LANG_CP_PROP_CATS',                 'Привязать свойство к категориям');
-    define('LANG_CP_PROP_UNITS',                'Единицы измерения');
     define('LANG_CP_FILTER_ADD',                'Создать фильтр');
     define('LANG_CP_FILTER_NO_TABLE',           'Фильтры выключены, <a href="%s">включите их</a>.');
     define('LANG_CP_FILTER_TABLE_SUCCESS',      'Механизм фильтров успешно включен');

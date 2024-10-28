@@ -2,9 +2,10 @@
 <html>
 <head>
     <title><?php echo LANG_PAGE_TITLE; ?></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8" />
     <link type="text/css" rel="stylesheet" href="css/sweetalert2.min.css">
     <link type="text/css" rel="stylesheet" href="css/styles.css">
+    <meta name="generator" content="InstantCMS" />
     <script src="js/jquery.js"></script>
     <script src="js/install.js"></script>
     <script src="js/sweetalert2.all.min.js"></script>

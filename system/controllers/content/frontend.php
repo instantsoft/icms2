@@ -1113,25 +1113,6 @@ class content extends cmsFrontend {
 
         foreach ($props as $prop) {
 
-            $prop['rules']   = [];
-            $prop['default'] = $prop['values'];
-
-            if (!empty($prop['options']['is_required'])) {
-                $prop['rules'][] = [('required')];
-            }
-            if (!empty($prop['options']['is_filter_multi'])) {
-                $prop['options']['filter_multiple'] = 1;
-            }
-            if (!empty($prop['options']['is_filter_range'])) {
-                $prop['options']['filter_range'] = 1;
-            }
-
-            switch ($prop['type']) {
-                case 'list_multiple':
-                    $prop['type'] = 'listbitmask';
-                    break;
-            }
-
             $field_class = 'field' . string_to_camel('_', $prop['type']);
 
             $field = new $field_class('props:' . $prop['id']);

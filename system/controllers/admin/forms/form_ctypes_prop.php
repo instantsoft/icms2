@@ -6,11 +6,12 @@ class formAdminCtypesProp extends cmsForm {
 
         $model = cmsCore::getModel('backend_content');
 
-        $table_name = $model->table_prefix . $ctype['name'] . '_props';
+        $table_name = $model->getContentTypeTableName($ctype['name'], '_props');
 
         return [
             'basic' => [
                 'type'   => 'fieldset',
+                'title'  => LANG_CP_BASIC,
                 'childs' => [
                     new fieldString('title', [
                         'title' => LANG_CP_PROP_TITLE,
@@ -29,19 +30,33 @@ class formAdminCtypesProp extends cmsForm {
                     ])
                 ]
             ],
+            'type'   => [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_TYPE,
+                'childs' => [
+                    new fieldList('type', [
+                        'default' => 'list',
+                        'items'   => modelBackendContent::PROP_FIELDS
+                    ])
+                ]
+            ],
             'group' => [
                 'type'   => 'fieldset',
                 'title'  => LANG_CP_FIELD_FIELDSET,
                 'childs' => [
                     new fieldList('fieldset', [
                         'title'     => LANG_CP_FIELD_FIELDSET_SELECT,
-                        'generator' => function ($prop) use ($model, $ctype) {
-                            $fieldsets = $model->getContentPropsFieldsets($ctype['name']);
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => $table_name
+                        ],
+                        'generator' => function ($field, $request, $formfield) use ($ctype) {
+                            $model = cmsCore::getModel('content');
+                            $fieldsets = $model->setLang($formfield->lang)->getContentFieldsets($ctype['name'], '_props');
                             $items     = [''];
-                            if (is_array($fieldsets)) {
-                                foreach ($fieldsets as $fieldset) {
-                                    $items[$fieldset] = $fieldset;
-                                }
+                            foreach ($fieldsets as $fieldset) {
+                                $items[$fieldset] = $fieldset;
                             }
                             return $items;
                         }
@@ -54,36 +69,38 @@ class formAdminCtypesProp extends cmsForm {
                     ])
                 ]
             ],
-            'type'   => [
+            'format'  => [
                 'type'   => 'fieldset',
-                'title'  => LANG_CP_FIELD_TYPE,
+                'title'  => LANG_CP_FIELD_FORMAT,
                 'childs' => [
-                    new fieldList('type', [
-                        'default' => 'list',
-                        'items'   => [
-                            'list'          => LANG_PARSER_LIST,
-                            'list_multiple' => LANG_PARSER_LIST_MULTIPLE,
-                            'string'        => LANG_PARSER_STRING,
-                            'color'         => LANG_PARSER_COLOR,
-                            'number'        => LANG_PARSER_NUMBER,
-                            'checkbox'      => LANG_PARSER_CHECKBOX
-                        ]
-                    ]),
                     new fieldCheckbox('options:is_required', [
-                        'title' => LANG_VALIDATE_REQUIRED
-                    ])
-                ]
-            ],
-            'number' => [
-                'type'   => 'fieldset',
-                'title'  => LANG_PARSER_NUMBER,
-                'childs' => [
-                    new fieldString('options:units', [
-                        'title' => LANG_CP_PROP_UNITS,
-                        'can_multilanguage' => true
+                        'title' => LANG_VALIDATE_REQUIRED,
                     ]),
-                    new fieldCheckbox('options:is_filter_range', [
-                        'title' => LANG_PARSER_NUMBER_FILTER_RANGE
+                    new fieldCheckbox('options:is_digits', [
+                        'title' => LANG_VALIDATE_DIGITS,
+                    ]),
+                    new fieldCheckbox('options:is_alphanumeric', [
+                        'title' => LANG_VALIDATE_ALPHANUMERIC,
+                    ]),
+                    new fieldCheckbox('options:is_email', [
+                        'title' => LANG_VALIDATE_EMAIL,
+                    ]),
+                    new fieldCheckbox('options:is_url', [
+                        'title' => LANG_VALIDATE_URL,
+                    ]),
+                    new fieldCheckbox('options:is_regexp', [
+                        'title' => LANG_CP_FIELD_REGEX
+                    ]),
+                    new fieldString('options:rules_regexp_str', [
+                        'title' => LANG_CP_FIELD_REGEX_TEXT,
+                        'hint' => LANG_CP_FIELD_REGEX_TEXT_HINT,
+                        'visible_depend' => ['options:is_regexp' => ['show' => ['1']]]
+                    ]),
+                    new fieldString('options:rules_regexp_error', [
+                        'title' => LANG_CP_FIELD_REGEX_ERROR,
+                        'hint' => LANG_CP_FIELD_REGEX_ERROR_HINT,
+                        'multilanguage' => true,
+                        'visible_depend' => ['options:is_regexp' => ['show' => ['1']]]
                     ])
                 ]
             ],
@@ -100,9 +117,6 @@ class formAdminCtypesProp extends cmsForm {
                         'size'          => 8,
                         'is_strip_tags' => true,
                         'hint'          => LANG_CP_PROP_VALUES_HINT
-                    ]),
-                    new fieldCheckbox('options:is_filter_multi', [
-                        'title' => LANG_PARSER_LIST_FILTER_MULTI
                     ])
                 ]
             ],

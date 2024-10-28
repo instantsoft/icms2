@@ -23,6 +23,9 @@
                 <?php if (!empty($field['id'])) { ?>
                     field_id: '<?php echo $field['id']; ?>',
                 <?php } ?>
+                <?php if (!empty($postfix)) { ?>
+                    postfix: '<?php echo $postfix; ?>',
+                <?php } ?>
                 form_id: '<?php echo $form_id; ?>',
                 ctype_name: '<?php echo isset($ctype_name) ? $ctype_name : ''; ?>',
                 type: field_type

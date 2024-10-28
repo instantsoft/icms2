@@ -4,6 +4,18 @@
  */
 class modelBackendContent extends modelContent {
 
+    /**
+     * Поля для свойств ограничены пока этим списком
+     */
+    const PROP_FIELDS = [
+        'list'        => LANG_PARSER_LIST,
+        'listbitmask' => LANG_PARSER_LIST_MULTIPLE,
+        'string'      => LANG_PARSER_STRING,
+        'color'       => LANG_PARSER_COLOR,
+        'number'      => LANG_PARSER_NUMBER,
+        'checkbox'    => LANG_PARSER_CHECKBOX
+    ];
+
     public function loadAllCtypes() {
         return $this->reloadAllCtypes(false);
     }
@@ -317,7 +329,6 @@ class modelBackendContent extends modelContent {
 
         return [
             'id'           => ['type' => 'primary'],
-            'ctype_id'     => ['type' => 'int', 'unsigned' => true],
             'title'        => ['type' => 'varchar', 'size' => 100],
             'fieldset'     => ['type' => 'varchar', 'size' => 32],
             'type'         => ['type' => 'varchar', 'size' => 16],
@@ -640,17 +651,17 @@ class modelBackendContent extends modelContent {
 //============================    СВОЙСТВА   =================================//
 //============================================================================//
 
-    public function isContentPropsExists($ctype_name){
+    public function isContentPropsExists($ctype_name) {
 
-        $props_table_name = $this->table_prefix . $ctype_name . '_props';
+        $props_table_name = $this->getContentTypeTableName($ctype_name, '_props');
 
-        return (bool)$this->getCount($props_table_name);
+        return (bool) $this->getCount($props_table_name, 'id', true);
     }
 
     public function getContentPropsBinds($ctype_name, $category_id = false) {
 
-        $props_table_name = $this->table_prefix . $ctype_name . '_props';
-        $bind_table_name = $this->table_prefix . $ctype_name . '_props_bind';
+        $props_table_name = $this->getContentTypeTableName($ctype_name, '_props');
+        $bind_table_name  = $this->getContentTypeTableName($ctype_name, '_props_bind');
 
         $this->selectOnly('p.*');
         $this->select('p.id', 'prop_id');
@@ -659,7 +670,7 @@ class modelBackendContent extends modelContent {
 
         $this->join($props_table_name, 'p', 'p.id = i.prop_id');
 
-        if ($category_id){
+        if ($category_id) {
             $this->filterEqual('i.cat_id', $category_id);
         }
 
@@ -669,24 +680,24 @@ class modelBackendContent extends modelContent {
         return $this->get($bind_table_name);
     }
 
-    public function getContentProp($ctype_name, $id){
+    public function getContentProp($ctype_name, $id) {
 
-        $props_table_name = $this->table_prefix . $ctype_name . '_props';
-        $bind_table_name = $this->table_prefix . $ctype_name . '_props_bind';
+        $props_table_name = $this->getContentTypeTableName($ctype_name, '_props');
+        $bind_table_name  = $this->getContentTypeTableName($ctype_name, '_props_bind');
 
-        $prop = $this->getItemById($props_table_name, $id, function($item, $model){
+        $prop = $this->getItemById($props_table_name, $id, function ($item, $model) {
             $item['options'] = cmsModel::yamlToArray($item['options']);
             return $item;
         });
 
-        if(!$prop){
+        if (!$prop) {
             return false;
         }
 
         $this->filterEqual('prop_id', $id);
 
-        $prop['cats'] = $this->get($bind_table_name, function($item, $model){
-           return (int)$item['cat_id'];
+        $prop['cats'] = $this->get($bind_table_name, function ($item, $model) {
+            return (int) $item['cat_id'];
         });
 
         return $prop;
@@ -694,7 +705,7 @@ class modelBackendContent extends modelContent {
 
     public function updateContentProp($ctype_name, $id, $prop) {
 
-        $table_name = $this->table_prefix . $ctype_name . '_props';
+        $table_name = $this->getContentTypeTableName($ctype_name, '_props');
 
         $old_prop = $this->getContentProp($ctype_name, $id);
 
@@ -715,6 +726,8 @@ class modelBackendContent extends modelContent {
 
         $prop['id'] = $id;
 
+        $this->makeFieldFieldset($prop, $table_name);
+
         cmsEventsManager::hook('ctype_prop_before_update', [$prop, $old_prop, $ctype_name, $this]);
 
         $result = $this->update($table_name, $id, $prop);
@@ -724,22 +737,22 @@ class modelBackendContent extends modelContent {
         return $result;
     }
 
-    public function deleteContentProp($ctype_name_or_id, $prop_id){
+    public function deleteContentProp($ctype_name_or_id, $prop_id) {
 
-        if (is_numeric($ctype_name_or_id)){
-            $ctype = $this->getContentType($ctype_name_or_id);
+        if (is_numeric($ctype_name_or_id)) {
+            $ctype      = $this->getContentType($ctype_name_or_id);
             $ctype_name = $ctype['name'];
         } else {
             $ctype_name = $ctype_name_or_id;
         }
 
-        $table_name = $this->table_prefix . $ctype_name . '_props';
+        $table_name = $this->getContentTypeTableName($ctype_name, '_props');
 
         $prop = $this->getContentProp($ctype_name, $prop_id);
 
-        cmsEventsManager::hook('ctype_prop_before_delete', array($prop, $ctype_name, $this));
+        cmsEventsManager::hook('ctype_prop_before_delete', [$prop, $ctype_name, $this]);
 
-        foreach($prop['cats'] as $cat_id){
+        foreach ($prop['cats'] as $cat_id) {
             $this->unbindContentProp($ctype_name, $prop_id, $cat_id);
         }
 
@@ -748,103 +761,80 @@ class modelBackendContent extends modelContent {
         return $this->delete($table_name, $prop_id);
     }
 
-    public function deleteContentPropValues($ctype_name, $prop_id){
+    public function deleteContentPropValues($ctype_name, $prop_id) {
 
-        $table_name = $this->table_prefix . $ctype_name . '_props_values';
+        $table_name = $this->getContentTypeTableName($ctype_name, '_props_values');
 
         return $this->filterEqual('prop_id', $prop_id)->deleteFiltered($table_name);
     }
 
-    public function addContentProp($ctype_name, $prop){
+    public function addContentProp($ctype_name, $prop) {
 
-        $table_name = $this->table_prefix . $ctype_name . '_props';
+        $table_name = $this->getContentTypeTableName($ctype_name, '_props');
 
-        $cats_list = $prop['cats']; unset($prop['cats']);
+        $cats_list = $prop['cats'];
+
+        unset($prop['cats']);
+
+        $this->makeFieldFieldset($prop, $table_name);
 
         $prop['id'] = $this->insert($table_name, $prop);
 
         $this->bindContentProp($ctype_name, $prop['id'], $cats_list);
 
-        cmsEventsManager::hook('ctype_prop_after_add', array($prop, $ctype_name, $this));
+        cmsEventsManager::hook('ctype_prop_after_add', [$prop, $ctype_name, $this]);
 
         return $prop['id'];
     }
 
-    public function toggleContentPropFilter($ctype_name, $id, $is_in_filter){
+    public function toggleContentPropFilter($ctype_name, $id, $is_in_filter) {
 
-        $table_name = $this->table_prefix . $ctype_name . '_props';
+        $table_name = $this->getContentTypeTableName($ctype_name, '_props');
 
-        return $this->update($table_name, $id, array(
+        return $this->update($table_name, $id, [
             'is_in_filter' => $is_in_filter
-        ));
+        ]);
     }
 
-    public function bindContentProp($ctype_name, $prop_id, $cats_list){
+    public function bindContentProp($ctype_name, $prop_id, $cats_list) {
 
-        $table_name = $this->table_prefix . $ctype_name . '_props_bind';
+        $table_name = $this->getContentTypeTableName($ctype_name, '_props_bind');
 
-        foreach($cats_list as $cat_id){
+        foreach ($cats_list as $cat_id) {
 
             $this->filterEqual('cat_id', $cat_id);
 
             $ordering = $this->getNextOrdering($table_name);
 
-            $this->insert($table_name, array(
-                'prop_id' => $prop_id,
-                'cat_id' => $cat_id,
+            $this->insert($table_name, [
+                'prop_id'  => $prop_id,
+                'cat_id'   => $cat_id,
                 'ordering' => $ordering
-            ));
-
+            ]);
         }
 
         return true;
     }
 
-    public function unbindContentProp($ctype_name, $prop_id, $cat_id){
+    public function unbindContentProp($ctype_name, $prop_id, $cat_id) {
 
-        $table_name = $this->table_prefix . $ctype_name . '_props_bind';
+        $table_name = $this->getContentTypeTableName($ctype_name, '_props_bind');
 
-        $this->
-            filterEqual('prop_id', $prop_id)->
-            filterEqual('cat_id', $cat_id)->
-            deleteFiltered($table_name);
+        $this->filterEqual('prop_id', $prop_id)->
+               filterEqual('cat_id', $cat_id)->
+               deleteFiltered($table_name);
 
-        $this->
-            filterEqual('cat_id', $cat_id)->
-            reorder($table_name);
+        $this->filterEqual('cat_id', $cat_id)->
+               reorder($table_name);
 
         return true;
     }
 
-    public function reorderContentProps($ctype_name, $props_ids_list){
+    public function reorderContentProps($ctype_name, $props_ids_list) {
 
-        $table_name = $this->table_prefix . $ctype_name . '_props_bind';
+        $table_name = $this->getContentTypeTableName($ctype_name, '_props_bind');
 
         return $this->reorderByList($table_name, $props_ids_list);
-    }
-
-    public function getContentPropsFieldsets($ctype_id){
-
-        if (is_numeric($ctype_id)){
-            $ctype = $this->getContentType($ctype_id);
-            $ctype_name = $ctype['name'];
-        } else {
-            $ctype_name = $ctype_id;
-        }
-
-        $table_name = $this->table_prefix . $ctype_name . '_props';
-
-        $this->groupBy('fieldset');
-        $this->orderBy('fieldset');
-
-        $fieldsets = $this->get($table_name, function($item, $model){
-            $item = $item['fieldset'];
-            return $item;
-        }, false);
-
-        if (is_array($fieldsets) && $fieldsets[0] == '') { unset($fieldsets[0]); }
-
-        return $fieldsets;
     }
 
 }

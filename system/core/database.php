@@ -1145,12 +1145,17 @@ class cmsDatabase {
      */
     public function isTableExists($table_name) {
 
-        $result = $this->query('show tables');
+        static $tables = null;
 
-        $tables = [];
+        if ($tables === null) {
 
-        while ($data = $this->fetchRow($result)) {
-            $tables[] = $data[0];
+            $result = $this->query('show tables');
+
+            $tables = [];
+
+            while ($data = $this->fetchRow($result)) {
+                $tables[] = $data[0];
+            }
         }
 
         $table_name = $this->replacePrefix('{#}' . $table_name);

@@ -25,7 +25,7 @@ class actionAdminCtypesProps extends cmsAction {
 
         $this->table_name = $this->model->getContentTypeTableName($this->ctype['name'], '_props_bind');
         $this->grid_name  = 'ctype_props';
-        $this->grid_args  = $this->cms_template->href_to('ctypes', ['props_reorder', $this->ctype['name']]);
+        $this->grid_args  = [$this->cms_template->href_to('ctypes', ['props_reorder', $this->ctype['name']]), $this->ctype['name']];
 
         $this->tool_buttons = [
             [
@@ -108,6 +108,25 @@ class actionAdminCtypesProps extends cmsAction {
             $model->limit(false);
 
             return $model;
+        };
+
+        $this->item_callback = function ($item, $model) {
+
+            $item['ctype_id'] = $this->ctype['id'];
+
+            $item['handler_title'] = string_lang('LANG_PARSER_' . mb_strtoupper($item['type']), $item['type']);
+
+            $field_class = 'field' . string_to_camel('_', $item['type']);
+
+            // Проверка тут скорее как переходная, т.к. имена полей в свойствах были неверные
+            if (class_exists($field_class)) {
+
+                $handler = new $field_class('props:'.$item['id']);
+
+                $item['handler_title'] = $handler->getTitle();
+            }
+
+            return $item;
         };
     }
 

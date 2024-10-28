@@ -1069,3 +1069,16 @@ function dump($var, $halt = true) {
     echo '</pre>';
     if ($halt) { die(); }
 }
+/**
+ * Если авторизация под админом
+ * Выводит переменную рекурсивно
+ * Используется для отладки
+ *
+ * @param mixed $var
+ * @param boolean $halt
+*/
+function dump_if_admin($var, $halt = true) {
+    if (cmsUser::isAdmin()) {
+        dump($var, $halt);
+    }
+}

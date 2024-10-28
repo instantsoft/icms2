@@ -1,10 +1,10 @@
 <?php
 
-function grid_ctype_props($controller, $drag_save_url){
+function grid_ctype_props($controller, $drag_save_url, $ctype_name){
 
     $options = [
         'is_sortable'   => false,
-        'is_filter'     => false,
+        'is_filter'     => true,
         'is_pagination' => false,
         'is_draggable'  => true,
         'drag_save_url' => $drag_save_url,
@@ -18,15 +18,27 @@ function grid_ctype_props($controller, $drag_save_url){
             'title' => 'id'
         ],
         'title' => [
-            'title' => LANG_CP_FIELD_TITLE,
-            'href'  => href_to($controller->name, 'ctypes', ['props_edit', '{ctype_id}', '{prop_id}'])
+            'title'  => LANG_CP_FIELD_TITLE,
+            'href'   => href_to($controller->name, 'ctypes', ['props_edit', '{ctype_id}', '{prop_id}']),
+            'filter_by' => 'p.title',
+            'filter' => 'like'
         ],
         'fieldset' => [
             'title'   => LANG_CP_FIELD_FIELDSET,
             'class'   => 'd-none d-lg-table-cell',
             'handler' => function ($value, $row) {
                 return $value ? $value : '&mdash;';
-            }
+            },
+            'filter_by' => 'p.fieldset',
+            'filter' => 'exact',
+            'filter_select' => array(
+                'items' => function($name) use($ctype_name) {
+                    $fieldsets = cmsCore::getModel('content')->getContentFieldsets($ctype_name, '_props');
+                    $items = ['' => LANG_ALL];
+                    foreach($fieldsets as $fieldset) { $items[$fieldset] = $fieldset; }
+                    return $items;
+                }
+            )
         ],
         'is_in_filter' => [
             'title'       => LANG_FILTER,
@@ -39,8 +51,15 @@ function grid_ctype_props($controller, $drag_save_url){
             'title'   => LANG_CP_FIELD_TYPE,
             'width'   => 150,
             'handler' => function ($value, $row) {
-                return constant('LANG_PARSER_' . mb_strtoupper($value));
-            }
+                return $row['handler_title'];
+            },
+            'filter_by' => 'p.type',
+            'filter' => 'exact',
+            'filter_select' => array(
+                'items' => function($name) {
+                    return ['' => LANG_ALL] + modelBackendContent::PROP_FIELDS;
+                }
+            )
         ]
     ];
 

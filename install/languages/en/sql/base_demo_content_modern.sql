@@ -267,7 +267,6 @@ INSERT INTO `{#}con_articles_fields` (`id`, `ctype_id`, `name`, `title`, `hint`,
 DROP TABLE IF EXISTS `{#}con_articles_props`;
 CREATE TABLE `{#}con_articles_props` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
   `type` varchar(16) DEFAULT NULL,
@@ -452,7 +451,6 @@ INSERT INTO `{#}con_news_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `or
 DROP TABLE IF EXISTS `{#}con_news_props`;
 CREATE TABLE `{#}con_news_props` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
   `type` varchar(16) DEFAULT NULL,
@@ -620,7 +618,6 @@ INSERT INTO `{#}con_posts_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `o
 DROP TABLE IF EXISTS `{#}con_posts_props`;
 CREATE TABLE `{#}con_posts_props` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
   `type` varchar(16) DEFAULT NULL,

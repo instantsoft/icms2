@@ -229,6 +229,7 @@ class modelContent extends cmsModel {
 
         if ($category_id) {
             $this->selectOnly('p.*');
+            $this->selectTranslatedField('p.values', $props_table_name, 'default');
             $this->select('c.title', 'cat_title');
             $this->select('i.cat_id');
             $this->join($props_table_name, 'p', 'p.id = i.prop_id');
@@ -241,11 +242,14 @@ class modelContent extends cmsModel {
             $this->orderBy('ordering');
             $table_name = $bind_table_name;
         } else {
+            $this->selectTranslatedField('i.values', $props_table_name, 'default');
             $table_name = $props_table_name;
         }
 
-        return $this->get($table_name, function ($item, $model) {
-            $item['options'] = self::yamlToArray($item['options']);
+        return $this->get($table_name, function ($item, $model) use($ctype_name) {
+
+            $item = $model->fieldCallback($item, $model->getContentTypeTableName($ctype_name));
+
             return $item;
         });
     }

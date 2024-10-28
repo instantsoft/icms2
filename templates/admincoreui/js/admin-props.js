@@ -116,7 +116,7 @@ icms.adminProps = (function ($) {
 
         if ($('#icms-grid tbody tr').not('.empty_tr').length === 0){ return; }
 
-        $('#icms-grid tbody tr').each(function(){
+        $('#icms-grid tbody tr .actions').each(function(){
 
            let prop_id = $('a.edit', $(this)).attr('href').split('/').pop();
            $('option[value='+prop_id+']', current_list).remove();

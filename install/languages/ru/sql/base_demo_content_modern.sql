@@ -273,7 +273,6 @@ INSERT INTO `{#}con_articles_fields` (`id`, `ctype_id`, `name`, `title`, `hint`,
 DROP TABLE IF EXISTS `{#}con_articles_props`;
 CREATE TABLE `{#}con_articles_props` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
   `type` varchar(16) DEFAULT NULL,
@@ -450,7 +449,6 @@ INSERT INTO `{#}con_board_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `o
 DROP TABLE IF EXISTS `{#}con_board_props`;
 CREATE TABLE `{#}con_board_props` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
   `type` varchar(16) DEFAULT NULL,
@@ -461,31 +459,31 @@ CREATE TABLE `{#}con_board_props` (
   KEY `is_active` (`is_in_filter`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
-INSERT INTO `{#}con_board_props` (`id`, `ctype_id`, `title`, `fieldset`, `type`, `is_in_filter`, `values`, `options`) VALUES
-(1, 9, 'Марка', NULL, 'list', 1, 'Audi\r\nBMW\r\nMercedes\r\nSkoda\r\nFiat', '---\nis_required: null\nis_multiple: null\n'),
-(3, 9, 'Тип кузова', NULL, 'list', 1, 'Седан\r\nХэтчбек\r\nУниверсал\r\nМинивэн\r\nКроссовер', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
-(6, 9, 'Год выпуска', NULL, 'number', 1, NULL, '---\nis_required: null\nunits:\nis_filter_range: 1\nis_filter_multi: null\n'),
-(7, 9, 'Тип предложения', NULL, 'list', 1, 'Продам\r\nКуплю\r\nСдам\r\nСниму', '---\nunits:\nis_required: null\nis_filter_multi: null\n'),
-(8, 9, 'Общая площадь', 'Площадь', 'number', NULL, NULL, '---\nunits: м²\nis_required: 1\nis_filter_multi: null\n'),
-(9, 9, 'Количество комнат', 'Квартира', 'number', 1, NULL, '---\nis_required: 1\nunits:\nis_filter_range: 1\nis_filter_multi: null\n'),
-(11, 9, 'Количество этажей', NULL, 'number', 1, NULL, NULL),
-(12, 9, 'Есть гараж', NULL, 'list', 1, 'Да\r\nНет', NULL),
-(13, 9, 'Тип дома', 'Дом', 'list', 1, 'Новостройка\r\nВторичка', '---\nunits:\nis_required: null\nis_filter_multi: 1\n'),
-(14, 9, 'Пробег', NULL, 'number', 1, NULL, '---\nis_required: 1\nunits: км\nis_filter_range: 1\nis_filter_multi: null\n'),
-(15, 9, 'Комплектация', NULL, 'list', NULL, 'Базовая\r\nСредняя\r\nМаксимальная', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
-(16, 9, 'Жилая площадь', 'Площадь', 'number', NULL, NULL, '---\nunits: м²\nis_required: 1\nis_filter_multi: null\n'),
-(17, 9, 'Есть балкон', 'Квартира', 'list', NULL, 'Да\r\nНет', '---\nunits:\nis_required: null\nis_filter_multi: null\n'),
-(18, 9, 'Санузел', 'Квартира', 'list', NULL, 'Смежный\r\nРаздельный', '---\nunits:\nis_required: null\nis_filter_multi: null\n'),
-(19, 9, 'Этаж', 'Дом', 'number', 1, NULL, '---\nis_required: 1\nunits:\nis_filter_range: 1\nis_filter_multi: null\n'),
-(20, 9, 'Этажей в доме', 'Дом', 'number', NULL, NULL, '---\nunits:\nis_required: 1\nis_filter_multi: null\n'),
-(21, 9, 'Модель', NULL, 'string', 1, NULL, '---\nis_required: 1\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
-(22, 9, 'Объем двигателя', NULL, 'list', 1, '0.5\r\n0.6\r\n0.7\r\n0.8\r\n0.9\r\n1.0\r\n1.2\r\n1.4\r\n1.6\r\n1.8\r\n2.0\r\n2.2\r\n2.5\r\n3.0\r\n3.2\r\n>3', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
-(23, 9, 'Трансмиссия', NULL, 'list', 1, 'Механическая\r\nАвтоматическая\r\nВариатор\r\nРобот', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
-(24, 9, 'Цвет', NULL, 'string', NULL, NULL, '---\nis_required: 1\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
-(25, 9, 'Модель Audi', NULL, 'list', 1, 'A1\r\nA2\r\nA3\r\nA4\r\nA5\r\nA6\r\nA7\r\nA8\r\nQ3\r\nQ5\r\nQ7\r\nTT', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
-(26, 9, 'Модель Ford', NULL, 'list', 1, 'Escort\r\nExplorer\r\nFiesta\r\nFocus\r\nFocus C-Max\r\nFocus RS\r\nFocus ST\r\nFusion\r\nS-max\r\nScorpio', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
-(27, 9, 'Модель Renault', NULL, 'list', 1, 'Clio\r\nDuster\r\nEspace\r\nFluence\r\nKangoo\r\nKoleos\r\nLatitude\r\nLogan\r\nMegane\r\nSandero', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
-(28, 9, 'Модель Kia', NULL, 'list', 1, 'Ceed\r\nCerato\r\nMohave\r\nOptima\r\nPregio\r\nQuoris\r\nRio\r\nShuma\r\nSoul\r\nSpectra', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n');
+INSERT INTO `{#}con_board_props` (`id`, `title`, `fieldset`, `type`, `is_in_filter`, `values`, `options`) VALUES
+(1, 'Марка', NULL, 'list', 1, 'Audi\r\nBMW\r\nMercedes\r\nSkoda\r\nFiat', '---\nis_required: null\nis_multiple: null\n'),
+(3, 'Тип кузова', NULL, 'list', 1, 'Седан\r\nХэтчбек\r\nУниверсал\r\nМинивэн\r\nКроссовер', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
+(6, 'Год выпуска', NULL, 'number', 1, NULL, '---\nis_required: null\nunits:\nis_filter_range: 1\nis_filter_multi: null\n'),
+(7, 'Тип предложения', NULL, 'list', 1, 'Продам\r\nКуплю\r\nСдам\r\nСниму', '---\nunits:\nis_required: null\nis_filter_multi: null\n'),
+(8, 'Общая площадь', 'Площадь', 'number', NULL, NULL, '---\nunits: м²\nis_required: 1\nis_filter_multi: null\n'),
+(9, 'Количество комнат', 'Квартира', 'number', 1, NULL, '---\nis_required: 1\nunits:\nis_filter_range: 1\nis_filter_multi: null\n'),
+(11, 'Количество этажей', NULL, 'number', 1, NULL, NULL),
+(12, 'Есть гараж', NULL, 'list', 1, 'Да\r\nНет', NULL),
+(13, 'Тип дома', 'Дом', 'list', 1, 'Новостройка\r\nВторичка', '---\nunits:\nis_required: null\nis_filter_multi: 1\n'),
+(14, 'Пробег', NULL, 'number', 1, NULL, '---\nis_required: 1\nunits: км\nis_filter_range: 1\nis_filter_multi: null\n'),
+(15, 'Комплектация', NULL, 'list', NULL, 'Базовая\r\nСредняя\r\nМаксимальная', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
+(16, 'Жилая площадь', 'Площадь', 'number', NULL, NULL, '---\nunits: м²\nis_required: 1\nis_filter_multi: null\n'),
+(17, 'Есть балкон', 'Квартира', 'list', NULL, 'Да\r\nНет', '---\nunits:\nis_required: null\nis_filter_multi: null\n'),
+(18, 'Санузел', 'Квартира', 'list', NULL, 'Смежный\r\nРаздельный', '---\nunits:\nis_required: null\nis_filter_multi: null\n'),
+(19, 'Этаж', 'Дом', 'number', 1, NULL, '---\nis_required: 1\nunits:\nis_filter_range: 1\nis_filter_multi: null\n'),
+(20, 'Этажей в доме', 'Дом', 'number', NULL, NULL, '---\nunits:\nis_required: 1\nis_filter_multi: null\n'),
+(21, 'Модель', NULL, 'string', 1, NULL, '---\nis_required: 1\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
+(22, 'Объем двигателя', NULL, 'list', 1, '0.5\r\n0.6\r\n0.7\r\n0.8\r\n0.9\r\n1.0\r\n1.2\r\n1.4\r\n1.6\r\n1.8\r\n2.0\r\n2.2\r\n2.5\r\n3.0\r\n3.2\r\n>3', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
+(23, 'Трансмиссия', NULL, 'list', 1, 'Механическая\r\nАвтоматическая\r\nВариатор\r\nРобот', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
+(24, 'Цвет', NULL, 'string', NULL, NULL, '---\nis_required: 1\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
+(25, 'Модель Audi', NULL, 'list', 1, 'A1\r\nA2\r\nA3\r\nA4\r\nA5\r\nA6\r\nA7\r\nA8\r\nQ3\r\nQ5\r\nQ7\r\nTT', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
+(26, 'Модель Ford', NULL, 'list', 1, 'Escort\r\nExplorer\r\nFiesta\r\nFocus\r\nFocus C-Max\r\nFocus RS\r\nFocus ST\r\nFusion\r\nS-max\r\nScorpio', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
+(27, 'Модель Renault', NULL, 'list', 1, 'Clio\r\nDuster\r\nEspace\r\nFluence\r\nKangoo\r\nKoleos\r\nLatitude\r\nLogan\r\nMegane\r\nSandero', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n'),
+(28, 'Модель Kia', NULL, 'list', 1, 'Ceed\r\nCerato\r\nMohave\r\nOptima\r\nPregio\r\nQuoris\r\nRio\r\nShuma\r\nSoul\r\nSpectra', '---\nis_required: null\nunits:\nis_filter_range: null\nis_filter_multi: null\n');
 
 DROP TABLE IF EXISTS `{#}con_board_props_bind`;
 CREATE TABLE `{#}con_board_props_bind` (
@@ -752,7 +750,6 @@ INSERT INTO `{#}con_news_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `or
 DROP TABLE IF EXISTS `{#}con_news_props`;
 CREATE TABLE `{#}con_news_props` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
   `type` varchar(16) DEFAULT NULL,
@@ -920,7 +917,6 @@ INSERT INTO `{#}con_posts_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `o
 DROP TABLE IF EXISTS `{#}con_posts_props`;
 CREATE TABLE `{#}con_posts_props` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
   `type` varchar(16) DEFAULT NULL,

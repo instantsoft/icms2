@@ -69,32 +69,39 @@ trait fieldable {
      */
     protected function fieldCallback($item, $table, $item_id = 0) {
 
-        $item['options']     = self::yamlToArray($item['options']);
-        $item['options']     = array_merge($this->getDefaultContentFieldOptions(), $item['options']);
-        $item['groups_read'] = self::yamlToArray($item['groups_read']);
-        $item['groups_add']  = self::yamlToArray($item['groups_add']);
-        $item['groups_edit'] = self::yamlToArray($item['groups_edit']);
-        $item['filter_view'] = self::yamlToArray($item['filter_view']);
+        foreach (['options', 'groups_read', 'groups_add', 'groups_edit', 'filter_view'] as $key) {
+            $item[$key] = self::yamlToArray($item[$key] ?? []);
+        }
+
+        $item['options'] = array_merge($this->getDefaultContentFieldOptions(), $item['options']);
 
         $item = $this->formatFieldVisibleDepend($item);
 
         $rules = [];
-        if ($item['options']['is_required']) { $rules[] = ['required']; }
-        if ($item['options']['is_digits']) { $rules[] = ['digits']; }
-        if ($item['options']['is_number']) { $rules[] = ['number']; }
-        if ($item['options']['is_alphanumeric']) { $rules[] = ['alphanumeric']; }
-        if ($item['options']['is_email']) { $rules[] = ['email']; }
-        if (!empty($item['options']['is_url'])) { $rules[] = ['url']; }
+
+        $rule_mappings = [
+            'is_required'     => 'required',
+            'is_digits'       => 'digits',
+            'is_number'       => 'number',
+            'is_alphanumeric' => 'alphanumeric',
+            'is_email'        => 'email',
+            'is_url'          => 'url'
+        ];
+
+        foreach ($rule_mappings as $key => $rule_name) {
+            if (!empty($item['options'][$key])) {
+                $rules[] = [$rule_name];
+            }
+        }
+
         if (!empty($item['options']['is_regexp']) && !empty($item['options']['rules_regexp_str'])) {
             $rules[] = ['regexp', $item['options']['rules_regexp_str'], get_localized_value('rules_regexp_error', $item['options'])];
         }
-        ;
-        if ($item['options']['is_unique']) {
-            if (!$item_id) {
-                $rules[] = ['unique', $table, $item['name']];
-            } else {
-                $rules[] = ['unique_exclude', $table, $item['name'], $item_id];
-            }
+
+        if (!empty($item['options']['is_unique'])) {
+            $rules[] = !$item_id
+                ? ['unique', $table, $item['name']]
+                : ['unique_exclude', $table, $item['name'], $item_id];
         }
 
         $item['rules'] = $rules;
@@ -196,11 +203,16 @@ trait fieldable {
      * @param string $ctype_name Имя типа контента
      * @param integer|string $id ID поля: номер или имя
      * @param string $by_field В каком поле искать ID: если ищем по имени, то передать нужно name
+     * @param string $table_postfix Последняя часть названия таблицы с полями
      * @return array
      */
-    public function getContentField(string $ctype_name, $id, $by_field = 'id') {
+    public function getContentField(string $ctype_name, $id, $by_field = 'id', $table_postfix = '_fields') {
 
-        $table_name = $this->getContentTypeTableName($ctype_name, '_fields');
+        $table_name = $this->getContentTypeTableName($ctype_name, $table_postfix);
+
+        if (!$this->db->isTableExists($table_name)) {
+            return false;
+        }
 
         $this->useCache('content.fields.' . $ctype_name);
 
@@ -243,9 +255,10 @@ trait fieldable {
      * Возвращет массив групп полей
      *
      * @param integer|string $ctype_id id типа контента или его имя
+     * @param string $table_postfix Последняя часть названия таблицы с полями
      * @return array
      */
-    public function getContentFieldsets($ctype_id) {
+    public function getContentFieldsets($ctype_id, $table_postfix = '_fields') {
 
         if (is_numeric($ctype_id)) {
 
@@ -261,7 +274,7 @@ trait fieldable {
             $ctype_name = $ctype_id;
         }
 
-        $table_name = $this->getContentTypeTableName($ctype_name, '_fields');
+        $table_name = $this->getContentTypeTableName($ctype_name, $table_postfix);
 
         $this->useCache('content.fields.' . $ctype_name);
 

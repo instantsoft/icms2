@@ -1,6 +1,7 @@
 <?php
 /**
  * @property \modelModeration $model
+ * @property \messages $controller_messages
  */
 class moderation extends cmsFrontend {
 
@@ -79,10 +80,20 @@ class moderation extends cmsFrontend {
      * успешной или неуспешной
      *
      * @param array $item Массив модерируемой записи
-     * @param string $letter moderation_approved || moderation_refused || moderation_rework
+     * @param string $type Типа уведомления moderation_approved | moderation_refused | moderation_rework | moderation_comment_refused
+     *                     Должна быть языковая константа LANG_PM_$type, либо, если передан аргумент $letter
+     *                     $type должен содержать текстовую фразу аналогично тем, что в константах LANG_PM_MODERATION_*
+     * @param ?string $letter Имя файла email письма без расширения
      * @return $this
      */
-    public function moderationNotifyAuthor($item, $letter) {
+    public function moderationNotifyAuthor($item, $type, $letter = null) {
+
+        $page_url = $item['page_url'] ?? '';
+        $reason   = $item['reason'] ?? '';
+
+        if (!$letter) {
+            $letter = $type;
+        }
 
         // автор гость
         if (empty($item['user_id'])) {
@@ -99,8 +110,8 @@ class moderation extends cmsFrontend {
             $this->controller_messages->sendEmail($to, $letter, [
                 'nickname'   => $author_name,
                 'page_title' => $item['title'],
-                'page_url'   => (isset($item['page_url']) ? $item['page_url'] : ''),
-                'reason'     => (isset($item['reason']) ? $item['reason'] : ''),
+                'page_url'   => $page_url,
+                'reason'     => $reason,
                 'date'       => html_date_time()
             ]);
 
@@ -114,7 +125,7 @@ class moderation extends cmsFrontend {
 
         // личное сообщение
         $this->controller_messages->addRecipient($author['id'])->sendNoticePM([
-            'content' => sprintf(string_lang('PM_' . $letter), $item['title'], (isset($item['page_url']) ? $item['page_url'] : ''), (isset($item['reason']) ? $item['reason'] : ''))
+            'content' => sprintf(string_lang('PM_' . $type, $type), $item['title'], $page_url, $reason)
         ]);
 
         // EMAIL уведомление
@@ -123,8 +134,8 @@ class moderation extends cmsFrontend {
         $this->controller_messages->sendEmail($to, $letter, [
             'nickname'   => $author['nickname'],
             'page_title' => $item['title'],
-            'page_url'   => (isset($item['page_url']) ? $item['page_url'] : ''),
-            'reason'     => (isset($item['reason']) ? $item['reason'] : ''),
+            'page_url'   => $page_url,
+            'reason'     => $reason,
             'date'       => html_date_time()
         ]);
 
@@ -137,10 +148,18 @@ class moderation extends cmsFrontend {
      * @param string $target_name Имя цели модерации
      * @param array $item Массив модерируемой записи
      * @param string $ups_key Ключ UPS для записей просмотра модераций
-     * @param string $letter Название письма для уведомления
+     * @param string $letter_name Имя файла email письма без расширения для уведомления
      * @return array $task
      */
-    public function approve($target_name, $item, $ups_key = false, $letter = 'moderation_approved') {
+    public function approve($target_name, $item, $ups_key = false, $letter_name = 'moderation_approved') {
+
+        $letter = $this->getLetterForTarget($letter_name, $target_name);
+
+        if (is_array($letter)) {
+            list($type, $letter) = $letter;
+        } else {
+            $type = $letter;
+        }
 
         $task = $this->model->getModeratorTask($target_name, $item['id']);
 
@@ -154,7 +173,7 @@ class moderation extends cmsFrontend {
 
         $item = cmsEventsManager::hook("content_{$target_name}_after_{$after_action}_approve", $item, null, $this->request);
 
-        $this->moderationNotifyAuthor($item, $letter);
+        $this->moderationNotifyAuthor($item, $type, $letter);
 
         if ($ups_key) {
             cmsUser::deleteUPSlist($ups_key);
@@ -242,7 +261,15 @@ class moderation extends cmsFrontend {
             'moderation_' . $target_name . '_rework'
         ], [$target_name, $item, $task], null, $this->request);
 
-        $this->moderationNotifyAuthor($item, 'moderation_rework');
+        $letter = $this->getLetterForTarget('moderation_rework', $target_name);
+
+        if (is_array($letter)) {
+            list($type, $letter) = $letter;
+        } else {
+            $type = $letter;
+        }
+
+        $this->moderationNotifyAuthor($item, $type, $letter);
 
         if ($ups_key) {
             cmsUser::deleteUPSlist($ups_key);
@@ -309,6 +336,26 @@ class moderation extends cmsFrontend {
         ], [$ctype_name, $user_id, $item, false]);
 
         return $is_moderator;
+    }
+
+    /**
+     * Возвращает имя файла email письма без расширения
+     * Если есть файл письма $letter_name . '_' . $target_name
+     * Возвращает это имя
+     *
+     * @param string $letter_name Имя файла email письма без расширения
+     * @param string $target_name Имя цели модерации
+     * @return string|array
+     */
+    public function getLetterForTarget($letter_name, $target_name) {
+
+        $letter_target = $letter_name . '_' . $target_name;
+
+        if (cmsCore::isLanguageTextFileExists('letters/'.$letter_target)) {
+            return [$letter_name, $letter_target];
+        }
+
+        return $letter_name;
     }
 
 }

@@ -461,7 +461,7 @@ class cmsCore {
 
         if (!class_exists($controller_name, false)) {
             if (!is_readable($ctrl_file)) {
-                if ($request->isStandard()) {
+                if (!$request->isInternal()) {
                     return self::error404();
                 }
                 return self::error(ERR_COMPONENT_NOT_FOUND . ': ' . str_replace($config->root_path, '', $ctrl_file));
@@ -676,22 +676,39 @@ class cmsCore {
     }
 
     /**
-     * Возвращает содержимое текстового файла из папки с текущим языком
+     * Возвращает содержимое текстового файла из директории с текущим языком
      *
-     * @param string $file Относительный путь к файлу
+     * @param string $file Имя файла без расширения
      * @return string
      */
     public static function getLanguageTextFile($file) {
 
-        $lang_dir = cmsConfig::get('root_path') . 'system/languages/' . self::$language;
+        $lang_file_path = self::getLanguageTextFileExistsPath($file);
 
-        $lang_file = $lang_dir . '/' . $file . '.txt';
+        return $lang_file_path ? file_get_contents($lang_file_path) : '';
+    }
 
-        if (!file_exists($lang_file)) {
-            return '';
-        }
+    /**
+     * Возвращает путь к текстовому файлу из директории с текущим языком
+     *
+     * @param string $file Имя файла без расширения
+     * @return bool|string
+     */
+    public static function getLanguageTextFileExistsPath($file) {
 
-        return file_get_contents($lang_file);
+        $lang_path = cmsConfig::get('root_path') . 'system/languages/' . self::$language. '/' . $file . '.txt';
+
+        return !file_exists($lang_path) ? false : $lang_path;
+    }
+
+    /**
+     * Проверяет наличие текстового файла в директории с текущим языком
+     *
+     * @param string $file Имя файла без расширения
+     * @return bool
+     */
+    public static function isLanguageTextFileExists($file) {
+        return self::getLanguageTextFileExistsPath($file) ? true : false;
     }
 
     /**

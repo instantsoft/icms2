@@ -19,7 +19,7 @@
     $this->addToolButton([
         'class' => 'save',
         'title' => LANG_SAVE,
-        'href'  => "javascript:icms.forms.submit()"
+        'href'  => 'javascript:icms.forms.submit()'
     ]);
 
     $this->addToolButton([
@@ -37,7 +37,12 @@
         ]
     ]);
 
-    $this->renderForm($form, $prop, [
-        'action' => '',
-        'method' => 'post'
-    ], $errors);
+    $this->renderControllerChild('admin', 'form_field', [
+        'fields_options_link' => $this->href_to('ctypes', ['fields_options']),
+        'ctype_name'          => $ctype['name'],
+        'postfix'             => '_props',
+        'do'                  => $do,
+        'errors'              => $errors,
+        'form'                => $form,
+        'field'               => $prop
+    ]);

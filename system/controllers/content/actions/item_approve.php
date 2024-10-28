@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @property \modelContent $model
+ * @property \moderation $controller_moderation
+ */
 class actionContentItemApprove extends cmsAction {
 
     public function run() {
@@ -30,7 +33,11 @@ class actionContentItemApprove extends cmsAction {
 
         $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
 
-        $this->controller_moderation->approve($ctype['name'], $item, $this->getUniqueKey([$ctype['name'], 'moderation', $item['id']]));
+        $this->controller_moderation->approve(
+                $ctype['name'],
+                $item,
+                $this->getUniqueKey([$ctype['name'], 'moderation', $item['id']])
+            );
 
         cmsUser::addSessionMessage(LANG_MODERATION_APPROVED, 'success');
 

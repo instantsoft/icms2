@@ -32,21 +32,42 @@ class actionAdminCtypesPropsEdit extends cmsAction {
 
         if ($is_submitted) {
 
-            $prop   = $form->parse($this->request, $is_submitted);
+            // добавляем поля настроек типа поля в общую форму
+            // чтобы они были обработаны парсером и валидатором
+            // вместе с остальными полями
+            $field_type   = $this->request->get('type', '');
+            $field_class  = 'field' . string_to_camel('_', $field_type);
+
+            if (!class_exists($field_class)) {
+                return cmsCore::error(ERR_CLASS_NOT_FOUND);
+            }
+
+            $field_object = new $field_class(null, [
+                'subject_name' => $ctype['name']
+            ]);
+
+            $field_options = $field_object->getOptions();
+
+            $form->addFieldsetAfter('type', LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
+
+            $form->mergeForm($this->makeForm(function ($form) use ($field_options) {
+
+                $form->addFieldset(LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
+
+                foreach ($field_options as $field_field) {
+
+                    $field_field->setName("options:{$field_field->name}");
+
+                    $form->addField('field_settings', $field_field);
+                }
+
+                return $form;
+            }));
+
+            $prop   = array_merge($prop, $form->parse($this->request, $is_submitted, $prop));
             $errors = $form->validate($this, $prop);
 
             if (!$errors) {
-
-                // если не выбрана группа, обнуляем поле группы
-                if (!$prop['fieldset']) {
-                    $prop['fieldset'] = null;
-                }
-
-                // если создается новая группа, то выбираем ее
-                if ($prop['new_fieldset']) {
-                    $prop['fieldset'] = $prop['new_fieldset'];
-                }
-                unset($prop['new_fieldset']);
 
                 // сохраняем поле
                 $this->model_backend_content->updateContentProp($ctype['name'], $prop_id, $prop);

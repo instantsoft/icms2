@@ -724,10 +724,6 @@ class admin extends cmsFrontend {
 
         foreach ($controllers as $controller_name) {
 
-            if (!cmsController::enabled($controller_name)) {
-                continue;
-            }
-
             $ctrl_file = $this->cms_config->root_path . 'system/controllers/' . $controller_name . '/frontend.php';
             if (!is_readable($ctrl_file)) {
                 continue;
