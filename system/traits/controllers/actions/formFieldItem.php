@@ -8,7 +8,7 @@ use cmsForm;
 use cmsEventsManager;
 
 /**
- * Трейт для экшена формы
+ * Трейт для экшена поля типа контента формы
  *
  * @property \cmsTemplate $cms_template
  * @property \cmsRequest $request
@@ -159,12 +159,26 @@ trait formFieldItem {
             if ($field['is_system']) {
                 $form->hideField('basic', 'hint');
                 $form->hideField('visibility', 'options:relation_id');
+                $form->hideField('visibility', 'options:visible_depend');
                 $form->setFieldProperty('visibility', 'options:is_in_item_pos', 'is_visible', false);
                 $form->hideFieldset('group');
                 $form->hideFieldset('format');
                 $form->hideFieldset('values');
                 $form->hideFieldset('labels');
                 $form->hideFieldset('wrap');
+                $form->hideFieldset('edit_access');
+            }
+
+            // скроем лишние опции для виртуальных полей
+            if ($field['parser']->is_virtual) {
+                $form->hideField('basic', 'hint');
+                $form->hideField('visibility', 'options:relation_id');
+                $form->hideField('visibility', 'options:visible_depend');
+                $form->hideFieldset('group');
+                $form->hideFieldset('format');
+                $form->hideFieldset('values');
+                $form->hideFieldset('add_access');
+                $form->hideFieldset('author_access');
                 $form->hideFieldset('edit_access');
             }
         }

@@ -43,6 +43,12 @@ class modelBackendContent extends modelContent {
 
         $id = $this->insert('content_types', $ctype);
 
+        // Создаём поля (кэшировать сейчас нечего)
+        if (!empty($ctype['options']['show_items_counts'])) {
+
+            $this->cacheCategoriesItemsCount($ctype['name']);
+        }
+
         $config = cmsConfig::getInstance();
 
         // получаем структуру таблиц для хранения контента данного типа
@@ -164,11 +170,22 @@ class modelBackendContent extends modelContent {
         return $id;
     }
 
-    public function updateContentType($id, $item){
+    public function updateContentType($id, $ctype){
 
         cmsCache::getInstance()->clean('content.types');
 
-        return $this->update('content_types', $id, $item);
+        $result = $this->update('content_types', $id, $ctype);
+
+        if (!empty($ctype['options']['show_items_counts'])) {
+
+            $this->cacheCategoriesItemsCount($ctype['name']);
+
+        } else {
+
+            $this->dropCacheCategoriesItemsCountFields($ctype['name']);
+        }
+
+        return $result;
     }
 
     public function deleteContentType($id){
@@ -615,6 +632,7 @@ class modelBackendContent extends modelContent {
     }
 
     public function getContentRelation($id, $by_field = 'id'){
+
         return $this->getItemByField('content_relations', $by_field, $id, function($item){
             $item['options'] = cmsModel::yamlToArray($item['options']);
             return $item;
@@ -623,28 +641,87 @@ class modelBackendContent extends modelContent {
 
     public function addContentRelation($relation){
 
+        $this->addContentRelationChildField($relation);
+
         cmsCache::getInstance()->clean('content.relations');
 
         $relation['ordering'] = $this->getNextOrdering('content_relations');
 
         return $this->insert('content_relations', $relation);
-
     }
 
     public function updateContentRelation($id, $relation){
 
         cmsCache::getInstance()->clean('content.relations');
 
-        return $this->update('content_relations', $id, $relation);
+        $this->addContentRelationChildField($relation);
 
+        return $this->update('content_relations', $id, $relation);
+    }
+
+    protected function addContentRelationChildField($relation) {
+
+        $is_add = false;
+
+        if (empty($relation['ctype_id']) ||
+                empty($relation['child_ctype_id']) ||
+                empty($relation['layout'])) {
+            return $is_add;
+        }
+
+        $ctype = $this->getContentType($relation['ctype_id']);
+        $ctype_child = $this->getContentType($relation['child_ctype_id']);
+
+        $field_name = 'rel_'.$ctype_child['name'].'_id';
+
+        $is_field_exists = $this->isContentFieldExists($ctype['name'], $field_name);
+
+        if ($relation['layout'] === 'field') {
+
+            if (!$is_field_exists) {
+
+                $this->addContentField($ctype['name'], [
+                    'type'          => 'child',
+                    'ctype_id'      => $relation['ctype_id'],
+                    'name'          => $field_name,
+                    'title'         => string_ucfirst($ctype_child['labels']['one']),
+                    'options'       => [],
+                    'is_fixed'      => true,
+                    'is_in_item'    => true,
+                    'is_in_filter'  => false,
+                    'is_fixed_type' => true
+                ], true);
+
+                $is_add = true;
+            }
+
+        } else {
+
+            if ($is_field_exists) {
+
+                $this->deleteContentField($ctype['name'], $field_name, 'name', true);
+            }
+        }
+
+        return $is_add;
     }
 
     public function deleteContentRelation($id){
 
+        $relation = $this->getContentRelation($id);
+
+        $ctype = $this->getContentType($relation['ctype_id']);
+        $ctype_child = $this->getContentType($relation['child_ctype_id']);
+
+        $field_name = 'rel_'.$ctype_child['name'].'_id';
+
+        if ($this->isContentFieldExists($ctype['name'], $field_name)) {
+            $this->deleteContentField($ctype['name'], $field_name, 'name', true);
+        }
+
         cmsCache::getInstance()->clean('content.relations');
 
         return $this->delete('content_relations', $id);
-
     }
 
 //============================================================================//

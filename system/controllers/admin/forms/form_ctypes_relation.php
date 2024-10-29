@@ -92,9 +92,10 @@ class formAdminCtypesRelation extends cmsForm {
                     new fieldList('layout', [
                         'title' => LANG_CP_RELATION_LAYOUT_TYPE,
                         'items' => [
-                            'list' => LANG_CP_RELATION_LAYOUT_LIST,
-                            'tab' => LANG_CP_RELATION_LAYOUT_TAB,
-                            'hidden' => LANG_CP_RELATION_LAYOUT_HIDDEN,
+                            'list'   => LANG_CP_RELATION_LAYOUT_LIST,
+                            'field'  => LANG_CP_RELATION_LAYOUT_FIELD,
+                            'tab'    => LANG_CP_RELATION_LAYOUT_TAB,
+                            'hidden' => LANG_CP_RELATION_LAYOUT_HIDDEN
                         ]
                     ]),
 

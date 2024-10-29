@@ -112,6 +112,16 @@ if (!$is_frontpage){
                                 <a href="<?php echo $c['list_params']['href']; ?>">
                                     <?php echo $c['title']; ?>
                                 </a>
+                                <?php if(isset($c['item_count_recursive'])){ ?>
+                                    <small class="text-secondary mt-1 icms-content-subcats__count d-block">
+                                        <?php echo html_spellcount(
+                                                $c['item_count_recursive'],
+                                                $ctype['labels']['one'],
+                                                $ctype['labels']['two'],
+                                                $ctype['labels']['many']
+                                            ); ?>
+                                    </small>
+                                <?php } ?>
                             </h2>
                         </div>
                     </div>
@@ -126,6 +136,11 @@ if (!$is_frontpage){
                     <a href="<?php echo $c['list_params']['href']; ?>">
                         <?php echo $c['title']; ?>
                     </a>
+                    <?php if(isset($c['item_count_recursive'])){ ?>
+                        <sup class="text-secondary icms-content-subcats__count">
+                            <?php echo $c['item_count_recursive']; ?>
+                        </sup>
+                    <?php } ?>
                 </li>
             <?php } ?>
         </ul>

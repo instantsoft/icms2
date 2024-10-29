@@ -103,12 +103,9 @@ class modelWidgets extends cmsModel {
             $item['groups']    = cmsModel::yamlToArray($item['groups']);
             $item['countries'] = cmsModel::yamlToArray($item['countries']);
 
-            if ($item['url_mask']) {
-                $item['url_mask'] = explode("\n", $item['url_mask']);
-            }
-            if ($item['url_mask_not']) {
-                $item['url_mask_not'] = explode("\n", $item['url_mask_not']);
-            }
+            $item['url_mask'] = $item['url_mask'] ? explode("\n", $item['url_mask']) : [];
+
+            $item['url_mask_not'] = $item['url_mask_not'] ? explode("\n", $item['url_mask_not']) : [];
 
             return $item;
         }, false) ?: [];

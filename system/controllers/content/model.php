@@ -911,6 +911,64 @@ class modelContent extends cmsModel {
 //============================================================================//
 //============================================================================//
 
+    public function dropCacheCategoriesItemsCountFields($ctype_name) {
+
+        $cats_table_name = $this->getContentCategoryTableName($ctype_name);
+
+        foreach (['item_count', 'item_count_recursive'] as $cache_field_name) {
+            if ($this->db->isFieldExists($cats_table_name, $cache_field_name, false)) {
+                $this->db->dropTableField($cats_table_name, $cache_field_name);
+            }
+        }
+    }
+
+    public function cacheCategoriesItemsCount($ctype_name) {
+
+        $ctype = $this->getContentTypeByName($ctype_name);
+
+        if (!$ctype || empty($ctype['options']['show_items_counts'])) {
+            return $this;
+        }
+
+        $cats_table_name = $this->getContentCategoryTableName($ctype_name);
+        $bind_table_name = $this->getContentTypeTableName($ctype_name, '_cats_bind');
+
+        foreach (['item_count', 'item_count_recursive'] as $cache_field_name) {
+            $this->db->addTableField($cats_table_name, $cache_field_name, "int(11) unsigned NOT NULL DEFAULT '0'");
+        }
+
+        $this->db->query("UPDATE {#}{$cats_table_name} "
+        . "SET item_count=(SELECT COUNT(category_id) FROM {#}{$bind_table_name} "
+        . "WHERE category_id = {#}{$cats_table_name}.id)");
+
+        cmsCache::getInstance()->clean('content.categories');
+
+        $cats = $this->selectOnly('ns_level')->select('item_count')->
+                select('ns_left')->select('ns_right')->select('id')->
+                filterGt('parent_id', 0)->orderBy('ns_left')->
+                get($cats_table_name) ?: [];
+
+        foreach ($cats as $cat) {
+
+            $cat['item_count_recursive'] = $cat['item_count'];
+
+            $paths = array_filter($cats, function ($item) use ($cat) {
+                return ($item['ns_left'] > $cat['ns_left'] &&
+                $item['ns_level'] > $cat['ns_level'] &&
+                $item['ns_right'] < $cat['ns_right'] &&
+                $item['ns_level'] > 0);
+            });
+
+            foreach ($paths as $path) {
+                $cat['item_count_recursive'] += $path['item_count'];
+            }
+
+            $this->db->query("UPDATE {#}{$cats_table_name} SET item_count_recursive = {$cat['item_count_recursive']} WHERE id='{$cat['id']}'");
+        }
+
+        return $this;
+    }
+
     public function getContentItemCategories($ctype_name, $id) {
 
         return $this->filterEqual('item_id', $id)->
@@ -986,6 +1044,8 @@ class modelContent extends cmsModel {
         cmsCache::getInstance()->clean('content.list.'.$ctype['name']);
         cmsCache::getInstance()->clean('content.item.'.$ctype['name']);
 
+        $this->cacheCategoriesItemsCount($ctype['name']);
+
         return true;
     }
 
@@ -1029,6 +1089,7 @@ class modelContent extends cmsModel {
             }
         }
 
+        $this->cacheCategoriesItemsCount($ctype_name);
     }
 
 //============================================================================//
@@ -1053,6 +1114,8 @@ class modelContent extends cmsModel {
         cmsEventsManager::hook('content_after_restore', [$ctype_name, $item]);
         cmsEventsManager::hook("content_{$ctype_name}_after_restore", $item);
 
+        $this->cacheCategoriesItemsCount($ctype_name);
+
         return $success;
     }
 
@@ -1074,6 +1137,8 @@ class modelContent extends cmsModel {
 
         cmsEventsManager::hook('content_after_trash_put', [$ctype_name, $item]);
         cmsEventsManager::hook("content_{$ctype_name}_after_trash_put", $item);
+
+        $this->cacheCategoriesItemsCount($ctype_name);
 
         return $success;
     }
@@ -1111,8 +1176,11 @@ class modelContent extends cmsModel {
         $success = $this->delete($table_name, $id);
 
         if ($success) {
+
             cmsEventsManager::hook('content_after_delete', ['ctype_name' => $ctype_name, 'ctype' => $ctype, 'item' => $item]);
             cmsEventsManager::hook("content_{$ctype_name}_after_delete", $item);
+
+            $this->cacheCategoriesItemsCount($ctype_name);
         }
 
         return $success;
@@ -1673,6 +1741,8 @@ class modelContent extends cmsModel {
 
         cmsCache::getInstance()->clean('content.list.' . $ctype_name);
         cmsCache::getInstance()->clean('content.item.' . $ctype_name);
+
+        $this->cacheCategoriesItemsCount($ctype_name);
 
         return true;
     }

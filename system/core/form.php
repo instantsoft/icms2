@@ -741,7 +741,7 @@ class cmsForm {
      */
     public function setFieldsetAttribute($fieldset_id, $attr_name, $value) {
 
-        if(isset($this->structure[$fieldset_id][$attr_name])){
+        if(isset($this->structure[$fieldset_id])){
             $this->structure[$fieldset_id][$attr_name] = $value;
         }
 

@@ -135,41 +135,24 @@ class actionContentItemView extends cmsAction {
 
         }
 
-        // Получаем поля для данного типа контента
-        $fields = $this->model->getContentFields($ctype['name']);
-
-        // Запоминаем копию записи для заполнения отпарсенных полей
-        $item_parsed = $item;
-
-        // Парсим значения полей
-        foreach ($fields as $name => $field) {
-            $fields[$name]['html'] = $field['handler']->setItem($item)->parse(isset($item[$name]) ? $item[$name] : '');
-            $item_parsed[$name] = $fields[$name]['html'];
-        }
-
-        // Для каких необходимо, обрабатываем дополнительно
-        foreach ($fields as $name => $field) {
-            $fields[$name]['string_value'] = $field['handler']->setItem($item_parsed)->getStringValue(isset($item[$name]) ? $item[$name] : '');
-            $fields[$name]['html'] = $field['handler']->afterParse($fields[$name]['html'], $item_parsed);
-        }
-
         // формируем связи (дочерние списки)
         $childs = [
             'relations' => $this->model->getContentTypeChilds($ctype['id']),
             'to_add'    => [],
             'to_bind'   => [],
             'to_unbind' => [],
+            'fields'    => [],
             'tabs'      => [],
-            'items'     => []
+            'lists'     => []
         ];
 
-        if ($childs['relations']){
+        if ($childs['relations']) {
 
-            foreach($childs['relations'] as $relation){
+            foreach ($childs['relations'] as $relation) {
 
                 // пропускаем все не контентные связи
                 // их должен обработать хук content_before_childs
-                if($relation['target_controller'] !== 'content'){
+                if ($relation['target_controller'] !== 'content') {
                     continue;
                 }
 
@@ -178,14 +161,14 @@ class actionContentItemView extends cmsAction {
                         ($perm === 'to_all' ||
                         ($perm === 'to_own' && $item['user_id'] == $this->cms_user->id) ||
                         ($perm === 'to_other' && $item['user_id'] != $this->cms_user->id)
-                )) || $this->cms_user->is_admin;
+                        )) || $this->cms_user->is_admin;
 
                 $perm = cmsUser::getPermissionValue($relation['child_ctype_name'], 'bind_to_parent');
                 $is_allowed_to_bind = ($perm && (
-                    ($perm === 'all_to_all' || $perm === 'own_to_all' || $perm === 'other_to_all') ||
-                    (($perm === 'all_to_own' || $perm === 'own_to_own' || $perm === 'other_to_own') && ($item['user_id'] == $this->cms_user->id)) ||
-                    (($perm === 'all_to_other' || $perm === 'own_to_other' || $perm === 'other_to_other') && ($item['user_id'] != $this->cms_user->id))
-                )) || $this->cms_user->is_admin;
+                        ($perm === 'all_to_all' || $perm === 'own_to_all' || $perm === 'other_to_all') ||
+                        (($perm === 'all_to_own' || $perm === 'own_to_own' || $perm === 'other_to_own') && ($item['user_id'] == $this->cms_user->id)) ||
+                        (($perm === 'all_to_other' || $perm === 'own_to_other' || $perm === 'other_to_other') && ($item['user_id'] != $this->cms_user->id))
+                        )) || $this->cms_user->is_admin;
 
                 $is_allowed_to_unbind = cmsUser::isAllowed($relation['child_ctype_name'], 'bind_off_parent');
 
@@ -201,10 +184,10 @@ class actionContentItemView extends cmsAction {
 
                 $child_ctype = $this->model->getContentTypeByName($relation['child_ctype_name']);
 
-                $filter =   "r.parent_ctype_id = {$ctype['id']} AND ".
-                            "r.parent_item_id = {$item['id']} AND ".
-                            "r.child_ctype_id = {$relation['child_ctype_id']} AND ".
-                            "r.child_item_id = i.id";
+                $filter = "r.parent_ctype_id = {$ctype['id']} AND " .
+                        "r.parent_item_id = {$item['id']} AND " .
+                        "r.child_ctype_id = {$relation['child_ctype_id']} AND " .
+                        "r.child_item_id = i.id";
 
                 $this->model->joinInner('content_relations_bind', 'r', $filter);
 
@@ -213,56 +196,87 @@ class actionContentItemView extends cmsAction {
 
                 $count = $this->model->getContentItemsCount($relation['child_ctype_name']);
 
-                $is_hide_empty = $relation['options']['is_hide_empty'];
+                if (!$count && $relation['options']['is_hide_empty']) {
 
-                if (($count || !$is_hide_empty) && $relation['layout'] === 'tab'){
+                    $this->model->resetFilters();
+
+                    continue;
+                }
+
+                if ($relation['layout'] === 'tab') {
 
                     $childs['tabs'][$relation['child_ctype_name']] = [
                         'title'       => $relation['title'],
-                        'url'         => href_to($ctype['name'], $item['slug'].'/view-'.$relation['child_ctype_name']),
+                        'url'         => href_to($ctype['name'], $item['slug'] . '/view-' . $relation['child_ctype_name']),
                         'counter'     => $count,
                         'relation_id' => $relation['id'],
                         'ordering'    => $relation['ordering']
                     ];
                 }
 
-                if (!$this->request->has('child_ctype_name') && ($count || !$is_hide_empty) && $relation['layout'] === 'list'){
+                if (!$this->request->has('child_ctype_name') && in_array($relation['layout'], ['list', 'field'])) {
 
-                    if (!empty($relation['options']['limit'])){
+                    if (!empty($relation['options']['limit'])) {
                         $child_ctype['options']['limit'] = $relation['options']['limit'];
                     }
 
-                    if (!empty($relation['options']['is_hide_filter'])){
+                    if (!empty($relation['options']['is_hide_filter'])) {
                         $child_ctype['options']['list_show_filter'] = false;
                     }
 
-                    if (!empty($relation['options']['dataset_id'])){
+                    if (!empty($relation['options']['dataset_id'])) {
 
                         $dataset = cmsCore::getModel('content')->getContentDataset($relation['options']['dataset_id']);
 
-                        if ($dataset){
+                        if ($dataset) {
                             $this->model->applyDatasetFilters($dataset);
                         }
                     }
 
-                    $childs['lists'][] = [
+                    $list_item = [
                         'title'       => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
                         'ctype_name'  => $relation['child_ctype_name'],
-                        'html'        => $this->setListContext('item_view_relation_list')->
-                            renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'] . '.html')),
+                        'html'        => $this->setListContext('form_field')->
+                                renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'] . '.html')),
                         'relation_id' => $relation['id'],
                         'ordering'    => $relation['ordering']
                     ];
+
+                    if ($relation['layout'] === 'list') {
+                        $childs['lists'][] = $list_item;
+                    }
+
+                    if ($relation['layout'] === 'field') {
+                        $item['rel_' . $relation['child_ctype_name'] . '_id'] = $list_item;
+                    }
                 }
 
                 $this->model->resetFilters();
             }
 
             list($ctype, $childs, $item) = cmsEventsManager::hook('content_before_childs', [$ctype, $childs, $item]);
+
+            array_order_by($childs['tabs'], 'ordering');
+            array_order_by($childs['lists'], 'ordering');
         }
 
-        array_order_by($childs['tabs'], 'ordering');
-        array_order_by($childs['lists'], 'ordering');
+        // Получаем поля для данного типа контента
+        $fields = $this->model->resetFilters()->getContentFields($ctype['name']);
+
+        // Запоминаем копию записи для заполнения отпарсенных полей
+        $item_parsed = $item;
+
+        // Парсим значения полей
+        foreach ($fields as $name => $field) {
+            $fields[$name]['html'] = $field['handler']->setItem($item)->parse(isset($item[$name]) ? $item[$name] : '');
+            $item_parsed[$name] = $fields[$name]['html'];
+        }
+
+        // Для каких необходимо, обрабатываем дополнительно
+        foreach ($fields as $name => $field) {
+            $fields[$name]['string_value'] = $field['handler']->setItem($item_parsed)->getStringValue(isset($item[$name]) ? $item[$name] : '');
+            $fields[$name]['html'] = $field['handler']->afterParse($fields[$name]['html'], $item_parsed);
+        }
 
         // показываем вкладку связи, если передана
         if ($this->request->has('child_ctype_name')){

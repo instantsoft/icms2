@@ -135,6 +135,11 @@ class formAdminCtypesBasic extends cmsForm {
                     new fieldCheckbox('is_cats', [
                         'title' => LANG_CP_CATEGORIES_ON
                     ]),
+                    new fieldCheckbox('options:show_items_counts', [
+                        'title' => LANG_CP_CATEGORIES_ITEMS_COUNT,
+                        'hint' => LANG_CP_CATEGORIES_ITEMS_COUNT_HINT,
+                        'visible_depend' => ['is_cats' => ['show' => ['1']]]
+                    ]),
                     new fieldCheckbox('is_cats_recursive', [
                         'title' => LANG_CP_CATEGORIES_RECURSIVE,
                         'visible_depend' => ['is_cats' => ['show' => ['1']]]

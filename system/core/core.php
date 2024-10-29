@@ -1282,28 +1282,12 @@ class cmsCore {
         //
         foreach ($pages as $page) {
 
-            if (empty($page['url_mask']) && !empty($page['id'])) {
+            if (!$page['url_mask'] && $page['id']) {
                 continue;
             }
 
-            $is_mask_match = empty($page['id']);
-            $is_stop_match = false;
-
-            if (!empty($page['url_mask'])) {
-                foreach ($page['url_mask'] as $mask) {
-                    $regular       = string_mask_to_regular($mask);
-                    $regular       = "/^{$regular}$/iu";
-                    $is_mask_match = $is_mask_match || preg_match($regular, $uri);
-                }
-            }
-
-            if (!empty($page['url_mask_not'])) {
-                foreach ($page['url_mask_not'] as $mask) {
-                    $regular       = string_mask_to_regular($mask);
-                    $regular       = "/^{$regular}$/iu";
-                    $is_stop_match = $is_stop_match || preg_match($regular, $_full_uri);
-                }
-            }
+            $is_mask_match = !$page['id'] || $this->matchesWidgetPagesMask($page['url_mask'], $uri);
+            $is_stop_match = $this->matchesWidgetPagesMask($page['url_mask_not'], $_full_uri);
 
             if ($is_mask_match && !$is_stop_match) {
                 $matched_pages[$page['id']] = $page;
@@ -1311,6 +1295,23 @@ class cmsCore {
         }
 
         return $matched_pages;
+    }
+
+    /**
+     * Проверяет, совпадает ли хотя бы одна маска с URI.
+     *
+     * @param array $masks
+     * @param string $uri
+     * @return bool
+     */
+    private function matchesWidgetPagesMask(array $masks, string $uri) {
+        foreach ($masks as $mask) {
+            $regular = string_mask_to_regular($mask);
+            if (preg_match("/^{$regular}$/iu", $uri)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 //============================================================================//
