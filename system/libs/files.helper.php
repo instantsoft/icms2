@@ -482,83 +482,83 @@ function img_get_params($path) {
         return false;
     }
 
+    // Получаем базовую информацию об изображении
     $s = getimagesize($path);
     if ($s === false) {
         return false;
     }
 
     $exif_data = [];
+    // Получаем EXIF-данные, если это JPEG
+    if (function_exists('exif_read_data') && $s['mime'] === 'image/jpeg') {
 
-    $exif = (function_exists('exif_read_data') && $s['mime'] === 'image/jpeg') ? (@exif_read_data($path, null, true)) : null;
+        $exif = @exif_read_data($path, null, true);
 
-    if ($exif) {
-        if (isset($exif['COMPUTED']['ApertureFNumber'])) {
-            $exif_data['aperturefnumber'] = $exif['COMPUTED']['ApertureFNumber'];
-        } elseif (isset($exif['EXIF']['FNumber'])) {
-            $num = explode('/', $exif['EXIF']['FNumber']);
-            $exif_data['aperturefnumber'] = 'f/' . ($num[0] / $num[1]);
-        }
-        if (isset($exif['EXIF']['ExposureTime'])) {
-            $num = explode('/', $exif['EXIF']['ExposureTime']);
-            $exif_data['exposuretime'] = ($num[0] == 1) ? $exif['EXIF']['ExposureTime'] : '1/' . round($num[1] / $num[0]) . 's';
-        } elseif (isset($exif['IFD0']['ExposureTime'])) {
-            $exif_data['exposuretime'] = $exif['IFD0']['ExposureTime'];
-        }
-        $make = false;
-        if (isset($exif['IFD0']['Make'])) {
-            $exif['IFD0']['Make'] = trim($exif['IFD0']['Make']);
-            if ($exif['IFD0']['Make'] != 'NIKON CORPORATION' && $exif['IFD0']['Make'] != 'Canon' && $exif['IFD0']['Make'] != 'Lenovo ') {
-                $exif_data['camera'] = $exif['IFD0']['Make'];
-                $make = true;
+        if ($exif) {
+            // Диафрагма
+            $exif_data['aperturefnumber'] = $exif['COMPUTED']['ApertureFNumber'] ??
+                (isset($exif['EXIF']['FNumber']) ? 'f/' . eval_fraction($exif['EXIF']['FNumber']) : null);
+
+            // Выдержка
+            $exif_data['exposuretime'] = $exif['EXIF']['ExposureTime'] ??
+                (isset($exif['EXIF']['ExposureTime']) ? '1/' . round(eval_fraction($exif['EXIF']['ExposureTime'])) . 's' : null);
+
+            // Камера
+            $make = isset($exif['IFD0']['Make']) ? trim($exif['IFD0']['Make']) : null;
+            $model = $exif['IFD0']['Model'] ?? null;
+            if ($make && !in_array($make, ['NIKON CORPORATION', 'Canon', 'Lenovo'])) {
+                $exif_data['camera'] = $model ? "$make $model" : $make;
+            } elseif ($model) {
+                $exif_data['camera'] = $model;
+            }
+
+            // Дата создания
+            $exif_data['date'] = $exif['EXIF']['DateTimeOriginal'] ?? $exif['EXIF']['DateTimeDigitized'] ?? null;
+
+            // ISO
+            $iso = $exif['EXIF']['ISOSpeedRatings'] ?? null;
+            $exif_data['isospeedratings'] = is_array($iso) ? current($iso) : $iso;
+
+            // Фокусное расстояние
+            $exif_data['focallength'] = isset($exif['EXIF']['FocalLength']) ? eval_fraction($exif['EXIF']['FocalLength']) . 'mm' : null;
+            $exif_data['focallengthin35mmfilm'] = isset($exif['EXIF']['FocalLengthIn35mmFilm']) ? $exif['EXIF']['FocalLengthIn35mmFilm'] . 'mm' : null;
+
+            // Ориентация
+            $exif_data['orientation'] = $exif['IFD0']['Orientation'] ?? null;
+
+            $exif_data = array_filter($exif_data);
+
+            foreach ($exif_data as $key => $value) {
+                $exif_data[$key] = is_string($value) ? strip_tags($value) : $value;
             }
         }
-        if (isset($exif['IFD0']['Model'])) {
-            $exif_data['camera'] = $make ? $exif['IFD0']['Make'] . ' ' . $exif['IFD0']['Model'] : $exif['IFD0']['Model'];
-        }
-
-        if (isset($exif['EXIF']['DateTimeOriginal'])) {
-            $exif_data['date'] = $exif['EXIF']['DateTimeOriginal'];
-        } elseif (isset($exif['EXIF']['DateTimeDigitized'])) {
-            $exif_data['date'] = $exif['EXIF']['DateTimeDigitized'];
-        }
-
-        if (isset($exif['EXIF']['ISOSpeedRatings'])) {
-            $exif_data['isospeedratings'] = $exif['EXIF']['ISOSpeedRatings'];
-            if (is_array($exif_data['isospeedratings'])) {
-                $exif_data['isospeedratings'] = current($exif_data['isospeedratings']);
-            }
-        }
-
-        if (isset($exif['EXIF']['FocalLength'])) {
-            $num = explode('/', $exif['EXIF']['FocalLength']);
-            $exif_data['focallength'] = floor($num[0] / $num[1]) . 'mm';
-        }
-
-        if (isset($exif['EXIF']['FocalLengthIn35mmFilm'])) {
-            $exif_data['focallengthin35mmfilm'] = $exif['EXIF']['FocalLengthIn35mmFilm'] . 'mm';
-        }
-
-        if (isset($exif['IFD0']['Orientation'])) {
-            $exif_data['orientation'] = $exif['IFD0']['Orientation'];
-        }
     }
 
-    $orientation = 'square';
-    if ($s[0] > $s[1]) {
-        $orientation = 'landscape';
-    }
-    if ($s[0] < $s[1]) {
-        $orientation = 'portrait';
-    }
+    // Определение ориентации изображения
+    $orientation = $s[0] === $s[1] ? 'square' : ($s[0] > $s[1] ? 'landscape' : 'portrait');
 
     return [
         'orientation' => $orientation,
         'width'       => $s[0],
         'height'      => $s[1],
         'mime'        => $s['mime'],
-        'exif'        => $exif_data,
-        'filesize'    => round(filesize($path))
+        'exif'        => array_filter($exif_data),
+        'filesize'    => filesize($path)
     ];
+}
+
+/**
+ * Вспомогательная функция для вычисления дробных значений EXIF
+ *
+ * @param string $fraction Строка дробного числа в формате 'числитель/знаменатель'
+ * @return float
+ */
+function eval_fraction($fraction) {
+    if (strpos($fraction, '/') !== false) {
+        list($numerator, $denominator) = explode('/', $fraction);
+        return $denominator == 0 ? 0 : $numerator / $denominator;
+    }
+    return (float)$fraction;
 }
 
 /**
