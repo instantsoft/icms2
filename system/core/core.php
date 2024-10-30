@@ -1103,10 +1103,8 @@ class cmsCore {
 
                 // Проверяем отрицательные маски виджета
                 if (!empty($widget['url_mask_not'])) {
-                    foreach ($widget['url_mask_not'] as $mask) {
-                        if (preg_match("/^".string_mask_to_regular($mask)."$/iu", $full_uri)) {
-                            continue 2;
-                        }
+                    if (string_matches_mask_list($widget['url_mask_not'], $full_uri)) {
+                        continue;
                     }
                 }
 
@@ -1286,8 +1284,8 @@ class cmsCore {
                 continue;
             }
 
-            $is_mask_match = !$page['id'] || $this->matchesWidgetPagesMask($page['url_mask'], $uri);
-            $is_stop_match = $this->matchesWidgetPagesMask($page['url_mask_not'], $_full_uri);
+            $is_mask_match = !$page['id'] || string_matches_mask_list($page['url_mask'], $uri);
+            $is_stop_match = string_matches_mask_list($page['url_mask_not'], $_full_uri);
 
             if ($is_mask_match && !$is_stop_match) {
                 $matched_pages[$page['id']] = $page;
@@ -1295,23 +1293,6 @@ class cmsCore {
         }
 
         return $matched_pages;
-    }
-
-    /**
-     * Проверяет, совпадает ли хотя бы одна маска с URI.
-     *
-     * @param array $masks
-     * @param string $uri
-     * @return bool
-     */
-    private function matchesWidgetPagesMask(array $masks, string $uri) {
-        foreach ($masks as $mask) {
-            $regular = string_mask_to_regular($mask);
-            if (preg_match("/^{$regular}$/iu", $uri)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 //============================================================================//

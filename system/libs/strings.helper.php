@@ -81,54 +81,57 @@ function string_mask_to_regular($mask) {
  */
 function string_parse_list($string_list) {
 
-    if (!$string_list) { return []; }
+    $list = [];
 
-    $user = cmsUser::getInstance();
+    if (!$string_list) { return $list; }
+
+    $is_logged = cmsUser::isLogged();
 
     $rows = explode("\n", $string_list);
 
-    $list = [];
-
     foreach ($rows as $row) {
 
-        if (!$row) { continue; }
-
-        $row = trim($row);
-
-        if (preg_match('/^{(.*)}$/i', $row, $matches)) {
-            if (!$user->is_logged) { continue; }
-            $row = trim($matches[1]);
+        if (preg_match('/^{(.*)}$/', $row, $matches)) {
+            if (!$is_logged) { continue; }
+            $row = $matches[1];
         }
 
-        if (!mb_strstr($row, '|')) {
-            $list[] = ['value' => trim($row)];
-        } else {
-            list($id, $value) = explode('|', $row);
-            $list[] = [
-                'id'    => trim($id),
-                'value' => trim($value)
-            ];
-        }
+        $parts = array_map('trim', explode('|', $row, 2));
+
+        $list[] = isset($parts[1])
+            ? ['id' => $parts[0], 'value' => $parts[1]]
+            : ['value' => $parts[0]];
     }
 
     return $list;
 }
 
+/**
+ * Разбивает текст на строки, где ключ и значение разделены |, создавая ассоциативный массив
+ *
+ * @param string $string_list   Исходная строка для разбивки
+ * @param bool $index_as_value  Определяет, использовать ли строку как ключ, если | отсутствует
+ * @return array                Ассоциативный массив с ключами и значениями
+ */
 function string_explode_list($string_list, $index_as_value = false) {
 
     $items = [];
-    $rows  = explode("\n", trim($string_list));
 
-    if (is_array($rows)) {
-        foreach ($rows as $count => $row) {
-            if (mb_strpos($row, '|')) {
-                list($index, $value) = explode('|', trim($row));
-            } else {
-                $index = (string)($index_as_value ? $row : ($count + 1));
-                $value = $row;
-            }
-            $items[trim($index)] = trim($value);
+    $rows = explode("\n", $string_list);
+
+    foreach ($rows as $count => $row) {
+
+        $parts = array_map('trim', explode('|', $row, 2));
+
+        if (isset($parts[1])) {
+            $index = $parts[0];
+            $value = $parts[1];
+        } else {
+            $index = $index_as_value ? $row : (string)($count + 1);
+            $value = $row;
         }
+
+        $items[$index] = $value;
     }
 
     return $items;
@@ -140,7 +143,7 @@ function string_explode_list($string_list, $index_as_value = false) {
  * @param array $array Исходный массив
  * @return array
  */
-function array_keys_to_string_type($array) {
+function array_keys_to_string_type(array $array) {
 
     $keys        = array_keys($array);
     $values      = array_values($array);
@@ -150,8 +153,8 @@ function array_keys_to_string_type($array) {
 }
 
 /**
- * Получает список аналогично string_parse_list() и ищет вхождение в него
- * заданной строки
+ * Получает список из строки, разбивая по \n и ищет
+ * вхождение в него заданной строки
  *
  * @param string $string
  * @param string $mask_list
@@ -159,16 +162,25 @@ function array_keys_to_string_type($array) {
  */
 function string_in_mask_list($string, $mask_list) {
 
-    if (!$mask_list) { return false; }
+    if (!$mask_list) {
+        return false;
+    }
 
-    $mask_list = explode("\n", $mask_list);
+    return string_matches_mask_list(explode("\n", $mask_list), $string);
+}
 
-    foreach ($mask_list as $item) {
+/**
+ * Проверяет, совпадает ли хотя бы одна маска со строкой
+ *
+ * @param array $masks Массив масок
+ * @param string $string
+ * @return bool
+ */
+function string_matches_mask_list(array $masks, string $string) {
 
-        $regular = string_mask_to_regular($item);
-        $regular = "/^{$regular}$/iu";
-
-        if (preg_match($regular, $string)) {
+    foreach ($masks as $mask) {
+        $regular = string_mask_to_regular($mask);
+        if (preg_match("/^{$regular}$/iu", $string)) {
             return true;
         }
     }

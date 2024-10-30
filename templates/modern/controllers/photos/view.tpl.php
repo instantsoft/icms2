@@ -97,8 +97,10 @@
         </div>
 
         <?php if (!empty($photo['content'])){ ?>
-            <div class="photo_content mt-3" itemprop="description">
-                <?php echo $photo['content']; ?>
+            <div class="photo_content mt-3 icms-text-spoiler" itemprop="description">
+                <div class="icms-text-spoiler__wrap">
+                    <?php echo $photo['content']; ?>
+                </div>
             </div>
         <?php } ?>
 

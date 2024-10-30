@@ -301,7 +301,59 @@ code {
         pointer-events: auto;
     }
 }
-
+.icms-text-spoiler {
+    position: relative;
+    padding-bottom: $line-height-base*$font-size-base;
+    .btn-spoiler-expand {
+        display: none !important;
+    }
+    &:not(.expanded) {
+        .btn-spoiler-collapse {
+            display: none;
+        }
+        .btn-spoiler-expand {
+            display: block !important;
+        }
+        padding-bottom: 0;
+        .icms-text-spoiler__wrap {
+            max-height: $line-height-base*$font-size-base*5;
+            overflow: hidden;
+        }
+    }
+    .btn-spoiler {
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        text-decoration: none;
+        font-size: $font-size-sm;
+        color: $gray-700;
+        text-align: center;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: $line-height-base*$font-size-base;
+        cursor: pointer;
+        z-index: 100;
+        background-color: rgba($white,0.8);
+        animation: fadeBackground .7s;
+        animation-fill-mode: forwards;
+        > span {
+            animation: fadeIn .7s;
+            display: block;
+            background-color: $white;
+            padding: 0 $spacer;
+        }
+    }
+}
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes fadeBackground {
+  from { background-color: transparent; }
+  to { background-color: rgba($white,0.8); }
+}
 @keyframes effect_dylan {
   50% {
     transform: scale(1.5, 1.5);

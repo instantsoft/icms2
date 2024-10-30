@@ -575,6 +575,8 @@
     define('LANG_SKIP',                      'Skip');
     define('LANG_DONE',                      'Done');
     define('LANG_CHANGE',                    'Change');
+    define('LANG_COLLAPSE',                  'Collapse');
+    define('LANG_EXPAND',                    'Expand');
 
     //NAVIGATION
     define('LANG_HOME',                      'Home');

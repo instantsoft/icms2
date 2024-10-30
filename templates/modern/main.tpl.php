@@ -61,7 +61,7 @@
         <?php if ($config->debug && cmsUser::isAdmin()){ ?>
             <?php $this->renderAsset('ui/debug', ['core' => $core]); ?>
         <?php } ?>
-        <script><?php echo $this->getLangJS('LANG_LOADING', 'LANG_ALL'); ?></script>
+        <script><?php echo $this->getLangJS('LANG_LOADING', 'LANG_ALL', 'LANG_COLLAPSE', 'LANG_EXPAND'); ?></script>
         <?php if(empty($this->options['js_print_head'])) { ?>
             <?php $this->printJavascriptTags(); ?>
         <?php } ?>
