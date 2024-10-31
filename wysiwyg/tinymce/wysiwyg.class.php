@@ -4,7 +4,7 @@ class cmsWysiwygTinymce {
     private static $redactor_loaded = false;
 
     private $buttons = [
-        '|','bold','italic','underline','strikethrough','alignleft','aligncenter','alignright','alignjustify','alignnone','styleselect','formatselect','fontselect','fontsizeselect','cut','copy','paste','outdent','indent','blockquote','undo','redo','removeformat','subscript','superscript','visualaid','insert'
+        '|','bold','italic','underline','strikethrough','alignleft','aligncenter','alignright','alignjustify','alignnone','styles','blocks','fontfamily','fontsize','cut','copy','paste','outdent','indent','blockquote','undo','redo','removeformat','subscript','superscript','visualaid','insert','forecolor','backcolor'
     ];
 
     private $block_formats = [
@@ -50,8 +50,10 @@ class cmsWysiwygTinymce {
         'plugins' => [
             'autoresize'
         ],
-        'textpattern_patterns' => [
-            ['start' => '> ', 'format' => 'blockquote']
+        'text_patterns' => [
+            ['start' => '>', 'format' => 'blockquote'],
+            ['start' => '1. ', 'cmd' => 'InsertOrderedList', 'trigger' => 'enter'],
+            ['start' => '* ', 'cmd' => 'InsertUnorderedList', 'trigger' => 'enter']
         ],
         'codesample_languages' => [
             ['text' => 'HTML/XML', 'value' => 'html'],
@@ -61,7 +63,7 @@ class cmsWysiwygTinymce {
             ['text' => 'SQL', 'value' => 'sql'],
             ['text' => 'Bash', 'value' => 'bash'],
         ],
-        'toolbar' => 'formatselect | bold italic strikethrough forecolor backcolor | link image media table | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat',
+        'toolbar' => 'blocks | bold italic strikethrough forecolor backcolor | link image media table | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat',
         'min_height'            => 200,
         'max_height'            => 700,
         'browser_spellcheck'    => true,
@@ -88,7 +90,9 @@ class cmsWysiwygTinymce {
         'file_upload'           => [],
         'allow_mime_types'      => [],
         'skin'                  => 'oxide',
-        'images_preset'         => 'big'
+        'images_preset'         => 'big',
+        'license_key'           => 'gpl',
+        'referrer_policy'       => 'origin'
     ];
 
     public function __construct($config = []) {
@@ -240,12 +244,12 @@ class cmsWysiwygTinymce {
 
         <script>
             <?php if($dom_id){ ?>
-                tiny_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options); ?>;
+                tiny_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options, JSON_UNESCAPED_UNICODE); ?>;
                 $(function(){
                     init_tinymce('<?php echo $dom_id; ?>');
                 });
             <?php } else { ?>
-                tiny_global_options['default'] = <?php echo json_encode($this->options); ?>;
+                tiny_global_options['default'] = <?php echo json_encode($this->options, JSON_UNESCAPED_UNICODE); ?>;
             <?php } ?>
         </script>
 

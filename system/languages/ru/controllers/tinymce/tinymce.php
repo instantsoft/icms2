@@ -27,3 +27,4 @@ define('LANG_TINYMCE_BLOCK_FORMATS', 'Доступные форматы');
 define('LANG_TINYMCE_P', 'Параграф');
 define('LANG_TINYMCE_SP', 'Спойлер');
 define('LANG_TINYMCE_IMG_PRESET', 'Пресет загружаемых изображений');
+define('LANG_TINYMCE_PLACEHOLDER', 'Подпись пустого поля редактора');

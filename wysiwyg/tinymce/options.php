@@ -141,6 +141,10 @@ class formWysiwygTinymceOptions extends cmsForm {
                 'default' => 700
             )),
 
+            new fieldString('options:placeholder', array(
+                'title' => LANG_TINYMCE_PLACEHOLDER
+            )),
+
             new fieldList('options:images_preset', array(
                 'title'     => LANG_TINYMCE_IMG_PRESET,
                 'generator' => function (){

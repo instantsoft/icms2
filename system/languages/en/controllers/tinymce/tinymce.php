@@ -27,3 +27,4 @@ define('LANG_TINYMCE_BLOCK_FORMATS', 'Available formats');
 define('LANG_TINYMCE_P', 'Paragraph');
 define('LANG_TINYMCE_SP', 'Spoiler');
 define('LANG_TINYMCE_IMG_PRESET', 'Images preset');
+define('LANG_TINYMCE_PLACEHOLDER', 'Placeholder');
