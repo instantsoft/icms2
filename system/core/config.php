@@ -146,9 +146,9 @@ class cmsConfig extends cmsConfigs {
 
         $this->set('document_root', preg_replace('#(.*)('.preg_quote($this->root).')$#u', '$1', PATH . DIRECTORY_SEPARATOR));
         $this->set('root_path', PATH . DIRECTORY_SEPARATOR);
-        $this->set('system_path', $this->root_path . 'system/');
-        $this->set('upload_path', $this->document_root . $this->upload_root);
-        $this->set('cache_path', $this->document_root . $this->cache_root);
+        $this->set('system_path', $this->root_path . 'system' . DIRECTORY_SEPARATOR);
+        $this->set('upload_path', realpath($this->document_root . $this->upload_root) . DIRECTORY_SEPARATOR);
+        $this->set('cache_path', realpath($this->document_root . $this->cache_root) . DIRECTORY_SEPARATOR);
 
         $protocol = 'http://';
         if (

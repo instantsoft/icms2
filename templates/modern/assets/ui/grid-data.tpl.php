@@ -35,7 +35,7 @@ if(!empty($page_title)) {
         <div class="ml-auto d-flex" v-if="switchable.columns || editable">
             <div :class="{'mr-3': switchable.columns && editable}" v-if="editable">
                 <button class="btn btn-light btn-sm" @click="enableEditMode" v-if="!edit_mode_enable">
-                    <?php echo html_svg_icon('solid', 'pen'); ?><span class="d-none d-lg-inline"> <?php echo LANG_CP_EDIT_MODE; ?></span>
+                    <?php echo html_svg_icon('solid', 'pen'); ?><span class="d-none d-lg-inline"> <?php echo LANG_GRID_EDIT_MODE; ?></span>
                 </button>
                 <button class="btn btn-success btn-sm mr-1" @click="saveEditMode" v-if="edit_mode_enable" :disabled="save_is_busy" :class="{'is-busy': save_is_busy}">
                     <span>

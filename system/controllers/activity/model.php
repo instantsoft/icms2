@@ -103,7 +103,9 @@ class modelActivity extends cmsModel {
         $this->select('u.nickname', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
         $this->select('u.slug', 'user_slug');
-        $this->joinLeft('{users}', 'u', 'u.id = i.user_id AND u.is_deleted IS NULL');
+        $this->joinLeft('{users}', 'u', 'u.id = i.user_id');
+
+        $this->filterIsNull('u.is_deleted');
 
         $this->is_joined_user = true;
 

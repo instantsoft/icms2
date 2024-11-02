@@ -90,23 +90,18 @@ class modelContent extends cmsModel {
     private function makeContentTypeLabels($labels) {
 
         $labels = self::yamlToArray($labels);
-        if (empty($labels['one_accusative'])) {
-            $labels['one_accusative'] = $labels['one'];
-        }
-        if (empty($labels['two_accusative'])) {
-            $labels['two_accusative'] = $labels['two'];
-        }
-        if (empty($labels['many_accusative'])) {
-            $labels['many_accusative'] = $labels['many'];
-        }
-        if (empty($labels['one_genitive'])) {
-            $labels['one_genitive'] = $labels['one'];
-        }
-        if (empty($labels['two_genitive'])) {
-            $labels['two_genitive'] = $labels['two'];
-        }
-        if (empty($labels['many_genitive'])) {
-            $labels['many_genitive'] = $labels['many'];
+
+        // Список форм и падежей, которые нужно проверить
+        $cases = ['accusative', 'genitive'];
+        $forms = ['one', 'two', 'many'];
+
+        foreach ($cases as $case) {
+            foreach ($forms as $form) {
+                $key = "{$form}_{$case}";
+                if (empty($labels[$key])) {
+                    $labels[$key] = $labels[$form];
+                }
+            }
         }
 
         return $labels;
@@ -524,6 +519,19 @@ class modelContent extends cmsModel {
 //==============================   НАБОРЫ   ==================================//
 //============================================================================//
 
+    private function prepareContentDatasetItem($item) {
+
+        $yaml_fields = ['groups_view', 'groups_hide', 'cats_view', 'cats_hide', 'filters', 'sorting'];
+
+        foreach ($yaml_fields as $field) {
+            $item[$field] = self::yamlToArray($item[$field]);
+        }
+
+        $item['list'] = self::stringToArray($item['list']);
+
+        return $item;
+    }
+
     public function getContentDatasets($ctype_id = false, $only_visible = false, $item_callback = false) {
 
         if ($ctype_id) {
@@ -544,16 +552,10 @@ class modelContent extends cmsModel {
 
         $datasets = $this->get('content_datasets', function ($item, $model) use ($item_callback) {
 
-            $item['groups_view'] = self::yamlToArray($item['groups_view']);
-            $item['groups_hide'] = self::yamlToArray($item['groups_hide']);
-            $item['cats_view']   = self::yamlToArray($item['cats_view']);
-            $item['cats_hide']   = self::yamlToArray($item['cats_hide']);
-            $item['filters']     = $item['filters'] ? self::yamlToArray($item['filters']) : [];
-            $item['sorting']     = $item['sorting'] ? self::yamlToArray($item['sorting']) : [];
-            $item['list']        = self::stringToArray($item['list']);
+            $item = $model->prepareContentDatasetItem($item);
 
             if (is_callable($item_callback)) {
-                $item = call_user_func_array($item_callback, array($item, $model));
+                $item = call_user_func_array($item_callback, [$item, $model]);
                 if ($item === false) {
                     return false;
                 }
@@ -579,16 +581,7 @@ class modelContent extends cmsModel {
     public function getContentDataset($id) {
 
         return cmsEventsManager::hook('ctype_dataset_get', $this->getItemById('content_datasets', $id, function ($item, $model) {
-
-            $item['groups_view'] = self::yamlToArray($item['groups_view']);
-            $item['groups_hide'] = self::yamlToArray($item['groups_hide']);
-            $item['cats_view']   = self::yamlToArray($item['cats_view']);
-            $item['cats_hide']   = self::yamlToArray($item['cats_hide']);
-            $item['filters']     = $item['filters'] ? self::yamlToArray($item['filters']) : [];
-            $item['sorting']     = $item['sorting'] ? self::yamlToArray($item['sorting']) : [];
-            $item['list']        = self::stringToArray($item['list']);
-
-            return $item;
+            return $model->prepareContentDatasetItem($item);
         }));
     }
 
@@ -1315,6 +1308,7 @@ class modelContent extends cmsModel {
         if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
         if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
+        if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
 
         if (!$this->order_by) {
             $this->orderBy('date_pub', 'desc')->forceIndex('date_pub');

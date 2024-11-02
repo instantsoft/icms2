@@ -27,10 +27,21 @@ class actionContentCategoryDelete extends cmsAction {
             $parent = $path[count($category['path']) - 2];
         }
 
+        list($ctype, $category) = cmsEventsManager::hook(
+            ['content_category_before_delete', "content_{$ctype['name']}_category_before_delete"],
+            [$ctype, $category],
+            null,
+            $this->request
+        );
+
         $this->model->deleteCategory($ctype['name'], $category['id'], true);
 
-        list($ctype, $category) = cmsEventsManager::hook('content_category_after_delete', [$ctype, $category], null, $this->request);
-        list($ctype, $category) = cmsEventsManager::hook("content_{$ctype['name']}_category_after_delete", [$ctype, $category], null, $this->request);
+        list($ctype, $category) = cmsEventsManager::hook(
+            ['content_category_after_delete', "content_{$ctype['name']}_category_after_delete"],
+            [$ctype, $category],
+            null,
+            $this->request
+        );
 
         $back_url = $this->getRequestBackUrl();
 

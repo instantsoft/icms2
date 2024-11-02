@@ -38,8 +38,26 @@ $icms-camera-icon: url("data:image/svg+xml,<svg width='32' height='26' viewBox='
         background-position: $btn-padding-x center;
         padding-left: calc(#{$btn-padding-x*2} + 26px);
     }
+    .qq-uploader {
+        position: relative;
+    }
     .qq-upload-drop-area {
-        display: none !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        z-index: 1;
+        font-size: 12px;
+        line-height: 1;
+        height: 100%;
+        text-align: center;
+        padding: $btn-padding-y;
+        border-radius: $btn-border-radius;
+        background-color: darken($secondary, 10%);
+        color: $white;
+        &.qq-upload-drop-area-active {
+            background-color: $warning;
+        }
     }
     .preview {
         margin: 0 ($spacer) ($spacer) 0;

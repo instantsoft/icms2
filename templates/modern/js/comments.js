@@ -68,7 +68,6 @@ icms.comments = (function ($) {
 
         if (clear_text) {
             form.hide();
-            icms.forms.wysiwygInsertText('content', '');
             $('#comments_add_link, .icms-comment-controls .reply, .icms-comment-controls .edit', comments_widget)
                     .removeClass('disabled');
             $('.preview_box', form).html('').addClass('d-none');

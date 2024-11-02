@@ -169,7 +169,7 @@ class typograph extends cmsFrontend {
         ]);
 
         $jevix->cfgSetTagIsEmpty([
-            'a', 'iframe', 'div', 'td'
+            'a', 'iframe', 'div', 'td', 'video'
         ]);
 
         // Устанавливаем разрешённые параметры тегов. Также можно устанавливать допустимые значения этих параметров.

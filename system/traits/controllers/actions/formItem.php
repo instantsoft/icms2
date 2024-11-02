@@ -69,6 +69,12 @@ trait formItem {
     protected $title = '';
 
     /**
+     * Заголовок кнопки сабмита
+     * @var ?string
+     */
+    protected $submit_title = null;
+
+    /**
      * Кнопки тулбара
      * @var array
      */
@@ -179,12 +185,13 @@ trait formItem {
         $this->cms_template->addToolButtons($this->tool_buttons);
 
         $html = $this->cms_template->getRenderedAsset('ui/typical_form', [
-            'page_title'  => string_replace_keys_values($this->title, $data),
-            'breadcrumbs' => $this->breadcrumbs,
-            'action'      => $this->cms_template->href_to($this->current_action, [$id]),
-            'data'        => $data,
-            'form'        => $form,
-            'errors'      => isset($errors) ? $errors : false
+            'page_title'   => string_replace_keys_values($this->title, $data),
+            'breadcrumbs'  => $this->breadcrumbs,
+            'submit_title' => $this->submit_title,
+            'action'       => $this->cms_template->href_to($this->current_action, [$id]),
+            'data'         => $data,
+            'form'         => $form,
+            'errors'       => isset($errors) ? $errors : false
         ]);
 
         if ($this->request->isStandard()) {

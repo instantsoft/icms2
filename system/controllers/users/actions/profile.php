@@ -1,37 +1,38 @@
 <?php
-
+/**
+ * @property \content $controller_content
+ */
 class actionUsersProfile extends cmsAction {
 
-    public $lock_explicit_call = true;
+    use icms\traits\controllers\actions\fieldsParseable;
 
+    public $lock_explicit_call = true;
     private $is_friend_req = false;
 
-    public function run($profile = null){
+    public function run($profile) {
 
         $profile = cmsEventsManager::hook('users_profile_view', $profile);
 
         // Отправлен запрос дружбы
         $this->is_friend_req = $this->options['is_friends_on'] ? $this->model->isFriendshipRequested($this->cms_user->id, $profile['id']) : false;
 
-        $content = cmsCore::getController('content', $this->request);
+        // Получаем поля для данного типа контента
+        // И парсим их, получая HTML полей
+        $fields = $this->parseContentFields(
+                $this->controller_content->model->setTablePrefix('')->getContentFields('{users}'),
+                $profile
+            );
 
-        // Получаем поля
-        $fields = $content->model->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
         // Системные поля (ячейки в таблице, дата регистрации и т.п.)
         $sys_fields = $this->getSystemFields($profile);
 
-        // Парсим значения полей
-        foreach($fields as $name => $field){
-            $fields[$name]['html'] = $field['handler']->setItem($profile)->parse($profile[$name]);
-            $fields[$name]['string_value'] = $field['handler']->getStringValue($profile[$name]);
-        }
-
         // Формируем метатеги
-        $meta_profile = $this->prepareItemSeo($profile, $fields, ['name' => 'users']);
+        $meta_profile = $this->prepareItemSeo($profile, $fields, ['name' => $this->name]);
 
         // Доступность профиля для данного пользователя
-        if ( !$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view') ){
-            return $this->cms_template->render('profile_closed', array(
+        if (!$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view')) {
+
+            return $this->cms_template->render('profile_closed', [
                 'profile'        => $profile,
                 'meta_profile'   => $meta_profile,
                 'sys_fields'     => $sys_fields,
@@ -40,44 +41,53 @@ class actionUsersProfile extends cmsAction {
                 'is_own_profile' => $this->is_own_profile,
                 'is_friends_on'  => $this->options['is_friends_on'],
                 'tool_buttons'   => $this->getToolButtons($profile)
-            ));
+            ]);
         }
 
         // Друзья
         $friends = [];
-        if($this->options['is_friends_on']){
-            if(!empty($this->options['profile_max_friends_count'])){
+
+        if ($this->options['is_friends_on']) {
+            if (!empty($this->options['profile_max_friends_count'])) {
                 $this->model->limit($this->options['profile_max_friends_count']);
             }
             $friends = $this->model->getFriends($profile['id']);
         }
 
         // Контент
-        $content->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
+        $this->controller_content->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
 
         $is_filter_hidden = (!$this->is_own_profile && !$this->cms_user->is_admin);
 
-        $content_counts = $content->model->getUserContentCounts($profile['id'], $is_filter_hidden, function($ctype) use ($profile, $content){
-            if(!cmsUser::isAllowed($ctype['name'], 'add') &&
-                    !cmsUser::getInstance()->isPrivacyAllowed($profile, 'view_user_'.$ctype['name'])){
+        $content_counts = $this->controller_content->model->getUserContentCounts($profile['id'], $is_filter_hidden, function ($ctype) use ($profile) {
+
+            if (!cmsUser::isAllowed($ctype['name'], 'add') &&
+                    !cmsUser::getInstance()->isPrivacyAllowed($profile, 'view_user_' . $ctype['name'])) {
                 return false;
             }
-            return cmsUser::get('id') == $profile['id'] ? true : $content->checkListPerm($ctype['name']);
+
+            return cmsUser::get('id') == $profile['id'] ? true : $this->controller_content->checkListPerm($ctype['name']);
         });
 
-        list($profile, $fields) = cmsEventsManager::hook('profile_before_view', array($profile, $fields));
+        list($profile, $fields) = cmsEventsManager::hook('profile_before_view', [$profile, $fields]);
 
-        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($profile){
+        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function ($field, $user) use ($profile) {
 
-            if ($field['is_system'] || !$field['is_in_item'] || empty($profile[$field['name']])) { return false; }
+            if ($field['is_system'] || !$field['is_in_item'] || empty($profile[$field['name']])) {
+                return false;
+            }
 
             // проверяем что группа пользователя имеет доступ к чтению этого поля
             if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
                 // если группа пользователя не имеет доступ к чтению этого поля,
                 // проверяем на доступ к нему для авторов
-                if (!empty($profile['id']) && !empty($field['options']['author_access'])){
-                    if (!in_array('is_read', $field['options']['author_access'])){ return false; }
-                    if ($profile['id'] == $user->id){ return true; }
+                if (!empty($profile['id']) && !empty($field['options']['author_access'])) {
+                    if (!in_array('is_read', $field['options']['author_access'])) {
+                        return false;
+                    }
+                    if ($profile['id'] == $user->id) {
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -85,7 +95,7 @@ class actionUsersProfile extends cmsAction {
 
         }, $profile);
 
-        return $this->cms_template->render('profile_view', array(
+        return $this->cms_template->render('profile_view', [
             'options'        => $this->options,
             'meta_profile'   => $meta_profile,
             'profile'        => $profile,
@@ -101,8 +111,7 @@ class actionUsersProfile extends cmsAction {
             'wall_html'      => false, // Не используется, чтобы нотиса в старых шаблонах не было
             'tabs'           => $this->getProfileMenu($profile),
             'show_all_flink' => isset($this->tabs['friends'])
-        ));
-
+        ]);
     }
 
     /**

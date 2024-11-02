@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @property \modelRating $model
  */
@@ -168,7 +167,7 @@ class actionRatingVote extends cmsAction {
         $this->controller_messages->addRecipient($target['user_id'])->sendNoticePM([
             'content' => sprintf(LANG_RATING_PM,
             $user_link,
-            string_lang('LANG_RATING_' . $direction),
+            $direction ? string_lang('LANG_RATING_' . $direction) : '',
             $target['page_url'],
             $target['title'])
         ], 'rating_user_vote');

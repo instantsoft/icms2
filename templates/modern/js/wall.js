@@ -287,7 +287,6 @@ icms.wall = (function ($) {
 
         if (clear_text) {
             form.hide();
-            icms.forms.wysiwygInsertText('content', '');
             $('#wall_widget #wall_add_link').show();
             $('#wall_widget #entries_list .links *').removeClass('disabled');
             $('.preview_box', form).html('').hide();

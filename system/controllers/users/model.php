@@ -636,117 +636,96 @@ class modelUsers extends cmsModel {
     public function getUserNotifyTypes($only_default_values = false) {
 
         $notify_types = cmsEventsManager::hookAll('user_notify_types');
-
         $notify_types = cmsEventsManager::hook('update_user_notify_types', $notify_types);
 
-        $default_options = array('', 'email', 'pm', 'both');
+        $default_options = ['', 'email', 'pm', 'both'];
 
-        $types = array();
+        $types = [];
 
-        foreach($notify_types as $list){
-            foreach($list as $name => $type){
+        foreach ($notify_types as $list) {
+            foreach ($list as $name => $type) {
 
-                $options = array();
+                $options = [];
 
-                if(!isset($type['options'])) { $type['options'] = $default_options; }
+                $type['options'] = $type['options'] ?? $default_options;
 
-                foreach($type['options'] as $option){
-                    if (!$option){
+                foreach ($type['options'] as $option) {
+                    if (!$option) {
                         $options[''] = LANG_USERS_NOTIFY_VIA_NONE;
                     } else {
-                        $options[$option] = constant('LANG_USERS_NOTIFY_VIA_'.strtoupper($option));
+                        $options[$option] = constant('LANG_USERS_NOTIFY_VIA_' . strtoupper($option));
                     }
                 }
 
-                if(!$only_default_values){
-                    $types[$name] = array(
-                        'title'   => $type['title'],
-                        'default' => (isset($type['default']) ? $type['default'] : 'email'),
-                        'items'   => $options
-                    );
-                } else {
-                    $types[$name] = (isset($type['default']) ? $type['default'] : 'email');
-                }
+                if (!$only_default_values) {
 
+                    $types[$name] = [
+                        'title'   => $type['title'],
+                        'default' => $type['default'] ?? 'email',
+                        'items'   => $options
+                    ];
+
+                } else {
+                    $types[$name] = $type['default'] ?? 'email';
+                }
             }
         }
 
         return $types;
-
     }
 
-    public function getUserNotifyOptions($id){
+    public function getUserNotifyOptions($id) {
 
-        return $this->getItemById('{users}', $id, function($item, $model){
+        return $this->getItemById('{users}', $id, function ($item, $model) {
             return cmsModel::yamlToArray($item['notify_options']);
         });
-
     }
 
-    public function updateUserNotifyOptions($id, $options){
+    public function updateUserNotifyOptions($id, $options) {
 
-        cmsCache::getInstance()->clean('users.user.'.$id);
+        cmsCache::getInstance()->clean('users.user.' . $id);
 
-        return $this->update('{users}', $id, array('notify_options' => $options), true);
-
+        return $this->update('{users}', $id, ['notify_options' => $options], true);
     }
 
-    public function getNotifiedUsers($notice_type = false, $id_list = array(), $options_only = array(), $default = 'email'){
+    public function getNotifiedUsers($notice_type = false, $id_list = [], $options_only = [], $default = 'email') {
 
-        $list = array();
-
-        $this->selectList(array(
+        $this->selectList([
             'i.id'             => 'id',
             'i.email'          => 'email',
             'i.slug'           => 'slug',
             'i.nickname'       => 'nickname',
             'i.notify_options' => 'notify_options'
-        ), true);
+        ], true);
 
-        if($id_list){
+        if ($id_list) {
             $this->filterIn('id', $id_list);
         }
 
-        $this->filterIsNull('is_locked');
-        $this->filterIsNull('is_deleted');
+        $this->filterIsNull('is_locked')->filterIsNull('is_deleted');
 
-        $users = $this->get('{users}', function($user, $model){
+        $users = $this->limit(false)->get('{users}', function ($user, $model) {
 
-            $user['slug']           = !empty($user['slug']) ? $user['slug'] : $user['id'];
+            $user['slug']           = $user['slug'] ?: $user['id'];
             $user['notify_options'] = cmsModel::yamlToArray($user['notify_options']);
 
             return $user;
-
         }, false);
 
-        if (!$users) { return false; }
-
-        if ($options_only){
-            foreach($users as $user){
-
-                if (!isset($user['notify_options'][$notice_type])){
-                    $user['notify_options'][$notice_type] = $default;
-                }
-
-                if (empty($user['notify_options'][$notice_type])){
-                    continue;
-                }
-
-                if (!in_array($user['notify_options'][$notice_type], $options_only)){
-                    continue;
-                }
-
-                $list[] = $user;
-
-            }
-        } else {
-            $list = $users;
+        if (!$users) {
+            return false;
         }
 
-        return $list ? $list : false;
+        if ($options_only) {
 
+            return array_filter($users, function ($user) use ($notice_type, $options_only, $default) {
+                $user_option = $user['notify_options'][$notice_type] ?? $default;
+                return $user_option && in_array($user_option, $options_only, true);
+            });
+        }
+
+        return $users;
     }
-
 
 //============================================================================//
 //=========================    ПРИВАТНОСТЬ   =================================//

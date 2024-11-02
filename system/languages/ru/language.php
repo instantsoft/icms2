@@ -429,6 +429,7 @@
 
     define('LANG_GRID_SELECT_HINT', 'Кликните на строку, чтобы выделить или ');
     define('LANG_GRID_COLYMNS_SETTINGS', 'Отображение столбцов');
+    define('LANG_GRID_EDIT_MODE',        'Режим редактирования');
 
     //MONEY
     define('LANG_CURRENCY',                  'руб.');

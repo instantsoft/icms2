@@ -143,5 +143,6 @@ return [
     'xsl'       => 'text/xsl',
     'xwd'       => 'image/x-xwindowdump',
     'xyz'       => 'chemical/x-xyz',
+    'yaml'      => ['application/yaml', 'text/plain'],
     'zip'       => 'application/zip'
 ];

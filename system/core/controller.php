@@ -934,41 +934,43 @@ class cmsController {
 
     public function prepareItemSeo($item, $fields, $ctype) {
 
-        list($ctype, $fields, $item) = cmsEventsManager::hook(['prepare_item_seo', 'prepare_item_'.$ctype['name'].'_seo'], [$ctype, $fields, $item]);
+        // Вызываем хуки и обновляем данные
+        list($ctype, $fields, $item) = cmsEventsManager::hook(
+                ['prepare_item_seo', 'prepare_item_' . $ctype['name'] . '_seo'],
+                [$ctype, $fields, $item]
+            );
 
         $_item = $item;
 
         foreach ($fields as $field) {
 
-            if (!isset($item[$field['name']])) { $_item[$field['name']] = null;  continue; }
+            $field_name = $field['name'];
 
-            if (empty($item[$field['name']]) && $item[$field['name']] !== '0') {
-                $_item[$field['name']] = null; continue;
+            $field_value = $item[$field_name] ?? null;
+
+            if (is_empty_value($field_value)) {
+
+                $_item[$field_name] = null;
+                continue;
             }
 
-            if(isset($field['string_value'])){
-                $_item[$field['name']] = strip_tags($field['string_value']);
-            } else {
-                $_item[$field['name']] = strip_tags($field['handler']->setItem($item)->getStringValue($item[$field['name']]));
-            }
+            // Преобразуем значение поля в строку
+            $str_value = strip_tags($field['string_value'] ?? $field['handler']->setItem($item)->getStringValue($field_value));
 
             // Убираем шорткоды
-            $_item[$field['name']] = preg_replace('#{[a-z]{1}[a-z0-9_]*\:[a-z0-9\:_]+}#i', '', $_item[$field['name']]);
+            $_item[$field_name] = preg_replace('#{[a-z]{1}[a-z0-9_]*\:[a-z0-9\:_]+}#i', '', $str_value);
         }
 
-        if(!empty($item['tags']) && is_array($item['tags'])){
+        // Объединяем теги в строку, если они заданы
+        if (!empty($item['tags']) && is_array($item['tags'])) {
             $_item['tags'] = implode(', ', $item['tags']);
         }
 
-        if(!isset($item['category']) && !empty($item['category_id'])){
+        if(!isset($item['category']['title']) && !empty($item['category_id'])){
             $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
         }
 
-        if(!empty($item['category']['title'])){
-            $_item['category'] = $item['category']['title'];
-        } else {
-            $_item['category'] = null;
-        }
+        $_item['category'] = $item['category']['title'] ?? null;
 
         return $_item;
     }

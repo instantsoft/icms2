@@ -56,7 +56,6 @@
     define('LANG_CP_SECTION_UPDATE',            'Updates');
     define('LANG_CP_SELECTED_EDIT',             'Edit');
     define('LANG_CP_SELECTED_DELETE',           'Delete');
-    define('LANG_CP_EDIT_MODE',                 'Edit mode');
     define('LANG_CP_CTYPES_ADD',                'Add Content Type');
     define('LANG_CP_CTYPES_EDIT',               'Edit Content Type');
     define('LANG_CP_CTYPE_CREATED',             'Content type &laquo;%s&raquo; created');

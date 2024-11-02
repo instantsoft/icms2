@@ -575,7 +575,6 @@ icms.comments = (function ($) {
 
         if (clear_text) {
             form.hide();
-            icms.forms.wysiwygInsertText('content', '');
             $('#comments_widget #comments_add_link').show();
             $('#comments_widget #comments_list .links .edit').show();
             $('#comments_widget #comments_list .links .reply').show();

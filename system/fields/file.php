@@ -48,32 +48,44 @@ class fieldFile extends cmsFormField {
     public function parse($value) {
 
         $file = is_array($value) ? $value : cmsModel::yamlToArray($value);
-        if (!$file) { return ''; }
+        if (!$file) {
+            return '';
+        }
 
         $size_counter = $size_info = '';
 
         if ($this->getOption('show_counter')) {
 
             $file = cmsCore::getModel('files')->getFile($file['id']);
-            if (!$file) { return ''; }
+            if (!$file) {
+                return '';
+            }
 
             if ($file['counter']) {
                 $size_counter = '<span class="size ml-2">' . LANG_PARSER_FILE_LABEL_COUNTER . ' '
-                        . html_spellcount($file['counter'], LANG_TIME1, LANG_TIME2, LANG_TIME10) . '</span>';
+                                . html_spellcount($file['counter'], LANG_TIME1, LANG_TIME2, LANG_TIME10) . '</span>';
             }
         }
 
-        if ($this->getOption('show_size')) {
+        // Обработка размера файла, если требуется
+        if ($this->getOption('show_size') && isset($file['size'])) {
             $size_info = '<span class="size ml-2">' . files_format_bytes($file['size']) . '</span>';
         }
 
-        $name = $this->getOption('show_name') ? $file['name'] : LANG_PARSER_FILE_LABEL_GET;
+        $name = ($this->getOption('show_name') && isset($file['name'])) ? $file['name'] : LANG_PARSER_FILE_LABEL_GET;
 
-        return '<a href="' . $this->getDownloadURL($file) . '">' . $name . '</a> ' . $size_info . $size_counter;
+        // Возврат сформированной ссылки с информацией
+        return '<a href="' . $this->getDownloadURL($file) . '">' . html($name, false) . '</a> ' . $size_info . $size_counter;
     }
 
     public function getStringValue($value) {
-        return '';
+
+        $file = is_array($value) ? $value : cmsModel::yamlToArray($value);
+        if (!$file) {
+            return '';
+        }
+
+        return ($this->getOption('show_name') && isset($file['name'])) ? $file['name'] : LANG_PARSER_FILE_LABEL_GET;
     }
 
     public function getDownloadURL($file) {

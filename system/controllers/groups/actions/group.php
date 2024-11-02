@@ -2,26 +2,15 @@
 
 class actionGroupsGroup extends cmsAction {
 
+    use icms\traits\controllers\actions\fieldsParseable;
+
     public $lock_explicit_call = true;
 
     public function run($group) {
 
-        $fields = [];
-
-        // Запоминаем копию записи для заполнения отпарсенных полей
-        $item_parsed = $group;
-
-        // Парсим значения полей
-        foreach ($group['fields'] as $name => $field) {
-            $fields[$name] = $field;
-            $fields[$name]['html'] = $field['handler']->setItem($group)->parse(isset($group[$name]) ? $group[$name] : '');
-            $item_parsed[$name] = $fields[$name]['html'];
-        }
-
-        // Для каких необходимо, обрабатываем дополнительно
-        foreach ($fields as $name => $field) {
-            $fields[$name]['html'] = $field['handler']->afterParse($fields[$name]['html'], $item_parsed);
-        }
+        // Получаем поля для данного типа контента
+        // И парсим их, получая HTML полей
+        $fields = $this->parseContentFields($group['fields'], $group);
 
         list($group, $fields) = cmsEventsManager::hook('group_before_view', [$group, $fields]);
 

@@ -430,6 +430,7 @@
 
     define('LANG_GRID_SELECT_HINT', 'Click on a row to select or ');
     define('LANG_GRID_COLYMNS_SETTINGS', 'Displaying columns');
+    define('LANG_GRID_EDIT_MODE',     'Edit mode');
 
     //MONEY
     define('LANG_CURRENCY',                  '$');

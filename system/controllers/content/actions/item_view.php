@@ -1,6 +1,10 @@
 <?php
-
+/**
+ * @property \moderation $controller_moderation
+ */
 class actionContentItemView extends cmsAction {
+
+    use icms\traits\controllers\actions\fieldsParseable;
 
     private $viewed_moderators = false;
 
@@ -261,22 +265,11 @@ class actionContentItemView extends cmsAction {
         }
 
         // Получаем поля для данного типа контента
-        $fields = $this->model->resetFilters()->getContentFields($ctype['name']);
-
-        // Запоминаем копию записи для заполнения отпарсенных полей
-        $item_parsed = $item;
-
-        // Парсим значения полей
-        foreach ($fields as $name => $field) {
-            $fields[$name]['html'] = $field['handler']->setItem($item)->parse(isset($item[$name]) ? $item[$name] : '');
-            $item_parsed[$name] = $fields[$name]['html'];
-        }
-
-        // Для каких необходимо, обрабатываем дополнительно
-        foreach ($fields as $name => $field) {
-            $fields[$name]['string_value'] = $field['handler']->setItem($item_parsed)->getStringValue(isset($item[$name]) ? $item[$name] : '');
-            $fields[$name]['html'] = $field['handler']->afterParse($fields[$name]['html'], $item_parsed);
-        }
+        // И парсим их, получая HTML полей
+        $fields = $this->parseContentFields(
+                $this->model->resetFilters()->getContentFields($ctype['name']),
+                $item
+            );
 
         // показываем вкладку связи, если передана
         if ($this->request->has('child_ctype_name')){
@@ -285,7 +278,7 @@ class actionContentItemView extends cmsAction {
 
             $parts = explode('-', $child_ctype_name);
             $child_controller_name = $parts[0];
-            $child_target = isset($parts[1]) ? $parts[1] : '';
+            $child_target = $parts[1] ?? '';
 
             // если связь с контроллером, а не с типом контента
             if ($this->isControllerInstalled($child_controller_name) && $this->isControllerEnabled($child_controller_name)){
