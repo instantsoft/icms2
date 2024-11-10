@@ -29,13 +29,13 @@
 ?>
 <h1>
     <?php html($manifest['info']['title']); ?>
-    <strong>
-        v<?php html($manifest['version']['major']); ?>.<?php html($manifest['version']['minor']); ?>.<?php html($manifest['version']['build']); ?>
-    </strong>
+    <sup>
+        <?php html($manifest['version']['major']); ?>.<?php html($manifest['version']['minor']); ?>.<?php html($manifest['version']['build']); ?>
+    </sup>
 </h1>
 
 
-<div id="cp_package_info" class="without-tabs card rounded-0">
+<div id="cp_package_info" class="without-tabs card">
 <div class="card-body">
     <form action="<?php echo $this->href_to('install', 'ftp'); ?>" method="post">
         <?php if (isset($manifest['info']['image'])) { ?>
@@ -136,24 +136,28 @@
             <?php if ($manifest['contents']) { ?>
             <fieldset>
                 <legend><?php echo LANG_CP_PACKAGE_CONTENTS; ?></legend>
-                <div id="tree" class="no-overflow">
+                <div id="tree" class="no-overflow skeleton-tree">
                     <?php echo html_array_to_list($manifest['contents']); ?>
                 </div>
-                <script>
+                <?php ob_start(); ?><script>
                     $(function(){
                         $("#tree").dynatree({
                             expand: true
                         });
                     });
-                </script>
+                </script><?php $this->addBottom(ob_get_clean()); ?>
             </fieldset>
             <?php } ?>
         </div>
         <div class="buttons mt-4">
             <?php if ($depends_pass){ ?>
-                <input class="button-submit btn btn-primary" name="next" value="<?php echo LANG_INSTALL; ?>" onclick="location.href='<?php echo $this->href_to('install', 'ftp'); ?>'" type="button">
+                <a href="<?php echo $this->href_to('install', 'ftp'); ?>" class="btn btn-primary">
+                    <?php echo LANG_INSTALL; ?>
+                </a>
             <?php } ?>
-            <?php echo html_button(LANG_CANCEL, 'cancel', "location.href='".$this->href_to('addons_list')."'"); ?>
+            <a href="<?php echo $this->href_to('addons_list'); ?>" class="btn btn-secondary">
+                <?php echo LANG_INSTALL; ?>
+            </a>
         </div>
     </form>
 </div>

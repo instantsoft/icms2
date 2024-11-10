@@ -2,8 +2,13 @@
 <ul class="nav <?php echo $css_class; ?>">
 
     <?php $last_level = 0; ?>
+    <?php $scripts = []; ?>
 
     <?php foreach($menu as $id=>$item){ ?>
+
+        <?php if (!empty($item['onclick'])) {
+            $scripts[] = '$("#'.$item['attributes']['id'].'").on("click", function(){'.$item['onclick'].'});';
+        } ?>
 
         <?php for ($i=0; $i<($last_level - $item['level']); $i++) { ?>
             </li></ul>
@@ -28,7 +33,9 @@
                 $item['attributes']['data-toggle'] = 'dropdown';
             }
 
-            if (!empty($item['options']['class'])) { $css_classes[] = $item['options']['class']; }
+            if (!empty($item['options']['class'])) {
+                $css_classes[] = $item['options']['class'];
+            }
 
         ?>
 
@@ -36,7 +43,7 @@
             <?php if ($item['disabled']) { ?>
                 <span class="nav-link disabled"><?php html($item['title']); ?></span>
             <?php } else { ?>
-                <a <?php if (!empty($item['title'])) {?>title="<?php echo html($item['title']); ?>"<?php } ?> class="<?php html(implode(' ', $css_aclasses)); ?>" href="<?php echo !empty($item['url']) ? html($item['url'], false) : 'javascript:void(0)'; ?>" <?php echo html_attr_str($item['attributes']); ?>>
+                <a <?php if (!empty($item['title'])) {?>title="<?php echo html($item['title']); ?>"<?php } ?> class="<?php html(implode(' ', $css_aclasses)); ?>" href="<?php echo !empty($item['url']) ? html($item['url'], false) : '#'; ?>" <?php echo html_attr_str($item['attributes']); ?>>
                     <?php if (!empty($item['options']['icon'])) {
                         $icon_params = explode(':', $item['options']['icon']);
                         if(!isset($icon_params[1])){ array_unshift($icon_params, 'solid'); }
@@ -61,3 +68,10 @@
         </li></ul>
     <?php } ?>
 </nav>
+<?php if ($scripts) { ?>
+<?php ob_start(); ?>
+<script>
+    $(function (){<?php echo implode("\n", $scripts); ?>});
+</script>
+<?php $this->addBottom(ob_get_clean()); ?>
+<?php } ?>

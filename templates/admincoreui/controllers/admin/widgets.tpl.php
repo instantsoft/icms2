@@ -21,78 +21,76 @@
         ]
     ]);
 
-	$this->addToolButton(array(
+	$this->addToolButton([
         'class' => 'menu d-xl-none',
 		'data'  => [
             'toggle' =>'quickview',
             'toggle-element' => '#left-quickview'
         ],
 		'title' => LANG_MENU
-	));
+	]);
 
-    $this->addToolButton(array(
-        'class' => 'view_list',
+    $this->addToolButton([
+        'icon'  => 'list',
         'childs_count' => 2,
         'title' => LANG_CP_WIDGETS_PAGES,
         'href'  => ''
-    ));
-    $this->addToolButton(array(
+    ]);
+    $this->addToolButton([
         'class' => 'add',
         'level' => 2,
         'title' => LANG_CP_WIDGETS_ADD_PAGE,
         'href'  => $this->href_to('widgets', 'page_add')
-    ));
-    $this->addToolButton(array(
+    ]);
+    $this->addToolButton([
         'class' => 'edit',
         'level' => 2,
         'title' => LANG_CP_WIDGETS_EDIT_PAGE,
         'href'  => $this->href_to('widgets', 'page_edit')
-    ));
-    $this->addToolButton(array(
+    ]);
+    $this->addToolButton([
         'class' => 'delete',
         'level' => 2,
         'title' => LANG_CP_WIDGETS_DELETE_PAGE,
         'href'  => $this->href_to('widgets', 'page_delete')
-    ));
-
-    $this->addToolButton(array(
+    ]);
+    $this->addToolButton([
         'class'   => 'cancel',
+        'icon'    => 'trash',
         'title'   => LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS,
-        'onclick' => "return confirm('" .LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM. "')",
-        'href'    => $this->href_to('widgets', array('unbind_all_widgets', $template_name))
-    ));
-
-    $this->addToolButton(array(
+        'href'    => $this->href_to('widgets', ['unbind_all_widgets', $template_name])
+    ]);
+    $this->addToolButton([
         'class' => 'gridicon',
         'childs_count' => count($templates),
         'title' => LANG_CP_WIDGETS_TEMPLATE.': '.$templates[$template_name],
         'href'  => ''
-    ));
+    ]);
 
     foreach ($templates as $tkey => $template) {
-        $this->addToolButton(array(
+        $this->addToolButton([
             'level' => 2,
             'title' => $template,
             'href'  => $this->href_to('widgets').'?template_name='.$tkey
-        ));
+        ]);
     }
 
     if($is_dynamic_scheme){
-        $this->addToolButton(array(
+        $this->addToolButton([
             'class' => 'add add_row ajax-modal',
             'title' => LANG_CP_WIDGETS_ADD_ROW,
             'href'  => $this->href_to('widgets', ['row_add', $template_name])
-        ));
-        $this->addToolButton(array(
+        ]);
+        $this->addToolButton([
             'class' => 'install add_row ajax-modal',
             'title' => LANG_CP_WIDGETS_IMPORT_SCHEME,
             'href'  => $this->href_to('widgets', ['import_scheme', $template_name])
-        ));
-        $this->addToolButton(array(
+        ]);
+        $this->addToolButton([
             'class' => 'export ajax-modal',
             'title' => LANG_CP_WIDGETS_EXPORT_SCHEME,
             'href'  => $this->href_to('widgets', ['export_scheme', $template_name])
-        ));
+        ]);
     }
 
     $this->applyToolbarHook('admin_widgets_toolbar');
@@ -238,20 +236,24 @@
         <a class="delete" href="#" data-func="widgetDelete" title="<?php echo LANG_DELETE; ?>"><i class="icon-close icons font-xl d-block"></i></a>
     </span>
 </div>
+<?php ob_start(); ?>
 <script>
-    <?php echo $this->getLangJS('LANG_CP_WIDGET_COPY_CONFIRM', 'LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_CP_WIDGET_REMOVE_CONFIRM', 'LANG_CP_PACKAGE_CONTENTS', 'LANG_HIDE', 'LANG_SHOW'); ?>
+    <?php echo $this->getLangJS('LANG_CP_WIDGET_COPY_CONFIRM', 'LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_CP_WIDGET_REMOVE_CONFIRM', 'LANG_CP_PACKAGE_CONTENTS', 'LANG_HIDE', 'LANG_SHOW', 'LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM'); ?>
     $(function(){
         icms.admin.introJsInit({page: 'widgets', steps: <?php echo json_encode($intro_lang); ?>});
         <?php if($scroll_to) { ?>
             $(function(){
-                var el = $("#<?php html($scroll_to); ?>").addClass('shadow');
-                $('html, body').animate({
-                    scrollTop: el.offset().top + 150
-                }, 500);
-                setTimeout(function (){
-                    el.removeClass('shadow');
-                }, 5000);
+                let el = $("#<?php html($scroll_to); ?>").addClass('shadow');
+                if(el.length > 0){
+                    $('html, body').animate({
+                        scrollTop: el.offset().top + 150
+                    }, 500);
+                    setTimeout(function (){
+                        el.removeClass('shadow');
+                    }, 5000);
+                }
             });
         <?php } ?>
     });
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

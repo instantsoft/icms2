@@ -78,10 +78,9 @@ class actionAdminContent extends cmsAction {
                 'confirm' => LANG_DELETE_CATEGORY_CONFIRM
             ],
             [
-                'class'   => 'tree_folder',
+                'class'   => 'tree_folder ajax-modal',
                 'level'   => 2,
-                'title'   => LANG_CP_CONTENT_CATS_ORDER,
-                'onclick' => 'return contentCatsReorder($(this))'
+                'title'   => LANG_CP_CONTENT_CATS_ORDER
             ],
             [
                 'class' => 'add add_site',

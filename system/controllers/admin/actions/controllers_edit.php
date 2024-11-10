@@ -39,8 +39,12 @@ class actionAdminControllersEdit extends cmsAction {
         //
         // Загружаем бэкенд выбранного контроллера
         //
-        $backend_context    = $this->request->isAjax() ? cmsRequest::CTX_AJAX : cmsRequest::CTX_INTERNAL;
-        $backend_request    = new cmsRequest($this->request->getData(), $backend_context);
+
+        $backend_request = clone $this->request;
+        if (!$this->request->isAjax()) {
+            $backend_request->setContext(cmsRequest::CTX_INTERNAL);
+        }
+
         $backend_controller = $this->loadControllerBackend($controller_info['name'], $backend_request);
 
         // меню компонента в админке

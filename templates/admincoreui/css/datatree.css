@@ -1,6 +1,6 @@
 ul.dynatree-container{
     white-space: nowrap;
-    padding: 0 0 1rem 0;
+    padding: 0;
     margin: 0;
     overflow: auto;
     min-height: 0%;

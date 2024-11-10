@@ -20,22 +20,14 @@ class actionUsersMigrationsAdd extends cmsAction {
             LANG_USERS_MIG_ADD
         ];
 
+        $this->use_default_tool_buttons = true;
+
         $this->tool_buttons = [
             [
-                'class' => 'save',
-                'title' => LANG_SAVE,
-                'href'  => 'javascript:icms.forms.submit()'
-            ],
-            [
-                'class' => 'cancel',
-                'title' => LANG_CANCEL,
-                'href'  => $list_url
-            ],
-            [
-                'class'  => 'help',
                 'title'  => LANG_HELP,
                 'target' => '_blank',
-                'href'   => LANG_HELP_URL_COM_USERS_MIGRATON
+                'href'   => LANG_HELP_URL_COM_USERS_MIGRATON,
+                'icon'   => 'question-circle'
             ]
         ];
 

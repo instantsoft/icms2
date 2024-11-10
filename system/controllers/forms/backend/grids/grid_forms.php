@@ -25,7 +25,7 @@ function grid_forms($controller) {
         $columns['hash'] = [
             'title'   => LANG_FORMS_CP_FORMS_EMBED,
             'handler' => function ($v, $row) {
-                return html_input('text', '', '<script src="' . href_to_abs('forms', 'framejs', $v) . '"></script>', ['onclick' => '$(this).select();']);
+                return html_input('text', '', '<script src="' . href_to_abs('forms', 'framejs', $v) . '"></script>', ['class' => 'icms-click-select']);
             }
         ];
     }
@@ -35,7 +35,7 @@ function grid_forms($controller) {
         $columns['tpl_form'] = [
             'title'   => LANG_FORMS_CP_FORMS_SHORTCODE,
             'handler' => function ($v, $row) {
-                return html_input('text', '', '{forms:' . $row['name'] . '}', ['onclick' => '$(this).select();']);
+                return html_input('text', '', '{forms:' . $row['name'] . '}', ['class' => 'icms-click-select']);
             }
         ];
     }

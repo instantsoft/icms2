@@ -25,7 +25,7 @@ class actionMessagesDeleteMesage extends cmsAction {
 
         $this->cms_template->renderJSON([
             'error'          => false,
-            'delete_text'    => LANG_PM_IS_DELETE . LANG_PM_DO_RESTORE,
+            'restore_text'   => LANG_PM_DO_RESTORE,
             'remove_text'    => LANG_PM_IS_DELETE,
             'message_ids'    => $message_ids,
             'delete_msg_ids' => $delete_msg_ids

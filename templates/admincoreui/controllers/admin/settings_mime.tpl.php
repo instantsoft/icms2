@@ -16,9 +16,10 @@
     ]);
 
     $this->addToolButton([
-        'class' => 'save',
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => 'javascript:icms.forms.submit()'
+        'href'  => '#',
+        'icon'  => 'save'
     ]);
 ?>
 

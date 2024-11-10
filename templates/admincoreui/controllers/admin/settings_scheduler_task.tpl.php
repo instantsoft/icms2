@@ -11,15 +11,17 @@ $this->setPageTitle($page_title);
 $this->addBreadcrumb($page_title);
 
 $this->addToolButton([
-    'class' => 'save',
+    'class' => 'save process-save',
     'title' => LANG_SAVE,
-    'href'  => 'javascript:icms.forms.submit()'
+    'href'  => '#',
+    'icon'  => 'save'
 ]);
 
 $this->addToolButton([
     'class' => 'cancel',
     'title' => LANG_CANCEL,
-    'href'  => $this->href_to('settings', ['scheduler'])
+    'href'  => $this->href_to('settings', ['scheduler']),
+    'icon'  => 'undo'
 ]);
 
 $this->addMenuItem('breadcrumb-menu', [
@@ -33,5 +35,6 @@ $this->addMenuItem('breadcrumb-menu', [
 
 $this->renderForm($form, $task, [
     'action' => '',
-    'method' => 'post'
+    'method' => 'post',
+    'cancel' => ['title' => LANG_CANCEL, 'href' => $this->href_to('settings', ['scheduler']), 'show' => true]
 ], $errors);

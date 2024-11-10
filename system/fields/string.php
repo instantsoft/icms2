@@ -38,7 +38,7 @@ class fieldString extends cmsFormField {
             ]),
             new fieldList('in_filter_as', [
                 'title' => LANG_PARSER_STRING_DISPLAY_VARIANT,
-                'hint'  => '<a href="#" onclick="return fieldStringLoadDefault(\'' . cmsTemplate::getInstance()->href_to('ctypes', ['field_string_ajax', $this->name]) . '\')" class="ajaxlink">' . LANG_PARSER_STRING_ENTER_DEFAULT . '</a>',
+                'hint'  => '<a href="#" data-field_string_ajax_url="' . cmsTemplate::getInstance()->href_to('ctypes', ['field_string_ajax', $this->name]) . '" class="ajaxlink string-display-variant">' . LANG_PARSER_STRING_ENTER_DEFAULT . '</a>',
                 'items' => [
                     'input'    => LANG_PARSER_STRING,
                     'select'   => LANG_PARSER_STRING_SELECT,

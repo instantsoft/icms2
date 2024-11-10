@@ -5,14 +5,14 @@
     $this->addBreadcrumb(LANG_CP_CTYPE_PERMISSIONS);
 
     $this->addToolButton([
-        'class'   => 'save',
-        'title'   => LANG_SAVE,
-        'href'    => null,
-        'onclick' => 'icms.forms.submit()'
+        'class' => 'save process-save',
+        'title' => LANG_SAVE,
+        'href'  => '#',
+        'icon'  => 'save'
     ]);
 
     $this->addToolButton([
-        'class' => 'view_list',
+        'icon'  => 'list',
         'title' => LANG_CP_CTYPE_TO_LIST,
         'href'  => $this->href_to('ctypes')
     ]);

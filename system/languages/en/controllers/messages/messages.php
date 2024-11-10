@@ -32,7 +32,7 @@
     define('LANG_PM_DESKTOP_NOTIFY_NEW',    'Messages from %s');
     define('LANG_PM_USER_SEARCH',           'Start typing the name...');
     define('LANG_PM_IS_DELETE',             'Message is deleted.');
-    define('LANG_PM_DO_RESTORE',            ' <a href="#" onclick="return icms.messages.restoreMsg(this);">Restore</a>');
+    define('LANG_PM_DO_RESTORE',            'Restore');
     define('LANG_PM_CLEAR_NOTICE',          'Clear all notifications');
     define('LANG_PM_CLEAR_NOTICE_CONFIRM',  'Really clear all notifications?');
     define('LANG_PM_PMAILING',              'Mass send messages');

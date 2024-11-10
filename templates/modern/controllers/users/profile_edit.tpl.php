@@ -9,38 +9,39 @@
     }
     $this->addBreadcrumb($profile['nickname'], href_to_profile($profile));
 
-    $this->addToolButton(array(
-        'class' => 'save',
-        'icon'  => 'save',
+    $this->addToolButton([
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => "javascript:icms.forms.submit()"
-    ));
+        'href'  => '#',
+        'icon'  => 'save'
+    ]);
 
-    $this->addToolButton(array(
+    $this->addToolButton([
         'class' => 'cancel',
-        'icon'  => 'window-close',
+        'icon'  => 'undo',
         'title' => LANG_CANCEL,
         'href'  => $cancel_url
-    ));
+    ]);
 
     $this->addBreadcrumb(LANG_USERS_EDIT_PROFILE);
 
-    $this->renderChild('profile_edit_header', array('profile'=>$profile));
+    $this->renderChild('profile_edit_header', ['profile' => $profile]);
 
     if(!empty($profile['id']) && $profile['slug'] == $profile['id']){ $profile['slug'] = null; }
-    $this->renderForm($form, $profile, array(
+
+    $this->renderForm($form, $profile, [
         'action'  => '',
-        'cancel'  => array('show' => true, 'href' => $cancel_url),
-        'buttons' => !$allow_delete_profile ? [] : array(
-            array(
+        'cancel'  => ['show' => true, 'href' => $cancel_url],
+        'buttons' => !$allow_delete_profile ? [] : [
+            [
                 'title'      => LANG_USERS_DELETE_PROFILE,
-                'name'       => 'delete_profile',
-                'onclick'    => "icms.users.delete('" . href_to_profile($profile, ['delete']) . "', '" . LANG_USERS_DELETE_PROFILE . "');",
-                'attributes' => array(
-                    'class' => 'delete_profile mt-3 mt-md-0 float-md-right btn-danger'
-                )
-            )
-        ),
+                'as_link'    => true,
+                'href'       => href_to_profile($profile, ['delete']),
+                'attributes' => [
+                    'class' => 'ajax-modal delete_profile mt-3 mt-md-0 float-md-right btn btn-danger'
+                ]
+            ]
+        ],
         'method'  => 'post',
         'toolbar' => false
-    ), $errors);
+    ], $errors);

@@ -1,22 +1,29 @@
 <h1><?php echo $page_title ?></h1>
 
-<?php if ($do=='edit') { $this->renderChild('group_edit_header', array('group' => $group)); } ?>
+<?php
+if ($do === 'edit') {
+    $this->renderChild('group_edit_header', ['group' => $group]);
+    $cancel_link = href_to('groups', $group['slug']);
+} else {
+    $cancel_link = href_to('groups');
+}
+?>
 
 <?php
     if(!empty($group['id']) && $group['slug'] == $group['id']){ $group['slug'] = null; }
-    $this->renderForm($form, $group, array(
+    $this->renderForm($form, $group, [
         'action'  => '',
-        'cancel'  => array('show' => true, 'href' => 'javascript:goBack()'),
+        'cancel'  => ['show' => true, 'href' => $cancel_link],
         'toolbar' => false,
         'method'  => 'post',
-        'hook' => array(
+        'hook' => [
             'event' => 'group_form_html',
-            'param' => array(
+            'param' => [
                 'do' => $do,
-                'id' => $do=='edit' ? $group['id'] : null
-            )
-        )
-    ), $errors);
+                'id' => $do === 'edit' ? $group['id'] : null
+            ]
+        ]
+    ], $errors);
 ?>
 <?php if ($is_premoderation) { ?>
     <div class="content_moderation_notice alert alert-info" role="alert">

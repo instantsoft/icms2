@@ -159,7 +159,7 @@ trait formFieldItem {
             if ($field['is_system']) {
                 $form->hideField('basic', 'hint');
                 $form->hideField('visibility', 'options:relation_id');
-                $form->hideField('visibility', 'options:visible_depend');
+                $form->setFieldProperty('visibility', 'options:visible_depend', 'is_visible', false);
                 $form->setFieldProperty('visibility', 'options:is_in_item_pos', 'is_visible', false);
                 $form->hideFieldset('group');
                 $form->hideFieldset('format');
@@ -173,7 +173,7 @@ trait formFieldItem {
             if ($field['parser']->is_virtual) {
                 $form->hideField('basic', 'hint');
                 $form->hideField('visibility', 'options:relation_id');
-                $form->hideField('visibility', 'options:visible_depend');
+                $form->setFieldProperty('visibility', 'options:visible_depend', 'is_visible', false);
                 $form->hideFieldset('group');
                 $form->hideFieldset('format');
                 $form->hideFieldset('values');

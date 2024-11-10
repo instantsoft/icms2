@@ -5,17 +5,19 @@ $this->addBreadcrumb(LANG_CP_SECTION_CONTENT, $this->href_to('content'));
 $this->addBreadcrumb($ctype['title'], $this->href_to('content', $ctype['id']));
 $this->addBreadcrumb(LANG_CP_CONTENT_CATS_ADD);
 
-$this->addToolButton(array(
-    'class' => 'save',
+$this->addToolButton([
+    'class' => 'save process-save',
     'title' => LANG_SAVE,
-    'href'  => "javascript:icms.forms.submit()"
-));
+    'href'  => '#',
+    'icon'  => 'save'
+]);
 
-$this->addToolButton(array(
+$this->addToolButton([
     'class' => 'cancel',
     'title' => LANG_CANCEL,
-    'href'  => $back_url ? $back_url : $this->href_to('content')
-));
+    'href'  => $back_url ? $back_url : $this->href_to('content'),
+    'icon'  => 'undo'
+]);
 
 $this->addMenuItem('breadcrumb-menu', [
     'title' => LANG_HELP,
@@ -26,7 +28,7 @@ $this->addMenuItem('breadcrumb-menu', [
     ]
 ]);
 
-$this->renderForm($form, $category, array(
+$this->renderForm($form, $category, [
     'action' => '',
     'method' => 'post'
-), $errors);
+], $errors);

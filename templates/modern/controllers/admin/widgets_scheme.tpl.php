@@ -12,7 +12,7 @@
             <a class="edit mr-1 text-decoration-none edit-scheme-row ajax-modal" data-toggle="tooltip" data-placement="top" href="<?php echo $this->href_to('widgets', ['row_edit', $row['id']]); ?>" title="<?php echo LANG_EDIT; ?>">
                 <i class="icon-pencil icons"></i>
             </a>
-            <a class="delete text-danger text-decoration-none delete-scheme-row" data-toggle="tooltip" data-placement="top" href="<?php echo $this->href_to('widgets', ['row_delete', $row['id']]); ?>" title="<?php echo LANG_DELETE; ?>" onclick="return confirm('<?php echo LANG_CP_WIDGETS_ROW_DEL_CONFIRM; ?>')">
+            <a class="delete text-danger text-decoration-none delete-scheme-row" data-toggle="tooltip" data-placement="top" href="<?php echo $this->href_to('widgets', ['row_delete', $row['id']]); ?>" title="<?php echo LANG_DELETE; ?>" data-confirm="<?php echo LANG_CP_WIDGETS_ROW_DEL_CONFIRM; ?>">
                 <i class="icon-close icons"></i>
             </a>
         </div>
@@ -60,7 +60,7 @@
                         <a class="edit mr-2 text-white text-decoration-none edit-scheme-col ajax-modal" href="<?php echo $this->href_to('widgets', ['col_edit', $col['id']]); ?>" title="<?php echo LANG_EDIT; ?>">
                             <i class="icon-pencil icons d-block"></i>
                         </a>
-                        <a class="delete text-warning text-decoration-none delete-scheme-col" href="<?php echo $this->href_to('widgets', ['col_delete', $col['id']]); ?>" title="<?php echo LANG_DELETE; ?>" onclick="return confirm('<?php echo LANG_CP_WIDGETS_COL_DEL_CONFIRM; ?>')">
+                        <a class="delete text-warning text-decoration-none delete-scheme-col" href="<?php echo $this->href_to('widgets', ['col_delete', $col['id']]); ?>" title="<?php echo LANG_DELETE; ?>" data-confirm="<?php echo LANG_CP_WIDGETS_COL_DEL_CONFIRM; ?>">
                             <i class="icon-close icons d-block"></i>
                         </a>
                     </div>

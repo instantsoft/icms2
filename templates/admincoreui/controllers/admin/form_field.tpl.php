@@ -6,7 +6,7 @@
         'method' => 'post'
     ], $errors);
 ?>
-
+<?php ob_start(); ?>
 <script>
 
     var filter_options_el = $('#fset_visibility > .field').length === 1 ? '#tab-visibility' : '#f_is_in_filter, #tab-filter_access';
@@ -89,3 +89,4 @@
     });
 
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

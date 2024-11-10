@@ -13,16 +13,19 @@
         $this->addBreadcrumb(LANG_USER_GROUP.': '.$group['title']);
     }
 
-    $this->addToolButton(array(
-        'class' => 'save',
+    $this->addToolButton([
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => "javascript:icms.forms.submit()"
-    ));
-    $this->addToolButton(array(
+        'href'  => '#',
+        'icon'  => 'save'
+    ]);
+
+    $this->addToolButton([
         'class' => 'cancel',
         'title' => LANG_CANCEL,
-        'href'  => $this->href_to('users')
-    ));
+        'href'  => $this->href_to('users'),
+        'icon'  => 'undo'
+    ]);
 
     $this->addMenuItem('breadcrumb-menu', [
         'title' => LANG_HELP,
@@ -35,7 +38,7 @@
 
     $this->setMenuItems('admin_toolbar', $menu);
 
-    $this->renderForm($form, $group, array(
+    $this->renderForm($form, $group, [
         'action' => '',
         'method' => 'post'
-    ), $errors);
+    ], $errors);

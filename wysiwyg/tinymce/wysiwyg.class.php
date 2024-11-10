@@ -91,6 +91,7 @@ class cmsWysiwygTinymce {
         'allow_mime_types'      => [],
         'skin'                  => 'oxide',
         'images_preset'         => 'big',
+        'placeholder'           => '',
         'license_key'           => 'gpl',
         'referrer_policy'       => 'origin'
     ];
@@ -210,7 +211,7 @@ class cmsWysiwygTinymce {
         }
 
         foreach ($this->options as $key => $value) {
-            if(!$value){
+            if(!$value && !is_string($value)){
                 $this->options[$key] = false;
                 continue;
             }

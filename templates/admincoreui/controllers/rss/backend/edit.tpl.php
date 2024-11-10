@@ -2,19 +2,21 @@
 
     $this->addBreadcrumb($feed['title']);
 
-    $this->addToolButton(array(
-        'class' => 'save',
+    $this->addToolButton([
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => "javascript:icms.forms.submit()"
-    ));
+        'href'  => '#',
+        'icon'  => 'save'
+    ]);
 
-    $this->addToolButton(array(
+    $this->addToolButton([
         'class' => 'cancel',
         'title' => LANG_CANCEL,
-        'href'  => $this->href_to('')
-    ));
+        'href'  => $this->href_to(''),
+        'icon'  => 'undo'
+    ]);
 
-    $this->renderForm($form, $feed, array(
+    $this->renderForm($form, $feed, [
         'action' => '',
         'method' => 'post'
-    ), $errors);
+    ], $errors);

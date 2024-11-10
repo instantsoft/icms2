@@ -190,20 +190,20 @@
 .cp_toolbar .view_list > a::before {
     content: "\e067";
 }
-.cp_toolbar .save > a::before {
-    content: "\e022";
-}
 .cp_toolbar .save > a, .datagrid .actions > a.basket_remove, .datagrid .actions > a.accept {
     color: #4dbd74;
 }
-.cp_toolbar .cancel > a::before {
-    content: "\e050";
+.cp_toolbar .save > a:hover, .datagrid .actions > a.basket_remove:hover, .datagrid .actions > a.accept:hover {
+    color: #3fa763;
 }
 .cp_toolbar .delete > a::before, .cp_toolbar .delete_folder > a::before {
     content: "\e082";
 }
 .cp_toolbar .cancel > a, .cp_toolbar .delete > a, .cp_toolbar .delete_folder > a, .cp_toolbar .delete_filter > a, .cp_toolbar .basket_put > a, .datagrid .actions > a.delete {
     color: #f86c6b;
+}
+.cp_toolbar .cancel > a:hover, .cp_toolbar .delete > a:hover, .cp_toolbar .delete_folder > a:hover, .cp_toolbar .delete_filter > a:hover, .cp_toolbar .basket_put > a:hover, .datagrid .actions > a.delete:hover {
+    color: #f12b2a;
 }
 .cp_toolbar .install > a::before {
     content: "\e084";
@@ -385,12 +385,12 @@ thead.list_thead {
     max-width: 100%;
 }
 h1:not(.error) {
-    background: #63c2de;
-    border-bottom: solid 1px #20a8d8;
+    background: #f0f3f5;
+    border-bottom: solid 1px #c8ced3;
     margin: 0 -1.5rem 1.5rem -1.5rem;
     padding: 15px 30px;
-    color: #FFF;
-    font-size: 1.53125rem;
+    color: #2f353a;
+    font-size: 1.4125rem;
 }
 h1 > span::before {
     content: '/ ';

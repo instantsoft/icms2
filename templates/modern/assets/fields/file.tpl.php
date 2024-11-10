@@ -8,7 +8,7 @@
             <a href="<?php echo $field->getDownloadURL($file); ?>"><?php echo $file['name']; ?></a>
         </span>
         <span class="size mx-2"><?php echo files_format_bytes($file['size']); ?></span>
-        <a class="btn btn-sm btn-danger delete" href="javascript:" onclick="icms.files.remove('<?php echo $field->id; ?>')" title="<?php echo LANG_DELETE; ?>" data-toggle="tooltip" data-placement="right">
+        <a class="btn btn-sm btn-danger btn-delete" href="#" title="<?php echo LANG_DELETE; ?>" data-toggle="tooltip" data-placement="right">
             <?php html_svg_icon('solid', 'minus-circle'); ?>
         </a>
     </div>
@@ -32,6 +32,9 @@
 
 <?php ob_start(); ?>
 <script>
+    $('#file_<?php html($field->id); ?>').on('click', '.btn-delete', function(){
+        return icms.files.remove('<?php html($field->id); ?>');
+    });
     $(function(){
         $('#<?php echo $field->id; ?>').on('change',function(){
             $(this).next('.custom-file-label').text($(this).val().replace('C:\\fakepath\\', ''));

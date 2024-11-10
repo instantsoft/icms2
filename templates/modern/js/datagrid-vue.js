@@ -927,7 +927,7 @@ icms.datagrid = (function () {
 
         if(selected.length === 0){
             self.alert(LANG_LIST_NONE_SELECTED);
-            return;
+            return false;
         }
 
         if (typeof (confirm_message) === 'string') {

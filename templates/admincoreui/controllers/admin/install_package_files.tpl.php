@@ -37,6 +37,14 @@
         </div>
     </fieldset>
 </form>
+<?php if(empty($hide_continue_btn)){ ?>
+    <a class="btn btn-success mt-4" href="<?php echo $this->href_to($type); ?>"><?php echo LANG_CONTINUE; ?></a>
+<?php } ?>
+<?php if(empty($hide_title)){ ?>
+    </div>
+</div>
+<?php } ?>
+<?php ob_start(); ?>
 <script>
     $(function(){
         $("#tree").dynatree({
@@ -45,11 +53,4 @@
         });
     });
 </script>
-
-<?php if(empty($hide_continue_btn)){ ?>
-    <a class="btn btn-success mt-4" href="<?php echo $this->href_to($type); ?>"><?php echo LANG_CONTINUE; ?></a>
-<?php } ?>
-<?php if(empty($hide_title)){ ?>
-    </div>
-</div>
-<?php } ?>
+<?php $this->addBottom(ob_get_clean()); ?>

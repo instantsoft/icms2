@@ -25,20 +25,20 @@
 </div>
 
 <?php
-    $this->renderForm($form, $account, array(
+    $this->renderForm($form, $account, [
         'action' => '',
         'method' => 'post',
-        'submit' => array(
+        'submit' => [
             'title' => LANG_CONTINUE
-        ),
-        'cancel' => array(
+        ],
+        'cancel' => [
             'show' => true,
             'href' => $this->href_to('addons_list')
-        )
-    ), $errors); ?>
+        ]
+    ], $errors); ?>
 
 <input class="button btn btn-primary" style="display: none;" name="skip" value="<?php echo LANG_INSTALL; ?>" type="button" id="skip">
-
+<?php ob_start(); ?>
 <script>
     $(function() {
         $('form > .buttons').prepend($('#skip'));
@@ -65,3 +65,4 @@
         });
     });
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

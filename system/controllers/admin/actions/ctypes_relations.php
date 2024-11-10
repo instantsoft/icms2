@@ -32,7 +32,7 @@ class actionAdminCtypesRelations extends cmsAction {
                 'href'  => $this->cms_template->href_to('ctypes', ['relations_add', $this->ctype['id']])
             ],
             [
-                'class' => 'view_list',
+                'icon'  => 'list',
                 'title' => LANG_CP_CTYPE_TO_LIST,
                 'href'  => $this->cms_template->href_to('ctypes')
             ]

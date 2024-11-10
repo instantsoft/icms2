@@ -8,13 +8,14 @@
     }
 
     $this->addToolButton([
-        'class' => 'save',
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => 'javascript:icms.forms.submit()'
+        'href'  => '#',
+        'icon'  => 'save'
     ]);
 
     $this->addToolButton([
-        'class' => 'view_list',
+        'icon'  => 'list',
         'title' => LANG_CP_CTYPE_TO_LIST,
         'href'  => $this->href_to('ctypes')
     ]);
@@ -33,7 +34,7 @@
         'method' => 'post'
     ], $errors);
 ?>
-
+<?php ob_start(); ?>
 <script>
     $(function(){
         $('#f_name .input').on('input', function(){
@@ -41,3 +42,4 @@
         });
     });
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

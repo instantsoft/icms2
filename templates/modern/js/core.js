@@ -16,6 +16,13 @@ icms.template = (function ($) {
         this.initTooltip();
         this.initCookieAlert();
         this.initHeightTextSpoiler();
+        this.initInputClickSelect();
+    };
+
+    this.initInputClickSelect = function(){
+        $('.icms-click-select').on('click', function(){
+            $(this).select();
+        });
     };
 
     this.initTooltip = function(){
@@ -382,24 +389,52 @@ icms.forms = (function ($) {
 
     };
 
-    this.initFormHelpers = function(){
-        $('body').on('focus', '.field.ft_string input, .field.ft_text textarea', function (){
+    this.initFormHelpers = function(form_id){
+        let form = $('#'+form_id);
+        form.on('focus', '.field.ft_string input, .field.ft_text textarea', function (){
             $('.pattern_fields_panel').hide();
             $('.pattern_fields_panel_hint').show();
             $(this).closest('.field').find('.pattern_fields_panel_hint').hide();
             $(this).closest('.field').find('.pattern_fields_panel').show();
         });
-        $('body').on('click', '.pattern_fields > ', function (){
-            var spacer = $(this).closest('.hint').data('spacer') || false;
-            var spacer_stop = $(this).closest('.hint').data('spacer_stop') || false;
-            var id = $(this).closest('.icms-forms-pattern__fields').data('for_id');
+        form.on('click', '.pattern_fields > ', function (){
+            let spacer = $(this).closest('.hint').data('spacer') || false;
+            let spacer_stop = $(this).closest('.hint').data('spacer_stop') || false;
+            let id = $(this).closest('.icms-forms-pattern__fields').data('for_id');
             if (typeof(_this.wysiwygs_insert_pool.add[id]) === 'function') {
                 _this.wysiwygs_insert_pool.add[id](id, $(this).text()); return false;
             }
             return addTextToPosition($('#'+id), $(this).text(), spacer, spacer_stop);
         });
-
-        $('.auto_copy_value').on('click', function (){
+        $('.field input, .field textarea', form).on('invalid', function (e){
+            $('.process-save > a, .buttons .btn').removeClass('disabled is-busy');
+            let name = $(e.target).attr('name');
+            let lang_tab = $("a[href='#f_"+name+"']", form);
+            if (lang_tab.length > 0) {
+                e.preventDefault();
+                setTimeout(function(){
+                    lang_tab.trigger('click');
+                    $(e.target).focus();
+                }, 1);
+            }
+            let tabs_menu = $(e.target).closest('.tabs-menu');
+            if (tabs_menu.length === 0) {
+                return;
+            }
+            let tab = $(e.target).closest('.tab-pane');
+            let tab_is_active = tab.hasClass('active');
+            let tab_id = tab.attr('id');
+            if (!tab_is_active) {
+                $("a[href='#"+tab_id+"']", tabs_menu).tab('show');
+            }
+        });
+        $('.process-save > a').on('click', function(){
+            $(this).addClass('disabled is-busy');
+            let submit_class = $(this).data('submit_class');
+            _this.submit(submit_class);
+            return false;
+        });
+        $('.auto_copy_value', form).on('click', function (){
             $(this).closest('.input-prefix-suffix').find('input').val($(this).data('value'));
             return false;
         });
@@ -1041,12 +1076,12 @@ function spellcount (num, one, two, many){
 function initMultyTabs(selector, tab_wrap_field){
     tab_wrap_field = tab_wrap_field || '.field';
     $(selector).each(function(indx, element){
-        var tab = $(' > li > a', $(this));
-        $(tab).eq(0).addClass('active');
-		$(tab).on('click', function() {
-            var tab_field = $(this).attr('href');
+        let tabs = $(' > li > a', $(element));
+        $(tabs).eq(0).addClass('active');
+		$(tabs).on('click', function() {
+            let tab_field = $(this).attr('href');
 			$(this).addClass('active').closest('li').siblings().find('a').removeClass('active');
-            $(element).nextAll(tab_wrap_field+':lt('+$(tab).closest('li').length+')').hide();
+            $(element).nextAll(tab_wrap_field+':lt('+$(tabs).closest('li').length+')').hide();
             $(tab_field).show();
             return false;
 		});

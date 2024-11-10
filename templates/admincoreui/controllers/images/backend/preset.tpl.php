@@ -10,31 +10,21 @@
         $this->addBreadcrumb($preset['title']);
     }
 
-    $this->addToolButton(array(
-        'class' => 'save',
+    $this->addToolButton([
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => "javascript:icms.forms.submit()"
-    ));
-    $this->addToolButton(array(
+        'href'  => '#',
+        'icon'  => 'save'
+    ]);
+
+    $this->addToolButton([
         'class' => 'cancel',
         'title' => LANG_CANCEL,
-        'href'  => $this->href_to('presets')
-    ));
+        'href'  => $this->href_to('presets'),
+        'icon'  => 'undo'
+    ]);
 
-    $this->renderForm($form, $preset, array(
+    $this->renderForm($form, $preset, [
         'action' => '',
         'method' => 'post'
-    ), $errors);
-?>
-
-    <script>
-        $(function(){
-            $('#is_square').on('click', function (){
-                if($(this).is(':checked')){
-                    $('#f_width .hint, #f_height .hint').hide();
-                } else {
-                    $('#f_width .hint, #f_height .hint').show();
-                }
-            }).triggerHandler('click');
-        });
-    </script>
+    ], $errors);

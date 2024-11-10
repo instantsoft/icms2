@@ -2,11 +2,12 @@
 
     $this->addBreadcrumb(LANG_OPTIONS);
 
-    $this->addToolButton(array(
-        'class' => 'save',
+    $this->addToolButton([
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => "javascript:icms.forms.submit()"
-    ));
+        'href'  => '#',
+        'icon'  => 'save'
+    ]);
 
     if($toolbar){
         foreach ($toolbar as $menu) {
@@ -17,9 +18,9 @@
 ?>
 <div id="<?php echo $this->controller->name; ?>_options_form">
 <?php
-    $this->renderForm($form, $options, array(
+    $this->renderForm($form, $options, [
         'action' => '',
         'method' => 'post'
-    ), $errors);
+    ], $errors);
 ?>
 </div>

@@ -23,9 +23,11 @@ function html_svg_icon($file, $name, $size = 16, $print = true){
  * Выводит тег <a>
  * @param string $title Название
  * @param string $href Ссылка
+ * @param string $attributes Массив атрибутов
+ * @return void
  */
-function html_link($title, $href){
-    echo '<a href="'.html($href, false).'">'.html($title, false).'</a>';
+function html_link($title, $href, $attributes = []){
+    echo '<a href="'.html($href, false).'" '.html_attr_str($attributes, false).'>'.html($title, false).'</a>';
 }
 
 /**
@@ -259,22 +261,21 @@ function html_submit($caption = LANG_SUBMIT, $name = 'submit', $attributes = [])
  */
 function html_button($caption, $name, $onclick = '', $attributes = []) {
 
-    if (!isset($attributes['type'])) { $attributes['type'] = 'button'; }
+    $attributes['type'] = $attributes['type'] ?? 'button';
 
-    $value = $caption;
-    if(isset($attributes['value'])){
-        $value = $attributes['value'];
-        unset($attributes['value']);
+    $attributes['value'] = $attributes['value'] ?? $caption;
+
+    if ($onclick) {
+        $attributes['onclick'] = $onclick;
     }
+
+    $attributes['name'] = $name;
 
     $attr_str = html_attr_str($attributes);
 
-    $class = 'button btn';
+    $class = 'button btn ' . ($attributes['class'] ?? 'btn-secondary');
 
-    if (!empty($attributes['class'])) { $class .= ' '.$attributes['class']; }
-    else { $class .= ' btn-secondary'; }
-
-    return '<button value="'.html($value, false).'" class="'.$class.'" name="'.$name.'" onclick="'.html($onclick, false).'" '.$attr_str.'><span>'.html($caption, false).'</span></button>';
+    return '<button class="' . $class . '" ' . $attr_str . '><span>' . html($caption, false) . '</span></button>';
 }
 
 /**
@@ -309,28 +310,38 @@ function html_avatar_image_empty($title, $class = ''){
     return '<span class="icms-profile-avatar__default '.$class.'" style="'.$iparams['style'].'"><svg fill="currentColor" viewBox="0 0 28 21"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle">'.mb_strtoupper(htmlspecialchars(mb_substr($title, 0, 1))).'</text></svg></span>';
 }
 
+/**
+ * Возвращает CSS стиль по переданной строке
+ *
+ * @staticvar array $image_block_params Кэшированные результаты
+ * @param string $title Слово или фраза
+ * @return array
+ */
 function get_image_block_param_by_title($title) {
 
-    static $image_block_params = null;
-    if(isset($image_block_params[$title])){
+    static $image_block_params = [];
+
+    // Проверяем наличие значения в кэше
+    if (isset($image_block_params[$title])) {
         return $image_block_params[$title];
     }
 
+    // Генерируем шестнадцатеричный цвет из CRC32 заголовка
     $bg_color = substr(dechex(crc32($title)), 0, 6);
 
-    // выбираем контрастный цвет для текста
-    $r = max( hexdec( substr($bg_color, 0, 2) ), 90);
-    $g = max( hexdec( substr($bg_color, 2, 2) ), 90);
-    $b = max( hexdec( substr($bg_color, 4, 2) ), 90);
-    $yiq = (($r*299)+($g*587)+($b*114)) / 1000;
+    // Преобразуем RGB компоненты и корректируем минимальные значения
+    $r = max(hexdec(substr($bg_color, 0, 2)), 90);
+    $g = max(hexdec(substr($bg_color, 2, 2)), 90);
+    $b = max(hexdec(substr($bg_color, 4, 2)), 90);
+
+    // Вычисляем контрастный цвет текста
+    $yiq = ($r * 299 + $g * 587 + $b * 114) / 1000;
     $txt_color = ($yiq >= 140) ? 'black' : 'white';
 
-    $image_block_params[$title] = array(
+    // Кэшируем результат
+    return $image_block_params[$title] = [
         'style' => "background-color: rgba({$r}, {$g}, {$b}, .9); color: {$txt_color};"
-    );
-
-    return $image_block_params[$title];
-
+    ];
 }
 
 /**
@@ -559,7 +570,10 @@ function html_switch($name, $active) {
     $html .= '<label><input type="radio" name="' . $name . '" value="0" ' . (!$active ? 'checked' : '') . '/> ' . LANG_OFF . "</label> \n";
     return $html;
 }
-
+/**
+ * @deprecated
+ * @return string
+ */
 function html_back_button() {
     return '<div class="back_button"><a href="javascript:window.history.go(-1);">' . LANG_BACK . '</a></div>';
 }

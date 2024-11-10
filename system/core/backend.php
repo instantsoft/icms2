@@ -40,6 +40,19 @@ class cmsBackend extends cmsController {
         }
     }
 
+    public function before($action_name) {
+
+        parent::before($action_name);
+
+        // Права доступа по имени экшена
+        // Управление не реализовано
+        if (!cmsUser::isAllowed('admin', implode('_', ['manage', $this->name, $action_name]))) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function setCurrentAction($action_name) {
 
         $this->current_action = $action_name;
@@ -195,7 +208,7 @@ class cmsBackend extends cmsController {
             return cmsCore::error404();
         }
 
-        $options = cmsController::loadOptions($this->name);
+        $options = $this->getOptions();
 
         $form = $this->getForm('options', [$options]);
         if (!$form) {
@@ -310,6 +323,14 @@ class cmsBackend extends cmsController {
 
         if (empty($this->useDefaultPermissionsAction)) {
             return cmsCore::error404();
+        }
+
+        $csrf_token = $this->request->get('csrf_token', '');
+        if (!cmsForm::validateCSRFToken($csrf_token)) {
+
+            cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
+
+            return $this->redirectBack();
         }
 
         $values = $this->request->get('value', []);

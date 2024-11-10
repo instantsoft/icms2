@@ -7,6 +7,14 @@ class actionAdminCtypesPermsSave extends cmsAction {
 
     public function run($ctype_name = null) {
 
+        $csrf_token = $this->request->get('csrf_token', '');
+        if (!cmsForm::validateCSRFToken($csrf_token)) {
+
+            cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
+
+            return $this->redirectBack();
+        }
+
         $values = $this->request->get('value', []);
 
         if (!$values || !$ctype_name) {
@@ -15,7 +23,7 @@ class actionAdminCtypesPermsSave extends cmsAction {
 
         $ctype = $this->model_backend_content->getContentTypeByName($ctype_name);
         if (!$ctype) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $rules = cmsPermissions::getRulesList('content');

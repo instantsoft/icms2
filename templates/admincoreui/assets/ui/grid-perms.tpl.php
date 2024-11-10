@@ -2,10 +2,10 @@
     <?php $this->toolbar('menu-toolbar'); ?>
 <?php } ?>
 
-<form action="<?php html($submit_url); ?>" method="post">
-
+<form action="<?php html($submit_url); ?>" method="post" id="form-perms">
+    <?php echo html_csrf_token(); ?>
     <div class="datagrid_wrapper perms_grid table-responsive dataTables_wrapper dt-bootstrap4">
-        <table id="datagrid" class="datagrid table table-striped table-bordered dataTable bg-white">
+        <table id="datagrid" class="datagrid table table-striped table-bordered dataTable bg-white m-0">
             <thead>
                 <tr>
                     <th><?php echo LANG_PERM_RULE; ?></th>
@@ -38,16 +38,12 @@
                                 <td class="center"></td>
                             <?php continue; } ?>
 
-                            <?php
-                                $default =  isset($values[$rule['id']][$group['id']]) ?
-                                            $values[$rule['id']][$group['id']] :
-                                            null;
-                            ?>
+                            <?php $default = $values[$rule['id']][$group['id']] ?? null; ?>
 
                             <td class="center align-middle text-center" data-label="<?php html($group['title']); ?>">
                                 <?php if ($rule['type'] == 'flag'){ ?>
                                     <label class="switch switch-pill switch-primary m-0 align-middle">
-                                        <?php echo html_checkbox("value[{$rule['id']}][{$group['id']}]", $default, 1, array('class' => 'switch-input')); ?>
+                                        <?php echo html_checkbox("value[{$rule['id']}][{$group['id']}]", $default, 1, ['class' => 'switch-input']); ?>
                                         <span class="switch-slider"></span>
                                     </label>
                                 <?php } ?>
@@ -55,7 +51,7 @@
                                     <?php echo html_select("value[{$rule['id']}][{$group['id']}]", $rule['options'], $default); ?>
                                 <?php } ?>
                                 <?php if ($rule['type'] == 'number'){ ?>
-                                    <?php echo html_input('text', "value[{$rule['id']}][{$group['id']}]", $default, array('class'=>'input-number')); ?>
+                                    <?php echo html_input('text', "value[{$rule['id']}][{$group['id']}]", $default, ['class'=>'input-number']); ?>
                                 <?php } ?>
                             </td>
 
@@ -66,19 +62,18 @@
             </tbody>
         </table>
     </div>
-
     <div class="buttons my-3">
         <?php echo html_submit(LANG_SAVE); ?>
     </div>
-
 </form>
 <?php ob_start(); ?>
 <script>
     <?php echo $this->getLangJS('LANG_SUBMIT_NOT_SAVE'); ?>
     $(function (){
+        icms.forms.initFormHelpers('form-perms');
         icms.forms.initUnsaveNotice();
         $('#filter_perm_rule').on('input', function () {
-            var rex = new RegExp($(this).val(), 'i');
+            let rex = new RegExp($(this).val(), 'i');
             $('.icms-perms-rule__list').hide();
             $('.icms-perms-rule__list').filter(function () {
                 return rex.test($(this).text());

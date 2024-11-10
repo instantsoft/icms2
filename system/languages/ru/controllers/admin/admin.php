@@ -447,8 +447,8 @@
     define('LANG_CP_WIDGETS_ROW_PARRENT_TAG',   'Родительский тег ряда');
     define('LANG_CP_WIDGETS_ROW_PARRENT_TAG_C', 'CSS класс родительского тега ряда');
     define('LANG_CP_WIDGETS_ROW_CONT_NO',       'Без контейнера');
-    define('LANG_CP_WIDGETS_ROW_DEL_CONFIRM',   'Удалить ряд?\nВиджеты переместятся в неиспользуемые');
-    define('LANG_CP_WIDGETS_COL_DEL_CONFIRM',   'Удалить колонку (вложенные также удалятся)?\nВиджеты переместятся в неиспользуемые');
+    define('LANG_CP_WIDGETS_ROW_DEL_CONFIRM',   'Удалить ряд? Виджеты переместятся в неиспользуемые');
+    define('LANG_CP_WIDGETS_COL_DEL_CONFIRM',   'Удалить колонку (вложенные также удалятся)? Виджеты переместятся в неиспользуемые');
     define('LANG_CP_WIDGETS_COL_COUNT',         'Количество колонок');
     define('LANG_CP_WIDGETS_COL_NAME',          'Название позиции');
     define('LANG_CP_WIDGETS_COL_NAME_HINT',     'Не указано, будет сгенерировано автоматически. Должно быть уникальным.');
@@ -465,7 +465,7 @@
     define('LANG_CP_WIDGETS_EDIT_PAGE',         'Редактировать');
     define('LANG_CP_WIDGETS_DELETE_PAGE',       'Удалить');
     define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS', 'Отвязать все виджеты');
-    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Отвязать все виджеты с позиций для данного шаблона?\nВиджеты переместятся в неиспользуемые');
+    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Отвязать все виджеты с позиций для данного шаблона? Виджеты переместятся в неиспользуемые');
     define('LANG_CP_WIDGETS_MISC',              'Общие');
     define('LANG_CP_WIDGET_COPY_CONFIRM',       'Копировать виджет, дублируя его на этой же позиции?');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Удалить виджет?');
@@ -845,6 +845,7 @@
     define('LANG_HELP_URL_COM_RSS',                 'https://docs.instantcms.ru/manual/components/rss');
     define('LANG_HELP_URL_COM_SITEMAP',             'https://docs.instantcms.ru/manual/components/sitemap');
     define('LANG_HELP_URL_COM_PHOTOS',              'https://docs.instantcms.ru/manual/components/photos');
+    define('LANG_HELP_URL_COM_CSP',                 'https://docs.instantcms.ru/manual/components/csp');
     define('LANG_HELP_URL_USERS',                   'https://docs.instantcms.ru/manual/users');
     define('LANG_HELP_URL_USERS_USER',              'https://docs.instantcms.ru/manual/users/user');
     define('LANG_HELP_URL_USERS_GROUP',             'https://docs.instantcms.ru/manual/users/group');

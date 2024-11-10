@@ -5,35 +5,43 @@ icms.adminModerators = (function ($) {
     this.url_submit = '';
     this.url_delete = '';
     this.url_autocomplete = '';
+    this.ctype_moderators_list = {};
 
-    var _this = this;
+    let self = this;
 
     this.onDocumentReady = function(){
-        var cache = {};
-        $( "#user_email" ).autocomplete({
+        this.ctype_moderators_list = $('#ctype_moderators_list');
+        let ctype_moderators_add = $('#ctype_moderators_add');
+        let cache = {};
+        $("#user_email", ctype_moderators_add).autocomplete({
             minLength: 2,
             delay: 500,
-            source: function( request, response ) {
-                var term = request.term;
-                if ( term in cache ) {
+            source: function(request, response) {
+                let term = request.term;
+                if (term in cache) {
                     response( cache[ term ] );
                     return;
                 }
-                $.getJSON(_this.url_autocomplete, request, function( data, status, xhr ) {
+                $.getJSON(self.url_autocomplete, request, function( data, status, xhr ) {
                     cache[ term ] = data;
                     response( data );
                 });
             }
         });
-        var ctype_moderators_add = $('#ctype_moderators_add');
-        this.url_submit = $(ctype_moderators_add).data('url_submit');
-        this.url_delete = $(ctype_moderators_add).data('url_delete');;
-        this.url_autocomplete = $(ctype_moderators_add).data('url_autocomplete');;
+        this.url_submit = ctype_moderators_add.data('url_submit');
+        this.url_delete = ctype_moderators_add.data('url_delete');;
+        this.url_autocomplete = ctype_moderators_add.data('url_autocomplete');
+        $('#submit', ctype_moderators_add).on('click', function(){
+            return self.add(this);
+        });
+        this.ctype_moderators_list.on('click', '.actions > .delete', function(){
+            return self.cancel(this);
+        });
     };
 
     this.add = function(btn){
 
-        var name = $('#user_email').val();
+        let name = $('#user_email').val();
 
         if (name.length === 0) { return false; }
 
@@ -49,11 +57,8 @@ icms.adminModerators = (function ($) {
                 alert(result.message);
                 return false;
             }
-            $('#ctype_moderators_list').show();
-            $('#ctype_moderators_list #datagrid tbody').append(result.html);
-
-            $('#ctype_moderators_list #datagrid tr').removeClass('odd');
-            $('#ctype_moderators_list #datagrid tr:odd').addClass('odd');
+            self.ctype_moderators_list.show();
+            $('#datagrid tbody', self.ctype_moderators_list).append(result.html);
 
             icms.modal.bind('a.ajax-modal');
 
@@ -64,9 +69,11 @@ icms.adminModerators = (function ($) {
         return false;
     };
 
-    this.cancel = function(id){
+    this.cancel = function(btn){
 
-        var list_item = $('#ctype_moderators_list #moderator-'+id);
+        let id = $(btn).data('user_id');
+
+        let list_item = $('#moderator-'+id, self.ctype_moderators_list);
 
         $('a.delete, a.view', list_item).hide();
         $('.loading-icon', list_item).show();
@@ -81,16 +88,15 @@ icms.adminModerators = (function ($) {
 
             list_item.fadeOut('fast', function(){
                 $(this).remove();
-                $('#ctype_moderators_list #datagrid tr').removeClass('odd');
-                $('#ctype_moderators_list #datagrid tr:odd').addClass('odd');
-                if (!$('#ctype_moderators_list #datagrid tbody tr').length){
-                    $('#ctype_moderators_list').hide();
+                if (!$('#datagrid tbody tr', self.ctype_moderators_list).length){
+                    self.ctype_moderators_list.hide();
                 }
                 icms.events.run('admin_moderators_cancel', result);
             });
 
         }, 'json');
 
+        return false;
     };
 
 	return this;

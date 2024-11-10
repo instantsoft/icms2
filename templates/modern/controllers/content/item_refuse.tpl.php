@@ -7,7 +7,7 @@
         </div>
         <div class="buttons mt-3">
             <?php echo html_submit(LANG_CONFIRM); ?>
-            <?php echo html_button(LANG_CANCEL, 'cancel', 'icms.modal.close()'); ?>
+            <?php echo html_button(LANG_CANCEL, 'cancel', '', ['data-dismiss' => 'modal']); ?>
         </div>
     </form>
 </div>

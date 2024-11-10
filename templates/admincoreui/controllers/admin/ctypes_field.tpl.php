@@ -16,15 +16,17 @@
     }
 
     $this->addToolButton([
-        'class' => 'save',
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => 'javascript:icms.forms.submit()'
+        'href'  => '#',
+        'icon'  => 'save'
     ]);
 
     $this->addToolButton([
         'class' => 'cancel',
         'title' => LANG_CANCEL,
-        'href'  => $this->href_to('ctypes', ['fields', $ctype['id']])
+        'href'  => $this->href_to('ctypes', ['fields', $ctype['id']]),
+        'icon'  => 'undo'
     ]);
 
     $this->addMenuItem('breadcrumb-menu', [

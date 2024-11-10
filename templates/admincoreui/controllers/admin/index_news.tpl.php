@@ -17,17 +17,18 @@
 </ul>
 
 <div class="need-scrollbar pr-2" id="icms_news_wrap" role="tabpanel"></div>
-
+<?php ob_start(); ?>
 <script>
     $(function() {
         $('.news_targets_tabs > li > a').on('click', function (){
-            var _this = this;
+            let self = this;
             icms.admin.dbCardSpinner(this).show();
             $.post('<?php echo $this->href_to('load_icms_news'); ?>/'+$(this).data('target'), {}, function(result){
-                icms.admin.dbCardSpinner(_this).fadeOut();
+                icms.admin.dbCardSpinner(self).fadeOut();
                 $('#icms_news_wrap').last().html(result);
             });
         });
         $('.news_targets_tabs > li > a.active').trigger('click');
     });
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

@@ -4,9 +4,9 @@
     </div>
 <?php } else { ?>
 
-<div class="modal_padding">
-    <form action="<?php echo $this->href_to('content', ['cats_order', $ctype['id']]); ?>" onsubmit="return contentSaveCatsOrder($(this))" method="post">
-        <div class="modal_treeview">
+    <form id="ordertree-form" action="<?php echo $this->href_to('content', ['cats_order', $ctype['id']]); ?>" method="post">
+        <?php echo html_csrf_token(); ?>
+        <div class="modal_treeview mb-4">
             <div class="alert alert-info"><?php echo LANG_CP_CONTENT_CATS_ORDER_DRAG; ?></div>
             <div id="ordertree">
                 <ul id="treeData">
@@ -44,11 +44,11 @@
             </div>
         </div>
 
-        <?php echo html_input('hidden', 'hash', ''); ?>
+        <?php echo html_input('hidden', 'hash', '', ['id' => 'ordertree-form-hash']); ?>
         <?php echo html_submit(LANG_SAVE); ?>
     </form>
 
-    <script>
+    <script nonce="<?php echo $this->nonce; ?>">
         $("#ordertree").dynatree({
             minExpandLevel: 2,
             expand: true,
@@ -73,15 +73,9 @@
                 }
             }
         });
-
-        function contentSaveCatsOrder(form){
-
-            var dict = $('#ordertree').dynatree('getTree').toDict();
-            $('input:hidden', form).val( JSON.stringify(dict) );
-
+        $('#ordertree-form').on('submit', function (){
+            $('#ordertree-form-hash', $(this)).val(JSON.stringify($('#ordertree').dynatree('getTree').toDict()));
             return true;
-        }
+        });
     </script>
-
-</div>
 <?php } ?>

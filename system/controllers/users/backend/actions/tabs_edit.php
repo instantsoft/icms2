@@ -21,19 +21,7 @@ class actionUsersTabsEdit extends cmsAction {
             '{title}'
         ];
 
-        $this->tool_buttons = [
-            [
-                'class' => 'save',
-                'title' => LANG_SAVE,
-                'href'  => 'javascript:icms.forms.submit()'
-            ],
-            [
-                'class' => 'cancel',
-                'title' => LANG_CANCEL,
-                'href'  => $list_url
-            ]
-        ];
-
+        $this->use_default_tool_buttons = true;
     }
 
 }

@@ -30,9 +30,9 @@
 					<?php if (!empty($paths)) { ?>
                         <div><img src="<?php html(cmsConfig::get('upload_host') . '/' . reset($paths)); ?>" /></div>
                     <?php } ?>
-                        <a class="btn btn-danger btn-sm py-0 px-1" href="#" data-id="<?php html($idx); ?>" onclick="return icms.images.removeOne('<?php html($dom_id); ?>', this);" title="<?php echo LANG_DELETE; ?>">
-                        <?php html_svg_icon('solid', 'minus-circle'); ?>
-                    </a>
+                        <a class="btn btn-danger btn-sm py-0 px-1 btn-remove-img" href="#" data-id="<?php html($idx); ?>" title="<?php echo LANG_DELETE; ?>">
+                            <?php html_svg_icon('solid', 'minus-circle'); ?>
+                        </a>
                 </div>
             <?php } ?>
         <?php } ?>
@@ -40,7 +40,7 @@
 
     <div class="preview_template preview multi-block" style="display:none">
         <div><img src="" /></div>
-        <a class="btn btn-danger btn-sm py-0 px-1" href="javascript:">
+        <a class="btn btn-danger btn-sm py-0 px-1 btn-remove-img" href="#">
             <?php html_svg_icon('solid', 'minus-circle'); ?>
         </a>
     </div>
@@ -81,6 +81,9 @@
             });
         });
     <?php } ?>
+    $('#widget_image_<?php html($dom_id); ?>').on('click', '.btn-remove-img', function(){
+        return icms.images.removeOne('<?php html($dom_id); ?>', this);
+    });
     $(function(){
         icms.images.initSortable('<?php html($dom_id); ?>');
     });

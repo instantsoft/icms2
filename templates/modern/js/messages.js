@@ -113,12 +113,16 @@ icms.messages = (function ($) {
                 $('#cancel_msgs').trigger('click');
             }
         });
+
+        $('.left-panel', pm_window).on('click', '.icms-messages__restore', function (){
+            return self.restoreMsg(this);
+        });
     };
 
     this.deleteMsgs = function (){
         if(this.msg_ids.length > 0){
 
-            var url = $(pm_window).data('delete-mesage-url');
+            let url = $(pm_window).data('delete-mesage-url');
 
             $.post(url, {message_ids: this.msg_ids}, function(result) {
 
@@ -128,25 +132,25 @@ icms.messages = (function ($) {
 
                 $('#cancel_msgs').trigger('click');
 
-                var replace_func = function (id, delete_text, is_remove_block){
+                let replace_func = function (id, is_remove_block){
                     var msg_block = $('#message-' + id, pm_window);
                     $(msg_block).find('.is_can_select').removeClass('is_can_select').
                             find('.message_text').hide().
-                            after('<span class="text-muted">'+delete_text+'</span>');
+                            after('<span class="text-muted">'+result.remove_text+(is_remove_block ? '' : ' <a href="#" class="icms-messages__restore">'+result.restore_text+'</a>')+'</span>');
                     if(is_remove_block){
-                        $(msg_block).delay(3000).fadeOut();
+                        $(msg_block).delay(3000).fadeOut('fast');
                     }
                 };
 
                 if(result.message_ids){
-                    for(var key in result.message_ids){
-                        replace_func(result.message_ids[key], result.delete_text);
+                    for(let key in result.message_ids){
+                        replace_func(result.message_ids[key]);
                     }
                 }
 
                 if(result.delete_msg_ids){
-                    for(var key in result.delete_msg_ids){
-                        replace_func(result.delete_msg_ids[key], result.remove_text, true);
+                    for(let key in result.delete_msg_ids){
+                        replace_func(result.delete_msg_ids[key], true);
                     }
                 }
 

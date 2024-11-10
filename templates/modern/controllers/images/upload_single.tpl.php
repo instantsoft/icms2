@@ -27,7 +27,7 @@
 
     <div class="preview block" <?php if (!$is_image_exists) { ?>style="display:none"<?php } ?><?php if ($is_image_exists) { ?> data-paths="<?php html(json_encode($paths)); ?>"<?php } ?>>
         <div><img src="<?php if ($preview_url) { html($preview_url); } ?>" /></div>
-        <a class="btn btn-danger btn-sm py-0 px-1" href="javascript:" onclick="icms.images.remove('<?php html($dom_id); ?>')" title="<?php echo LANG_DELETE; ?>">
+        <a class="btn btn-danger btn-sm py-0 px-1 btn-remove-img" href="#" title="<?php echo LANG_DELETE; ?>">
             <?php html_svg_icon('solid', 'minus-circle'); ?>
         </a>
     </div>
@@ -97,6 +97,9 @@
     <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR'); ?>
     icms.images.allowed_mime = <?php echo json_encode($allowed_mime); ?>;
     icms.images.delete_url = "<?php html($delete_url); ?>";
+    $('#widget_image_<?php html($dom_id); ?>').on('click', '.btn-remove-img', function(){
+        return icms.images.remove('<?php html($dom_id); ?>');
+    });
     $(function(){
         icms.images.upload("<?php html($dom_id); ?>", "<?php echo $upload_url; ?>", <?php echo $allow_image_cropper ? 'true' : 'false'; ?>);
         <?php if($allow_import_link){ ?>

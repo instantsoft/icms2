@@ -8,11 +8,11 @@ class actionUsersProfileInvites extends cmsAction {
 
         // проверяем наличие доступа
         if (!$this->is_own_profile) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         if (!$profile['invites_count']) {
-            $this->redirectToAction($profile['id']);
+            return $this->redirectToAction($profile['id']);
         }
 
         // Форма отправлена?
@@ -24,27 +24,25 @@ class actionUsersProfileInvites extends cmsAction {
 
         if ($profile['invites_count'] > 1) {
 
-            $form->addField($fieldset_id, new fieldText('emails', array(
-                'title' => LANG_USERS_INVITES_EMAILS,
-                'hint'  => LANG_USERS_INVITES_EMAILS_HINT,
+            $form->addField($fieldset_id, new fieldText('emails', [
+                'title'         => LANG_USERS_INVITES_EMAILS,
+                'hint'          => LANG_USERS_INVITES_EMAILS_HINT,
                 'is_strip_tags' => true,
-                'rules' => array(
-                    array('required')
-                )
-            )));
-
+                'rules'         => [
+                    ['required']
+                ]
+            ]));
         }
 
         if ($profile['invites_count'] == 1) {
 
-            $form->addField($fieldset_id, new fieldString('emails', array(
+            $form->addField($fieldset_id, new fieldString('emails', [
                 'title' => LANG_USERS_INVITES_EMAIL,
-                'rules' => array(
-                    array('required'),
-                    array('email')
-                )
-            )));
-
+                'rules' => [
+                    ['required'],
+                    ['email']
+                ]
+            ]));
         }
 
         $fieldset_id = $form->addFieldset(LANG_USERS_INVITES_LINKS);
@@ -53,17 +51,16 @@ class actionUsersProfileInvites extends cmsAction {
 
         foreach ($invites as $invite) {
 
-            $form->addField($fieldset_id, new fieldString('invite:'.$invite['id'], array(
-                'default' => $invite['page_url'],
-                'attributes' => array(
+            $form->addField($fieldset_id, new fieldString('invite:' . $invite['id'], [
+                'default'    => $invite['page_url'],
+                'attributes' => [
                     'readonly' => '',
-                    'onclick' => '$(this).select();'
-                )
-            )));
-
+                    'class'    => 'icms-click-select'
+                ]
+            ]));
         }
 
-        $input = array();
+        $input = [];
 
         if ($is_submitted) {
 
@@ -77,37 +74,34 @@ class actionUsersProfileInvites extends cmsAction {
 
                 $results = $this->sendInvites($profile, $input['emails']);
 
-                return $this->cms_template->render('profile_invites_results', array(
+                return $this->cms_template->render('profile_invites_results', [
                     'id'      => $profile['id'],
                     'profile' => $profile,
                     'results' => $results
-                ));
-
+                ]);
             }
 
             if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
-        return $this->cms_template->render('profile_invites', array(
+        return $this->cms_template->render('profile_invites', [
             'id'      => $profile['id'],
             'profile' => $profile,
             'invites' => $invites,
             'form'    => $form,
             'input'   => $input,
             'errors'  => isset($errors) ? $errors : false
-        ));
-
+        ]);
     }
 
     private function sendInvites($profile, $emails_list) {
 
-        $results = array(
-            'success' => array(),
-            'failed'  => array()
-        );
+        $results = [
+            'success' => [],
+            'failed'  => []
+        ];
 
         $emails = string_explode_list($emails_list);
 
@@ -130,14 +124,14 @@ class actionUsersProfileInvites extends cmsAction {
 
             $invite = $this->model_auth->getNextInvite($this->cms_user->id);
 
-            $to     = array('email' => $email, 'name' => $email);
-            $letter = array('name' => 'users_invite');
+            $to     = ['email' => $email, 'name' => $email];
+            $letter = ['name' => 'users_invite'];
 
-            $this->controller_messages->sendEmail($to, $letter, array(
+            $this->controller_messages->sendEmail($to, $letter, [
                 'nickname' => $this->cms_user->nickname,
                 'code'     => $invite['code'],
                 'page_url' => href_to_abs('auth', 'register') . "?inv={$invite['code']}"
-            ));
+            ]);
 
             $results['success'][$email] = true;
 
@@ -146,11 +140,9 @@ class actionUsersProfileInvites extends cmsAction {
             if ((count($results['success']) + count($results['failed'])) >= $profile['invites_count']) {
                 break;
             }
-
         }
 
         return $results;
-
     }
 
 }

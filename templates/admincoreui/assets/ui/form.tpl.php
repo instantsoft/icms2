@@ -54,17 +54,27 @@
             <?php echo html_submit($attributes['submit']['title'], 'submit', $attributes['submit']); ?>
         <?php } ?>
         <?php if(isset($attributes['buttons'])){ ?>
-            <?php foreach ($attributes['buttons'] as $button) { ?>
-                <?php if (!empty($button['hide'])) { continue; } ?>
-                <?php echo html_button(
+            <?php foreach ($attributes['buttons'] as $button) {
+
+                if (!empty($button['hide'])) { continue; }
+
+                if (!empty($button['as_link'])) {
+                    html_link($button['title'], $button['href'], $button['attributes'] ?? []);
+                } else {
+                    echo html_button(
                         $button['title'],
                         $button['name'],
-                        (isset($button['onclick']) ? $button['onclick'] : ''),
-                        (isset($button['attributes']) ? $button['attributes'] : array())
-                    ); ?>
-            <?php } ?>
+                        ($button['onclick'] ?? ''),
+                        ($button['attributes'] ?? [])
+                    );
+                }
+            } ?>
         <?php } ?>
-        <?php if ($attributes['cancel']['show']) { echo html_button($attributes['cancel']['title'], 'cancel', "location.href='{$attributes['cancel']['href']}'", array('class'=>'btn-secondary button-cancel')); } ?>
+        <?php if ($attributes['cancel']['show']) { ?>
+            <a href="<?php html($attributes['cancel']['href']); ?>" class="btn btn-secondary button-cancel">
+                <?php html($attributes['cancel']['title']); ?>
+            </a>
+        <?php } ?>
     </div>
 
 </form>
@@ -77,7 +87,7 @@
             icms.forms.initUnsaveNotice();
         <?php } ?>
         icms.forms.initCollapsedFieldset('<?php echo $attributes['form_id']; ?>');
-        icms.forms.initFormHelpers();
+        icms.forms.initFormHelpers('<?php echo $attributes['form_id']; ?>');
     <?php if (!empty($attributes['is_ajax'])){ ?>
         $('#<?php echo $attributes['form_id']; ?>').on('submit', function (){
             return icms.forms.submitAjax(this, <?php echo !empty($attributes['params']) ? json_encode($attributes['params']) : 'undefined'; ?>);

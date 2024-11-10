@@ -6,7 +6,8 @@ define('DS', DIRECTORY_SEPARATOR);
 define('PATH', dirname(__FILE__) . DS);
 define('DOC_ROOT', str_replace(DS, '/', realpath($_SERVER['DOCUMENT_ROOT'])));
 
-header("Content-type:text/html; charset=utf-8");
+header('Content-type:text/html; charset=utf-8');
+
 mb_internal_encoding('UTF-8');
 date_default_timezone_set('UTC');
 
@@ -23,7 +24,7 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 }
 
 if (isset($_REQUEST['lang'])) {
-    if (in_array($_REQUEST['lang'], $all_langs)) {
+    if (is_string($_REQUEST['lang']) && in_array($_REQUEST['lang'], $all_langs)) {
         $_SESSION['install']['lang'] = $_REQUEST['lang'];
         header('Location: ' . $_SERVER['SCRIPT_NAME']);
         die;
@@ -36,7 +37,7 @@ $lang = $is_lang_selected ? $_SESSION['install']['lang'] : $default_lang;
 
 define('LANG', $lang);
 
-include PATH . DS . 'languages' . DS . LANG . DS . "language.php";
+include PATH . DS . 'languages' . DS . LANG . DS . 'language.php';
 
 $steps = [
     ['id' => 'start', 'title' => LANG_STEP_START],
@@ -54,11 +55,16 @@ $steps = [
 $current_step = 0;
 
 if (is_ajax_request()) {
-    $step      = $steps[(int) (isset($_POST['step']) ? $_POST['step'] : 0)];
+    $step      = $steps[(int) ($_POST['step'] ?? 0)] ?? $steps[1];
     $is_submit = isset($_POST['submit']);
     echo json_encode(run_step($step, $is_submit));
     exit();
 }
+
+// Чтобы страница установки не висела с 200 ответом
+header('HTTP/1.1 503 Service Temporarily Unavailable');
+header('Status: 503 Service Temporarily Unavailable');
+header('Retry-After: 3600');
 
 $step_result = run_step($steps[$current_step], false);
 

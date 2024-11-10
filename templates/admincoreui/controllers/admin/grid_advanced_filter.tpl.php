@@ -1,5 +1,5 @@
 <div class="datagrid_dataset_filter">
-    <form onsubmit="return icms.datagrid.applyAdvancedFilter(this)">
+    <form id="datagrid-dataset-filter">
 
     <?php $index = 0; ?>
     <?php foreach($fields as $field) { ?>
@@ -62,3 +62,8 @@
 
     </form>
 </div>
+<script nonce="<?php echo $this->nonce; ?>">
+    $('#datagrid-dataset-filter').on('submit', function (){
+        return icms.datagrid.applyAdvancedFilter(this);
+    });
+</script>

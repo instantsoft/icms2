@@ -39,7 +39,8 @@ class formMessagesPmailing extends cmsForm {
                         'autocomplete' => ['url' => href_to('admin', 'users', 'autocomplete')],
                         'rules'        => [
                             ['email']
-                        ]
+                        ],
+                        'visible_depend' => ['type' => ['show' => ['message']]]
                     ])
                 ]
             ]

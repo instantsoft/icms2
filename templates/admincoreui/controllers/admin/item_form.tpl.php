@@ -6,53 +6,57 @@
     $this->addBreadcrumb($page_title);
 
     if(!empty($show_save_button) || !isset($show_save_button)){
-        $this->addToolButton(array(
-            'icon'  => 'save',
-            'title' => $button_save_text,
-            'href'  => "javascript:icms.forms.submit()"
-        ));
+        $this->addToolButton([
+            'class' => 'save process-save',
+            'title' => LANG_SAVE,
+            'href'  => '#',
+            'icon'  => 'save'
+        ]);
     }
 
     if(!$hide_draft_btn){
-        $this->addToolButton(array(
+        $this->addToolButton([
+            'class' => 'process-save',
             'icon'  => 'bookmark',
+            'data'  => ['submit_class' => '.button.to_draft'],
             'title' => $button_draft_text,
-            'href'  => "javascript:icms.forms.submit('.button.to_draft')"
-        ));
+            'href'  => '#'
+        ]);
     }
 
     if ($cancel_url){
-        $this->addToolButton(array(
-            'icon'  => 'window-close',
+        $this->addToolButton([
+            'class' => 'cancel',
             'title' => LANG_CANCEL,
-            'href'  => $cancel_url
-        ));
+            'href'  => $cancel_url,
+            'icon'  => 'undo'
+        ]);
     }
 
-    $this->renderForm($form, $item, array(
+    $this->renderForm($form, $item, [
         'action' => '',
-        'submit' => array('title' => $button_save_text, 'show' => (isset($show_save_button) ? $show_save_button : true)),
-        'cancel' => array('show' => (bool)$cancel_url, 'href' => $cancel_url),
-        'buttons' => $hide_draft_btn ? [] : array(
-            array(
+        'submit' => ['title' => $button_save_text, 'show' => ($show_save_button ?? true)],
+        'cancel' => ['show' => (bool)$cancel_url, 'href' => $cancel_url],
+        'buttons' => $hide_draft_btn ? [] : [
+            [
                 'title' => $button_draft_text,
                 'name' => 'to_draft',
-                'attributes' => array(
+                'attributes' => [
                     'type' => 'submit',
                     'class' => 'to_draft btn-warning'
-                )
-            )
-        ),
+                ]
+            ]
+        ],
         'method' => 'post',
         'toolbar' => true,
-        'hook' => array(
+        'hook' => [
             'event' => "content_{$ctype['name']}_form_html",
-            'param' => array(
+            'param' => [
                 'do' => $do,
                 'id' => $do=='edit' ? $item['id'] : null
-            )
-        ),
-    ), $errors);
+            ]
+        ]
+    ], $errors);
 ?>
 
 <?php ob_start(); ?>

@@ -96,7 +96,7 @@
         </div>
     </div>
 </div>
-
+<?php ob_start(); ?>
 <script>
     var current_cat_id = <?php echo $cat_id; ?>;
     var current_ds_id  = <?php echo $dataset_id; ?>;
@@ -218,3 +218,4 @@
         });
     };
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

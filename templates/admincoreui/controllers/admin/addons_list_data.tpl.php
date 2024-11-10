@@ -1,4 +1,4 @@
-<script>
+<script nonce="<?php echo $this->nonce; ?>">
     has_next = <?php echo $has_next; ?>;
     addons_count = <?php echo $count; ?>;
 </script>

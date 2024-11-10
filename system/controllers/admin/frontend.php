@@ -61,12 +61,19 @@ class admin extends cmsFrontend {
                 cmsCore::errorForbidden('', true);
             }
 
-            if (!$this->cms_user->is_admin) {
-                cmsCore::error404();
+            // Общее правило доступа в админку
+            if (!cmsUser::isAllowed($this->name, 'management')) {
+                return cmsCore::error404();
             }
 
             if (!$this->isAllowByIp()) {
                 cmsCore::errorForbidden(LANG_ADMIN_ACCESS_DENIED_BY_IP);
+            }
+
+            // Права доступа по имени экшена, для главной всегда разрешено
+            // Управление не реализовано
+            if ($action_name !== 'index' && !cmsUser::isAllowed($this->name, 'manage_' . $action_name)) {
+                return cmsCore::errorForbidden();
             }
 
             $this->install_folder_exists = file_exists($this->cms_config->root_path . 'install/');
@@ -84,11 +91,13 @@ class admin extends cmsFrontend {
                     'hide_sidebar'  => cmsUser::getCookie('hide_sidebar', 'integer'),
                     'close_sidebar' => cmsUser::getCookie('close_sidebar', 'integer'),
                     'su'            => $this->getSystemUtilization(),
-                    'update'        => ($this->cms_config->is_check_updates ? $this->cms_updater->checkUpdate(true) : array()),
+                    'update'        => ($this->cms_config->is_check_updates ? $this->cms_updater->checkUpdate(true) : []),
                     'notices_count' => cmsCore::getModel('messages')->getNoticesCount($this->cms_user->id)
                 ]);
             }
         }
+
+        return true;
     }
 
     private function isAllowByIp() {

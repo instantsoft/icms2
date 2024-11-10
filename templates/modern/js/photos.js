@@ -220,12 +220,15 @@ icms.photos = (function ($) {
 
     this.delete = function(){
 
+        if(!confirm(LANG_PHOTOS_DELETE_PHOTO_CONFIRM)){ return false; }
+
         $.post($('#album-photo-item').data('item-delete-url'), {id: $('#album-photo-item').data('id')}, function(result){
 			if (result.success){
 				window.location.href=result.album_url;
 			}
 		}, 'json');
 
+        return false;
     };
 
 	this.flexImagesInit = function(selector){

@@ -18,26 +18,27 @@
 
     if(!empty($show_save_button) || !isset($show_save_button)){
         $this->addToolButton([
-            'class' => 'save',
-            'icon'  => 'save',
+            'class' => 'save process-save',
             'title' => $button_save_text,
-            'href'  => 'javascript:icms.forms.submit()'
+            'href'  => '#',
+            'icon'  => 'save'
         ]);
     }
 
     if(!$hide_draft_btn){
         $this->addToolButton([
-            'class' => 'save_draft',
+            'class' => 'process-save save_draft',
             'icon'  => 'bookmark',
+            'data'  => ['submit_class' => '.button.to_draft'],
             'title' => $button_draft_text,
-            'href'  => "javascript:icms.forms.submit('.button.to_draft')"
+            'href'  => '#'
         ]);
     }
 
     if ($cancel_url){
         $this->addToolButton([
             'class' => 'cancel',
-            'icon'  => 'window-close',
+            'icon'  => 'undo',
             'title' => LANG_CANCEL,
             'href'  => $cancel_url
         ]);

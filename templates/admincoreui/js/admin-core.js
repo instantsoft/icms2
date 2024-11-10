@@ -119,14 +119,12 @@ icms.admin = (function ($) {
         return $(el).closest('.card').find('.db_spinner');
     };
 
-    this.goToLinkAnimated = function (link){
+    this.animateClickLink = function (link){
 
         link = $(link);
 
-        $(link).prop('disabled', true);
-        $(link).html('<div class="spinner mr-2"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
-
-        window.location.href = link.attr('href');
+        link.prop('disabled', true);
+        link.html('<div class="spinner mr-2"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
 
         return false;
     };

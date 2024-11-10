@@ -4,11 +4,11 @@ define('LANG_REDIRECT_CONTROLLER', 'Redirects');
 define('LANG_REDIRECT_H1', 'External link disclaimer');
 define('LANG_REDIRECT_HINT1', 'You are leaving the website "<a href="%s">%s</a>" via the external link <a rel="nofollow" href="%s">%s</a>.');
 define('LANG_REDIRECT_HINT2', 'We are not responsible for the content of the site <b>%s</b> and strongly recommend that you <b>do not specify</b> any personal data on third-party sites.');
-define('LANG_REDIRECT_HINT3', 'If you do not want to risk the safety of your computer, click <a rel="nofollow" href="javascript:window.close()">Cancel</a>, otherwise, you will be redirected in');
+define('LANG_REDIRECT_HINT3', 'If you do not want to risk the safety of your computer, close this tab, otherwise, you will be redirected in');
 define('LANG_REDIRECT_HINT4', 'Do not warn me');
 define('LANG_REDIRECT_YOUR_SAFETY', 'Your safety is %s\'s primary concern.');
 define('LANG_REDIRECT_SUSPICIOUS_LINK', 'Link to a Fraudulent Site');
-define('LANG_REDIRECT_SUSPICIOUS_LINK_1', 'The link you are trying to open may lead you to a site that was created for the purpose of deceiving users with the intention of gaining profit. <a rel="nofollow" href="javascript:window.close()">Close Tab</a>');
+define('LANG_REDIRECT_SUSPICIOUS_LINK_1', 'The link you are trying to open may lead you to a site that was created for the purpose of deceiving users with the intention of gaining profit.');
 define('LANG_REDIRECT_SUSPICIOUS_LINK_2', 'I understand the risk, but I still want to <a rel="nofollow" href="%s">Visit the Website</a>.');
 
 define('LANG_REDIRECT_NO_REDIRECT_LIST', 'List of directly forwarded domains');

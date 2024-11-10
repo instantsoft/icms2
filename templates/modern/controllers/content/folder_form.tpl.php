@@ -8,19 +8,19 @@
 
     $this->addBreadcrumb(LANG_EDIT_CATEGORY);
 
-    $this->addToolButton(array(
-        'class' => 'save',
-        'icon'  => 'save',
+    $this->addToolButton([
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => "javascript:icms.forms.submit()"
-    ));
+        'href'  => '#',
+        'icon'  => 'save'
+    ]);
 
-    $this->addToolButton(array(
+    $this->addToolButton([
         'class' => 'cancel',
-        'icon'  => 'window-close',
+        'icon'  => 'undo',
         'title' => LANG_CANCEL,
         'href'  => href_to($ctype['name'])
-    ));
+    ]);
 
 ?>
 
@@ -28,8 +28,8 @@
 
 <?php
 
-    $this->renderForm($form, $folder, array(
+    $this->renderForm($form, $folder, [
         'action' => '',
         'method' => 'post',
         'toolbar' => false
-    ), $errors);
+    ], $errors);

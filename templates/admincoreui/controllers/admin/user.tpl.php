@@ -23,15 +23,17 @@
     ]);
 
     $this->addToolButton([
-        'class' => 'save',
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => "javascript:icms.forms.submit()"
+        'href'  => '#',
+        'icon'  => 'save'
     ]);
 
     $this->addToolButton([
         'class' => 'cancel',
         'title' => LANG_CANCEL,
-        'href'  => $this->href_to('users')
+        'href'  => $this->href_to('users'),
+        'icon'  => 'undo'
     ]);
 
     $this->renderForm($form, $user, [

@@ -16,8 +16,7 @@ function render($template_name, $data = []) {
 
 function run_step($step, $is_submit = false) {
     require PATH . "steps/{$step['id']}.php";
-    $result = step($is_submit);
-    return $result;
+    return step($is_submit);
 }
 
 function is_config_exists() {

@@ -12,19 +12,19 @@
 
     $this->addBreadcrumb($do=='add' ? LANG_ADD_CATEGORY : LANG_EDIT_CATEGORY);
 
-    $this->addToolButton(array(
-        'class' => 'save',
-        'icon'  => 'save',
+    $this->addToolButton([
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => "javascript:icms.forms.submit()"
-    ));
+        'href'  => '#',
+        'icon'  => 'save'
+    ]);
 
-    $this->addToolButton(array(
+    $this->addToolButton([
         'class' => 'cancel',
-        'icon'  => 'window-close',
+        'icon'  => 'undo',
         'title' => LANG_CANCEL,
         'href'  => $back_url ? $back_url : href_to($ctype['name'])
-    ));
+    ]);
 
 ?>
 
@@ -34,9 +34,9 @@
 
     $category['ctype_name'] = $ctype['name'];
 
-    $this->renderForm($form, $category, array(
+    $this->renderForm($form, $category, [
         'action' => '',
-        'cancel' => array('show' => true, 'href' => $back_url ? $back_url : href_to($ctype['name'])),
+        'cancel' => ['show' => true, 'href' => $back_url ? $back_url : href_to($ctype['name'])],
         'method' => 'post',
         'toolbar' => false
-    ), $errors);
+    ], $errors);

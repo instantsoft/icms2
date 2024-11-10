@@ -5,15 +5,17 @@ $this->setPageTitle($do === 'add' ? LANG_ADD_CATEGORY : LANG_EDIT_CATEGORY);
 $this->addBreadcrumb($do === 'add' ? LANG_ADD_CATEGORY : LANG_EDIT_CATEGORY);
 
 $this->addToolButton([
-    'class' => 'save',
+    'class' => 'save process-save',
     'title' => LANG_SAVE,
-    'href'  => 'javascript:icms.forms.submit()'
+    'href'  => '#',
+    'icon'  => 'save'
 ]);
 
 $this->addToolButton([
     'class' => 'cancel',
     'title' => LANG_CANCEL,
-    'href'  => $back_url ? $back_url : href_to($ctype['name'])
+    'href'  => $back_url ? $back_url : href_to($ctype['name']),
+    'icon'   => 'undo'
 ]);
 
 $category['ctype_name'] = $ctype['name'];

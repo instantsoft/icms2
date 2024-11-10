@@ -11,6 +11,8 @@ icms.files = (function ($) {
         $('#hidden_'+file_id).val('1');
 
         icms.events.run('icms_files_remove', file_id);
+
+        return false;
     };
 
     this.deleteByPath = function(path){

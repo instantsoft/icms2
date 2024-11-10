@@ -13,7 +13,7 @@ class actionContentCategoryDelete extends cmsAction {
         }
 
         // проверяем наличие доступа
-        if (!cmsUser::isAllowed($ctype['name'], 'delete_cat', true, true)) {
+        if (!cmsUser::isAllowed($ctype['name'], 'delete_cat')) {
             return cmsCore::error404();
         }
 

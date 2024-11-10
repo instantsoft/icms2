@@ -82,9 +82,7 @@
 
             <div class="buttons mt-3">
                 <?php echo html_submit(LANG_CONTINUE); ?>
-                <?php echo html_button(LANG_CANCEL, 'cancel', "location.href='".$this->href_to('addons_list')."'"); ?>
             </div>
-
         </form>
     </div>
 </div>

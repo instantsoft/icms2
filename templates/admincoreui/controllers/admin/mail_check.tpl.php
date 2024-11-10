@@ -1,15 +1,14 @@
 <div id="mail_check">
-    <?php $this->renderForm($form, $values, array(
-        'action' => $this->href_to('settings', array('mail_check')),
-        'submit' => array(
+    <?php $this->renderForm($form, $values, [
+        'action' => $this->href_to('settings', ['mail_check']),
+        'submit' => [
             'title' => LANG_SEND
-        ),
+        ],
         'method' => 'ajax',
-    ), $errors); ?>
+    ], $errors); ?>
 </div>
 
-<script>
-
+<script nonce="<?php echo $this->nonce; ?>">
     function checkSuccess(form_data, result){
         if(result.type === 'ui_error'){
             toastr.error(result.text);
@@ -18,5 +17,4 @@
             toastr.success(result.text);
         }
     }
-
 </script>

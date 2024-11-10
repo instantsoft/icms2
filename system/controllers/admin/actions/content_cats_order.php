@@ -19,15 +19,27 @@ class actionAdminContentCatsOrder extends cmsAction {
 
         if ($this->request->has('submit')) {
 
+            $csrf_token = $this->request->get('csrf_token', '');
+            if (!cmsForm::validateCSRFToken($csrf_token)) {
+
+                cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
+
+                return $this->redirectToAction('content');
+            }
+
             $hash = $this->request->get('hash', '');
 
             cmsUser::setCookiePublic('content_tree_path', "{$ctype_id}.1");
 
-            $this->reorderCategoriesTree($ctype, $categories, $hash);
+            if (!$this->reorderCategoriesTree($ctype, $categories, $hash)) {
 
-            cmsUser::addSessionMessage(LANG_CP_ORDER_SUCCESS, 'success');
+                cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
 
-            $this->redirectBack();
+            } else {
+                cmsUser::addSessionMessage(LANG_CP_ORDER_SUCCESS, 'success');
+            }
+
+            return $this->redirectToAction('content');
         }
 
         return $this->cms_template->render('content_cats_order', [
@@ -40,13 +52,22 @@ class actionAdminContentCatsOrder extends cmsAction {
 
         $hash = json_decode($hash, true);
 
+        if (!$hash) {
+            return false;
+        }
+
         $this->total_nodes = 0;
 
         $tree = $this->prepareTree($hash);
 
         $tree = $this->buildNestedSet($tree);
 
-        $this->model_backend_content->updateCategoryTree($ctype['name'], $tree, $this->total_nodes, !empty($ctype['options']['is_cats_first_level_slug']));
+        return $this->model_backend_content->updateCategoryTree(
+            $ctype['name'],
+            $tree,
+            $this->total_nodes,
+            !empty($ctype['options']['is_cats_first_level_slug'])
+        );
     }
 
     private function countChilds($tree, $count) {
@@ -72,7 +93,7 @@ class actionAdminContentCatsOrder extends cmsAction {
 
             $node['parent_key'] = $parent_key;
 
-            if (!empty($node['children'])) {
+            if (!empty($node['children']) && is_array($node['children'])) {
                 $count                  = count($node['children']);
                 $node['children']       = $this->prepareTree($node['children'], $node['key']);
                 $node['children_count'] = $this->countChilds($node['children'], $count);

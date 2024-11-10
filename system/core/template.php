@@ -207,6 +207,11 @@ class cmsTemplate {
      * @var array
      */
     protected $controllers_queue = [];
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce
+     * @var ?string
+     */
+    private $nonce = null;
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -250,6 +255,8 @@ class cmsTemplate {
             $this->metakeys = $this->site_config->metakeys;
             $this->metadesc = $this->site_config->metadesc;
         }
+
+        $this->nonce = cmsResponse::getNonce();
     }
 
     /**
@@ -397,7 +404,7 @@ class cmsTemplate {
      * Выводит теги внизу страницы, перед закрывающим тегом </body>
      */
     public function bottom() {
-        foreach ($this->bottom as $id => $tag) {
+        foreach ($this->bottom as $tag) {
             echo "\t" . $tag . "\n";
         }
     }
@@ -424,7 +431,7 @@ class cmsTemplate {
 
             $file = $this->getHeadFilePath($file);
 
-            echo $this->getJSTag($file) . "\n\t\t";
+            echo $this->getJSTag($file, '', ['nonce' => $this->nonce]) . "\n\t\t";
         }
 
         return $this;
@@ -652,12 +659,11 @@ class cmsTemplate {
         foreach ($menu as $id => $item) {
 
             // Строим атрибуты ссылок
-            $menu[$id]['attributes'] = [];
+            $menu[$id]['attributes'] = $item['attributes'] ?? [];
 
-            $onclick = $item['options']['onclick'] ?? false;
-            $onclick = isset($item['options']['confirm']) ? "return confirm('{$item['options']['confirm']}')" : $onclick;
+            $onclick = isset($item['options']['confirm']) ? "return confirm('{$item['options']['confirm']}')" : ($item['options']['onclick'] ?? false);
             if($onclick){
-                $menu[$id]['attributes']['onclick'] = $onclick;
+                $menu[$id]['onclick'] = $onclick;
             }
 
             if(!empty($item['options']['target'])){
@@ -669,6 +675,8 @@ class cmsTemplate {
                     $menu[$id]['attributes']['data-' . $key] = html($val, false);
                 }
             }
+
+            $menu[$id]['attributes']['id'] = $item['attributes']['id'] ?? 'menu-item-id-'.$menu_name.'-'.($item['id']??$id);
 
             $menu[$id]['disabled']     = !empty($item['disabled']);
             $menu[$id]['level']        = $item['level'] ?? 1;
@@ -682,12 +690,17 @@ class cmsTemplate {
             }
 
             // Если нужно, считаем количество пунктов первого уровня
-            if ($max_items){
+            if ($max_items) {
 
-                if ($item['level'] == 1){ $first_level_count++; }
-                if ($first_level_count > $max_items && !$first_level_limit){ $first_level_limit = $index; }
+                if ($menu[$id]['level'] == 1) {
+                    $first_level_count++;
+                }
+
+                if ($first_level_count > $max_items && !$first_level_limit) {
+                    $first_level_limit = $index;
+                }
+
                 $index++;
-
             }
 
             // ищем активные пункты меню
@@ -695,7 +708,7 @@ class cmsTemplate {
 
                 if (!isset($item['url'])) { continue; }
 
-                $url = isset($item['url_mask']) ? $item['url_mask'] : urldecode($item['url']);
+                $url = $item['url_mask'] ?? urldecode($item['url']);
                 $url = mb_substr($url, $root_len);
                 if($href_lang){
                     $url = mb_substr($url, $lang_len);
@@ -746,8 +759,8 @@ class cmsTemplate {
                 ]
             ];
 
-            foreach($more_items as $id=>$item){
-                if ($item['level']==1){
+            foreach ($more_items as $id => $item) {
+                if ($item['level'] == 1) {
                     $more_items[$id]['parent_id'] = $item_more_id;
                 }
                 $more_items[$id]['level']++;
@@ -1018,7 +1031,7 @@ class cmsTemplate {
             $this->menus[$menu_name] = [];
         }
 
-        array_push($this->menus[$menu_name], $item);
+        $this->menus[$menu_name][] = $item;
 
         return $this;
     }
@@ -1035,10 +1048,7 @@ class cmsTemplate {
         }
 
         foreach ($items as $item) {
-            if (!isset($item['level'])) {
-                $item['level'] = 1;
-            }
-            array_push($this->menus[$menu_name], $item);
+            $this->menus[$menu_name][] = $item;
         }
 
         return $this;
@@ -1152,16 +1162,22 @@ class cmsTemplate {
      *
      * @param string $tag
      * @param ?cmsRequest $request
+     * @param bool $at_begin
      * @return $this
      */
-    public function addBottom($tag, $request = null) {
+    public function addBottom($tag, $request = null, $at_begin = false) {
         if (!$request) {
             $request = cmsCore::getInstance()->request;
         }
+        $tag = string_replace_first('<script>', '<script nonce="'.$this->nonce.'">', $tag);
         if ($request->isAjax()) {
             echo $tag;
         } else {
-            $this->bottom[] = $tag;
+            if ($at_begin) {
+                array_unshift($this->bottom, $tag);
+            } else {
+                $this->bottom[] = $tag;
+            }
         }
         return $this;
     }
@@ -1218,7 +1234,7 @@ class cmsTemplate {
      * Возвращает тег <script> для указанного файла
      *
      * @param string $file Путь к файлу без учета корневой директории (начального слеша)
-     * @param string $comment Комментарий к скрипту
+     * @param string $comment Комментарий к скрипту @deprecated
      * @param array $params Параметры тега
      * @return string
      */
@@ -1228,9 +1244,7 @@ class cmsTemplate {
             $file = $this->getHeadFilePath($file);
         }
 
-        $comment = $comment ? '<!-- ' . $comment . ' !-->' : '';
-
-        return '<script src="' . $file . '" ' . html_attr_str($params) . '>' . $comment . '</script>';
+        return '<script src="' . $file . '"' . ($params ? ' '.html_attr_str($params) : '') . '></script>';
     }
 
     /**
@@ -1702,7 +1716,7 @@ class cmsTemplate {
      */
     public function onDemandPrint() {
         $this->on_demand['root'] = $this->site_config->root;
-        echo '<script> icms.head.on_demand = ' . json_encode($this->on_demand) . ';</script>' . "\n";
+        echo '<script nonce="'.$this->nonce.'"> icms.head.on_demand = ' . json_encode($this->on_demand) . ';</script>' . "\n";
     }
 
     /**
@@ -1770,8 +1784,8 @@ class cmsTemplate {
 
             $this->insert_js[$file] = $file;
 
-            // атрибут rel="forceLoad" добавлен для nyroModal
-            echo $this->getJSTag($file, $comment, ['rel' => 'forceLoad']);
+            // атрибут rel="forceLoad" добавлен для nyroModal, оставлено для старых шаблонов
+            echo $this->getJSTag($file, $comment, ['rel' => 'forceLoad', 'nonce' => $this->nonce]);
 
             return true;
         }

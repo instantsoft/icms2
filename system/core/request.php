@@ -48,6 +48,12 @@ class cmsRequest {
     private $header = [];
 
     /**
+     * Необработанные данные тела запроса
+     * @var string|false|null
+     */
+    private $content = null;
+
+    /**
      * HTTP метод запроса
      * @var ?string
      */
@@ -78,8 +84,11 @@ class cmsRequest {
      * @param array $data Массив параметров, например $_REQUEST
      * @param integer $context Контекст (если не указан, определяется автоматически)
      * @param array $server Массив параметров сервера, например $_SERVER
+     * @param ?string $content Необработанные данные тела запроса
      */
-    public function __construct(array $data, int $context = self::CTX_AUTO_DETECT, array $server = []) {
+    public function __construct(array $data, int $context = self::CTX_AUTO_DETECT, array $server = [], $content = null) {
+
+        $this->content = $content;
 
         $this->setData($data);
 
@@ -312,6 +321,20 @@ class cmsRequest {
         }
 
         return $value;
+    }
+
+    /**
+     * Возвращает содержимое тела запроса
+     *
+     * @return string|false
+     */
+    public function getContent() {
+
+        if ($this->content === null) {
+            $this->content = file_get_contents('php://input');
+        }
+
+        return $this->content;
     }
 
     /**

@@ -8,7 +8,8 @@ class actionAdminToggleItem extends cmsAction {
             return cmsCore::error404();
         }
 
-        $backend_request = new cmsRequest($this->request->getData(), cmsRequest::CTX_AJAX);
+        $backend_request = clone $this->request;
+        $backend_request->setContext(cmsRequest::CTX_AJAX);
 
         return $this->loadControllerBackend('admin', $backend_request)->actionToggleItem($item_id, $table, $field);
     }

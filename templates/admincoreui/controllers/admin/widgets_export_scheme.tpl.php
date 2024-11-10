@@ -1,10 +1,10 @@
 <?php
 if($is_rows){
-    $this->renderForm($form, $data, array(
+    $this->renderForm($form, $data, [
         'action' => $this->href_to('widgets', ['export_scheme', $from_template]),
         'method' => 'ajax'
-    ), $errors); ?>
-<script>
+    ], $errors); ?>
+<script nonce="<?php echo $this->nonce; ?>">
     function successExport(form_data, result){
         icms.modal.close();
         var file = new File([result.yaml], result.filename, {type: "application/x-yaml;charset=utf-8"});

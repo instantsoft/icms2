@@ -15,27 +15,29 @@
         ]
     ]);
 
-    $this->addToolButton(array(
-        'class' => 'save',
+    $this->addToolButton([
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => "javascript:icms.forms.submit()"
-    ));
+        'href'  => '#',
+        'icon'  => 'save'
+    ]);
 
-	$this->addToolButton(array(
-		'class' => 'transfer ajax-modal',
+	$this->addToolButton([
+        'icon'  => 'envelope-open-text',
+		'class' => 'ajax-modal',
 		'title' => LANG_MAILCHECK_MENU,
-		'href'  => $this->href_to('settings', array('mail_check'))
-	));
+		'href'  => $this->href_to('settings', ['mail_check'])
+	]);
 
 ?>
 
 <div id="site_settings"><?php
-    $this->renderForm($form, $values, array(
+    $this->renderForm($form, $values, [
         'action' => '',
         'method' => 'post',
-    ), $errors);
+    ], $errors);
 ?></div>
-
+<?php ob_start(); ?>
 <script>
 
     var templates_has_options = <?php echo json_encode($templates_has_options); ?>;
@@ -65,3 +67,4 @@
     }
 
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

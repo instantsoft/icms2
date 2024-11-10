@@ -2,11 +2,12 @@
 
     $this->addBreadcrumb(LANG_PERMISSIONS);
 
-    $this->addToolButton(array(
-        'class' => 'save',
+    $this->addToolButton([
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => "javascript:icms.forms.submit()"
-    ));
+        'href'  => '#',
+        'icon'  => 'save'
+    ]);
 
 ?>
 <div id="<?php echo $this->controller->name; ?>_permissions_form">

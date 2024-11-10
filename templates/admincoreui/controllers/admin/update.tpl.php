@@ -1,18 +1,16 @@
 <?php
-
     $this->setPageTitle(LANG_CP_SECTION_UPDATE);
     $this->addBreadcrumb(LANG_CP_SECTION_UPDATE, $this->href_to('update'));
-
 ?>
 
 <?php if ($update === cmsUpdater::UPDATE_CHECK_ERROR){ ?>
-    <div class="alert alert-info" role="alert">
+    <div class="alert alert-info">
         <?php echo LANG_CP_UPDATE_CHECK_FAIL; ?>
     </div>
 <?php } ?>
 
 <?php if ($update === cmsUpdater::UPDATE_NOT_AVAILABLE){ ?>
-    <div class="alert alert-info" role="alert">
+    <div class="alert alert-info">
         <?php echo sprintf(LANG_CP_UPDATE_NOT_AVAILABLE, $current_version['version'], html_date($current_version['date'])); ?>
     </div>
 <?php } ?>
@@ -37,7 +35,7 @@
 
         <?php } else { ?>
 
-            <a class="btn btn-success mt-3 loading-icon" href="<?php echo $this->href_to('update', 'install');?>" onclick="return icms.admin.goToLinkAnimated(this)">
+            <a class="btn btn-success mt-3 loading-icon update-install" href="<?php echo $this->href_to('update', 'install');?>">
                 <?php echo LANG_CP_UPDATE_INSTALL; ?>
             </a>
 
@@ -45,5 +43,11 @@
 
     </div>
 </div>
-
+<?php ob_start(); ?>
+<script>
+    $('.update-install').on('click', function(){
+        icms.admin.animateClickLink(this);
+    });
+</script>
+<?php $this->addBottom(ob_get_clean()); ?>
 <?php } ?>

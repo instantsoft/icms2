@@ -28,7 +28,7 @@
     define('LANG_PM_DESKTOP_NOTIFY_NEW',    'Сообщение от %s');
     define('LANG_PM_USER_SEARCH',           'Начните вводить имя...');
     define('LANG_PM_IS_DELETE',             'Сообщение удалено.');
-    define('LANG_PM_DO_RESTORE',            ' <a href="#" onclick="return icms.messages.restoreMsg(this);">Восстановить</a>');
+    define('LANG_PM_DO_RESTORE',            'Восстановить');
     define('LANG_PM_CLEAR_NOTICE',          'Очистить все уведомления');
     define('LANG_PM_CLEAR_NOTICE_CONFIRM',  'Очистить все уведомления, уверены?');
     define('LANG_PM_PMAILING',              'Массовая рассылка');

@@ -22,30 +22,29 @@
     $this->addBreadcrumb($photo['title']);
 
     if ($is_can_set_cover) {
-        $this->addToolButton(array(
+        $this->addToolButton([
             'class' => 'images',
             'icon'  => 'images',
             'title' => LANG_PHOTOS_SET_COVER,
             'href'  => $this->href_to('set_cover', $photo['id'])
-        ));
+        ]);
     }
     if ($is_can_edit) {
-        $this->addToolButton(array(
+        $this->addToolButton([
             'class' => 'edit',
             'icon'  => 'pencil-alt',
             'title' => LANG_PHOTOS_EDIT_PHOTO,
             'href'  => $this->href_to('edit', $photo['id'])
-        ));
+        ]);
     }
 
     if ($is_can_delete) {
-        $this->addToolButton(array(
+        $this->addToolButton([
             'class'   => 'delete',
             'icon'    => 'minus-circle',
             'title'   => LANG_PHOTOS_DELETE_PHOTO,
-            'href'    => 'javascript:icms.photos.delete()',
-            'onclick' => "if(!confirm('" . LANG_PHOTOS_DELETE_PHOTO_CONFIRM . "')){ return false; }"
-        ));
+            'onclick' => 'return icms.photos.delete();'
+        ]);
     }
 
 ?>
@@ -54,13 +53,13 @@
     <div class="col-sm">
         <div class="inside_wrap orientation_<?php echo $photo['orientation']; ?> text-center bg-light" id="fullscreen_cont">
             <div id="photo_container" class="d-inline-block position-relative overflow-hidden" <?php if($full_size_img){?>data-full-size-img="<?php echo $full_size_img; ?>"<?php } ?>>
-                <?php echo $this->renderChild('view_photo_container', array(
+                <?php echo $this->renderChild('view_photo_container', [
                     'photos_url_params' => $photos_url_params,
                     'photo'      => $photo,
                     'preset'     => $preset,
                     'prev_photo' => $prev_photo,
                     'next_photo' => $next_photo
-                )); ?>
+                ]); ?>
             </div>
         </div>
     </div>
@@ -167,6 +166,7 @@
 </div>
 <?php ob_start(); ?>
 <script>
+    <?php echo $this->getLangJS('LANG_PHOTOS_DELETE_PHOTO_CONFIRM'); ?>
     icms.photos.init = true;
     icms.photos.mode = 'photo';
     icms.photos.row_height = '<?php echo $row_height; ?>';
@@ -176,14 +176,14 @@
 <div id="related_photos_wrap" class="mt-lg-3 mb-2">
     <h5><?php echo $related_title; ?></h5>
     <div class="album-photos-wrap d-flex flex-wrap m-n1" id="related_photos" data-delete-url="<?php echo href_to('photos', 'delete'); ?>">
-        <?php echo $this->renderChild('photos', array(
+        <?php echo $this->renderChild('photos', [
             'photos'        => $photos,
             'is_owner'      => false,
             'disable_owner' => true,
             'user'          => $user,
             'photo_wrap_id' => 'related_photos',
             'preset_small'  => $preset_small
-        )); ?>
+        ]); ?>
     </div>
 </div>
 <?php } ?>

@@ -21,10 +21,11 @@
         ?>
     </div>
 </div>
-
+<?php ob_start(); ?>
 <script>
     $(function() {
         $('#wrapper').css('background-color', '#EEE');
         $('#cp_header, #cp_left_sidebar, #cp_footer').addClass('blur_block');
     });
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

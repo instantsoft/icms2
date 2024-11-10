@@ -197,9 +197,9 @@ function string_matches_mask_list(array $masks, string $string) {
  */
 function string_random($length = 32, $seed = '') {
 
-    $salt = bin2hex(random_bytes(64));
+    $salt = bin2hex(random_bytes(32));
 
-    $string = md5($salt . chr(random_int(0, 127)) . $seed . random_bytes(16));
+    $string = md5($salt . $seed . random_bytes(16));
 
     return ($length < 32) ? substr($string, 0, $length) : $string;
 }
@@ -1043,6 +1043,26 @@ function string_html_get_images_path($text) {
     }
 
     return $paths;
+}
+
+/**
+ * Функция аналогична str_replace, только заменяет
+ * первое вхождение и не принимает массивы
+ *
+ * @param string $search Что ищем
+ * @param string $replace На что меняем
+ * @param string $subject Где ищем
+ * @return string
+ */
+function string_replace_first($search, $replace, $subject) {
+
+    $pos = strpos($subject, $search);
+
+    if ($pos !== false) {
+        return substr_replace($subject, $replace, $pos, strlen($search));
+    }
+
+    return $subject;
 }
 
 /**

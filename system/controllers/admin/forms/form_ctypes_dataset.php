@@ -47,7 +47,8 @@ class formAdminCtypesDataset extends cmsForm {
 
         $form = [
             'basic' => [
-                'type' => 'fieldset',
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_BASIC,
                 'childs' => [
                     new fieldString('name', [
                         'title' => LANG_SYSTEM_NAME,

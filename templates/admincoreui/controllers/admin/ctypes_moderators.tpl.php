@@ -39,7 +39,7 @@
                 <th class="d-none d-lg-table-cell"><?php echo LANG_MODERATOR_APPROVED_COUNT; ?></th>
                 <th class="d-none d-lg-table-cell"><?php echo LANG_MODERATOR_DELETED_COUNT; ?></th>
                 <th><?php echo LANG_MODERATOR_IDLE_COUNT; ?></th>
-                <th><?php echo LANG_CP_ACTIONS; ?></th>
+                <th class="text-right align-middle" width="60"><?php echo LANG_CP_ACTIONS; ?></th>
             </tr>
         </thead>
         <tbody>
@@ -66,7 +66,7 @@
         <div class="hint text-muted"><?php echo LANG_MODERATOR_ADD_HINT; ?></div>
         <div class="field form-inline mt-3">
             <?php echo html_input('text', 'user_email', '', ['id'=>'user_email', 'autocomplete'=>'off', 'class' => 'mr-4']); ?>
-            <?php echo html_button(LANG_ADD, 'add', 'return icms.adminModerators.add(this)', ['id'=>'submit', 'class' => 'button-submit btn-primary']); ?>
+            <?php echo html_button(LANG_ADD, 'add', '', ['id'=>'submit', 'class' => 'button-submit btn-primary']); ?>
         </div>
     </div>
 </div>

@@ -168,7 +168,8 @@ function href_to_rel($controller, $action = '', $params = false, $query = []) {
         $url_parts[] = is_array($params) ? implode('/', $params) : $params;
     }
 
-    $href = implode('/', $url_parts);
+    // trim, на случай если в $params пустые значения
+    $href = trim(implode('/', $url_parts), '/');
 
     if ($query) {
         $href .= '?' . http_build_query($query, '', '&');

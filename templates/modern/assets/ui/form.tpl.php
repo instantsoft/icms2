@@ -16,7 +16,7 @@
     <div class="<?php if($form->is_tabbed){ ?>tabs-menu mb-3 <?php } else { ?><?php if(count($form->getStructure()) > 1) { ?> without-tabs <?php } ?> <?php } ?>form-tabs">
 
         <?php if($form->is_tabbed){ ?>
-            <ul class="nav nav-tabs flex-wrap" role="tablist">
+            <ul class="nav nav-tabs flex-wrap">
                 <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
                     <?php if (empty($fieldset['is_empty']) && empty($fieldset['childs'])) { continue; } ?>
                     <li class="nav-item">
@@ -52,7 +52,11 @@
         <?php if ($attributes['submit']['show']) { unset($attributes['submit']['show']); ?>
             <?php echo html_submit($attributes['submit']['title'], 'submit', $attributes['submit']); ?>
         <?php } ?>
-        <?php if ($attributes['cancel']['show']) { echo html_button($attributes['cancel']['title'], 'cancel', "location.href='{$attributes['cancel']['href']}'", ['class'=>'btn-secondary button-cancel']); } ?>
+        <?php if ($attributes['cancel']['show']) { ?>
+            <a href="<?php html($attributes['cancel']['href']); ?>" class="btn btn-secondary button-cancel">
+                <?php html($attributes['cancel']['title']); ?>
+            </a>
+        <?php } ?>
         <?php if(!empty($attributes['buttons'])){ ?>
 
             <?php $many_buttons = count($attributes['buttons']) > 1; ?>
@@ -70,15 +74,19 @@
                 if (!empty($button['hide'])) { continue; }
 
                 if ($many_buttons){
-                    $button['attributes']['class'] = isset($button['attributes']['class']) ? $button['attributes']['class'] .= ' dropdown-item' : 'dropdown-item';
+                    $button['attributes']['class'] = ($button['attributes']['class'] ?? '').' dropdown-item';
                 }
 
-                echo html_button(
-                    $button['title'],
-                    $button['name'],
-                    (isset($button['onclick']) ? $button['onclick'] : ''),
-                    (isset($button['attributes']) ? $button['attributes'] : [])
-                );
+                if (!empty($button['as_link'])) {
+                    html_link($button['title'], $button['href'], $button['attributes'] ?? []);
+                } else {
+                    echo html_button(
+                        $button['title'],
+                        $button['name'],
+                        ($button['onclick'] ?? ''),
+                        ($button['attributes'] ?? [])
+                    );
+                }
             } ?>
 
             <?php if($many_buttons){ ?>
@@ -98,7 +106,7 @@
             icms.forms.initUnsaveNotice();
         <?php } ?>
         icms.forms.initCollapsedFieldset('<?php echo $attributes['form_id']; ?>');
-        icms.forms.initFormHelpers();
+        icms.forms.initFormHelpers('<?php echo $attributes['form_id']; ?>');
     <?php if (!empty($attributes['is_ajax'])){ ?>
         $('#<?php echo $attributes['form_id']; ?>').on('submit', function (){
             return icms.forms.submitAjax(this, <?php echo !empty($attributes['params']) ? json_encode($attributes['params']) : 'undefined'; ?>);

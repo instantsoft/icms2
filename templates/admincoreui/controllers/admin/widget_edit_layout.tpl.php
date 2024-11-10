@@ -30,13 +30,17 @@
     ]); ?>
     <?php $this->head(false); ?>
 </head>
-<body id="widgets_layout" class="m-3" onload="top.postMessage($('html').height(), '*');" onresize="top.postMessage($('html').height(), '*');">
+<body id="widgets_layout" class="m-3">
     <?php $this->body(); ?>
-    <script>
+    <script nonce="<?php echo $this->nonce; ?>">
+        $('#widgets_layout').on('resize', function() {
+            top.postMessage($('html').height(), '*');
+        });
         function widgetUpdated(widget, result){
             window.parent.location.reload();
         }
         $(function(){
+            top.postMessage($('html').height(), '*');
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 $('body').trigger('resize');
             });

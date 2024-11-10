@@ -81,6 +81,12 @@ trait formItem {
     protected $tool_buttons = [];
 
     /**
+     * Использовать кнопки по умолчанию: Сохранить/Отменить
+     * @var bool
+     */
+    protected $use_default_tool_buttons = false;
+
+    /**
      * Глубиномер
      * @var array
      */
@@ -182,7 +188,7 @@ trait formItem {
             }
         }
 
-        $this->cms_template->addToolButtons($this->tool_buttons);
+        $this->cms_template->addToolButtons($this->getToolButtons());
 
         $html = $this->cms_template->getRenderedAsset('ui/typical_form', [
             'page_title'   => string_replace_keys_values($this->title, $data),
@@ -203,6 +209,39 @@ trait formItem {
         }
 
         return $html;
+    }
+
+    protected function getToolButtons() {
+
+        $btns = [];
+
+        if ($this->use_default_tool_buttons) {
+
+            $btns[] = [
+                'class' => 'save process-save',
+                'title' => LANG_SAVE,
+                'href'  => '#',
+                'icon'  => 'save'
+            ];
+
+            if($this->success_url){
+
+                $btns[] = [
+                    'class' => 'cancel',
+                    'title' => LANG_CANCEL,
+                    'href'  => $this->success_url,
+                    'icon'   => 'undo'
+                ];
+            }
+        }
+
+        if ($this->tool_buttons) {
+            foreach ($this->tool_buttons as $button) {
+                $btns[] = $button;
+            }
+        }
+
+        return $btns;
     }
 
 }

@@ -1,4 +1,7 @@
 var icms = icms || {};
+icms.events.on('datagrid_mounted', function(gridApp){
+    icms.adminProps.init(gridApp);
+});
 icms.adminProps = (function ($) {
 
     this.cookie_path_key = '';

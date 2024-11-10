@@ -37,11 +37,11 @@ $this->addMenuItem('breadcrumb-menu', [
     <div class="alert alert-danger mt-4" role="alert">
         <h4 class="alert-heading"><?php echo LANG_CP_NS_UNSUCCESSFUL; ?></h4>
         <hr>
-        <?php $this->renderForm($form, [], array(
+        <?php $this->renderForm($form, [], [
             'method' => 'post',
-            'submit' => array(
+            'submit' => [
                 'title' => LANG_CP_NS_FIX
-            )
-        ), []); ?>
+            ]
+        ], []); ?>
     </div>
 <?php } ?>

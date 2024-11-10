@@ -31,6 +31,12 @@ class cmsResponse {
     protected $status_code = 200;
 
     /**
+     * Токен запроса
+     * @var ?string
+     */
+    protected static $nonce = null;
+
+    /**
      *
      * @param array|string $content Тело HTTP ответа
      * @param int $status Статус-код HTTP ответа
@@ -46,6 +52,20 @@ class cmsResponse {
             self::$instance = new self;
         }
         return self::$instance;
+    }
+
+    /**
+     * Возвращает nonce запроса
+     *
+     * @return string
+     */
+    public static function getNonce() {
+
+        if (self::$nonce === null) {
+            self::$nonce = bin2hex(random_bytes(24));
+        }
+
+        return self::$nonce;
     }
 
     /**

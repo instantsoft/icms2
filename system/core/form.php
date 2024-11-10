@@ -1055,15 +1055,9 @@ class cmsForm {
      *
      * @return string
      */
-    public static function generateCSRFToken(){
+    public static function generateCSRFToken() {
 
-        $hash = implode('::', array(session_id(), microtime(true)));
-
-        if(function_exists('hash') && in_array('sha256', hash_algos())){
-            $token = hash('sha256', $hash);
-        } else {
-            $token = md5($hash);
-        }
+        $token = bin2hex(random_bytes(32));
 
         cmsUser::sessionSet('csrf_token', $token);
 

@@ -9,7 +9,15 @@ function grid_subscriptions($controller) {
         'show_id'       => false,
         'is_selectable' => true,
         'order_by'      => 'subscribers_count',
-        'order_to'      => 'desc'
+        'order_to'      => 'desc',
+        'select_actions' => [
+            [
+                'title'   => LANG_DELETE,
+                'action'  => 'submit',
+                'confirm' => LANG_DELETE_SELECTED_CONFIRM,
+                'url'     => $controller->cms_template->href_to('delete')
+            ]
+        ]
     ];
 
     $columns  = [

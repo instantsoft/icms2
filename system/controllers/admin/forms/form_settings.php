@@ -164,7 +164,8 @@ class formAdminSettings extends cmsForm {
                 'childs' => [
                     new fieldList('template', [
                         'title' => LANG_CP_SETTINGS_TEMPLATE,
-                        'hint'  => '<a class="theme_settings theme_settings_options" href="#" data-url="' . href_to('admin', 'settings', 'theme') . '">' . LANG_CP_SETTINGS_TEMPLATE_OPTIONS . '</a><a class="theme_settings inthemer" target="_blank" href="https://addons.instantcms.ru/addons/inthemer.html">' . LANG_CP_SETTINGS_TEMPLATE_INTH . '</a>',
+                        //'hint'  => '<a class="theme_settings theme_settings_options" href="#" data-url="' . href_to('admin', 'settings', 'theme') . '">' . LANG_CP_SETTINGS_TEMPLATE_OPTIONS . '</a><a class="theme_settings inthemer" target="_blank" href="https://addons.instantcms.ru/addons/inthemer.html">' . LANG_CP_SETTINGS_TEMPLATE_INTH . '</a>',
+                        'hint'  => '<a class="theme_settings theme_settings_options" href="#" data-url="' . href_to('admin', 'settings', 'theme') . '">' . LANG_CP_SETTINGS_TEMPLATE_OPTIONS . '</a>',
                         'items' => $frontend_templates
                     ]),
                     new fieldList('template_admin', [

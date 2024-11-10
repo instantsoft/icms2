@@ -11,6 +11,10 @@ $(function() {
 
     var tree_url = $('#cp-widgets-layout').data('tree-url');
 
+    $('.cp_toolbar .cancel').on('click', function(){
+        return confirm(LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM);
+    });
+
     $("#datatree").dynatree({
         onPostInit: function(isReloading, isError){
             var path = $.cookie('icms[widgets_tree_path]');

@@ -76,6 +76,7 @@
         <?php } ?>
     </div>
 </div>
+<?php ob_start(); ?>
 <script>
     icms.adminProps.cookie_path_key = 'icms[<?php echo $cookie_path_key; ?>]';
     icms.adminProps.tree_path_key   = '<?php echo $tree_path_key; ?>';
@@ -83,8 +84,5 @@
     icms.adminProps.datagrid_url    = '<?php echo $this->href_to('ctypes', ['props', $ctype['id']]); ?>';
     icms.adminProps.tree_ajax_url   = '<?php echo $this->href_to('content', ['tree_ajax']); ?>';
     icms.adminProps.back_url        = '<?php echo $this->href_to('ctypes', ['props', $ctype['id']]) ?>';
-
-    icms.events.on('datagrid_mounted', function(gridApp){
-        icms.adminProps.init(gridApp);
-    });
 </script>
+<?php $this->addBottom(ob_get_clean(), null, true); ?>

@@ -104,7 +104,7 @@ icms.images = (function ($) {
 
         $(preview_block).data('paths', image_data);
         $('img', preview_block).attr('src', preview_img_src);
-        $('a', preview_block).data('id', idx).click(function() { self.removeOne(field_name, this); });
+        $('a', preview_block).data('id', idx);
 
         $('.previews_list', widget).append(preview_block);
 

@@ -416,7 +416,8 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (23, 'Wysiwyg редакторы', 'wysiwygs', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (24, 'Конструктор форм', 'forms', 1, '---\nsend_text: >\n  Спасибо! Форма\n  успешно отправлена.\nallow_embed: null\nallow_embed_domain:\ndenied_embed_domain:\nletter: |\n  [subject:Форма: {form_title} - {site}]\r\n  \r\n  Здравствуйте.\r\n  \r\n  С сайта {site} отправлена форма <b>{form_title}</b>.\r\n  \r\n  Данные формы:\r\n  \r\n  {form_data}\r\n  \r\n  --\r\n   C уважением, {site}\r\n   <small>Письмо отправлено автоматически, пожалуйста, не отвечайте на него.</small>\nnotify_text: \'<p>Здравствуйте.</p><p>Отправлена форма <strong>{form_title}</strong>.</p><p><strong>Данные формы:</strong></p><p>{form_data}</p>\'\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (25, 'Мультиязычность', 'languages', 1, '---\nservice: google\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(26, 'Типограф', 'typograph', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
+(26, 'Типограф', 'typograph', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(27, 'Content Security Policy', 'csp', 1, '---\nenable_csp: null\ncsp_str: \"default-src \'self\'; script-src \'unsafe-eval\' \'nonce-{nonce}\' \'strict-dynamic\'; style-src \'self\' data: \'unsafe-inline\' https://fonts.googleapis.com; img-src \'self\' data: https://instantcms.ru; font-src \'self\' data: https://fonts.gstatic.com\"\nis_report_only: 1\nenable_report: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (
@@ -1217,7 +1218,7 @@ DROP TABLE IF EXISTS `{#}perms_rules`;
 CREATE TABLE `{#}perms_rules` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `controller` varchar(32) DEFAULT NULL COMMENT 'Компонент (владелец)',
-  `name` varchar(32) NOT NULL COMMENT 'Название правила',
+  `name` varchar(64) NOT NULL COMMENT 'Название правила',
   `type` enum('flag','list','number') NOT NULL DEFAULT 'flag' COMMENT 'Тип выбора (flag,list...)',
   `options` varchar(128) DEFAULT NULL COMMENT 'Массив возможных значений',
   `show_for_guest_group` tinyint(1) DEFAULT NULL COMMENT 'Показывать правило для группы гости',
@@ -1966,3 +1967,19 @@ INSERT INTO `{#}wysiwygs_presets` (`id`, `wysiwyg_name`, `options`, `title`) VAL
 (2, 'redactor', '{\"plugins\":[\"smiles\"],\"buttons\":[\"bold\",\"italic\",\"deleted\",\"unorderedlist\",\"image\",\"video\",\"link\"],\"convertVideoLinks\":1,\"convertDivs\":null,\"toolbarFixedBox\":null,\"autoresize\":null,\"pastePlainText\":1,\"removeEmptyTags\":1,\"linkNofollow\":1,\"minHeight\":\"58\",\"placeholder\":\"\\u0412\\u0432\\u0435\\u0434\\u0438\\u0442\\u0435 \\u0441\\u043e\\u043e\\u0431\\u0449\\u0435\\u043d\\u0438\\u0435\"}', 'Редактор для личных сообщений'),
 (3, 'tinymce', '{\"toolbar\":\"blocks codesample blockquote | bold italic underline strikethrough numlist bullist | image link unlink media table  emoticons spoiler-add | fullscreen\",\"quickbars_selection_toolbar\":\"bold italic underline | quicklink h2 h3 blockquote\",\"quickbars_insert_toolbar\":\"quickimage quicktable\",\"plugins\":[\"autoresize\"],\"skin\":\"icms\",\"forced_root_block\":\"p\",\"block_formats\":[\"p\",\"h2\",\"h3\",\"h4\",\"h5\"],\"toolbar_mode\":\"floating\",\"image_caption\":null,\"image_title\":1,\"image_description\":null,\"image_dimensions\":null,\"image_advtab\":null,\"statusbar\":null,\"min_height\":350,\"max_height\":900,\"images_preset\":\"big\",\"allow_mime_types\":{\"3\":null,\"4\":null,\"5\":null,\"6\":null}}', 'По умолчанию'),
 (4, 'tinymce', '{\"toolbar\":\"bold italic underline strikethrough | numlist bullist blockquote | link image media spoiler-add | emoticons\",\"quickbars_selection_toolbar\":\"bold italic underline | quicklink blockquote\",\"quickbars_insert_toolbar\":\"quickimage\",\"plugins\":[\"autoresize\"],\"skin\":\"icms\",\"forced_root_block\":\"p\",\"block_formats\":[\"p\"],\"toolbar_mode\":\"floating\",\"image_caption\":null,\"image_title\":null,\"image_description\":null,\"image_dimensions\":null,\"image_advtab\":null,\"statusbar\":null,\"min_height\":350,\"max_height\":700,\"images_preset\":\"big\",\"allow_mime_types\":{\"3\":null,\"4\":null,\"5\":null,\"6\":null}}', 'Для комментариев');
+
+DROP TABLE IF EXISTS `{#}csp_logs`;
+CREATE TABLE `{#}csp_logs` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `date_pub` timestamp NOT NULL DEFAULT current_timestamp(),
+  `blocked_uri` varchar(255) DEFAULT NULL,
+  `referrer` varchar(255) DEFAULT NULL,
+  `line_number` smallint(6) DEFAULT NULL,
+  `document_uri` varchar(255) DEFAULT NULL,
+  `violated_directive` varchar(64) DEFAULT NULL,
+  `effective_directive` varchar(64) DEFAULT NULL,
+  `status_code` smallint(6) DEFAULT NULL,
+  `ip` varbinary(16) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `date_pub` (`date_pub`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Логи CSP';

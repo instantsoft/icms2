@@ -12,16 +12,19 @@
 		$this->setPageTitle(LANG_CP_MENU_ITEM.': '.$item['title']);
     }
 
-    $this->addToolButton(array(
-        'class' => 'save',
+    $this->addToolButton([
+        'class' => 'save process-save',
         'title' => LANG_SAVE,
-        'href'  => "javascript:icms.forms.submit()"
-    ));
-    $this->addToolButton(array(
+        'href'  => '#',
+        'icon'  => 'save'
+    ]);
+
+    $this->addToolButton([
         'class' => 'cancel',
         'title' => LANG_CANCEL,
-        'href'  => $this->href_to('menu')
-    ));
+        'href'  => $this->href_to('menu'),
+        'icon'  => 'undo'
+    ]);
 
     $this->addMenuItem('breadcrumb-menu', [
         'title' => LANG_HELP,
@@ -32,7 +35,7 @@
         ]
     ]);
 
-    $this->renderForm($form, $item, array(
+    $this->renderForm($form, $item, [
         'action' => '',
         'method' => 'post'
-    ), $errors);
+    ], $errors);

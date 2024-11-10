@@ -11,7 +11,7 @@ class formAuthSendInvites extends cmsForm {
                 'childs' => array(
                     new fieldListGroups('groups', array(
                         'title' => LANG_AUTH_INVITES_SGROUP,
-                        'show_all' => true,
+                        'show_all' => false,
                         'rules' => array(
                             array('required')
                         )

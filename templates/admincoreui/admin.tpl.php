@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
+    <meta property="csp-nonce" content="<?php echo $this->nonce; ?>" />
     <?php $this->addMainTplCSSName([
         'vendors/simple-line-icons/css/simple-line-icons',
         'vendors/toastr/toastr.min',
@@ -231,7 +232,7 @@
     <?php if ($config->debug){ ?>
         <?php $this->renderAsset('ui/debug', ['core' => cmsCore::getInstance(), 'hide_short_info' => true]); ?>
     <?php } ?>
-    <script>
+    <script nonce="<?php echo $this->nonce; ?>">
         <?php echo $this->getLangJS('LANG_BACK', 'LANG_NEXT', 'LANG_SKIP', 'LANG_DONE', 'LANG_LOADING', 'LANG_ALL'); ?>
         $(function(){
         <?php if($this->controller->install_folder_exists){ ?>
