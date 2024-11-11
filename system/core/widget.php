@@ -1,6 +1,12 @@
 <?php
+/**
+ * Основной класс всех виджетов
+ *
+ */
 #[\AllowDynamicProperties]
 class cmsWidget {
+
+    use icms\traits\corePropertyLoadable;
 
     /**
      * Некоторые поля таблиц виджетов

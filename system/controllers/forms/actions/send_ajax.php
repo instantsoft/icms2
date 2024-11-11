@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @property \modelUsers $model_users
+ * @property \messages $controller_messages
+ */
 class actionFormsSendAjax extends cmsAction {
 
     private $attachment_fields = ['file', 'image', 'images'];
@@ -121,7 +124,7 @@ class actionFormsSendAjax extends cmsAction {
                     if($files){
                         $is_number = count($files) > 1;
                         foreach ($files as $path_key => $path) {
-                            $attachments[$field->title.($is_number ? $path_key+1 : '')] = $path;
+                            $attachments[$field->title.($is_number ? $path_key+1 : '').'.'.pathinfo($path, PATHINFO_EXTENSION)] = $path;
                         }
                     }
                 }

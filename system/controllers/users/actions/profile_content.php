@@ -170,7 +170,7 @@ class actionUsersProfileContent extends cmsAction {
             ]
         ]]);
 
-        $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
+        $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}', 0, true, ['avatar']);
 
         $filter_titles = $this->controller_content->getFilterTitles();
 

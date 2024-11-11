@@ -1,14 +1,11 @@
 <?php
 
-    $user = cmsUser::getInstance();
-
     $this->addMenuItems('group_tabs', $this->controller->getGroupTabs($group));
     $this->addMenuItems('toolbar', $this->controller->getToolButtons($group));
 
     $this->setPagePatternTitle($group);
     if(!empty($filter_titles)){ $this->addToPageTitle(implode(', ', $filter_titles)); }
     $this->setPagePatternDescription($group);
-
 ?>
 
 <?php if(!empty($group['fields']['cover']['is_in_item']) && $group['cover']){ ?>
@@ -57,7 +54,7 @@
     <?php } ?>
 </h1>
 
-<?php if (!$group['is_closed'] || ($group['access']['is_member'] || $user->is_admin)){ ?>
+<?php if (!$group['is_closed'] || ($group['access']['is_member'] || $group['access']['is_moderator'])){ ?>
 <div class="mobile-menu-wrapper mobile-menu-wrapper__tab mt-3">
     <?php $this->menu('group_tabs', true, 'icms-groups__tabs nav nav-tabs', 6); ?>
 </div>

@@ -35,7 +35,7 @@ if($ctype['options']['list_show_filter']) {
             <div class="icms-content-fields d-flex flex-column h-100">
             <?php foreach($item['fields'] as $field){ ?>
 
-                <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_style']; ?>">
+                <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php html($field['options']['wrap_style'].' '.$field['options']['wrap_style_list']); ?>">
 
                     <?php if ($field['label_pos'] !== 'none'){ ?>
                         <div class="title_<?php echo $field['label_pos']; ?>">

@@ -306,6 +306,8 @@
     define('LANG_CP_FIELD_WRAP_WIDTH',         'Ширина блока поля');
     define('LANG_CP_FIELD_WRAP_WIDTH_HINT',    'Не указано - автоматическая ширина. Указывайте вместе с единицей измерения, например 200px, 60% и т.п.');
     define('LANG_CP_FIELD_WRAP_STYLE',         'CSS класс обёртки поля');
+    define('LANG_CP_FIELD_WRAP_STYLE_LIST',    'CSS класс обёртки поля в списке');
+    define('LANG_CP_FIELD_WRAP_STYLE_ITEM',    'CSS класс обёртки поля в записи');
     define('LANG_CP_FIELD_VISIBLE_DEPEND',      'Зависимость показа поля в форме');
     define('LANG_CP_FIELD_VISIBLE_DEPEND_HINT', 'Значения можно указывать через запятую.');
     define('LANG_CP_FIELD_VISIBLE_DEPEND_F',    'Поле, от которого зависит');
@@ -703,6 +705,7 @@
     define('LANG_CP_PACKAGE_DESCRIPTION',       'Описание пакета');
     define('LANG_CP_PACKAGE_CONTENTS',          'Содержимое пакета');
     define('LANG_CP_PACKAGE_DEPENDS',           'Зависимости пакета');
+    define('LANG_CP_PACKAGE_DEPENDS_PHP',       'Требуемая версия PHP');
     define('LANG_CP_PACKAGE_DEPENDS_CORE',      'Требуемая версия ядра');
     define('LANG_CP_PACKAGE_DEPENDENT_TYPE',      'Требуется установленный %s <a href="%s" target="_blank">%s</a>');
     define('LANG_CP_PACKAGE_DEPENDENT_COMPONENT', 'компонент');

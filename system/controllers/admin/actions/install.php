@@ -3,7 +3,7 @@
 class actionAdminInstall extends cmsAction {
 
     private $upload_name = 'package';
-    private $upload_exts = 'zip,icp';
+    private $upload_exts = 'zip';
 
     public function run($do=false){
 
@@ -135,41 +135,43 @@ class actionAdminInstall extends cmsAction {
 
     }
 
-    private function checkManifestDepends($manifest){
+    private function checkManifestDepends($manifest) {
 
-        $results = array();
+        $results = [];
 
-        if (isset($manifest['depends']['core'])){
+        if (isset($manifest['depends']['core'])) {
 
-            $results['core'] = (version_compare(cmsCore::getVersion(), $manifest['depends']['core']) >= 0) ? true : false;
-
+            $results['core'] = version_compare(cmsCore::getVersion(), $manifest['depends']['core']) >= 0 ? true : false;
         }
-        if (isset($manifest['depends']['package']) && isset($manifest['package']['installed_version'])){
 
-            $results['package'] = (version_compare((string)$manifest['package']['installed_version'], $manifest['depends']['package']) >= 0) ? true : false;
+        if (isset($manifest['depends']['package']) && isset($manifest['package']['installed_version'])) {
 
+            $results['package'] = version_compare((string) $manifest['package']['installed_version'], $manifest['depends']['package'] >= 0) ? true : false;
         }
-        if (isset($manifest['depends']['dependent_type']) && isset($manifest['depends']['dependent_name'])){
 
-            $installed_version = call_user_func(array($this, $manifest['depends']['dependent_type'].'Installed'), array(
+        if (isset($manifest['depends']['dependent_type']) && isset($manifest['depends']['dependent_name'])) {
+
+            $installed_version = call_user_func([$this, $manifest['depends']['dependent_type'] . 'Installed'], [
                 'name'       => $manifest['depends']['dependent_name'],
-                'controller' => (isset($manifest['depends']['dependent_controller']) ? $manifest['depends']['dependent_controller'] : null)
-            ));
+                'controller' => $manifest['depends']['dependent_controller'] ?? null
+            ]);
 
             $valid = $installed_version !== false;
 
-            if($valid && isset($manifest['depends']['dependent_version'])){
+            if ($valid && isset($manifest['depends']['dependent_version'])) {
 
-                $results['dependent_version'] = (version_compare((string)$installed_version, $manifest['depends']['dependent_version']) >= 0) ? true : false;
-
+                $results['dependent_version'] = version_compare((string) $installed_version, $manifest['depends']['dependent_version']) >= 0 ? true : false;
             }
 
             $results['dependent_type'] = $valid;
+        }
 
+        if (isset($manifest['depends']['php'])) {
+
+            $results['php'] = version_compare(PHP_VERSION, $manifest['depends']['php']) >= 0 ? true : false;
         }
 
         return $results;
-
     }
 
     private function extractPackage($package_name){

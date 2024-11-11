@@ -193,7 +193,7 @@ class auth extends cmsFrontend {
         //
         // Добавляем в форму обязательные поля профилей
         //
-        $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getRequiredContentFields('{users}');
+        $fields = $this->model_content->setTablePrefix('')->getRequiredContentFields('{users}');
 
         // Разбиваем поля по группам
         $fieldsets = cmsForm::mapFieldsToFieldsets($fields);

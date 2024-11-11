@@ -4,7 +4,7 @@
  */
 class actionUsersProfile extends cmsAction {
 
-    use icms\traits\controllers\actions\fieldsParseable;
+    use icms\traits\services\fieldsParseable;
 
     public $lock_explicit_call = true;
     private $is_friend_req = false;
@@ -22,6 +22,14 @@ class actionUsersProfile extends cmsAction {
                 $this->controller_content->model->setTablePrefix('')->getContentFields('{users}'),
                 $profile
             );
+
+        list($profile, $fields) = cmsEventsManager::hook('profile_before_view', [$profile, $fields]);
+
+        // Строим поля, которые выведем в шаблоне
+        $profile['fields'] = $this->getViewableItemFields($fields, $profile, 'id');
+
+        // Применяем хуки полей к записи
+        $profile = $this->applyFieldHooksToItem($profile['fields'], $profile);
 
         // Системные поля (ячейки в таблице, дата регистрации и т.п.)
         $sys_fields = $this->getSystemFields($profile);
@@ -69,31 +77,9 @@ class actionUsersProfile extends cmsAction {
             return cmsUser::get('id') == $profile['id'] ? true : $this->controller_content->checkListPerm($ctype['name']);
         });
 
-        list($profile, $fields) = cmsEventsManager::hook('profile_before_view', [$profile, $fields]);
-
-        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function ($field, $user) use ($profile) {
-
-            if ($field['is_system'] || !$field['is_in_item'] || empty($profile[$field['name']])) {
-                return false;
-            }
-
-            // проверяем что группа пользователя имеет доступ к чтению этого поля
-            if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
-                // если группа пользователя не имеет доступ к чтению этого поля,
-                // проверяем на доступ к нему для авторов
-                if (!empty($profile['id']) && !empty($field['options']['author_access'])) {
-                    if (!in_array('is_read', $field['options']['author_access'])) {
-                        return false;
-                    }
-                    if ($profile['id'] == $user->id) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-            return true;
-
-        }, $profile);
+        $fieldsets = cmsForm::mapFieldsToFieldsets($profile['fields'], function ($field, $user) {
+            return empty($field['is_system']);
+        });
 
         return $this->cms_template->render('profile_view', [
             'options'        => $this->options,

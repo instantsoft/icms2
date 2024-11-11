@@ -2,7 +2,7 @@
 
 class formUsersField extends cmsForm {
 
-    private $reserved_names = ['ctype', 'ctype_name', 'item_css_class', 'notice_title', 'actions'];
+    private $reserved_names = ['ctype', 'ctype_name', 'item_css_class', 'notice_title', 'actions', 'fields'];
 
     public function init($do) {
 

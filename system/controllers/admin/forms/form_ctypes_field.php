@@ -260,6 +260,14 @@ class formAdminCtypesField extends cmsForm {
                     new fieldString('options:wrap_style', [
                         'title'   => LANG_CP_FIELD_WRAP_STYLE,
                         'default' => ''
+                    ]),
+                    new fieldString('options:wrap_style_list', [
+                        'title'   => LANG_CP_FIELD_WRAP_STYLE_LIST,
+                        'default' => ''
+                    ]),
+                    new fieldString('options:wrap_style_item', [
+                        'title'   => LANG_CP_FIELD_WRAP_STYLE_ITEM,
+                        'default' => ''
                     ])
                 ]
             ],

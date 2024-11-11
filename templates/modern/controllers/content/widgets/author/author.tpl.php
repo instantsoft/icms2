@@ -1,7 +1,7 @@
 <?php if (!empty($fields['avatar']) || !empty($fields['nickname'])){ ?>
     <a class="icms-content__author-avatar" href="<?php echo href_to_profile($profile); ?>">
         <?php if (!empty($fields['nickname'])){ ?>
-            <span class="h3 border-right m-0 flex-shrink-0 icms-content__author-avatar-nickname">
+            <span class="h3 m-0 flex-shrink-0<?php if (!empty($fields['avatar'])){ ?> border-right icms-content__author-avatar-nickname<?php } ?>">
                 <?php echo $profile['nickname']; ?>
             </span>
         <?php } ?>

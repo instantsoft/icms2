@@ -33,6 +33,8 @@ trait fieldable {
             'wrap_type'             => 'auto',
             'wrap_width'            => '',
             'wrap_style'            => '',
+            'wrap_style_list'       => '',
+            'wrap_style_item'       => '',
             'profile_value'         => '',
             'is_in_item_pos'        => ['page']
         ];

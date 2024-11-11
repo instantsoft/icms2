@@ -4,7 +4,7 @@
  */
 class actionContentItemView extends cmsAction {
 
-    use icms\traits\controllers\actions\fieldsParseable;
+    use icms\traits\services\fieldsParseable;
 
     private $viewed_moderators = false;
 
@@ -368,40 +368,15 @@ class actionContentItemView extends cmsAction {
             $this->model->incrementHitsCounter($ctype['name'], $item['id']);
         }
 
-        // строим поля записи
-        $item['fields'] = [];
+        // Строим поля, которые выведем в шаблоне
+        $item['fields'] = $this->getViewableItemFields($fields, $item, 'user_id', function($field, $item) {
+            return $field['name'] !== 'title' && empty($field['is_system']);
+        });
 
-        foreach($fields as $field){
+        // Применяем хуки полей к записи
+        $item = $this->applyFieldHooksToItem($item['fields'], $item);
 
-            if (!$field['is_in_item'] || $field['is_system'] || $field['name'] === 'title') {
-                continue;
-            }
-
-            // Позиция поля "На позиции в специальном виджете"
-            if (!empty($field['options']['is_in_item_pos']) && !in_array('page', $field['options']['is_in_item_pos'])) {
-                continue;
-            }
-
-            if (is_empty_value($field['html'])) {
-                continue;
-            }
-
-            // проверяем что группа пользователя имеет доступ к чтению этого поля
-            if ($field['groups_read'] && !$this->cms_user->isInGroups($field['groups_read'])) {
-                // если группа пользователя не имеет доступ к чтению этого поля,
-                // проверяем на доступ к нему для авторов
-                if (empty($item['user_id']) || empty($field['options']['author_access'])){ continue; }
-                if (!in_array('is_read', $field['options']['author_access'])){ continue; }
-                if ($item['user_id'] != $this->cms_user->id){ continue; }
-            }
-
-            $item['fields'][$field['name']] = $field;
-        }
-
-        foreach($item['fields'] as $name => $field){
-            $item = $fields[$name]['handler']->hookItem($item, $item['fields']);
-        }
-
+        // Группируем
         $fields_fieldsets = cmsForm::mapFieldsToFieldsets($item['fields']);
 
         // кешируем запись для получения ее в виджетах

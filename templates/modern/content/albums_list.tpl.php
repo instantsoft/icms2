@@ -99,7 +99,7 @@ if( $ctype['options']['list_show_filter'] ) {
                 <?php unset($item['fields']['cover_image'], $item['fields']['content'], $item['fields']['is_public'], $item['fields']['title']); ?>
             </div>
             <?php foreach($item['fields'] as $field){ ?>
-                <div class="my-2 field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_style']; ?>">
+                <div class="my-2 field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php html($field['options']['wrap_style'].' '.$field['options']['wrap_style_list']); ?>">
                     <?php if ($field['label_pos'] !== 'none'){ ?>
                         <div class="title_<?php echo $field['label_pos']; ?>">
                             <?php echo string_replace_svg_icons($field['title']) . ($field['label_pos']=='left' ? ': ' : ''); ?>

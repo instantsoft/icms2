@@ -257,8 +257,6 @@ class content extends cmsFrontend {
 
             $field['handler']->setItem(['ctype_name' => $ctype['name'], 'id' => null])->setContext('filter');
 
-            $fields[$name] = $field;
-
             if (!$this->request->has($name)){ continue; }
 
             $value = $this->request->get($name, false, $field['handler']->getDefaultVarType());

@@ -11,6 +11,8 @@
 #[\AllowDynamicProperties]
 class cmsController {
 
+    use icms\traits\corePropertyLoadable;
+
     private static $controllers;
     private static $mapping;
 
@@ -138,39 +140,6 @@ class cmsController {
         $this->request = $request;
 
         return $this;
-    }
-
-    public function __get($name) {
-
-        $this->{$name} = null;
-
-        if (strpos($name, 'cms_') === 0) {
-
-            $class_name = string_to_camel('_', $name);
-
-            if (method_exists($class_name, 'getInstance')) {
-                $this->{$name} = call_user_func([$class_name, 'getInstance']);
-            } else {
-                $this->{$name} = new $class_name();
-            }
-
-        } else if (strpos($name, 'controller_') === 0) {
-
-            $this->{$name} = cmsCore::getController(str_replace('controller_', '', $name), $this->request);
-
-        } else if (strpos($name, 'model_') === 0) {
-
-            $this->{$name} = cmsCore::getModel(str_replace('model_', '', $name));
-
-        } else if ($name === 'model') {
-
-            $this->{$name} = new cmsModel();
-
-        } else {
-            trigger_error('Undefined property: '.$name, E_USER_WARNING);
-        }
-
-        return $this->{$name};
     }
 
     public function setRootURL($root_url) {

@@ -1,5 +1,9 @@
-<?php $this->renderChild('group_header', array('group' => $group)); ?>
-
+<?php $this->renderChild('group_header', ['group' => $group]); ?>
+<?php if ($display_closed) { ?>
+    <div class="alert alert-warning my-3">
+        <?php echo LANG_GROUP_IS_CLOSED; ?>
+    </div>
+<?php } ?>
 <div id="group_profile" class="content_item groups_item my-3">
     <div class="icms-content-fields">
         <?php foreach ($fields_fieldsets as $fieldset_id => $fieldset) { ?>
@@ -27,7 +31,7 @@
         <?php } ?>
     </div>
 
-    <?php if (!empty($group['fields']['cover']) && (empty($group['fields']['cover']['is_in_item']) || !$group['cover'])){ ?>
+    <?php if (empty($group['fields']['cover']['is_in_item']) || !$group['cover']) { ?>
         <div class="info_bar mb-n3">
             <div class="bar_item bi_rating" title="<?php echo LANG_RATING; ?>">
                 <?php html_svg_icon('solid', 'star'); ?>

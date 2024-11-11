@@ -39,19 +39,21 @@ class groups extends cmsFrontend {
         if (is_numeric($action_name)) {
 
             $group = $this->model->getGroup($action_name);
-            if (!$group) { cmsCore::error404(); }
+            if (!$group) {
+                return cmsCore::error404();
+            }
 
-            if($group['slug'] != $action_name){
+            if ($group['slug'] != $action_name) {
                 return $this->redirect(href_to('groups', $group['slug'], $this->current_params), 301);
             }
 
         } else {
 
-            if($action_name === 'index' && $this->current_params){
+            if ($action_name === 'index' && $this->current_params) {
                 return $this->redirect(href_to('groups', $this->current_params[0]), 301);
             }
 
-            if ($this->isActionExists($action_name)){
+            if ($this->isActionExists($action_name)) {
                 return $action_name;
             }
 
@@ -62,14 +64,13 @@ class groups extends cmsFrontend {
 
                 return 'index';
             }
-
         }
 
         $this->lock_explicit_call = false;
 
         $group['access'] = $this->getGroupAccess($group);
 
-        if(empty($this->current_params[0]) || $this->current_params[0] != 'edit'){
+        if(empty($this->current_params[0]) || $this->current_params[0] !== 'edit'){
 
             $this->loadGroupsFields();
 
@@ -98,8 +99,9 @@ class groups extends cmsFrontend {
         $this->current_params[0] = $group;
 
         if ($group['is_closed'] && !$group['access']['is_member'] && !$this->cms_user->is_admin &&
-                (empty($this->cms_core->uri_params[0]) || !in_array($this->cms_core->uri_params[0], array('join', 'enter')))){
-            return 'group_closed';
+                (empty($this->cms_core->uri_params[0]) || !in_array($this->cms_core->uri_params[0], ['join', 'enter']))) {
+            $this->current_params[1] = true;
+            return 'group';
         }
 
         if (!$this->cms_core->uri_params){ return 'group'; }

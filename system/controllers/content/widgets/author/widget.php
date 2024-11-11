@@ -4,6 +4,8 @@
  */
 class widgetContentAuthor extends cmsWidget {
 
+    use icms\traits\services\fieldsParseable;
+
     public $is_cacheable = false;
 
     public function run() {
@@ -29,7 +31,6 @@ class widgetContentAuthor extends cmsWidget {
 
         // Если мы в списке личных записей
         $profile = cmsModel::getCachedResult('current_user_profile');
-        $fields = cmsModel::getCachedResult('current_user_fields');
 
         if (!$item && !$profile) {
             return false;
@@ -40,40 +41,25 @@ class widgetContentAuthor extends cmsWidget {
 
             $is_item_page = true;
 
-            $profile = cmsCore::getModel('users')->getUser($item['user_id']);
+            $profile = $this->model_users->getUser($item['user_id']);
             if(!$profile){
                 return false;
             }
-
-            $fields = cmsCore::getModel('content')->setTablePrefix('')->getContentFields('{users}', false, false);
         }
 
-        foreach($fields as $name => $field){
+        $fields = $this->model_content->setTablePrefix('')->getContentFields('{users}', false, false, $show_fields);
 
-            if(!in_array($name, $show_fields)){
-                continue;
-            }
+        $fields = $this->parseContentFields($fields, $profile);
 
-            $fields[$name]['html'] = $field['handler']->setItem($profile)->parse($profile[$name]);
-        }
+        // Строим поля, которые выведем в шаблоне
+        $profile['fields'] = $this->getViewableItemFields($fields, $profile, 'id');
 
-        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($profile){
+        // Применяем хуки полей к записи
+        $profile = $this->applyFieldHooksToItem($profile['fields'], $profile);
 
-            if ($field['is_system'] || empty($profile[$field['name']])) { return false; }
-
-            // проверяем что группа пользователя имеет доступ к чтению этого поля
-            if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
-                // если группа пользователя не имеет доступ к чтению этого поля,
-                // проверяем на доступ к нему для авторов
-                if (!empty($field['options']['author_access'])){
-                    if (!in_array('is_read', $field['options']['author_access'])){ return false; }
-                    if ($profile['id'] == $user->id){ return true; }
-                }
-                return false;
-            }
-            return true;
-
-        }, $profile);
+        $fieldsets = cmsForm::mapFieldsToFieldsets($profile['fields'], function($field, $user) {
+            return empty($field['is_system']);
+        });
 
         // Микроразметка
         $jsonld = [];
@@ -133,7 +119,7 @@ class widgetContentAuthor extends cmsWidget {
 
             $groups_title = [];
 
-            $groups = cmsCore::getModel('users')->getGroups();
+            $groups = $this->model_users->getGroups();
 
             foreach ($profile['groups'] as $group_id) {
                 $groups_title[] = $groups[$group_id]['title'];

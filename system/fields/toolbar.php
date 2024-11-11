@@ -108,15 +108,16 @@ class fieldToolbar extends cmsFormField {
             }
 
             // Есть ли в полях для показа
-            if(isset($item['fields'][$field_data['name']])){
+            if(isset($fields[$field_data['name']])){
 
                 $toolbar[$field_data['name']] = [
                     'icon'  => $field_data['icon'],
                     'href'  => '',
-                    'value' => isset($item[$field_data['name']]) ? $item[$field_data['name']] : '',
-                    'html'  => $item['fields'][$field_data['name']]['html']
+                    'value' => $item[$field_data['name']] ?? '',
+                    'html'  => $fields[$field_data['name']]['html']
                 ];
 
+                // Удаляем поля, которые были объединены
                 unset($item['fields'][$field_data['name']]);
             }
 

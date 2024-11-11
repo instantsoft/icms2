@@ -1,6 +1,6 @@
 <?php if(empty($modal_btn['is_show'])){ ?>
 <?php
-    $this->addTplJSName([
+    $this->addTplJSNameFromContext([
         'forms-constructor'
     ]);
 ?>

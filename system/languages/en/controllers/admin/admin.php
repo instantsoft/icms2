@@ -290,6 +290,8 @@
     define('LANG_CP_FIELD_WRAP_WIDTH',          'Field width');
     define('LANG_CP_FIELD_WRAP_WIDTH_HINT',     'Not Set - automatic width. Used in conjunction with the unit of measurement, such as 200px, 60%, etc.');
     define('LANG_CP_FIELD_WRAP_STYLE',          'CSS field wrapper class');
+    define('LANG_CP_FIELD_WRAP_STYLE_LIST',     'CSS field wrapper class in List');
+    define('LANG_CP_FIELD_WRAP_STYLE_ITEM',     'CSS field wrapper class in Item');
     define('LANG_CP_FIELD_VISIBLE_DEPEND',      'Dependence to show the field in the form');
     define('LANG_CP_FIELD_VISIBLE_DEPEND_HINT', 'The values can be specified separated by commas.');
     define('LANG_CP_FIELD_VISIBLE_DEPEND_F',    'The field depends on');
@@ -677,6 +679,7 @@
     define('LANG_CP_PACKAGE_DESCRIPTION',       'Package description');
     define('LANG_CP_PACKAGE_CONTENTS',          'Package contents');
     define('LANG_CP_PACKAGE_DEPENDS',           'Package dependencies');
+    define('LANG_CP_PACKAGE_DEPENDS_PHP',       'Required PHP version');
     define('LANG_CP_PACKAGE_DEPENDS_CORE',      'Required core version');
     define('LANG_CP_PACKAGE_DEPENDS_PACKAGE',   'Required installed package version');
     define('LANG_CP_PACKAGE_TYPE_COMPONENT_INSTALL', 'Component installation package');

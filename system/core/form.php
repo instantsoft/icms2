@@ -1081,8 +1081,8 @@ class cmsForm {
      * Разбивает массив полей по группам
      *
      * @param array $fields Массив полей из БД
-     * @param callable $callback
-     * @param array $values Массив значений полей
+     * @param ?callable $callback
+     * @param ?array $values Массив значений полей
      * @return array
      */
     public static function mapFieldsToFieldsets($fields, $callback = null, $values = null) {
@@ -1099,7 +1099,7 @@ class cmsForm {
         foreach ($fields as $field) {
 
             if (is_callable($callback)) {
-                if (!$callback($field, $user)) {
+                if (!call_user_func_array($callback, [$field, $user])) {
                     continue;
                 }
             }

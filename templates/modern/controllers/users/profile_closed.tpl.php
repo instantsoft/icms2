@@ -23,7 +23,7 @@
 <div class="icms-users-profile__view row mt-3 mt-md-4">
 
     <div id="left_column" class="col-md-3">
-        <?php if (!empty($fields['avatar']) && $fields['avatar']['is_in_item']){ ?>
+        <?php if (!empty($fields['avatar']['is_in_item'])){ ?>
             <div id="avatar">
                 <?php if($profile['avatar']){ ?>
                     <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname']); ?>
