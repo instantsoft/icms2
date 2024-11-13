@@ -7,7 +7,7 @@ class cmsTemplate {
     /**
      * Путь корневой папки шаблонов (может быть пустым)
      */
-    const TEMPLATE_BASE_PATH = 'templates/';
+    const TEMPLATE_BASE_PATH = 'templates'.DIRECTORY_SEPARATOR;
 
     /**
      * Базовый шаблон, в котором есть все файлы
@@ -2253,9 +2253,10 @@ class cmsTemplate {
 
             foreach ($this->inherit_names as $name) {
                 $file = self::TEMPLATE_BASE_PATH . $name . '/' . $relative_path;
-                if (is_readable($this->site_config->root_path . $file)) {
+                $full_path = $this->site_config->root_path . $file;
+                if (is_readable($full_path)) {
                     if ($return_abs_path) {
-                        $exists = $this->site_config->root_path . $file;
+                        $exists = $full_path;
                     } else {
                         $exists = $file;
                     }

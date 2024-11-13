@@ -63,9 +63,7 @@ class onRendererMiddlewareScss extends cmsAction {
         }
 
         // Компилируем вендоры
-        $vendors_dir = $this->cms_template->getTplFilePath('scss/vendors/');
-
-        $vendors = cmsCore::getDirsList(str_replace($this->cms_config->root_path, '', $vendors_dir));
+        $vendors = $this->getDirsList('scss/vendors/');
         if($vendors){
             foreach ($vendors as $vendor_name) {
 
@@ -89,9 +87,7 @@ class onRendererMiddlewareScss extends cmsAction {
         }
 
         // Компилируем CSS компонентов
-        $controllers_dir = $this->cms_template->getTplFilePath('scss/controllers/');
-
-        $controllers = cmsCore::getDirsList(str_replace($this->cms_config->root_path, '', $controllers_dir));
+        $controllers = $this->getDirsList('scss/controllers/');
         if($controllers){
             foreach ($controllers as $controller_name) {
 
@@ -121,9 +117,7 @@ class onRendererMiddlewareScss extends cmsAction {
         }
 
         // Компилируем стили wysiwyg
-        $wysiwygs_dir = $this->cms_template->getTplFilePath('scss/wysiwyg/');
-
-        $wysiwygs = cmsCore::getDirsList(str_replace($this->cms_config->root_path, '', $wysiwygs_dir));
+        $wysiwygs = $this->getDirsList('scss/wysiwyg/');
         if($wysiwygs){
             foreach ($wysiwygs as $wysiwyg_name) {
 
@@ -149,6 +143,44 @@ class onRendererMiddlewareScss extends cmsAction {
             }
         }
 
+        // Компилируем секции, если есть
+        $sections = $this->getDirsList('scss/sections/', true);
+        if($sections){
+            foreach ($sections as $section_name => $files) {
+
+                $section_css_data = '';
+
+                foreach ($files as $file_name) {
+
+                    $css_data = $this->compile('scss/sections/'.$section_name.'/'.$file_name, $scss);
+
+                    if($css_data){
+
+                        $section_css_data .= $css_data;
+
+                    } elseif($this->hasCompileMessage()) {
+                        cmsUser::addSessionMessage($this->getCompileMessage(), 'error');
+                    }
+                }
+
+                if ($section_css_data) {
+
+                    $compiled_dir_path = $css_dir_path.'sections/';
+                    $compiled_file_path = $compiled_dir_path.$section_name.'.css';
+
+                    if(!is_dir($compiled_dir_path)){
+                        mkdir($compiled_dir_path, 0755, true);
+                    }
+
+                    if(is_writable($compiled_file_path) || !file_exists($compiled_file_path)){
+                        file_put_contents($compiled_file_path, $section_css_data);
+                    } else {
+                        cmsUser::addSessionMessage(sprintf(LANG_CP_FILE_NOT_WRITABLE, $css_dir.'sections/'.$section_name.'.css'), 'error');
+                    }
+                }
+            }
+        }
+
         $end_time = microtime(true) - $start_time;
 
         cmsUser::addSessionMessage(sprintf(LANG_CP_COMPILE_TIME, nf($end_time, 2)), 'info');
@@ -164,15 +196,33 @@ class onRendererMiddlewareScss extends cmsAction {
 
         $scss_file = $this->cms_template->getTplFilePath($path);
 
-        $data = file_get_contents($scss_file);
-
         $working_dir = dirname(realpath($scss_file));
 
-        $scss_file_name = basename($scss_file);
-
-        chdir($working_dir);
-
         $scss = new ScssPhp\ScssPhp\Compiler();
+
+        $scss->addImportPath(function($path) use($working_dir) {
+
+            if (ScssPhp\ScssPhp\Compiler::isCssImport($path)) {
+                return null;
+            }
+
+            $rel_path = $this->getRelPath($path, $working_dir);
+
+            $scss_file = $this->cms_template->getTplFilePath($rel_path);
+
+            if (!$scss_file || is_dir($scss_file)) {
+
+                $partial = dirname($rel_path) . DIRECTORY_SEPARATOR . '_' . basename($rel_path);
+
+                $scss_file = $this->cms_template->getTplFilePath($partial);
+            }
+
+            if (!$scss_file || is_dir($scss_file)) {
+                return null;
+            }
+
+            return $scss_file;
+        });
 
         $scss->setOutputStyle(ScssPhp\ScssPhp\OutputStyle::COMPRESSED);
 
@@ -196,7 +246,11 @@ class onRendererMiddlewareScss extends cmsAction {
         $result = false;
 
         try {
-            $result = $scss->compile($data, $scss_file_name);
+
+            $compilation = $scss->compileFile($scss_file);
+
+            $result = $compilation->getCss();
+
         } catch (Exception $exc) {
             $this->last_compile_error = $exc->getMessage();
         }
@@ -214,6 +268,84 @@ class onRendererMiddlewareScss extends cmsAction {
         $this->last_compile_error = false;
 
         return $msg;
+    }
+
+    private function getRelPath($path, $working_dir) {
+
+        $has_extension = preg_match('/.s[ac]ss$/', $path);
+
+        if (!$has_extension) {
+            $path .= '.scss';
+        }
+
+        $tpl_path = str_replace($this->cms_config->root_path . cmsTemplate::TEMPLATE_BASE_PATH, '', $working_dir.DIRECTORY_SEPARATOR.$path);
+
+        return $this->getAbsolutePath(ltrim(strstr($tpl_path, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR));
+    }
+
+    private function getAbsolutePath($path) {
+
+        $path      = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+        $parts     = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
+        $absolutes = [];
+
+        foreach ($parts as $part) {
+            if ('.' === $part){
+                continue;
+            }
+            if ('..' === $part) {
+                array_pop($absolutes);
+            } else {
+                $absolutes[] = $part;
+            }
+        }
+
+        return implode(DIRECTORY_SEPARATOR, $absolutes);
+    }
+
+    private function getDirsList($relative_path, $with_files = false) {
+
+        $list = [];
+
+        foreach ($this->cms_template->getInheritNames() as $name) {
+
+            $file = cmsTemplate::TEMPLATE_BASE_PATH . $name . '/' . $relative_path;
+
+            if (is_readable($this->cms_config->root_path . $file)) {
+
+                $list = array_merge($list, cmsCore::getDirsList($file));
+            }
+        }
+
+        $list = array_unique($list);
+
+        if ($with_files) {
+
+            $list_files = [];
+
+            foreach ($list as $dir_name) {
+
+                $files = [];
+
+                foreach ($this->cms_template->getInheritNames() as $name) {
+
+                    $file = cmsTemplate::TEMPLATE_BASE_PATH . $name . '/' . $relative_path . '/' . $dir_name;
+
+                    if (is_readable($this->cms_config->root_path . $file)) {
+
+                        $files = array_merge($files, cmsCore::getFilesList($file));
+                    }
+                }
+
+                $files = array_unique($files);
+
+                $list_files[$dir_name] = $files;
+            }
+
+            $list = $list_files;
+        }
+
+        return $list;
     }
 
 }
