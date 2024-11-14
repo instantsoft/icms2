@@ -485,7 +485,7 @@
     define('LANG_CP_USER_GROUP_EDIT',           'Edit group');
     define('LANG_CP_USER_GROUP_PERMS',          'Group Permissions');
     define('LANG_CP_USER_GROUP_DELETE',         'Delete Group');
-    define('LANG_CP_USER_GROUP_DELETE_CONFIRM', 'Delete selected group?\nUsers will no be deleted');
+    define('LANG_CP_USER_GROUP_DELETE_CONFIRM', 'Delete selected group? Users will no be deleted');
     define('LANG_CP_USER_GROUP_CREATED',        'Group &laquo;%s&raquo; has been created');
     define('LANG_CP_USER_GROUP_IS_PUBLIC',      'Allow to join this group after sign up');
     define('LANG_CP_USER_GROUP_IS_FILTER',      'Show in user filter');

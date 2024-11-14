@@ -12,41 +12,41 @@
 
     if (cmsUser::isAllowed($ctype['name'], 'add')) {
 
-        $this->addToolButton(array(
+        $this->addToolButton([
             'class' => 'add',
             'icon' => 'plus-circle',
             'title' => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
             'href'  => href_to($ctype['name'], 'add').(($folder_id  && is_numeric($folder_id) && ($user->id == $profile['id'] || $user->is_admin)) ? '?folder_id='.$folder_id : ''),
-        ));
+        ]);
 
     }
 
     if ($folder_id  && is_numeric($folder_id) && ($user->id == $profile['id'] || $user->is_admin)){
 
-        $this->addToolButton(array(
+        $this->addToolButton([
             'class' => 'folder_edit',
             'icon' => 'pen-square',
             'title' => LANG_EDIT_FOLDER,
             'href'  => href_to($ctype['name'], 'editfolder', $folder_id),
-        ));
+        ]);
 
-        $this->addToolButton(array(
-            'class' => 'folder_delete',
-            'icon' => 'folder-minus',
+        $this->addToolButton([
+            'class' => 'folder_delete icms-action-confirm',
+            'icon'  => 'folder-minus',
             'title' => LANG_DELETE_FOLDER,
             'href'  => href_to($ctype['name'], 'delfolder', $folder_id),
-            'onclick' => "if(!confirm('".LANG_DELETE_FOLDER_CONFIRM."')){ return false; }"
-        ));
+            'data'  => ['confirm' => LANG_DELETE_FOLDER_CONFIRM]
+        ]);
 
     }
 
     if ($user->is_admin){
-        $this->addToolButton(array(
+        $this->addToolButton([
             'class' => 'page_gear',
             'icon' => 'wrench',
             'title' => sprintf(LANG_CONTENT_TYPE_SETTINGS, mb_strtolower($ctype['title'])),
-            'href'  => href_to('admin', 'ctypes', array('edit', $ctype['id']))
-        ));
+            'href'  => href_to('admin', 'ctypes', ['edit', $ctype['id']])
+        ]);
     }
 ?>
 <?php if(empty($hide_h1)){ ob_start(); ?>
@@ -77,12 +77,12 @@
 <div class="row align-content-end">
     <?php if (!empty($datasets)){ ?>
         <div class="col-sm">
-            <?php $this->renderAsset('ui/datasets-panel', array(
+            <?php $this->renderAsset('ui/datasets-panel', [
                 'datasets'        => $datasets,
                 'dataset_name'    => $dataset,
                 'current_dataset' => $current_dataset,
                 'base_ds_url'     => $base_ds_url
-            )); ?>
+            ]); ?>
         </div>
     <?php } ?>
     <?php if ($folders){ ?>
@@ -93,8 +93,8 @@
                         <?php
                             $is_selected = $folder['id'] == $folder_id;
                             $url = $folder['id'] ?
-                                    href_to_profile($profile, array('content', $ctype['name'], $folder['id'])) :
-                                    href_to_profile($profile, array('content', $ctype['name']));
+                                    href_to_profile($profile, ['content', $ctype['name'], $folder['id']]) :
+                                    href_to_profile($profile, ['content', $ctype['name']]);
                         ?>
                         <?php if ($is_selected){ $current_folder = $folder; ?>
                             <span class="dropdown-item active"><?php echo $folder['title']; ?></span>
@@ -116,7 +116,7 @@
 
 <?php echo $html; ?>
 
-<?php $hooks_html = cmsEventsManager::hookAll("content_{$ctype['name']}_items_html", array('user_view', $ctype, $profile, (!empty($current_folder) ? $current_folder : []))); ?>
+<?php $hooks_html = cmsEventsManager::hookAll("content_{$ctype['name']}_items_html", ['user_view', $ctype, $profile, (!empty($current_folder) ? $current_folder : [])]); ?>
 <?php if ($hooks_html) { ?>
     <div class="sub_items_list">
         <?php echo html_each($hooks_html); ?>

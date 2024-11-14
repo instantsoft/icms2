@@ -55,12 +55,12 @@ class actionAdminUsers extends cmsAction {
                 'href'  => null
             ],
             [
-                'class' => 'delete_user',
+                'class' => 'delete_user icms-action-confirm',
                 'icon'  => 'times',
                 'level' => 2,
                 'title' => LANG_CP_USER_GROUP_DELETE,
                 'href'  => null,
-                'onclick' => "return confirm('".LANG_CP_USER_GROUP_DELETE_CONFIRM."')"
+                'data'  => ['confirm' => LANG_CP_USER_GROUP_DELETE_CONFIRM]
             ],
             [
                 'class' => 'group_perms d-none',

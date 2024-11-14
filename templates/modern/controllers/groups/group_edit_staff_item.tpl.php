@@ -13,7 +13,7 @@
     </div>
     <div class="actions">
         <?php if ($member['id'] != $group['owner_id']) { ?>
-            <a class="ajaxlink btn btn-danger btn-sm icms-group-sraff__delete" href="#" onclick="icms.groups.deleteStaff(<?php echo $member['id']; ?>)">
+            <a class="ajaxlink btn btn-danger btn-sm icms-group-sraff__delete" href="#" data-id="<?php echo $member['id']; ?>">
                 <?php html_svg_icon('solid', 'window-close'); ?>
                 <span class="d-none d-md-inline-block"><?php echo LANG_CANCEL; ?></span>
             </a>

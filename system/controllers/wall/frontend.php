@@ -78,7 +78,7 @@ class wall extends cmsFrontend {
                 'title'   => LANG_REPLY,
                 'icon'    => 'reply',
                 'href'    => '#wall-reply',
-                'class'   => 'btn-outline-secondary reply mr-2',
+                'class'   => 'btn-outline-secondary reply mr-2 icms-wall-reply',
                 'onclick' => 'return icms.wall.add({id})',
                 'handler' => function($entry) use($permissions) {
                     return !empty($permissions['reply']) && $entry['parent_id'] == 0;
@@ -88,7 +88,7 @@ class wall extends cmsFrontend {
                 'hint'    => LANG_EDIT,
                 'icon'    => 'edit',
                 'href'    => '#wall-edit',
-                'class'   => 'btn-outline-secondary edit',
+                'class'   => 'btn-outline-secondary edit icms-wall-edit',
                 'onclick' => 'return icms.wall.edit({id})',
                 'handler' => function($entry) use($permissions) {
                     return ($entry['user']['id'] == $this->cms_user->id) || $this->cms_user->is_admin;
@@ -98,7 +98,7 @@ class wall extends cmsFrontend {
                 'hint'    => LANG_DELETE,
                 'icon'    => 'trash',
                 'href'    => '#wall-delete',
-                'class'   => 'btn-outline-danger delete',
+                'class'   => 'btn-outline-danger delete icms-wall-delete',
                 'onclick' => 'return icms.wall.remove({id})',
                 'handler' => function($entry) use($permissions) {
 

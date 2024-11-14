@@ -5,7 +5,7 @@
     <div class="title_bar d-flex justify-content-between">
         <h3 class="m-0"><?php echo $title; ?></h3>
         <?php if ($permissions['add']){ ?>
-            <a href="#wall-write" id="wall_add_link" onclick="return icms.wall.add()" class="btn btn-primary">
+            <a href="#wall-write" id="wall_add_link" class="btn btn-primary">
                 <?php html_svg_icon('solid', 'marker'); ?>
                 <span class="d-none d-md-inline-block"><?php echo LANG_WALL_ENTRY_ADD; ?></span>
             </a>
@@ -31,11 +31,11 @@
             <?php echo html_wysiwyg('content', '', $editor_params['editor'], $editor_params['options']); ?>
             <div class="buttons row justify-content-between">
                 <div class="col">
-                    <?php echo html_button(LANG_SEND, 'submit', 'icms.wall.submit()', ['class' => 'button-add button-update btn-primary']); ?>
-                    <?php echo html_button(LANG_CANCEL, 'cancel', 'icms.wall.restoreForm()', ['class'=>'btn-secondary button-cancel']); ?>
+                    <?php echo html_button(LANG_SEND, 'submit', '', ['class' => 'button-add button-update btn-primary']); ?>
+                    <?php echo html_button(LANG_CANCEL, 'cancel', '', ['class'=>'btn-secondary button-cancel']); ?>
                 </div>
                 <div class="col-auto">
-                    <button class="button btn button-preview btn-info" name="preview" onclick="icms.wall.preview()" type="button">
+                    <button class="button btn button-preview btn-info" name="preview" type="button">
                         <?php html_svg_icon('solid', 'eye'); ?>
                         <span class="d-none d-lg-inline-block"><?php echo LANG_PREVIEW; ?></span>
                     </button>
@@ -58,13 +58,13 @@
 
         <?php if ($entries){ ?>
             <?php
-                echo $this->renderChild('entry', array(
+                echo $this->renderChild('entry', [
                     'entries'     => $entries,
                     'max_entries' => $max_entries,
                     'page'        => $page,
                     'user'        => $user,
                     'permissions' => $permissions
-                ));
+                ]);
             ?>
         <?php } ?>
 

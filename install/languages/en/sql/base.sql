@@ -971,7 +971,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (235, 'frontpage_action_index', 'languages', 235, 1),
 (236, 'content_before_item', 'languages', 236, 1),
 (237, 'content_before_list', 'languages', 237, 1),
-(238, 'content_item_form', 'languages', 238, 1);
+(238, 'content_item_form', 'languages', 238, 1),
+(239, 'engine_start', 'csp', 239, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

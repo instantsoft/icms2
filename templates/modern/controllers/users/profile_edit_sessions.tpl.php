@@ -40,7 +40,7 @@
                         <?php } ?>
                     </td>
                     <td class="align-middle">
-                        <a class="text-danger" href="<?php echo href_to_profile($profile, ['edit', 'sessions_delete', $session['id']]).'?csrf_token='.cmsForm::getCSRFToken(); ?>" onclick="if(!confirm('<?php echo LANG_SESS_DROP_CONFIRM; ?>')){ return false; }">
+                        <a class="text-danger icms-action-confirm" href="<?php echo href_to_profile($profile, ['edit', 'sessions_delete', $session['id']]).'?csrf_token='.cmsForm::getCSRFToken(); ?>" data-confirm="<?php echo LANG_SESS_DROP_CONFIRM; ?>">
                             <?php echo LANG_SESS_DROP; ?>
                         </a>
                     </td>

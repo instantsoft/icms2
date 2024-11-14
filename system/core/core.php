@@ -1387,6 +1387,8 @@ class cmsCore {
             }
         }
 
+        if (ob_get_length()) { ob_end_clean(); }
+
         $this->response->
                 setStatusCode($http_code)->
                 setContent($html)->

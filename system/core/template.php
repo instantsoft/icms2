@@ -661,7 +661,7 @@ class cmsTemplate {
             // Строим атрибуты ссылок
             $menu[$id]['attributes'] = $item['attributes'] ?? [];
 
-            $onclick = isset($item['options']['confirm']) ? "return confirm('{$item['options']['confirm']}')" : ($item['options']['onclick'] ?? false);
+            $onclick = isset($item['options']['confirm']) ? "return confirm('{$item['options']['confirm']}');" : ($item['options']['onclick'] ?? false);
             if($onclick){
                 $menu[$id]['onclick'] = $onclick;
             }

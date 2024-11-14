@@ -6,52 +6,51 @@ if (!$is_frontpage){
 
             $href = href_to($ctype['name'], 'add', isset($category['path']) ? $category['id'] : '');
 
-            $this->addToolButton(array(
+            $this->addToolButton([
                 'icon' => 'plus-circle',
                 'title' => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
                 'href'  => $href
-            ));
-
+            ]);
         }
-
     }
 
     if ($ctype['is_cats']){
         if (cmsUser::isAllowed($ctype['name'], 'add_cat')) {
-            $this->addToolButton(array(
+            $this->addToolButton([
                 'icon' => 'folder-plus',
                 'title' => LANG_ADD_CATEGORY,
                 'href'  => href_to($ctype['name'], 'addcat', $category['id'])
-            ));
+            ]);
         }
 
         if ($category['id']){
 
             if (cmsUser::isAllowed($ctype['name'], 'edit_cat')) {
-                $this->addToolButton(array(
+                $this->addToolButton([
                     'icon'  => 'edit',
                     'title' => LANG_EDIT_CATEGORY,
                     'href'  => href_to($ctype['name'], 'editcat', $category['id'])
-                ));
+                ]);
             }
             if (cmsUser::isAllowed($ctype['name'], 'delete_cat')) {
-                $this->addToolButton(array(
-                    'icon' => 'folder-minus',
+                $this->addToolButton([
+                    'icon'  => 'folder-minus',
+                    'class' => 'icms-action-confirm',
                     'title' => LANG_DELETE_CATEGORY,
                     'href'  => href_to($ctype['name'], 'delcat', $category['id']),
-                    'onclick' => "if(!confirm('".LANG_DELETE_CATEGORY_CONFIRM."')){ return false; }"
-                ));
+                    'data'  => ['confirm' => LANG_DELETE_CATEGORY_CONFIRM]
+                ]);
             }
 
         }
     }
 
     if (cmsUser::isAdmin()){
-        $this->addToolButton(array(
+        $this->addToolButton([
             'icon' => 'wrench',
             'title' => sprintf(LANG_CONTENT_TYPE_SETTINGS, mb_strtolower($ctype['title'])),
-            'href'  => href_to('admin', 'ctypes', array('edit', $ctype['id']))
-        ));
+            'href'  => href_to('admin', 'ctypes', ['edit', $ctype['id']])
+        ]);
     }
 }
 

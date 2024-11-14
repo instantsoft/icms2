@@ -29,7 +29,7 @@
                             </a>
                             <?php if(empty($is_edit)){ ?>
                             <div class="actions mt-2">
-                                <a title="<?php echo LANG_DELETE; ?>" class="btn btn-danger btn-block btn-sm delete" href="#" onclick="return icms.photos.remove(<?php echo $photo['id']; ?>)">
+                                <a title="<?php echo LANG_DELETE; ?>" class="btn btn-danger btn-block btn-sm delete" href="#" data-id="<?php echo $photo['id']; ?>">
                                     <?php html_svg_icon('solid', 'minus-circle'); ?>
                                 </a>
                             </div>
@@ -113,6 +113,11 @@
                         this.params = {
                             album_id: _album_id
                         };
+                    });
+                    $(function(){
+                        $('#album-photos-widget').on('click', '.actions > .delete', function(){
+                            return icms.photos.remove(this);
+                        });
                     });
                 </script>
             <?php $this->addBottom(ob_get_clean()); ?>

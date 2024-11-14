@@ -2,50 +2,64 @@ var icms = icms || {};
 
 icms.users = (function ($) {
 
-    var self = this;
+    let self = this;
+
+    this.user_profile_header = {};
+    this.user_profile_rates = {};
+    this.user_status_widget = {};
 
     this.onDocumentReady = function () {
 
-        $('#user_status_widget .input:text').on('keydown', function(event){
-            if (event.keyCode == 13) {
+        this.user_profile_rates = $('#user_profile_rates');
+        this.user_profile_header = $('#user_profile_title');
+        this.user_status_widget = $('#user_status_widget');
+
+        $('.input:text', this.user_status_widget).on('keydown', function(event){
+            if (event.keyCode === 13) {
                 self.saveStatus();
             }
         });
-
+        $('.icms-user-profile__status_delete', this.user_profile_header).on('click', function(event){
+            return self.deleteStatus(this);
+        });
+        $('.thumb_up', this.user_profile_rates).on('click', function(event){
+            return self.karmaUp();
+        });
+        $('.thumb_down', this.user_profile_rates).on('click', function(event){
+            return self.karmaDown();
+        });
     };
 
     this.enableStatusInput = function (clear) {
 
-        $('#user_status_widget').removeClass('loading');
+        this.user_status_widget.removeClass('loading');
 
         if (typeof(clear) === 'undefined') { clear = true; }
 
-        $('#user_status_widget .input:text').removeAttr('disabled');
+        $('.input:text', this.user_status_widget).removeAttr('disabled');
 
         if (clear){
-            $('#user_status_widget .input:text').val('').blur();
+            $('.input:text', this.user_status_widget).val('').blur();
         }
-
     };
 
     this.disableStatusInput = function () {
 
-        $('#user_status_widget').addClass('loading');
-        $('#user_status_widget .input:text').attr('disabled', 'disabled');
-
+        this.user_status_widget.addClass('loading');
+        $('.input:text', this.user_status_widget).attr('disabled', 'disabled');
     };
 
     this.saveStatus = function (){
 
-        var input = $('#user_status_widget .input:text');
-        var content = input.val();
+        let input = $('.input:text', this.user_status_widget);
+        let content = input.val();
 
         if (!content) { return false; }
 
         this.disableStatusInput();
 
-        var url = input.data('url');
-        var user_id = input.data('user-id');
+        let url = input.data('url');
+        let user_id = input.data('user-id');
 
         $.post(url, {user_id: user_id, content: content}, function(result){
 
@@ -59,23 +73,18 @@ icms.users = (function ($) {
             self.enableStatusInput();
 
         }, 'json');
-
-
     };
 
     this.updateStatus = function (result){
 
-        var block = $('#user_profile_title');
-
-        $('.status .text', block).html(result.content);
-        $('.status .icms-user-profile__status_reply', block).attr('href', result.status_link).find(' > span').html(LANG_REPLY);
-        $('.status', block).hide().fadeIn(800);
-
+        $('.status .text', this.user_profile_header).html(result.content);
+        $('.status .icms-user-profile__status_reply', this.user_profile_header).attr('href', result.status_link).find(' > span').html(LANG_REPLY);
+        $('.status', this.user_profile_header).hide().fadeIn(800);
     };
 
     this.deleteStatus = function (link){
 
-        var url = $(link).data('url');
+        let url = $(link).data('url');
 
         if (!confirm(LANG_USERS_DELETE_STATUS_CONFIRM)){ return false; }
 
@@ -86,15 +95,12 @@ icms.users = (function ($) {
                 return;
             }
 
-            var block = $('#user_profile_title');
-
-            $('.status .text', block).html('');
-            $('.status', block).hide();
+            $('.status .text', self.user_profile_header).html('');
+            $('.status', self.user_profile_header).hide();
 
         }, 'json');
 
         return false;
-
     };
 
     this.karmaUp = function(){
@@ -109,38 +115,36 @@ icms.users = (function ($) {
 
     this.karmaVote = function(direction){
 
-        var block = $('#user_profile_rates');
-        var url = block.data('url');
-        var is_comment = block.data('is-comment');
-        var comment = '';
+        let url = this.user_profile_rates.data('url');
+        let is_comment = this.user_profile_rates.data('is-comment');
+        let comment = '';
 
         if (is_comment){
             comment = prompt(LANG_USERS_KARMA_COMMENT);
             if (!comment) { return false; }
         }
 
-        $('.thumb_'+direction, block).addClass('loading');
+        $('.thumb_'+direction, this.user_profile_rates).addClass('loading');
 
         $.post(url, {direction: direction, comment: comment}, function(result){
 
-            $('.thumb_'+direction, block).removeClass('loading');
+            $('.thumb_'+direction, self.user_profile_rates).removeClass('loading');
 
             if (result.error){
                 self.error(result.message);
                 return;
             }
 
-            $(block).
+            $(self.user_profile_rates).
                 removeClass('bg-success').
                 removeClass('bg-secondary').
                 addClass(result.value.charAt(0) === '+' ? 'bg-success' : 'bg-secondary').
                 find('.value').
                 html(result.value);
 
-            $('.thumb', block).remove();
+            $('.thumb', self.user_profile_rates).remove();
 
         }, 'json');
-
     };
 
     this.error = function(message){

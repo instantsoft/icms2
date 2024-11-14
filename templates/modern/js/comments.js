@@ -2,8 +2,10 @@ var icms = icms || {};
 
 icms.comments = (function ($) {
 
-    var _this = this;
+    let self = this;
 
+    this.comments_add_link = {};
+    this.comments_widget = {};
     this.is_moderation_list = false;
     this.urls, this.target = {};
 
@@ -14,18 +16,21 @@ icms.comments = (function ($) {
 
     this.onDocumentReady = function() {
 
+        this.comments_widget = $('#comments_widget');
+
+        this.initActionBtns();
         this.initRefreshBtn();
 
-        $('#comments_widget #is_track').click(function(){
-            return _this.toggleTrack(this);
+        $('#is_track', this.comments_widget).click(function(){
+            return self.toggleTrack(this);
         });
 
-        $('#comments_widget .icms-comment-rating .rate-up').click(function(){
-            return _this.rate(this, 1);
+        $('.icms-comment-rating .rate-up', this.comments_widget).click(function(){
+            return self.rate(this, 1);
         });
 
-        $('#comments_widget .icms-comment-rating .rate-down').click(function(){
-            return _this.rate(this, -1);
+        $('.icms-comment-rating .rate-down', this.comments_widget).click(function(){
+            return self.rate(this, -1);
         });
 
         var anchor = window.location.hash;
@@ -34,18 +39,54 @@ icms.comments = (function ($) {
         var find_id = anchor.match(/comment_([0-9]+)/);
         if (!find_id) {return false;}
 
-        _this.show(find_id[1]);
+        self.show(find_id[1]);
+    };
+
+    this.initActionBtns = function(){
+
+        this.comments_add_link = $('#comments_add_link', self.comments_widget);
+
+        this.comments_add_link.on('click', function(){
+            return self.add();
+        });
+
+        $('.button-preview', self.comments_widget).on('click', function(){
+            return self.preview();
+        });
+        $('.button-add', self.comments_widget).on('click', function(){
+            return self.submit();
+        });
+        $('.button-cancel', self.comments_widget).on('click', function(){
+            return self.restoreForm();
+        });
+        $('.scroll-up', self.comments_widget).on('click', function(){
+            return self.up(this);
+        });
+        $('.scroll-down', self.comments_widget).on('click', function(){
+            return self.down(this);
+        });
+        self.comments_widget.on('click', '.icms-comment-approve', function(){
+            return self.approve($(this).data('id'));
+        }).on('click', '.icms-comment-reply', function(){
+            return self.add($(this).data('id'));
+        }).on('click', '.icms-comment-edit', function(){
+            return self.edit($(this).data('id'));
+        }).on('click', '.icms-comment-delete', function(){
+            return self.remove($(this).data('id'), false);
+        }).on('click', '.icms-comment-decline', function(){
+            return self.remove($(this).data('id'), true);
+        });
 
     };
 
     this.initRefreshBtn = function(){
-        var comments = $('#comments');
+        let comments = $('#comments');
         if($(comments).length === 0){
             return;
         }
-        var win = $(window);
-        var refresh_btn = $('#icms-refresh-id');
-        var comments_top = $(comments).offset().top;
+        let win = $(window);
+        let refresh_btn = $('#icms-refresh-id');
+        let comments_top = $(comments).offset().top;
         win.on('scroll', function (){
             if (win.scrollTop() > comments_top) {
                 refresh_btn.removeClass('d-none');
@@ -53,22 +94,23 @@ icms.comments = (function ($) {
                 refresh_btn.addClass('d-none');
             }
         }).trigger('scroll');
+        refresh_btn.on('click', function(){
+            return self.refresh();
+        });
     };
 
     this.restoreForm = function(clear_text){
 
-        var comments_widget = $('#comments_widget');
-
         if (typeof clear_text === 'undefined'){clear_text = true;}
 
-        var form = $('#comments_add_form');
+        let form = $('#comments_add_form');
 
         $('.buttons *', form).removeClass('disabled is-busy');
         $('textarea', form).prop('disabled', false);
 
         if (clear_text) {
             form.hide();
-            $('#comments_add_link, .icms-comment-controls .reply, .icms-comment-controls .edit', comments_widget)
+            $('#comments_add_link, .icms-comment-controls .reply, .icms-comment-controls .edit', self.comments_widget)
                     .removeClass('disabled');
             $('.preview_box', form).html('').addClass('d-none');
             icms.events.run('icms_comments_restore_form', form);
@@ -77,22 +119,21 @@ icms.comments = (function ($) {
 
     this.add = function (parent_id) {
 
-        var form = $('#comments_add_form');
-        var comments_widget = $('#comments_widget');
+        let form = $('#comments_add_form');
 
         if (typeof parent_id === 'undefined'){parent_id = 0;}
 
-        $('#comments_add_link, .icms-comment-controls .reply, .icms-comment-controls .edit', comments_widget)
+        $('#comments_add_link, .icms-comment-controls .reply, .icms-comment-controls .edit', self.comments_widget)
                 .removeClass('disabled');
 
         if (parent_id == 0){
 
-            $('#comments_add_link', comments_widget).addClass('disabled');
+            self.comments_add_link.addClass('disabled');
             form.detach().insertBefore('#comments_list');
 
         } else {
 
-            $('#comments_list #comment_'+parent_id+' .icms-comment-controls .reply', comments_widget).addClass('disabled');
+            $('#comments_list #comment_'+parent_id+' .icms-comment-controls .reply', self.comments_widget).addClass('disabled');
             form.detach().appendTo('#comment_'+parent_id+' .media-body');
 
         }
@@ -116,9 +157,8 @@ icms.comments = (function ($) {
     this.edit = function (id) {
 
         let form = $('#comments_add_form');
-        let comments_widget = $('#comments_widget');
 
-        $('#comments_add_link, .icms-comment-controls .reply, .icms-comment-controls .edit', comments_widget)
+        $('#comments_add_link, .icms-comment-controls .reply, .icms-comment-controls .edit', self.comments_widget)
                 .removeClass('disabled');
 
         form.detach().appendTo('#comment_' + id + ' .media-body').show();
@@ -127,20 +167,20 @@ icms.comments = (function ($) {
         $('input[name=action]', form).val('update');
         $('input[name=submit]', form).val(LANG_SAVE);
 
-        $('#comment_' + id + ' .icms-comment-controls .edit', comments_widget).addClass('is-busy');
+        $('#comment_' + id + ' .icms-comment-controls .edit', self.comments_widget).addClass('is-busy');
         $('textarea', form).prop('disabled', true);
 
         icms.forms.wysiwygInit('content', function () {
-            $.post(_this.urls.get, {id: id}, function (result) {
+            $.post(self.urls.get, {id: id}, function (result) {
 
-                $('#comment_' + id + ' .icms-comment-controls .edit', comments_widget).removeClass('is-busy');
+                $('#comment_' + id + ' .icms-comment-controls .edit', self.comments_widget).removeClass('is-busy');
 
                 if (result.error) {
-                    _this.error(result.message);
+                    self.error(result.message);
                     return;
                 }
 
-                _this.restoreForm(false);
+                self.restoreForm(false);
 
                 icms.forms.wysiwygInsertText('content', result.html);
 
@@ -183,15 +223,15 @@ icms.comments = (function ($) {
 
         $.post(url, form_data, function(result){
 
-            if (form_data.action === 'add') { _this.result(result);}
+            if (form_data.action === 'add') { self.result(result);}
             if (form_data.action === 'preview') {
                 if(form_data.id){
-                    _this.previewResult(result, $('#comment_'+form_data.id+' .icms-comment-html'));
+                    self.previewResult(result, $('#comment_'+form_data.id+' .icms-comment-html'));
                 } else {
-                    _this.previewResult(result);
+                    self.previewResult(result);
                 }
             }
-            if (form_data.action === 'update') { _this.updateResult(result);}
+            if (form_data.action === 'update') { self.updateResult(result);}
 
             icms.events.run('icms_comments_submit', result);
 
@@ -244,13 +284,11 @@ icms.comments = (function ($) {
             clear_selection = true;
         }
 
-        var comments_widget = $('#comments_widget');
-
         if (clear_selection){
-            $('.comment', comments_widget).removeClass('selected-comment');
+            $('.comment', self.comments_widget).removeClass('selected-comment');
         }
 
-        $('.refresh_btn', comments_widget).addClass('refresh_spin');
+        $('.refresh_btn', self.comments_widget).addClass('refresh_spin');
 
         var form = $('#comments_add_form form');
 
@@ -265,32 +303,32 @@ icms.comments = (function ($) {
         $.post(this.urls.refresh, form_data, function(result){
 
             setTimeout(function (){
-                $('.refresh_btn', comments_widget).removeClass('refresh_spin');
+                $('.refresh_btn', self.comments_widget).removeClass('refresh_spin');
             }, 500);
 
             icms.events.run('icms_comments_refresh', result);
 
             if (result == null || typeof(result) === 'undefined' || result.error){
-                _this.error(result.message);
+                self.error(result.message);
                 return;
             }
 
             if (result.total){
                 for (var comment_index in result.comments){
                     var comment = result.comments[ comment_index ];
-                    _this.append( comment );
+                    self.append( comment );
                     $('#comment_'+comment.id).addClass('selected-comment');
                     $('input[name=timestamp]', form).val(comment.timestamp);
-                    _this.target.timestamp = comment.timestamp;
+                    self.target.timestamp = comment.timestamp;
                 }
             }
 
             if (result.exists <= 0){
-                _this.showFirstSelected();
+                self.showFirstSelected();
                 return;
             }
 
-            _this.refresh(false);
+            self.refresh(false);
 
         }, 'json');
 
@@ -300,11 +338,11 @@ icms.comments = (function ($) {
 
     this.append = function(comment){
 
-        $('#comments_widget #comments_list .no_comments').remove();
+        $('#comments_list .no_comments', self.comments_widget).remove();
 
         if (comment.parent_id == 0){
 
-            $('#comments_widget #comments_list').append( comment.html );
+            $('#comments_list', self.comments_widget).append( comment.html );
 
         }
 
@@ -322,13 +360,11 @@ icms.comments = (function ($) {
             });
 
             if (!next_id){
-                $('#comments_widget #comments_list').append( comment.html );
+                $('#comments_list', self.comments_widget).append( comment.html );
             } else {
                 $('#'+next_id).before( comment.html );
             }
-
         }
-
     };
 
     this.result = function(result){
@@ -417,18 +453,18 @@ icms.comments = (function ($) {
         $.post(this.urls.approve, {id: id}, function(result){
 
             if (result == null || typeof(result) === 'undefined' || result.error){
-                _this.error(result.message);
+                self.error(result.message);
                 return false;
             }
 
-            if(_this.is_moderation_list){
+            if(self.is_moderation_list){
                 $('#comments_list #comment_'+result.id).remove();
-                _this.setModerationCounter();
+                self.setModerationCounter();
             } else {
 
                 $('#comments_list #comment_'+result.id+' .icms-comment-html').html(result.html);
 
-                _this.show(result.id);
+                self.show(result.id);
 
                 $('#comment_'+result.id+' .hide_approved').hide();
                 $('#comment_'+result.id+' .no_approved').removeClass('no_approved');
@@ -460,16 +496,16 @@ icms.comments = (function ($) {
         $.post(this.urls.delete, {id: id, reason: reason}, function(result){
 
             if (result == null || typeof(result) === 'undefined' || result.error){
-                _this.error(result.message);
+                self.error(result.message);
                 return;
             }
 
-            if(_this.is_moderation_list){
+            if(self.is_moderation_list){
                 $(c).remove();
-                _this.setModerationCounter();
+                self.setModerationCounter();
             } else {
 
-                _this.restoreForm();
+                self.restoreForm();
 
                 if(result.delete_ids.length > 0){
                     $('#comments_add_form').detach().insertBefore('#comments_list');
@@ -529,8 +565,8 @@ icms.comments = (function ($) {
     };
 
     this.show = function(id){
-        $('#comments_widget .comment').removeClass('selected-comment');
-        var c = $('#comment_'+id);
+        $('.comment', self.comments_widget).removeClass('selected-comment');
+        let c = $('#comment_'+id);
         c.addClass('selected-comment');
         $.scrollTo( c, 500, {offset: {left:0, top:-10}} );
         return false;
@@ -543,16 +579,18 @@ icms.comments = (function ($) {
         return false;
     };
 
-    this.up = function(to_id, from_id){
-        var c = $('#comment_'+to_id);
-        $('#comments_widget .scroll-down').addClass('d-none');
+    this.up = function(link){
+        let to_id = $(link).data('parent_id');
+        let from_id = $(link).data('id');
+        let c = $('#comment_'+to_id);
+        $('.scroll-down', self.comments_widget).addClass('d-none');
         $('.scroll-down', c).addClass('d-inline-block').removeClass('d-none').data('child-id', from_id);
         this.show(to_id);
         return false;
     };
 
     this.down = function (link){
-        var to_id = $(link).data('child-id');
+        let to_id = $(link).data('child-id');
         $(link).addClass('d-none');
         if(to_id){
             this.show(to_id);

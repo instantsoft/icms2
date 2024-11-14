@@ -43,7 +43,7 @@
                         </a>
                     </div>
                 </div>
-                <button type="button" class="btn d-block d-sm-none" title="<?php echo LANG_CLOSE; ?>" onclick="return icms.modal.close();">
+                <button type="button" class="btn d-block d-sm-none" title="<?php echo LANG_CLOSE; ?>" data-dismiss="modal">
                     <?php html_svg_icon('solid', 'times'); ?>
                 </button>
             </div>
@@ -63,7 +63,7 @@
             <div class="mt-auto"></div>
 
         <?php if ($messages){ ?>
-            <?php echo $this->renderChild('message', ['messages'=>$messages, 'user'=>$user, 'last_date' => '']); ?>
+            <?php echo $this->renderChild('message', ['messages' => $messages, 'user' => $user, 'last_date' => '']); ?>
         <?php } ?>
     </div>
 
@@ -87,7 +87,7 @@
         <?php } else { ?>
 
             <form action="<?php echo $this->href_to('send'); ?>" method="post" class="position-relative px-2 px-lg-0">
-                <?php echo html_input('hidden', 'last_date', '', array('id' => 'msg_last_date')); ?>
+                <?php echo html_input('hidden', 'last_date', '', ['id' => 'msg_last_date']); ?>
                 <?php echo html_input('hidden', 'contact_id', $contact['id']); ?>
                 <?php echo html_csrf_token(); ?>
                 <div class="editor editor-<?php echo $editor_params['editor']; ?>">

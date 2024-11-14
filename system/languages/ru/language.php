@@ -481,11 +481,11 @@
     define('LANG_ADD_CATEGORY_QUICK',        'или создать новую категорию внутри выбранной');
     define('LANG_EDIT_CATEGORY',             'Редактировать категорию');
     define('LANG_DELETE_CATEGORY',           'Удалить категорию');
-    define('LANG_DELETE_CATEGORY_CONFIRM',   'Вы уверены что хотите удалить категорию?\nВсе содержимое также будет удалено!');
+    define('LANG_DELETE_CATEGORY_CONFIRM',   'Вы уверены что хотите удалить категорию? Все содержимое также будет удалено!');
     define('LANG_ADD_FOLDER_QUICK',          'или создать новую папку');
     define('LANG_EDIT_FOLDER',               'Редактировать папку');
     define('LANG_DELETE_FOLDER',             'Удалить папку');
-    define('LANG_DELETE_FOLDER_CONFIRM',     'Вы уверены что хотите удалить папку?\nВсе содержимое также будет удалено!');
+    define('LANG_DELETE_FOLDER_CONFIRM',     'Вы уверены что хотите удалить папку? Все содержимое также будет удалено!');
     define('LANG_CP_ACTIONS',                'Действия');
     define('LANG_SELECTED_ACTIONS',          'Действия над выделенными');
     define('LANG_BY_DEFAULT',                'По умолчанию');

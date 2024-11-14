@@ -40,12 +40,12 @@
         <div class="right-panel col-lg-3 border-right d-none d-lg-block">
             <div class="sticky-top icms-messages__contacts-block">
                 <div id="user_search_panel" class="bg-gray p-2 border-bottom pannel-toolbar">
-                    <?php echo html_input('text', '', '', array('placeholder' => LANG_PM_USER_SEARCH)); ?>
+                    <?php echo html_input('text', '', '', ['placeholder' => LANG_PM_USER_SEARCH]); ?>
                 </div>
                 <div class="contacts icms-messages__contacts-list list-group" id="contacts-list">
                     <?php foreach($contacts as $contact){ ?>
                         <?php $nickname = mb_strlen($contact['nickname']) > 15 ? mb_substr($contact['nickname'], 0, 15).'...' : $contact['nickname']; ?>
-                        <a id="contact-<?php echo $contact['id']; ?>" href="#<?php echo $contact['id']; ?>" class="text-decoration-none d-flex align-items-center contact list-group-item border-0 rounded-0 p-2" onclick="return icms.messages.selectContact(<?php echo $contact['id']; ?>);" title="<?php echo $contact['nickname']; ?>" rel="<?php echo $contact['id']; ?>">
+                        <a id="contact-<?php echo $contact['id']; ?>" href="#<?php echo $contact['id']; ?>" class="text-decoration-none d-flex align-items-center contact list-group-item border-0 rounded-0 p-2" title="<?php echo $contact['nickname']; ?>" rel="<?php echo $contact['id']; ?>">
 
                             <span class="icms-user-avatar mr-2 small <?php if (!empty($contact['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" rel="<?php echo $contact['id']; ?>">
                                 <?php if($contact['avatar']){ ?>
@@ -87,6 +87,9 @@
         <?php } ?>
         icms.messages.options.refreshInterval = <?php echo $refresh_time; ?>;
         $(function(){
+            $('#contacts-list .contact').on('click', function(){
+                return icms.messages.selectContact($(this).attr('rel'));
+            });
             icms.messages.initUserSearch();
             <?php if($select_contact_id){ ?>
                 icms.messages.selectContact(<?php echo $select_contact_id; ?>);

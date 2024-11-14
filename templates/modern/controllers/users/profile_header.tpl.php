@@ -56,8 +56,8 @@
                             </a>
                         <?php } ?>
                     <?php } ?>
-                    <?php if ($profile['id'] == $user->id) { ?>
-                        <a class="ml-2 text-danger" href="#delete-status" onclick="return icms.users.deleteStatus(this)" data-url="<?php echo $this->href_to('status_delete', $profile['id']); ?>" title="<?php echo LANG_DELETE; ?>" data-toggle="tooltip" data-placement="top">
+                    <?php if ($profile['id'] == $user->id || $user->is_admin) { ?>
+                        <a class="ml-2 text-danger icms-user-profile__status_delete" href="#delete-status" data-url="<?php echo $this->href_to('status_delete', $profile['id']); ?>" title="<?php echo LANG_DELETE; ?>" data-toggle="tooltip" data-placement="top">
                             <?php html_svg_icon('solid', 'trash'); ?>
                         </a>
                     <?php } ?>
@@ -74,7 +74,7 @@
                  data-is-comment="<?php echo $this->controller->options['is_karma_comments']; ?>">
                 <div class="d-flex justify-content-center align-items-center">
                     <?php if ($profile['is_can_vote_karma']){ ?>
-                        <a href="#vote-up" onclick="return icms.users.karmaUp()" class="thumb thumb_up text-primary" title="<?php echo LANG_KARMA_UP; ?>" data-toggle="tooltip" data-placement="top">
+                        <a href="#vote-up" class="thumb thumb_up text-primary" title="<?php echo LANG_KARMA_UP; ?>" data-toggle="tooltip" data-placement="top">
                             <?php html_svg_icon('solid', 'thumbs-up'); ?>
                         </a>
                     <?php } ?>
@@ -82,7 +82,7 @@
                         <?php echo html_signed_num($profile['karma']); ?>
                     </b>
                     <?php if ($profile['is_can_vote_karma']){ ?>
-                        <a href="#vote-down" onclick="return icms.users.karmaDown()" class="thumb thumb_down text-danger" title="<?php echo LANG_KARMA_DOWN; ?>" data-toggle="tooltip" data-placement="top">
+                        <a href="#vote-down" class="thumb thumb_down text-danger" title="<?php echo LANG_KARMA_DOWN; ?>" data-toggle="tooltip" data-placement="top">
                             <?php html_svg_icon('solid', 'thumbs-down'); ?>
                         </a>
                     <?php } ?>

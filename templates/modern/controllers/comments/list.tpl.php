@@ -6,7 +6,7 @@ $this->addTplJSName('comments');
     <div class="d-flex justify-content-between align-items-center mt-3 mt-md-4">
     <?php if ($can_add){ ?>
         <div id="comments_add_link">
-            <a href="#reply" class="btn btn-primary ajaxlink" onclick="return icms.comments.add()">
+            <a href="#reply" class="btn btn-primary ajaxlink">
                 <?php echo $this->controller->labels->add; ?>
             </a>
         </div>
@@ -23,7 +23,7 @@ $this->addTplJSName('comments');
                     </b>
                 </a>
             <?php } ?>
-            <a id="icms-refresh-id" href="#refresh" data-toggle="tooltip" data-placement="right" class="btn btn-secondary refresh_btn d-none" onclick="return icms.comments.refresh()" title="<?php echo $this->controller->labels->refresh; ?>">
+            <a id="icms-refresh-id" href="#refresh" data-toggle="tooltip" data-placement="right" class="btn btn-secondary refresh_btn d-none" title="<?php echo $this->controller->labels->refresh; ?>">
                 <?php html_svg_icon('solid', 'sync-alt'); ?>
             </a>
         </div>
@@ -53,7 +53,7 @@ $this->addTplJSName('comments');
 
     <?php if ($comments){ ?>
 
-        <?php echo $this->renderChild($this->controller->comment_template, array(
+        <?php echo $this->renderChild($this->controller->comment_template, [
             'comments'         => $comments,
             'target_user_id'   => $target_user_id,
             'user'             => $user,
@@ -62,7 +62,7 @@ $this->addTplJSName('comments');
             'is_levels'        => true,
             'is_controls'      => true,
             'is_show_target'   => false
-        )); ?>
+        ]); ?>
 
     <?php } ?>
 
@@ -107,11 +107,11 @@ $this->addTplJSName('comments');
                 <?php echo html_wysiwyg('content', '', $editor_params['editor'], $editor_params['options']); ?>
                 <div class="buttons row justify-content-between">
                     <div class="col">
-                        <?php echo html_button(LANG_SEND, 'submit', 'icms.comments.submit()', ['class' => 'button-add button-update btn-primary']); ?>
-                        <?php echo html_button(LANG_CANCEL, 'cancel', 'icms.comments.restoreForm()', ['class'=>'btn-secondary button-cancel']); ?>
+                        <?php echo html_button(LANG_SEND, 'submit', '', ['class' => 'button-add button-update btn-primary']); ?>
+                        <?php echo html_button(LANG_CANCEL, 'cancel', '', ['class'=>'btn-secondary button-cancel']); ?>
                     </div>
                     <div class="col-auto">
-                        <button class="button btn button-preview btn-info" name="preview" onclick="icms.comments.preview()" type="button">
+                        <button class="button btn button-preview btn-info" name="preview" type="button">
                             <?php html_svg_icon('solid', 'eye'); ?>
                             <span class="d-none d-lg-inline-block"><?php echo LANG_PREVIEW; ?></span>
                         </button>

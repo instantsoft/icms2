@@ -19,11 +19,14 @@
         ]); ?>
         <?php $this->printCssTags(); ?>
     </head>
-    <body class="h-100 w-100 overflow-hidden <?php echo $device_type; ?>_device_type embed-form" onload="top.postMessage(JSON.stringify({id: 'embed-form-<?php echo $form_data['hash']; ?>', height: $('html').height()}), '*');">
+    <body class="h-100 w-100 overflow-hidden <?php echo $device_type; ?>_device_type embed-form">
         <?php $this->body(); ?>
         <?php $this->printJavascriptTags(); ?>
         <?php $this->bottom(); ?>
-        <script>
+        <script nonce="<?php echo $this->nonce; ?>">
+            $(function(){
+                top.postMessage(JSON.stringify({id: 'embed-form-<?php echo $form_data['hash']; ?>', height: $('html').height()}), '*');
+            });
             icms.events.on('icms_forms_submitajax', function (result){
                 top.postMessage(JSON.stringify({id: 'embed-form-<?php echo $form_data['hash']; ?>', height: $('html').height()}), '*');
             });

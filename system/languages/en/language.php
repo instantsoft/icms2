@@ -482,11 +482,11 @@
     define('LANG_ADD_CATEGORY_QUICK',        'or create a category inside the selected');
     define('LANG_EDIT_CATEGORY',             'Edit Category');
     define('LANG_DELETE_CATEGORY',           'Delete Category');
-    define('LANG_DELETE_CATEGORY_CONFIRM',   'Are you sure you want to delete the category?\nIts contents will be deleted too!');
+    define('LANG_DELETE_CATEGORY_CONFIRM',   'Are you sure you want to delete the category? Its contents will be deleted too!');
     define('LANG_ADD_FOLDER_QUICK',          'or add a new folder');
     define('LANG_EDIT_FOLDER',               'Edit Folder');
     define('LANG_DELETE_FOLDER',             'Delete Folder');
-    define('LANG_DELETE_FOLDER_CONFIRM',     'Are you sure you want to delete the folder?\nIts contents will be deleted too!');
+    define('LANG_DELETE_FOLDER_CONFIRM',     'Are you sure you want to delete the folder? Its contents will be deleted too!');
     define('LANG_CP_ACTIONS',                'Actions');
     define('LANG_SELECTED_ACTIONS',          'Actions on selected');
     define('LANG_BY_DEFAULT',                'Default');

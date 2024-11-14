@@ -280,7 +280,7 @@ class cmsRequest {
      * @param string $var_type Тип переменной
      * @return mixed
      */
-    public function get(string $var, mixed $default = false, $var_type = null) {
+    public function get(string $var, $default = false, $var_type = null) {
 
         //если значение не определено, возвращаем умолчание
 
@@ -374,7 +374,7 @@ class cmsRequest {
      * @param mixed $value Значение параметра
      * @return $this
      */
-    public function set(string $name, mixed $value) {
+    public function set(string $name, $value) {
 
         $this->data[$name] = $value;
 
@@ -389,7 +389,7 @@ class cmsRequest {
      * @param mixed $default Значение по умолчанию
      * @return mixed
      */
-    private function getProperty(string $prop, string $key, mixed $default = null) {
+    private function getProperty(string $prop, string $key, $default = null) {
         return $this->hasProperty($prop, $key) ? $this->{$prop}[$key] : $default;
     }
 
@@ -400,7 +400,7 @@ class cmsRequest {
      * @param string $key Ключ в массиве
      * @param mixed $value Значение
      */
-    private function setProperty(string $prop, string $key, mixed $value) {
+    private function setProperty(string $prop, string $key, $value) {
         $this->{$prop}[$key] = $value;
     }
 

@@ -237,7 +237,7 @@ function html_datepicker($name = '', $value = '', $attributes = [], $datepicker 
  *
  * @param string $caption Заголовок кнопки
  * @param string $name Имя (name)
- * @param array $attributes Массив параметров
+ * @param array $attributes Атрибуты тега
  * @return string
  */
 function html_submit($caption = LANG_SUBMIT, $name = 'submit', $attributes = []) {
@@ -254,9 +254,10 @@ function html_submit($caption = LANG_SUBMIT, $name = 'submit', $attributes = [])
 /**
  * Возвращает html-код кнопки
  *
- * @param str $caption Заголовок
- * @param str $name Название кнопки
- * @param str $onclick Содержимое аттрибута onclick (javascript)
+ * @param string $caption Заголовок
+ * @param string $name Название кнопки
+ * @param string $onclick Содержимое аттрибута onclick (javascript)
+ * @param array $attributes Атрибуты тега
  * @return string
  */
 function html_button($caption, $name, $onclick = '', $attributes = []) {

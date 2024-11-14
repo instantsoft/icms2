@@ -164,7 +164,7 @@ icms.photos = (function ($) {
                         attr('name', 'content['+result.id+']').
                         attr('id', 'mcontent_'+result.id);
 
-                $('.actions a.delete', preview_block).click(function() { return icms.photos.remove(result.id); });
+                $('.actions a.delete', preview_block).data('id', result.id);
 
                 $('.previews_list', widget).append(preview_block);
 
@@ -180,11 +180,13 @@ icms.photos = (function ($) {
 
     };
 
-    this.remove = function(id){
+    this.remove = function(link){
 
-        var widget = $('#album-photos-widget');
+        let id = $(link).data('id');
 
-        var url = widget.data('delete-url') + '/' + id;
+        let widget = $('#album-photos-widget');
+
+        let url = widget.data('delete-url') + '/' + id;
 
         $.post(url, {}, function(result){
 
@@ -195,7 +197,6 @@ icms.photos = (function ($) {
         }, 'json');
 
         return false;
-
     };
 
     this.deletePhoto = function(id, link){

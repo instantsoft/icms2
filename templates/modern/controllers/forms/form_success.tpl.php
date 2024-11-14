@@ -8,7 +8,7 @@
         </a>
     <?php } ?>
     <?php if(!$hide_after_submit){ ?>
-        <button type="button" class="close" onclick="return icms.cforms.closeSuccess(this);">
+        <button type="button" class="close icms-forms__btn-close">
             <span>&times;</span>
         </button>
     <?php } ?>

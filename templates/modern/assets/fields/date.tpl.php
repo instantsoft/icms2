@@ -4,16 +4,16 @@
     ]); ?>
 <?php $this->addTplCSSNameFromContext('jquery-ui'); ?>
 <?php if($field->title){ ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
-<div class="form-inline">
+<div class="form-inline" id="field-datetime-<?php echo $field->id; ?>">
 <?php echo html_datepicker($field->data['fname_date'], $field->data['date'], ['id'=>$field->id, 'class' => 'mr-sm-2 mb-2 mb-sm-0'], ['minDate'=>date('d.m.Y', 86400)]); ?>
 <?php if($field->data['show_time']){ ?>
     <?php echo html_select_range($field->data['fname_hours'], 0, 23, 1, true, $field->data['hours'], ['class' => 'w-auto mr-2']); ?>
     <span class="mr-2">:</span>
     <?php echo html_select_range($field->data['fname_mins'], 0, 59, 1, true, $field->data['mins'], ['class' => 'w-auto mr-2']); ?>
 <?php } ?>
-    <a class="btn text-decoration-none" onclick="return parser_current_time_<?php echo $field->id; ?>(this);" href="#">
-        <span class="d-md-none">
-            <?php html_svg_icon('solid', 'user-clock'); ?>
+    <a class="btn btn-sm" href="#">
+        <span>
+            <?php html_svg_icon('solid', 'clock'); ?>
         </span>
         <span class="d-none d-md-inline-block">
             <?php echo LANG_PARSER_CURRENT_TIME; ?>
@@ -22,9 +22,14 @@
 </div>
 <?php ob_start(); ?>
 <script>
+    $(function(){
+        $('#field-datetime-<?php echo $field->id; ?> > a').on('click', function(){
+            return parser_current_time_<?php echo $field->id; ?>(this);
+        });
+    });
     function parser_current_time_<?php echo $field->id; ?>(a){
-        var now = new Date();
-        var p = $(a).parent();
+        let now = new Date();
+        let p = $(a).parent();
         p.find('input:eq(0)').val((now.getDate()+'.'+(now.getMonth()+1)+'.'+now.getFullYear()).replace(/(\b\d\b)/g, '0$1'));
         <?php if($field->data['show_time']){ ?>
         p.find('select:eq(0) > option:selected').attr('selected', false);

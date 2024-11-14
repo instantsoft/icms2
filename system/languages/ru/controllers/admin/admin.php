@@ -506,7 +506,7 @@
     define('LANG_CP_USER_GROUP_EDIT',           'Редактировать группу');
     define('LANG_CP_USER_GROUP_PERMS',          'Права группы');
     define('LANG_CP_USER_GROUP_DELETE',         'Удалить группу');
-    define('LANG_CP_USER_GROUP_DELETE_CONFIRM', 'Удалить выбранную группу?\nПользователи не будут удалены');
+    define('LANG_CP_USER_GROUP_DELETE_CONFIRM', 'Удалить выбранную группу? Пользователи не будут удалены');
     define('LANG_CP_USER_GROUP_CREATED',        'Группа &laquo;%s&raquo; создана');
     define('LANG_CP_USER_GROUP_ERR_DELETE',     'Вы не можете удалить последнюю группу');
     define('LANG_CP_USER_GROUP_IS_PUBLIC',      'Разрешить вступление при регистрации');

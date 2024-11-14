@@ -381,12 +381,13 @@ class comments extends cmsFrontend {
             'is_delete_own' => cmsUser::isAllowed('comments', 'delete', 'own')
         ];
 
+        // Все onclick оставлены для старых шаблонов на основе default
         $actions = [
             [
                 'title'   => LANG_COMMENTS_APPROVE,
                 'icon'    => 'check',
                 'href'    => '#approve',
-                'class'   => 'btn-outline-success mr-1 approve hide_approved',
+                'class'   => 'btn-outline-success mr-1 approve hide_approved icms-comment-approve',
                 'onclick' => 'return icms.comments.approve({id})',
                 'handler' => function($comment){
                     return !$comment['is_approved'];
@@ -401,7 +402,7 @@ class comments extends cmsFrontend {
                     return $is_can_add && empty($params['is_moderator']);
                 },
                 'handler_class' => function($comment){
-                    $class = 'btn-link reply mr-1';
+                    $class = 'btn-link reply mr-1 icms-comment-reply';
                     if(!$comment['is_approved']){
                         $class .= ' no_approved';
                     }
@@ -412,7 +413,7 @@ class comments extends cmsFrontend {
                 'hint'    => LANG_EDIT,
                 'icon'    => 'edit',
                 'href'    => '#edit',
-                'class'   => 'btn-outline-secondary edit',
+                'class'   => 'btn-outline-secondary edit icms-comment-edit',
                 'onclick' => 'return icms.comments.edit({id})',
                 'handler' => function($comment) use($perms, $params) {
 
@@ -429,7 +430,7 @@ class comments extends cmsFrontend {
                 'hint'    => LANG_DELETE,
                 'icon'    => 'trash',
                 'href'    => '#delete',
-                'class'   => 'btn-outline-danger',
+                'class'   => 'btn-outline-danger icms-comment-delete',
                 'onclick' => 'return icms.comments.remove({id}, false)',
                 'handler' => function($comment) use($perms) {
 
@@ -446,7 +447,7 @@ class comments extends cmsFrontend {
                 'hint'    => LANG_DECLINE,
                 'icon'    => 'trash',
                 'href'    => '#delete',
-                'class'   => 'btn-outline-danger',
+                'class'   => 'btn-outline-danger icms-comment-decline',
                 'onclick' => 'return icms.comments.remove({id}, true)',
                 'handler' => function($comment) use($perms) {
 

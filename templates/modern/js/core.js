@@ -10,6 +10,8 @@ $(function(){
 
 icms.template = (function ($) {
 
+    let self = this;
+
     this.onDocumentReady = function(){
         this.initWidgetTabbed();
         this.initScrollTop();
@@ -17,11 +19,21 @@ icms.template = (function ($) {
         this.initCookieAlert();
         this.initHeightTextSpoiler();
         this.initInputClickSelect();
+        this.initActionConfirm();
     };
 
     this.initInputClickSelect = function(){
         $('.icms-click-select').on('click', function(){
             $(this).select();
+        });
+    };
+
+    this.initActionConfirm = function(){
+        $('a.icms-action-confirm, .icms-action-confirm > a').on('click', function(){
+            let confirm_text = $(this).data('confirm');
+            if (confirm_text) {
+                if(!confirm(confirm_text)){ return false; }
+            }
         });
     };
 
@@ -46,7 +58,11 @@ icms.template = (function ($) {
             let line_height = parseInt(block.css('line-height').replace('px',''));
             let visible_height = line_height*5.2;
             if (visible_height < block_height) {
-                block.append('<a class="btn-spoiler" href="#" onclick="return icms.template.toggleSpoiler(this);"><span class="btn-spoiler-expand">'+LANG_EXPAND+'</span><span class="btn-spoiler-collapse">'+LANG_COLLAPSE+'</span></a>');
+                let link = $('<a class="btn-spoiler" href="#"><span class="btn-spoiler-expand">'+LANG_EXPAND+'</span><span class="btn-spoiler-collapse">'+LANG_COLLAPSE+'</span></a>');
+                link.on('click', function(){
+                    return self.toggleSpoiler(this);
+                });
+                block.append(link);
             }
         });
     };

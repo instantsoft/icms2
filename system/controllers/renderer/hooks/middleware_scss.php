@@ -247,7 +247,9 @@ class onRendererMiddlewareScss extends cmsAction {
 
         try {
 
-            $compilation = $scss->compileFile($scss_file);
+            $source = file_get_contents($scss_file);
+
+            $compilation = $scss->compileString($source);
 
             $result = $compilation->getCss();
 

@@ -183,7 +183,11 @@ icms.adminCsp = (function () {
                                 }
                             }
 
-                            this.rules[directiveName].domain = option;
+                            if (!this.rules[directiveName].domain) {
+                                this.rules[directiveName].domain = option;
+                            } else {
+                                this.rules[directiveName].domain += ' '+option;
+                            }
                         });
 
                         if (this.rules[directiveName] && !this.rules[directiveName].domain.length) {

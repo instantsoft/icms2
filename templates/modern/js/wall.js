@@ -2,7 +2,49 @@ var icms = icms || {};
 
 icms.wall = (function ($) {
 
-    var self = this;
+    let self = this;
+
+    this.wall_widget = {};
+    this.wall_add_link = {};
+
+    this.onDocumentReady = function() {
+
+        this.wall_widget = $('#wall_widget');
+
+        this.initActionBtns();
+    };
+
+    this.initActionBtns = function(){
+
+        this.wall_add_link = $('#wall_add_link', self.wall_widget);
+
+        this.wall_add_link.on('click', function(){
+            return self.add();
+        });
+
+        $('.button-preview', self.wall_widget).on('click', function(){
+            return self.preview();
+        });
+        $('.button-add', self.wall_widget).on('click', function(){
+            return self.submit();
+        });
+        $('.button-cancel', self.wall_widget).on('click', function(){
+            return self.restoreForm();
+        });
+        $('.show_more', self.wall_widget).on('click', function(){
+            return self.more();
+        });
+
+        self.wall_widget.on('click', '.icms-wall-reply', function(){
+            return self.add($(this).data('id'));
+        }).on('click', '.icms-wall-edit', function(){
+            return self.edit($(this).data('id'));
+        }).on('click', '.icms-wall-delete', function(){
+            return self.remove($(this).data('id'));
+        }).on('click', '.icms-wall-item__btn_replies', function(){
+            return self.replies($(this).data('id'));
+        });
+    };
 
     this.add = function (parent_id) {
 
@@ -12,17 +54,17 @@ icms.wall = (function ($) {
             parent_id = 0;
         }
 
-        $('#wall_widget #wall_add_link').show();
-        $('#wall_widget #entries_list .links *').removeClass('disabled');
+        this.wall_add_link.show();
+        $('#entries_list .links *', this.wall_widget).removeClass('disabled');
 
         if (parent_id == 0){
 
-            $('#wall_widget #wall_add_link').hide();
+            this.wall_add_link.hide();
             form.detach().prependTo('#wall_widget #entries_list');
 
         } else {
 
-            $('#wall_widget #entries_list #entry_'+parent_id+' > .media-body > .links .reply').addClass('disabled');
+            $('#entries_list #entry_'+parent_id+' > .media-body > .links .reply', this.wall_widget).addClass('disabled');
             form.detach().appendTo('#wall_widget #entries_list #entry_'+parent_id+' > .media-body');
         }
 
@@ -84,22 +126,20 @@ icms.wall = (function ($) {
 
     this.more = function(){
 
-        var widget = $('#wall_widget');
-
-        $('.show_more', widget).hide();
-        $('.entry', widget).show();
-        $('.wall_pages', widget).show();
+        $('.show_more', this.wall_widget).hide();
+        $('.entry', this.wall_widget).show();
+        $('.wall_pages', this.wall_widget).show();
 
         return false;
     };
 
     this.replies = function(id, callback){
 
-        var e = $('#wall_widget #entry_'+id);
+        let e = $('#entry_'+id, this.wall_widget);
 
         if (!e.data('replies')) { return false; }
 
-        var url = $('#wall_urls').data('replies-url');
+        let url = $('#wall_urls').data('replies-url');
 
         $('.icms-wall-item__btn_replies', e).addClass('is-busy');
 
@@ -125,11 +165,11 @@ icms.wall = (function ($) {
 
     this.append = function(entry){
 
-        $('#wall_widget #entries_list .no_entries').remove();
+        $('#entries_list .no_entries', this.wall_widget).remove();
 
         if (entry.parent_id == 0){
 
-            $('#wall_widget #entries_list').prepend( entry.html );
+            $('#entries_list', this.wall_widget).prepend( entry.html );
 
             return;
 
@@ -137,7 +177,7 @@ icms.wall = (function ($) {
 
         if (entry.parent_id > 0){
 
-            $('#wall_widget #entry_'+entry.parent_id+' .replies').append( entry.html );
+            $('#entry_'+entry.parent_id+' .replies', this.wall_widget).append( entry.html );
 
             return;
         }
@@ -170,10 +210,10 @@ icms.wall = (function ($) {
 
         let form = $('#wall_add_form');
 
-        $('#wall_widget #wall_add_link').show();
-        $('#wall_widget #entries_list .links *').removeClass('disabled');
+        this.wall_add_link.show();
+        $('#entries_list .links *', this.wall_widget).removeClass('disabled');
 
-        $('#wall_widget #entries_list #entry_'+id+' > .media-body > .links .edit').addClass('is-busy disabled');
+        $('#entries_list #entry_'+id+' > .media-body > .links .edit', this.wall_widget).addClass('is-busy disabled');
 
         form.detach().insertAfter('#wall_widget #entries_list #entry_'+id+' > .media-body > .links').show();
 
@@ -189,7 +229,7 @@ icms.wall = (function ($) {
 
             $.post(url, {id: id}, function(result){
 
-                $('#wall_widget #entries_list #entry_'+id+' > .media-body > .links .edit').removeClass('is-busy');
+                $('#entries_list #entry_'+id+' > .media-body > .links .edit', self.wall_widget).removeClass('is-busy');
 
                 if (result.error){
                     self.error(result.message);
@@ -235,7 +275,7 @@ icms.wall = (function ($) {
     };
 
     this.show = function(id, reply_id, go_reply){
-        var e = $('#entry_'+id);
+        let e = $('#entry_'+id);
         if (e.length){
             $.scrollTo( e, 500, {
                 offset: {
@@ -255,7 +295,7 @@ icms.wall = (function ($) {
             });
         } else {
             if (go_reply){
-                $.scrollTo( $('#wall_widget'), 500, {
+                $.scrollTo( self.wall_widget, 500, {
                     offset: {
                         left:0,
                         top:-10
@@ -280,15 +320,15 @@ icms.wall = (function ($) {
             clear_text = true;
         }
 
-        var form = $('#wall_add_form');
+        let form = $('#wall_add_form');
 
         $('.buttons *', form).removeClass('disabled is-busy');
         $('textarea', form).prop('disabled', false);
 
         if (clear_text) {
             form.hide();
-            $('#wall_widget #wall_add_link').show();
-            $('#wall_widget #entries_list .links *').removeClass('disabled');
+            this.wall_add_link.show();
+            $('#entries_list .links *', this.wall_widget).removeClass('disabled');
             $('.preview_box', form).html('').hide();
         }
     };

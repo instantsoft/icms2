@@ -3,9 +3,9 @@ var Notification = window.Notification || window.mozNotification || window.webki
 
 icms.messages = (function ($) {
 
-    var self = this;
+    let self = this;
 
-    var pm_window = $('#pm_window');
+    let pm_window = $('#pm_window');
 
     this.sound_enabled = false;
     this.is_modal = true;

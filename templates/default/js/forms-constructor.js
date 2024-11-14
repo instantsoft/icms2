@@ -2,6 +2,12 @@ var icms = icms || {};
 
 icms.cforms = (function ($) {
 
+    this.onDocumentReady = function() {
+        $('.icms-forms__wrap').on('click', '.icms-forms__btn-close', function(){
+            return icms.cforms.closeSuccess(this);
+        });
+	};
+
     this.closeSuccess = function(link){
         $(link).closest('.icms-forms__full-msg').remove();
         return false;

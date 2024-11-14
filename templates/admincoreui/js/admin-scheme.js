@@ -5,12 +5,6 @@ icms.scheme = (function ($) {
 
         let cp_widgets_layout = $('#cp-widgets-layout');
 
-        $('.delete-scheme-row', cp_widgets_layout).on('click', function(e){
-            return confirm($(this).data('confirm'));
-        });
-        $('.delete-scheme-col', cp_widgets_layout).on('click', function(e){
-            return confirm($(this).data('confirm'));
-        });
         $('#rows_titles_pos input', cp_widgets_layout).on('click', function(e){
             let pos = $(this).val();
             $.cookie('icms[rows_titles_pos]', pos, {expires: 365, path: '/'});

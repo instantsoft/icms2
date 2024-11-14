@@ -46,7 +46,7 @@
         </div>
         <div class="links mt-2">
             <?php foreach($entry['actions'] as $action){ ?>
-                <a href="<?php echo $action['href']; ?>" class="btn btn-sm border-0<?php if (!empty($action['class'])){ ?> <?php echo $action['class']; ?><?php } ?>"<?php if (!empty($action['onclick'])) { ?> onclick="<?php echo $action['onclick']; ?>"<?php } ?><?php if (!empty($action['hint'])) { ?> title="<?php html($action['hint']); ?>"<?php } ?>>
+                <a href="<?php echo $action['href']; ?>" class="btn btn-sm border-0<?php if (!empty($action['class'])){ ?> <?php echo $action['class']; ?><?php } ?>"<?php if (!empty($action['hint'])) { ?> title="<?php html($action['hint']); ?>"<?php } ?> data-id="<?php echo $entry['id']; ?>">
                     <?php if (!empty($action['icon'])){ ?>
                         <?php html_svg_icon('solid', $action['icon']); ?>
                     <?php } ?>
@@ -57,7 +57,7 @@
             <?php } ?>
         </div>
         <?php if ($entry['replies_count']){ ?>
-            <a href="#wall-replies" class="icms-wall-item__btn_replies btn btn-sm font-weight-bold" onclick="return icms.wall.replies(<?php echo $entry['id']; ?>)">
+            <a href="#wall-replies" class="icms-wall-item__btn_replies btn btn-sm font-weight-bold" data-id="<?php echo $entry['id']; ?>">
                 <span><?php html_svg_icon('solid', 'level-down-alt'); ?></span>
                 <span><?php echo html_spellcount($entry['replies_count'], LANG_REPLY_SPELLCOUNT); ?></span>
             </a>
@@ -69,7 +69,7 @@
 </div>
 
 <?php if ($max_entries && ($count == $max_entries) && (count($entries) > $count) && ($page == 1)){ ?>
-    <a class="show_more btn btn-primary btn-block" href="#wall-more" onclick="return icms.wall.more()">
+    <a class="show_more btn btn-primary btn-block" href="#wall-more">
         <?php echo LANG_SHOW_ALL; ?>
     </a>
 <?php } ?>

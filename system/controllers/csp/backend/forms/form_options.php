@@ -26,6 +26,9 @@ class formCspOptions extends cmsForm {
                         'title' => LANG_CSP_CSP_STR,
                         'hint' => LANG_CSP_CSP_STR_HINT,
                         'default' => '',
+                        'options' => [
+                            'max_length' => 1000
+                        ],
                         'attributes' => [
                             'readonly' => true,
                             'v-model' => 'cspString'
