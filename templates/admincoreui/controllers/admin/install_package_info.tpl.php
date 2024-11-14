@@ -40,7 +40,7 @@
     <form action="<?php echo $this->href_to('install', 'ftp'); ?>" method="post">
         <?php if (isset($manifest['info']['image'])) { ?>
             <div class="image float-right ml-4">
-                <img style="max-width: 200px;" src="<?php echo $manifest['info']['image']; ?>" />
+                <img class="rounded" style="max-width: 200px;" src="<?php echo $manifest['info']['image']; ?>?<?php echo mt_rand(); ?>" />
             </div>
         <?php } ?>
         <div class="info">
@@ -48,16 +48,16 @@
             <fieldset>
                 <legend><?php echo LANG_CP_PACKAGE_AUTHOR; ?></legend>
                 <?php if (isset($manifest['author']['name'])) { ?>
-                <p class="author m-0">
+                <p class="author m-0 d-flex align-items-center">
                     <span><?php html($manifest['author']['name']); ?></span>
                     <?php if (isset($manifest['author']['url'])) { ?>
-                        <a rel="noopener noreferrer" class="url btn btn-primary ml-2" href="<?php echo $manifest['author']['url']; ?>" target="_blank">
-                            <i class="icon-link icons"></i>
+                        <a rel="noopener noreferrer" class="url btn btn-primary btn-sm ml-2" href="<?php echo $manifest['author']['url']; ?>" target="_blank">
+                            <?php html_svg_icon('solid', 'link'); ?>
                         </a>
                     <?php } ?>
                     <?php if (isset($manifest['author']['email'])) { ?>
-                        <a class="mail btn btn-success ml-2" href="mailto:<?php echo $manifest['author']['email']; ?>">
-                            <i class="icon-envelope icons"></i>
+                        <a class="mail btn btn-success btn-sm ml-2" href="mailto:<?php echo $manifest['author']['email']; ?>">
+                            <?php html_svg_icon('solid', 'envelope-open-text'); ?>
                         </a>
                     <?php } ?>
                 </p>
@@ -166,7 +166,7 @@
                 </a>
             <?php } ?>
             <a href="<?php echo $this->href_to('addons_list'); ?>" class="btn btn-secondary">
-                <?php echo LANG_INSTALL; ?>
+                <?php echo LANG_CANCEL; ?>
             </a>
         </div>
     </form>

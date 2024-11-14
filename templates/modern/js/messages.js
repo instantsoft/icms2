@@ -82,6 +82,8 @@ icms.messages = (function ($) {
             $('.is_can_select', pm_window).removeClass('selected');
 
             self.msg_ids = [];
+        }).on('click', '#delete_msgs', function (){
+            return self.deleteMsgs();
         });
 
         $('.left-panel', pm_window).on('mouseup', '.is_can_select', function (){
@@ -116,6 +118,10 @@ icms.messages = (function ($) {
 
         $('.left-panel', pm_window).on('click', '.icms-messages__restore', function (){
             return self.restoreMsg(this);
+        });
+
+        $('.left-panel', pm_window).on('click', '#pm-forgive-btn', function (){
+            return self.forgiveContact($(this).data('id'));
         });
     };
 
@@ -234,7 +240,7 @@ icms.messages = (function ($) {
 
             self.scrollChat();
 
-            $('.composer form', pm_window).on('keydown', function(event, external_event){
+            $('.composer form', pm_window).off('keydown').on('keydown', function(event, external_event){
                 event = external_event || event;
                 if (event.keyCode === 10 || event.keyCode === 13 && event.ctrlKey) {
                     self.send();
@@ -244,6 +250,19 @@ icms.messages = (function ($) {
             $('#contact_toggle', pm_window).off('click').on('click', function(event){
                 $('.left-panel').addClass('d-none');
                 $('.right-panel').removeClass('d-none');
+            });
+
+            $('#pm-send-btn', pm_window).off('click').on('click', function(event){
+                self.send();
+            });
+            $('#pm-ignore-btn', pm_window).off('click').on('click', function(event){
+                return self.ignoreContact(this);
+            });
+            $('#pm-del_contact-btn', pm_window).off('click').on('click', function(event){
+                return self.deleteContact(this);
+            });
+            $('#pm-older-btn', pm_window).off('click').on('click', function(event){
+                return self.showOlder(this);
             });
 
             self.toggleContactOnline(contact);
@@ -377,12 +396,14 @@ icms.messages = (function ($) {
 
     };
 
-    this.deleteContact = function(id){
+    this.deleteContact = function(link){
+
+        let id = $(link).data('id');
 
         if(confirm(LANG_PM_DELETE_CONTACT_CONFIRM)){
 
-            var url = $(pm_window).data('delete-url');
-            var form_data = {contact_id: id};
+            let url = $(pm_window).data('delete-url');
+            let form_data = {contact_id: id};
 
             $.post(url, form_data, function(result) {
 
@@ -391,7 +412,7 @@ icms.messages = (function ($) {
                 $('#contact-' + id, pm_window).remove();
 
                 if (result.count > 0){
-                    var next_id = $('.contact', pm_window).eq(0).attr('rel');
+                    let next_id = $('.contact', pm_window).eq(0).attr('rel');
                     self.selectContact(next_id);
                 } else {
                     if(self.is_modal){
@@ -400,19 +421,19 @@ icms.messages = (function ($) {
                 }
 
             }, 'json');
-
         }
 
         return false;
-
     };
 
-    this.ignoreContact = function(id){
+    this.ignoreContact = function(link){
+
+        let id = $(link).data('id');
 
         if(confirm(LANG_PM_IGNORE_CONTACT_CONFIRM)){
 
-            var url = $(pm_window).data('ignore-url');
-            var form_data = {contact_id: id};
+            let url = $(pm_window).data('ignore-url');
+            let form_data = {contact_id: id};
 
             $.post(url, form_data, function(result) {
 
@@ -421,7 +442,7 @@ icms.messages = (function ($) {
                 $('#contact-' + id, pm_window).remove();
 
                 if (result.count > 0){
-                    var next_id = $('.contact', pm_window).eq(0).attr('rel');
+                    let next_id = $('.contact', pm_window).eq(0).attr('rel');
                     self.selectContact(next_id);
                 } else {
                     if(self.is_modal){
@@ -430,11 +451,9 @@ icms.messages = (function ($) {
                 }
 
             }, 'json');
-
         }
 
         return false;
-
     };
 
     this.forgiveContact = function(id){
@@ -454,16 +473,16 @@ icms.messages = (function ($) {
 
     };
 
-    this.showOlder = function(contact_id, link_obj){
+    this.showOlder = function(link_obj){
 
-        var pm_chat = $('#pm_chat', pm_window);
+        let pm_chat = $('#pm_chat', pm_window);
 
-        var url = pm_window.data('show-older-url');
+        let url = pm_window.data('show-older-url');
 
-        var message_id = $(link_obj).attr('rel');
+        let message_id = $(link_obj).attr('rel');
 
-        var form_data = {
-            contact_id: contact_id,
+        let form_data = {
+            contact_id: $(link_obj).data('id'),
             message_id: message_id
         };
 
@@ -479,7 +498,7 @@ icms.messages = (function ($) {
 
                 $('.show-older', pm_chat).after( result.html );
 
-                var msg_top = $('#message-'+message_id, pm_chat).position().top;
+                let msg_top = $('#message-'+message_id, pm_chat).position().top;
 
                 pm_chat.scrollTop(pm_chat.scrollTop() + msg_top);
 
@@ -492,7 +511,6 @@ icms.messages = (function ($) {
         }, "json");
 
         return false;
-
     };
 
     this.noticeAction = function(id, name){

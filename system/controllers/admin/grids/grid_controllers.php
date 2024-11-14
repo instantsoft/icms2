@@ -25,6 +25,7 @@ function grid_controllers($controller) {
         'slug' => [
             'title'    => LANG_ADMIN_CONTROLLER_SLUG,
             'class'    => 'd-none d-lg-table-cell',
+            'sortable' => false,
             'editable' => [
                 'attributes' => ['placeholder' => '{name}'],
                 'rules' => [

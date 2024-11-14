@@ -34,11 +34,11 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                         <?php if (!$contact['is_admin'] && !$contact['is_ignored']){ ?>
-                            <a class="dropdown-item" href="#" onclick="return icms.messages.ignoreContact(<?php echo $contact['id']; ?>);">
+                            <a class="dropdown-item" href="#" data-id="<?php echo $contact['id']; ?>" id="pm-ignore-btn">
                                 <?php echo LANG_PM_ACTION_IGNORE; ?>
                             </a>
                         <?php } ?>
-                        <a class="dropdown-item" href="#" onclick="return icms.messages.deleteContact(<?php echo $contact['id']; ?>);">
+                        <a class="dropdown-item" href="#" id="pm-del_contact-btn" data-id="<?php echo $contact['id']; ?>">
                             <?php echo LANG_PM_DELETE_CONTACT; ?>
                         </a>
                     </div>
@@ -49,14 +49,14 @@
             </div>
         </div>
         <div class="icms-messages-toolbar__action d-none w-100 align-items-center px-2 px-lg-0">
-            <?php echo html_button(LANG_DELETE, 'delete_msgs', 'icms.messages.deleteMsgs()', ['class'=>'btn-sm btn-primary', 'id' => 'delete_msgs']); ?>
-            <?php echo html_button(LANG_CANCEL, 'delete_msgs', '', ['class'=>'btn-sm btn-secondary ml-auto', 'id' => 'cancel_msgs']); ?>
+            <?php echo html_button(LANG_DELETE, '', '', ['class'=>'btn-sm btn-primary', 'id' => 'delete_msgs']); ?>
+            <?php echo html_button(LANG_CANCEL, '', '', ['class'=>'btn-sm btn-secondary ml-auto', 'id' => 'cancel_msgs']); ?>
         </div>
     </div>
 
     <div id="pm_chat" class="icms-messages-chat bg-gray border-bottom text-center d-flex flex-column">
         <?php if($has_older){ ?>
-            <a class="show-older btn btn-secondary mt-2 mb-0" href="#show-older" onclick="return icms.messages.showOlder(<?php echo $contact['id'] ?>, this);" rel="<?php echo $messages[0]['id']; ?>">
+            <a class="show-older btn btn-secondary mt-2 mb-0" href="#show-older" rel="<?php echo $messages[0]['id']; ?>" data-id="<?php echo $contact['id']; ?>" id="pm-older-btn">
                 <span><?php echo LANG_PM_SHOW_OLDER_MESSAGES; ?></span>
             </a>
         <?php } ?>
@@ -73,7 +73,7 @@
 
             <div class="ignored_info alert alert-warning m-0 rounded-0 border-top-0 border-left-0 m-n2">
                 <?php echo LANG_PM_CONTACT_IS_IGNORED; ?>
-                <?php echo html_button(LANG_PM_ACTION_FORGIVE, 'forgive', 'icms.messages.forgiveContact('.$contact['id'].')', ['class'=>'btn-sm btn-secondary']); ?>
+                <?php echo html_button(LANG_PM_ACTION_FORGIVE, '', '', ['class'=>'btn-sm btn-secondary', 'id' => 'pm-forgive-btn', 'data-id' => $contact['id']]); ?>
             </div>
 
         <?php } else if ($is_me_ignored){ ?>
@@ -99,7 +99,7 @@
                     </span>
                     <span>
                         <span class="ctrenter_hint text-muted mr-2">ctrl+enter</span>
-                        <button class="button btn btn-primary" value="1" name="send" onclick="icms.messages.send()" type="button">
+                        <button class="button btn btn-primary" value="1" name="send" type="button" id="pm-send-btn">
                             <span>
                                 <?php html_svg_icon('solid', 'paper-plane'); ?>
                                 <?php echo LANG_SEND; ?>

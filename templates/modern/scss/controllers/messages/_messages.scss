@@ -8,8 +8,25 @@
         line-height: 1.4;
     }
     .icms-messages-chat {
-        height: calc(100% - 206px);
         overflow-y: auto;
+        flex: 1 1 auto;
+        scrollbar-width:thin;
+        scrollbar-color: $gray-700 rgba(0,0,0,0);
+
+        &::-webkit-scrollbar {
+            display: block;
+            width: 10px;
+            height: 10px
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: $gray-700;
+            border-radius: 4px
+        }
+
+        &::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0)
+        }
     }
     .markItUp .markItUpEditor {
         height: auto;
@@ -71,7 +88,7 @@
 @include media-breakpoint-down(sm) {
     .icms-messages {
         &.modal-messages {
-            height: 100vh;
+            height: 100%;
         }
     }
     .modal-dialog-icms-messages {
