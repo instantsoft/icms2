@@ -280,7 +280,7 @@ class onRendererMiddlewareScss extends cmsAction {
             $path .= '.scss';
         }
 
-        $tpl_path = str_replace($this->cms_config->root_path . cmsTemplate::TEMPLATE_BASE_PATH, '', $working_dir.DIRECTORY_SEPARATOR.$path);
+        $tpl_path = str_replace($this->cms_config->root_path . str_replace('/', DIRECTORY_SEPARATOR, cmsTemplate::TEMPLATE_BASE_PATH), '', $working_dir.DIRECTORY_SEPARATOR.$path);
 
         return $this->getAbsolutePath(ltrim(strstr($tpl_path, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR));
     }

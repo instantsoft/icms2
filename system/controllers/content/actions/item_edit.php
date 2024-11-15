@@ -338,7 +338,7 @@ class actionContentItemEdit extends cmsAction {
             'button_draft_text' => $button_draft_text,
             'hide_draft_btn'    => !empty($ctype['options']['disable_drafts']) && (!$is_moderator && $is_owner),
             'is_load_props'     => false,
-            'errors'            => isset($errors) ? $errors : false
+            'errors'            => $errors ?? false
         ]);
     }
 

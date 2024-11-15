@@ -74,7 +74,7 @@ class actionAdminMenuEdit extends cmsAction {
             'do'     => 'edit',
             'item'   => $menu,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

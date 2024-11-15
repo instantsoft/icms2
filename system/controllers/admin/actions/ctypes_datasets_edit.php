@@ -93,7 +93,7 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
             'ctype'   => $ctype,
             'dataset' => $dataset,
             'form'    => $form,
-            'errors'  => isset($errors) ? $errors : false
+            'errors'  => $errors ?? false
         ]);
     }
 

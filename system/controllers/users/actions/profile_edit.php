@@ -182,7 +182,7 @@ class actionUsersProfileEdit extends cmsAction {
             'profile'              => $profile,
             'form'                 => $form,
             'allow_delete_profile' => $allow_delete_profile,
-            'errors'               => isset($errors) ? $errors : false
+            'errors'               => $errors ?? false
         ]);
     }
 

@@ -73,7 +73,7 @@ class actionAuthReset extends cmsAction {
         return $this->cms_template->render('reset', [
             'profile' => $profile,
             'form'    => $form,
-            'errors'  => isset($errors) ? $errors : false
+            'errors'  => $errors ?? false
         ]);
     }
 

@@ -80,7 +80,7 @@ class actionGeoCity extends cmsAction {
             cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
         }
 
-        $this->cms_template->setPageH1([$country['name'], $region['name'], (isset($city['name']) ? $city['name'] : LANG_GEO_ADD_CITY)]);
+        $this->cms_template->setPageH1([$country['name'], $region['name'], ($city['name'] ?? LANG_GEO_ADD_CITY)]);
 
         return $this->cms_template->render('backend/city', [
             'do'      => $city_id ? 'edit' : 'add',
@@ -88,7 +88,7 @@ class actionGeoCity extends cmsAction {
             'region'  => $region,
             'country' => $country,
             'form'    => $form,
-            'errors'  => isset($errors) ? $errors : false
+            'errors'  => $errors ?? false
         ]);
     }
 

@@ -48,7 +48,7 @@ class actionAdminMenuItemEdit extends cmsAction {
             'menu'   => $menu,
             'item'   => $item,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

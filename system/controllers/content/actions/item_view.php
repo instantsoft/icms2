@@ -416,7 +416,7 @@ class actionContentItemView extends cmsAction {
 
                     $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
 
-                    if(!empty($base_url)){
+                    if(!empty($base_url) && empty($ctype['options']['item_off_breadcrumb_ctype'])){
                         $this->cms_template->addBreadcrumb($list_header, href_to($ctype['name']));
                     }
 

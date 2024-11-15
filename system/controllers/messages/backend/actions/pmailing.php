@@ -122,7 +122,7 @@ class actionMessagesPmailing extends cmsAction {
         return $this->cms_template->render('backend/pmailing', [
             'mailing' => $mailing,
             'form'    => $form,
-            'errors'  => isset($errors) ? $errors : false
+            'errors'  => $errors ?? false
         ]);
     }
 }

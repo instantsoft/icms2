@@ -25,7 +25,7 @@ class actionAdminWidgetsPageAdd extends cmsAction {
                     cmsUser::setCookiePublic('widgets_tree_path', "/custom/custom.{$page_id}");
                 }
 
-                $this->redirectToAction('widgets');
+                return $this->redirectToAction('widgets');
             }
 
             if ($errors) {
@@ -37,7 +37,7 @@ class actionAdminWidgetsPageAdd extends cmsAction {
             'do'     => 'add',
             'page'   => $page,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

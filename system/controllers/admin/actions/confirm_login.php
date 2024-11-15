@@ -10,7 +10,7 @@ class actionAdminConfirmLogin extends cmsAction {
             'pagetitle' => $pagetitle,
             'title'     => $title,
             'hint'      => $hint,
-            'errors'    => isset($errors) ? $errors : false
+            'errors'    => $errors ?? false
         ]);
     }
 

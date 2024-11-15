@@ -87,7 +87,7 @@ class actionAdminCtypesPropsEdit extends cmsAction {
             'ctype'  => $ctype,
             'prop'   => $prop,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

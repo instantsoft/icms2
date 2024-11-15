@@ -8,6 +8,10 @@ function install_package(){
     $admin = cmsCore::getController('admin');
     $content_model = cmsCore::getModel('content');
 
+    if(!$core->db->isFieldExists('tags', 'description', false)){
+        $core->db->query("ALTER TABLE `{#}tags` ADD `description` TEXT NULL DEFAULT NULL AFTER `tag`;");
+    }
+
     if(!$core->db->isFieldExists('widgets_bind', 'url_mask_not', false)){
         $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `url_mask_not` TEXT NULL DEFAULT NULL COMMENT 'Отрицательные маски виджета' AFTER `groups_hide`;");
     }

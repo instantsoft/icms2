@@ -46,7 +46,7 @@ class actionRssEdit extends cmsAction {
         return $this->cms_template->render('backend/edit', [
             'feed'   => $feed,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

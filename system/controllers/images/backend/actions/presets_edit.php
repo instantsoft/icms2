@@ -2,40 +2,40 @@
 
 class actionImagesPresetsEdit extends cmsAction {
 
-    public function run($id){
+    public function run($id) {
 
-        if (!$id) { cmsCore::error404(); }
+        if (!$id) {
+            return cmsCore::error404();
+        }
 
-        $form = $this->getForm('preset', array('edit'));
+        $form = $this->getForm('preset', ['edit']);
 
         $preset = $original_preset = $this->model->getPreset($id);
 
-        if ($preset['is_internal']){
+        if ($preset['is_internal']) {
             $form->removeFieldset('basic');
         }
 
-        if ($this->request->has('submit')){
+        if ($this->request->has('submit')) {
 
             $preset = $form->parse($this->request, true);
-            $errors = $form->validate($this,  $preset);
+            $errors = $form->validate($this, $preset);
 
-            if (!$errors){
+            if (!$errors) {
 
-                if((!$preset['width'] && !$preset['height']) ||
-                        ($preset['is_square'] && (!$preset['width'] || !$preset['height']))){
+                if ((!$preset['width'] && !$preset['height']) ||
+                        ($preset['is_square'] && (!$preset['width'] || !$preset['height']))) {
 
-                    if(!$preset['width']){
+                    if (!$preset['width']) {
                         $errors['width'] = ERR_VALIDATE_REQUIRED;
                     }
-                    if(!$preset['height']){
+                    if (!$preset['height']) {
                         $errors['height'] = ERR_VALIDATE_REQUIRED;
                     }
-
                 }
-
             }
 
-            if (!$errors){
+            if (!$errors) {
 
                 $this->model->updatePreset($id, $preset);
 
@@ -45,26 +45,21 @@ class actionImagesPresetsEdit extends cmsAction {
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                $this->redirectToAction('presets');
-
+                return $this->redirectToAction('presets');
             }
 
-            if ($errors){
+            if ($errors) {
 
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
-
         }
 
-        return $this->cms_template->render('backend/preset', array(
+        return $this->cms_template->render('backend/preset', [
             'do'     => 'edit',
             'preset' => $preset,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
-        ));
-
+            'errors' => $errors ?? false
+        ]);
     }
 
 }
-

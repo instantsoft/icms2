@@ -95,7 +95,7 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
             'ctype'   => $ctype,
             'dataset' => isset($dataset) ? $dataset : [],
             'form'    => $form,
-            'errors'  => isset($errors) ? $errors : false
+            'errors'  => $errors ?? false
         ]);
     }
 

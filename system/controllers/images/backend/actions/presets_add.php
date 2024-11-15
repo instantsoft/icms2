@@ -2,35 +2,33 @@
 
 class actionImagesPresetsAdd extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        $form = $this->getForm('preset', array('add'));
+        $form = $this->getForm('preset', ['add']);
 
-        $preset = array();
+        $preset = [];
 
-        if ($this->request->has('submit')){
+        if ($this->request->has('submit')) {
 
             $preset = $form->parse($this->request, true);
 
-            $errors = $form->validate($this,  $preset);
+            $errors = $form->validate($this, $preset);
 
-            if (!$errors){
+            if (!$errors) {
 
-                if((!$preset['width'] && !$preset['height']) ||
-                        ($preset['is_square'] && (!$preset['width'] || !$preset['height']))){
+                if ((!$preset['width'] && !$preset['height']) ||
+                        ($preset['is_square'] && (!$preset['width'] || !$preset['height']))) {
 
-                    if(!$preset['width']){
+                    if (!$preset['width']) {
                         $errors['width'] = ERR_VALIDATE_REQUIRED;
                     }
-                    if(!$preset['height']){
+                    if (!$preset['height']) {
                         $errors['height'] = ERR_VALIDATE_REQUIRED;
                     }
-
                 }
-
             }
 
-            if (!$errors){
+            if (!$errors) {
 
                 $id = $this->model->addPreset($preset);
 
@@ -41,25 +39,21 @@ class actionImagesPresetsAdd extends cmsAction {
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                $this->redirectToAction('presets');
-
+                return $this->redirectToAction('presets');
             }
 
-            if ($errors){
+            if ($errors) {
 
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
-
         }
 
-        return $this->cms_template->render('backend/preset', array(
+        return $this->cms_template->render('backend/preset', [
             'do'     => 'add',
             'preset' => $preset,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
-        ));
-
+            'errors' => $errors ?? false
+        ]);
     }
 
 }

@@ -36,7 +36,7 @@ class actionContentFolderEdit extends cmsAction {
                 // Обновляем папку и редиректим на ее просмотр
                 $this->model->updateContentFolder($id, $updated_folder);
 
-                $this->redirect(href_to_profile($folder['user'], ['content', $ctype['name'], $folder['id']]));
+                return $this->redirect(href_to_profile($folder['user'], ['content', $ctype['name'], $folder['id']]));
             }
 
             if ($errors) {
@@ -48,7 +48,7 @@ class actionContentFolderEdit extends cmsAction {
             'ctype'  => $ctype,
             'folder' => $folder,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

@@ -59,7 +59,7 @@ class actionGroupsSetRoles extends cmsAction {
             'group'   => $group,
             'data'    => array('role_ids' => $roles),
             'form'    => $form,
-            'errors'  => (isset($errors) ? $errors : false),
+            'errors'  => $errors ?? false,
             'user_id' => $user_id
         ));
 

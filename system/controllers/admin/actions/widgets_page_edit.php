@@ -1,17 +1,22 @@
 <?php
-
+/**
+ * @property \modelBackendWidgets $model_backend_widgets
+ */
 class actionAdminWidgetsPageEdit extends cmsAction {
 
     public function run($id = false) {
 
         if (!is_numeric($id)) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         cmsCore::loadAllControllersLanguages();
 
         $page = $this->model_backend_widgets->getPage($id);
-        if (!$page) { cmsCore::error404(); }
+
+        if (!$page) {
+            return cmsCore::error404();
+        }
 
         $form = $this->getForm('widgets_page');
 
@@ -34,7 +39,7 @@ class actionAdminWidgetsPageEdit extends cmsAction {
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                $this->redirectToAction('widgets');
+                return $this->redirectToAction('widgets');
             }
 
             if ($errors) {
@@ -46,7 +51,7 @@ class actionAdminWidgetsPageEdit extends cmsAction {
             'do'     => 'edit',
             'page'   => $page,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

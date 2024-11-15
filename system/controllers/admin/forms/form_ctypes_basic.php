@@ -323,6 +323,10 @@ class formAdminCtypesBasic extends cmsForm {
                     new fieldCheckbox('options:item_off_breadcrumb', [
                         'title' => LANG_CP_LIST_OFF_BREADCRUMB
                     ]),
+                    new fieldCheckbox('options:item_off_breadcrumb_ctype', [
+                        'title' => LANG_CP_LIST_OFF_BREADCRUMB_CTYPE,
+                        'visible_depend' => ['options:item_off_breadcrumb' => ['show' => ['0']]]
+                    ]),
                     new fieldCheckbox('options:item_on', [
                         'title' => LANG_CP_ITEMVIEW_ON,
                         'default' => true

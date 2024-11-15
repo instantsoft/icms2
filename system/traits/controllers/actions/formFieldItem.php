@@ -240,7 +240,7 @@ trait formFieldItem {
                     cmsUser::addSessionMessage(sprintf(LANG_CP_FIELD_CREATED, $_field['title']), 'success');
                 }
 
-                $this->redirect(string_replace_keys_values($this->success_url, $ctype));
+                return $this->redirect(string_replace_keys_values($this->success_url, $ctype));
             }
 
             if ($errors) {
@@ -256,7 +256,7 @@ trait formFieldItem {
             'ctype'  => $ctype,
             'field'  => $field,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

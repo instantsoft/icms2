@@ -77,7 +77,7 @@ class actionGroupsGroupEdit extends cmsAction {
             'page_title' => $page_title,
             'group'      => $group,
             'form'       => $form,
-            'errors'     => isset($errors) ? $errors : false
+            'errors'     => $errors ?? false
         ));
 
     }

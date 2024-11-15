@@ -204,6 +204,7 @@
     define('LANG_PARSER_PARENT_STYLE',       'Стиль вывода в записи');
     define('LANG_PARSER_PARENT_STYLE1',      'Список типа контента');
     define('LANG_PARSER_PARENT_STYLE2',      'Простой список ссылок');
+    define('LANG_PARSER_PARENT_STYLE3',      'Выводить только глубиномер родителя');
     define('LANG_PARSER_IMAGE',              'Изображение');
     define('LANG_PARSER_IMAGE_SPELL',        'изображение|изображения|изображений');
     define('LANG_PARSER_IMAGES',             'Набор изображений');

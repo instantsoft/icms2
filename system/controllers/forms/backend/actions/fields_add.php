@@ -64,7 +64,7 @@ class actionFormsFieldsAdd extends cmsAction {
             'form_data' => $form_data,
             'field'     => $field,
             'form'      => $form,
-            'errors'    => isset($errors) ? $errors : false
+            'errors'    => $errors ?? false
         ]);
     }
 

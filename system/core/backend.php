@@ -250,7 +250,7 @@ class cmsBackend extends cmsController {
             'toolbar' => $this->getOptionsToolbar(),
             'options' => $options,
             'form'    => $form,
-            'errors'  => isset($errors) ? $errors : false
+            'errors'  => $errors ?? false
         ];
 
         // если задан шаблон опций в контроллере

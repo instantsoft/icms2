@@ -80,7 +80,7 @@ class actionAdminCtypesEdit extends cmsAction {
             'do'     => 'edit',
             'ctype'  => $ctype,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

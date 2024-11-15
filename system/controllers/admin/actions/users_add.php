@@ -6,14 +6,14 @@ class actionAdminUsersAdd extends cmsAction {
 
         $users_model = cmsCore::getModel('users');
 
-        $form = $this->getForm('user', array('add'));
+        $form = $this->getForm('user', ['add']);
 
         $is_submitted = $this->request->has('submit');
 
         $user = $form->parse($this->request, $is_submitted);
 
         if (!$is_submitted) {
-            $user['groups'] = array($group_id);
+            $user['groups'] = [$group_id];
         }
 
         if ($is_submitted) {
@@ -36,7 +36,8 @@ class actionAdminUsersAdd extends cmsAction {
 
                     cmsUser::addSessionMessage(sprintf(LANG_CP_USER_CREATED, $user['nickname']), 'success');
 
-                    $this->redirectToAction('users');
+                    return $this->redirectToAction('users');
+
                 } else {
                     $errors = $result['errors'];
                 }
@@ -47,13 +48,12 @@ class actionAdminUsersAdd extends cmsAction {
             }
         }
 
-        return $this->cms_template->render('user', array(
+        return $this->cms_template->render('user', [
             'do'     => 'add',
             'user'   => $user,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
-        ));
-
+            'errors' => $errors ?? false
+        ]);
     }
 
 }

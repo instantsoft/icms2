@@ -150,7 +150,7 @@ class actionAdminSettings extends cmsAction {
 
                 if (!$result){
 
-                    $errors = array();
+                    $errors = [];
 
                     cmsUser::addSessionMessage(LANG_CP_SETTINGS_NOT_WRITABLE, 'error');
 
@@ -160,14 +160,12 @@ class actionAdminSettings extends cmsAction {
 
                     cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                    $this->redirectToAction('settings');
-
+                    return $this->redirectToAction('settings');
                 }
 
             } else {
 
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
 
         }
@@ -190,14 +188,13 @@ class actionAdminSettings extends cmsAction {
             }
         }
 
-        return $this->cms_template->render('settings', array(
+        return $this->cms_template->render('settings', [
             'templates_has_options' => $templates_has_options,
             'do'     => 'edit',
             'values' => $values,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
-        ));
-
+            'errors' => $errors ?? false
+        ]);
     }
 
 }

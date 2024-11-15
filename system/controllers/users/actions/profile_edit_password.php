@@ -187,7 +187,7 @@ class actionUsersProfileEditPassword extends cmsAction {
             'profile' => $profile,
             'data'    => $data,
             'form'    => $form,
-            'errors'  => isset($errors) ? $errors : false
+            'errors'  => $errors ?? false
         ]);
     }
 

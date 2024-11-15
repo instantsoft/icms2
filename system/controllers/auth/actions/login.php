@@ -166,7 +166,7 @@ class actionAuthLogin extends cmsAction {
         return $this->cms_template->render([
             'is_reg_enabled'     => $this->options['is_reg_enabled'],
             'ajax_page_redirect' => $ajax_page_redirect,
-            'errors'             => (isset($errors) ? $errors : false),
+            'errors'             => $errors ?? false,
             'data'               => $data,
             'form'               => $form,
             'back_url'           => $back_url,

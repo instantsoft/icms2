@@ -7,7 +7,7 @@ class cmsTemplate {
     /**
      * Путь корневой папки шаблонов (может быть пустым)
      */
-    const TEMPLATE_BASE_PATH = 'templates'.DIRECTORY_SEPARATOR;
+    const TEMPLATE_BASE_PATH = 'templates/';
 
     /**
      * Базовый шаблон, в котором есть все файлы

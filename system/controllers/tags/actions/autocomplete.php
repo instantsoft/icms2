@@ -18,6 +18,8 @@ class actionTagsAutocomplete extends cmsAction {
         }
 
         $tags = $this->model->filterLike('tag', "%{$term}%")->
+                selectOnly('tag')->
+                select('id')->
                 select("(LEFT(`tag`, " . mb_strlen($term) . ") = '".$this->model->db->escape($term)."')", 'tag_order')->
                 orderByList([
                     ['by' => 'tag_order', 'to' => 'desc', 'strict' => true],

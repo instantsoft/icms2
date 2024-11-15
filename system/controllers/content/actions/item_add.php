@@ -335,7 +335,7 @@ class actionContentItemAdd extends cmsAction {
             'button_draft_text' => LANG_CONTENT_SAVE_DRAFT,
             'hide_draft_btn'   => !empty($ctype['options']['disable_drafts']),
             'is_load_props'    => !isset($errors),
-            'errors'           => isset($errors) ? $errors : false
+            'errors'           => $errors ?? false
         ]);
     }
 

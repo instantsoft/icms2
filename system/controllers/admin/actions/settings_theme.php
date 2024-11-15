@@ -87,7 +87,7 @@ class actionAdminSettingsTheme extends cmsAction {
             'template_name' => $template_name,
             'options'       => $options,
             'form'          => $form,
-            'errors'        => isset($errors) ? $errors : false
+            'errors'        => $errors ?? false
         ];
 
         if(is_readable($template_file)){

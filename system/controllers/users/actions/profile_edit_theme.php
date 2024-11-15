@@ -47,7 +47,7 @@ class actionUsersProfileEditTheme extends cmsAction {
             'id'      => $profile['id'],
             'profile' => $profile,
             'form'    => $form,
-            'errors'  => isset($errors) ? $errors : false
+            'errors'  => $errors ?? false
         ));
 
     }

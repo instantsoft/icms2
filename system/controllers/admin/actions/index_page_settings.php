@@ -54,7 +54,7 @@ class actionAdminIndexPageSettings extends cmsAction {
 
         return $this->cms_template->render('index_page_settings', [
             'values' => $values,
-            'errors' => isset($errors) ? $errors : false,
+            'errors' => $errors ?? false,
             'form'   => $form
         ]);
     }

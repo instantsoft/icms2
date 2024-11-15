@@ -173,7 +173,7 @@ trait formItem {
                     $this->redirect($this->success_url);
                 }
 
-                $this->redirect($this->getRequestBackUrl($this->getBackURL()));
+                return $this->redirect($this->getRequestBackUrl($this->getBackURL()));
             }
 
             if ($errors){
@@ -197,7 +197,7 @@ trait formItem {
             'action'       => $this->cms_template->href_to($this->current_action, [$id]),
             'data'         => $data,
             'form'         => $form,
-            'errors'       => isset($errors) ? $errors : false
+            'errors'       => $errors ?? false
         ]);
 
         if ($this->request->isStandard()) {

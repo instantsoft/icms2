@@ -23,7 +23,7 @@ class actionAdminSettingsSchedulerEdit extends cmsAction {
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                $this->redirectToAction('settings', ['scheduler']);
+                return $this->redirectToAction('settings', ['scheduler']);
             }
 
             if ($errors) {
@@ -35,7 +35,7 @@ class actionAdminSettingsSchedulerEdit extends cmsAction {
             'do'     => 'edit',
             'task'   => $task,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

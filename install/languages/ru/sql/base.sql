@@ -1463,6 +1463,7 @@ DROP TABLE IF EXISTS `{#}tags`;
 CREATE TABLE `{#}tags` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `tag` varchar(32) NOT NULL,
+  `description` text DEFAULT NULL,
   `frequency` int(11) unsigned NOT NULL DEFAULT '1',
   `tag_title` varchar(300) DEFAULT NULL,
   `tag_desc` varchar(300) DEFAULT NULL,

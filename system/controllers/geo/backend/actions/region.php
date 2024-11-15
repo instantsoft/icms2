@@ -52,14 +52,14 @@ class actionGeoRegion extends cmsAction {
             cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
         }
 
-        $this->cms_template->setPageH1([$country['name'], (isset($region['name']) ? $region['name'] : LANG_GEO_ADD_REGION)]);
+        $this->cms_template->setPageH1([$country['name'], ($region['name'] ?? LANG_GEO_ADD_REGION)]);
 
         return $this->cms_template->render('backend/region', [
             'do'      => $region_id ? 'edit' : 'add',
             'region'  => $region,
             'country' => $country,
             'form'    => $form,
-            'errors'  => isset($errors) ? $errors : false
+            'errors'  => $errors ?? false
         ]);
     }
 

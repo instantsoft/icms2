@@ -61,9 +61,9 @@ class actionAdminUsersEdit extends cmsAction {
                     list($back_url, $id, $user) = cmsEventsManager::hook('users_after_edit_admin', [$back_url, $id, $user], null, $this->request);
 
                     if ($back_url) {
-                        $this->redirect($back_url);
+                        return $this->redirect($back_url);
                     } else {
-                        $this->redirectToAction('users');
+                        return $this->redirectToAction('users');
                     }
 
                 } else {
@@ -80,7 +80,7 @@ class actionAdminUsersEdit extends cmsAction {
             'do'     => 'edit',
             'user'   => $user,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

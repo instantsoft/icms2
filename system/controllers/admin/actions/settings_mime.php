@@ -36,7 +36,7 @@ class actionAdminSettingsMime extends cmsAction {
 
                     cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                    $this->redirectToAction('settings', ['mime']);
+                    return $this->redirectToAction('settings', ['mime']);
                 }
             } else {
 
@@ -47,7 +47,7 @@ class actionAdminSettingsMime extends cmsAction {
         return $this->cms_template->render([
             'data'   => $data,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

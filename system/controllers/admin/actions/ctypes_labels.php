@@ -55,7 +55,7 @@ class actionAdminCtypesLabels extends cmsAction {
             'id'     => $id,
             'ctype'  => $ctype,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

@@ -20,7 +20,8 @@ class fieldParent extends cmsFormField {
                 'default' => 'ctype_list',
                 'items'   => [
                     'ctype_list' => LANG_PARSER_PARENT_STYLE1,
-                    'links_list' => LANG_PARSER_PARENT_STYLE2
+                    'links_list' => LANG_PARSER_PARENT_STYLE2,
+                    'only_breadcrumbs' => LANG_PARSER_PARENT_STYLE3
                 ]
             ])
         ];
@@ -156,6 +157,11 @@ class fieldParent extends cmsFormField {
             $child_ctype['controller'] = 'content';
         }
 
+        if ($this->getOption('item_style') === 'only_breadcrumbs') {
+
+            return $this->addBreadcrumb($value, $parent_ctype, $child_ctype, $controller);
+        }
+
         $filter = "r.parent_ctype_id = {$parent_ctype['id']} AND " .
                 "r.child_item_id = {$this->item['id']} AND " .
                 'r.child_ctype_id ' . ($child_ctype['id'] ? '=' . $child_ctype['id'] : 'IS NULL' ) . ' AND ' .
@@ -169,6 +175,37 @@ class fieldParent extends cmsFormField {
         $parent_ctype['options']['limit'] = 0;
 
         return $controller->renderItemsList($parent_ctype, '', true);
+    }
+
+    private function addBreadcrumb($value, $parent_ctype, $child_ctype, $controller) {
+
+        $template = cmsTemplate::getInstance();
+
+        $template->addBreadcrumb($parent_ctype['title'], href_to($parent_ctype['name']));
+
+        $parent_item = $controller->model->selectOnly('title')->select('slug')->
+                getItemById(
+                    $controller->model->getContentTypeTableName($parent_ctype['name']),
+                    $value
+                );
+
+        if ($parent_item) {
+
+            $template->addBreadcrumb($parent_item['title'], href_to($parent_ctype['name'], $parent_item['slug'] . '.html'));
+
+            $controller->model->selectOnly('title')->select('layout')->
+                    filterEqual('ctype_id', $parent_ctype['id'])->
+                    filterEqual('child_ctype_id', $child_ctype['id'])->
+                    filterEqual('target_controller', $child_ctype['controller']);
+
+            $relation = $controller->model->getItem('content_relations');
+
+            if ($relation && $relation['layout'] === 'tab') {
+                $template->addBreadcrumb($relation['title'], href_to($parent_ctype['name'], $parent_item['slug'], ['view-'.$child_ctype['name']]));
+            }
+        }
+
+        return '';
     }
 
     public function getInput($value) {

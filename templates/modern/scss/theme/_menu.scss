@@ -14,6 +14,9 @@
         }
     }
 }
+.icms-actions-menu {
+    padding: $spacer*0.22 0;
+}
 .mobile-menu-wrapper {
     @include media-breakpoint-down(lg) {
         &__info_bar {

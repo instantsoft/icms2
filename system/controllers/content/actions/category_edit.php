@@ -106,7 +106,7 @@ class actionContentCategoryEdit extends cmsAction {
             'category' => $category,
             'form'     => $form,
             'back_url' => $back_url,
-            'errors'   => isset($errors) ? $errors : false
+            'errors'   => $errors ?? false
         ]);
     }
 

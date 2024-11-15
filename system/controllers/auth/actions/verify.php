@@ -98,7 +98,7 @@ class actionAuthVerify extends cmsAction {
             'reg_email' => $reg_email,
             'data'      => $data,
             'form'      => $form,
-            'errors'    => isset($errors) ? $errors : false
+            'errors'    => $errors ?? false
         ]);
     }
 

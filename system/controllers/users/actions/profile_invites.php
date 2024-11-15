@@ -92,7 +92,7 @@ class actionUsersProfileInvites extends cmsAction {
             'invites' => $invites,
             'form'    => $form,
             'input'   => $input,
-            'errors'  => isset($errors) ? $errors : false
+            'errors'  => $errors ?? false
         ]);
     }
 

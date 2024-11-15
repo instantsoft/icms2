@@ -2,6 +2,7 @@
 
 define('LANG_TAGS_CONTROLLER', 'Tags');
 define('LANG_TAGS_TAG', 'Tag');
+define('LANG_TAGS_TAG_DESC', 'Tag Description');
 define('LANG_TAGS_ROOT_OPTIONS', 'Tags home page settings');
 define('LANG_TAGS_TAG_FREQUENCY', 'Frequency');
 define('LANG_TAGS_SEARCH_BY_TAG', 'Search by the «%s» tag');

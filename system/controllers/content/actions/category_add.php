@@ -61,7 +61,7 @@ class actionContentCategoryAdd extends cmsAction {
                     $ctype, $category
                 ]);
 
-                $this->redirectTo($ctype['name'], $category['slug']);
+                return $this->redirectTo($ctype['name'], $category['slug']);
             }
 
             if ($errors) {
@@ -75,7 +75,7 @@ class actionContentCategoryAdd extends cmsAction {
             'category' => $category,
             'form'     => $form,
             'back_url' => false,
-            'errors'   => isset($errors) ? $errors : false
+            'errors'   => $errors ?? false
         ]);
     }
 

@@ -37,7 +37,7 @@ class actionAuthgaLogin2fa extends cmsAction {
             'form_action' => $form_action,
             'data'        => $data,
             'form'        => $form_confirm,
-            'errors'      => isset($errors) ? $errors : false
+            'errors'      => $errors ?? false
         ];
 
         // Для вызовов из InstantCMS JSON API

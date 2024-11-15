@@ -266,7 +266,7 @@ class actionAdminContentItemsEdit extends cmsAction {
                         'ctype'  => $ctype,
                         'items'  => $items,
                         'form'   => $form_fields,
-                        'errors' => isset($errors) ? $errors : false
+                        'errors' => $errors ?? false
                     ], new cmsRequest($this->request->getData(), cmsRequest::CTX_INTERNAL)),
                     'callback' => 'contentItemsEditSelected'
                 ]);
@@ -283,7 +283,7 @@ class actionAdminContentItemsEdit extends cmsAction {
             'ctype'  => $ctype,
             'items'  => $items,
             'form'   => $form_select,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

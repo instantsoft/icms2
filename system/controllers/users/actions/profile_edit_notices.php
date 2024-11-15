@@ -56,7 +56,7 @@ class actionUsersProfileEditNotices extends cmsAction {
             'profile' => $profile,
             'options' => $options,
             'form'    => $form,
-            'errors'  => isset($errors) ? $errors : false
+            'errors'  => $errors ?? false
         ]);
     }
 

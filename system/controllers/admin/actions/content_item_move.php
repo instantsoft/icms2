@@ -72,7 +72,7 @@ class actionAdminContentItemMove extends cmsAction {
             'parent_id' => $current_id,
             'items'     => $items,
             'form'      => $form,
-            'errors'    => isset($errors) ? $errors : false
+            'errors'    => $errors ?? false
         ]);
     }
 

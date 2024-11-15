@@ -1,12 +1,12 @@
 <?php
-
+/**
+ * @property \modelMenu $model_menu
+ */
 class actionAdminMenuAdd extends cmsAction {
 
     public function run() {
 
-        $menu_model = cmsCore::getModel('menu');
-
-        $form = $this->getForm('menu', array('add'));
+        $form = $this->getForm('menu', ['add']);
 
         $is_submitted = $this->request->has('submit');
 
@@ -18,7 +18,7 @@ class actionAdminMenuAdd extends cmsAction {
 
             if (!$errors) {
 
-                $menu_id = $menu_model->addMenu($menu);
+                $menu_id = $this->model_menu->addMenu($menu);
 
                 if ($menu_id) {
                     cmsUser::addSessionMessage(sprintf(LANG_CP_MENU_CREATED, $menu['title']), 'success');
@@ -26,7 +26,7 @@ class actionAdminMenuAdd extends cmsAction {
 
                 cmsUser::setCookiePublic('menu_tree_path', "{$menu_id}.0");
 
-                $this->redirectToAction('menu');
+                return $this->redirectToAction('menu');
             }
 
             if ($errors) {
@@ -34,12 +34,12 @@ class actionAdminMenuAdd extends cmsAction {
             }
         }
 
-        return $this->cms_template->render('menu_form', array(
+        return $this->cms_template->render('menu_form', [
             'do'     => 'add',
             'item'   => $menu,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
-        ));
+            'errors' => $errors ?? false
+        ]);
     }
 
 }

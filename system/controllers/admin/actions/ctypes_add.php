@@ -55,7 +55,7 @@ class actionAdminCtypesAdd extends cmsAction {
             'do'     => 'add',
             'ctype'  => $ctype,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

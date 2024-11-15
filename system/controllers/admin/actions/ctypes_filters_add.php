@@ -84,7 +84,7 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
             'ctype'  => $ctype,
             'filter' => $filter,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

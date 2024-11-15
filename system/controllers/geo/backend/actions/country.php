@@ -50,7 +50,7 @@ class actionGeoCountry extends cmsAction {
             'do'      => $country_id ? 'edit' : 'add',
             'country' => $country,
             'form'    => $form,
-            'errors'  => isset($errors) ? $errors : false
+            'errors'  => $errors ?? false
         ]);
     }
 

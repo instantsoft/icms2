@@ -1,12 +1,12 @@
 <?php
-
+/**
+ * @property \modelUsers $model_users
+ */
 class actionAdminUsersGroupAdd extends cmsAction {
 
     public function run() {
 
-        $users_model = cmsCore::getModel('users');
-
-        $form = $this->getForm('users_group', array('add'));
+        $form = $this->getForm('users_group', ['add']);
 
         $is_submitted = $this->request->has('submit');
 
@@ -18,27 +18,25 @@ class actionAdminUsersGroupAdd extends cmsAction {
 
             if (!$errors) {
 
-                $id = $users_model->addGroup($group);
+                $id = $this->model_users->addGroup($group);
 
                 cmsUser::addSessionMessage(sprintf(LANG_CP_USER_GROUP_CREATED, $group['title']), 'success');
 
-                $this->redirectToAction('users', array('group_perms', $id));
+                return $this->redirectToAction('users', ['group_perms', $id]);
             }
 
             if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
-
         }
 
-        return $this->cms_template->render('users_group', array(
+        return $this->cms_template->render('users_group', [
             'do'     => 'add',
             'menu'   => $this->getUserGroupsMenu('add'),
             'group'  => $group,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
-        ));
-
+            'errors' => $errors ?? false
+        ]);
     }
 
 }

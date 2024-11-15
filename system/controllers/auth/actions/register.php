@@ -243,7 +243,7 @@ class actionAuthRegister extends cmsAction {
         return $this->cms_template->render('registration', [
             'user'   => $user,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

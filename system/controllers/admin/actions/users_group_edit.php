@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @property \modelUsers $model_users
  */
@@ -34,7 +33,7 @@ class actionAdminUsersGroupEdit extends cmsAction {
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                $this->redirectToAction('users');
+                return $this->redirectToAction('users');
             }
 
             if ($errors) {
@@ -47,7 +46,7 @@ class actionAdminUsersGroupEdit extends cmsAction {
             'menu'   => $this->getUserGroupsMenu('view', $group['id']),
             'group'  => $group,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

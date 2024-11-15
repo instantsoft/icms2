@@ -76,7 +76,7 @@ class actionGroupsGroupChangeOwner extends cmsAction {
                 'form_action' => href_to($this->name, $group['slug'], array('change_owner')),
                 'data'   => $data,
                 'form'   => $form,
-                'errors' => (isset($errors) ? $errors : false),
+                'errors' => $errors ?? false,
                 'group' => $group
             ));
 

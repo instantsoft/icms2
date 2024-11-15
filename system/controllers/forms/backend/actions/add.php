@@ -37,7 +37,7 @@ class actionFormsAdd extends cmsAction {
             'form_data' => $form_data,
             'do'        => $do,
             'form'      => $form,
-            'errors'    => isset($errors) ? $errors : false
+            'errors'    => $errors ?? false
         ]);
     }
 

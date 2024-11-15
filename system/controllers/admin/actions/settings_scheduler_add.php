@@ -16,11 +16,11 @@ class actionAdminSettingsSchedulerAdd extends cmsAction {
 
             if (!$errors) {
 
-                $task_id = $this->model->addSchedulerTask($task);
+                $this->model->addSchedulerTask($task);
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                $this->redirectToAction('settings', ['scheduler']);
+                return $this->redirectToAction('settings', ['scheduler']);
             }
 
             if ($errors) {
@@ -32,7 +32,7 @@ class actionAdminSettingsSchedulerAdd extends cmsAction {
             'do'     => 'add',
             'task'   => $task,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

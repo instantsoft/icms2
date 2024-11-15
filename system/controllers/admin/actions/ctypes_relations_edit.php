@@ -71,7 +71,7 @@ class actionAdminCtypesRelationsEdit extends cmsAction {
             'ctype'    => $ctype,
             'relation' => $relation,
             'form'     => $form,
-            'errors'   => isset($errors) ? $errors : false
+            'errors'   => $errors ?? false
         ]);
     }
 

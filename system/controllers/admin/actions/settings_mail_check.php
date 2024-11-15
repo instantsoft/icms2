@@ -43,7 +43,7 @@ class actionAdminSettingsMailCheck extends cmsAction {
         return $this->cms_template->render('mail_check', [
             'values' => isset($values) ? $values : [],
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

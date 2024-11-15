@@ -61,7 +61,7 @@ class actionTagsEdit extends cmsAction {
             'do'     => 'edit',
             'tag'    => $tag,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors ?? false
         ]);
     }
 

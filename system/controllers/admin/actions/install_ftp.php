@@ -69,7 +69,7 @@ class actionAdminInstallFtp extends cmsAction {
             'manifest' => $this->parsePackageManifest(),
             'account'  => $account,
             'form'     => $form,
-            'errors'   => isset($errors) ? $errors : false
+            'errors'   => $errors ?? false
         ]);
     }
 
