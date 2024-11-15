@@ -201,7 +201,7 @@ function widgetsLoad(page_id){
 
 function createWidgetNode(widget){
 
-    var widget_dom = $(document.createElement('li'))
+    let widget_dom = $(document.createElement('li'))
             .attr('bind-id', widget.bind_id)
             .attr('data-name', widget.name)
             .attr('data-widget-id', widget.widget_id)
@@ -218,8 +218,8 @@ function createWidgetNode(widget){
 
     if (widget.device_types){
         widget_dom.addClass('device_restrictions');
-        var device_icons = '';
-        for (var key in widget.device_type_names) {
+        let device_icons = '';
+        for (let key in widget.device_type_names) {
             if(widget.device_type_names[key] === 'mobile'){
                 widget.device_type_names[key] = 'smartphone';
             }
@@ -228,8 +228,8 @@ function createWidgetNode(widget){
         widget_dom.append('<span class="wd_device_types mr-2">'+device_icons+'</span>');
     }
     if (widget.languages){
-        var lang_icons = '';
-        for (var key in widget.languages) {
+        let lang_icons = '';
+        for (let key in widget.languages) {
             lang_icons = lang_icons+'<i title="'+widget.languages[key]+'" class="icon-lang-'+widget.languages[key]+' icon-svg  mr-1"></i>';
         }
         widget_dom.append(lang_icons);
@@ -238,6 +238,9 @@ function createWidgetNode(widget){
     $('#cp-widgets-layout #pos-'+widget.position).append(widget_dom);
     if (widget.is_disabled) {
         widget_dom.addClass('disabled');
+        if (widget.page_title) {
+            widget_dom.attr('title', widget.page_title);
+        }
     } else {
         widgetAddActionButtons(widget_dom);
     }
@@ -258,7 +261,6 @@ function createWidgetNode(widget){
     widgetsMarkTabbed();
 
     return widget_dom;
-
 }
 
 function widgetsMarkTabbed(){
@@ -379,13 +381,13 @@ function widgetEdit(link){
 
 function widgetUpdated(widget, result){
 
-    var widget_dom = $( "#cp-widgets-layout li[bind-id=" + result.widget.id + ']');
+    let widget_dom = $( "#cp-widgets-layout li[bind-id=" + result.widget.id + ']');
 
     widget_dom.html('<span class="title">'+result.widget.title+'</span>');
 
     if (result.widget.device_types){
-        var device_icons = '';
-        for (var key in result.widget.device_type_names) {
+        let device_icons = '';
+        for (let key in result.widget.device_type_names) {
             if(result.widget.device_type_names[key] === 'mobile'){
                 result.widget.device_type_names[key] = 'smartphone';
             }
@@ -396,8 +398,8 @@ function widgetUpdated(widget, result){
     }
 
     if (result.widget.languages){
-        var lang_icons = '';
-        for (var key in result.widget.languages) {
+        let lang_icons = '';
+        for (let key in result.widget.languages) {
             lang_icons = lang_icons+'<i title="'+result.widget.languages[key]+'" class="icon-lang-'+result.widget.languages[key]+' icon-svg  mr-1"></i>';
         }
         widget_dom.append(lang_icons);
@@ -430,7 +432,6 @@ function widgetUpdated(widget, result){
     toastr.success(result.success_text);
 
     icms.modal.close();
-
 }
 
 function widgetDelete(link){

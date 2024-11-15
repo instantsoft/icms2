@@ -313,9 +313,14 @@ class modelBackendWidgets extends modelWidgets {
                 select('w.title', 'name')->
                 select('w.image_hint_path', 'image_hint_path')->
                 select('bp.*')->
+                select('wp.title_const', 'page_title_const')->
+                select('wp.title', 'page_title')->
+                select('ct.title', 'page_title_subject')->
                 select('IFNULL(bp.bind_id,i.id)', 'bind_id')->
                 joinInner('widgets', 'w', 'w.id = i.widget_id')->
                 joinLeft('widgets_bind_pages', 'bp', 'bp.bind_id = i.id')->
+                joinLeft('widgets_pages', 'wp', 'wp.id = bp.page_id')->
+                joinLeft('content_types', 'ct', "wp.name LIKE concat(ct.name, '.%')")->
                 orderBy('bp.position, bp.ordering')->
                 get('widgets_bind') ?: [];
 
@@ -346,11 +351,16 @@ class modelBackendWidgets extends modelWidgets {
                 $bind['image_hint_path'] = cmsConfig::get('upload_host') . '/' . $bind['image_hint_path'];
             }
 
+            if ($bind['page_id'] == 1) {
+                $bind['page_title'] = LANG_WP_HOME_PAGE;
+            }
+
             $positions[$bind['position']][] = [
                 'id'                => $bind['id'],
                 'bind_id'           => $bind['bind_id'],
                 'widget_id'         => $bind['widget_id'],
                 'title'             => string_replace_svg_icons($bind['title']),
+                'page_title'        => $bind['page_title'] ?: sprintf(constant($bind['page_title_const']), $bind['page_title_subject']),
                 'position'          => $bind['position'],
                 'languages'         => $bind['languages'],
                 'image_hint_path'   => $bind['image_hint_path'],
