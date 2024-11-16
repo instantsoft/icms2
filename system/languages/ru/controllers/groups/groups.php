@@ -27,8 +27,6 @@
     define('LANG_GROUPS_REQUESTS',          'Заявки');
     define('LANG_GROUPS_REQUEST_NOTICE_DECLINE', 'Ваша заявка на вступление в группу &laquo;%s&raquo; была отклонена администратором %s.');
     define('LANG_GROUPS_REQUEST_NOTICE_ACCEPT', 'Ваша заявка на вступление в группу &laquo;%s&raquo; была принята.');
-    define('LANG_GROUPS_CHOWNR_NOTICE_ACCEPT', 'Ваше предложение о передачи прав на группу &laquo;%s&raquo; было принято пользователем %s.');
-    define('LANG_GROUPS_CHOWNR_NOTICE_DECLINE', 'Ваше предложение о передачи прав на группу &laquo;%s&raquo; было отклонено пользователем %s.');
     define('LANG_GROUPS_REQ_SUCCESS',       'Заявка отправлена администраторам группы');
     define('LANG_GROUPS_REQ_ERROR',         'Ваша заявка на вступление уже на рассмотрении');
     define('LANG_GROUPS_INVITE_GROUP_USERS', 'Кто может приглашать вас в группы');
@@ -55,10 +53,6 @@
     define('LANG_GROUP_INFO_OWNER',         'Владелец');
     define('LANG_GROUPS_OPT_WALL_ENABLED',  'Показывать стену группы');
     define('LANG_GROUPS_OPT_CHANGE_OWNER_EMAIL', 'E-mail для уведомлений при смене владельца группы');
-    define('LANG_GROUPS_OWNER_NEW_EMAIL',   'E-mail адрес нового владельца');
-    define('LANG_GROUPS_OWNER_NEW_EMAIL_HINT',   'Внимание! Это действие необратимое.');
-    define('LANG_GROUPS_CHANGE_OWNER_SEND',   'Предложение отправлено пользователю');
-    define('LANG_GROUPS_CHANGE_OWNER_SUCCESS',   'Вы стали владельцем группы &laquo;%s&raquo;');
     define('LANG_GROUPS_OPT_DS_SHOW',       'Показывать вкладку "%s"');
     define('LANG_GROUPS_DS_MEMBER',         'Участие в группах');
     define('LANG_GROUPS_DS_MY',             'Мои группы');

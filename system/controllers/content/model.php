@@ -804,6 +804,18 @@ class modelContent extends cmsModel {
         return $item;
     }
 
+    public function updateContentItemOwner($ctype_name, $id, $user_id) {
+
+        $table_name = $this->getContentTypeTableName($ctype_name);
+
+        cmsCache::getInstance()->clean('content.list.' . $ctype_name);
+        cmsCache::getInstance()->clean('content.item.' . $ctype_name);
+
+        return $this->update($table_name, $id, [
+            'user_id' => $user_id
+        ]);
+    }
+
     public function updateContentItemTags($ctype_name, $id, $tags) {
 
         $table_name = $this->getContentTypeTableName($ctype_name);

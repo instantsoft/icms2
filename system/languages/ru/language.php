@@ -15,6 +15,7 @@
     define('LANG_CONTENT_UNBIND_ITEM',       'Отвязать %s');
     define('LANG_CONTENT_UNBIND_ITEMS',      'Отвязать');
     define('LANG_CONTENT_EDIT_ITEM',         'Редактировать %s');
+    define('LANG_CONTENT_OWNER_ITEM',        'Передать %s');
     define('LANG_CONTENT_DELETE_ITEM',       'Удалить %s');
     define('LANG_CONTENT_DELETE_ITEM_CONFIRM',  'Вы уверены что хотите удалить %s?');
     define('LANG_CONTENT_RETURN_CONFIRM',    'Вы уверены что хотите отозвать эту запись с проверки?\nОна переместится в ваши черновики.');
@@ -649,6 +650,13 @@
     define('LANG_HITS_SPELL',                'просмотр|просмотра|просмотров');
     define('LANG_HITS',                      'Просмотры');
     define('LANG_GUEST',                     'Гость');
+    define('LANG_OWNER_NEW_EMAIL',           'E-mail адрес нового владельца');
+    define('LANG_OWNER_NEW_EMAIL_HINT',      'Внимание! Это действие необратимое.');
+    define('LANG_OFFER_OWNER_SEND',          'Предложение отправлено пользователю');
+    define('LANG_OFFER_OWNER_NOTICE',        '%s предлагает вам стать владельцем %s &laquo;%s&raquo;');
+    define('LANG_CHOWN_NOTICE_ACCEPT',       'Ваше предложение о передачи прав на &laquo;%s&raquo; было принято пользователем %s.');
+    define('LANG_CHOWN_NOTICE_DECLINE',      'Ваше предложение о передачи прав на &laquo;%s&raquo; было отклонено пользователем %s.');
+    define('LANG_CHOWN_SUCCESS',             'Вы стали владельцем &laquo;%s&raquo;');
 
     //SEO
     define('LANG_SEO',                       'SEO');

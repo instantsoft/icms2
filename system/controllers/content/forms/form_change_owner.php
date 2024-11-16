@@ -1,6 +1,6 @@
 <?php
 
-class formGroupsChangeOwner extends cmsForm {
+class formContentChangeOwner extends cmsForm {
 
     public function init() {
 

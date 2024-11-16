@@ -26,7 +26,7 @@ class actionGroupsGroupChangeOwner extends cmsAction {
             }
 
             if(!$errors && cmsUser::getUPS('change_owner_'.$this->cms_user->id, $user['id'])){
-                $errors['email'] = LANG_GROUPS_CHANGE_OWNER_SEND;
+                $errors['email'] = LANG_OFFER_OWNER_SEND;
             }
 
             if ($errors){
@@ -67,7 +67,7 @@ class actionGroupsGroupChangeOwner extends cmsAction {
 
             return $this->cms_template->renderJSON(array(
                 'errors'   => false,
-                'success_text' => LANG_GROUPS_CHANGE_OWNER_SEND
+                'success_text' => LANG_OFFER_OWNER_SEND
             ));
 
         } else {

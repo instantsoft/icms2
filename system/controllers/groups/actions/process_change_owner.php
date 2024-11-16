@@ -44,7 +44,7 @@ class actionGroupsProcessChangeOwner extends cmsAction {
             $this->controller_messages->addRecipient($this->cms_user->id);
 
             $notice = array(
-                'content' => sprintf(LANG_GROUPS_CHANGE_OWNER_SUCCESS, $group_link),
+                'content' => sprintf(LANG_CHOWN_SUCCESS, $group_link),
                 'options' => array(
                     'is_closeable' => true
                 )
@@ -57,7 +57,7 @@ class actionGroupsProcessChangeOwner extends cmsAction {
         $this->controller_messages->clearRecipients()->addRecipient($owner_id);
 
         $notice = array(
-            'content' => sprintf(string_lang('LANG_GROUPS_CHOWNR_NOTICE_'.$action), $group_link, $user_link),
+            'content' => sprintf(string_lang('LANG_CHOWN_NOTICE_'.$action), $group_link, $user_link),
             'options' => array(
                 'is_closeable' => true
             )

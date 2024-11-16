@@ -15,6 +15,7 @@
     define('LANG_CONTENT_UNBIND_ITEM',       'Unbind %s');
     define('LANG_CONTENT_UNBIND_ITEMS',      'Unbind');
     define('LANG_CONTENT_EDIT_ITEM',         'Edit %s');
+    define('LANG_CONTENT_OWNER_ITEM',        'Transfer the %s');
     define('LANG_CONTENT_DELETE_ITEM',       'Delete %s');
     define('LANG_CONTENT_DELETE_ITEM_CONFIRM',  'Are you sure you want to delete %s?');
     define('LANG_CONTENT_RETURN_CONFIRM',    'Are you sure you want to retrieve this item from the moderation?\nIt will move to your drafts.');
@@ -650,6 +651,13 @@
     define('LANG_HITS_SPELL',                'views|views|views');
     define('LANG_HITS',                      'Views');
     define('LANG_GUEST',                     'Guest');
+    define('LANG_OWNER_NEW_EMAIL',           'E-mail address of the new owner');
+    define('LANG_OWNER_NEW_EMAIL_HINT',      'Attention! This action is irreversible.');
+    define('LANG_OFFER_OWNER_SEND',          'Offer sent to user');
+    define('LANG_OFFER_OWNER_NOTICE',        '%s is offering you ownership of the %s &laquo;%s&raquo;');
+    define('LANG_CHOWN_NOTICE_ACCEPT',       'Your proposal to transfer the rights to the &laquo;%s&raquo; was accepted %s');
+    define('LANG_CHOWN_NOTICE_DECLINE',      'Your proposal to transfer the rights to the &laquo;%s&raquo; was rejected %s');
+    define('LANG_CHOWN_SUCCESS',             'You became the owner of the &laquo;%s&raquo;');
 
     //SEO
     define('LANG_SEO',                       'SEO');

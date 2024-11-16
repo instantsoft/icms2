@@ -478,6 +478,8 @@ class actionContentItemView extends cmsAction {
 
     private function getToolButtons($ctype, $item, $is_moderator, $childs) {
 
+        $is_owner = $item['user_id'] == $this->cms_user->id;
+
         $tool_buttons = [];
 
         if (!$item['is_approved'] && !$item['is_draft'] && $is_moderator){
@@ -493,7 +495,7 @@ class actionContentItemView extends cmsAction {
             ];
         }
 
-        if (!$item['is_approved'] && !$item['is_draft'] && !$this->viewed_moderators && $item['user_id'] == $this->cms_user->id){
+        if (!$item['is_approved'] && !$item['is_draft'] && !$this->viewed_moderators && $is_owner){
             $tool_buttons['return'] = [
                 'title'   => LANG_MODERATION_RETURN,
                 'options' => ['class' => 'return', 'confirm' => LANG_CONTENT_RETURN_CONFIRM, 'icon' => 'undo'],
@@ -540,12 +542,19 @@ class actionContentItemView extends cmsAction {
             }
 
             $allow_edit = cmsUser::isAllowed($ctype['name'], 'edit', 'all') || cmsUser::isAllowed($ctype['name'], 'edit', 'premod_all');
-            if($item['user_id'] == $this->cms_user->id && !$allow_edit){
+            if($is_owner && !$allow_edit){
                 $allow_edit = cmsUser::isAllowed($ctype['name'], 'edit', 'own') || cmsUser::isAllowed($ctype['name'], 'edit', 'premod_own');
             }
 
-            if ($allow_edit){
-                if(!cmsUser::isPermittedLimitReached($ctype['name'], 'edit_times', ((time() - strtotime($item['date_pub']))/60))){
+            if ($allow_edit) {
+
+                $tool_buttons['change_owner'] = [
+                    'title'   => sprintf(LANG_CONTENT_OWNER_ITEM, $ctype['labels']['create']),
+                    'options' => ['class' => 'change_owner ajax-modal', 'icon' => 'people-arrows'],
+                    'url'     => href_to($ctype['name'], 'owner', $item['id'])
+                ];
+
+                if (!cmsUser::isPermittedLimitReached($ctype['name'], 'edit_times', ((time() - strtotime($item['date_pub'])) / 60))) {
                     $tool_buttons['edit'] = [
                         'title'   => sprintf(LANG_CONTENT_EDIT_ITEM, $ctype['labels']['create']),
                         'options' => ['class' => 'edit', 'icon' => 'pencil-alt'],
@@ -555,7 +564,7 @@ class actionContentItemView extends cmsAction {
             }
 
             $allow_delete = (cmsUser::isAllowed($ctype['name'], 'delete', 'all') ||
-                (cmsUser::isAllowed($ctype['name'], 'delete', 'own') && $item['user_id'] == $this->cms_user->id));
+                (cmsUser::isAllowed($ctype['name'], 'delete', 'own') && $is_owner));
             $delete_limit_reached = cmsUser::isPermittedLimitReached($ctype['name'], 'delete_times', ((time() - strtotime($item['date_pub']))/60));
 
             if ($allow_delete){
@@ -594,7 +603,7 @@ class actionContentItemView extends cmsAction {
         if ($item['is_approved'] && !$item['is_deleted'] && !$delete_limit_reached){
 
             if (cmsUser::isAllowed($ctype['name'], 'move_to_trash', 'all') ||
-            (cmsUser::isAllowed($ctype['name'], 'move_to_trash', 'own') && $item['user_id'] == $this->cms_user->id)){
+            (cmsUser::isAllowed($ctype['name'], 'move_to_trash', 'own') && $is_owner)){
 
                 $tool_buttons['basket_put'] = [
                     'title'   => ($allow_delete ? LANG_BASKET_DELETE : sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create'])),
@@ -609,7 +618,7 @@ class actionContentItemView extends cmsAction {
         if ($item['is_approved'] && $item['is_deleted']){
 
             if (cmsUser::isAllowed($ctype['name'], 'restore', 'all') ||
-            (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $item['user_id'] == $this->cms_user->id)){
+            (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $is_owner)){
 
                 $tool_buttons['basket_remove'] = [
                     'title'   => LANG_RESTORE,

@@ -28,8 +28,6 @@
     define('LANG_GROUPS_REQUESTS',          'Requests');
     define('LANG_GROUPS_REQUEST_NOTICE_DECLINE', 'Your request to join in &laquo;%s&raquo; was rejected by the administrator group: %s.');
     define('LANG_GROUPS_REQUEST_NOTICE_ACCEPT', 'Your request to join in &laquo;%s&raquo; group has been accepted');
-    define('LANG_GROUPS_CHOWNR_NOTICE_ACCEPT', 'Your proposal to transfer the rights to the &laquo;%s&raquo; group was accepted %s');
-    define('LANG_GROUPS_CHOWNR_NOTICE_DECLINE', 'Your proposal to transfer the rights to the &laquo;%s&raquo; group was rejected %s');
     define('LANG_GROUPS_REQ_SUCCESS',       'Request sent to group administrators');
     define('LANG_GROUPS_REQ_ERROR',         'Your request to join in the group already pending');
     define('LANG_GROUPS_INVITE_GROUP_USERS', 'Who can invite you to a group');
@@ -55,10 +53,6 @@
     define('LANG_GROUP_INFO_OWNER',         'Owner');
     define('LANG_GROUPS_OPT_WALL_ENABLED',  'Show group wall');
     define('LANG_GROUPS_OPT_CHANGE_OWNER_EMAIL', 'E-mail for notifications when changing a group owner');
-    define('LANG_GROUPS_OWNER_NEW_EMAIL',   'E-mail address of the new owner');
-    define('LANG_GROUPS_OWNER_NEW_EMAIL_HINT',   'Attention! This action is irreversible.');
-    define('LANG_GROUPS_CHANGE_OWNER_SEND',   'The owner change offer was sent to the user');
-    define('LANG_GROUPS_CHANGE_OWNER_SUCCESS',   'You became the owner of the &laquo;%s&raquo; group');
     define('LANG_GROUPS_OPT_DS_SHOW',       'Show the "%s" tab');
     define('LANG_GROUPS_DS_MEMBER',         'Group Memberships');
     define('LANG_GROUPS_DS_MY',             'My groups');
