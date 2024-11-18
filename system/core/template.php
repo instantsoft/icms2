@@ -3251,6 +3251,13 @@ class cmsTemplate {
         return include $file_path;
     }
 
+    public function hasScssSupport(){
+        if (isset($this->manifest['properties']['style_middleware'])) {
+            return $this->manifest['properties']['style_middleware'] === 'scss';
+        }
+        return false;
+    }
+
     public function hasOptions(){
         if (isset($this->manifest['properties'])) {
             return !empty($this->manifest['properties']['has_options']);

@@ -156,7 +156,7 @@ class subscriptions extends cmsFrontend {
      */
     public function validate_subscribe_params($params) {
 
-        if (!$params) {
+        if (!$params || !array_filter($params)) {
             return true;
         }
 

@@ -1,6 +1,8 @@
 <?php
 class formAdminCtypesBasic extends cmsForm {
 
+    const SEO_PATTERNS_LEN = 800;
+
     public function init($do, $ctype) {
 
         $template = new cmsTemplate(cmsConfig::get('template'));
@@ -405,6 +407,10 @@ class formAdminCtypesBasic extends cmsForm {
                         'can_multilanguage' => true,
                         'patterns_hint' => [
                             'patterns' =>  $item_fields
+                        ],
+                        'options' => [
+                            'max_length' => self::SEO_PATTERNS_LEN,
+                            'show_symbol_count' => true
                         ]
                     ]),
                     new fieldString('options:seo_keys_pattern', [
@@ -413,6 +419,10 @@ class formAdminCtypesBasic extends cmsForm {
                         'default' => '{content|string_get_meta_keywords}',
                         'patterns_hint' => [
                             'patterns' =>  $item_fields
+                        ],
+                        'options' => [
+                            'max_length' => self::SEO_PATTERNS_LEN,
+                            'show_symbol_count' => true
                         ]
                     ]),
                     new fieldString('options:seo_desc_pattern', [
@@ -421,6 +431,10 @@ class formAdminCtypesBasic extends cmsForm {
                         'default' => '{content|string_get_meta_description}',
                         'patterns_hint' => [
                             'patterns' =>  $item_fields
+                        ],
+                        'options' => [
+                            'max_length' => self::SEO_PATTERNS_LEN,
+                            'show_symbol_count' => true
                         ]
                     ])
                 ]
@@ -455,6 +469,10 @@ class formAdminCtypesBasic extends cmsForm {
                         'can_multilanguage' => true,
                         'patterns_hint' => [
                             'patterns' =>  $meta_item_fields
+                        ],
+                        'options' => [
+                            'max_length' => self::SEO_PATTERNS_LEN,
+                            'show_symbol_count' => true
                         ]
                     ]),
                     new fieldString('options:seo_cat_title_pattern', [
@@ -462,6 +480,10 @@ class formAdminCtypesBasic extends cmsForm {
                         'can_multilanguage' => true,
                         'patterns_hint' => [
                             'patterns' =>  $meta_item_fields
+                        ],
+                        'options' => [
+                            'max_length' => self::SEO_PATTERNS_LEN,
+                            'show_symbol_count' => true
                         ]
                     ]),
                     new fieldString('options:seo_cat_keys_pattern', [
@@ -469,6 +491,10 @@ class formAdminCtypesBasic extends cmsForm {
                         'can_multilanguage' => true,
                         'patterns_hint' => [
                             'patterns' =>  $meta_item_fields
+                        ],
+                        'options' => [
+                            'max_length' => self::SEO_PATTERNS_LEN,
+                            'show_symbol_count' => true
                         ]
                     ]),
                     new fieldString('options:seo_cat_desc_pattern', [
@@ -476,6 +502,10 @@ class formAdminCtypesBasic extends cmsForm {
                         'can_multilanguage' => true,
                         'patterns_hint' => [
                             'patterns' =>  $meta_item_fields
+                        ],
+                        'options' => [
+                            'max_length' => self::SEO_PATTERNS_LEN,
+                            'show_symbol_count' => true
                         ]
                     ])
                 ]
@@ -490,6 +520,10 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_SEOMETA_ITEM_H1,
                         'patterns_hint' => [
                             'patterns' =>  $meta_ctype_fields
+                        ],
+                        'options' => [
+                            'max_length' => self::SEO_PATTERNS_LEN,
+                            'show_symbol_count' => true
                         ]
                     ]),
                     new fieldString('seo_title', [
@@ -503,7 +537,7 @@ class formAdminCtypesBasic extends cmsForm {
                             'patterns' =>  $meta_ctype_fields
                         ],
                         'options' => [
-                            'max_length' => 256,
+                            'max_length' => self::SEO_PATTERNS_LEN,
                             'show_symbol_count' => true
                         ]
                     ]),
@@ -518,7 +552,7 @@ class formAdminCtypesBasic extends cmsForm {
                             'patterns' =>  $meta_ctype_fields
                         ],
                         'options' => [
-                            'max_length' => 256,
+                            'max_length' => self::SEO_PATTERNS_LEN,
                             'show_symbol_count' => true
                         ]
                     ]),
@@ -534,7 +568,7 @@ class formAdminCtypesBasic extends cmsForm {
                             'patterns' =>  $meta_ctype_fields
                         ],
                         'options' => [
-                            'max_length' => 256,
+                            'max_length' => self::SEO_PATTERNS_LEN,
                             'show_symbol_count' => true
                         ]
                     ])

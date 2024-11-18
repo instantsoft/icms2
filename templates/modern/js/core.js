@@ -590,17 +590,17 @@ icms.forms = (function ($) {
          * Совместимость, передаётся в колбэк
          * @type coreforms.toJSON.o
          */
-        var form_data = this.toJSON($(form));
+        let form_data = this.toJSON($(form));
 
-        var submit_btn = $(form).find('.button-submit');
+        let submit_btn = $(form).find('.button-submit');
 
         $(submit_btn).prop('disabled', true).addClass('is-busy');
 
-        var formData = new FormData(form);
+        let formData = new FormData(form);
 
         if(additional_params){
-            for(var name in additional_params){
-                formData.append(name, additional_params[name]);
+            for(let name in additional_params){
+                formData.set(name, additional_params[name]);
             }
         }
 
@@ -619,10 +619,10 @@ icms.forms = (function ($) {
                 if (result.errors === false){
                     if ("callback" in result){
 
-                        var params = result.callback.split('.');
+                        let params = result.callback.split('.');
 
-                        var calling_func = window;
-                        for(var id in params){
+                        let calling_func = window;
+                        for(let id in params){
                             calling_func = calling_func[params[id]];
                         }
 
@@ -644,8 +644,8 @@ icms.forms = (function ($) {
                     if(result.message){
                         icms.modal.alert(result.message, 'danger');
                     }
-                    for(var field_id in result.errors){
-                        var id = field_id.replace(':', '_');
+                    for(let field_id in result.errors){
+                        let id = field_id.replace(':', '_');
                         $('#'+id, form).addClass('is-invalid');
                         $('#f_'+id, form).addClass('field_error').append('<div class="invalid-feedback">' + result.errors[field_id] + '</div>');
                         $(form).find('ul.tabbed > li > a[href = "#'+$('#f_'+id, form).parents('.tab').attr('id')+'"]').trigger('click');
@@ -658,7 +658,6 @@ icms.forms = (function ($) {
                     icms.forms.submitted = false;
 
                     return;
-
                 }
             },
             error: function (error) {

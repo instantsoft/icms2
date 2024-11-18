@@ -35,7 +35,7 @@ class actionSubscriptionsSubscribe extends cmsAction {
     public function run() {
 
         if (!$this->request->isAjax()) {
-            //return cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $this->target['controller'] = $this->request->get('controller');

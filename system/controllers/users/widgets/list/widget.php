@@ -1,78 +1,82 @@
 <?php
+/**
+ * @property \modelUsers $model_users
+ * @property \modelContent $model_content
+ */
 class widgetUsersList extends cmsWidget {
 
-    public function run(){
+    public function run() {
 
         $show        = $this->getOption('show', 'all');
         $dataset     = $this->getOption('dataset', 'latest');
         $groups      = $this->getOption('groups');
         $list_fields = $this->getOption('list_fields');
 
-        $user = cmsUser::getInstance();
-        $model = cmsCore::getModel('users');
-        $content_model = cmsCore::getModel('content');
-
         $show_fields = [];
 
-        $content_model->setTablePrefix('')->orderBy('ordering');
-        $fields = $content_model->getContentFields('{users}');
+        $fields = $this->model_content->setTablePrefix('')->getContentFields('{users}');
 
-        list($fields, $model) = cmsEventsManager::hook('profiles_list_filter', array($fields, $model));
+        list($fields, $this->model_users) = cmsEventsManager::hook('profiles_list_filter', [$fields, $this->model_users]);
 
-        if($list_fields){
+        if ($list_fields) {
             foreach ($fields as $name => $field) {
-                if(in_array($field['id'], $list_fields)){
+                if (in_array($field['id'], $list_fields)) {
                     $show_fields[$name] = $field;
                 }
             }
         }
 
-        switch ($show){
+        switch ($show) {
 
             case 'friends':
-                if (!$user->is_logged) { return false; }
-                $model->filterFriends($user->id);
+                if (!$this->cms_user->is_logged) {
+                    return false;
+                }
+                $this->model_users->filterFriends($this->cms_user->id);
                 break;
 
             case 'friends_online':
-                if (!$user->is_logged) { return false; }
-                $model->filterFriends($user->id);
-                $model->filterOnlineUsers();
-                break;
-
-        }
-
-        switch ($dataset){
-            case 'latest': $model->orderBy('date_reg', 'desc');
-                break;
-            case 'rating': $model->orderBy('karma desc, rating desc');
-                break;
-            case 'popular': $model->orderBy('friends_count', 'desc');
-                break;
-            case 'subscribers': $model->orderBy('subscribers_count', 'desc');
-                break;
-            case 'date_log': $model->orderBy('date_log', 'desc');
+                if (!$this->cms_user->is_logged) {
+                    return false;
+                }
+                $this->model_users->filterFriends($this->cms_user->id);
+                $this->model_users->filterOnlineUsers();
                 break;
         }
 
-        if ($groups){
-            $model->filterGroups($groups);
+        switch ($dataset) {
+            case 'latest': $this->model_users->orderBy('date_reg', 'desc');
+                break;
+            case 'rating': $this->model_users->orderBy('karma desc, rating desc');
+                break;
+            case 'popular': $this->model_users->orderBy('friends_count', 'desc');
+                break;
+            case 'subscribers': $this->model_users->orderBy('subscribers_count', 'desc');
+                break;
+            case 'date_log': $this->model_users->orderBy('date_log', 'desc');
+                break;
         }
 
-        $profiles = $model->limit($this->getOption('limit', 10))->getUsers();
-        if (!$profiles) { return false; }
+        if ($groups) {
+            $this->model_users->filterGroups($groups);
+        }
 
-        $model->makeProfileFields($show_fields, $profiles, $user);
+        $profiles = $this->model_users->limit($this->getOption('limit', 10))->getUsers();
+
+        if (!$profiles) {
+            return false;
+        }
+
+        $this->model_users->makeProfileFields($show_fields, $profiles, $this->cms_user);
 
         list($profiles, $show_fields) = cmsEventsManager::hook('profiles_before_list', [$profiles, $show_fields]);
 
-        return array(
+        return [
             'profiles'   => $profiles,
             'fields'     => $fields,
             'style'      => $this->getOption('style', 'list'),
             'is_avatars' => $this->getOption('is_avatars')
-        );
-
+        ];
     }
 
 }

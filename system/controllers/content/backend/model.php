@@ -805,6 +805,11 @@ class modelBackendContent extends modelContent {
 
         $this->makeFieldFieldset($prop, $table_name);
 
+        $field_class   = 'field'.string_to_camel('_', $prop['type']);
+        $field_handler = new $field_class(null, ['options' => $prop['options']]);
+
+        $field_handler->hookAfterUpdate($table_name, $prop, $old_prop, $this);
+
         cmsEventsManager::hook('ctype_prop_before_update', [$prop, $old_prop, $ctype_name, $this]);
 
         $result = $this->update($table_name, $id, $prop);
