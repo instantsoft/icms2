@@ -13,6 +13,7 @@ define('LANG_WD_CONTENT_LIST_DETAILS', 'Show author, date and comment count');
 define('LANG_WD_CONTENT_LIST_STYLE_BASIC', 'Basic');
 define('LANG_WD_CONTENT_LIST_STYLE_FEATURED', 'Featured');
 define('LANG_WD_CONTENT_LIST_STYLE_TILES_BIG', 'Big tiles');
+define('LANG_WD_CONTENT_LIST_STYLE_ALBUMS', 'Photo albums');
 define('LANG_WD_CONTENT_LIST_STYLE_TILES_SMALL', 'Small tiles');
 define('LANG_WD_CONTENT_LIST_STYLE_COMPACT', 'Compact');
 define('LANG_WD_CONTENT_LIST_STYLE_CUSTOM', 'Template specified in the "Design" tab');

@@ -45,7 +45,7 @@ class widgetContentList extends cmsWidget {
             }
         }
         if (!$shown_fields) {
-            $shown_fields = ['title', 'content'];
+            $shown_fields = ['title'];
         }
         // Опции полей
         $show_fields_options  = $this->getOption('show_fields_options', []);

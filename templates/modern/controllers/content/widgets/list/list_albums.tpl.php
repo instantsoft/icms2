@@ -1,33 +1,11 @@
 <?php
-$this->addTplCSSFromContext('controllers/photos/styles');
-
-if( $ctype['options']['list_show_filter'] ) {
-    $this->renderAsset('ui/filter-panel', [
-        'css_prefix'   => $ctype['name'],
-        'page_url'     => $page_url,
-        'fields'       => $fields,
-        'props_fields' => $props_fields,
-        'props'        => $props,
-        'filters'      => $filters,
-        'ext_hidden_params' => $ext_hidden_params,
-        'is_expanded'  => $ctype['options']['list_expand_filter']
-    ]);
-}
+/**
+ * Template Name: LANG_WD_CONTENT_LIST_STYLE_ALBUMS
+ * Template Type: widget
+ */
 ?>
-
-<?php if (!$items){ ?>
-    <p class="alert alert-info mt-4 alert-list-empty">
-        <?php if(!empty($ctype['labels']['many'])){ ?>
-            <?php echo sprintf(LANG_TARGET_LIST_EMPTY, $ctype['labels']['many']); ?>
-        <?php } else { ?>
-            <?php echo LANG_LIST_EMPTY; ?>
-        <?php } ?>
-    </p>
-<?php return; } ?>
-
-<div class="content_list tiled <?php echo $ctype['name']; ?>_list row mt-3 mt-md-4">
-
-    <?php foreach($items as $item){ ?>
+<div class="icms-widget__content_list mb-n3 mb-md-n4 content_list <?php echo $ctype['name']; ?>_list tiled row">
+    <?php foreach($items as $item) { ?>
 
         <?php
             $image_paths = '';
@@ -40,23 +18,8 @@ if( $ctype['options']['list_show_filter'] ) {
             }
         ?>
 
-        <div class="icms-photo-album <?php echo $ctype['name']; ?>_list_item col-md-6 col-lg-4">
+        <div class="icms-photo-album <?php echo $ctype['name']; ?>_list_item col-lg-6">
             <div class="icms-bg__cover icms-photo-album__cover position-relative embed-responsive embed-responsive-16by9"<?php if ($image_paths){ ?> style="background-image: url(<?php echo html_image_src($image_paths, $ctype['photos_options']['preset_small'], true); ?>);"<?php } ?>>
-
-                <?php if (!empty($this->menus['list_actions_menu'])){ ?>
-                    <div class="dropdown position-absolute text-white">
-                        <button class="btn text-white" type="button" data-toggle="dropdown">
-                            <?php html_svg_icon('solid', 'ellipsis-v'); ?>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <?php foreach($this->menus['list_actions_menu'] as $menu){ ?>
-                                <a class="dropdown-item <?php echo isset($menu['options']['class']) ? $menu['options']['class'] : ''; ?>" href="<?php echo string_replace_keys_values($menu['url'], $item); ?>" title="<?php html($menu['title']); ?>">
-                                    <?php echo $menu['title']; ?>
-                                </a>
-                            <?php } ?>
-                        </div>
-                    </div>
-                <?php } ?>
 
                 <div class="position-absolute btn-dark btn-sm icms-photo-album__note">
                     <?php echo html_spellcount($item['photos_count'], LANG_PHOTOS_PHOTO_SPELLCOUNT); ?>
@@ -66,7 +29,7 @@ if( $ctype['options']['list_show_filter'] ) {
                 </div>
 
                 <div class="icms-photo-album__header">
-                    <?php if (!empty($fields['title']['is_in_list'])) { ?>
+                    <?php if (!empty($item['fields']['title'])) { ?>
                         <div class="text-truncate">
                             <?php if ($item['parent_id']){ ?>
                                 <?php html($item['parent_title']); ?> &rarr;
@@ -137,8 +100,5 @@ if( $ctype['options']['list_show_filter'] ) {
             <?php } ?>
 
         </div>
-
     <?php } ?>
-
 </div>
-<?php echo html_pagebar($page, $perpage, $total, $page_url, $filter_query); ?>
