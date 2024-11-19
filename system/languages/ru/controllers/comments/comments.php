@@ -2,6 +2,7 @@
 
 define('LANG_COMMENTS_CONTROLLER', 'Комментарии');
 define('LANG_COMMENTS_TEXT', 'Текст комментария');
+define('LANG_COMMENTS_TARGET', 'Запись');
 define('LANG_COMMENTS_IP', 'IP адрес');
 define('LANG_COMMENTS_IS_DELETED', 'Удалён?');
 define('LANG_COMMENTS_IS_PRIVATE', 'Приватный?');

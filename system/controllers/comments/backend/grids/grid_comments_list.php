@@ -32,13 +32,6 @@ function grid_comments_list($controller) {
             },
             'filter' => 'range_date'
         ],
-        'target_id' => [
-            'title'    => LANG_COMMENTS_TEXT,
-            'sortable' => false,
-            'handler'  => function ($value, $row) use ($controller) {
-                return '<a title="' . LANG_COMMENTS_EDIT_TEXT . '" class="ajax-modal comment_text_edit" href="' . href_to($controller->root_url, 'text_edit', [$row['id']]) . '">' . string_short($row['content_html'], 350) . '</a>';
-            }
-        ],
         'user_id' => [
             'title'      => LANG_AUTHOR,
             'switchable' => true,
@@ -54,10 +47,46 @@ function grid_comments_list($controller) {
                 return $v;
             }
         ],
+        'target_id' => [
+            'title'    => LANG_COMMENTS_TEXT,
+            'sortable' => false,
+            'handler'  => function ($value, $row) use ($controller) {
+                return '<a title="' . LANG_COMMENTS_EDIT_TEXT . '" class="ajax-modal comment_text_edit" href="' . href_to($controller->root_url, 'text_edit', [$row['id']]) . '">' . string_short($row['content_html'], 350) . '</a>';
+            }
+        ],
+        'target_title' => [
+            'title'      => LANG_COMMENTS_TARGET,
+            'switchable' => true,
+            'sortable'   => false,
+            'handler'    => function ($value, $row) {
+                return '<a target="_blank" href="' . rel_to_href($row['target_url']) . '#comment_'.$row['id'].'">' . $value . '</a>';
+            },
+            'filter'    => 'exact',
+            'filter_by' => 'target_subject',
+            'filter_select' => array(
+                'items' => function($name) {
+
+                    $items = [];
+
+                    $comments_targets = cmsEventsManager::hookAll('comments_targets');
+
+                    if (is_array($comments_targets)) {
+                        foreach ($comments_targets as $comments_target) {
+                            foreach ($comments_target['types'] as $name => $title) {
+                                $items[ltrim(strstr($name, ':'), ':')] = $title;
+                            }
+                        }
+                    }
+
+                    return ['' => LANG_ALL] + $items;
+                }
+            )
+        ],
         'author_ip' => [
             'title'      => LANG_COMMENTS_IP,
             'class'      => 'd-none d-lg-table-cell',
             'width'      => 120,
+            'disable'    => true,
             'sortable'   => false,
             'filter'     => 'ip',
             'switchable' => true,
@@ -75,6 +104,7 @@ function grid_comments_list($controller) {
             'class'      => 'd-none d-lg-table-cell',
             'width'      => 50,
             'switchable' => true,
+            'disable'    => true,
             'handler'    => function ($value, $row) {
                 return '<span class="' . html_signed_class($value) . '">' . html_signed_num($value) . '</span>';
             },
@@ -104,6 +134,7 @@ function grid_comments_list($controller) {
             'title'      => LANG_COMMENTS_IS_PRIVATE,
             'class'      => 'd-none d-lg-table-cell',
             'switchable' => true,
+            'disable'    => true,
             'flag'       => true,
             'width'      => 50
         ]

@@ -2,6 +2,7 @@
 
 define('LANG_COMMENTS_CONTROLLER', 'Comments');
 define('LANG_COMMENTS_TEXT', 'Comment text');
+define('LANG_COMMENTS_TARGET', 'Item');
 define('LANG_COMMENTS_IP', 'IP address');
 define('LANG_COMMENTS_IS_DELETED', 'Removed?');
 define('LANG_COMMENTS_IS_PRIVATE', 'Private?');

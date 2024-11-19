@@ -194,11 +194,14 @@ class cmsPaginator {
         $template = cmsTemplate::getInstance();
 
         return $template->getRenderedAsset('ui/'.$template->getOption('pagination_template', 'pagination'), [
-            'stat_hint' => sprintf(LANG_PAGES_SHOWN, $from, $to, $this->total),
+            'stat_hint'    => sprintf(LANG_PAGES_SHOWN, $from, $to, $this->total),
             'current_page' => $this->current_page,
-            'prev_url' => $this->getPrevUrl(),
-            'next_url' => $this->getNextUrl(),
-            'pages'    => $this->getPages()
+            'prev_url'     => $this->getPrevUrl(),
+            'next_url'     => $this->getNextUrl(),
+            'pages'        => $this->getPages(),
+            'total'        => $this->total,
+            'perpage'      => $this->perpage,
+            'pages_count'  => $this->pages_count
         ]);
     }
 
