@@ -70,6 +70,7 @@ define('LANG_RULE_COMMENTS_TIMES', 'Time limit for editing/deleting a comment');
 define('LANG_RULE_COMMENTS_TIMES_HINT', 'In minutes');
 define('LANG_COMMENTS_UPDATE_USER_RATING', 'Comment rating will effect author\'s rating');
 define('LANG_COMMENTS_UPDATE_USER_RATING_HINT', 'Increase/decrease author\'s reputation for +/- in comments');
+define('LANG_COMMENTS_HIDE_DELETED_USER_COMMENTS', 'Hide comments from deleted users');
 define('LANG_PERM_OPTION_FULL_DELETE', 'Full delete all');
 define('LANG_COMMENTS_MODERATE_NOTIFY', "Added a new comment. Moderation is needed.\n<blockquote>%s</blockquote>");
 define('LANG_COMMENTS_MODERATE_TITLE', 'Comments on moderation (%s)');

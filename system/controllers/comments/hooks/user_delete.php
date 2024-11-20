@@ -2,12 +2,13 @@
 
 class onCommentsUserDelete extends cmsAction {
 
-    public function run($user){
+    public function run($user) {
 
-        $this->model->deleteUserComments($user['id']);
+        if (!empty($this->options['hide_deleted_user_comments'])) {
+            $this->model->deleteUserComments($user['id']);
+        }
 
         return $user;
-
     }
 
 }

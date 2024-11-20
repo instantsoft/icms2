@@ -144,6 +144,9 @@ class formCommentsOptions extends cmsForm {
                         'title' => LANG_COMMENTS_UPDATE_USER_RATING,
                         'hint'  => LANG_COMMENTS_UPDATE_USER_RATING_HINT,
                     ]),
+                    new fieldCheckbox('hide_deleted_user_comments', [
+                        'title' => LANG_COMMENTS_HIDE_DELETED_USER_COMMENTS
+                    ]),
                     new fieldNumber('limit_nesting', [
                         'title'   => LANG_COMMENTS_LIMIT_NESTING,
                         'default' => 5,

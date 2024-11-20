@@ -899,12 +899,16 @@ class cmsTemplate {
      * @param string $default Ключ по умолчанию, если паттерн не задан
      * @return \cmsTemplate
      */
-    public function setPagePatternTitle($item, $default = 'title'){
-        if (!empty($this->controller->options['tag_title'])) {
-            $this->setPageTitle(string_replace_keys_values_extended($this->controller->options['tag_title'], $item));
+    public function setPagePatternTitle($item, $default = 'title') {
+
+        $pattern = get_localized_value('tag_title', $this->controller->options);
+
+        if ($pattern) {
+            $this->setPageTitle(string_replace_keys_values_extended($pattern, $item));
         } else {
             $this->setPageTitle($item[$default]);
         }
+
         return $this;
     }
 
@@ -955,8 +959,10 @@ class cmsTemplate {
 
     public function setPagePatternDescription($item, $default = 'description') {
 
-        if (!empty($this->controller->options['tag_desc'])) {
-            $this->setPageDescription(string_replace_keys_values_extended($this->controller->options['tag_desc'], $item));
+        $pattern = get_localized_value('tag_desc', $this->controller->options);
+
+        if ($pattern) {
+            $this->setPageDescription(string_replace_keys_values_extended($pattern, $item));
         } else {
             $this->setPageDescription(string_get_meta_description($item[$default]));
         }

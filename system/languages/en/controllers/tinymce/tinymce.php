@@ -6,7 +6,14 @@ define('LANG_TINYMCE_QUICKBARS_INSERT_TOOLBAR', 'Insert buttons for the QuickBar
 define('LANG_TINYMCE_PLUGINS', 'Plugins');
 define('LANG_TINYMCE_PLUGINS_HINT', 'Other plugins will connect automatically when assigning their buttons');
 define('LANG_TINYMCE_SKIN', 'Skin');
-define('LANG_TINYMCE_FORCED_ROOT_BLOCK', 'Carriage transfer');
+define('LANG_TINYMCE_FORCED_ROOT_BLOCK', 'Default Block Element');
+define('LANG_TINYMCE_FORCED_ROOT_BLOCK_HINT', 'This option enables you to adjust the default block element used to wrap non block elements and text nodes.');
+define('LANG_TINYMCE_NEWLINE_BEHAVIOR', 'Newline Behavior');
+define('LANG_TINYMCE_NEWLINE_BEHAVIOR_HINT', 'This option enables you to adjust what happens when Enter or Return is pressed.');
+define('LANG_TINYMCE_NEWLINE_BEHAVIOR1', 'Inserts a block (defined by Default Block Element opts) on Enter, and a br tag on Shift+Enter');
+define('LANG_TINYMCE_NEWLINE_BEHAVIOR2', 'Forces the above Enter behavior in all cases.');
+define('LANG_TINYMCE_NEWLINE_BEHAVIOR3', 'Forces the above Shift+Enter behavior in all cases');
+define('LANG_TINYMCE_NEWLINE_BEHAVIOR4', 'Swaps Enter and Shift+Enter behaviors');
 define('LANG_TINYMCE_TAG', '%s tag');
 define('LANG_TINYMCE_TOOLBAR_DRAWER', 'Surplus buttons across the width of the toolbar');
 define('LANG_TINYMCE_TOOLBAR_DRAWER0', 'Move to the next line');

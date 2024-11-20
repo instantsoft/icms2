@@ -6,7 +6,14 @@ define('LANG_TINYMCE_QUICKBARS_INSERT_TOOLBAR', 'Кнопки вставки п�
 define('LANG_TINYMCE_PLUGINS', 'Плагины');
 define('LANG_TINYMCE_PLUGINS_HINT', 'Другие плагины подключатся автоматически, при назначении их кнопок');
 define('LANG_TINYMCE_SKIN', 'Скин');
-define('LANG_TINYMCE_FORCED_ROOT_BLOCK', 'Перевод каретки');
+define('LANG_TINYMCE_FORCED_ROOT_BLOCK', 'Блочный элемент');
+define('LANG_TINYMCE_FORCED_ROOT_BLOCK_HINT', 'Блочный элемент по умолчанию, используемый для обертывания неблочных элементов и текстовых узлов.');
+define('LANG_TINYMCE_NEWLINE_BEHAVIOR', 'Поведение новой строки');
+define('LANG_TINYMCE_NEWLINE_BEHAVIOR_HINT', 'Этот параметр позволяет настроить, что происходит при нажатии клавиш Enter или Return.');
+define('LANG_TINYMCE_NEWLINE_BEHAVIOR1', 'Вставляет блок (заданный в опции "Блочный элемент") по Enter и тег br по Shift+Enter');
+define('LANG_TINYMCE_NEWLINE_BEHAVIOR2', 'Вставляет блок (заданный в опции "Блочный элемент") по Enter во всех случаях');
+define('LANG_TINYMCE_NEWLINE_BEHAVIOR3', 'Вставляет тег br во всех случаях');
+define('LANG_TINYMCE_NEWLINE_BEHAVIOR4', 'Меняет местами поведение клавиш Enter и Shift+Enter.');
 define('LANG_TINYMCE_TAG', 'Тег %s');
 define('LANG_TINYMCE_TOOLBAR_DRAWER', 'Излишки кнопок по ширине тулбара');
 define('LANG_TINYMCE_TOOLBAR_DRAWER0', 'Переносить на следующую строку');

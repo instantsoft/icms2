@@ -70,6 +70,7 @@ define('LANG_RULE_COMMENTS_TIMES_HINT', 'В минутах');
 define('LANG_RULE_CONTENT_COMMENT',      'Комментирование');
 define('LANG_COMMENTS_UPDATE_USER_RATING', 'Рейтинг комментариев повлияет на рейтинг автора');
 define('LANG_COMMENTS_UPDATE_USER_RATING_HINT', 'Увеличить/уменьшить рейтинг автора за +/- в комментариях');
+define('LANG_COMMENTS_HIDE_DELETED_USER_COMMENTS', 'Скрывать комментарии удалённых пользователей');
 define('LANG_PERM_OPTION_FULL_DELETE', 'Все удалять полностью');
 define('LANG_COMMENTS_MODERATE_NOTIFY', "Добавлен новый комментарий, необходима модерация.\n<blockquote>%s</blockquote>");
 define('LANG_COMMENTS_MODERATE_TITLE', 'Комментарии на модерации (%s)');

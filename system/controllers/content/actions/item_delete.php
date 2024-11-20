@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelContent $model
+ */
 class actionContentItemDelete extends cmsAction {
 
     public function run() {

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelContent $model
+ */
 class actionContentItemBindForm extends cmsAction {
 
     public function run() {

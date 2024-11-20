@@ -87,9 +87,9 @@ class actionTagsIndex extends cmsAction {
             'ctype_title' => $menu_items[$target_controller][$target]['title'] ?? null
         ];
 
-        $seo_title_pattern = $tag['tag_title'] ?: $this->options['seo_title_pattern'];
-        $seo_desc_pattern  = $tag['tag_desc'] ?: $this->options['seo_desc_pattern'];
-        $seo_h1_pattern    = $tag['tag_h1'] ?: $this->options['seo_h1_pattern'];
+        $seo_title_pattern = $tag['tag_title'] ?: get_localized_value('seo_title_pattern', $this->options);
+        $seo_desc_pattern  = $tag['tag_desc'] ?: get_localized_value('seo_desc_pattern', $this->options);
+        $seo_h1_pattern    = $tag['tag_h1'] ?: get_localized_value('seo_h1_pattern', $this->options);
 
         if ($seo_title_pattern) {
             $seo_title = string_replace_keys_values_extended($seo_title_pattern, $seo_data);

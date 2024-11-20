@@ -1040,14 +1040,14 @@ class content extends cmsFrontend {
             }
         }
 
-        list($form, $item, $ctype) = cmsEventsManager::hook('content_item_form', [$form, $item, $ctype], null, $this->request);
-
-        // Хук с контекстом использования формы. Можно было бы скорректировать хук выше, но совместимость :)
+        // Хук с контекстом использования формы. Можно было бы скорректировать хук ниже, но совместимость :)
         list($form, $item, $ctype, $action, $data) = cmsEventsManager::hook('content_item_form_context',
             [$form, $item, $ctype, $action, $data],
             null,
             $this->request
         );
+
+        list($form, $item, $ctype) = cmsEventsManager::hook('content_item_form', [$form, $item, $ctype], null, $this->request);
 
         return $form;
     }

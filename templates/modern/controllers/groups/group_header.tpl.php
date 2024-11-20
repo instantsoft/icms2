@@ -36,9 +36,10 @@
         </span>
 	<?php } ?>
     <?php if (!empty($group['fields']['title']['is_in_item'])){ ?>
+        <?php $pattern = get_localized_value('tag_h1', $this->controller->options); ?>
         <span>
-            <?php if (!empty($this->controller->options['tag_h1'])) { ?>
-                <?php echo string_replace_keys_values_extended($this->controller->options['tag_h1'], $group); ?>
+            <?php if ($pattern) { ?>
+                <?php echo string_replace_keys_values_extended($pattern, $group); ?>
             <?php } else { ?>
                 <?php html($group['title']); ?>
             <?php } ?>

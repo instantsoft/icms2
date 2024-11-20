@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @property \modelGroups $model
+ * @property \modelContent $model_content
+ */
 class onGroupsContentItemFormContext extends cmsAction {
 
     public function run($data) {
@@ -45,15 +48,21 @@ class onGroupsContentItemFormContext extends cmsAction {
         }
 
         // Добавляем поле выбора группы
-        if (($action == 'add' || $this->cms_user->is_admin) && $groups){
+        if (($action === 'add' || $this->cms_user->is_admin) && $groups){
 
             $fieldset_id = $form->addFieldsetToBeginning(LANG_GROUP, 'group_wrap', ['is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('group_wrap', $ctype['options']['is_collapsed'])]);
 
             $form->addField($fieldset_id,
                 new fieldList('parent_id', [
-                        'items' => $groups_list,
+                        'items'   => $groups_list,
                         'default' => $this->request->get('group_id', 0),
-                        'rules' => $groups_rules
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'field_name' => 'parent_title',
+                            'is_table_field' => true,
+                            'table' => $this->model_content->getContentTypeTableName($ctype['name'])
+                        ],
+                        'rules'   => $groups_rules
                     ]
                 )
             );
@@ -70,7 +79,7 @@ class onGroupsContentItemFormContext extends cmsAction {
             $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
             $this->cms_template->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
             if ($ctype['options']['list_on']){
-                $this->cms_template->addBreadcrumb((empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile']), href_to('groups', $group['slug'], array('content', $ctype['name'])));
+                $this->cms_template->addBreadcrumb((empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile']), href_to('groups', $group['slug'], ['content', $ctype['name']]));
             }
 
         }

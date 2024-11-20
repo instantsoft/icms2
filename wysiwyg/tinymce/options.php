@@ -71,12 +71,24 @@ class formWysiwygTinymceOptions extends cmsForm {
 
             new fieldList('options:forced_root_block', array(
                 'title' => LANG_TINYMCE_FORCED_ROOT_BLOCK,
+                'hint'  => LANG_TINYMCE_FORCED_ROOT_BLOCK_HINT,
                 'items' => [
-                    '' => sprintf(LANG_TINYMCE_TAG, '<br>'),
                     'p' => sprintf(LANG_TINYMCE_TAG, '<p>'),
                     'div' => sprintf(LANG_TINYMCE_TAG, '<div>')
                 ],
-                'default' => 'p',
+                'default' => 'p'
+            )),
+
+            new fieldList('options:newline_behavior', array(
+                'title' => LANG_TINYMCE_NEWLINE_BEHAVIOR,
+                'hint'  => LANG_TINYMCE_NEWLINE_BEHAVIOR_HINT,
+                'items' => [
+                    'default'   => LANG_TINYMCE_NEWLINE_BEHAVIOR1,
+                    'block'     => LANG_TINYMCE_NEWLINE_BEHAVIOR2,
+                    'linebreak' => LANG_TINYMCE_NEWLINE_BEHAVIOR3,
+                    'invert'    => LANG_TINYMCE_NEWLINE_BEHAVIOR4
+                ],
+                'default' => 'default'
             )),
 
             new fieldList('options:block_formats', array(

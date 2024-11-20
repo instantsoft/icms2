@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelContent $model
+ */
 class actionContentItemChildsView extends cmsAction {
 
     public $lock_explicit_call = true;

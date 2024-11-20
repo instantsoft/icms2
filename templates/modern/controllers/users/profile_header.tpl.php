@@ -12,8 +12,9 @@
 
     <div class="name flex-fill<?php if (!empty($profile['status'])){ ?> name_with_status<?php } ?>">
         <h1 class="h2 m-0 text-break">
-            <?php if (!empty($this->controller->options['tag_h1'])) { ?>
-                <?php echo string_replace_keys_values_extended($this->controller->options['tag_h1'], $meta_profile); ?>
+            <?php $pattern = get_localized_value('tag_h1', $this->controller->options); ?>
+            <?php if ($pattern) { ?>
+                <?php echo string_replace_keys_values_extended($pattern, $meta_profile); ?>
             <?php } else { ?>
                 <?php html($profile['nickname']); ?>
             <?php } ?>
