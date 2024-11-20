@@ -4,13 +4,13 @@ class cmsWysiwygAce {
     private static $redactor_loaded = false;
 
     private $options = [
-        'theme'                     => 'ace/theme/github_dark',
+        'theme'                     => 'ace/theme/github_light_default',
         'mode'                      => 'ace/mode/html',
         'wrap'                      => true,
         'fontSize'                  => 14,
         'enableBasicAutocompletion' => true,
         'enableSnippets'            => true,
-        'enableEmmet'               => true,
+        'enableEmmet'               => false,
         'showLineNumbers'           => true,
         'enableLiveAutocompletion'  => true,
         'newLineMode'               => 'unix',
@@ -77,7 +77,7 @@ class cmsWysiwygAce {
                 let textarea = $('#'+dom_id).hide();
                 $('<pre class="ace_redactor" id="'+dom_id+'_ace">'+$(textarea).html()+'</pre><div class="scrollmargin"></div>').insertAfter(textarea);
                 ace.require('ace/ext/language_tools');
-                var editor = ace.edit(dom_id+'_ace', aceconfig);
+                let editor = ace.edit(dom_id+'_ace', aceconfig);
                 editor.getSession().on('changeAnnotation', function() {
                     let annotations = editor.getSession().getAnnotations()||[], i = len = annotations.length;
                     while (i--) {
