@@ -217,7 +217,7 @@ class cmsDatabase {
      */
     public function reconnect($is_force = false) {
 
-        if ($is_force || !$this->mysqli->ping()) {
+        if ($is_force || !$this->ping()) {
 
             $this->mysqli->close();
 
@@ -225,6 +225,20 @@ class cmsDatabase {
         }
 
         return true;
+    }
+
+    /**
+     * Проверяет соединение с сервером
+     * Если коннект потерян, возвращает false,
+     * Если нет, true
+     *
+     * @return bool
+     */
+    public function ping() {
+
+        $this->mysqli->query('SELECT LAST_INSERT_ID()');
+
+        return $this->mysqli->errno == 2006 ? false : true;
     }
 
     public function getStat() {
@@ -471,69 +485,65 @@ class cmsDatabase {
         $is_enc_field = strpos($field, 'enc_') === 0;
 
         // если значение поля - массив,
-        // то преобразуем его в YAML
-        if (is_array($value) && !$is_enc_field){
-            if($array_as_json){
-                $value = "'". $this->escape(cmsModel::arrayToString($value)) ."'";
-            } else {
-                $value = "'". $this->escape(cmsModel::arrayToYaml($value)) ."'";
-            }
-        } else
+        // то преобразуем его в YAML или JSON
+        if (is_array($value) && !$is_enc_field) {
 
-        // если это поле даты и оно не установлено,
-        // то используем текущее время
-        if ($is_date_field && ($value === false || $value === 0)) { $value = 'NULL'; }  else
-        if ($is_date_field && ($value === '' || is_null($value))) { $value = 'CURRENT_TIMESTAMP'; }  else
+            $value = $array_as_json
+                ? cmsModel::arrayToString($value)
+                : cmsModel::arrayToYaml($value);
 
-        // если нужно шифровать
-        if ($is_enc_field) {
-
-            // значит первая ячейка ключ
-            if (is_array($value)){
-
-                $aes_key = "'". $this->escape($value[0]) ."'";
-
-                $value = $value[1];
-
-            } else {
-                $aes_key = '@aeskey';
-            }
-
-            if (is_array($value)){
-                $value = "'". $this->escape(base64_encode(cmsModel::arrayToString($value))) ."'";
-            } else
-            if ($value === '' || is_null($value)) { $value = 'NULL'; }
-            else {
-                $value = $this->escape(base64_encode($value));
-                $value = "'{$value}'";
-            }
-
-            if($value != 'NULL'){
-                $value = "AES_ENCRYPT({$value}, {$aes_key})";
-            }
-
-        } else
-
-        // если это поле булево,
-        // то преобразуем его в число
-        if (is_bool($value)) { $value = intval($value); } else
-
-        // если значение поля не задано,
-        // то запишем в базу NULL
-        if ($value === '' || is_null($value)) { $value = 'NULL'; } else
-
-        // если значение поля как результат функции
-        if ($value instanceof Closure) { $value = $value($this); }
-
-        else {
-
-            // Убираем только пробелы и NUL-байт
-            $value = $this->escape(trim($value, " \0"));
-            $value = "'{$value}'";
-
+            return "'" . $this->escape($value) . "'";
         }
 
-        return $value;
+        // Поля даты
+        if ($is_date_field) {
+            if ($value === false || $value === 0) {
+                return 'NULL';
+            }
+            if ($value === '' || is_null($value)) {
+                return 'CURRENT_TIMESTAMP';
+            }
+        }
+
+        // Поля шифрования
+        if ($is_enc_field) {
+
+            // Если передан массив, то в нулевом индексе должен быть
+            // ключ шифрования, а в первом непосредственно данные
+
+            $aes_key = is_array($value) ? "'" . $this->escape($value[0]) . "'" : '@aeskey';
+            $value   = is_array($value) ? $value[1] : $value;
+
+            if (is_array($value)) {
+                $value = base64_encode(cmsModel::arrayToString($value));
+            } elseif ($value !== '' && !is_null($value)) {
+                $value = base64_encode($value);
+            } else {
+                return 'NULL';
+            }
+
+            $value = $this->escape($value);
+
+            return "AES_ENCRYPT('{$value}', {$aes_key})";
+        }
+
+        // Булевы значения
+        if (is_bool($value)) {
+            return $value ? '1' : '0';
+        }
+
+        // Обработка значения через функцию
+        if ($value instanceof Closure) {
+            return $value($this);
+        }
+
+        // NULL для пустых строк и значений
+        if ($value === '' || is_null($value)) {
+            return 'NULL';
+        }
+
+        // Обычные строки, убираем только пробелы и NUL-байт
+        return "'" . $this->escape(trim($value, " \0")) . "'";
     }
 
     public function freeResult($result) {
@@ -652,52 +662,52 @@ class cmsDatabase {
      *
      * @param string $table Таблица
      * @param array $data Массив данных для вставки в таблицу
-     * @param array $update_data Массив данных для обновления при совпадении ключей
+     * @param ?array $update_data Массив данных для обновления при совпадении ключей
      * @param boolean $array_as_json Переходная опция для миграции с Yaml на Json
      * @return boolean|integer
      */
-    public function insertOrUpdate($table, $data, $update_data = false, $array_as_json = false){
+    public function insertOrUpdate(string $table, array $data, $update_data = null, $array_as_json = false) {
+
+        if (!$data){
+            return false;
+        }
 
         $fields = [];
         $values = [];
         $set    = [];
 
-        if (is_array($data)){
+        foreach ($data as $field => $value) {
 
-            foreach ($data as $field => $value){
+            $value = $this->prepareValue($field, $value, $array_as_json);
+
+            $fields[] = "`$field`";
+            $values[] = $value;
+
+            if (!$update_data) {
+                $set[] = "`{$field}` = {$value}";
+            }
+        }
+
+        if (is_array($update_data)) {
+            foreach ($update_data as $field => $value) {
 
                 $value = $this->prepareValue($field, $value, $array_as_json);
 
-                $fields[] = "`$field`";
-                $values[] = $value;
-
-                if($update_data === false){
-                    $set[] = "`{$field}` = {$value}";
-                }
-
+                $set[] = "`{$field}` = {$value}";
             }
+        }
 
-            $fields = implode(', ', $fields);
-            $values = implode(', ', $values);
+        $fields = implode(', ', $fields);
+        $values = implode(', ', $values);
+        $set    = implode(', ', $set);
 
-            $sql = "INSERT INTO {#}{$table} ({$fields})\nVALUES ({$values})";
-
-            if(is_array($update_data)){
-                foreach ($update_data as $field=>$value) {
-
-                    $value = $this->prepareValue($field, $value, $array_as_json);
-
-                    $set[] = "`{$field}` = {$value}";
-
-                }
-            }
-
-            $set = implode(', ', $set);
-
+        $sql = "INSERT INTO {#}{$table} ({$fields})\nVALUES ({$values})";
+        if ($set) {
             $sql .= " ON DUPLICATE KEY UPDATE {$set}";
+        }
 
-            if ($this->query($sql)) { return $this->lastId(); }
-
+        if ($this->query($sql)) {
+            return $this->lastId();
         }
 
         return false;
