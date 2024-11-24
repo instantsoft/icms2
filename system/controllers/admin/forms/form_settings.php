@@ -6,6 +6,8 @@ class formAdminSettings extends cmsForm {
 
     public function init() {
 
+        cmsCore::includeFile('system/libs/phpmailer/autoload.php');
+
         $host = parse_url(cmsConfig::get('host'), PHP_URL_HOST);
 
         $is_css_cache = cmsCore::getFilesList('cache/static/css', '*.css');
@@ -290,6 +292,7 @@ class formAdminSettings extends cmsForm {
                     ]),
                     new fieldList('mail_transport', [
                         'title' => LANG_CP_SETTINGS_MAIL_TRANSPORT,
+                        'hint' => 'PHPMailer V'.PHPMailer\PHPMailer\PHPMailer::VERSION,
                         'items' => [
                             'mail'     => 'PHP mail()',
                             'smtp'     => 'SMTP',

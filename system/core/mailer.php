@@ -6,13 +6,13 @@ class cmsMailer {
 
     public function __construct($config = false) {
 
+        cmsCore::includeFile('system/libs/phpmailer/autoload.php');
+
         if(!$config){
             $config = cmsConfig::getInstance();
         }
 
-        cmsCore::loadLib('phpmailer/class.phpmailer', 'PHPMailer');
-
-        $this->mailer = new PHPMailer();
+        $this->mailer = new PHPMailer\PHPMailer\PHPMailer;
 
         $this->mailer->CharSet  = 'UTF-8';
         $this->mailer->XMailer  = ' ';
@@ -50,8 +50,6 @@ class cmsMailer {
         // SMTP Server
         if ($config->mail_transport == 'smtp') {
 
-            cmsCore::loadLib('phpmailer/class.smtp', 'SMTP');
-
             $this->mailer->IsSMTP();
             $this->mailer->Host          = $config->mail_smtp_server;
             $this->mailer->Port          = $config->mail_smtp_port;
@@ -72,7 +70,6 @@ class cmsMailer {
         }
 
         return $this;
-
     }
 
 //============================================================================//
@@ -149,7 +146,6 @@ class cmsMailer {
         }
 
         return $this;
-
     }
 
     /**
@@ -186,7 +182,6 @@ class cmsMailer {
         }
 
         return $letter_text;
-
     }
 
     /**
@@ -216,7 +211,6 @@ class cmsMailer {
         }
 
         return $letter_text;
-
     }
 
     /**
