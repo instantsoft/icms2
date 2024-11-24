@@ -20,7 +20,7 @@
     define('LANG_CP_WO_AUTO_GROUP_HINT',        'На страницах групп виджет выведет указанные записи группы');
     define('LANG_CP_DASHBOARD_SI_ICMS',         'Версия InstantCMS');
     define('LANG_CP_DASHBOARD_SI_WS',           'Веб сервер');
-    define('LANG_CP_DASHBOARD_SQL_SERVER',      'Mysql сервер');
+    define('LANG_CP_DASHBOARD_SQL_SERVER',      'SQL сервер');
     define('LANG_CP_DASHBOARD_APACHE_NGINX',    'двухуровневая конфигурация, версия Nginx - %s');
     define('LANG_CP_DASHBOARD_SI_PHP',          'Версия PHP');
     define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');

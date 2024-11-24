@@ -251,6 +251,40 @@ class cmsDatabase {
     }
 
     /**
+     * Возвращает информацию о сервере
+     * Версию и тип (mysql или mariadb)
+     * ['version' => '8.0.0', 'type' => 'MySQL']
+     * 
+     * @return array
+     */
+    public function getServerInfo() {
+
+        $res = [
+            'version' => 'N/A',
+            'type' => 'MySQL'
+        ];
+
+        $result = $this->query('SELECT @@version as v');
+
+        $data = $this->fetchAssoc($result);
+        $this->freeResult($result);
+
+        if ($data) {
+
+            preg_match('#[0-9]+\.[0-9]+\.[0-9]+#u', $data['v'], $version);
+            if (isset($version[0])) {
+                $res['version'] = $version[0];
+            }
+
+            if (stripos($data['v'], 'mariadb') !== false) {
+                $res['type'] = 'MariaDB';
+            }
+        }
+
+        return $res;
+    }
+
+    /**
      * Устанавливает таймзону соединения
      * @return $this
      */
@@ -295,7 +329,7 @@ class cmsDatabase {
         $data = $this->fetchAssoc($result);
         $this->freeResult($result);
 
-        return isset($data['Value']) ? $data['Value'] : null;
+        return $data['Value'] ?? null;
     }
 
 //============================================================================//

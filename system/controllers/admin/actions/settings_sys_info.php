@@ -39,16 +39,7 @@ class actionAdminSettingsSysInfo extends cmsAction {
             ];
         }
 
-        // mysql
-        $o = console_exec_command('mysql -V');
-
-        $mysql_version = 'N/A';
-        if ($o && is_array($o)) {
-            preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', current($o), $version);
-            if (isset($version[0])) {
-                $mysql_version = $version[0];
-            }
-        }
+        $sql_server_info = $this->model->db->getServerInfo();
 
         $sysinfo = [];
 
@@ -59,7 +50,7 @@ class actionAdminSettingsSysInfo extends cmsAction {
 
         $sysinfo = $sysinfo + [
             $server_data['title']             => $server_data['value'],
-            LANG_CP_DASHBOARD_SQL_SERVER      => $mysql_version,
+            LANG_CP_DASHBOARD_SQL_SERVER      => $sql_server_info['type'].' '.$sql_server_info['version'],
             LANG_CP_DASHBOARD_SI_PHP          => implode('.', [PHP_MAJOR_VERSION, PHP_MINOR_VERSION, PHP_RELEASE_VERSION]) . ', ' . PHP_SAPI,
             LANG_CP_DASHBOARD_SI_ML           => files_format_bytes(files_convert_bytes(@ini_get('memory_limit'))),
             LANG_CP_DASHBOARD_SI_MAX          => $uploader->getMaxUploadSize(),

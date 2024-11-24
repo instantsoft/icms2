@@ -21,7 +21,7 @@
     define('LANG_CP_DASHBOARD_SI_ICMS',         'InstantCMS version');
     define('LANG_CP_DASHBOARD_SI_PHP',          'PHP version');
     define('LANG_CP_DASHBOARD_SI_WS',           'Web server');
-    define('LANG_CP_DASHBOARD_SQL_SERVER',      'MYSQL server');
+    define('LANG_CP_DASHBOARD_SQL_SERVER',      'SQL server');
     define('LANG_CP_DASHBOARD_APACHE_NGINX',    'a two-tier configuration, Nginx version is %s');
     define('LANG_CP_DASHBOARD_SI_ML',           'Memory limit');
     define('LANG_CP_DASHBOARD_SI_IP',           'Server IP');
