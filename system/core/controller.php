@@ -614,16 +614,17 @@ class cmsController {
 
     /**
      * Проверяет параметры запроса, если они заданы
-     * @param object $action_object
-     * @return boolean
+     *
+     * @param cmsAction $action_object
+     * @return false|array False или массив ошибок
      */
     public function validateRequestParams($action_object) {
 
-        if(empty($action_object->request_params)){
+        if (empty($action_object->request_params)) {
             return false;
         }
 
-        $errors = array();
+        $errors = [];
 
         // валидация аналогична валидации форм
         foreach ($action_object->request_params as $param_name => $rules) {
@@ -636,13 +637,16 @@ class cmsController {
 
                 $this->request->set($param_name, $value);
 
-            } elseif(!is_null($value) && isset($rules['default'])){
+            } elseif (!is_null($value) && isset($rules['default'])) {
 
                 $value = $this->request->get($param_name, $rules['default']);
 
                 // для применения типизации переменной
                 $this->request->set($param_name, $value);
+            }
 
+            if (empty($rules['rules'])) {
+                continue;
             }
 
             foreach ($rules['rules'] as $rule) {
@@ -655,23 +659,18 @@ class cmsController {
 
                 unset($rule[0]);
 
-                $result = call_user_func_array(array($this, $validate_function), $rule);
+                $result = call_user_func_array([$action_object, $validate_function], $rule);
 
-                // если получилось false, то дальше не проверяем, т.к.
-                // ошибка уже найдена
                 if ($result !== true) {
                     $errors[$param_name] = $result;
                     break;
                 }
-
             }
-
         }
 
         if (!count($errors)) { return false; }
 
         return $errors;
-
     }
 
 //============================================================================//
@@ -871,11 +870,13 @@ class cmsController {
 //============================================================================//
 //============================================================================//
 
-    public function loadRoutes(){
+    public function loadRoutes() {
 
         $file = $this->root_path . 'routes.php';
 
-        if (!is_readable($file)){ return array(); }
+        if (!is_readable($file)) {
+            return [];
+        }
 
         include_once($file);
 
@@ -883,10 +884,11 @@ class cmsController {
 
         $routes = call_user_func($routes_func);
 
-        if (!is_array($routes)) { return array(); }
+        if (!is_array($routes)) {
+            return [];
+        }
 
         return $routes;
-
     }
 
 //============================================================================//
@@ -949,26 +951,25 @@ class cmsController {
 
     /**
      * Позволяет переопределить экшен перед вызовом
+     * 
      * @param string $action_name
      * @return string
      */
-    public function routeAction($action_name){
+    public function routeAction($action_name) {
 
         // Избавляемся от index в url
-        if($this->unknown_action_as_index_param){
+        if ($this->unknown_action_as_index_param) {
 
-            if($this->isActionExists($action_name)){
+            if ($this->isActionExists($action_name)) {
                 return $action_name;
             }
 
             array_unshift($this->current_params, $action_name);
 
             return 'index';
-
         }
 
         return $action_name;
-
     }
 
 //============================================================================//
