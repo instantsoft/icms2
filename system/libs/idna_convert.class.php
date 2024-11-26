@@ -1,27 +1,4 @@
 <?php
-
-// {{{ license
-
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 foldmethod=marker: */
-//
-// +----------------------------------------------------------------------+
-// | This library is free software; you can redistribute it and/or modify |
-// | it under the terms of the GNU Lesser General Public License as       |
-// | published by the Free Software Foundation; either version 2.1 of the |
-// | License, or (at your option) any later version.                      |
-// |                                                                      |
-// | This library is distributed in the hope that it will be useful, but  |
-// | WITHOUT ANY WARRANTY; without even the implied warranty of           |
-// | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    |
-// | Lesser General Public License for more details.                      |
-// |                                                                      |
-// | You should have received a copy of the GNU Lesser General Public     |
-// | License along with this library; if not, write to the Free Software  |
-// | Foundation, Inc., 51 Franklin St, Boston, MA 02110, United States    |
-// +----------------------------------------------------------------------+
-//
-// }}}
-
 /**
  * Encode/decode Internationalized Domain Names.
  *
@@ -41,17 +18,18 @@
  *
  * Unicode input might be given as either UTF-8 string, UCS-4 string or UCS-4 array.
  * Unicode output is available in the same formats.
- * You can select your preferred format via {@link set_paramter()}.
  *
  * ACE input and output is always expected to be ASCII.
  *
  * @author  Matthias Sommerfeld <mso@phlylabs.de>
  * @copyright 2004-2014 phlyLabs Berlin, http://phlylabs.de
- * @version 0.9.0 2014-12-12
+ * @modified InstantSoft, https://instantcms.ru/ for InstantCMS
+ * @version 0.10.0 2024-11-26
  */
+#[\AllowDynamicProperties]
 class idna_convert {
 
-    private $version = '0.9.0';
+    private $version = '0.10.0';
     protected $sub_version = 'main';
 
     // NP See below

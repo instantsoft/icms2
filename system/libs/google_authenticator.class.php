@@ -6,6 +6,7 @@
  * @author Michael Kliewe
  * @copyright 2012 Michael Kliewe
  * @license http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @modified InstantSoft, https://instantcms.ru/ for InstantCMS
  *
  * @link http://www.phpgangsta.de/
  */
@@ -61,6 +62,7 @@ class googleAuthenticator {
      * @return string
      */
     public function getCode($secret, $timeSlice = null) {
+
         if ($timeSlice === null) {
             $timeSlice = floor(time() / 30);
         }
@@ -68,11 +70,11 @@ class googleAuthenticator {
         $secretkey = $this->_base32Decode($secret);
 
         // Pack time into binary string
-        $time     = chr(0) . chr(0) . chr(0) . chr(0) . pack('N*', $timeSlice);
+        $time = chr(0) . chr(0) . chr(0) . chr(0) . pack('N*', $timeSlice);
         // Hash it with users secret key
-        $hm       = hash_hmac('SHA1', $time, $secretkey, true);
+        $hm = hash_hmac('SHA1', $time, $secretkey, true);
         // Use last nipple of result as index/offset
-        $offset   = ord(substr($hm, -1)) & 0x0F;
+        $offset = ord(substr($hm, -1)) & 0x0F;
         // grab 4 bytes of the result
         $hashpart = substr($hm, $offset, 4);
 
@@ -97,18 +99,18 @@ class googleAuthenticator {
      *
      * @return string
      */
-    public function getQRCodeGoogleUrl($name, $secret, $title = null, $params = array()) {
+    public function getQRCodeGoogleUrl($name, $secret, $title = null, $params = []) {
 
         $width  = !empty($params['width']) && (int) $params['width'] > 0 ? (int) $params['width'] : 200;
         $height = !empty($params['height']) && (int) $params['height'] > 0 ? (int) $params['height'] : 200;
-        $level  = !empty($params['level']) && array_search($params['level'], array('L', 'M', 'Q', 'H')) !== false ? $params['level'] : 'M';
+        $level  = !empty($params['level']) && array_search($params['level'], ['L', 'M', 'Q', 'H']) !== false ? $params['level'] : 'M';
 
         $urlencoded = urlencode('otpauth://totp/' . $name . '?secret=' . $secret . '');
         if (isset($title)) {
             $urlencoded .= urlencode('&issuer=' . urlencode($title));
         }
 
-        return "https://api.qrserver.com/v1/create-qr-code/?data=$urlencoded&size=${width}x${height}&ecc=$level";
+        return "https://api.qrserver.com/v1/create-qr-code/?data=$urlencoded&size={$width}x{$height}&ecc={$level}";
     }
 
     /**
@@ -172,7 +174,7 @@ class googleAuthenticator {
         $base32charsFlipped = array_flip($base32chars);
 
         $paddingCharCount = substr_count($secret, $base32chars[32]);
-        $allowedValues    = array(6, 4, 3, 1, 0);
+        $allowedValues    = [6, 4, 3, 1, 0];
 
         if (!in_array($paddingCharCount, $allowedValues)) {
             return false;
@@ -199,7 +201,7 @@ class googleAuthenticator {
             }
             $eightBits = str_split($x, 8);
             for ($z = 0; $z < count($eightBits); ++$z) {
-                $binaryString .= (($y            = chr(base_convert($eightBits[$z], 2, 10))) || ord($y) == 48) ? $y : '';
+                $binaryString .= (($y = chr(base_convert($eightBits[$z], 2, 10))) || ord($y) == 48) ? $y : '';
             }
         }
 
@@ -212,13 +214,13 @@ class googleAuthenticator {
      * @return array
      */
     protected function _getBase32LookupTable() {
-        return array(
+        return [
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', //  7
             'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', // 15
             'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', // 23
             'Y', 'Z', '2', '3', '4', '5', '6', '7', // 31
-            '=', // padding char
-        );
+            '=' // padding char
+        ];
     }
 
     /**
@@ -239,7 +241,7 @@ class googleAuthenticator {
         $safeLen = strlen($safeString);
         $userLen = strlen($userString);
 
-        if ($userLen != $safeLen) {
+        if ($userLen !== $safeLen) {
             return false;
         }
 

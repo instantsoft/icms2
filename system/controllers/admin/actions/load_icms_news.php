@@ -20,8 +20,6 @@ class actionAdminLoadIcmsNews extends cmsAction {
             cmsCore::error404();
         }
 
-        cmsCore::loadLib('lastrss.class');
-
         $rss = new lastRSS;
 
         $rss->cache_dir   = cmsConfig::get('cache_path');

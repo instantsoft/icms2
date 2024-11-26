@@ -479,7 +479,9 @@
     define('LANG_CP_USER_PMAILING',             'Create pm messages');
     define('LANG_CP_USER_ADD',                  'Add user');
     define('LANG_CP_USER_CREATED',              'User &laquo;%s&raquo; is created');
-    define('LANG_CP_USER_DELETE_CONFIRM',       'Delete a user {nickname}?\nAll his content and all his uploaded files will be also deleted');
+    define('LANG_CP_USER_DELETE_CONFIRM',       'Delete a user {nickname}? All his content and all his uploaded files will be also deleted');
+    define('LANG_CP_USER_DELETE_LIST_CONFIRM',  'Delete selected users? All their content and all files uploaded to them will also be deleted!');
+    define('LANG_CP_USER_DELETED_LIST',         'Selected users have been deleted');
     define('LANG_CP_USER_DELETED',              'User %s has been deleted');
     define('LANG_CP_USER_GROUP_ADD',            'Add group');
     define('LANG_CP_USER_GROUP_EDIT',           'Edit group');

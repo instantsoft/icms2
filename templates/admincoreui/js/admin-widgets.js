@@ -434,29 +434,33 @@ function widgetUpdated(widget, result){
     icms.modal.close();
 }
 
-function widgetDelete(link){
+function widgetDelete(link) {
 
-    var id = parseInt(link) > 0 ? link : $(link).parents('li:first').attr('data-bp_id');
+    let id = parseInt(link) > 0 ? link : $(link).parents('li:first').attr('data-bp_id');
 
-    if (!confirm(LANG_CP_WIDGET_DELETE_CONFIRM)){return false;}
+    if (id > 0 && !confirm(LANG_CP_WIDGET_DELETE_CONFIRM)) {
+        return false;
+    }
 
-    var widget_dom = $( "#cp-widgets-layout li[data-bp_id=" + id + ']');
+    let widget_dom = $("#cp-widgets-layout li[data-bp_id=" + id + ']');
 
-    var delete_url = $('#cp-widgets-layout').data('delete-url') + '/' + id;
-
-    widget_dom.fadeOut(300, function(){
+    widget_dom.fadeOut(300, function () {
         widget_dom.remove();
         widgetsMarkTabbed();
     });
 
-    $.post(delete_url, {}, function(data){
-        if(data.errors === false && data.del_id){
-            $('li[bind-id="'+data.del_id+'"]').remove();
-        }
-    }, 'json');
+    if (id > 0) {
+
+        let delete_url = $('#cp-widgets-layout').data('delete-url') + '/' + id;
+
+        $.post(delete_url, {}, function (data) {
+            if (data.errors === false && data.del_id) {
+                $('li[bind-id="' + data.del_id + '"]').remove();
+            }
+        }, 'json');
+    }
 
     return false;
-
 }
 
 function widgetRemove(id){

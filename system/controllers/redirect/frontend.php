@@ -41,8 +41,6 @@ class redirect extends cmsFrontend {
         // кириллические домены
         if (preg_match('/^[а-яё]+/iu', $url_host)) {
 
-            cmsCore::loadLib('idna_convert.class');
-
             $IDN = new idna_convert();
 
             $host = $IDN->encode($url_host);

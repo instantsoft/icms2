@@ -6,8 +6,6 @@ class formAdminSettings extends cmsForm {
 
     public function init() {
 
-        cmsCore::includeFile('system/libs/phpmailer/autoload.php');
-
         $host = parse_url(cmsConfig::get('host'), PHP_URL_HOST);
 
         $is_css_cache = cmsCore::getFilesList('cache/static/css', '*.css');

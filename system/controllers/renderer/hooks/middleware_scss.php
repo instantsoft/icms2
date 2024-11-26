@@ -190,10 +190,6 @@ class onRendererMiddlewareScss extends cmsAction {
 
     public function compile($path, $vars = []) {
 
-        if(!cmsCore::includeFile('system/libs/scssphp/scss.inc.php')){
-            return false;
-        }
-
         $scss_file = $this->cms_template->getTplFilePath($path);
 
         $working_dir = dirname(realpath($scss_file));

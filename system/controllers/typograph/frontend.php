@@ -143,8 +143,6 @@ class typograph extends cmsFrontend {
 
         $errors = null;
 
-        cmsCore::loadLib('jevix.class', 'Jevix');
-
         $jevix = new Jevix();
 
         // Протокол ссылок
@@ -580,8 +578,6 @@ class typograph extends cmsFrontend {
      */
     public function parseCode($tag, $params, $content) {
 
-        cmsCore::loadLib('geshi/geshi', 'GeSHi');
-
         $geshi = new GeSHi(htmlspecialchars_decode($content), (isset($params['type']) ? $params['type'] : 'php'));
         $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
 
@@ -600,8 +596,6 @@ class typograph extends cmsFrontend {
 
         $content = htmlspecialchars_decode($content);
         $content = preg_replace('#^<code>(.*)<\/code>$#uis', '$1', $content);
-
-        cmsCore::loadLib('geshi/geshi', 'GeSHi');
 
         $geshi = new GeSHi($content, (isset($params['class']) ? str_replace('language-', '', $params['class']) : 'php'));
         $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);

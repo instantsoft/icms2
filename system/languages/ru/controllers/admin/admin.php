@@ -500,7 +500,9 @@
     define('LANG_CP_USER_PMAILING',             'Создать рассылку');
     define('LANG_CP_USER_ADD',                  'Создать пользователя');
     define('LANG_CP_USER_CREATED',              'Пользователь &laquo;%s&raquo; создан');
-    define('LANG_CP_USER_DELETE_CONFIRM',       'Удалить пользователя {nickname}?\nБудет также удален весь его контент и все загруженные им файлы!');
+    define('LANG_CP_USER_DELETE_CONFIRM',       'Удалить пользователя {nickname}? Будет также удален весь его контент и все загруженные им файлы!');
+    define('LANG_CP_USER_DELETE_LIST_CONFIRM',  'Удалить выбранных пользователей? Будет также удален весь их контент и все загруженные им файлы!');
+    define('LANG_CP_USER_DELETED_LIST',         'Выбранные пользователи удалены');
     define('LANG_CP_USER_DELETED',              'Пользователь %s удален');
     define('LANG_CP_USER_GROUP_ADD',            'Создать группу');
     define('LANG_CP_USER_GROUP_EDIT',           'Редактировать группу');

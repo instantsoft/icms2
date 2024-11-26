@@ -519,8 +519,6 @@ class cmsRequest {
 
         if (!$device_type || !in_array($device_type, self::$device_types, true)) {
 
-            cmsCore::loadLib('mobile_detect.class');
-
             $detect = new Mobile_Detect();
 
             $device_type = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'mobile') : 'desktop');

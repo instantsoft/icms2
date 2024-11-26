@@ -20,6 +20,28 @@ class actionAdminWidgetsDelete extends cmsAction {
 
             if ($count < 2) {
 
+                $widget = $this->model_backend_widgets->localizedOff()->getWidgetBinding($bp['bind_id']);
+
+                $widget_object = cmsCore::getWidgetObject($widget);
+
+                $form = $this->getWidgetOptionsForm(
+                    $widget_object->name,
+                    $widget_object->controller,
+                    $widget_object->options
+                );
+
+                foreach ($form->getStructure() as $fieldset) {
+
+                    if (empty($fieldset['childs'])) {
+                        continue;
+                    }
+
+                    foreach ($fieldset['childs'] as $field) {
+                        $field->setItem($widget)->delete(array_value_recursive($field->getName(), $widget));
+                    }
+
+                }
+
                 $this->model_backend_widgets->deleteWidgetBinding($bp['bind_id']);
 
                 $del_all = $bp['bind_id'];

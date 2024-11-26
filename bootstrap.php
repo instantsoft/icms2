@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Файл первоначальной инициализации окружения InstantCMS
@@ -13,6 +12,10 @@ define('PATH', __DIR__);
 // в CMS не используется нигде
 define('ROOT', rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR));
 
+// Каталог с конфигурациями
+// Можно изменить переменной окружения
+define('ICMS_CONFIG_DIR', (getenv('ICMS_CONFIG_DIR') ?: '/system/config/'));
+
 // Устанавливаем кодировку
 mb_internal_encoding('UTF-8');
 
@@ -22,10 +25,10 @@ if (is_readable(PATH . '/vendor/autoload.php')) {
 }
 
 // Подключаем автозагрузчик классов CMS
-require_once PATH . '/system/config/autoload.php';
+require_once PATH . '/system/core/autoloader.php';
 
-// Устанавливаем обработчик автозагрузки классов
-spl_autoload_register('autoLoadCoreClass');
+// Регистрируем список классов для автозагрузки
+cmsAutoloader::registerList((new cmsConfigs('autoload.php'))->getAll());
 
 // Инициализируем конфиг
 $config = cmsConfig::getInstance();
@@ -60,13 +63,10 @@ if (defined('SESSION_START')) {
 // Могла быть изменена в cmsUser::sessionStart
 date_default_timezone_set($config->time_zone);
 
-// Подключаем все необходимые классы и библиотеки
+// Подключаем все необходимые хелперы
 cmsCore::loadLib('html.helper');
 cmsCore::loadLib('strings.helper');
 cmsCore::loadLib('files.helper');
-if (!$config->native_yaml) {
-    cmsCore::loadLib('spyc.class');
-}
 
 // Инициализируем ядро
 $core = cmsCore::getInstance();

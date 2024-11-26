@@ -1,12 +1,18 @@
 <?php
-
+/**
+ * @property \modelBackendWidgets $model_backend_widgets
+ */
 class actionAdminWidgetsRemove extends cmsAction {
 
     public function run($id = false) {
 
-        if (!$this->request->isAjax()) { cmsCore::error404(); }
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
 
-        if (!$id) { cmsCore::error404(); }
+        if (!$id) {
+            return cmsCore::error404();
+        }
 
         $widget = $this->model_backend_widgets->getWidget($id);
         if (!$widget) {
@@ -28,11 +34,10 @@ class actionAdminWidgetsRemove extends cmsAction {
 
         list($widget, $success_text) = cmsEventsManager::hook(['widget_after_remove', $widget_after_event_name], [$widget, $success_text]);
 
-        return $this->cms_template->renderJSON(array(
+        return $this->cms_template->renderJSON([
             'error'        => false,
             'success_text' => $success_text
-        ));
-
+        ]);
     }
 
 }

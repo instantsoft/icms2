@@ -751,6 +751,9 @@ form .child_field{margin-left: 20px}
     min-height: 3.1rem;
     background: #FFF;
 }
+#cp-widgets-layout #cp-widgets-unused .position, #cp-widgets-layout #cp-widgets-bind .position {
+    min-height: 3.6rem;
+}
 #cp-widgets-layout .widgets-layout-scheme-col .position {
     padding: 0.25rem;
 }

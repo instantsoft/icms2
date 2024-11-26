@@ -246,7 +246,7 @@ class cmsCore {
 
         if (self::$core_version === null) {
 
-            $file = cmsConfig::get('root_path') . 'system/config/version.ini';
+            $file = cmsConfig::get('root_path') . ltrim(ICMS_CONFIG_DIR, '/') . 'version.ini';
             if (!is_readable($file)) {
                 die('system/config/version.ini not found');
             }

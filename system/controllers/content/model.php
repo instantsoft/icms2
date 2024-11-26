@@ -370,7 +370,7 @@ class modelContent extends cmsModel {
         $this->filterEqual('parent_ctype_id', $relation['parent_ctype_id']);
         $this->filterEqual('child_ctype_id', $relation['child_ctype_id']);
         $this->filterEqual('child_item_id', $relation['child_item_id']);
-        $this->filterEqual('target_controller', (isset($relation['target_controller']) ? $relation['target_controller'] : 'content'));
+        $this->filterEqual('target_controller', ($relation['target_controller'] ?? 'content'));
 
         $parent_items_ids = $this->get('content_relations_bind', function ($item, $model) {
             return $item['id'];
@@ -417,7 +417,7 @@ class modelContent extends cmsModel {
         $this->filterEqual('parent_item_id', $relation['parent_item_id']);
         $this->filterEqual('child_ctype_id', $relation['child_ctype_id']);
         $this->filterEqual('child_item_id', $relation['child_item_id']);
-        $this->filterEqual('target_controller', (isset($relation['target_controller']) ? $relation['target_controller'] : 'content'));
+        $this->filterEqual('target_controller', ($relation['target_controller'] ?? 'content'));
 
         $this->deleteFiltered('content_relations_bind');
 
@@ -1166,7 +1166,7 @@ class modelContent extends cmsModel {
         $fields = $this->getContentFields($ctype_name, $id);
 
         foreach ($fields as $field) {
-            $field['handler']->setItem($item)->delete(isset($item[$field['name']]) ? $item[$field['name']] : null);
+            $field['handler']->setItem($item)->delete($item[$field['name']] ?? null);
         }
 
         cmsCache::getInstance()->clean('content.list.' . $ctype_name);

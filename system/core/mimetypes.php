@@ -4,6 +4,8 @@
  */
 class cmsMimetypes extends cmsConfigs {
 
+    protected $keep_original = true;
+
     private $extensions = [];
 
     public function __construct($cfg_file = 'mimetypes.php') {

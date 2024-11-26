@@ -93,6 +93,6 @@ custom_scss:
   light: ""
   dark: ""
 vars:
-  - 
+  1:
     name: dropdown-item-padding-x
     value: 1rem

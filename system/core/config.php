@@ -6,9 +6,17 @@ class cmsConfig extends cmsConfigs {
 
     /**
      * Синглтон
+     *
      * @var object
      */
     private static $instance = null;
+
+    /**
+     * Нам надо помнить оригинальный конфиг
+     *
+     * @var bool
+     */
+    protected $keep_original = true;
 
     /**
      * Сформированный массив ремапа контроллеров
@@ -48,7 +56,7 @@ class cmsConfig extends cmsConfigs {
 
         self::$mapping = [];
 
-        $map_file     = PATH . parent::CONFIG_DIR . 'remap.php';
+        $map_file     = PATH . ICMS_CONFIG_DIR . 'remap.php';
         $map_function = 'remap_controllers';
 
         if (!is_readable($map_file)) {

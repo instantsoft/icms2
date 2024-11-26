@@ -1,17 +1,9 @@
 <?php
 /**
  * Класс для работы с конфигурациями
- * из каталога /system/config/
+ * из директории константы ICMS_CONFIG_DIR
  */
 class cmsConfigs {
-
-    /**
-     * Путь директории с конфигурациями
-     * можно изменить на хранение вне корня сайта,
-     * изменив путь, используя две точки (..) для
-     * указания на родительские каталоги
-     */
-    const CONFIG_DIR = '/system/config/';
 
     /**
      * Массив конфигурации
@@ -44,6 +36,13 @@ class cmsConfigs {
     protected $config = [];
 
     /**
+     * Объявить оригинальный массив конфигурации
+     *
+     * @var bool
+     */
+    protected $keep_original = false;
+
+    /**
      * Файл конфигурации
      *
      * @var string
@@ -60,7 +59,7 @@ class cmsConfigs {
     /**
      * Загружает конфигурацию
      *
-     * @param string $cfg_file Файл конфигурации из /system/config/
+     * @param string $cfg_file Файл конфигурации из директории константы ICMS_CONFIG_DIR
      */
     public function __construct($cfg_file) {
 
@@ -75,7 +74,7 @@ class cmsConfigs {
      * @return string
      */
     public function getFilePath() {
-        return self::CONFIG_DIR . $this->file;
+        return ICMS_CONFIG_DIR . $this->file;
     }
 
     /**
@@ -117,7 +116,9 @@ class cmsConfigs {
         $this->data = include $cfg_file;
 
         // Запоминаем оригинальный конфиг
-        $this->config = $this->data;
+        if ($this->keep_original) {
+            $this->config = $this->data;
+        }
 
         return true;
     }

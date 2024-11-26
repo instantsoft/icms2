@@ -6,8 +6,6 @@ class cmsMailer {
 
     public function __construct($config = false) {
 
-        cmsCore::includeFile('system/libs/phpmailer/autoload.php');
-
         if(!$config){
             $config = cmsConfig::getInstance();
         }

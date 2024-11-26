@@ -360,7 +360,8 @@ class modelBackendWidgets extends modelWidgets {
                 'bind_id'           => $bind['bind_id'],
                 'widget_id'         => $bind['widget_id'],
                 'title'             => string_replace_svg_icons($bind['title']),
-                'page_title'        => $bind['page_title'] ?: sprintf(constant($bind['page_title_const']), $bind['page_title_subject']),
+                'page_title'        => $bind['page_title'] ?:
+                        ($bind['page_title_const'] ? sprintf(constant($bind['page_title_const']), $bind['page_title_subject']) : ''),
                 'position'          => $bind['position'],
                 'languages'         => $bind['languages'],
                 'image_hint_path'   => $bind['image_hint_path'],

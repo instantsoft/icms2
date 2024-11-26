@@ -10,7 +10,16 @@ function grid_users($controller){
         'is_draggable'    => false,
         'order_by'        => 'id',
         'order_to'        => 'asc',
-        'show_id'         => false
+        'show_id'         => false,
+        'is_selectable'  => true,
+        'select_actions' => [
+            [
+                'title'   => LANG_DELETE,
+                'action'  => 'submit',
+                'confirm' => LANG_CP_USER_DELETE_LIST_CONFIRM,
+                'url'     => $controller->cms_template->href_to('users_delete_list')
+            ]
+        ]
     ];
 
     $columns = [
