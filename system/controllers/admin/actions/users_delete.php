@@ -18,6 +18,11 @@ class actionAdminUsersDelete extends cmsAction {
             return cmsCore::error404();
         }
 
+        // Случайно сам себя чтобы не удалил
+        if ($user['id'] == $this->cms_user->id) {
+            return $this->redirectToAction('users');
+        }
+
         $user = cmsEventsManager::hook('user_delete', $user);
 
         $this->model_users->deleteUser($user);

@@ -148,6 +148,11 @@ class users extends cmsFrontend {
             return $menu;
         }
 
+        // Доступность профиля для данного пользователя
+        if (!$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view')) {
+            return $menu;
+        }
+
         $this->tabs = $this->model->getUsersProfilesTabs(true, 'name');
 
         $this->tabs_controllers = ['users' => $this];

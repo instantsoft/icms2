@@ -250,6 +250,7 @@
     @include box-shadow($chosen-box-shadow);
     cursor: text;
     height: auto !important;
+    min-height: $chosen-multi-height;
     margin: 0;
     padding: .175rem;
     overflow: hidden;

@@ -503,7 +503,7 @@ class modelUsers extends cmsModel {
         $user['ctype_name'] = 'users';
 
         foreach ($fields as $field) {
-            $field['handler']->setItem($user)->delete($user[$field['name']]);
+            $field['handler']->setItem($user)->delete($user[$field['name']] ?? null);
         }
 
         // уменьшаем счётчики друзей и подписчиков

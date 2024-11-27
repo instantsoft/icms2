@@ -1,26 +1,25 @@
 <?php
-
+/**
+ * @property \modelContent $model_content
+ */
 class actionUsersProfileTab extends cmsAction {
+
+    use icms\traits\services\fieldsParseable;
 
     public $lock_explicit_call = true;
 
     public function run($profile, $tab_name, $dataset = false) {
 
-        // Доступность профиля для данного пользователя
-        if (!$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view')) {
-            cmsCore::error404();
-        }
-
         $tabs_menu = $this->getProfileMenu($profile);
 
-        if (!isset($this->tabs[$tab_name]) || !$this->tabs[$tab_name]) {
-            cmsCore::error404();
+        if (empty($this->tabs[$tab_name])) {
+            return cmsCore::error404();
         }
 
         $tab = $this->tabs[$tab_name];
 
         if (!isset($this->tabs_controllers[$tab['controller']])) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $controller = $this->tabs_controllers[$tab['controller']];
@@ -37,16 +36,15 @@ class actionUsersProfileTab extends cmsAction {
         }
         $this->cms_template->addBreadcrumb($profile['nickname'], href_to_profile($profile));
 
-        $html = $controller->runHook('user_tab_show', array($profile, $tab_name, $tab));
-        if (!$html) { cmsCore::error404(); }
-
-        // Получаем поля
-        $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
-
-        // Парсим значения полей
-        foreach ($fields as $name => $field) {
-            $fields[$name]['string_value'] = $field['handler']->setItem($profile)->getStringValue($profile[$name]);
+        $html = $controller->runHook('user_tab_show', [$profile, $tab_name, $tab]);
+        if (!$html) {
+            return cmsCore::error404();
         }
+
+        $fields = $this->parseContentFields(
+            $this->model_content->setTablePrefix('')->getContentFields('{users}'),
+            $profile
+        );
 
         $meta_profile = $this->prepareItemSeo($profile, $fields, ['name' => 'users']);
 

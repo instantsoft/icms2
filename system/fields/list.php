@@ -257,10 +257,10 @@ class fieldList extends cmsFormField {
             $value = cmsModel::yamlToArray($value);
         }
 
-        if (is_array($value) && $value) {
+        if (is_array($value)) {
             foreach ($value as $k => $v) {
-                if (!is_array($v) && is_numeric($v)) {
-                    $value[$k] = (int) $v;
+                if (!is_array($v)) {
+                    $value[$k] = (string) $v;
                 }
             }
         }

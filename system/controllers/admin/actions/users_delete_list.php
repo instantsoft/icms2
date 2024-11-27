@@ -23,6 +23,11 @@ class actionAdminUsersDeleteList extends cmsAction {
                     continue;
                 }
 
+                // Случайно сам себя чтобы не удалил
+                if ($user['id'] == $this->cms_user->id) {
+                    continue;
+                }
+
                 $user = cmsEventsManager::hook('user_delete', $user);
 
                 $this->model_users->deleteUser($user);

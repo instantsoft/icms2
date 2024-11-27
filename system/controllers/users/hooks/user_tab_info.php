@@ -4,13 +4,16 @@ class onUsersUserTabInfo extends cmsAction {
 
     public function run($profile, $tab_name) {
 
-        if ($tab_name == 'karma') {
+        if ($tab_name === 'karma') {
+
             if (!$this->options['is_karma']) {
                 return false;
             }
+
+            return true;
         }
 
-        if ($tab_name == 'friends') {
+        if ($tab_name === 'friends') {
 
             if (empty($this->options['is_friends_on'])) {
                 return false;
@@ -25,7 +28,7 @@ class onUsersUserTabInfo extends cmsAction {
             return ['counter' => $this->friends_count];
         }
 
-        if ($tab_name == 'subscribers') {
+        if ($tab_name === 'subscribers') {
 
             $this->subscribers_count = $profile['subscribers_count'];
             if (!$this->subscribers_count) {
@@ -37,7 +40,7 @@ class onUsersUserTabInfo extends cmsAction {
 
         // Не используется. Совместимость с InstantCMS 1.X.
         // Для работы необходим экшен и запись в таблице.
-        if ($tab_name == 'files') {
+        if ($tab_name === 'files') {
 
             $this->model->filterEqual('target_controller', 'users');
             $this->model->filterEqual('target_subject', 'files');

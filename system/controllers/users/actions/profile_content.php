@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \content $controller_content
+ */
 class actionUsersProfileContent extends cmsAction {
 
     public $lock_explicit_call = true;
@@ -25,7 +27,7 @@ class actionUsersProfileContent extends cmsAction {
 
             $ctype_name = $ctypes_names[0];
 
-            $this->redirect(href_to_profile($profile, ['content', $ctype_name, $folder_id, $dataset]), 301);
+            return $this->redirect(href_to_profile($profile, ['content', $ctype_name, $folder_id, $dataset]), 301);
         }
 
         $ctype = $this->controller_content->model->getContentTypeByName($ctype_name);

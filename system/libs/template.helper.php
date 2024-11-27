@@ -428,56 +428,49 @@ function html_gif_image($image, $size_preset = 'small', $alt = '', $attributes =
  *
  * @param string $name Имя списка
  * @param array $items Массив элементов списка (значение => заголовок)
- * @param string|array $selected Значение выбранного(ых) элемента
+ * @param mixed $selected Значение выбранного(ых) элемента
  * @param array $attributes Массив аттрибутов тега
  * @return string HTML
  */
-function html_select($name, $items, $selected = '', $attributes = []) {
+function html_select(string $name, array $items, $selected = '', $attributes = []) {
 
-    $name = isset($attributes['multiple']) ? $name . '[]' : $name;
+    $name = !empty($attributes['multiple']) ? $name . '[]' : $name;
 
     $attr_str = html_attr_str($attributes);
-    $class    = isset($attributes['class']) ? $attributes['class'] : '';
-    $html     = '<select class="form-control ' . $class . '" name="' . $name . '" ' . $attr_str . '>' . "\n";
+    $class = $attributes['class'] ?? '';
+    $html = '<select class="form-control ' . html($class, false) . '" name="' . html($name, false) . '" ' . $attr_str . '>';
 
-    $optgroup = false;
+    $selected = is_array($selected) ? array_map('strval', $selected) : [(string)$selected];
 
-    if (is_array($selected) && $selected) {
-        foreach ($selected as $k => $v) {
-            if (is_numeric($v)) {
-                $selected[$k] = (int) $v;
+    $optgroup_open = false;
+
+    foreach ($items as $value => $title) {
+
+        $value = (string)$value;
+
+        if (is_array($title)) {
+
+            if ($optgroup_open) {
+                $html .= '</optgroup>';
             }
+
+            $html .= '<optgroup label="' . html($title[0], false) . '">';
+            $optgroup_open = true;
+            continue;
         }
+
+        $is_selected = in_array($value, $selected, true) ? ' selected' : '';
+
+        $html .= '<option'.(!$title ? ' label="'.LANG_ALL.'"' : '').' value="'.html($value, false).'"'.$is_selected.'>'
+               . html($title, false)
+               . '</option>';
     }
 
-    if ($items && is_array($items)) {
-        foreach ($items as $value => $title) {
-
-            if (is_array($title)) {
-                if ($optgroup !== false) {
-                    $html     .= "\t" . '</optgroup>' . "\n";
-                    $optgroup = false;
-                }
-                $optgroup = true;
-                $html     .= "\t" . '<optgroup label="' . htmlspecialchars($title[0]) . '">' . "\n";
-                continue;
-            }
-
-            if (is_array($selected)) {
-                $sel = in_array($value, $selected, true) ? 'selected' : '';
-            } else {
-                $sel = ((string) $selected === (string) $value) ? 'selected' : '';
-            }
-
-            $html .= "\t" . '<option' . (!$title ? ' label="' . LANG_ALL . '"' : '') . ' value="' . htmlspecialchars($value) . '" ' . $sel . '>' . htmlspecialchars($title) . '</option>' . "\n";
-        }
+    if ($optgroup_open) {
+        $html .= '</optgroup>';
     }
 
-    if ($optgroup !== false) {
-        $html .= "\t" . '</optgroup>' . "\n";
-    }
-
-    $html .= '</select>' . "\n";
+    $html .= '</select>';
 
     return $html;
 }

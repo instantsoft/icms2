@@ -10,7 +10,7 @@ icms.translate = (function ($) {
         $('.multilanguage').not('.multilanguage-base').each(function (){
             if($(this).find('.form-control').val().length === 0){
                 let lang = $(this).attr('rel');
-                let link = '<a class="ml-2 text-muted" href="#">'+LANG_TRANSLATE+'</a>';
+                let link = $('<a class="ml-2 text-muted" href="#">'+LANG_TRANSLATE+'</a>');
                 link.on('click', function(){
                     return self.run(this, lang);
                 });
