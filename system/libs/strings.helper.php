@@ -4,20 +4,12 @@
  * Разбивает строку по разделителю, затем собирает обратно в CamelCase
  * Например "my_own_string" => "MyOwnString", разделитель "_"
  *
- * @param char $delimiter Разделитель
+ * @param string $delimiter Разделитель
  * @param string $string Исходная строка
  * @return string
  */
-function string_to_camel($delimiter, $string) {
-
-    $result = '';
-    $words  = explode($delimiter, mb_strtolower($string));
-
-    foreach ($words as $word) {
-        $result .= ucfirst($word);
-    }
-
-    return $result;
+function string_to_camel(string $delimiter, string $string) {
+    return str_replace(' ', '', ucwords(str_replace($delimiter, ' ', strtolower($string))));
 }
 
 /**

@@ -14,9 +14,9 @@
             <?php } ?>
         </div>
         <?php if(!empty($item['description'])){ ?>
-            <div class="mb-1">
+            <div class="mt-1 mt-lg-2">
                 <?php if(!empty($item['enclosure'])){ ?>
-                    <img src="<?php echo $item['enclosure']; ?>" class="float-left">
+                    <img src="<?php echo $item['enclosure']; ?>" class="img-fluid d-block mb-2">
                 <?php } ?>
                 <?php echo string_short($item['description'], 255); ?>
             </div>

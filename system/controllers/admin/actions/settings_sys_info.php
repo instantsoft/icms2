@@ -54,7 +54,6 @@ class actionAdminSettingsSysInfo extends cmsAction {
             LANG_CP_DASHBOARD_SI_PHP          => implode('.', [PHP_MAJOR_VERSION, PHP_MINOR_VERSION, PHP_RELEASE_VERSION]) . ', ' . PHP_SAPI,
             LANG_CP_DASHBOARD_SI_ML           => files_format_bytes(files_convert_bytes(@ini_get('memory_limit'))),
             LANG_CP_DASHBOARD_SI_MAX          => $uploader->getMaxUploadSize(),
-            LANG_CP_DASHBOARD_SI_IP           => filter_input(INPUT_SERVER, 'SERVER_ADDR'),
             LANG_CP_DASHBOARD_SI_ROOT         => PATH,
             LANG_CP_DASHBOARD_SI_SESSION_TYPE => @ini_get('session.save_handler'),
             LANG_CP_DASHBOARD_SI_SESSION      => session_save_path(),

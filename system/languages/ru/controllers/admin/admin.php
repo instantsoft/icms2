@@ -24,7 +24,6 @@
     define('LANG_CP_DASHBOARD_APACHE_NGINX',    'двухуровневая конфигурация, версия Nginx - %s');
     define('LANG_CP_DASHBOARD_SI_PHP',          'Версия PHP');
     define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');
-    define('LANG_CP_DASHBOARD_SI_IP',           'IP адрес сервера');
     define('LANG_CP_DASHBOARD_SI_ROOT',         'Директория сайта');
     define('LANG_CP_DASHBOARD_SI_SESSION_TYPE', 'Обработчик сессий');
     define('LANG_CP_DASHBOARD_SI_SESSION',      'Директория сессий');

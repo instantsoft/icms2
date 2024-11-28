@@ -18,7 +18,7 @@ trait corePropertyLoadable {
 
         if (strpos($name, 'cms_') === 0) {
 
-            $class_name = \string_to_camel('_', $name);
+            $class_name = lcfirst(\string_to_camel('_', $name));
 
             if (method_exists($class_name, 'getInstance')) {
                 $this->{$name} = call_user_func([$class_name, 'getInstance']);

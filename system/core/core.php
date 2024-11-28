@@ -827,7 +827,7 @@ class cmsCore {
      * @param string $uri
      * @return void
      */
-    public function route($uri) {
+    public function route(string $uri) {
 
         $config = cmsConfig::getInstance();
 
@@ -840,65 +840,44 @@ class cmsCore {
 
         // если в URL присутствует знак вопроса, значит есть
         // в нем есть GET-параметры которые нужно распарсить
-        $query_str = '';
-        $pos_que = mb_strpos($uri, '?');
-        if ($pos_que !== false) {
+        if (($pos_que = mb_strpos($uri, '?')) !== false) {
 
-            // получаем строку запроса
-            $query_data = [];
-            $query_str  = mb_substr($uri, $pos_que + 1);
-
-            // удаляем строку запроса из URL
+            parse_str(mb_substr($uri, $pos_que + 1), $this->uri_query);
             $uri = mb_substr($uri, 0, $pos_que);
-
-            // парсим строку запроса
-            parse_str($query_str, $query_data);
-
-            $this->uri_query = $query_data;
         }
 
-        // Смена языка включена
+        // Обработка смены языка
         if (!empty($config->is_user_change_lang)) {
 
             $segments = explode('/', $uri);
 
             // язык может быть только двухбуквенный, определяем его по первому сегменту
+            // язык по умолчанию без префиксов, дубли нам не нужны
             if (!empty($segments[0]) && preg_match('/^[a-z]{2}$/i', $segments[0])) {
-                if (is_dir($config->root_path . 'system/languages/' . $segments[0] . '/')) {
-                    // язык по умолчанию без префиксов, дубли нам не нужны
-                    if ($segments[0] !== $config->language) {
+                $lang_path = $config->root_path . 'system/languages/' . $segments[0] . '/';
+                if (is_dir($lang_path) && $segments[0] !== $config->language) {
 
-                        self::$language = self::$language_href_prefix = $segments[0];
-                        unset($segments[0]);
+                    self::$language = self::$language_href_prefix = array_shift($segments);
 
-                        $uri = implode('/', $segments);
+                    $uri = implode('/', $segments);
 
-                        $config->findLocalizedOn();
-                    }
+                    $config->findLocalizedOn();
                 }
             }
         }
 
+        // Установка свойств URI
         $this->uri          = $this->uri_before_remap = $uri;
         $this->uri_absolute = $config->root . $uri;
 
-        // разбиваем URL на сегменты
-        $segments = explode('/', $uri);
-
+        // Разделение URI на сегменты
+        $segments             = explode('/', $uri);
         // Определяем контроллер из первого сегмента
-        if (isset($segments[0])) {
-            $this->uri_controller = $segments[0];
-        }
-
+        $this->uri_controller = $segments[0] ?? '';
         // Определяем действие из второго сегмента
-        if (isset($segments[1])) {
-            $this->uri_action = $segments[1];
-        }
-
+        $this->uri_action     = $segments[1] ?? '';
         // Определяем параметры действия из всех остальных сегментов
-        if (count($segments) > 2) {
-            $this->uri_params = array_slice($segments, 2);
-        }
+        $this->uri_params     = array_slice($segments, 2);
 
         return;
     }
@@ -924,13 +903,13 @@ class cmsCore {
      */
     public function defineController() {
 
-        $hash = md5($this->uri_controller . $this->uri_action);
+        $key = $this->uri_controller . ':' . $this->uri_action;
 
-        if (isset($this->defined_controllers[$hash])) {
+        if (isset($this->defined_controllers[$key])) {
             return $this;
         }
 
-        $this->defined_controllers[$hash] = true;
+        $this->defined_controllers[$key] = true;
 
         $config = cmsConfig::getInstance();
 
@@ -998,7 +977,7 @@ class cmsCore {
                 return self::error404();
             }
 
-            $controller->redirectTo($slug, ($this->uri_action === 'index' ? '' : $this->uri_action), $this->uri_params, $this->uri_query, 301);
+            return $controller->redirectTo($slug, ($this->uri_action === 'index' ? '' : $this->uri_action), $this->uri_params, $this->uri_query, 301);
         }
 
         // запускаем действие
@@ -1479,30 +1458,13 @@ class cmsCore {
 
         $dir = cmsConfig::get('root_path') . $root_dir;
 
-        $dir_context = opendir($dir);
+        $sorting_order = $asc_sort ? SCANDIR_SORT_ASCENDING : SCANDIR_SORT_NONE;
 
-        $list = [];
+        return array_values(array_filter(scandir($dir, $sorting_order), function ($entry) use ($dir) {
 
-        while ($next = readdir($dir_context)) {
-
-            if (in_array($next, ['.', '..'])) {
-                continue;
-            }
-            if (strpos($next, '.') === 0) {
-                continue;
-            }
-            if (!is_dir($dir . '/' . $next)) {
-                continue;
-            }
-
-            $list[] = $next;
-        }
-
-        closedir($dir_context);
-
-        if ($asc_sort) { sort($list); }
-
-        return $list;
+            return $entry !== '.' && $entry !== '..' &&
+                   is_dir($dir . '/' . $entry);
+        }));
     }
 
     /**

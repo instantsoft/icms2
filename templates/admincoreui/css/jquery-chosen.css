@@ -214,7 +214,9 @@
   margin: 0;
   padding: .175rem;
   overflow: hidden;
-  position: relative; }
+  position: relative;
+  min-height: calc(1.5em + .75rem + 2px);
+}
   .chosen-container-multi .chosen-choices li {
     float: left;
     list-style: none; }
