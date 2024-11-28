@@ -173,7 +173,11 @@ class modelAdmin extends cmsModel {
         ]);
     }
 
-    public function getTableItemsCount24($table_name, $date_pub_field = 'date_pub') {
+    public function getTableItemsCount24($table_name, $date_pub_field = 'date_pub', $cache_key = false) {
+
+        if ($cache_key) {
+            $this->useCache($cache_key);
+        }
 
         $this->filterDateYounger($date_pub_field, 1);
 

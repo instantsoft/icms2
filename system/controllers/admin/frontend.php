@@ -213,7 +213,11 @@ class admin extends cmsFrontend {
 
         if($show_submenu){
             foreach ($ctypes as $ctype) {
-                $ctype_new_count += $this->model->getTableItemsCount24($this->model->getContentTypeTableName($ctype['name']));
+                $ctype_new_count += $this->model->getTableItemsCount24(
+                        $this->model->getContentTypeTableName($ctype['name']),
+                        'date_pub',
+                        'content.list.' . $ctype['name']
+                    );
             }
         }
 

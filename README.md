@@ -8,7 +8,7 @@
 
 [![LICENSE](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](./LICENSE)
 [![GitHub release](https://img.shields.io/github/release/instantsoft/icms2.svg)](https://github.com/instantsoft/icms2/releases)
-![PHP version](https://img.shields.io/badge/PHP->=v7.0-red.svg?php=7.0)
+![PHP version](https://img.shields.io/badge/PHP->=v7.2-red.svg?php=7.2)
 [![Issues](https://img.shields.io/github/issues-closed-raw/instantsoft/icms2.svg?maxAge=2592000)](https://github.com/instantsoft/icms2/issues)
 
 ## Key features

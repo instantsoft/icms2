@@ -1,100 +1,106 @@
 <?php
+
 class cmsCacheMemory {
 
+    /**
+     * @var Memcache
+     */
     private $memcache;
-    private $site_namespace;
+    /**
+     * @var string
+     */
+    private $site_namespace = '';
+    /**
+     * @var object
+     */
     private $config;
 
     public function __construct($config) {
 
         $this->config = $config;
 
-        $this->site_namespace = 'instantcms.'.sprintf('%u', crc32($config->host));
-
+        $this->site_namespace = 'instantcms.' . sprintf('%u', crc32($config->host));
     }
 
-    public function set($key, $value, $ttl){
-
+    public function set($key, $value, $ttl) {
         return $this->memcache->set($this->getKey($key), serialize($value), false, $ttl);
-
     }
 
-    public function has($key){
+    public function has($key) {
         return true;
     }
 
-    public function get($key){
+    public function get($key) {
 
         $value = $this->memcache->get($this->getKey($key));
-        if (!$value) { return false; }
+        if (!$value) {
+            return false;
+        }
 
         return unserialize($value);
-
     }
 
-    public function clean($ns = false){
+    public function clean($ns = false) {
 
-        if ($ns){
+        if ($ns) {
 
             return $this->memcache->increment($this->getNamespaceKey($ns));
 
         } else {
 
             return $this->memcache->flush();
-
         }
-
     }
 
-    public function start(){
+    public function start() {
 
         $this->memcache = new Memcache;
 
-        $this->memcache->connect($this->config->cache_host, $this->config->cache_port) or die('Memcache connect error');
+        if (!$this->memcache->connect($this->config->cache_host, $this->config->cache_port)) {
+
+            throw new Exception('Memcache connect error');
+        }
 
         return true;
-
     }
 
+    public function stop() {
 
-    public function stop(){
         $this->memcache->close();
+
         return true;
     }
 
-    public function getStats(){
-        return array();
+    public function getStats() {
+        return [];
     }
 
-    private function getKey($_key){
+    private function getKey($_key) {
 
         $key_path = explode('.', $_key);
 
         $key = array_pop($key_path);
         $ns  = implode('.', $key_path);
 
-        return implode('.', array($this->site_namespace, $this->getNamespaceValue($ns), $ns, $key));
-
+        return implode('.', [$this->site_namespace, $this->getNamespaceValue($ns), $ns, $key]);
     }
 
-    private function getNamespaceValue($ns){
+    private function getNamespaceValue($ns) {
 
         $ns_value = $this->memcache->get($this->getNamespaceKey($ns));
 
-        if($ns_value === false) {
+        if ($ns_value === false) {
 
             $ns_value = time();
 
             $this->memcache->set($this->getNamespaceKey($ns), $ns_value, false, 86400);
-
         }
 
         return $ns_value;
-
     }
 
     private function getNamespaceKey($ns) {
-        return $this->site_namespace.'.namespace:'.$ns;
+        return $this->site_namespace . '.namespace:' . $ns;
     }
 
 }

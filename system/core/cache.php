@@ -2,10 +2,35 @@
 
 class cmsCache {
 
+    /**
+     * @var cmsCache
+     */
     private static $instance;
+
+    /**
+     * @var cmsCache*
+     */
     private $cacher;
+
+    /**
+     * @var string
+     */
     private $cacher_name;
+
+    /**
+     * @var int
+     */
     private $cache_ttl;
+
+    /**
+     * @var bool
+     */
+    private $is_enabled = false;
+
+    /**
+     * @var bool
+     */
+    private $is_paused = false;
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -14,6 +39,11 @@ class cmsCache {
         return self::$instance;
     }
 
+    /**
+     *
+     * @param stdClass|cmsConfig $config
+     * @return \cmsCache*
+     */
     public static function getCacher($config) {
 
         $cacher_class = 'cmsCache' . string_to_camel('_', $config->cache_method);
@@ -31,13 +61,34 @@ class cmsCache {
             $this->cacher_name = $config->cache_method;
 
             $this->cache_ttl = $config->cache_ttl;
+
+            $this->is_enabled = true;
         }
+    }
+
+    /**
+     * Приостанавливает работу кэширования
+     */
+    public function pause() {
+        $this->is_paused = true;
+    }
+
+    /**
+     * Возобновляет работу кэширования
+     */
+    public function resume() {
+        $this->is_paused = false;
     }
 
     public function __call($method_name, $arguments) {
 
         // кеширование отключено
-        if (!isset($this->cacher)) {
+        if (!$this->is_enabled) {
+            return false;
+        }
+
+        // Можно ставить на паузу
+        if ($this->is_paused) {
             return false;
         }
 
@@ -93,6 +144,34 @@ class cmsCache {
         ], 5);
 
         return $value;
+    }
+
+    private function _start() {
+
+        cmsDebugging::pointStart('cache');
+
+        try {
+
+            $is_start = $this->cacher->start();
+
+        } catch (Throwable $e) {
+
+            $this->is_enabled = false;
+
+            cmsCore::loadLanguage();
+
+            cmsCore::error($e->getMessage());
+        }
+
+        cmsDebugging::pointProcess('cache', [
+            'data' => $this->cacher_name.' => start()',
+            'context' => [
+                'target' => $this->cacher_name,
+                'subject' => ''
+            ]
+        ], 1);
+
+        return $is_start;
     }
 
 }
