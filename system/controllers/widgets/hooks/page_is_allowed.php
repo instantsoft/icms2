@@ -108,9 +108,17 @@ class onWidgetsPageIsAllowed extends cmsAction {
         ]));
     }
 
+    /**
+     * @todo Надо переделать всё
+     * @return $this
+     */
     private function detectUserCountry() {
 
         if ($this->country !== null) {
+            return $this;
+        }
+
+        if (!$this->isControllerInstalled('geo') || !$this->isControllerEnabled('geo')) {
             return $this;
         }
 

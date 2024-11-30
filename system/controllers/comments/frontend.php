@@ -79,11 +79,11 @@ class comments extends cmsFrontend {
 
         if ($is_highlight_new && !$this->cms_user->is_logged) { $is_highlight_new = false; }
 
-        $csrf_token_seed = implode('/', array($this->target_controller, $this->target_subject, $this->target_id));
+        $csrf_token_seed = implode('/', [$this->target_controller, $this->target_subject, $this->target_id]);
 
         $rss_link = '';
-        if ($comments && $this->isControllerEnabled('rss') && $this->model->isRssFeedEnable()){
-            $rss_link = href_to('rss', 'feed', 'comments').'?'.http_build_query([
+        if ($comments && $this->callIfExists('model:rss')->isRssFeedEnable('comments')) {
+            $rss_link = href_to('rss', 'feed', 'comments') . '?' . http_build_query([
                 'tc' => $this->target_controller,
                 'ts' => $this->target_subject,
                 'ti' => $this->target_id

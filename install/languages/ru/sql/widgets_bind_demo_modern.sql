@@ -1,6 +1,5 @@
 INSERT INTO `{#}widgets_bind` (`id`, `template_layouts`, `languages`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `tpl_body`, `tpl_wrap`, `tpl_wrap_style`, `device_types`, `is_cacheable`) VALUES
 (69, NULL, NULL, 21, 'Поля контента', NULL, NULL, NULL, NULL, NULL, NULL, '---\n', NULL, '---\nctype_id: 6\nimage_field: picture\nimage_preset: original\nimage_is_parallax: 1\nfields:\n  - title\n', 'fields', NULL, NULL, NULL, 1),
-(71, NULL, NULL, 6, 'Активность', 'Вся | activity', NULL, NULL, NULL, 1, NULL, '---\n', NULL, '---\ndataset: all\nshow_avatars: 1\ndate_group: null\nlimit: 8\n', 'list', 'wrapper', 'icms-widget__transparent', NULL, 1),
 (72, NULL, NULL, 10, 'Облако тегов', NULL, NULL, NULL, NULL, 1, NULL, '---\n', NULL, '---\nsubjects:\n  - 0\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nmin_freq: 0\nmin_len: 0\nlimit: 10\ncolors: \'#008cba,#6610f2,#e83e8c,#f04124,#e99002,#43ac6a,#5bc0de\'\nshuffle: null\n', 'cloud', 'wrapper', 'icms-widget__compact', NULL, 1),
 (79, NULL, NULL, 3, 'Нижнее меню', NULL, NULL, NULL, NULL, NULL, NULL, '---\n', NULL, '---\nmenu: footer\ntemplate: menu\nclass:\nis_detect: 1\nis_detect_strict: null\nmax_items: 0\nnavbar_color_scheme: navbar-dark\nmenu_nav_style:\nmenu_nav_style_add: flex-md-row justify-content-md-end\nmenu_type: navbar\nnavbar_expand:\nshow_search_form: 0\ntoggler_icon: null\ntoggler_show_sitename: null\nmenu_is_pills: null\nmenu_is_fill:\n', 'menu', NULL, NULL, NULL, 1),
 (86, NULL, NULL, 12, 'Форма авторизации', NULL, NULL, NULL, NULL, NULL, NULL, '---\n', NULL, NULL, 'auth', 'wrapper_plain_indented', NULL, NULL, 1),
@@ -21,7 +20,6 @@ INSERT INTO `{#}widgets_bind` (`id`, `template_layouts`, `languages`, `widget_id
 
 INSERT INTO `{#}widgets_bind_pages` (`id`, `bind_id`, `template`, `is_enabled`, `page_id`, `position`, `ordering`) VALUES
 (75, 69, 'modern', 1, 153, 'con_header', 0),
-(77, 71, 'modern', 1, 1, 'pos_8', 5),
 (78, 72, 'modern', 1, 1, 'pos_40', 0),
 (85, 79, 'modern', 1, 0, 'pos_32', 0),
 (92, 86, 'modern', 1, 1, 'pos_9', 0),

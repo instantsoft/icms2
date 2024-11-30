@@ -1,14 +1,18 @@
 <?php
-
+/**
+ * @property \activity $controller_activity
+ */
 class actionGroupsGroupActivity extends cmsAction {
 
     public $lock_explicit_call = true;
 
-    public function run($group){
+    public function run($group) {
 
-        $activity_controller = cmsCore::getController('activity', $this->request);
+        if (!$this->isControllerInstalled('activity') || !$this->isControllerEnabled('activity')) {
+            return cmsCore::error404();
+        }
 
-        $activity_controller->model->filterEqual('group_id', $group['id']);
+        $this->controller_activity->model->filterEqual('group_id', $group['id']);
 
         $page_url = href_to($this->name, $group['slug'], 'activity');
 
@@ -18,12 +22,11 @@ class actionGroupsGroupActivity extends cmsAction {
         $this->cms_template->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
         $this->cms_template->addBreadcrumb($group['sub_title']);
 
-        return $this->cms_template->render('group_activity', array(
+        return $this->cms_template->render('group_activity', [
             'user'  => $this->cms_user,
             'group' => $group,
-            'html'  => $activity_controller->renderActivityList($page_url)
-        ));
-
+            'html'  => $this->controller_activity->renderActivityList($page_url)
+        ]);
     }
 
 }

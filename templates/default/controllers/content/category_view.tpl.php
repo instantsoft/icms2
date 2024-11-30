@@ -67,8 +67,8 @@
     <?php } ?>
     <h1>
         <?php $this->pageH1(); ?>
-        <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
-            <a class="inline_rss_icon" title="RSS" href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>"></a>
+        <?php if (!empty($ctype['rss_link'])){ ?>
+            <a class="inline_rss_icon" title="RSS" href="<?php echo $ctype['rss_link']; ?>"></a>
         <?php } ?>
     </h1>
 <?php } ?>

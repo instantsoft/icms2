@@ -242,7 +242,7 @@ class cmsController {
             return self::$controllers[$name]['is_enabled'];
         }
 
-        return true;
+        return cmsCore::isControllerExists($name);
     }
 
     /**
@@ -256,7 +256,7 @@ class cmsController {
         if (isset(self::$controllers[$name]['is_enabled'])) {
             return self::$controllers[$name]['is_enabled'];
         }
-        return true;
+        return cmsCore::isControllerExists($name);
     }
 
     /**
@@ -951,7 +951,7 @@ class cmsController {
 
     /**
      * Позволяет переопределить экшен перед вызовом
-     * 
+     *
      * @param string $action_name
      * @return string
      */

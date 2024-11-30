@@ -11,6 +11,7 @@
         ]);
         ?>
         <?php $this->printCssTags(); ?>
+        <meta name="robots" content="noindex" />
     </head>
     <body class="flex-row d-flex align-items-center h-100 bg-dark">
         <div class="container">

@@ -247,7 +247,6 @@ class actionContentCategoryView extends cmsAction {
         }
 
         $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
-        $rss_query   = !empty($category['id']) ? "?category={$category['id']}" : '';
 
         $base_ds_url = href_to_rel($ctype['name']) . '%s' . (isset($category['slug']) ? '/' . $category['slug'] : '');
 
@@ -304,7 +303,7 @@ class actionContentCategoryView extends cmsAction {
             'show_h1'         => $this->cms_template->hasPageH1() && !$this->request->isInternal() && !$is_frontpage,
             'base_ds_url'     => $base_ds_url,
             'base_url'        => $base_url,
-            'rss_query'       => $rss_query,
+            'rss_query'       => '', // Не используется, совместимость
             'list_styles'     => $list_styles,
             'is_frontpage'    => $is_frontpage,
             'is_hide_items'   => $is_hide_items,

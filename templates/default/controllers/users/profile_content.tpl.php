@@ -68,8 +68,8 @@
     <div class="name">
         <a href="<?php echo href_to_profile($profile); ?>"><?php html($profile['nickname']); ?></a> /
         <span><?php echo $list_header; ?></span>
-        <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
-            <a class="inline_rss_icon" href="<?php echo href_to('rss', 'feed', $ctype['name']) . '?user='.$profile['id']; ?>">RSS</a>
+        <?php if (!empty($ctype['rss_link'])){ ?>
+            <a class="inline_rss_icon" href="<?php echo $ctype['rss_link']; ?>">RSS</a>
         <?php } ?>
     </div>
 

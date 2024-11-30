@@ -19,6 +19,7 @@
             'modal'
         ]); ?>
         <?php $this->printCssTags(); ?>
+        <meta name="robots" content="noindex" />
     </head>
     <body class="h-100 flex-row d-flex align-items-center bg-secondary">
         <section class="container">

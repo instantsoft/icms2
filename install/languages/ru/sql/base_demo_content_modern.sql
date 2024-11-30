@@ -52,32 +52,6 @@ INSERT INTO `{#}uploaded_files` (`id`, `path`, `name`, `size`, `counter`, `type`
 (93, '000/u1/f/3/prodam-kvartiru-v-novostroike-photos-big.jpg', 'prodam-kvartiru-v-novostroike-photos-big.jpg', 55599, 0, 'image', 'content', 'board', 7, 1),
 (94, '000/u1/b/7/prodam-kvartiru-v-novostroike-photos-small.jpg', 'prodam-kvartiru-v-novostroike-photos-small.jpg', 1975, 0, 'image', 'content', 'board', 7, 1);
 
-INSERT INTO `{#}activity` (`id`, `type_id`, `user_id`, `group_id`, `subject_title`, `subject_id`, `subject_url`, `reply_url`, `images`, `images_count`, `date_pub`, `is_private`, `is_parent_hidden`) VALUES
-(3, 13, 1, NULL, 'Эллиптический перигей в XXI веке', 1, 'articles/1-ellipticheskii-perigei-v-xxi-veke.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 13 DAY), 0, NULL),
-(6, 13, 1, NULL, 'Недонасыщенный алмаз: предпосылки и развитие', 4, 'articles/4-nedonasyschennyi-almaz-predposylki-i-razvitie.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 12 DAY), 0, NULL),
-(10, 12, 1, NULL, 'We are all made of stars © Moby', NULL, NULL, 'users/1?wid=1&reply=1', NULL, NULL, CURRENT_TIMESTAMP, 0, NULL),
-(17, 1, 1, NULL, 'О проекте', 1, 'pages/about.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 11 DAY), 0, NULL),
-(18, 1, 1, NULL, 'Правила сайта', 2, 'pages/rules.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 10 DAY), 0, NULL),
-(32, 17, 1, NULL, 'На улице 22 Партсъезда прорвало трубы с водой', 1, 'news/1-na-ulice-prorvalo-truby.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 9 DAY), 0, NULL),
-(33, 17, 1, NULL, 'Игрушки становятся дороже', 2, 'news/2-igrushki-stanovjatsja-dorozhe.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 8 DAY), 0, NULL),
-(34, 17, 1, NULL, 'В городе открыт сервис для ретро-автомобилей', 3, 'news/3-v-gorode-otkryt-servis-dlja-retro-avtomobilei.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 7 DAY), 0, NULL),
-(35, 17, 1, NULL, 'Дачный сезон на Урале официально начался', 4, 'news/4-dachnyi-sezon-otkryt.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 6 DAY), 0, NULL),
-(36, 17, 1, NULL, 'Бизнес ожидает снижения налогов', 5, 'news/5-snizhenie-nalogov-dlja-biznesa.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 5 DAY), 0, NULL),
-(37, 17, 1, NULL, 'Все больше россиян покупают дома за границей', 6, 'news/6-vse-bolshe-rossijan-pokupayut-nedvizhimost-za-granicei.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 4 DAY), 0, NULL),
-(38, 17, 1, NULL, 'Количество преступлений в России сокращается', 7, 'news/7-kolichestvo-prestuplenii-v-rossii-sokraschaetsja.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 3 DAY), 0, NULL),
-(40, 17, 1, NULL, 'Россияне стали первыми на Чемпионате Мира', 9, 'news/9-rossijane-stali-pervymi-na-chempionate-mira.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 2 DAY), 0, NULL),
-(56, 13, 1, NULL, 'Мифологический реципиент', 10, 'articles/10-mifologicheskii-recipient.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 1 DAY), 0, NULL),
-(57, 13, 1, NULL, 'Общественный анализ зарубежного опыта', 11, 'articles/11-obschestvennyi-analiz-zarubezhnogo-opyta.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 7 MINUTE), 0, NULL),
-(67, 14, 1, 1, 'Мой первый пост в сообществе', 5, 'posts/5-moi-pervyi-post-v-soobschestve.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 6 MINUTE), 0, NULL),
-(69, 16, 1, NULL, 'Продам квартиру в новостройке', 7, 'board/7-prodam-kvartiru-v-novostroike.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 5 MINUTE), 0, NULL);
-
-INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
-(13, 1, 'content', 'add.articles', 'Добавление статей', 'добавляет статью %s'),
-(14, 1, 'content', 'add.posts', 'Добавление постов', 'добавляет пост %s'),
-(15, 0, 'content', 'add.albums', 'Добавление альбомов', 'добавляет фотоальбом %s'),
-(16, 1, 'content', 'add.board', 'Добавление объявлений', 'добавляет объявление %s'),
-(17, 1, 'content', 'add.news', 'Добавление новостей', 'добавляет новость %s');
-
 INSERT INTO `{#}comments` (`id`, `parent_id`, `level`, `ordering`, `user_id`, `date_pub`, `target_controller`, `target_subject`, `target_id`, `target_url`, `target_title`, `author_name`, `author_email`, `author_ip`, `content`, `content_html`, `is_deleted`, `is_private`, `rating`) VALUES
 (3, 0, 1, 1, 6, DATE_SUB(NOW(),INTERVAL 4 MINUTE), 'content', 'articles', 4, 'articles/4-nedonasyschennyi-almaz-predposylki-i-razvitie.html', 'Недонасыщенный алмаз: предпосылки и развитие', NULL, NULL, NULL, 'Базальтовый слой <i>разогревает сталактит</i>, где присутствуют моренные суглинки днепровского возраста.', 'Базальтовый слой <i>разогревает сталактит</i>, где присутствуют моренные суглинки днепровского возраста.', 1, 0, 1),
 (4, 0, 1, 1, 1, DATE_SUB(NOW(),INTERVAL 3 MINUTE), 'content', 'articles', 11, 'articles/11-obschestvennyi-analiz-zarubezhnogo-opyta.html', 'Общественный анализ зарубежного опыта', NULL, NULL, NULL, 'Отличная статья, все очень доходчиво и познавательно', 'Отличная статья, все очень доходчиво и познавательно', NULL, 0, 0),
@@ -950,6 +924,8 @@ CREATE TABLE `{#}con_posts_props_values` (
 INSERT INTO `{#}groups` (`id`, `owner_id`, `date_pub`, `title`, `description`, `logo`, `rating`, `members_count`, `join_policy`, `edit_policy`, `wall_policy`, `is_closed`) VALUES
 (1, 1, DATE_SUB(NOW(),INTERVAL 10 MINUTE), 'Робототехника', 'Группа посвящена роботам, машиностроению и всему что с этим связано.', '---\nsmall: 000/u1/7/3/robototehnika-logo-small.png\nmicro: 000/u1/e/3/robototehnika-logo-micro.png\n', 0, 1, 0, 0, 0, 0);
 
+SET @insert_group_id = 1;
+
 INSERT INTO `{#}groups_members` (`id`, `group_id`, `user_id`, `role`, `date_updated`) VALUES
 (1, 1, 1, 2, CURRENT_TIMESTAMP);
 
@@ -1058,12 +1034,6 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (1, 3, 'board', 'yes'),
 (3, 3, 'board', 'own'),
 (2, 3, 'board', 'own');
-
-INSERT INTO `{#}rss_feeds` (`id`, `ctype_id`, `ctype_name`, `title`, `description`, `image`, `mapping`, `limit`, `is_enabled`, `is_cache`, `cache_interval`, `date_cached`) VALUES
-(2, 5, 'articles', 'Статьи', NULL, NULL, '---\ntitle: title\ndescription: teaser\npubDate: date_pub\nimage:\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
-(3, 6, 'posts', 'Посты', 'Лента пользовательских постов', NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: picture\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
-(5, 9, 'board', 'Объявления', 'Коммерческие объявления', NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: photo\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
-(6, 10, 'news', 'Новости', 'Информационные сообщения', NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: photo\nimage_size: normal\n', 15, 1, NULL, 60, NULL);
 
 INSERT INTO `{#}tags` (`id`, `tag`, `frequency`) VALUES
 (1, 'пример', 6),

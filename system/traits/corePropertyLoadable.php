@@ -12,6 +12,51 @@ namespace icms\traits;
  */
 trait corePropertyLoadable {
 
+    /**
+     * Возвращает объект модели или контроллера
+     * А если не найдены, возвращает класс-заглушку
+     *
+     * @param string $name Тип и имя контроллера через двоеточие
+     * @return anon|\cmsController|\cmsModel
+     */
+    public function callIfExists($name) {
+
+        list($type, $controller) = explode(':', $name);
+
+        $obj = null;
+
+        if (!\cmsController::enabled($controller)) {
+            $type = 'disabled';
+        }
+
+        switch ($type) {
+            case 'model':
+
+                $obj = \cmsCore::getModel($controller, '_', false);
+
+                break;
+            case 'controller':
+
+                $obj = \cmsCore::getController($controller, ($this->request ?? null), false);
+
+                break;
+            default:
+                break;
+        }
+
+        if ($obj !== null) {
+            return $obj;
+        }
+
+        return new class() {
+            public function __call($name, $arguments = []) { return null; }
+            public function __get($name) { return null; }
+            public function __set($name, $value) {}
+            public function __isset($name) { return false; }
+            public function __unset($name) {}
+        };
+    }
+
     public function __get($name) {
 
         $this->{$name} = null;

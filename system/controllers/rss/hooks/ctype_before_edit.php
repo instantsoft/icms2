@@ -2,7 +2,7 @@
 
 class onRssCtypeBeforeEdit extends cmsAction {
 
-    public function run($ctype){
+    public function run($ctype) {
 
         $feed = $this->model->getFeedByCtypeName($ctype['name']);
 
@@ -11,7 +11,6 @@ class onRssCtypeBeforeEdit extends cmsAction {
         }
 
         return $ctype;
-
     }
 
 }

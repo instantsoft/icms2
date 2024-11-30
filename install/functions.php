@@ -187,6 +187,17 @@ function get_templates() {
     return $list;
 }
 
+function get_packages_sql_list() {
+
+    $dir_path = PATH . 'languages' . DS . LANG . DS . 'sql' . DS . 'packages' . DS;
+
+    return array_values(array_filter(scandir($dir_path, SCANDIR_SORT_ASCENDING), function ($entry) use ($dir_path) {
+
+        return $entry !== '.' && $entry !== '..' &&
+               is_dir($dir_path . $entry);
+    }));
+}
+
 function copy_folder($dir_source, $dir_target) {
 
     if (is_dir($dir_source)) {

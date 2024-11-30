@@ -19,7 +19,7 @@ class modelModeration extends cmsModel {
             $this->filterEqual('moderator_id', $moderator_id);
         }
 
-        return $this->getTasksItemCounts();
+        return $this->limit(0)->getTasksItemCounts();
     }
 
     public function getTasksItemCounts() {

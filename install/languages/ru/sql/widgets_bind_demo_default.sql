@@ -1,7 +1,6 @@
 INSERT INTO `{#}widgets_bind` (`id`, `template_layouts`, `languages`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `tpl_body`, `tpl_wrap`, `device_types`) VALUES
 (6, NULL, NULL, 8, 'Сейчас онлайн', NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', NULL, 'wrapper', NULL),
 (8, NULL, NULL, 10, 'Облако тегов', NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nlimit: 10\n', NULL, 'wrapper', NULL),
-(9, NULL, NULL, 6, 'Активность', 'Вся | activity\r\n{Моих друзей | activity/index/friends}\r\n{Моя | activity/index/my}', NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\ndataset: all\nshow_avatars: 1\ndate_group: null\nlimit: 5\n', NULL, 'wrapper', NULL),
 (10, NULL, NULL, 4, 'Статьи', 'Все статьи | articles\r\n{Добавить статью | articles/add}', 'columns-2', NULL, NULL, 1, 1, '---\n- 0\n', NULL, '---\nctype_id: 5\ndataset:\nimage_field:\nteaser_field:\nshow_details: 1\nlimit: 5\n', NULL, 'wrapper', NULL),
 (11, NULL, NULL, 7, 'Комментарии', 'Все | comments\r\n{Моих друзей | comments/index/friends}\r\n{Мои | comments/index/my}', NULL, NULL, NULL, 1, 1, '---\n- 0\n', NULL, '---\nshow_avatars: 1\nshow_text: 1\nlimit: 10\n', NULL, 'wrapper', NULL),
 (12, NULL, NULL, 5, 'Категории', NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', NULL, 'wrapper', NULL),
@@ -16,7 +15,6 @@ INSERT INTO `{#}widgets_bind` (`id`, `template_layouts`, `languages`, `widget_id
 INSERT INTO `{#}widgets_bind_pages` (`id`, `bind_id`, `template`, `is_enabled`, `page_id`, `position`, `ordering`) VALUES
 (7, 6, 'default', 1, 1, 'right-bottom', 0),
 (8, 8, 'default', 1, 1, 'right-bottom', 3),
-(9, 9, 'default', 1, 1, 'left-bottom', 3),
 (10, 10, 'default', 1, 1, 'left-bottom', 1),
 (11, 11, 'default', 1, 1, 'left-bottom', 4),
 (12, 12, 'default', 1, 147, 'right-bottom', 4),

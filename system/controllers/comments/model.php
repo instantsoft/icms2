@@ -576,8 +576,4 @@ class modelComments extends cmsModel {
         return $time ? strtotime($time) : 0;
     }
 
-    public function isRssFeedEnable() {
-        return $this->filterEqual('ctype_name', 'comments')->getFieldFiltered('rss_feeds', 'is_enabled');
-    }
-
 }

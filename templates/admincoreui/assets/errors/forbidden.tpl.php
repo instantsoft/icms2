@@ -11,6 +11,7 @@
         ]); ?>
         <?php $this->addCSS($this->getStylesFileName('admin')); ?>
         <?php $this->head(false); ?>
+        <meta name="robots" content="noindex" />
     </head>
     <?php if($show_login_link){ ?>
         <body class="app flex-row align-items-center bg-dark">
@@ -32,7 +33,7 @@
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">
-                                                    <i class="icon-user"></i>
+                                                    <?php html_svg_icon('solid', 'user'); ?>
                                                 </span>
                                             </div>
                                             <input class="form-control" required="" type="email" name="login_email" placeholder="<?php echo LANG_EMAIL; ?>">
@@ -40,24 +41,18 @@
                                         <div class="input-group mb-4">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">
-                                                    <i class="icon-lock"></i>
+                                                    <?php html_svg_icon('solid', 'lock'); ?>
                                                 </span>
                                             </div>
                                             <input class="form-control" required="" type="password" name="login_password" placeholder="<?php echo LANG_PASSWORD; ?>">
                                         </div>
                                         <div class="row">
                                             <div class="col">
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-auto">
-                                                        <button class="btn btn-primary mb-2" type="submit"><?php echo LANG_LOG_IN; ?></button>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <div class="form-check text-muted mb-2">
-                                                            <input name="remember" class="form-check-input" value="1" type="checkbox" id="remember">
-                                                            <label class="form-check-label" for="remember">
-                                                                <?php echo LANG_REMEMBER_ME; ?>
-                                                            </label>
-                                                        </div>
+                                                <div class="d-flex align-items-center">
+                                                    <button class="btn btn-primary" type="submit"><?php echo LANG_LOG_IN; ?></button>
+                                                    <div class="custom-control custom-checkbox text-muted ml-2">
+                                                        <input name="remember" value="1" type="checkbox" class="custom-control-input" id="remember">
+                                                        <label class="custom-control-label" for="remember"><?php echo LANG_REMEMBER_ME; ?></label>
                                                     </div>
                                                 </div>
                                             </div>

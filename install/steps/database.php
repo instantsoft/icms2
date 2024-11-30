@@ -30,6 +30,8 @@ function get_db_collation($charset) {
 
 function check_db() {
 
+    $start_time = microtime(true);
+
     $db = get_post_array('db');
 
     $db['host']             = trim($db['host']);
@@ -126,49 +128,17 @@ function check_db() {
         ];
     }
 
-    // Для innodb оборачиваем в транзакцию, это быстрее и удобней
-    if ($db['engine'] === 'InnoDB') {
-        $mysqli->autocommit(false);
-    }
+    // Список дампов для импортирования
+    $dumps = get_sql_file_names(!empty($db['is_install_demo_content']));
 
-    // Основной дамп
-    $success = import_dump($mysqli, 'base.sql', $db['prefix'], $db['engine'], ';', $db['db_charset'], $db['innodb_full_text']);
-    // Гео
-    if ($success === true) {
-        $success = import_dump($mysqli, 'geo.sql', $db['prefix'], $db['engine'], ';', $db['db_charset'], $db['innodb_full_text']);
-    }
-    // Виджеты для шаблона
-    if ($success === true) {
-        $success = import_dump(
-            $mysqli,
-            'widgets_bind_' . $_SESSION['install']['site']['template'] . '.sql',
-            $db['prefix'],
-            $db['engine'],
-            ';',
-            $db['db_charset'],
-            $db['innodb_full_text']
-        );
-    }
+    $success = true;
 
-    // Демо данные
-    if ($success === true && !empty($db['is_install_demo_content'])) {
-
-        // С учётом шаблона
-        $success = import_dump(
-            $mysqli,
-            'base_demo_content_' . $_SESSION['install']['site']['template'] . '.sql',
-            $db['prefix'],
-            $db['engine'],
-            ';',
-            $db['db_charset'],
-            $db['innodb_full_text']
-        );
-
-        // Демо виджеты для шаблона
+    // Основные дампы
+    foreach ($dumps as $dump_name) {
         if ($success === true) {
             $success = import_dump(
                 $mysqli,
-                'widgets_bind_demo_' . $_SESSION['install']['site']['template'] . '.sql',
+                $dump_name,
                 $db['prefix'],
                 $db['engine'],
                 ';',
@@ -178,13 +148,49 @@ function check_db() {
         }
     }
 
-    if ($db['engine'] === 'InnoDB') {
-        if ($success === true) {
-            $mysqli->commit();
-        } else {
-            $mysqli->rollback();
+    // Импортируем дампы отдельных компонентов
+    $packages_list = get_packages_sql_list();
+
+    foreach ($packages_list as $controller_name) {
+        foreach ($dumps as $dump_name) {
+            if ($success === true) {
+                $success = import_dump(
+                    $mysqli,
+                    'packages' . DS . $controller_name . DS . $dump_name,
+                    $db['prefix'],
+                    $db['engine'],
+                    ';',
+                    $db['db_charset'],
+                    $db['innodb_full_text']
+                );
+            }
         }
-        $mysqli->autocommit(true);
+    }
+
+    // Теперь импортируем дампы по зависимостям контроллеров
+    $result = $mysqli->query("SELECT `name` FROM `{$db['prefix']}controllers`");
+    $controllers = [];
+    if (!$mysqli->errno) {
+        while ($item = $result->fetch_assoc()) {
+            $controllers[] = $item['name'];
+        }
+        $result->close();
+    }
+
+    foreach ($packages_list as $controller_name) {
+        foreach ($controllers as $rel_controller_name) {
+            if ($success === true) {
+                $success = import_dump(
+                    $mysqli,
+                    'packages' . DS . $controller_name . DS . $rel_controller_name . '_rel.sql',
+                    $db['prefix'],
+                    $db['engine'],
+                    ';',
+                    $db['db_charset'],
+                    $db['innodb_full_text']
+                );
+            }
+        }
     }
 
     if ($success === true) {
@@ -200,6 +206,7 @@ function check_db() {
     }
 
     return [
+        'time'    => number_format((microtime(true) - $start_time), 3),
         'error'   => $success !== true,
         'message' => is_string($success) ? $success : LANG_DATABASE_BASE_ERROR
     ];
@@ -245,6 +252,25 @@ function check_db_charset($mysqli, $charset) {
     return true;
 }
 
+function get_sql_file_names($is_install_demo_content = false) {
+
+    $dumps = [
+        // Основной дамп
+        'base.sql',
+        // Базовые виджеты для шаблона
+        'widgets_bind_' . $_SESSION['install']['site']['template'] . '.sql',
+    ];
+
+    if ($is_install_demo_content) {
+        // Демо данные
+        $dumps[] = 'base_demo_content_' . $_SESSION['install']['site']['template'] . '.sql';
+        // Демо виджеты для шаблона
+        $dumps[] = 'widgets_bind_demo_' . $_SESSION['install']['site']['template'] . '.sql';
+    }
+
+    return $dumps;
+}
+
 function import_dump(&$mysqli, $file, $prefix, $engine = 'MyISAM', $delimiter = ';', $charset = 'utf8', $innodb_full_text = 0) {
 
     clearstatcache();
@@ -266,27 +292,25 @@ function import_dump(&$mysqli, $file, $prefix, $engine = 'MyISAM', $delimiter = 
 
         $file = fopen($filename, 'r');
 
-        $query = [];
+        $buffer = '';
 
         while (($line = fgets($file)) !== false) {
 
-            $query[] = $line;
+            $buffer .= $line;
 
-            if (preg_match('~' . preg_quote($delimiter, '~') . '\s*$~iS', end($query)) === 1) {
+            if (substr(rtrim($line), -1) === $delimiter) {
 
-                $query = trim(implode('', $query));
+                $query = rtrim($buffer);
+
+                $buffer = '';
 
                 $query = str_replace(['{#}', 'InnoDB', 'CHARSET=utf8'], [$prefix, $engine, 'CHARSET=' . $charset], $query);
 
                 if ($innodb_full_text && $engine === 'InnoDB') {
-                    $query = str_replace(['MyISAM'], ['InnoDB'], $query);
+                    $query = str_replace('MyISAM', 'InnoDB', $query);
                 }
 
                 yield $query;
-            }
-
-            if (is_string($query) === true) {
-                $query = [];
             }
         }
 

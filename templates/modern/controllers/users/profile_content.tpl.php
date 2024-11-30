@@ -64,9 +64,9 @@
         </a>
         <span class="d-none d-lg-inline-block"> &middot; <?php echo $list_header_h1; ?></span>
     </span>
-    <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
+    <?php if (!empty($ctype['rss_link'])) { ?>
         <sup>
-            <a class="inline_rss_icon d-none d-lg-inline-block" href="<?php echo href_to('rss', 'feed', $ctype['name']) . '?user='.$profile['id']; ?>" title="RSS">
+            <a class="inline_rss_icon d-none d-lg-inline-block" href="<?php echo $ctype['rss_link']; ?>" title="RSS">
                 <?php html_svg_icon('solid', 'rss'); ?>
             </a>
         </sup>

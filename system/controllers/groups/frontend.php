@@ -545,47 +545,51 @@ class groups extends cmsFrontend {
 
     }
 
-    public function getGroupTabs($group){
+    public function getGroupTabs($group) {
 
-        $menu = array();
+        $menu = [];
 
-        $menu[] = array(
+        $menu['index'] = [
             'title'      => LANG_GROUPS_PROFILE_INDEX,
             'controller' => $this->name,
             'action'     => $group['slug'],
-        );
+        ];
 
-        if ($group['content_counts']){
-            foreach($group['content_counts'] as $ctype_name => $count){
-                if (!$count['is_in_list'] || !$count['count']) { continue; }
-                $menu[] = array(
+        if ($group['content_counts']) {
+            foreach ($group['content_counts'] as $ctype_name => $count) {
+
+                if (!$count['is_in_list'] || !$count['count']) {
+                    continue;
+                }
+
+                $menu['content_'.$ctype_name] = [
                     'title'      => $count['title'],
                     'controller' => $this->name,
                     'action'     => $group['slug'],
-                    'params'     => array('content', $ctype_name),
+                    'params'     => ['content', $ctype_name],
                     'counter'    => $count['count']
-                );
+                ];
             }
         }
 
-        if ($this->isControllerEnabled('activity')) {
-            $menu[] = array(
+        if ($this->isControllerInstalled('activity') && $this->isControllerEnabled('activity')) {
+            $menu['activity'] = [
                 'title'      => LANG_GROUPS_PROFILE_ACTIVITY,
                 'controller' => $this->name,
                 'action'     => $group['slug'],
                 'params'     => 'activity',
-            );
+            ];
         }
 
-        $menu[] = array(
+        $menu['members'] = [
             'title'      => LANG_GROUPS_PROFILE_MEMBERS,
             'controller' => $this->name,
             'action'     => $group['slug'],
             'params'     => 'members',
             'counter'    => $group['members_count']
-        );
+        ];
 
-        list($menu, $group) = cmsEventsManager::hook('group_tabs', array($menu, $group));
+        list($menu, $group) = cmsEventsManager::hook('group_tabs', [$menu, $group]);
 
         return $menu;
     }

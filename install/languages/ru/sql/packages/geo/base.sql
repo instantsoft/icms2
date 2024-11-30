@@ -1,3 +1,6 @@
+INSERT INTO `{#}controllers` (`title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES
+('География', 'geo', 1, '---\nauto_detect: 1\nauto_detect_provider: geoiplookup\ndefault_country_id: null\ndefault_country_id_cache: null\ndefault_region_id: null\ndefault_region_id_cache: null\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
+
 DROP TABLE IF EXISTS `{#}geo_cities`;
 CREATE TABLE `{#}geo_cities` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -10,6 +13,8 @@ CREATE TABLE `{#}geo_cities` (
   KEY `country_id` (`country_id`),
   KEY `region_id` (`region_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+START TRANSACTION;
 
 INSERT INTO `{#}geo_cities` (`id`, `country_id`, `region_id`, `name`) VALUES
 (15789524, 3159, 15789410, 'Плиево'),
@@ -11019,6 +11024,8 @@ INSERT INTO `{#}geo_cities` (`id`, `country_id`, `region_id`, `name`) VALUES
 (7, 4, 5, 'Бендиго'),
 (6, 4, 5, 'Балларат');
 
+COMMIT;
+
 DROP TABLE IF EXISTS `{#}geo_countries`;
 CREATE TABLE `{#}geo_countries` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -11035,6 +11042,8 @@ CREATE TABLE `{#}geo_countries` (
   KEY `iso` (`iso`),
   KEY `ordering` (`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+START TRANSACTION;
 
 INSERT INTO `{#}geo_countries` (`id`, `name`, `alpha2`, `alpha3`, `iso`, `ordering`) VALUES
 (3661568, 'ЮАР', 'ZA', 'ZAF', 710, 100),
@@ -11143,6 +11152,8 @@ INSERT INTO `{#}geo_countries` (`id`, `name`, `alpha2`, `alpha3`, `iso`, `orderi
 (63, 'Австрия', 'AT', 'AUT', 40, 100),
 (4, 'Австралия', 'AU', 'AUS', 36, 100);
 
+COMMIT;
+
 DROP TABLE IF EXISTS `{#}geo_regions`;
 CREATE TABLE `{#}geo_regions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -11153,6 +11164,8 @@ CREATE TABLE `{#}geo_regions` (
   PRIMARY KEY (`id`),
   KEY `country_id` (`country_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+START TRANSACTION;
 
 INSERT INTO `{#}geo_regions` (`id`, `country_id`, `name`) VALUES
 (15789405, 582106, 'Ямайка'),
@@ -12078,3 +12091,5 @@ INSERT INTO `{#}geo_regions` (`id`, `country_id`, `name`) VALUES
 (16, 4, 'Западная Австралия'),
 (15789410, 3159, 'Республика Ингушетия'),
 (5, 4, 'Виктория');
+
+COMMIT;

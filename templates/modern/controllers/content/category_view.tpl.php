@@ -59,9 +59,9 @@ if (!$is_frontpage){
     <?php if ($show_h1){  ?>
         <h1>
             <?php $this->pageH1(); ?>
-            <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
+            <?php if (!empty($ctype['rss_link'])){ ?>
                 <sup>
-                    <a class="inline_rss_icon d-none d-lg-inline-block" title="RSS" href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>">
+                    <a class="inline_rss_icon d-none d-lg-inline-block" title="RSS" href="<?php echo $ctype['rss_link']; ?>">
                         <?php html_svg_icon('solid', 'rss'); ?>
                     </a>
                 </sup>

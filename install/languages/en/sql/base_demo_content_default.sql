@@ -1,26 +1,3 @@
-INSERT INTO `{#}activity` (`id`, `type_id`, `user_id`, `group_id`, `subject_title`, `subject_id`, `subject_url`, `reply_url`, `images`, `images_count`, `date_pub`, `is_private`, `is_parent_hidden`) VALUES
-(3, 13, 1, NULL, 'Elliptical perigee in the XXI century', 1, 'articles/1-elliptical-perigee-in-the-xxi-century.html', NULL, NULL, NULL, '2013-07-24 10:49:30', 0, NULL),
-(6, 13, 1, NULL, 'Undersaturated diamond: preconditions and development', 4, 'articles/4-undersaturated-diamond-preconditions-and-development.html', NULL, NULL, NULL, '2013-07-24 11:22:39', 0, NULL),
-(10, 12, 1, NULL, 'We are all made of stars © Moby', NULL, NULL, 'users/1?wid=1&reply=1', NULL, NULL, CURRENT_TIMESTAMP, 0, NULL),
-(17, 1, 1, NULL, 'About', 1, 'pages/about.html', NULL, NULL, NULL, '2013-08-08 15:07:27', 0, NULL),
-(18, 1, 1, NULL, 'Site Rules', 2, 'pages/rules.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 10 DAY), 0, NULL),
-(33, 17, 1, NULL, 'Toys are becoming more expensive', 2, 'news/2-igrushki-stanovjatsja-dorozhe.html', NULL, NULL, NULL, '2013-09-09 16:02:07', 0, NULL),
-(34, 17, 1, NULL, 'Сar service for vintage cars', 3, 'news/3-v-gorode-otkryt-servis-dlja-retro-avtomobilei.html', NULL, NULL, NULL, '2013-09-09 16:03:25', 0, NULL),
-(35, 17, 1, NULL, 'Summer season has officially begun', 4, 'news/4-dachnyi-sezon-otkryt.html', NULL, NULL, NULL, '2013-09-09 16:04:25', 0, NULL),
-(36, 17, 1, NULL, 'Business expects to reduce taxes', 5, 'news/5-snizhenie-nalogov-dlja-biznesa.html', NULL, NULL, NULL, '2013-09-09 16:05:26', 0, NULL),
-(37, 17, 1, NULL, 'More and more people are buying homes abroad', 6, 'news/6-vse-bolshe-rossijan-pokupayut-nedvizhimost-za-granicei.html', NULL, NULL, NULL, '2013-09-12 12:09:25', 0, NULL),
-(38, 17, 1, NULL, 'Reduced the number of crimes', 7, 'news/7-kolichestvo-prestuplenii-v-rossii-sokraschaetsja.html', NULL, NULL, NULL, '2013-09-12 12:10:55', 0, NULL),
-(40, 17, 1, NULL, 'We have won the World Championship!', 9, 'news/9-rossijane-stali-pervymi-na-chempionate-mira.html', NULL, NULL, NULL, '2013-09-12 12:14:13', 0, NULL),
-(56, 13, 1, NULL, 'Mythological recipient', 10, 'articles/10-mythological-recipient.html', NULL, NULL, NULL, '2013-10-09 14:48:19', 0, NULL),
-(57, 13, 1, NULL, 'Public review of international experience', 11, 'articles/11-public-review-of-international-experience.html', NULL, NULL, NULL, '2013-10-09 14:54:36', 0, NULL),
-(67, 14, 1, 1, 'My first post in the Community', 5, 'posts/5-moi-pervyi-post-v-soobschestve.html', NULL, NULL, NULL, '2013-11-13 16:43:07', 0, NULL);
-
-INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
-(13, 1, 'content', 'add.articles', 'Adding articles', 'added article %s'),
-(14, 1, 'content', 'add.posts', 'Adding posts', 'added post %s'),
-(15, 0, 'content', 'add.albums', 'Adding albums', 'added album %s'),
-(17, 1, 'content', 'add.news', 'Adding news', 'added news %s');
-
 INSERT INTO `{#}comments` (`id`, `parent_id`, `level`, `ordering`, `user_id`, `date_pub`, `target_controller`, `target_subject`, `target_id`, `target_url`, `target_title`, `author_name`, `author_email`, `author_ip`, `content`, `content_html`, `is_deleted`, `is_private`, `rating`) VALUES
 (1, 0, 1, 1, 1, CURRENT_TIMESTAMP, 'content', 'articles', 4, 'articles/4-undersaturated-diamond-preconditions-and-development.html', 'Undersaturated diamond: preconditions and development', NULL, NULL, NULL, 'This article is so complicated...', 'This article is so complicated…', NULL, 0, 0),
 (2, 1, 2, 2, 1, CURRENT_TIMESTAMP, 'content', 'articles', 4, 'articles/4-undersaturated-diamond-preconditions-and-development.html', 'Undersaturated diamond: preconditions and development', NULL, NULL, NULL, 'I didn''t understand anything', 'I didn''t understand anything', NULL, 0, 0);
@@ -595,6 +572,8 @@ CREATE TABLE `{#}con_posts_props_values` (
 INSERT INTO `{#}groups` (`id`, `owner_id`, `date_pub`, `title`, `description`, `logo`, `rating`, `members_count`, `join_policy`, `edit_policy`, `wall_policy`, `is_closed`) VALUES
 (1, 1, CURRENT_TIMESTAMP, 'Robot Fans', 'The group is dedicated to robots, machine-building and all that is connected with it.', '---\noriginal: u1/004/f398ad69.png\nbig: u1/004/f13052e8.png\nnormal: u1/004/de897122.png\nsmall: u1/004/a442fa4b.png\nmicro: u1/004/c8a73161.png\n', 0, 1, 0, 0, 0, 0);
 
+SET @insert_group_id = 1;
+
 INSERT INTO `{#}groups_members` (`id`, `group_id`, `user_id`, `role`, `date_updated`) VALUES
 (1, 1, 1, 2, CURRENT_TIMESTAMP);
 
@@ -696,11 +675,6 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (8, 5, 'news', '1'),
 (8, 6, 'news', '1'),
 (13, 6, 'news', '1');
-
-INSERT INTO `{#}rss_feeds` (`id`, `ctype_id`, `ctype_name`, `title`, `description`, `image`, `mapping`, `limit`, `is_enabled`, `is_cache`, `cache_interval`, `date_cached`) VALUES
-(2, 5, 'articles', 'Articles', NULL, NULL, '---\ntitle: title\ndescription: teaser\npubDate: date_pub\nimage:\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
-(3, 6, 'posts', 'Blog posts', NULL, NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: picture\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
-(6, 10, 'news', 'News', NULL, NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: photo\nimage_size: normal\n', 15, 1, NULL, 60, NULL);
 
 INSERT INTO `{#}tags` (`id`, `tag`, `frequency`) VALUES
 (43, 'example', 6),

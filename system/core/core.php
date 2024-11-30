@@ -401,9 +401,10 @@ class cmsCore {
      *
      * @param string $controller Имя контроллера модели
      * @param string $delimitter Разделитель слов в названии класса
+     * @param bool $display_error Завершать с ошибокой, если не найден
      * @return ?cmsModel
      */
-    public static function getModel($controller, $delimitter = '_') {
+    public static function getModel($controller, $delimitter = '_', $display_error = true) {
 
         if (is_array($controller)) {
             $controller = end($controller);
@@ -414,7 +415,9 @@ class cmsCore {
         try {
             $model = new $model_class();
         } catch (Exception $e) {
-            self::error(ERR_MODEL_NOT_FOUND . ': ' . $e->getMessage());
+            if ($display_error) {
+                self::error(ERR_MODEL_NOT_FOUND . ': ' . $e->getMessage());
+            }
         } finally {
             return isset($model) ? $model : null;
         }
@@ -447,9 +450,10 @@ class cmsCore {
      *
      * @param string $controller_name Имя контроллера
      * @param ?cmsRequest $request Объект cmsRequest
+     * @param bool $display_error Завершать с ошибокой, если не найден
      * @return void|cmsController
      */
-    public static function getController($controller_name, $request = null) {
+    public static function getController($controller_name, $request = null, $display_error = true) {
 
         if (!$request) {
             $request = new cmsRequest([], cmsRequest::CTX_INTERNAL);
@@ -461,6 +465,9 @@ class cmsCore {
 
         if (!class_exists($controller_name, false)) {
             if (!is_readable($ctrl_file)) {
+                if (!$display_error) {
+                    return null;
+                }
                 if (!$request->isInternal()) {
                     return self::error404();
                 }
@@ -481,6 +488,9 @@ class cmsCore {
         }
 
         if (!class_exists($controller_class, false)) {
+            if (!$display_error) {
+                return null;
+            }
             return self::error(ERR_COMPONENT_NOT_FOUND . ': ' . str_replace($config->root_path, '', $ctrl_file));
         }
 

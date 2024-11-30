@@ -176,6 +176,10 @@ class modelBackendContent extends modelContent {
 
         $result = $this->update('content_types', $id, $ctype);
 
+        if (empty($ctype['name'])) {
+            return $result;
+        }
+
         if (!empty($ctype['options']['show_items_counts'])) {
 
             $this->cacheCategoriesItemsCount($ctype['name']);

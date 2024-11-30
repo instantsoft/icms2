@@ -75,37 +75,6 @@ INSERT INTO `{#}typograph_presets` (`id`, `options`, `title`) VALUES
 (2, '---\nis_auto_br: null\nis_auto_link_mode: null\nbuild_redirect_link: 1\nis_process_callback: 1\nautoreplace: [ ]\nallowed_tags:\n  - p\n  - br\n  - a\n  - img\n  - b\n  - i\n  - u\n  - s\n  - strong\n  - strike\n  - ul\n  - ol\n  - li\n  - blockquote\n  - iframe\ncallback:\n  p: \"\"\n  br: \"\"\n  a: typograph|linkRedirectPrefix\n  img: typograph|parseImg\n  b: \"\"\n  i: \"\"\n  u: \"\"\n  s: \"\"\n  strong: \"\"\n  strike: \"\"\n  ul: \"\"\n  ol: \"\"\n  li: \"\"\n  blockquote: \"\"\n  iframe: typograph|parseIframe\ntags:\n  p: [ ]\n  br: [ ]\n  a:\n    - \n      type: \'#link\'\n      name: href\n      params: \"\"\n    - \n      type: \'#text\'\n      name: target\n      params: \"\"\n  img:\n    - \n      type: \'#image\'\n      name: src\n      params: \"\"\n    - \n      type: \'#text\'\n      name: alt\n      params: \"\"\n    - \n      type: \'#text\'\n      name: title\n      params: \"\"\n    - \n      type: \'#array\'\n      name: align\n      params: |\n        right\n        left\n        center\n    - \n      type: \'#int\'\n      name: width\n      params: \"\"\n    - \n      type: \'#int\'\n      name: height\n      params: \"\"\n    - \n      type: \'#text\'\n      name: class\n      params: \"\"\n  b: [ ]\n  i: [ ]\n  u: [ ]\n  s: [ ]\n  strong: [ ]\n  strike: [ ]\n  ul: [ ]\n  ol: [ ]\n  li: [ ]\n  blockquote: [ ]\n  iframe:\n    - \n      type: \'#int\'\n      name: width\n      params: \"\"\n    - \n      type: \'#int\'\n      name: height\n      params: \"\"\n    - \n      type: \'#text\'\n      name: style\n      params: \"\"\n    - \n      type: \'#int\'\n      name: frameborder\n      params: \"\"\n    - \n      type: \'#text\'\n      name: allowfullscreen\n      params: \"\"\n    - \n      type: \'#domain\'\n      name: src\n      params: |\n        youtube.com\n        yandex.ru\n        rutube.ru\n        vimeo.com\n        vk.com\n        my.mail.ru\n        facebook.com\n', 'Для личных сообщений'),
 (3, '---\nis_auto_br: 1\nis_auto_link_mode: null\nbuild_redirect_link: 1\nbuild_smiles: 1\nis_process_callback: 1\nautoreplace: [ ]\nallowed_tags:\n  - p\n  - br\n  - a\n  - b\n  - i\n  - u\n  - s\n  - strong\n  - strike\n  - ul\n  - ol\n  - li\ncallback:\n  p: \"\"\n  br: \"\"\n  a: typograph|linkRedirectPrefix\n  b: \"\"\n  i: \"\"\n  u: \"\"\n  s: \"\"\n  strong: \"\"\n  strike: \"\"\n  ul: \"\"\n  ol: \"\"\n  li: \"\"\ntags:\n  p: [ ]\n  br: [ ]\n  a:\n    - \n      type: \'#link\'\n      name: href\n      params: \"\"\n    - \n      type: \'#text\'\n      name: target\n      params: \"\"\n  b: [ ]\n  i: [ ]\n  u: [ ]\n  s: [ ]\n  strong: [ ]\n  strike: [ ]\n  ul: [ ]\n  ol: [ ]\n  li: [ ]\n', 'Для Markitup редактора');
 
-DROP TABLE IF EXISTS `{#}forms`;
-CREATE TABLE `{#}forms` (
-  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) DEFAULT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `description` text,
-  `options` text,
-  `tpl_form` varchar(100) DEFAULT NULL,
-  `hash` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `hash` (`hash`),
-  KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Формы конструктора форм';
-
-DROP TABLE IF EXISTS `{#}forms_fields`;
-CREATE TABLE `{#}forms_fields` (
-  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `form_id` int DEFAULT NULL,
-  `name` varchar(40) DEFAULT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `hint` varchar(200) DEFAULT NULL,
-  `ordering` int DEFAULT NULL,
-  `is_enabled` tinyint UNSIGNED DEFAULT '1',
-  `fieldset` varchar(32) DEFAULT NULL,
-  `type` varchar(16) DEFAULT NULL,
-  `values` text,
-  `options` text,
-  PRIMARY KEY (`id`),
-  KEY `form_id` (`form_id`,`is_enabled`,`ordering`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Поля конструктора форм';
-
 DROP TABLE IF EXISTS `{#}jobs`;
 CREATE TABLE `{#}jobs` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -121,90 +90,6 @@ CREATE TABLE `{#}jobs` (
   KEY `queue` (`queue`),
   KEY `attempts` (`attempts`,`is_locked`,`date_started`,`priority`,`date_created`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Очередь';
-
-DROP TABLE IF EXISTS `{#}subscriptions`;
-CREATE TABLE `{#}subscriptions` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) DEFAULT NULL,
-  `controller` varchar(32) DEFAULT NULL,
-  `subject` varchar(50) DEFAULT NULL,
-  `subject_url` varchar(255) DEFAULT NULL,
-  `params` text,
-  `subscribers_count` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `hash` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `hash` (`hash`),
-  KEY `target_controller` (`controller`,`subject`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Списки подписок';
-
-DROP TABLE IF EXISTS `{#}subscriptions_bind`;
-CREATE TABLE `{#}subscriptions_bind` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `subscription_id` int(11) UNSIGNED DEFAULT NULL,
-  `user_id` int(11) UNSIGNED DEFAULT NULL,
-  `guest_email` varchar(100) DEFAULT NULL,
-  `guest_name` varchar(50) DEFAULT NULL,
-  `is_confirmed` tinyint(1) UNSIGNED DEFAULT '1',
-  `confirm_token` varchar(32) DEFAULT NULL,
-  `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`,`subscription_id`) USING BTREE,
-  KEY `guest_email` (`guest_email`,`subscription_id`) USING BTREE,
-  KEY `confirm_token` (`confirm_token`),
-  KEY `subscription_id` (`subscription_id`,`is_confirmed`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Подписки';
-
-DROP TABLE IF EXISTS `{#}activity`;
-CREATE TABLE `{#}activity` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `type_id` int(11) unsigned DEFAULT NULL,
-  `user_id` int(11) unsigned DEFAULT NULL,
-  `group_id` int(11) unsigned DEFAULT NULL,
-  `subject_title` varchar(140) DEFAULT NULL,
-  `subject_id` int(11) unsigned DEFAULT NULL,
-  `subject_url` varchar(250) DEFAULT NULL,
-  `reply_url` varchar(250) DEFAULT NULL,
-  `images` text,
-  `images_count` int(11) unsigned DEFAULT NULL,
-  `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `is_private` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `is_parent_hidden` tinyint(1) unsigned DEFAULT NULL,
-  `is_pub` tinyint(1) unsigned DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `type_id` (`type_id`),
-  KEY `user_id` (`user_id`),
-  KEY `date_pub` (`date_pub`),
-  KEY `is_private` (`is_private`),
-  KEY `group_id` (`group_id`),
-  KEY `is_parent_hidden` (`is_parent_hidden`),
-  KEY `is_pub` (`is_pub`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Лента активности';
-
-DROP TABLE IF EXISTS `{#}activity_types`;
-CREATE TABLE `{#}activity_types` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `is_enabled` tinyint(1) unsigned DEFAULT '1',
-  `controller` varchar(32) NOT NULL,
-  `name` varchar(32) NOT NULL,
-  `title` varchar(100) NOT NULL,
-  `description` varchar(200) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `is_enabled` (`is_enabled`),
-  KEY `controller` (`controller`),
-  KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Типы записей в ленте активности';
-
-INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
-(1, 1, 'content', 'add.pages', 'Добавление страниц', 'добавляет страницу %s'),
-(2, 1, 'comments', 'vote.comment', 'Оценка комментария', 'оценил комментарий на странице %s'),
-(7, 1, 'users', 'friendship', 'Дружба', 'и %s становятся друзьями'),
-(8, 1, 'users', 'signup', 'Регистрация', 'регистрируется. Приветствуем!'),
-(10, 1, 'groups', 'join', 'Вступление в группу', 'вступает в группу %s'),
-(11, 1, 'groups', 'leave', 'Выход из группы', 'выходит из группы %s'),
-(12, 1, 'users', 'status', 'Изменение статуса', '&rarr; %s'),
-(18, 1, 'photos', 'add.photos', 'Добавление фотографий', 'загружает фото в альбом %s'),
-(19, 1, 'users', 'avatar', 'Изменение аватара', 'изменяет аватар'),
-(20, 1, 'subscriptions', 'subscribe', 'Подписка на контент', 'подписывается на список %s');
 
 DROP TABLE IF EXISTS `{#}comments`;
 CREATE TABLE `{#}comments` (
@@ -398,26 +283,20 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (4, 'Комментарии', 'comments', 1, '---\ndisable_icms_comments: null\nis_guests: 1\nguest_ip_delay: 1\nrestricted_ips: \"\"\ndim_negative: 1\nupdate_user_rating: 1\nlimit: 20\nseo_keys: \"\"\nseo_desc: \"\"\nis_guests_moderate: 1\nrestricted_emails: \"\"\nrestricted_names: \"\"\nlimit_nesting: 5\nshow_author_email: 1\neditor: \"4\"\neditor_presets: null\nshow_list:\n  - \"0\"\ntypograph_id: \"1\"\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (5, 'Личные сообщения', 'messages', 1, '---\nlimit: 10\ngroups_allowed: [ ]\neditor: \"2\"\neditor_presets: null\ntime_delete_old: 0\nrealtime_mode: ajax\nrefresh_time: 15\nsocket_host: \"\"\nsocket_port: 3000\nuse_queue: null\nis_enable_pm: 1\nis_contact_first_select: null\ntypograph_id: \"2\"\nemail_template: \"\"\n', 'InstantCMS Team', 'https://instantcms.ru/', '2.0', 1),
 (6, 'Авторизация и регистрация', 'auth', 1, '---\nis_reg_enabled: 1\nreg_reason: >\n  К сожалению, нам пока\n  не нужны новые\n  пользователи\nis_reg_invites: null\nreg_captcha: null\nverify_email: null\nverify_exp: 48\nauth_captcha: null\nrestricted_emails: |\n  *@shitmail.me\r\n  *@mailspeed.ru\r\n  *@temp-mail.ru\r\n  *@guerrillamail.com\r\n  *@12minutemail.com\r\n  *@mytempemail.com\r\n  *@spamobox.com\r\n  *@disposableinbox.com\r\n  *@filzmail.com\r\n  *@freemail.ms\r\n  *@anonymbox.com\r\n  *@lroid.com\r\n  *@yopmail.com\r\n  *@TempEmail.net\r\n  *@spambog.com\r\n  *@mailforspam.com\r\n  *@spam.su\r\n  *@no-spam.ws\r\n  *@mailinator.com\r\n  *@spamavert.com\r\n  *@trashcanmail.com\nrestricted_names: |\n  admin*\r\n  админ*\r\n  модератор\r\n  moderator\nrestricted_ips:\nis_invites: 1\nis_invites_strict: 1\ninvites_period: 7\ninvites_qty: 3\ninvites_min_karma: 0\ninvites_min_rating: 0\ninvites_min_days: 0\nreg_auto_auth: 1\nfirst_auth_redirect: profileedit\nauth_redirect: none\ndef_groups:\n  - 3\nis_site_only_auth_users: null\nguests_allow_controllers:\n  - auth\n  - geo\nseo_keys:\nseo_desc:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(7, 'Лента активности', 'activity', 1, '---\ntypes:\n  - 10\n  - 11\n  - 17\n  - 16\n  - 14\n  - 13\n  - 18\n  - 7\n  - 19\n  - 12\n  - 8\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (8, 'Группы', 'groups', 1, '---\nis_ds_rating: 1\nis_ds_popular: 1\nis_wall: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (10, 'Рейтинг', 'rating', 1, '---\nis_hidden: 1\nis_show: 1\nallow_guest_vote: null\ntemplate: widget\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (11, 'Стена', 'wall', 1, '---\nlimit: 15\norder_by: date_last_reply\nshow_entries: 5\neditor: \"4\"\neditor_presets: null\ntypograph_id: \"1\"\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (12, 'Капча reCAPTCHA', 'recaptcha', 1, '---\npublic_key:\nprivate_key:\ntheme: light\nlang: ru\nsize: normal\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (13, 'Модерация', 'moderation', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (14, 'Теги', 'tags', 1, '---\nordering: frequency\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nmin_freq: 0\nmin_len: 0\nlimit: 10\ncolors:\nshuffle: 1\nseo_keys:\nseo_desc:\nseo_title_pattern:\nseo_desc_pattern:\nseo_h1_pattern:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(15, 'Генератор RSS', 'rss', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (16, 'Генератор карты сайта и robots.txt', 'sitemap', 1, '---\nsources:\n  content|pages: 1\n  content|albums: 1\n  content|articles: 1\n  content|posts: 1\n  content|board: 1\n  content|news: 1\n  frontpage|root: 1\n  groups|profiles: 1\n  users|profiles: 1\nshow_lastmod: 1\nshow_changefreq: 1\ndefault_changefreq: daily\nshow_priority: 1\nrobots: |\n  User-agent: *\r\n  Disallow:\ngenerate_html_sitemap: null\nchangefreq:\n  content:\n    pages:\n    albums:\n    articles:\n    posts:\n    board:\n    news:\n  frontpage:\n    root:\n  groups:\n    profiles:\n  users:\n    profiles:\npriority:\n  content:\n    pages:\n    albums:\n    articles:\n    posts:\n    board:\n    news:\n  frontpage:\n    root: 1.0\n  groups:\n    profiles: 0.8\n  users:\n    profiles: 0.8\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (17, 'Поиск', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (18, 'Фотоальбомы', 'photos', 1, '---\nsizes:\n  - normal\n  - small\n  - big\nis_origs: 1\npreset: big\npreset_small: normal\ntypes: |\n  1 | Фото\n  2 | Векторы\n  3 | Иллюстрации\nordering: date_pub\norderto: desc\nlimit: 20\ndownload_view:\n  normal: [ ]\n  micro: [ ]\n  small: [ ]\n  content_list_small: [ ]\n  content_list: [ ]\n  big: [ ]\n  content_item: [ ]\n  original: [ ]\ndownload_hide:\n  normal: null\n  micro: null\n  small: null\n  content_list_small: null\n  content_list: null\n  big: null\n  content_item: null\n  original:\n    - \"1\"\n    - \"3\"\n    - \"4\"\nurl_pattern: \'{id}-{title}\'\npreset_related: normal\nrelated_limit: 0\neditor: \"1\"\neditor_presets: null\nseo_keys: \"\"\nseo_desc: \"\"\nallow_add_public_albums: null\nallow_download: 1\nhide_photo_item_info: null\ntypograph_id: \"3\"\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (19, 'Загрузка изображений', 'images', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (20, 'Редиректы', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\nis_check_refer: null\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(21, 'География', 'geo', 1, '---\nauto_detect: 1\nauto_detect_provider: geoiplookup\ndefault_country_id: null\ndefault_country_id_cache: null\ndefault_region_id: null\ndefault_region_id_cache: null\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(22, 'Подписки', 'subscriptions', 1, '---\nguest_email_confirmation: 1\nneed_auth: null\nverify_exp: 24\nupdate_user_rating: 1\nrating_value: 1\nadmin_email:\nlimit: 20\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (23, 'Wysiwyg редакторы', 'wysiwygs', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(24, 'Конструктор форм', 'forms', 1, '---\nsend_text: >\n  Спасибо! Форма\n  успешно отправлена.\nallow_embed: null\nallow_embed_domain:\ndenied_embed_domain:\nletter: |\n  [subject:Форма: {form_title} - {site}]\r\n  \r\n  Здравствуйте.\r\n  \r\n  С сайта {site} отправлена форма <b>{form_title}</b>.\r\n  \r\n  Данные формы:\r\n  \r\n  {form_data}\r\n  \r\n  --\r\n   C уважением, {site}\r\n   <small>Письмо отправлено автоматически, пожалуйста, не отвечайте на него.</small>\nnotify_text: \'<p>Здравствуйте.</p><p>Отправлена форма <strong>{form_title}</strong>.</p><p><strong>Данные формы:</strong></p><p>{form_data}</p>\'\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (25, 'Мультиязычность', 'languages', 1, '---\nservice: google\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(26, 'Типограф', 'typograph', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(27, 'Content Security Policy', 'csp', 1, '---\nenable_csp: null\ncsp_str: \"default-src \'self\'; script-src \'unsafe-eval\' \'nonce-{nonce}\' \'strict-dynamic\'; style-src \'self\' data: \'unsafe-inline\' https://fonts.googleapis.com; img-src \'self\' data: https://instantcms.ru; font-src \'self\' data: https://fonts.gstatic.com\"\nis_report_only: 1\nenable_report: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
+(26, 'Типограф', 'typograph', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (
@@ -738,12 +617,6 @@ CREATE TABLE `{#}events` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Привязка хуков к событиям';
 
 INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VALUES
-(1, 'content_after_add_approve', 'activity', 1, 1),
-(2, 'content_after_update_approve', 'activity', 2, 1),
-(3, 'publish_delayed_content', 'activity', 3, 1),
-(4, 'user_delete', 'activity', 4, 1),
-(5, 'user_tab_info', 'activity', 5, 1),
-(6, 'user_tab_show', 'activity', 6, 1),
 (7, 'menu_admin', 'admin', 7, 1),
 (8, 'user_login', 'admin', 8, 1),
 (9, 'admin_confirm_login', 'admin', 9, 1),
@@ -822,14 +695,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (84, 'content_before_list', 'rating', 84, 1),
 (85, 'captcha_html', 'recaptcha', 85, 1),
 (86, 'captcha_validate', 'recaptcha', 86, 1),
-(87, 'ctype_basic_form', 'rss', 87, 1),
-(88, 'ctype_before_add', 'rss', 88, 1),
-(89, 'ctype_after_add', 'rss', 89, 1),
-(90, 'ctype_before_edit', 'rss', 90, 1),
-(91, 'ctype_before_update', 'rss', 91, 1),
-(92, 'ctype_after_delete', 'rss', 92, 1),
-(93, 'content_before_category', 'rss', 93, 1),
-(94, 'content_before_profile', 'rss', 94, 1),
 (95, 'photos_before_item', 'search', 95, 1),
 (96, 'content_before_list', 'search', 96, 1),
 (97, 'content_before_item', 'search', 97, 1),
@@ -860,21 +725,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (122, 'moderation_list', 'comments', 122, 1),
 (123, 'content_groups_before_delete', 'moderation', 123, 1),
 (124, 'comments_after_refuse', 'moderation', 124, 1),
-(125, 'subscribe', 'activity', 125, 1),
-(126, 'unsubscribe', 'activity', 126, 1),
 (127, 'admin_subscriptions_list', 'content', 127, 1),
 (128, 'admin_subscriptions_list', 'photos', 128, 1),
-(129, 'user_delete', 'subscriptions', 129, 1),
-(130, 'content_toolbar_html', 'subscriptions', 130, 1),
-(131, 'photos_toolbar_html', 'subscriptions', 131, 1),
-(132, 'content_filter_buttons_html', 'subscriptions', 132, 1),
-(133, 'user_tab_info', 'subscriptions', 133, 1),
-(134, 'content_photos_after_add', 'subscriptions', 134, 1),
-(135, 'user_notify_types', 'subscriptions', 135, 1),
-(136, 'user_tab_show', 'subscriptions', 136, 1),
-(137, 'content_after_add_approve', 'subscriptions', 137, 1),
-(138, 'publish_delayed_content', 'subscriptions', 138, 1),
-(139, 'ctype_basic_form', 'subscriptions', 139, 1),
 (140, 'admin_dashboard_block', 'users', 140, 1),
 (141, 'engine_start', 'sitemap', 141, 1),
 (142, 'sitemap_sources', 'frontpage', 142, 1),
@@ -888,7 +740,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (150, 'tags_search_subjects', 'content', 150, 1),
 (151, 'images_before_upload', 'typograph', 151, 1),
 (152, 'engine_start', 'content', 152, 1),
-(153, 'content_category_after_update', 'subscriptions', 153, 1),
 (155, 'user_notify_types', 'rating', 155, 1),
 (156, 'content_before_item', 'comments', 156, 1),
 (157, 'content_before_item', 'rating', 157, 1),
@@ -902,51 +753,30 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (165, 'comments_targets', 'photos', 165, 1),
 (166, 'content_before_list', 'comments', 166, 1),
 (167, 'admin_dashboard_block', 'admin', 167, 1),
-(168, 'admin_dashboard_block', 'activity', 168, 1),
 (169, 'user_notify_types', 'content', 169, 1),
 (170, 'form_users_password_2fa', 'authga', 170, 1),
 (171, 'controller_auth_after_save_options', 'authga', 171, 1),
 (172, 'form_users_password', 'auth', 172, 1),
 (173, 'auth_twofactor_list', 'authga', 173, 1),
 (174, 'users_before_edit_password', 'authga', 174, 1),
-(175, 'admin_inline_save_subscriptions', 'activity', 175, 1),
 (176, 'admin_col_scheme_options', 'bootstrap4', 176, 1),
 (178, 'admin_row_scheme_options', 'bootstrap4', 178, 1),
 (179, 'process_render_users_profile_view', 'wall', 179, 1),
 (180, 'process_render_groups_group_view', 'wall', 180, 1),
-(181, 'user_add_status_after', 'activity', 181, 1),
 (182, 'user_add_status', 'wall', 182, 1),
 (183, 'form_groups_options', 'wall', 183, 1),
 (184, 'form_users_options', 'wall', 184, 1),
 (185, 'user_privacy_types', 'wall', 185, 1),
 (186, 'ctype_field_users_after_update', 'bootstrap4', 186, 1),
 (187, 'widget_menu_form', 'bootstrap4', 187, 1),
-(188, 'users_add_friendship_mutual', 'activity', 188, 1),
-(189, 'user_registered', 'activity', 189, 1),
 (190, 'db_nested_tables', 'content', 190, 1),
 (191, 'widget_content_list_form', 'content', 191, 1),
-(192, 'content_before_item', 'forms', 192, 1),
-(193, 'users_after_update', 'activity', 193, 1),
 (194, 'content_item_form_context', 'groups', 194, 1),
-(195, 'ctype_labels_after_update', 'activity', 195, 1),
-(196, 'ctype_after_delete', 'activity', 196, 1),
-(197, 'comments_rate_after', 'activity', 197, 1),
-(198, 'content_albums_after_delete', 'activity', 198, 1),
-(199, 'content_photos_after_add', 'activity', 199, 1),
-(200, 'comments_after_delete_list', 'activity', 200, 1),
-(201, 'content_after_delete', 'activity', 201, 1),
 (202, 'content_after_delete', 'comments', 202, 1),
 (203, 'content_after_delete', 'rating', 203, 1),
 (204, 'content_after_delete', 'tags', 204, 1),
-(205, 'content_after_restore', 'activity', 205, 1),
-(206, 'content_after_trash_put', 'activity', 206, 1),
 (207, 'content_after_restore', 'comments', 207, 1),
 (208, 'content_after_trash_put', 'comments', 208, 1),
-(209, 'content_groups_after_delete', 'activity', 209, 1),
-(210, 'group_after_join', 'activity', 210, 1),
-(211, 'group_after_leave', 'activity', 211, 1),
-(212, 'groups_after_accept_request', 'activity', 212, 1),
-(213, 'groups_after_update', 'activity', 213, 1),
 (214, 'render_widget_menu_menu', 'bootstrap4', 214, 1),
 (215, 'engine_start', 'redirect', 215, 1),
 (216, 'restore_user', 'comments', 216, 1),
@@ -960,19 +790,16 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (224, 'form_make', 'languages', 224, 1),
 (225, 'languages_forms', 'users', 225, 1),
 (226, 'languages_forms', 'groups', 226, 1),
-(227, 'languages_forms', 'activity', 227, 1),
 (228, 'grid_activity_types', 'languages', 228, 1),
 (229, 'content_form_field', 'languages', 229, 1),
 (230, 'ctype_field_after_add', 'languages', 230, 1),
 (231, 'ctype_field_after_update', 'languages', 231, 1),
 (232, 'engine_start', 'languages', 232, 1),
-(233, 'languages_forms', 'forms', 233, 1),
 (234, 'ctype_basic_form', 'languages', 234, 1),
 (235, 'frontpage_action_index', 'languages', 235, 1),
 (236, 'content_before_item', 'languages', 236, 1),
 (237, 'content_before_list', 'languages', 237, 1),
-(238, 'content_item_form', 'languages', 238, 1),
-(239, 'engine_start', 'csp', 239, 1);
+(238, 'content_item_form', 'languages', 238, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -1149,7 +976,6 @@ INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `orde
 (25, 2, 0, 'Панель управления', '{admin:menu}', 7, '---\nclass: cpanel\n', '---\n- 6\n', NULL),
 (29, 1, 0, 'Люди', 'users', 9, '---\nclass: \n', '---\n- 0\n', NULL),
 (30, 6, 0, 'Уведомления', '{messages:notices}', 1, '---\ntarget: _self\nclass: bell ajax-modal notices-counter\nicon: bell\n', '---\n- 0\n', '---\n- 1\n'),
-(31, 1, 0, 'Активность', 'activity', 7, '---\nclass:', '---\n- 0\n', NULL),
 (32, 1, 0, 'Группы', 'groups', 6, '---\nclass:', '---\n- 0\n', NULL),
 (33, 2, 0, 'Мои группы', '{groups:my}', 5, '---\nclass: group', '---\n- 0\n', NULL),
 (34, 5, 0, 'Войти', 'auth/login', 9, '---\ntarget: _self\nclass: ajax-modal key\nicon: sign-in-alt\n', '---\n- 1\n', NULL),
@@ -1250,7 +1076,6 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (20, 'comments', 'rate', 'flag', NULL),
 (21, 'comments', 'karma', 'number', NULL),
 (22, 'content', 'karma', 'number', NULL),
-(23, 'activity', 'delete', 'flag', NULL),
 (24, 'content', 'pub_late', 'flag', NULL),
 (25, 'content', 'pub_long', 'list', 'days,any'),
 (26, 'content', 'pub_max_days', 'number', NULL),
@@ -1336,8 +1161,6 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (20, 5, 'comments', '1'),
 (20, 6, 'comments', '1'),
 (14, 6, 'comments', '1'),
-(23, 5, 'activity', '1'),
-(23, 6, 'activity', '1'),
 (1, 3, 'albums', 'yes'),
 (3, 3, 'albums', 'own'),
 (2, 3, 'albums', 'own');
@@ -1391,34 +1214,6 @@ CREATE TABLE `{#}rating_log` (
   KEY `ip` (`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Оценки рейтинга';
 
-DROP TABLE IF EXISTS `{#}rss_feeds`;
-CREATE TABLE `{#}rss_feeds` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) unsigned DEFAULT NULL,
-  `ctype_name` varchar(32) DEFAULT NULL,
-  `title` varchar(128) DEFAULT NULL,
-  `description` text,
-  `image` text,
-  `mapping` text,
-  `limit` int(11) unsigned NOT NULL DEFAULT '15',
-  `is_enabled` tinyint(1) unsigned DEFAULT NULL,
-  `is_cache` tinyint(1) unsigned DEFAULT NULL,
-  `cache_interval` int(11) unsigned DEFAULT '60',
-  `date_cached` timestamp NULL DEFAULT NULL,
-  `template` varchar(30) NOT NULL DEFAULT 'feed' COMMENT 'Шаблон ленты',
-  PRIMARY KEY (`id`),
-  KEY `ctype_id` (`ctype_id`),
-  KEY `ctype_name` (`ctype_name`),
-  KEY `is_enabled` (`is_enabled`),
-  KEY `is_cache` (`is_cache`),
-  KEY `cache_interval` (`cache_interval`),
-  KEY `date_cached` (`date_cached`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='RSS ленты';
-
-INSERT INTO `{#}rss_feeds` (`id`, `ctype_id`, `ctype_name`, `title`, `description`, `image`, `mapping`, `limit`, `is_enabled`, `is_cache`, `cache_interval`, `date_cached`) VALUES
-(1, NULL, 'comments', 'Комментарии', NULL, NULL, '---\r\ntitle: target_title\r\ndescription: content_html\r\npubDate: date_pub\r\n', 15, 1, NULL, 60, NULL),
-(4, 7, 'albums', 'Фотоальбомы', NULL, NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: cover_image\nimage_size: normal\n', 15, 1, NULL, 60, NULL);
-
 DROP TABLE IF EXISTS `{#}scheduler_tasks`;
 CREATE TABLE `{#}scheduler_tasks` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1447,7 +1242,6 @@ INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`,
 (6, 'Удаление пользователей, не прошедших верификацию', 'auth', 'delete_expired_unverified', 60, NULL, NULL, 1, 1),
 (7, 'Удаление просроченных записей из корзины', 'moderation', 'trash', 30, NULL, NULL, 1, 1),
 (8, 'Выполняет задачи системной очереди', 'queue', 'run_queue', 1, NULL, NULL, 1, 1),
-(9, 'Удаляет просроченные неподтвержденные подписки гостей', 'subscriptions', 'delete_expired_unconfirmed', 1440, 1, DATE_FORMAT(NOW(), '%Y-%m-%d 00:00:05'), 1, 1),
 (10, 'Удаляет устаревшие сессии', 'users', 'sessionclean', 10, NULL, NULL, 1, 1),
 (11, 'Рассылает уведомления об окончании публикации', 'content', 'publication_notify', 1440, 1, DATE_FORMAT(NOW(), '%Y-%m-%d 00:00:05'), 1, 1);
 
@@ -1541,8 +1335,6 @@ CREATE TABLE `{#}users` (
   `invites_count` int(11) unsigned NOT NULL DEFAULT '0',
   `date_invites` timestamp NULL DEFAULT NULL,
   `birth_date` datetime DEFAULT NULL,
-  `city` int(11) unsigned DEFAULT NULL,
-  `city_cache` varchar(128) DEFAULT NULL,
   `hobby` text,
   `avatar` text,
   `phone` varchar(255) DEFAULT NULL,
@@ -1553,7 +1345,6 @@ CREATE TABLE `{#}users` (
   UNIQUE KEY `email` (`email`),
   KEY `pass_token` (`pass_token`),
   KEY `birth_date` (`birth_date`),
-  KEY `city` (`city`),
   KEY `is_admin` (`is_admin`),
   KEY `friends_count` (`friends_count`),
   KEY `karma` (`karma`),
@@ -1568,8 +1359,8 @@ CREATE TABLE `{#}users` (
   KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Пользователи';
 
-INSERT INTO `{#}users` (`id`, `groups`, `email`, `password_hash`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `pass_token`, `date_token`, `friends_count`, `subscribers_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `city_cache`, `hobby`, `avatar`, `phone`, `music`, `movies`, `site`) VALUES
-(1, '---\n- 6\n', 'admin@example.com', NULL, 1, 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, 0, 0, 'Europe/Moscow', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_accept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, NULL, '1985-10-15 00:00:00', 4400, 'Москва', 'Ротор векторного поля, очевидно, неоднозначен. По сути, уравнение в частных производных масштабирует нормальный лист Мёбиуса, при этом, вместо 13 можно взять любую другую константу.', NULL, '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
+INSERT INTO `{#}users` (`id`, `groups`, `email`, `password_hash`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `pass_token`, `date_token`, `friends_count`, `subscribers_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `hobby`, `avatar`, `phone`, `music`, `movies`, `site`) VALUES
+(1, '---\n- 6\n', 'admin@example.com', NULL, 1, 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, 0, 0, 'Europe/Moscow', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_accept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, NULL, '1985-10-15 00:00:00', 'Ротор векторного поля, очевидно, неоднозначен. По сути, уравнение в частных производных масштабирует нормальный лист Мёбиуса, при этом, вместо 13 можно взять любую другую константу.', NULL, '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
 
 DROP TABLE IF EXISTS `{#}users_contacts`;
 CREATE TABLE `{#}users_contacts` (
@@ -1613,7 +1404,6 @@ CREATE TABLE `{#}users_fields` (
 
 INSERT INTO `{#}users_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_edit`) VALUES
 (1, NULL, 'birth_date', 'Возраст', NULL, 4, 'Анкета', 'age', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, '---\ndate_title: Дата рождения\nshow_y: 1\nshow_m: \nshow_d: \nshow_h: \nshow_i: \nrange: YEAR\nlabel_in_item: left\nis_required: \nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
-(2, NULL, 'city', 'Город', 'Укажите город, в котором вы живете', 3, 'Анкета', 'city', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, '---\nlabel_in_item: left\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
 (3, NULL, 'hobby', 'Расскажите о себе', 'Расскажите о ваших интересах и увлечениях', 11, 'О себе', 'text', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: none\nis_required: \nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
 (5, NULL, 'nickname', 'Никнейм', 'Ваше имя для отображения на сайте', 1, 'Анкета', 'string', 1, 1, 1, NULL, 1, NULL, 1, NULL, '---\r\nlabel_in_list: left\r\nlabel_in_item: left\r\nis_required: 1\r\nis_digits: \r\nis_number: \r\nis_alphanumeric: \r\nis_email: \r\nis_unique: \r\nshow_symbol_count: 1\r\nmin_length: 2\r\nmax_length: 100\r\n', '---\n- 0\n', '---\n- 0\n'),
 (6, NULL, 'avatar', 'Аватар', 'Ваша основная фотография', 2, 'Анкета', 'image', 1, 1, NULL, NULL, 1, NULL, 1, NULL, '---\nvisible_depend: null\nlabel_in_list: left\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_url: null\nis_regexp: null\nrules_regexp_str: \"\"\nis_unique: null\nauthor_access: null\nsize_teaser: small\nsize_full: normal\nsize_modal: \"\"\nsizes:\n  - normal\n  - micro\n  - small\nallow_import_link: null\nallow_image_cropper: 1\nimage_cropper_rounded: null\nimage_cropper_ratio: 1\ndefault_image: null\nshow_to_item_link: 1\n', '---\n- 0\n', '---\n- 0\n'),
@@ -1783,13 +1573,11 @@ CREATE TABLE `{#}users_tabs` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Табы профилей';
 
 INSERT INTO `{#}users_tabs` (`id`, `title`, `controller`, `name`, `is_active`, `ordering`) VALUES
-(1, 'Лента', 'activity', 'activity', 1, 1),
 (3, 'Друзья', 'users', 'friends', 1, 2),
 (4, 'Комментарии', 'comments', 'comments', 1, 10),
 (5, 'Группы', 'groups', 'groups', 1, 3),
 (6, 'Репутация', 'users', 'karma', 1, 11),
-(7, 'Подписчики', 'users', 'subscribers', 1, 3),
-(8, 'Подписки', 'subscriptions', 'subscriptions', 1, 3);
+(7, 'Подписчики', 'users', 'subscribers', 1, 3);
 
 DROP TABLE IF EXISTS `{#}users_personal_settings`;
 CREATE TABLE `{#}users_personal_settings` (
@@ -1862,7 +1650,6 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (3, NULL, 'menu', 'Меню', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (4, 'content', 'list', 'Список контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (5, 'content', 'categories', 'Категории', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(6, 'activity', 'list', 'Лента активности', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (7, 'comments', 'list', 'Новые комментарии', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (8, 'users', 'online', 'Кто онлайн', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (9, 'users', 'avatar', 'Аватар пользователя', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
@@ -1874,11 +1661,9 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (15, 'content', 'filter', 'Фильтр контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (16, 'photos', 'list', 'Список фотографий', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (17, 'groups', 'list', 'Список групп', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(18, 'subscriptions', 'button', 'Кнопки подписки', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (19, 'auth', 'register', 'Форма регистрации', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (20, NULL, 'template', 'Элементы шаблона', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (21, 'content', 'fields', 'Поля контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(22, 'forms', 'form', 'Форма', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (23, 'content', 'author', 'Автор записи', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
@@ -1969,19 +1754,3 @@ INSERT INTO `{#}wysiwygs_presets` (`id`, `wysiwyg_name`, `options`, `title`) VAL
 (2, 'redactor', '{\"plugins\":[\"smiles\"],\"buttons\":[\"bold\",\"italic\",\"deleted\",\"unorderedlist\",\"image\",\"video\",\"link\"],\"convertVideoLinks\":1,\"convertDivs\":null,\"toolbarFixedBox\":null,\"autoresize\":null,\"pastePlainText\":1,\"removeEmptyTags\":1,\"linkNofollow\":1,\"minHeight\":\"58\",\"placeholder\":\"\\u0412\\u0432\\u0435\\u0434\\u0438\\u0442\\u0435 \\u0441\\u043e\\u043e\\u0431\\u0449\\u0435\\u043d\\u0438\\u0435\"}', 'Редактор для личных сообщений'),
 (3, 'tinymce', '{\"toolbar\":\"blocks codesample blockquote | bold italic underline strikethrough numlist bullist | image link unlink media table  emoticons spoiler-add | fullscreen\",\"quickbars_selection_toolbar\":\"bold italic underline | quicklink h2 h3 blockquote\",\"quickbars_insert_toolbar\":\"quickimage quicktable\",\"plugins\":[\"autoresize\"],\"skin\":\"icms\",\"forced_root_block\":\"p\",\"newline_behavior\":\"default\",\"block_formats\":[\"p\",\"h2\",\"h3\",\"h4\",\"h5\"],\"toolbar_mode\":\"floating\",\"toolbar_sticky\":null,\"image_caption\":null,\"image_title\":1,\"image_description\":null,\"image_dimensions\":null,\"image_advtab\":null,\"statusbar\":null,\"min_height\":350,\"max_height\":900,\"placeholder\":\"\",\"images_preset\":\"big\",\"allow_mime_types\":{\"3\":null,\"7\":null,\"4\":null,\"6\":null}}', 'По умолчанию'),
 (4, 'tinymce', '{\"toolbar\":\"bold italic underline strikethrough | numlist bullist blockquote | link image media spoiler-add | emoticons\",\"quickbars_selection_toolbar\":\"bold italic underline | quicklink blockquote\",\"quickbars_insert_toolbar\":\"quickimage\",\"plugins\":[\"autoresize\"],\"skin\":\"icms\",\"forced_root_block\":\"p\",\"block_formats\":[\"p\"],\"toolbar_mode\":\"floating\",\"image_caption\":null,\"image_title\":null,\"image_description\":null,\"image_dimensions\":null,\"image_advtab\":null,\"statusbar\":null,\"min_height\":350,\"max_height\":700,\"images_preset\":\"big\",\"allow_mime_types\":{\"3\":null,\"4\":null,\"5\":null,\"6\":null}}', 'Для комментариев');
-
-DROP TABLE IF EXISTS `{#}csp_logs`;
-CREATE TABLE `{#}csp_logs` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `date_pub` timestamp NOT NULL DEFAULT current_timestamp(),
-  `blocked_uri` varchar(255) DEFAULT NULL,
-  `referrer` varchar(255) DEFAULT NULL,
-  `line_number` smallint(6) DEFAULT NULL,
-  `document_uri` varchar(255) DEFAULT NULL,
-  `violated_directive` varchar(64) DEFAULT NULL,
-  `effective_directive` varchar(64) DEFAULT NULL,
-  `status_code` smallint(6) DEFAULT NULL,
-  `ip` varbinary(16) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `date_pub` (`date_pub`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Логи CSP';

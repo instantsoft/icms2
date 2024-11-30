@@ -2,24 +2,23 @@
 
 class onRssCtypeBeforeAdd extends cmsAction {
 
-    public function run($ctype){
+    public function run($ctype) {
 
-        $this->model->addFeed(array(
-            'ctype_name' => $ctype['name'],
-            'title' => $ctype['title'],
+        $this->model->addFeed([
+            'ctype_name'  => $ctype['name'],
+            'title'       => $ctype['title'],
             'description' => $ctype['description'],
-            'mapping' => array(
-                'title' => 'title',
+            'mapping'     => [
+                'title'       => 'title',
                 'description' => 'content',
-                'pubDate' => 'date_pub',
-                'image' => '',
-                'image_size' => 'normal'
-            ),
-            'is_enabled' => $ctype['options']['is_rss']
-        ));
+                'pubDate'     => 'date_pub',
+                'image'       => '',
+                'image_size'  => 'normal'
+            ],
+            'is_enabled'  => $ctype['options']['is_rss']
+        ]);
 
         return $ctype;
-
     }
 
 }

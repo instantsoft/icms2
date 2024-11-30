@@ -38,4 +38,8 @@ class modelRss extends cmsModel {
         return $this->filterEqual('name', $ctype_name)->getFieldFiltered('content_types', 'id');
     }
 
+    public function isRssFeedEnable($ctype_name) {
+        return $this->filterEqual('ctype_name', $ctype_name)->getFieldFiltered('rss_feeds', 'is_enabled');
+    }
+
 }
