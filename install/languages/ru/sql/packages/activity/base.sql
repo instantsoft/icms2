@@ -46,8 +46,6 @@ INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `titl
 (10, 1, 'groups', 'join', 'Вступление в группу', 'вступает в группу %s'),
 (11, 1, 'groups', 'leave', 'Выход из группы', 'выходит из группы %s'),
 (12, 1, 'users', 'status', 'Изменение статуса', '&rarr; %s'),
-(15, 0, 'content', 'add.albums', 'Добавление альбомов', 'добавляет фотоальбом %s'),
-(18, 1, 'photos', 'add.photos', 'Добавление фотографий', 'загружает фото в альбом %s'),
 (19, 1, 'users', 'avatar', 'Изменение аватара', 'изменяет аватар');
 
 INSERT INTO `{#}controllers` (`title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES

@@ -254,9 +254,10 @@ class cmsCore {
             $version = parse_ini_file($file);
 
             self::$core_version = [
-                'date'    => $version['date'],
-                'version' => $version['major'] . '.' . $version['minor'] . '.' . $version['build'],
-                'raw'     => $version
+                'date'      => $version['date'],
+                'is_custom' => $version['is_custom']??0,
+                'version'   => $version['major'] . '.' . $version['minor'] . '.' . $version['build'],
+                'raw'       => $version
             ];
         }
 

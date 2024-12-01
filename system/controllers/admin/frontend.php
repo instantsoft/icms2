@@ -4,7 +4,7 @@ class admin extends cmsFrontend {
     use icms\traits\eventDispatcher;
 
     const addons_api_key   = '8e13cb202f8bdc27dc765e0448e50d11';
-    const addons_api_point = 'https://api.instantcms.ru/api/method/';
+    const addons_api_point = 'https://api.instantcms.ru/{lang}api/method/';
 
     public $disallow_mapping_redirect = true;
 
@@ -1090,7 +1090,14 @@ class admin extends cmsFrontend {
 
         $curl = curl_init();
 
-        curl_setopt($curl, CURLOPT_URL, self::addons_api_point . $name . '?api_key=' . self::addons_api_key . '&' . http_build_query($params, '', '&'));
+        $lang = cmsCore::getLanguageName();
+        if ($lang === 'ru') {
+            $lang = '';
+        } else {
+            $lang = 'en/';
+        }
+
+        curl_setopt($curl, CURLOPT_URL, str_replace('{lang}', $lang, self::addons_api_point) . $name . '?api_key=' . self::addons_api_key . '&' . http_build_query($params, '', '&'));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, false);
         curl_setopt($curl, CURLOPT_TIMEOUT, 5);

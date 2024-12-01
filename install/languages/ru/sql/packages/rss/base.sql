@@ -36,5 +36,4 @@ CREATE TABLE `{#}rss_feeds` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='RSS ленты';
 
 INSERT INTO `{#}rss_feeds` (`ctype_id`, `ctype_name`, `title`, `description`, `image`, `mapping`, `limit`, `is_enabled`, `is_cache`, `cache_interval`, `date_cached`) VALUES
-(NULL, 'comments', 'Комментарии', NULL, NULL, '---\r\ntitle: target_title\r\ndescription: content_html\r\npubDate: date_pub\r\n', 15, 1, NULL, 60, NULL),
-(7, 'albums', 'Фотоальбомы', NULL, NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: cover_image\nimage_size: normal\n', 15, 1, NULL, 60, NULL);
+(NULL, 'comments', 'Комментарии', NULL, NULL, '---\r\ntitle: target_title\r\ndescription: content_html\r\npubDate: date_pub\r\n', 15, 1, NULL, 60, NULL);

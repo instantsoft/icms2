@@ -1,3 +1,19 @@
+ALTER TABLE `{#}users` ADD `birth_date` datetime NULL DEFAULT NULL, ADD INDEX (`birth_date`);
+ALTER TABLE `{#}users` ADD `hobby` text NULL DEFAULT NULL;
+ALTER TABLE `{#}users` ADD `site` text NULL DEFAULT NULL;
+ALTER TABLE `{#}users` ADD `phone` varchar(255) NULL DEFAULT NULL;
+ALTER TABLE `{#}users` ADD `music` varchar(255) NULL DEFAULT NULL;
+ALTER TABLE `{#}users` ADD `movies` varchar(255) NULL DEFAULT NULL;
+UPDATE `{#}users` SET `site` = 'instantcms.ru', `movies` = 'разные интересные', `music` = 'Disco House, Minimal techno', `phone` = '100-20-30', `hobby` = 'Ротор векторного поля, очевидно, неоднозначен. По сути, уравнение в частных производных масштабирует нормальный лист Мёбиуса, при этом, вместо 13 можно взять любую другую константу.', `birth_date` = '1985-10-15 00:00:00' WHERE `id` = 1;
+
+INSERT INTO `{#}users_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_edit`) VALUES
+(1, NULL, 'birth_date', 'Возраст', NULL, 4, 'Анкета', 'age', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, '---\ndate_title: Дата рождения\nshow_y: 1\nshow_m: \nshow_d: \nshow_h: \nshow_i: \nrange: YEAR\nlabel_in_item: left\nis_required: \nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
+(3, NULL, 'hobby', 'Расскажите о себе', 'Расскажите о ваших интересах и увлечениях', 11, 'О себе', 'text', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: none\nis_required: \nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
+(9, NULL, 'phone', 'Телефон', NULL, 7, 'Контакты', 'string', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: \nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
+(10, NULL, 'music', 'Любимая музыка', NULL, 6, 'Предпочтения', 'string', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
+(11, NULL, 'movies', 'Любимые фильмы', NULL, 5, 'Предпочтения', 'string', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
+(12, NULL, 'site', 'Сайт', 'Ваш персональный веб-сайт', 10, 'Контакты', 'url', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nredirect: 1\nauto_http: 1\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n');
+
 INSERT INTO `{#}comments` (`id`, `parent_id`, `level`, `ordering`, `user_id`, `date_pub`, `target_controller`, `target_subject`, `target_id`, `target_url`, `target_title`, `author_name`, `author_email`, `author_ip`, `content`, `content_html`, `is_deleted`, `is_private`, `rating`) VALUES
 (3, 0, 1, 1, 6, DATE_SUB(NOW(),INTERVAL 4 MINUTE), 'content', 'articles', 4, 'articles/4-nedonasyschennyi-almaz-predposylki-i-razvitie.html', 'Недонасыщенный алмаз: предпосылки и развитие', NULL, NULL, NULL, 'Базальтовый слой <i>разогревает сталактит</i>, где присутствуют моренные суглинки днепровского возраста.', 'Базальтовый слой <i>разогревает сталактит</i>, где присутствуют моренные суглинки днепровского возраста.', 1, 0, 1),
 (4, 0, 1, 1, 1, DATE_SUB(NOW(),INTERVAL 3 MINUTE), 'content', 'articles', 11, 'articles/11-obschestvennyi-analiz-zarubezhnogo-opyta.html', 'Общественный анализ зарубежного опыта', NULL, NULL, NULL, 'Отличная статья, все очень доходчиво и познавательно', 'Отличная статья, все очень доходчиво и познавательно', NULL, 0, 0),
@@ -33,12 +49,6 @@ INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_r
 (6, 'Посты', 'posts', '<p>Персональные публикации пользователей</p>', NULL, NULL, NULL, 1, 1, NULL, 1, 1, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: пост\ntwo: поста\nmany: постов\ncreate: пост\nlist: Лента блогов\nprofile: Блог\n', NULL, NULL, NULL, NULL, NULL),
 (9, 'Объявления', 'board', '<p>Коммерческие объявления</p>', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: 1\nis_show_cats: 1\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: 1\nlist_expand_filter: null\nlist_style: table\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: объявление\ntwo: объявления\nmany: объявлений\ncreate: объявление\nlist: Доска объявлений\nprofile:\n', NULL, NULL, NULL, NULL, NULL),
 (10, 'Новости', 'news', '<p>Информационные сообщения</p>', NULL, 1, 1, NULL, NULL, NULL, 1, 1, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_date_range_process: hide\nnotify_end_date_days: 1\nnotify_end_date_notice: \'Через %s публикация вашего контента <a href=\"%s\">%s</a> будет прекращена.\'\ndisable_drafts: null\nis_empty_root: null\nis_cats_multi: null\nis_cats_change: 1\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\ncover_sizes: null\ncontext_list_cover_sizes: null\nrating_template: widget\nrating_item_label:\nrating_list_label:\nrating_is_in_item: 1\nrating_is_in_list: null\ncomments_template: comment\ncomments_title_pattern:\ncomments_labels:\n  comments:\n  spellcount:\n  add:\n  none:\n  low_karma:\n  login:\n  track:\n  refresh:\n  commenting:\nis_tags_in_list: null\nis_tags_in_item: 1\nenable_subscriptions: 1\nsubscriptions_recursive_categories: 1\nis_rss: 1\nlist_off_breadcrumb: null\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nprivacy_type: hide\nlimit: 15\nlist_style:\n  - featured\nlist_style_names: null\ncontext_list_style: null\nitem_off_breadcrumb: null\nitem_on: 1\nis_show_fields_group: null\nhits_on: null\nshare_code:\nis_manual_title: null\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\nis_cats_title: null\nis_cats_h1: null\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_cat_h1_pattern:\nseo_cat_title_pattern:\nseo_cat_keys_pattern:\nseo_cat_desc_pattern:\nseo_ctype_h1_pattern:\nis_collapsed: null\n', '---\none: новость\ntwo: новости\nmany: новостей\ncreate: новость\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, NULL);
-
-INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `cover_image`, `photos_count`, `is_public`) VALUES
-(16, 'Красота окружающей природы', 'Фотографии из коллекции сайта deviantart.com', '16-krasota-okruzhayuschei-prirody', NULL, NULL, NULL, 'пример, фото', DATE_SUB(NOW(),INTERVAL 4 DAY), DATE_SUB(NOW(),INTERVAL 3 DAY), NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 1, NULL, NULL, 0, NULL, 0, NULL);
-
-INSERT INTO `{#}con_albums_cats_bind` (`item_id`, `category_id`) VALUES
-(16, 1);
 
 DROP TABLE IF EXISTS `{#}con_articles`;
 CREATE TABLE `{#}con_articles` (
@@ -878,7 +888,6 @@ INSERT INTO `{#}menu` (`id`, `name`, `title`, `is_fixed`) VALUES
 (3, 'footer', 'Нижнее меню', NULL);
 
 INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `ordering`, `options`, `groups_view`, `groups_hide`) VALUES
-(6, 1, 0, 'Фото', 'albums', 4, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (7, 1, 0, 'Сайты', NULL, 10, NULL, NULL, NULL),
 (8, 1, 7, 'Яндекс', 'https://www.yandex.ru', 10, NULL, NULL, NULL),
 (9, 1, 7, 'InstantSoft', NULL, 11, NULL, NULL, NULL),
@@ -981,15 +990,14 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (2, 3, 'board', 'own');
 
 INSERT INTO `{#}tags` (`id`, `tag`, `frequency`) VALUES
-(1, 'пример', 6),
+(1, 'пример', 5),
 (2, 'статья', 2),
 (3, 'астрономия', 1),
 (9, 'наука', 1),
 (36, 'новости', 4),
 (37, 'проишествия', 1),
 (39, 'пост', 1),
-(40, 'роботы', 1),
-(42, 'фото', 1);
+(40, 'роботы', 1);
 
 INSERT INTO `{#}tags_bind` (`id`, `tag_id`, `target_controller`, `target_subject`, `target_id`) VALUES
 (10, 1, 'content', 'articles', 1),
@@ -1003,8 +1011,6 @@ INSERT INTO `{#}tags_bind` (`id`, `tag_id`, `target_controller`, `target_subject
 (60, 36, 'content', 'news', 6),
 (86, 2, 'content', 'articles', 4),
 (87, 9, 'content', 'articles', 4),
-(103, 1, 'content', 'albums', 16),
-(104, 42, 'content', 'albums', 16),
 (105, 1, 'content', 'posts', 5),
 (106, 39, 'content', 'posts', 5),
 (107, 40, 'content', 'posts', 5),

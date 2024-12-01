@@ -1,3 +1,19 @@
+ALTER TABLE `{#}users` ADD `birth_date` datetime NULL DEFAULT NULL, ADD INDEX (`birth_date`);
+ALTER TABLE `{#}users` ADD `hobby` text NULL DEFAULT NULL;
+ALTER TABLE `{#}users` ADD `site` text NULL DEFAULT NULL;
+ALTER TABLE `{#}users` ADD `phone` varchar(255) NULL DEFAULT NULL;
+ALTER TABLE `{#}users` ADD `music` varchar(255) NULL DEFAULT NULL;
+ALTER TABLE `{#}users` ADD `movies` varchar(255) NULL DEFAULT NULL;
+UPDATE `{#}users` SET `site` = 'instantcms.ru', `movies` = 'various interesting', `music` = 'Disco House, Minimal techno', `phone` = '100-20-30', `hobby` = 'Style too own civil out along. Perfectly offending attempted add arranging age gentleman concluded.', `birth_date` = '1985-10-15 00:00:00' WHERE `id` = 1;
+
+INSERT INTO `{#}users_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_edit`) VALUES
+(1, NULL, 'birth_date', 'Age', NULL, 4, 'About', 'age', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, '---\ndate_title: Date of birth\nshow_y: 1\nshow_m: null\nshow_d: null\nshow_h: null\nshow_i: null\nrange: YEAR\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
+(3, NULL, 'hobby', 'Tell us about yourself', 'Tell us about your interests and hobbies', 11, 'About me', 'text', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nis_html_filter: null\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
+(9, NULL, 'phone', 'Phone number', NULL, 7, 'Contacts', 'string', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
+(10, NULL, 'music', 'Favorite Music', NULL, 6, 'Preferences', 'string', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
+(11, NULL, 'movies', 'Favorite Movies', NULL, 5, 'Preferences', 'string', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
+(12, NULL, 'site', 'Website', 'Your personal website', 10, 'Contacts', 'url', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nredirect: 1\nauto_http: 1\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n');
+
 INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`, `quality`, `gamma_correct`, `crop_position`, `allow_enlarge`, `gif_to_gif`, `convert_format`) VALUES
 (7, 'content_list', 'Big ctype list', 600, 360, 1, NULL, NULL, 'top-left', 0, NULL, 87, NULL, 2, NULL, NULL, 'webp'),
 (8, 'content_item', 'Ctype item', 730, 460, 1, NULL, NULL, 'top-left', 0, NULL, 87, NULL, 2, NULL, NULL, 'webp'),
@@ -82,14 +98,6 @@ INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_r
 (5, 'Articles', 'articles', '<p>Text materials</p>', NULL, 1, 1, NULL, NULL, NULL, 1, 1, 1, 1, 1, 1, NULL, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: 1\nis_cats_only_last: null\nis_show_cats: 1\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: 1\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nhits_on: 1\nis_cats_keys: 1\nis_cats_desc: 1\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: article\ntwo: articles\nmany: articles\ncreate: article\nlist:\nprofile:\n', 'articles, different, interesting, useful', NULL, NULL, NULL, NULL),
 (6, 'Blog posts', 'posts', '<p>Blog posts</p>', NULL, NULL, NULL, 1, 1, NULL, 1, 1, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: post\ntwo: posts\nmany: posts\ncreate: post\nlist: Blogs Posts\nprofile: Blog\n', NULL, NULL, NULL, NULL, NULL),
 (10, 'News', 'news', '<p>Information</p>', NULL, 1, 1, NULL, NULL, NULL, 1, 1, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_date_range_process: hide\nnotify_end_date_days: 1\nnotify_end_date_notice: \'After %s your <a href=\"%s\">%s</a> content will be discontinued.\'\ndisable_drafts: null\nis_empty_root: null\nis_cats_multi: null\nis_cats_change: 1\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\ncover_sizes: null\ncontext_list_cover_sizes: null\nrating_template: widget\nrating_item_label:\nrating_list_label:\nrating_is_in_item: 1\nrating_is_in_list: null\nrating_is_average: 1\ncomments_template: comment\ncomments_title_pattern:\ncomments_labels:\n  comments:\n  spellcount:\n  add:\n  none:\n  low_karma:\n  login:\n  track:\n  refresh:\n  commenting:\nis_tags_in_list: null\nis_tags_in_item: 1\nenable_subscriptions: 1\nsubscriptions_recursive_categories: 1\nsubscriptions_letter_tpl:\nsubscriptions_notify_text:\nis_rss: 1\nlist_off_breadcrumb: null\nlist_off_breadcrumb_ctype: null\nlist_on: 1\nlist_off_index: null\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nprivacy_type: hide\nlimit: 15\nlist_style:\n  - featured\nlist_style_options: null\nlist_style_names: null\ncontext_list_style: null\nitem_off_breadcrumb: null\nitem_on: 1\nis_show_fields_group: null\nhits_on: null\ndisable_info_block: null\nshare_code:\nis_manual_title: null\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\nis_cats_title: null\nis_cats_h1: null\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_cat_h1_pattern:\nseo_cat_title_pattern:\nseo_cat_keys_pattern:\nseo_cat_desc_pattern:\nseo_ctype_h1_pattern:\nis_collapsed: null\n', '---\none: news\ntwo: news\nmany: news\ncreate: news\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, NULL);
-
-INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `cover_image`, `photos_count`, `is_public`) VALUES
-(16, 'The beauty of the surrounding nature', 'Photos from the deviantart.com', '16-the-beauty-of-the-surrounding-nature', 'photos, deviantart.com', 'Photos from the deviantart.com', NULL, 'example, photo', '2013-11-13 16:48:18', '2013-11-22 16:32:38', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 1, NULL, '2013-11-22 16:32:38', 0, '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg', 4, NULL),
-(14, 'Other photos', 'Photos taken of me at leisure', '14-other-photos', 'photos', 'leisure', NULL, '0', '2013-10-09 16:46:43', '2013-10-09 16:46:43', NULL, 1, 0, 6, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL);
-
-INSERT INTO `{#}con_albums_cats_bind` (`item_id`, `category_id`) VALUES
-(16, 1),
-(14, 1);
 
 DROP TABLE IF EXISTS `{#}con_articles`;
 CREATE TABLE `{#}con_articles` (
@@ -637,7 +645,6 @@ INSERT INTO `{#}menu` (`id`, `name`, `title`, `is_fixed`) VALUES
 (3, 'footer', 'Footer menu', NULL);
 
 INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `ordering`, `options`, `groups_view`, `groups_hide`) VALUES
-(6, 1, 0, 'Photos', 'albums', 4, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (7, 1, 0, 'Sites', NULL, 9, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (8, 1, 7, 'Yahoo', 'https://www.yahoo.com', 10, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (9, 1, 7, 'Google', 'https://www.google.com', 11, NULL, NULL, NULL),
@@ -733,13 +740,12 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (13, 6, 'news', '1');
 
 INSERT INTO `{#}tags` (`id`, `tag`, `frequency`) VALUES
-(43, 'example', 6),
+(43, 'example', 5),
 (44, 'news', 3),
 (49, 'article', 2),
 (50, 'science', 2),
 (55, 'post', 1),
-(56, 'robots', 1),
-(58, 'photo', 1);
+(56, 'robots', 1);
 
 INSERT INTO `{#}tags_bind` (`id`, `tag_id`, `target_controller`, `target_subject`, `target_id`) VALUES
 (110, 43, 'content', 'news', 6),
@@ -755,9 +761,7 @@ INSERT INTO `{#}tags_bind` (`id`, `tag_id`, `target_controller`, `target_subject
 (120, 50, 'content', 'articles', 1),
 (121, 43, 'content', 'posts', 5),
 (122, 55, 'content', 'posts', 5),
-(123, 56, 'content', 'posts', 5),
-(124, 43, 'content', 'albums', 16),
-(125, 58, 'content', 'albums', 16);
+(123, 56, 'content', 'posts', 5);
 
 INSERT INTO `{#}users_statuses` (`id`, `user_id`, `date_pub`, `content`, `replies_count`, `wall_entry_id`) VALUES
 (1, 1, CURRENT_TIMESTAMP, 'We are all made of stars © Moby', 1, 1);

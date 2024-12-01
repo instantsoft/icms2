@@ -119,11 +119,11 @@ function get_version($show_date = false) {
 
     $version = parse_ini_file($file);
 
-    if (!$show_date && isset($version['date'])) {
-        unset($version['date']);
-    }
+    $version_str = $version['major'] . '.' . $version['minor'] . '.' . $version['build'];
 
-    return implode('.', $version);
+    $is_custom = $version['is_custom'] ?? 0;
+
+    return $version_str.($is_custom ? '-custom' : '').($show_date ? ' '.$version['date'] : '');
 }
 
 function html_bool_span($value, $condition) {

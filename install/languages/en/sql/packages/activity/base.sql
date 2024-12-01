@@ -22,7 +22,7 @@ CREATE TABLE `{#}activity` (
   KEY `group_id` (`group_id`),
   KEY `is_parent_hidden` (`is_parent_hidden`),
   KEY `is_pub` (`is_pub`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Лента активности';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Activity feed';
 
 DROP TABLE IF EXISTS `{#}activity_types`;
 CREATE TABLE `{#}activity_types` (
@@ -36,7 +36,7 @@ CREATE TABLE `{#}activity_types` (
   KEY `is_enabled` (`is_enabled`),
   KEY `controller` (`controller`),
   KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Типы записей в ленте активности';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Activity feed types';
 
 INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
 (1, 1, 'content', 'add.pages', 'Adding pages', 'added the page %s'),
@@ -46,8 +46,6 @@ INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `titl
 (10, 1, 'groups', 'join', 'Group joining', 'joined the group %s'),
 (11, 1, 'groups', 'leave', 'Group leaving', 'left the group %s'),
 (12, 1, 'users', 'status', 'Status changing', '&rarr; %s'),
-(15, 0, 'content', 'add.albums', 'Adding albums', 'added album %s'),
-(18, 1, 'photos', 'add.photos', 'Photo uploading', 'uploaded photos to the album %s'),
 (19, 1, 'users', 'avatar', 'Avatar changing', 'changed avatar');
 
 INSERT INTO `{#}controllers` (`title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES

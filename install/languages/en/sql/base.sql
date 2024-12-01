@@ -254,8 +254,7 @@ CREATE TABLE `{#}content_types` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Content types';
 
 INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_rating`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
-(1, 'Pages', 'pages', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: null\nlist_on: null\nprofile_on: null\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: page\ntwo: pages\nmany: pages\ncreate: page\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1),
-(7, 'Photo albums', 'albums', '<p>User photo albums</p>', NULL, NULL, NULL, NULL, 1, NULL, 1, 1, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: album\ntwo: albums\nmany: albums\ncreate: album\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1);
+(1, 'Pages', 'pages', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: null\nlist_on: null\nprofile_on: null\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: page\ntwo: pages\nmany: pages\ncreate: page\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1);
 
 DROP TABLE IF EXISTS `{#}controllers`;
 CREATE TABLE `{#}controllers` (
@@ -291,166 +290,11 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (14, 'Tags', 'tags', 1, '---\nordering: frequency\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nmin_freq: 0\nmin_len: 0\nlimit: 10\ncolors:\nshuffle: 1\nseo_keys:\nseo_desc:\nseo_title_pattern:\nseo_desc_pattern:\nseo_h1_pattern:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (16, 'Sitemap and robots.txt generator', 'sitemap', 1, '---\nsources:\n  content|pages: 1\n  content|albums: 1\n  content|articles: 1\n  content|posts: 1\n  content|board: 1\n  content|news: 1\n  frontpage|root: 1\n  groups|profiles: 1\n  users|profiles: 1\nshow_lastmod: 1\nshow_changefreq: 1\ndefault_changefreq: daily\nshow_priority: 1\nrobots: |\n  User-agent: *\r\n  Disallow:\ngenerate_html_sitemap: null\nchangefreq:\n  content:\n    pages:\n    albums:\n    articles:\n    posts:\n    board:\n    news:\n  frontpage:\n    root:\n  groups:\n    profiles:\n  users:\n    profiles:\npriority:\n  content:\n    pages:\n    albums:\n    articles:\n    posts:\n    board:\n    news:\n  frontpage:\n    root: 1.0\n  groups:\n    profiles: 0.8\n  users:\n    profiles: 0.8\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (17, 'Search', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(18, 'Photos', 'photos', 1, '---\nsizes:\n  - normal\n  - small\n  - big\nis_origs: 1\npreset: big\npreset_small: normal\ntypes: |\n  1 | Фото\n  2 | Векторы\n  3 | Иллюстрации\nordering: date_pub\norderto: desc\nlimit: 20\ndownload_view:\n  normal: [ ]\n  micro: [ ]\n  small: [ ]\n  content_list_small: [ ]\n  content_list: [ ]\n  big: [ ]\n  content_item: [ ]\n  original: [ ]\ndownload_hide:\n  normal: null\n  micro: null\n  small: null\n  content_list_small: null\n  content_list: null\n  big: null\n  content_item: null\n  original:\n    - \"1\"\n    - \"3\"\n    - \"4\"\nurl_pattern: \'{id}-{title}\'\npreset_related: normal\nrelated_limit: 0\neditor: \"1\"\neditor_presets: null\nseo_keys: \"\"\nseo_desc: \"\"\nallow_add_public_albums: null\nallow_download: 1\nhide_photo_item_info: null\ntypograph_id: \"3\"\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (19, 'Image Upload', 'images', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (20, 'Redirects', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\nis_check_refer: null\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (23, 'Wysiwyg editors', 'wysiwygs', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (25, 'Multilinguality', 'languages', 1, '---\nservice: google\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (26, 'Typograph', 'typograph', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
-
-DROP TABLE IF EXISTS `{#}con_albums`;
-CREATE TABLE `{#}con_albums` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) DEFAULT NULL,
-  `content` text,
-  `slug` varchar(100) DEFAULT NULL,
-  `seo_keys` varchar(256) DEFAULT NULL,
-  `seo_desc` varchar(256) DEFAULT NULL,
-  `seo_title` varchar(256) DEFAULT NULL,
-  `tags` varchar(1000) DEFAULT NULL,
-  `template` varchar(150) DEFAULT NULL,
-  `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `date_last_modified` timestamp NULL DEFAULT NULL,
-  `date_pub_end` timestamp NULL DEFAULT NULL,
-  `is_pub` tinyint(1) NOT NULL DEFAULT '1',
-  `hits_count` int(11) DEFAULT '0',
-  `user_id` int(11) unsigned DEFAULT NULL,
-  `parent_id` int(11) unsigned DEFAULT NULL,
-  `parent_type` varchar(32) DEFAULT NULL,
-  `parent_title` varchar(100) DEFAULT NULL,
-  `parent_url` varchar(255) DEFAULT NULL,
-  `is_parent_hidden` tinyint(1) DEFAULT NULL,
-  `category_id` int(11) unsigned NOT NULL DEFAULT '1',
-  `folder_id` int(11) unsigned DEFAULT NULL,
-  `is_comments_on` tinyint(1) unsigned DEFAULT '1',
-  `comments` int(11) NOT NULL DEFAULT '0',
-  `rating` int(11) NOT NULL DEFAULT '0',
-  `is_deleted` tinyint(1) unsigned DEFAULT NULL,
-  `is_approved` tinyint(1) DEFAULT '1',
-  `approved_by` int(11) DEFAULT NULL,
-  `date_approved` timestamp NULL DEFAULT NULL,
-  `is_private` tinyint(1) NOT NULL DEFAULT '0',
-  `cover_image` text,
-  `photos_count` int(11) NOT NULL DEFAULT '0',
-  `is_public` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `category_id` (`category_id`),
-  KEY `folder_id` (`folder_id`),
-  KEY `slug` (`slug`),
-  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`date_pub`),
-  KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
-  KEY `user_id` (`user_id`,`date_pub`),
-  KEY `date_pub_end` (`date_pub_end`),
-  FULLTEXT KEY `fulltext_search` (`title`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `{#}con_albums_cats`;
-CREATE TABLE `{#}con_albums_cats` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) unsigned DEFAULT NULL,
-  `title` varchar(200) DEFAULT NULL,
-  `description` text NULL DEFAULT NULL,
-  `slug` varchar(255) DEFAULT NULL,
-  `slug_key` varchar(255) DEFAULT NULL,
-  `seo_keys` varchar(256) DEFAULT NULL,
-  `seo_desc` varchar(256) DEFAULT NULL,
-  `seo_title` varchar(256) DEFAULT NULL,
-  `seo_h1` varchar(256) DEFAULT NULL,
-  `ordering` int(11) DEFAULT NULL,
-  `ns_left` int(11) DEFAULT NULL,
-  `ns_right` int(11) DEFAULT NULL,
-  `ns_level` int(11) DEFAULT NULL,
-  `ns_differ` varchar(32) NOT NULL DEFAULT '',
-  `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
-  `allow_add` text,
-  `is_hidden` tinyint(1) UNSIGNED DEFAULT NULL,
-  `cover` text,
-  PRIMARY KEY (`id`),
-  KEY `ordering` (`ordering`),
-  KEY `slug` (`slug`),
-  KEY `ns_left` (`ns_level`,`ns_right`,`ns_left`),
-  KEY `parent_id` (`parent_id`,`ns_left`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
-
-INSERT INTO `{#}con_albums_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
-(1, 0, '---', NULL, NULL, NULL, NULL, NULL, 1, 1, 2, 0, '', 0);
-
-DROP TABLE IF EXISTS `{#}con_albums_cats_bind`;
-CREATE TABLE `{#}con_albums_cats_bind` (
-  `item_id` int(11) DEFAULT NULL,
-  `category_id` int(11) DEFAULT NULL,
-  KEY `item_id` (`item_id`),
-  KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `{#}con_albums_fields`;
-CREATE TABLE `{#}con_albums_fields` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) DEFAULT NULL,
-  `name` varchar(40) DEFAULT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `hint` varchar(200) DEFAULT NULL,
-  `ordering` int(11) DEFAULT NULL,
-  `is_enabled` tinyint(1) UNSIGNED DEFAULT '1',
-  `fieldset` varchar(32) DEFAULT NULL,
-  `type` varchar(16) DEFAULT NULL,
-  `is_in_list` tinyint(1) DEFAULT NULL,
-  `is_in_item` tinyint(1) DEFAULT NULL,
-  `is_in_filter` tinyint(1) DEFAULT NULL,
-  `is_private` tinyint(1) DEFAULT NULL,
-  `is_fixed` tinyint(1) DEFAULT NULL,
-  `is_fixed_type` tinyint(1) DEFAULT NULL,
-  `is_system` tinyint(1) DEFAULT NULL,
-  `values` text,
-  `options` text,
-  `groups_read` text,
-  `groups_add` text,
-  `groups_edit` text,
-  `filter_view` text,
-  PRIMARY KEY (`id`),
-  KEY `is_enabled` (`is_enabled`,`ordering`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
-
-INSERT INTO `{#}con_albums_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_edit`) VALUES
-(1, 7, 'title', 'Album title', NULL, 1, NULL, 'caption', 1, 1, 1, NULL, 1, 1, 0, NULL, '---\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
-(2, 7, 'date_pub', 'Publication date', NULL, 2, NULL, 'date', 1, 1, 1, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
-(3, 7, 'user', 'Author', NULL, 3, NULL, 'user', 1, 1, NULL, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
-(4, 7, 'content', 'Album description', NULL, 4, NULL, 'text', 1, 1, NULL, NULL, 1, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 2048\nis_html_filter: null\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
-(5, 7, 'cover_image', 'Album cover image', NULL, 5, NULL, 'image', 1, NULL, NULL, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: left\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
-(6, 7, 'is_public', 'Public photo album', 'Other users will be able to upload photos in this album', 6, NULL, 'checkbox', 0, 0, NULL, NULL, 1, NULL, NULL, NULL, '---\nlabel_in_list: none\nlabel_in_item: none\n', NULL, NULL);
-
-DROP TABLE IF EXISTS `{#}con_albums_props`;
-CREATE TABLE `{#}con_albums_props` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) DEFAULT NULL,
-  `fieldset` varchar(32) DEFAULT NULL,
-  `type` varchar(16) DEFAULT NULL,
-  `is_in_filter` tinyint(1) DEFAULT NULL,
-  `values` text,
-  `options` text,
-  PRIMARY KEY (`id`),
-  KEY `is_active` (`is_in_filter`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `{#}con_albums_props_bind`;
-CREATE TABLE `{#}con_albums_props_bind` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `prop_id` int(11) DEFAULT NULL,
-  `cat_id` int(11) DEFAULT NULL,
-  `ordering` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `prop_id` (`prop_id`),
-  KEY `ordering` (`cat_id`,`ordering`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `{#}con_albums_props_values`;
-CREATE TABLE `{#}con_albums_props_values` (
-  `prop_id` int(11) DEFAULT NULL,
-  `item_id` int(11) DEFAULT NULL,
-  `value` varchar(255) DEFAULT NULL,
-  KEY `prop_id` (`prop_id`),
-  KEY `item_id` (`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}con_pages`;
 CREATE TABLE `{#}con_pages` (
@@ -682,15 +526,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (71, 'content_after_restore', 'moderation', 71, 1),
 (72, 'content_before_delete', 'moderation', 72, 1),
 (73, 'menu_moderation', 'moderation', 73, 1),
-(74, 'content_albums_items_html', 'photos', 74, 1),
-(75, 'fulltext_search', 'photos', 75, 1),
-(76, 'admin_albums_ctype_menu', 'photos', 76, 1),
-(77, 'content_albums_after_add', 'photos', 77, 1),
-(78, 'content_albums_after_delete', 'photos', 78, 1),
-(79, 'content_albums_item_html', 'photos', 79, 1),
-(80, 'content_albums_before_item', 'photos', 80, 1),
-(81, 'content_albums_before_list', 'photos', 81, 1),
-(82, 'user_delete', 'photos', 82, 1),
 (83, 'user_delete', 'rating', 83, 1),
 (84, 'content_before_list', 'rating', 84, 1),
 (85, 'captcha_html', 'recaptcha', 85, 1),
@@ -726,11 +561,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (123, 'content_groups_before_delete', 'moderation', 123, 1),
 (124, 'comments_after_refuse', 'moderation', 124, 1),
 (127, 'admin_subscriptions_list', 'content', 127, 1),
-(128, 'admin_subscriptions_list', 'photos', 128, 1),
 (140, 'admin_dashboard_block', 'users', 140, 1),
 (141, 'engine_start', 'sitemap', 141, 1),
 (142, 'sitemap_sources', 'frontpage', 142, 1),
-(143, 'sitemap_sources', 'photos', 143, 1),
 (144, 'ctype_basic_form', 'tags', 144, 1),
 (145, 'content_after_add', 'tags', 145, 1),
 (146, 'content_before_update', 'tags', 146, 1),
@@ -750,7 +583,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (162, 'photos_before_item', 'rating', 162, 1),
 (163, 'photos_before_item', 'comments', 163, 1),
 (164, 'comments_targets', 'content', 164, 1),
-(165, 'comments_targets', 'photos', 165, 1),
 (166, 'content_before_list', 'comments', 166, 1),
 (167, 'admin_dashboard_block', 'admin', 167, 1),
 (169, 'user_notify_types', 'content', 169, 1),
@@ -1137,23 +969,6 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (10, 3, 'comments', '1'),
 (12, 3, 'comments', 'own'),
 (11, 3, 'comments', 'own'),
-(1, 4, 'albums', 'yes'),
-(1, 5, 'albums', 'yes'),
-(1, 6, 'albums', 'yes'),
-(3, 4, 'albums', 'own'),
-(3, 5, 'albums', 'all'),
-(3, 6, 'albums', 'all'),
-(2, 4, 'albums', 'own'),
-(2, 5, 'albums', 'all'),
-(2, 6, 'albums', 'all'),
-(9, 4, 'albums', '1'),
-(9, 5, 'albums', '1'),
-(9, 6, 'albums', '1'),
-(8, 4, 'albums', '1'),
-(8, 5, 'albums', '1'),
-(8, 6, 'albums', '1'),
-(13, 5, 'albums', '1'),
-(13, 6, 'albums', '1'),
 (10, 6, 'comments', '1'),
 (12, 6, 'comments', 'all'),
 (11, 6, 'comments', 'all'),
@@ -1161,44 +976,7 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (20, 5, 'comments', '1'),
 (20, 6, 'comments', '1'),
 (14, 6, 'comments', '1'),
-(21, 4, 'comments', '1'),
-(1, 3, 'albums', 'yes'),
-(3, 3, 'albums', 'own'),
-(2, 3, 'albums', 'own');
-
-DROP TABLE IF EXISTS `{#}photos`;
-CREATE TABLE `{#}photos` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `album_id` int(11) unsigned DEFAULT NULL,
-  `user_id` int(11) unsigned DEFAULT NULL,
-  `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `date_photo` timestamp NULL DEFAULT NULL,
-  `title` varchar(128) DEFAULT NULL,
-  `content_source` text,
-  `content` text,
-  `image` text NOT NULL,
-  `exif` varchar(250) DEFAULT NULL,
-  `height` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `width` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `sizes` varchar(250) DEFAULT NULL,
-  `rating` int(11) NOT NULL DEFAULT '0',
-  `comments` int(11) unsigned DEFAULT '0',
-  `hits_count` int(11) unsigned NOT NULL DEFAULT '0',
-  `orientation` enum('square','landscape','portrait','') DEFAULT NULL,
-  `type` tinyint(3) unsigned DEFAULT NULL,
-  `camera` varchar(50) DEFAULT NULL,
-  `slug` varchar(100) DEFAULT NULL,
-  `is_private` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `ordering` int(11) unsigned NOT NULL DEFAULT '0',
-  `downloads_count` int(11) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`,`date_pub`),
-  KEY `album_id` (`album_id`,`date_pub`,`id`),
-  KEY `slug` (`slug`),
-  KEY `camera` (`camera`),
-  KEY `ordering` (`ordering`),
-  FULLTEXT KEY `title` (`title`,`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+(21, 4, 'comments', '1');
 
 DROP TABLE IF EXISTS `{#}rating_log`;
 CREATE TABLE `{#}rating_log` (
@@ -1349,22 +1127,13 @@ CREATE TABLE `{#}users` (
   `inviter_id` int(11) unsigned DEFAULT NULL,
   `invites_count` int(11) unsigned NOT NULL DEFAULT '0',
   `date_invites` timestamp NULL DEFAULT NULL,
-  `birth_date` datetime DEFAULT NULL,
-  `hobby` text,
   `avatar` text,
-  `phone` varchar(255) DEFAULT NULL,
-  `music` varchar(255) DEFAULT NULL,
-  `movies` varchar(255) DEFAULT NULL,
-  `site` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   KEY `pass_token` (`pass_token`),
-  KEY `birth_date` (`birth_date`),
-  KEY `is_admin` (`is_admin`),
   KEY `friends_count` (`friends_count`),
   KEY `karma` (`karma`),
   KEY `rating` (`rating`),
-  KEY `is_locked` (`is_locked`),
   KEY `date_reg` (`date_reg`),
   KEY `date_log` (`date_log`),
   KEY `date_group` (`date_group`),
@@ -1374,8 +1143,8 @@ CREATE TABLE `{#}users` (
   KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Users';
 
-INSERT INTO `{#}users` (`id`, `groups`, `email`, `password_hash`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `pass_token`, `date_token`, `friends_count`, `subscribers_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `hobby`, `avatar`, `phone`, `music`, `movies`, `site`) VALUES
-(1, '---\n- 6\n', 'admin@example.com', NULL, 1, 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, 0, 0, 'Europe/London', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_accept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, NULL, '1985-10-15 00:00:00', 'Style too own civil out along. Perfectly offending attempted add arranging age gentleman concluded.', NULL, '100-20-30', 'Disco House, Minimal techno', 'various interesting', 'instantcms.ru');
+INSERT INTO `{#}users` (`id`, `groups`, `email`, `password_hash`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `pass_token`, `date_token`, `friends_count`, `subscribers_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `avatar`) VALUES
+(1, '---\n- 6\n', 'admin@example.com', NULL, 1, 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, 0, 0, 'Europe/London', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_accept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, NULL, NULL);
 
 DROP TABLE IF EXISTS `{#}users_contacts`;
 CREATE TABLE `{#}users_contacts` (
@@ -1418,14 +1187,8 @@ CREATE TABLE `{#}users_fields` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='User profile fields';
 
 INSERT INTO `{#}users_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_edit`) VALUES
-(1, NULL, 'birth_date', 'Age', NULL, 4, 'About', 'age', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, '---\ndate_title: Date of birth\nshow_y: 1\nshow_m: null\nshow_d: null\nshow_h: null\nshow_i: null\nrange: YEAR\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(3, NULL, 'hobby', 'Tell us about yourself', 'Tell us about your interests and hobbies', 11, 'About me', 'text', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nis_html_filter: null\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
 (5, NULL, 'nickname', 'Username', 'Your display name on the website', 1, 'About', 'string', 1, 1, 1, NULL, 1, NULL, 1, NULL, '---\r\nlabel_in_list: left\r\nlabel_in_item: left\r\nis_required: 1\r\nis_digits: \r\nis_number: \r\nis_alphanumeric: \r\nis_email: \r\nis_unique: \r\nshow_symbol_count: 1\r\nmin_length: 2\r\nmax_length: 100\r\n', '---\n- 0\n', '---\n- 0\n'),
-(6, NULL, 'avatar', 'Avatar', 'Your main photo', 2, 'About', 'image', 1, 1, NULL, NULL, 1, NULL, 1, NULL, '---\nvisible_depend: null\nlabel_in_list: left\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_url: null\nis_regexp: null\nrules_regexp_str: \"\"\nis_unique: null\nauthor_access: null\nsize_teaser: small\nsize_full: normal\nsize_modal: \"\"\nsizes:\n  - normal\n  - micro\n  - small\nallow_import_link: null\nallow_image_cropper: 1\nimage_cropper_rounded: null\nimage_cropper_ratio: 1\ndefault_image: null\nshow_to_item_link: 1\n', '---\n- 0\n', '---\n- 0\n'),
-(9, NULL, 'phone', 'Phone number', NULL, 7, 'Contacts', 'string', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(10, NULL, 'music', 'Favorite Music', NULL, 6, 'Preferences', 'string', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(11, NULL, 'movies', 'Favorite Movies', NULL, 5, 'Preferences', 'string', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(12, NULL, 'site', 'Website', 'Your personal website', 10, 'Contacts', 'url', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nredirect: 1\nauto_http: 1\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n');
+(6, NULL, 'avatar', 'Avatar', 'Your main photo', 2, 'About', 'image', 1, 1, NULL, NULL, 1, NULL, 1, NULL, '---\nvisible_depend: null\nlabel_in_list: left\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_url: null\nis_regexp: null\nrules_regexp_str: \"\"\nis_unique: null\nauthor_access: null\nsize_teaser: small\nsize_full: normal\nsize_modal: \"\"\nsizes:\n  - normal\n  - micro\n  - small\nallow_import_link: null\nallow_image_cropper: 1\nimage_cropper_rounded: null\nimage_cropper_ratio: 1\ndefault_image: null\nshow_to_item_link: 1\n', '---\n- 0\n', '---\n- 0\n');
 
 DROP TABLE IF EXISTS `{#}users_friends`;
 CREATE TABLE `{#}users_friends` (
@@ -1660,7 +1423,6 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (13, 'search', 'search', 'Search', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (14, NULL, 'html', 'HTML block', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (15, 'content', 'filter', 'Content filter', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(16, 'photos', 'list', 'Photos list', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (17, 'groups', 'list', 'Groups list', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (19, 'auth', 'register', 'Registration form', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (20, NULL, 'template', 'Template Elements', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
@@ -1730,12 +1492,6 @@ INSERT INTO `{#}widgets_pages` (`id`, `controller`, `name`, `title_const`, `titl
 (100, 'users', 'list', 'LANG_USERS_LIST', NULL, NULL, 'users\r\nusers/index\r\nusers/index/*', NULL),
 (101, 'users', 'profile', 'LANG_USERS_PROFILE', NULL, NULL, 'users/%*', 'users/%/edit'),
 (102, 'users', 'edit', 'LANG_USERS_EDIT_PROFILE', NULL, NULL, 'users/%/edit', NULL),
-(155, 'content', 'albums.all', 'LANG_WP_CONTENT_ALL_PAGES', NULL, NULL, 'albums\nalbums-*\nalbums/*', NULL),
-(156, 'content', 'albums.list', 'LANG_WP_CONTENT_LIST', NULL, NULL, 'albums\nalbums-*\nalbums/*', 'albums/*/view-*\nalbums/*.html\nalbums/add\nalbums/add?*\nalbums/add/%\nalbums/addcat\nalbums/addcat/%\nalbums/editcat/%\nalbums/edit/*'),
-(157, 'content', 'albums.item', 'LANG_WP_CONTENT_ITEM', NULL, NULL, 'albums/*.html', NULL),
-(158, 'content', 'albums.edit', 'LANG_WP_CONTENT_ITEM_EDIT', NULL, NULL, 'albums/add\nalbums/add/%\nalbums/edit/*', NULL),
-(167, 'photos', 'item', 'LANG_PHOTOS_WP_ITEM', NULL, NULL, 'photos/*.html', NULL),
-(168, 'photos', 'upload', 'LANG_PHOTOS_WP_UPLOAD', NULL, NULL, 'photos/upload/%\r\nphotos/upload', NULL),
 (169, 'groups', 'list', 'LANG_GROUPS_LIST', NULL, NULL, 'groups', NULL),
 (200, NULL, 'all', 'LANG_WP_ALL_PAGES', NULL, NULL, NULL, NULL);
 

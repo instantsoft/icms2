@@ -41,14 +41,14 @@
     <link rel="shortcut icon" href="<?php echo $this->getTemplateFilePath('images/favicons/favicon_admin.ico'); ?>">
     <?php $this->head(false); ?>
 </head>
-<?php $messages = cmsUser::getSessionMessages(); ?>
+<?php $messages = cmsUser::getSessionMessages(); $core_version = cmsCore::getVersionArray(); ?>
 <body class="icms-cpanel app header-fixed sidebar-fixed <?php if(!$close_sidebar){ ?>sidebar-lg-show<?php } ?> <?php if($hide_sidebar){ ?> brand-minimized sidebar-minimized<?php } ?> <?php echo $device_type; ?>_device_type" data-device="<?php echo $device_type; ?>">
     <header class="app-header navbar shadow-sm" id="cp_header">
         <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show">
             <span class="navbar-toggler-icon"></span>
         </button>
         <a class="navbar-brand" href="<?php echo href_to('admin'); ?>">
-            <img class="navbar-brand-full" src="<?php echo $this->getTemplateFilePath('images/logo.svg', true); ?>" width="135" alt="InstantCMS Logo">
+            <img class="navbar-brand-full" src="<?php echo $this->getTemplateFilePath('images/'.($core_version['is_custom'] ? 'logo-custom.svg' : 'logo.svg'), true); ?>" width="135" alt="InstantCMS Logo">
             <img class="navbar-brand-minimized" src="<?php echo $this->getTemplateFilePath('images/small_logo.svg', true); ?>" width="40" height="40" alt="InstantCMS Logo">
         </a>
         <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-current_state="<?php if($close_sidebar){ ?>1<?php } else { ?>0<?php } ?>" data-toggle="sidebar-lg-show">
@@ -64,12 +64,12 @@
                         </a>
                     <?php } else { ?>
                         <a class="nav-link" data-toggle="tooltip" data-placement="bottom" href="<?php echo href_to('admin', 'update'); ?>" title="<?php echo LANG_CP_UPDATE_CHECK; ?>">
-                            <?php html_svg_icon('solid', 'code-branch'); ?> <?php echo cmsCore::getVersion(); ?>
+                            <?php html_svg_icon('solid', 'code-branch'); ?> <?php echo $core_version['version'].($core_version['is_custom'] ? '-custom' : ''); ?>
                         </a>
                     <?php } ?>
                 <?php } else { ?>
                     <span class="text-info">
-                        <?php html_svg_icon('solid', 'code-branch'); ?> <?php echo cmsCore::getVersion(); ?>
+                        <?php html_svg_icon('solid', 'code-branch'); ?> <?php echo $core_version['version'].($core_version['is_custom'] ? '-custom' : ''); ?>
                     </span>
                 <?php } ?>
             </li>
