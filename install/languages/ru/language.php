@@ -27,7 +27,7 @@
 
     define('LANG_LICENSE_AGREE',            'Я согласен с условиями лицензии');
     define('LANG_LICENSE_ERROR',            'Вы должны согласиться с условиями лицензии');
-    define('LANG_LICENSE_NOTE',             'InstantCMS распространяется по лицензии <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank" rel="noopener noreferrer">GNU/GPL</a> версии 2.');
+    define('LANG_LICENSE_NOTE',             'InstantCMS распространяется по лицензии <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank" rel="noopener noreferrer">GNU/GPL</a> версии 2.');
     define('LANG_LICENSE_ORIGINAL',         'Оригинал');
     define('LANG_LICENSE_TRANSLATION',      'Перевод');
 
@@ -142,3 +142,15 @@
     define('LANG_CFG_TIME_ZONE',            'Europe/Moscow');
     define('LANG_CFG_METAKEYS',             'ключевые, слова, сайта');
     define('LANG_CFG_METADESC',             'Описание сайта');
+
+    define('LANG_RB_ERROR_MANIFEST',        'Нет информации о сборке. Заполните файл manifest.php');
+    define('LANG_RB_TITLE',                 'Кастомизация InstantCMS %s');
+    define('LANG_RB_CREATE_ZIP',            'Создавать ZIP архив сборки?');
+    define('LANG_RB_START',                 'Собираю InstantCMS...');
+    define('LANG_RB_DEL_COM',               'Удаляю компонент %s...');
+    define('LANG_RB_DEL_SER',               'Удаляю вспомогательные файлы...');
+    define('LANG_RB_SET_PERM',              'Устанавливаю правильные права доступа...');
+    define('LANG_RB_START_ARCH',            'Упаковываю в архив...');
+    define('LANG_RB_SUCCES_ARCH',           'Архивирование завершено. Файл находится по пути %s');
+    define('LANG_RB_DONE',                  'Кастомизация успешно завершена.');
+    define('LANG_RB_DONE_HINT',             'Можете приступать к установке InstantCMS.');

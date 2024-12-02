@@ -5,7 +5,7 @@
     define('LANG_NEXT',                     'Next &rarr;');
     define('LANG_ERROR',                    'Error');
 
-    define('LANG_MANUAL',                   '<a href="http://docs.instantcms.ru/en/manual/install" target="_blank" rel="noopener noreferrer">Installation Manual</a>');
+    define('LANG_MANUAL',                   '<a href="https://docs.instantcms.ru/en/manual/install" target="_blank" rel="noopener noreferrer">Installation Manual</a>');
 
     define('LANG_LANGUAGE_SELECT_RU',       'Пожалуйста, выберите язык');
     define('LANG_LANGUAGE_SELECT_EN',       'Please select a language');
@@ -27,7 +27,7 @@
 
     define('LANG_LICENSE_AGREE',            'I agree to the license terms');
     define('LANG_LICENSE_ERROR',            'You need to agree to the license terms');
-    define('LANG_LICENSE_NOTE',             'InstantCMS is licensed under <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank" rel="noopener noreferrer">GNU/GPL</a> v2.');
+    define('LANG_LICENSE_NOTE',             'InstantCMS is licensed under <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank" rel="noopener noreferrer">GNU/GPL</a> v2.');
     define('LANG_LICENSE_ORIGINAL',         'English');
     define('LANG_LICENSE_TRANSLATION',      'Russian');
 
@@ -142,3 +142,15 @@
     define('LANG_CFG_TIME_ZONE',            'Europe/London');
     define('LANG_CFG_METAKEYS',             'site, blog, community');
     define('LANG_CFG_METADESC',             'My social site');
+
+    define('LANG_RB_ERROR_MANIFEST',        'Complete the manifest.php file');
+    define('LANG_RB_TITLE',                 'InstantCMS %s customization');
+    define('LANG_RB_CREATE_ZIP',            'Create a zip archive?');
+    define('LANG_RB_START',                 'Customizing InstantCMS...');
+    define('LANG_RB_DEL_COM',               'Deleting the %s component');
+    define('LANG_RB_DEL_SER',               'Deleting service files...');
+    define('LANG_RB_SET_PERM',              'Set the correct permissions...');
+    define('LANG_RB_START_ARCH',            'Start archiving...');
+    define('LANG_RB_SUCCES_ARCH',           'Archiving is complete. The file is located at %s');
+    define('LANG_RB_DONE',                  'Customization successfully completed.');
+    define('LANG_RB_DONE_HINT',             'You can start InstantCMS installation.');

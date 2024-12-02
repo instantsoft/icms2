@@ -179,16 +179,18 @@ function check_db() {
 
     foreach ($packages_list as $controller_name) {
         foreach ($controllers as $rel_controller_name) {
-            if ($success === true) {
-                $success = import_dump(
-                    $mysqli,
-                    'packages' . DS . $controller_name . DS . $rel_controller_name . '_rel.sql',
-                    $db['prefix'],
-                    $db['engine'],
-                    ';',
-                    $db['db_charset'],
-                    $db['innodb_full_text']
-                );
+            foreach ($dumps as $dump_name) {
+                if ($success === true) {
+                    $success = import_dump(
+                        $mysqli,
+                        'packages' . DS . $controller_name . DS . $rel_controller_name . DS. $dump_name,
+                        $db['prefix'],
+                        $db['engine'],
+                        ';',
+                        $db['db_charset'],
+                        $db['innodb_full_text']
+                    );
+                }
             }
         }
     }
@@ -263,7 +265,7 @@ function get_sql_file_names($is_install_demo_content = false) {
 
     if ($is_install_demo_content) {
         // Демо данные
-        $dumps[] = 'base_demo_content_' . $_SESSION['install']['site']['template'] . '.sql';
+        $dumps[] = 'base_demo_' . $_SESSION['install']['site']['template'] . '.sql';
         // Демо виджеты для шаблона
         $dumps[] = 'widgets_bind_demo_' . $_SESSION['install']['site']['template'] . '.sql';
     }

@@ -19,7 +19,7 @@ INSERT INTO `{#}activity_types` (`is_enabled`, `controller`, `name`, `title`, `d
 (1, 'content', 'add.posts', 'Добавление постов', 'добавляет пост %s');
 
 INSERT INTO `{#}activity` (`type_id`, `user_id`, `group_id`, `subject_title`, `subject_id`, `subject_url`, `reply_url`, `images`, `images_count`, `date_pub`, `is_private`, `is_parent_hidden`) VALUES
-((SELECT LAST_INSERT_ID()), 1, @insert_group_id, 'Мой первый пост в сообществе', 5, 'posts/5-moi-pervyi-post-v-soobschestve.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 6 MINUTE), 0, NULL);
+((SELECT LAST_INSERT_ID()), 1, 1, 'Мой первый пост в сообществе', 5, 'posts/5-moi-pervyi-post-v-soobschestve.html', NULL, NULL, NULL, DATE_SUB(NOW(),INTERVAL 6 MINUTE), 0, NULL);
 
 INSERT INTO `{#}activity_types` (`is_enabled`, `controller`, `name`, `title`, `description`) VALUES
 (1, 'content', 'add.board', 'Добавление объявлений', 'добавляет объявление %s');

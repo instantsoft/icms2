@@ -5,6 +5,8 @@
  * - должны быть удалены из полной сборки
  * - необходимо добавить в сборку
  *
+ * Для упаковки в ZIP должен быть установлен zip на сервре
+ *
  * Запуск: php -f rebuild.php
  */
 if (PHP_SAPI !== 'cli') {
@@ -29,21 +31,6 @@ include_once PATH . 'functions.php';
 
 include_once PATH_ICMS . 'system/libs/files.helper.php';
 
-function delete_manifest_files ($manifest) {
-    if (!empty($manifest['dirs'])) {
-        foreach ($manifest['dirs'] as $dir_path) {
-            files_remove_directory(PATH_ICMS . $dir_path);
-        }
-    }
-    if (!empty($manifest['files'])) {
-        foreach ($manifest['files'] as $file_path) {
-            if(is_file(PATH_ICMS . $file_path)){
-                @unlink(PATH_ICMS . $file_path);
-            }
-        }
-    }
-}
-
 $version_file = PATH_ICMS.'system/config/version.ini';
 $version = parse_ini_file($version_file);
 $core_version = [
@@ -53,26 +40,40 @@ $core_version = [
 
 $all_langs = get_langs();
 
+$_lang = 'en';
+
+if (($sys_locale = exec('echo $LANG'))) {
+    $user_lang = strtolower(substr($sys_locale, 0, 2));
+    if (in_array($user_lang, $all_langs)) {
+        $_lang = $user_lang;
+    }
+}
+
+define('LANG', $_lang);
+
+include PATH . 'languages/' . LANG . '/language.php';
+
 $manifest = include PATH . 'manifest.php';
 
 if (!array_filter($manifest)) {
-    exit('Complete the manifest.php file' . PHP_EOL);
+
+    echo LANG_RB_ERROR_MANIFEST . PHP_EOL;
 }
 
-echo PHP_EOL."\e[34m\e[1m###### InstantCMS {$core_version['version']} customization ######\e[0m".PHP_EOL.PHP_EOL;
+echo PHP_EOL."\e[34m\e[1m###### ".sprintf(LANG_RB_TITLE, $core_version['version'])." ######\e[0m".PHP_EOL.PHP_EOL;
 
 fopen('php://stdin', 'r');
 
-echo "\e[33mCreate a zip archive? (Y/N)\n";
+echo "\e[33m".LANG_RB_CREATE_ZIP." (Y/N): ";
 
 $is_create_archive = strtolower(trim(fgets(STDIN))) === 'y' ? true : false;
 
-echo PHP_EOL.'Customizing InstantCMS...'.PHP_EOL.PHP_EOL;
+echo PHP_EOL.LANG_RB_START.PHP_EOL.PHP_EOL;
 
 if (!empty($manifest['removed'])) {
     foreach ($manifest['removed'] as $controller_name) {
 
-        echo 'Deleting the '.$controller_name.' component'.PHP_EOL;
+        echo sprintf(LANG_RB_DEL_COM, $controller_name).PHP_EOL;
 
         $controller_manifest_path = PATH . 'manifests/' . $controller_name . '.php';
 
@@ -89,7 +90,7 @@ if (!empty($manifest['removed'])) {
     }
 }
 
-echo PHP_EOL.'Deleting service files...'.PHP_EOL;
+echo PHP_EOL.LANG_RB_DEL_SER.PHP_EOL;
 
 files_remove_directory(PATH_ICMS . '.git/');
 files_remove_directory(PATH_ICMS . '.github/');
@@ -97,7 +98,7 @@ files_remove_directory(PATH_ICMS . 'update/');
 @unlink(PATH_ICMS . 'LICENSE');
 @unlink(PATH_ICMS . 'README.md');
 
-echo PHP_EOL."\e[93mSet the correct permissions...\e[33m".PHP_EOL;
+echo PHP_EOL."\e[93m".LANG_RB_SET_PERM."\e[33m".PHP_EOL;
 
 exec('find '.PATH_ICMS.' -type f -exec chmod 644 {} \;');
 exec('find '.PATH_ICMS.' -type d -exec chmod 755 {} \;');
@@ -113,12 +114,14 @@ file_put_contents($version_file, "\nis_custom = 1", FILE_APPEND);
 
 if ($is_create_archive) {
 
+    echo PHP_EOL.LANG_RB_START_ARCH.PHP_EOL;
+
     $archive_path = dirname(PATH_ICMS)."/instantcms_{$core_version['date']}_v{$core_version['version']}-custom.zip";
 
     exec('cd '.PATH_ICMS.'; /usr/bin/zip -FSr '.$archive_path.' .');
 
-    exit(PHP_EOL.'Archiving is complete. The file is located at '.$archive_path.PHP_EOL);
+    exit(PHP_EOL."\e[32m".sprintf(LANG_RB_SUCCES_ARCH, $archive_path)."\e[0m".PHP_EOL);
 }
 
-exit(PHP_EOL.'Customization successfully completed.'.PHP_EOL);
-exit('You can start InstantCMS installation'.PHP_EOL);
+echo PHP_EOL."\e[32m".LANG_RB_DONE.PHP_EOL;
+exit(LANG_RB_DONE_HINT."\e[0m".PHP_EOL);

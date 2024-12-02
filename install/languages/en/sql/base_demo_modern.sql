@@ -56,8 +56,6 @@ INSERT INTO `{#}uploaded_files` (`id`, `path`, `name`, `size`, `counter`, `type`
 (81, '000/u1/3/5/c29217d1.webp', 'c29217d1.webp', 39000, 0, 'image', 'content', 'news', 1, 1),
 (82, '000/u1/4/3/8914eba7.webp', '8914eba7.webp', 17766, 0, 'image', 'content', 'news', 1, 1),
 (83, '000/u1/0/a/35b34880.jpg', '35b34880.jpg', 1909, 0, 'image', 'content', 'news', 1, 1),
-(84, '000/u1/7/3/robototehnika-logo-small.png', 'robototehnika-logo-small.png', 5259, 0, 'image', 'groups', '1', 0, 1),
-(85, '000/u1/e/3/robototehnika-logo-micro.png', 'robototehnika-logo-micro.png', 1873, 0, 'image', 'groups', '1', 0, 1),
 (86, '000/u1/0/3/prodam-kvartiru-v-novostroike-photo-normal.jpg', 'prodam-kvartiru-v-novostroike-photo-normal.jpg', 18318, 0, 'image', 'content', 'board', 7, 1),
 (87, '000/u1/e/e/prodam-kvartiru-v-novostroike-photo-small.jpg', 'prodam-kvartiru-v-novostroike-photo-small.jpg', 1816, 0, 'image', 'content', 'board', 7, 1),
 (88, '000/u1/3/e/prodam-kvartiru-v-novostroike-photo-micro.jpg', 'prodam-kvartiru-v-novostroike-photo-micro.jpg', 909, 0, 'image', 'content', 'board', 7, 1),
@@ -85,11 +83,6 @@ INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `ordering`
 (10, 10, 'latest', 'Latest', 1, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
 (11, 10, 'discussed', 'Discussed', 2, 1, NULL, '---\n- \n  by: comments\n  to: desc\n', 'dataset_discussed', '---\n- 0\n', NULL),
 (12, 10, 'popular', 'Popular', 3, 1, NULL, '---\n- \n  by: rating\n  to: desc\n', 'dataset_popular', '---\n- 0\n', NULL);
-
-INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `description`, `ordering`, `is_visible`, `filters`, `sorting`, `index`, `groups_view`, `groups_hide`, `seo_keys`, `seo_desc`, `seo_title`, `cats_view`, `cats_hide`, `max_count`, `target_controller`) VALUES
-(13, NULL, 'rating', 'Top Groups', NULL, 3, 1, NULL, '---\n- \n  by: rating\n  to: desc\n', 'rating', '---\n- 0\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'groups'),
-(14, NULL, 'all', 'New Groups', NULL, 2, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'groups'),
-(15, NULL, 'popular', 'Popular', NULL, 1, 1, NULL, '---\n- \n  by: members_count\n  to: desc\n', 'members_count', '---\n- 0\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'groups');
 
 INSERT INTO `{#}content_folders` (`id`, `ctype_id`, `user_id`, `title`) VALUES
 (5, 6, 1, 'My thoughts');
@@ -521,7 +514,7 @@ CREATE TABLE `{#}con_posts` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_posts` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `picture`) VALUES
-(5, 'My first post in the Community', '<p>\r\n	Greatly cottage thought fortune no mention he. Of mr certainty arranging am smallness by conveying. Him plate you allow built grave. Sigh sang nay sex high yet door game. She dissimilar was favourable unreserved nay expression contrasted saw. Past her find she like bore pain open. Shy lose need eyes son not shot. Jennings removing are his eat dashwood. Middleton as pretended listening he smallness perceived. Now his but two green spoil drift.\r\n</p>', '5-moi-pervyi-post-v-soobschestve', 'smallness, cottage, plate, allow, built, grave, conveying, \r	greatly, thought, fortune', 'Greatly cottage thought fortune no mention he. Of mr certainty arranging am smallness by conveying. Him plate you allow built grave. Sigh sang nay sex high yet door game. She dissimilar was favourable unreserved nay expression contrasted saw', NULL, 'example, post, robots', '2013-11-13 16:43:07', '2013-11-22 16:24:00', NULL, 1, 0, 1, 1, 'group', 'Fans of Robots', 'groups/1/content/posts', NULL, 1, 5, 1, 0, 0, 1, NULL, '2013-11-22 13:51:35', 0, NULL);
+(5, 'My first post in the Community', '<p>\r\n	Greatly cottage thought fortune no mention he. Of mr certainty arranging am smallness by conveying. Him plate you allow built grave. Sigh sang nay sex high yet door game. She dissimilar was favourable unreserved nay expression contrasted saw. Past her find she like bore pain open. Shy lose need eyes son not shot. Jennings removing are his eat dashwood. Middleton as pretended listening he smallness perceived. Now his but two green spoil drift.\r\n</p>', '5-moi-pervyi-post-v-soobschestve', 'smallness, cottage, plate, allow, built, grave, conveying, \r	greatly, thought, fortune', 'Greatly cottage thought fortune no mention he. Of mr certainty arranging am smallness by conveying. Him plate you allow built grave. Sigh sang nay sex high yet door game. She dissimilar was favourable unreserved nay expression contrasted saw', NULL, 'example, post, robots', '2013-11-13 16:43:07', '2013-11-22 16:24:00', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, 5, 1, 0, 0, 1, NULL, '2013-11-22 13:51:35', 0, NULL);
 
 DROP TABLE IF EXISTS `{#}con_posts_cats`;
 CREATE TABLE `{#}con_posts_cats` (
@@ -633,14 +626,6 @@ CREATE TABLE `{#}con_posts_props_values` (
   KEY `item_id` (`item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `{#}groups` (`id`, `owner_id`, `date_pub`, `title`, `description`, `logo`, `rating`, `members_count`, `join_policy`, `edit_policy`, `wall_policy`, `is_closed`) VALUES
-(1, 1, CURRENT_TIMESTAMP, 'Robot Fans', 'The group is dedicated to robots, machine-building and all that is connected with it.', '---\nsmall: 000/u1/7/3/robototehnika-logo-small.png\nmicro: 000/u1/e/3/robototehnika-logo-micro.png\n', 0, 1, 0, 0, 0, 0);
-
-SET @insert_group_id = 1;
-
-INSERT INTO `{#}groups_members` (`id`, `group_id`, `user_id`, `role`, `date_updated`) VALUES
-(1, 1, 1, 2, CURRENT_TIMESTAMP);
-
 INSERT INTO `{#}menu` (`id`, `name`, `title`, `is_fixed`) VALUES
 (3, 'footer', 'Footer menu', NULL);
 
@@ -738,30 +723,6 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (8, 5, 'news', '1'),
 (8, 6, 'news', '1'),
 (13, 6, 'news', '1');
-
-INSERT INTO `{#}tags` (`id`, `tag`, `frequency`) VALUES
-(43, 'example', 5),
-(44, 'news', 3),
-(49, 'article', 2),
-(50, 'science', 2),
-(55, 'post', 1),
-(56, 'robots', 1);
-
-INSERT INTO `{#}tags_bind` (`id`, `tag_id`, `target_controller`, `target_subject`, `target_id`) VALUES
-(110, 43, 'content', 'news', 6),
-(111, 44, 'content', 'news', 6),
-(112, 43, 'content', 'news', 4),
-(113, 44, 'content', 'news', 3),
-(114, 43, 'content', 'news', 3),
-(115, 44, 'content', 'news', 2),
-(116, 49, 'content', 'articles', 4),
-(117, 50, 'content', 'articles', 4),
-(118, 43, 'content', 'articles', 1),
-(119, 49, 'content', 'articles', 1),
-(120, 50, 'content', 'articles', 1),
-(121, 43, 'content', 'posts', 5),
-(122, 55, 'content', 'posts', 5),
-(123, 56, 'content', 'posts', 5);
 
 INSERT INTO `{#}users_statuses` (`id`, `user_id`, `date_pub`, `content`, `replies_count`, `wall_entry_id`) VALUES
 (1, 1, CURRENT_TIMESTAMP, 'We are all made of stars © Moby', 1, 1);

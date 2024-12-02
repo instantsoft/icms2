@@ -8,13 +8,3 @@ INSERT INTO `{#}con_albums_cats_bind` (`item_id`, `category_id`) VALUES
 
 INSERT INTO `{#}menu_items` (`menu_id`, `parent_id`, `title`, `url`, `ordering`, `options`, `groups_view`, `groups_hide`) VALUES
 (1, 0, 'Photos', 'albums', 4, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL);
-
-INSERT INTO `{#}tags` (`tag`, `frequency`) VALUES
-('photo', 1);
-SET @albums_tag_id = LAST_INSERT_ID();
-
-INSERT INTO `{#}tags_bind` (`tag_id`, `target_controller`, `target_subject`, `target_id`) VALUES
-(43, 'content', 'albums', 16),
-(@albums_tag_id, 'content', 'albums', 16);
-
-UPDATE `{#}tags` SET `frequency` = 6 WHERE `id` = 43;

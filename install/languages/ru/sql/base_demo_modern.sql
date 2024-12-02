@@ -56,8 +56,6 @@ INSERT INTO `{#}uploaded_files` (`id`, `path`, `name`, `size`, `counter`, `type`
 (81, '000/u1/3/5/c29217d1.webp', 'c29217d1.webp', 39000, 0, 'image', 'content', 'news', 1, 1),
 (82, '000/u1/4/3/8914eba7.webp', '8914eba7.webp', 17766, 0, 'image', 'content', 'news', 1, 1),
 (83, '000/u1/0/a/35b34880.jpg', '35b34880.jpg', 1909, 0, 'image', 'content', 'news', 1, 1),
-(84, '000/u1/7/3/robototehnika-logo-small.png', 'robototehnika-logo-small.png', 5259, 0, 'image', 'groups', '1', 0, 1),
-(85, '000/u1/e/3/robototehnika-logo-micro.png', 'robototehnika-logo-micro.png', 1873, 0, 'image', 'groups', '1', 0, 1),
 (86, '000/u1/0/3/prodam-kvartiru-v-novostroike-photo-normal.jpg', 'prodam-kvartiru-v-novostroike-photo-normal.jpg', 18318, 0, 'image', 'content', 'board', 7, 1),
 (87, '000/u1/e/e/prodam-kvartiru-v-novostroike-photo-small.jpg', 'prodam-kvartiru-v-novostroike-photo-small.jpg', 1816, 0, 'image', 'content', 'board', 7, 1),
 (88, '000/u1/3/e/prodam-kvartiru-v-novostroike-photo-micro.jpg', 'prodam-kvartiru-v-novostroike-photo-micro.jpg', 909, 0, 'image', 'content', 'board', 7, 1),
@@ -89,11 +87,6 @@ INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `ordering`
 (13, 9, 'all', 'Новые', 1, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
 (14, 9, 'cheap', 'Сначала дешевые', 2, 1, NULL, '---\n- \n  by: price\n  to: asc\n', 'dataset_cheap', '---\n- 0\n', NULL),
 (15, 9, 'expensive', 'Сначала дорогие', 3, 1, NULL, '---\n- \n  by: price\n  to: desc\n', 'dataset_cheap', '---\n- 0\n', NULL);
-
-INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `description`, `ordering`, `is_visible`, `filters`, `sorting`, `index`, `groups_view`, `groups_hide`, `seo_keys`, `seo_desc`, `seo_title`, `cats_view`, `cats_hide`, `max_count`, `target_controller`) VALUES
-(16, NULL, 'rating', 'Лучшие группы', NULL, 3, 1, NULL, '---\n- \n  by: rating\n  to: desc\n', 'rating', '---\n- 0\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'groups'),
-(17, NULL, 'all', 'Новые группы', NULL, 2, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'groups'),
-(18, NULL, 'popular', 'Популярные', NULL, 1, 1, NULL, '---\n- \n  by: members_count\n  to: desc\n', 'members_count', '---\n- 0\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'groups');
 
 INSERT INTO `{#}content_folders` (`id`, `ctype_id`, `user_id`, `title`) VALUES
 (5, 6, 1, 'Личное');
@@ -819,7 +812,7 @@ CREATE TABLE `{#}con_posts` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_posts` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `picture`) VALUES
-(5, 'Мой первый пост в сообществе', '<p>\r\n	 Не факт, что выставочный стенд по-прежнему устойчив к изменениям спроса. Креатив, анализируя результаты рекламной кампании, уравновешивает стиль менеджмента, осознав маркетинг как часть производства. Поэтому построение бренда не критично. Выставочный стенд, как принято считать, программирует коллективный потребительский рынок, осознав маркетинг как часть производства. Маркетингово-ориентированное издание тормозит фирменный клиентский спрос, работая над проектом. Личность топ менеджера порождена временем.\r\n</p>\r\n<p>\r\n	 Сущность и концепция маркетинговой программы экономит маркетинг, отвоевывая рыночный сегмент. В общем, медиабизнес осмысленно ускоряет из ряда вон выходящий ребрендинг, не считаясь с затратами. Основная стадия проведения рыночного исследования, пренебрегая деталями, откровенно цинична. Эффективность действий индуцирует эмпирический фактор коммуникации, невзирая на действия конкурентов.\r\n</p>', '5-moi-pervyi-post-v-soobschestve', NULL, NULL, NULL, 'пример, пост, роботы', DATE_SUB(NOW(),INTERVAL 6 MINUTE), DATE_SUB(NOW(),INTERVAL 6 MINUTE), NULL, 1, 0, 1, 1, 'group', 'Робототехника', 'groups/1/content/posts', NULL, 1, 5, 1, 0, 0, 1, NULL, DATE_SUB(NOW(),INTERVAL 6 MINUTE), 0, NULL);
+(5, 'Мой первый пост в сообществе', '<p>\r\n	 Не факт, что выставочный стенд по-прежнему устойчив к изменениям спроса. Креатив, анализируя результаты рекламной кампании, уравновешивает стиль менеджмента, осознав маркетинг как часть производства. Поэтому построение бренда не критично. Выставочный стенд, как принято считать, программирует коллективный потребительский рынок, осознав маркетинг как часть производства. Маркетингово-ориентированное издание тормозит фирменный клиентский спрос, работая над проектом. Личность топ менеджера порождена временем.\r\n</p>\r\n<p>\r\n	 Сущность и концепция маркетинговой программы экономит маркетинг, отвоевывая рыночный сегмент. В общем, медиабизнес осмысленно ускоряет из ряда вон выходящий ребрендинг, не считаясь с затратами. Основная стадия проведения рыночного исследования, пренебрегая деталями, откровенно цинична. Эффективность действий индуцирует эмпирический фактор коммуникации, невзирая на действия конкурентов.\r\n</p>', '5-moi-pervyi-post-v-soobschestve', NULL, NULL, NULL, 'пример, пост, роботы', DATE_SUB(NOW(),INTERVAL 6 MINUTE), DATE_SUB(NOW(),INTERVAL 6 MINUTE), NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, 5, 1, 0, 0, 1, NULL, DATE_SUB(NOW(),INTERVAL 6 MINUTE), 0, NULL);
 
 DROP TABLE IF EXISTS `{#}con_posts_cats`;
 CREATE TABLE `{#}con_posts_cats` (
@@ -931,14 +924,6 @@ CREATE TABLE `{#}con_posts_props_values` (
   KEY `item_id` (`item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `{#}groups` (`id`, `owner_id`, `date_pub`, `title`, `description`, `logo`, `rating`, `members_count`, `join_policy`, `edit_policy`, `wall_policy`, `is_closed`) VALUES
-(1, 1, DATE_SUB(NOW(),INTERVAL 10 MINUTE), 'Робототехника', 'Группа посвящена роботам, машиностроению и всему что с этим связано.', '---\nsmall: 000/u1/7/3/robototehnika-logo-small.png\nmicro: 000/u1/e/3/robototehnika-logo-micro.png\n', 0, 1, 0, 0, 0, 0);
-
-SET @insert_group_id = 1;
-
-INSERT INTO `{#}groups_members` (`id`, `group_id`, `user_id`, `role`, `date_updated`) VALUES
-(1, 1, 1, 2, CURRENT_TIMESTAMP);
-
 INSERT INTO `{#}menu` (`id`, `name`, `title`, `is_fixed`) VALUES
 (3, 'footer', 'Нижнее меню', NULL);
 
@@ -1043,34 +1028,6 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (1, 3, 'board', 'yes'),
 (3, 3, 'board', 'own'),
 (2, 3, 'board', 'own');
-
-INSERT INTO `{#}tags` (`id`, `tag`, `frequency`) VALUES
-(1, 'пример', 5),
-(2, 'статья', 2),
-(3, 'астрономия', 1),
-(9, 'наука', 1),
-(36, 'новости', 4),
-(37, 'проишествия', 1),
-(39, 'пост', 1),
-(40, 'роботы', 1);
-
-INSERT INTO `{#}tags_bind` (`id`, `tag_id`, `target_controller`, `target_subject`, `target_id`) VALUES
-(10, 1, 'content', 'articles', 1),
-(11, 2, 'content', 'articles', 1),
-(12, 3, 'content', 'articles', 1),
-(49, 36, 'content', 'news', 2),
-(50, 36, 'content', 'news', 3),
-(51, 1, 'content', 'news', 3),
-(56, 1, 'content', 'news', 4),
-(59, 1, 'content', 'news', 6),
-(60, 36, 'content', 'news', 6),
-(86, 2, 'content', 'articles', 4),
-(87, 9, 'content', 'articles', 4),
-(105, 1, 'content', 'posts', 5),
-(106, 39, 'content', 'posts', 5),
-(107, 40, 'content', 'posts', 5),
-(108, 36, 'content', 'news', 1),
-(109, 37, 'content', 'news', 1);
 
 INSERT INTO `{#}users_statuses` (`id`, `user_id`, `date_pub`, `content`, `replies_count`, `wall_entry_id`) VALUES
 (1, 1, CURRENT_TIMESTAMP, 'We are all made of stars © Moby', 1, 1);

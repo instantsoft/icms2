@@ -264,3 +264,18 @@ function get_post($name) {
 function get_post_array($name) {
     return (isset($_POST[$name]) && is_array($_POST[$name])) ? $_POST[$name] : [];
 }
+
+function delete_manifest_files ($manifest) {
+    if (!empty($manifest['dirs'])) {
+        foreach ($manifest['dirs'] as $dir_path) {
+            files_remove_directory(PATH_ICMS . $dir_path);
+        }
+    }
+    if (!empty($manifest['files'])) {
+        foreach ($manifest['files'] as $file_path) {
+            if(is_file(PATH_ICMS . $file_path)){
+                @unlink(PATH_ICMS . $file_path);
+            }
+        }
+    }
+}

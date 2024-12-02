@@ -37,7 +37,7 @@ $lang = $is_lang_selected ? $_SESSION['install']['lang'] : $default_lang;
 
 define('LANG', $lang);
 
-include PATH . DS . 'languages' . DS . LANG . DS . 'language.php';
+include PATH . 'languages' . DS . LANG . DS . 'language.php';
 
 $steps = [
     ['id' => 'start', 'title' => LANG_STEP_START],
@@ -74,5 +74,5 @@ echo render('main', [
     'lang'             => LANG,
     'current_step'     => $current_step,
     'step_html'        => $step_result['html'],
-    'langs'            => get_langs()
+    'langs'            => $all_langs
 ]);

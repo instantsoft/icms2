@@ -19,7 +19,7 @@ INSERT INTO `{#}activity_types` (`is_enabled`, `controller`, `name`, `title`, `d
 (1, 'content', 'add.posts', 'Adding posts', 'added post %s');
 
 INSERT INTO `{#}activity` (`type_id`, `user_id`, `group_id`, `subject_title`, `subject_id`, `subject_url`, `reply_url`, `images`, `images_count`, `date_pub`, `is_private`, `is_parent_hidden`) VALUES
-((SELECT LAST_INSERT_ID()), 1, @insert_group_id, 'My first post in the Community', 5, 'posts/5-moi-pervyi-post-v-soobschestve.html', NULL, NULL, NULL, '2013-11-13 16:43:07', 0, NULL);
+((SELECT LAST_INSERT_ID()), 1, 1, 'My first post in the Community', 5, 'posts/5-moi-pervyi-post-v-soobschestve.html', NULL, NULL, NULL, '2013-11-13 16:43:07', 0, NULL);
 
 INSERT INTO `{#}activity_types` (`is_enabled`, `controller`, `name`, `title`, `description`) VALUES
 (1, 'content', 'add.news', 'Adding news', 'added news %s');

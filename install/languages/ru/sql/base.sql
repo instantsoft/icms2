@@ -282,12 +282,10 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (4, 'Комментарии', 'comments', 1, '---\ndisable_icms_comments: null\nis_guests: 1\nguest_ip_delay: 1\nrestricted_ips: \"\"\ndim_negative: 1\nupdate_user_rating: 1\nlimit: 20\nseo_keys: \"\"\nseo_desc: \"\"\nis_guests_moderate: 1\nrestricted_emails: \"\"\nrestricted_names: \"\"\nlimit_nesting: 5\nshow_author_email: 1\neditor: \"4\"\neditor_presets: null\nshow_list:\n  - \"0\"\ntypograph_id: \"1\"\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (5, 'Личные сообщения', 'messages', 1, '---\nlimit: 10\ngroups_allowed: [ ]\neditor: \"2\"\neditor_presets: null\ntime_delete_old: 0\nrealtime_mode: ajax\nrefresh_time: 15\nsocket_host: \"\"\nsocket_port: 3000\nuse_queue: null\nis_enable_pm: 1\nis_contact_first_select: null\ntypograph_id: \"2\"\nemail_template: \"\"\n', 'InstantCMS Team', 'https://instantcms.ru/', '2.0', 1),
 (6, 'Авторизация и регистрация', 'auth', 1, '---\nis_reg_enabled: 1\nreg_reason: >\n  К сожалению, нам пока\n  не нужны новые\n  пользователи\nis_reg_invites: null\nreg_captcha: null\nverify_email: null\nverify_exp: 48\nauth_captcha: null\nrestricted_emails: |\n  *@shitmail.me\r\n  *@mailspeed.ru\r\n  *@temp-mail.ru\r\n  *@guerrillamail.com\r\n  *@12minutemail.com\r\n  *@mytempemail.com\r\n  *@spamobox.com\r\n  *@disposableinbox.com\r\n  *@filzmail.com\r\n  *@freemail.ms\r\n  *@anonymbox.com\r\n  *@lroid.com\r\n  *@yopmail.com\r\n  *@TempEmail.net\r\n  *@spambog.com\r\n  *@mailforspam.com\r\n  *@spam.su\r\n  *@no-spam.ws\r\n  *@mailinator.com\r\n  *@spamavert.com\r\n  *@trashcanmail.com\nrestricted_names: |\n  admin*\r\n  админ*\r\n  модератор\r\n  moderator\nrestricted_ips:\nis_invites: 1\nis_invites_strict: 1\ninvites_period: 7\ninvites_qty: 3\ninvites_min_karma: 0\ninvites_min_rating: 0\ninvites_min_days: 0\nreg_auto_auth: 1\nfirst_auth_redirect: profileedit\nauth_redirect: none\ndef_groups:\n  - 3\nis_site_only_auth_users: null\nguests_allow_controllers:\n  - auth\n  - geo\nseo_keys:\nseo_desc:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(8, 'Группы', 'groups', 1, '---\nis_ds_rating: 1\nis_ds_popular: 1\nis_wall: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (10, 'Рейтинг', 'rating', 1, '---\nis_hidden: 1\nis_show: 1\nallow_guest_vote: null\ntemplate: widget\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (11, 'Стена', 'wall', 1, '---\nlimit: 15\norder_by: date_last_reply\nshow_entries: 5\neditor: \"4\"\neditor_presets: null\ntypograph_id: \"1\"\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (12, 'Капча reCAPTCHA', 'recaptcha', 1, '---\npublic_key:\nprivate_key:\ntheme: light\nlang: ru\nsize: normal\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (13, 'Модерация', 'moderation', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(14, 'Теги', 'tags', 1, '---\nordering: frequency\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nmin_freq: 0\nmin_len: 0\nlimit: 10\ncolors:\nshuffle: 1\nseo_keys:\nseo_desc:\nseo_title_pattern:\nseo_desc_pattern:\nseo_h1_pattern:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (16, 'Генератор карты сайта и robots.txt', 'sitemap', 1, '---\nsources:\n  content|pages: 1\n  content|albums: 1\n  content|articles: 1\n  content|posts: 1\n  content|board: 1\n  content|news: 1\n  frontpage|root: 1\n  groups|profiles: 1\n  users|profiles: 1\nshow_lastmod: 1\nshow_changefreq: 1\ndefault_changefreq: daily\nshow_priority: 1\nrobots: |\n  User-agent: *\r\n  Disallow:\ngenerate_html_sitemap: null\nchangefreq:\n  content:\n    pages:\n    albums:\n    articles:\n    posts:\n    board:\n    news:\n  frontpage:\n    root:\n  groups:\n    profiles:\n  users:\n    profiles:\npriority:\n  content:\n    pages:\n    albums:\n    articles:\n    posts:\n    board:\n    news:\n  frontpage:\n    root: 1.0\n  groups:\n    profiles: 0.8\n  users:\n    profiles: 0.8\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (17, 'Поиск', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (19, 'Загрузка изображений', 'images', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
@@ -492,28 +490,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (37, 'ctype_lists_context', 'content', 37, 1),
 (38, 'ctype_after_update', 'frontpage', 38, 1),
 (39, 'ctype_after_delete', 'frontpage', 39, 1),
-(40, 'admin_dashboard_chart', 'groups', 40, 1),
-(41, 'content_view_hidden', 'groups', 41, 1),
-(42, 'content_before_list', 'groups', 42, 1),
-(43, 'rating_vote', 'groups', 43, 1),
-(44, 'user_privacy_types', 'groups', 44, 1),
-(45, 'user_profile_buttons', 'groups', 45, 1),
-(46, 'user_notify_types', 'groups', 46, 1),
-(47, 'user_delete', 'groups', 47, 1),
-(48, 'user_tab_info', 'groups', 48, 1),
-(49, 'user_tab_show', 'groups', 49, 1),
-(50, 'menu_groups', 'groups', 50, 1),
-(51, 'sitemap_sources', 'groups', 51, 1),
-(52, 'sitemap_urls', 'groups', 52, 1),
-(53, 'content_privacy_types', 'groups', 53, 1),
-(54, 'content_add_permissions', 'groups', 54, 1),
-(55, 'fulltext_search', 'groups', 55, 1),
-(56, 'content_before_childs', 'groups', 56, 1),
-(57, 'ctype_relation_childs', 'groups', 57, 1),
-(58, 'admin_groups_dataset_fields_list', 'groups', 58, 1),
-(59, 'content_validate', 'groups', 59, 1),
-(60, 'moderation_list', 'groups', 60, 1),
-(61, 'content_before_item', 'groups', 61, 1),
 (62, 'user_delete', 'images', 62, 1),
 (63, 'admin_dashboard_chart', 'messages', 63, 1),
 (64, 'menu_messages', 'messages', 64, 1),
@@ -555,8 +531,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (117, 'user_notify_types', 'wall', 117, 1),
 (118, 'user_delete', 'wall', 118, 1),
 (119, 'page_is_allowed', 'widgets', 119, 1),
-(120, 'ctype_lists_context', 'groups', 120, 1),
-(121, 'ctype_lists_context', 'tags', 121, 1),
 (122, 'moderation_list', 'comments', 122, 1),
 (123, 'content_groups_before_delete', 'moderation', 123, 1),
 (124, 'comments_after_refuse', 'moderation', 124, 1),
@@ -564,12 +538,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (140, 'admin_dashboard_block', 'users', 140, 1),
 (141, 'engine_start', 'sitemap', 141, 1),
 (142, 'sitemap_sources', 'frontpage', 142, 1),
-(144, 'ctype_basic_form', 'tags', 144, 1),
-(145, 'content_after_add', 'tags', 145, 1),
-(146, 'content_before_update', 'tags', 146, 1),
-(147, 'content_item_form', 'tags', 147, 1),
-(148, 'content_before_item', 'tags', 148, 1),
-(149, 'content_before_list', 'tags', 149, 1),
 (150, 'tags_search_subjects', 'content', 150, 1),
 (151, 'images_before_upload', 'typograph', 151, 1),
 (152, 'engine_start', 'content', 152, 1),
@@ -579,7 +547,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (158, 'content_item_form', 'comments', 158, 1),
 (159, 'ctype_basic_form', 'comments', 159, 1),
 (160, 'ctype_basic_form', 'rating', 160, 1),
-(161, 'ctype_basic_form', 'groups', 161, 1),
 (162, 'photos_before_item', 'rating', 162, 1),
 (163, 'photos_before_item', 'comments', 163, 1),
 (164, 'comments_targets', 'content', 164, 1),
@@ -603,10 +570,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (187, 'widget_menu_form', 'bootstrap4', 187, 1),
 (190, 'db_nested_tables', 'content', 190, 1),
 (191, 'widget_content_list_form', 'content', 191, 1),
-(194, 'content_item_form_context', 'groups', 194, 1),
 (202, 'content_after_delete', 'comments', 202, 1),
 (203, 'content_after_delete', 'rating', 203, 1),
-(204, 'content_after_delete', 'tags', 204, 1),
 (207, 'content_after_restore', 'comments', 207, 1),
 (208, 'content_after_trash_put', 'comments', 208, 1),
 (214, 'render_widget_menu_menu', 'bootstrap4', 214, 1),
@@ -621,7 +586,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (223, 'languages_forms', 'content', 223, 1),
 (224, 'form_make', 'languages', 224, 1),
 (225, 'languages_forms', 'users', 225, 1),
-(226, 'languages_forms', 'groups', 226, 1),
 (228, 'grid_activity_types', 'languages', 228, 1),
 (229, 'content_form_field', 'languages', 229, 1),
 (230, 'ctype_field_after_add', 'languages', 230, 1),
@@ -632,108 +596,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (236, 'content_before_item', 'languages', 236, 1),
 (237, 'content_before_list', 'languages', 237, 1),
 (238, 'content_item_form', 'languages', 238, 1);
-
-DROP TABLE IF EXISTS `{#}groups`;
-CREATE TABLE `{#}groups` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `owner_id` int(11) unsigned DEFAULT NULL COMMENT 'Создатель',
-  `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата создания',
-  `title` varchar(128) NOT NULL COMMENT 'Название',
-  `description` text COMMENT 'Описание',
-  `logo` text COMMENT 'Логотип группы',
-  `rating` int(11) NOT NULL DEFAULT '0' COMMENT 'Рейтинг',
-  `members_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Кол-во членов',
-  `join_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Политика вступления',
-  `edit_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Политика редактирования',
-  `wall_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Политика стены',
-  `wall_reply_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Политика комментирования стены',
-  `is_closed` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Закрытая?',
-  `cover` text COMMENT 'Обложка группы',
-  `slug` varchar(100) DEFAULT NULL,
-  `content_policy` varchar(500) DEFAULT NULL COMMENT 'Политика контента',
-  `content_groups` varchar(1000) DEFAULT NULL COMMENT 'Группы, которым разрешено добавление контента',
-  `roles` varchar(2000) DEFAULT NULL,
-  `content_roles` varchar(1000) DEFAULT NULL,
-  `join_roles` varchar(1000) DEFAULT NULL COMMENT 'Роли при вступлении в группу',
-  `is_approved` tinyint(1) NOT NULL DEFAULT '1',
-  `approved_by` int(11) DEFAULT NULL,
-  `date_approved` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `members_count` (`members_count`),
-  KEY `date_pub` (`date_pub`),
-  KEY `rating` (`rating`),
-  KEY `owner_id` (`owner_id`,`members_count`),
-  KEY `slug` (`slug`),
-  FULLTEXT KEY `fulltext_search` (`title`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='Группы (сообщества)';
-
-DROP TABLE IF EXISTS `{#}groups_fields`;
-CREATE TABLE `{#}groups_fields` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) unsigned DEFAULT NULL,
-  `name` varchar(40) DEFAULT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `hint` varchar(200) DEFAULT NULL,
-  `ordering` int(11) unsigned DEFAULT NULL,
-  `is_enabled` tinyint(1) UNSIGNED DEFAULT '1',
-  `fieldset` varchar(32) DEFAULT NULL,
-  `type` varchar(16) DEFAULT NULL,
-  `is_in_list` tinyint(1) unsigned DEFAULT NULL,
-  `is_in_item` tinyint(1) unsigned DEFAULT NULL,
-  `is_in_filter` tinyint(1) unsigned DEFAULT NULL,
-  `is_in_closed` tinyint(3) unsigned DEFAULT NULL,
-  `is_private` tinyint(1) unsigned DEFAULT NULL,
-  `is_fixed` tinyint(1) unsigned DEFAULT NULL,
-  `is_fixed_type` tinyint(1) unsigned DEFAULT NULL,
-  `is_system` tinyint(1) unsigned DEFAULT NULL,
-  `values` text,
-  `options` text,
-  `groups_read` text,
-  `groups_add` text,
-  `groups_edit` text,
-  `filter_view` text,
-  PRIMARY KEY (`id`),
-  KEY `is_enabled` (`is_enabled`,`ordering`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Поля групп';
-
-INSERT INTO `{#}groups_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_in_closed`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_edit`, `filter_view`) VALUES
-(1, NULL, 'title', 'Заголовок', NULL, 1, 'Основная информация', 'caption', 1, 1, 1, 1, NULL, 1, 1, 1, NULL, '---\nmin_length: 1\nmax_length: 128\nin_fulltext_search: 1\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n'),
-(2, NULL, 'description', 'Описание группы', NULL, 2, 'Основная информация', 'html', 1, 1, NULL, 1, NULL, 1, 1, NULL, NULL, '---\neditor: 3\nis_html_filter: 1\nbuild_redirect_link: 1\nteaser_len: 200\nin_fulltext_search: null\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n'),
-(3, NULL, 'logo', 'Логотип группы', NULL, 3, 'Основная информация', 'image', 1, 1, NULL, 1, NULL, 1, 1, 1, NULL, '---\nsize_teaser: small\nsize_full: micro\nsize_modal:\nsizes:\n  - micro\n  - small\nallow_import_link: 1\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n'),
-(5, NULL, 'cover', 'Обложка группы', NULL, 4, 'Основная информация', 'image', NULL, 1, NULL, 1, NULL, 1, 1, 1, NULL, '---\nsize_teaser: small\nsize_full: original\nsize_modal:\nsizes:\n  - small\n  - original\nallow_import_link: 1\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n');
-
-DROP TABLE IF EXISTS `{#}groups_invites`;
-CREATE TABLE `{#}groups_invites` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `group_id` int(11) unsigned DEFAULT NULL COMMENT 'ID группы',
-  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID пригласившего',
-  `invited_id` int(11) unsigned DEFAULT NULL COMMENT 'ID приглашенного',
-  PRIMARY KEY (`id`),
-  KEY `group_id` (`group_id`),
-  KEY `user_id` (`user_id`),
-  KEY `invited_id` (`invited_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Приглашения в группы';
-
-DROP TABLE IF EXISTS `{#}groups_members`;
-CREATE TABLE `{#}groups_members` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `group_id` int(11) unsigned DEFAULT NULL,
-  `user_id` int(11) unsigned DEFAULT NULL,
-  `role` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'Роль пользователя в группе',
-  `date_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата обновления роли',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `group_id` (`group_id`,`date_updated`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Члены групп (сообществ)';
-
-DROP TABLE IF EXISTS `{#}groups_member_roles`;
-CREATE TABLE `{#}groups_member_roles` (
-  `user_id` int(11) unsigned DEFAULT NULL,
-  `group_id` int(11) unsigned DEFAULT NULL,
-  `role_id` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  KEY `user_id` (`user_id`),
-  KEY `group_id` (`group_id`,`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Роли участников групп';
 
 DROP TABLE IF EXISTS `{#}images_presets`;
 CREATE TABLE `{#}images_presets` (
@@ -808,8 +670,6 @@ INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `orde
 (25, 2, 0, 'Панель управления', '{admin:menu}', 7, '---\nclass: cpanel\n', '---\n- 6\n', NULL),
 (29, 1, 0, 'Люди', 'users', 9, '---\nclass: \n', '---\n- 0\n', NULL),
 (30, 6, 0, 'Уведомления', '{messages:notices}', 1, '---\ntarget: _self\nclass: bell ajax-modal notices-counter\nicon: bell\n', '---\n- 0\n', '---\n- 1\n'),
-(32, 1, 0, 'Группы', 'groups', 6, '---\nclass:', '---\n- 0\n', NULL),
-(33, 2, 0, 'Мои группы', '{groups:my}', 5, '---\nclass: group', '---\n- 0\n', NULL),
 (34, 5, 0, 'Войти', 'auth/login', 9, '---\ntarget: _self\nclass: ajax-modal key\nicon: sign-in-alt\n', '---\n- 1\n', NULL),
 (35, 5, 0, 'Регистрация', 'auth/register', 10, '---\ntarget: _self\nclass: user_add\nicon: user-plus\n', '---\n- 1\n', NULL),
 (36, 2, 0, 'Черновики', '{moderation:draft}', 4, '---\ntarget: _self\nclass: draft\nicon: cloud\n', '---\n- 0\n', NULL),
@@ -900,9 +760,6 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (12, 'comments', 'delete', 'list', 'own,all,full_delete'),
 (13, 'content', 'view_all', 'flag', NULL),
 (14, 'comments', 'view_all', 'flag', NULL),
-(15, 'groups', 'add', 'list', 'premod,yes'),
-(16, 'groups', 'edit', 'list', 'own,all'),
-(17, 'groups', 'delete', 'list', 'own,all'),
 (18, 'content', 'limit', 'number', NULL),
 (19, 'users', 'vote_karma', 'flag', NULL),
 (20, 'comments', 'rate', 'flag', NULL),
@@ -922,12 +779,8 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (36, 'content', 'restore', 'list', 'own,all'),
 (37, 'content', 'trash_left_time', 'number', NULL),
 (38, 'users', 'delete', 'list', 'my,anyuser'),
-(39, 'groups', 'invite_users', 'flag', NULL),
-(40, 'groups', 'bind_to_parent', 'list', 'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all'),
 (41, 'users', 'bind_to_parent', 'list', 'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all'),
-(42, 'groups', 'bind_off_parent', 'list', 'own,all'),
 (43, 'users', 'bind_off_parent', 'list', 'own,all'),
-(44, 'groups', 'content_access', 'flag', NULL),
 (45, 'auth', 'view_closed', 'flag', NULL),
 (46, 'content', 'view_list', 'list', 'all,other,allow'),
 (47, 'content', 'limit24', 'number', NULL),
@@ -954,17 +807,11 @@ CREATE TABLE `{#}perms_users` (
 INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (10, 4, 'comments', '1'),
 (11, 4, 'comments', 'own'),
-(15, 4, 'groups', 'yes'),
-(17, 4, 'groups', 'own'),
-(16, 4, 'groups', 'own'),
 (19, 4, 'users', '1'),
 (10, 5, 'comments', '1'),
 (12, 5, 'comments', 'all'),
 (11, 5, 'comments', 'all'),
 (14, 5, 'comments', '1'),
-(15, 5, 'groups', 'yes'),
-(17, 5, 'groups', 'all'),
-(16, 5, 'groups', 'all'),
 (19, 5, 'users', '1'),
 (10, 3, 'comments', '1'),
 (12, 3, 'comments', 'own'),
@@ -1030,33 +877,6 @@ CREATE TABLE `{#}sessions_online` (
   UNIQUE KEY `user_id` (`user_id`),
   KEY `date_created` (`date_created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Онлайн сессии';
-
-DROP TABLE IF EXISTS `{#}tags`;
-CREATE TABLE `{#}tags` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `tag` varchar(32) NOT NULL,
-  `description` text DEFAULT NULL,
-  `frequency` int(11) unsigned NOT NULL DEFAULT '1',
-  `tag_title` varchar(300) DEFAULT NULL,
-  `tag_desc` varchar(300) DEFAULT NULL,
-  `tag_h1` varchar(300) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `tag` (`tag`),
-  UNIQUE KEY `frequency` (`frequency`,`tag`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Список тегов';
-
-DROP TABLE IF EXISTS `{#}tags_bind`;
-CREATE TABLE `{#}tags_bind` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `tag_id` int(11) unsigned DEFAULT NULL,
-  `target_controller` varchar(32) DEFAULT NULL,
-  `target_subject` varchar(32) DEFAULT NULL,
-  `target_id` int(11) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `target_id` (`target_id`,`target_controller`,`target_subject`),
-  KEY `tag_id` (`tag_id`),
-  KEY `target_controller` (`target_controller`,`target_subject`,`tag_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Привязка тегов к материалам';
 
 DROP TABLE IF EXISTS `{#}uploaded_files`;
 CREATE TABLE `{#}uploaded_files` (
@@ -1338,7 +1158,6 @@ CREATE TABLE `{#}users_tabs` (
 INSERT INTO `{#}users_tabs` (`id`, `title`, `controller`, `name`, `is_active`, `ordering`) VALUES
 (3, 'Друзья', 'users', 'friends', 1, 2),
 (4, 'Комментарии', 'comments', 'comments', 1, 10),
-(5, 'Группы', 'groups', 'groups', 1, 3),
 (6, 'Репутация', 'users', 'karma', 1, 11),
 (7, 'Подписчики', 'users', 'subscribers', 1, 3);
 
@@ -1416,13 +1235,11 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (7, 'comments', 'list', 'Новые комментарии', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (8, 'users', 'online', 'Кто онлайн', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (9, 'users', 'avatar', 'Аватар пользователя', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(10, 'tags', 'cloud', 'Облако тегов', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (11, 'content', 'slider', 'Слайдер контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (12, 'auth', 'auth', 'Форма авторизации', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (13, 'search', 'search', 'Поиск', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (14, NULL, 'html', 'HTML блок', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (15, 'content', 'filter', 'Фильтр контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(17, 'groups', 'list', 'Список групп', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (19, 'auth', 'register', 'Форма регистрации', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (20, NULL, 'template', 'Элементы шаблона', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (21, 'content', 'fields', 'Поля контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
@@ -1491,7 +1308,6 @@ INSERT INTO `{#}widgets_pages` (`id`, `controller`, `name`, `title_const`, `titl
 (100, 'users', 'list', 'LANG_USERS_LIST', NULL, NULL, 'users\r\nusers/index\r\nusers/index/*', NULL),
 (101, 'users', 'profile', 'LANG_USERS_PROFILE', NULL, NULL, 'users/%*', 'users/%/edit'),
 (102, 'users', 'edit', 'LANG_USERS_EDIT_PROFILE', NULL, NULL, 'users/%/edit', NULL),
-(169, 'groups', 'list', 'LANG_GROUPS_LIST', NULL, NULL, 'groups', NULL),
 (200, NULL, 'all', 'LANG_WP_ALL_PAGES', NULL, NULL, NULL, NULL);
 
 UPDATE `{#}widgets_pages` SET `id` = 0 WHERE `id` = 200;
