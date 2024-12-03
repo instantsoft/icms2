@@ -1,7 +1,7 @@
 <?php
 class modelPhotos extends cmsModel{
 
-    public $config = array();
+    public $config = [];
 
     public function __construct() {
 
@@ -15,23 +15,23 @@ class modelPhotos extends cmsModel{
 
     }
 
-    public static function getOrderList(){
-        return array(
+    public static function getOrderList() {
+        return [
             'date_pub'   => LANG_PHOTOS_DATE_PUB,
             'date_photo' => LANG_PHOTOS_DATE_PHOTO,
             'rating'     => LANG_PHOTOS_RATING,
             'hits_count' => LANG_PHOTOS_HITS_COUNT,
             'comments'   => LANG_PHOTOS_COMMENTS
-        );
+        ];
     }
 
-    public static function getOrientationList(){
-        return array(
+    public static function getOrientationList() {
+        return [
             ''          => LANG_PHOTOS_ALL_ORIENT,
             'square'    => LANG_PHOTOS_SQUARE,
             'landscape' => LANG_PHOTOS_LANDSCAPE,
             'portrait'  => LANG_PHOTOS_PORTRAIT
-        );
+        ];
     }
 
     public function filterApprovedOnly(){
@@ -259,37 +259,34 @@ class modelPhotos extends cmsModel{
 
     /**************************************************************************/
 
-    public function deletePhoto($id_or_photo){
+    public function deletePhoto($id_or_photo) {
 
         $photo = is_array($id_or_photo) ? $id_or_photo : $this->getPhoto($id_or_photo);
-        if (!$photo) { return false; }
+        if (!$photo) {
+            return false;
+        }
 
-        return $this->deletePhotosByPhotoList(array($photo), $photo['album_id']);
-
+        return $this->deletePhotosByPhotoList([$photo], $photo['album_id']);
     }
 
-    public function deletePhotosByPhotoList($photos, $album_id = false){
+    public function deletePhotosByPhotoList($photos, $album_id = false) {
 
         $config = cmsConfig::getInstance();
-        $comments_model = cmsCore::getModel('comments');
-        $rating_model   = cmsCore::getModel('rating');
 
-        foreach($photos as $photo){
+        foreach ($photos as $photo) {
 
-            if(is_array($photo['image'])){
-                foreach($photo['image'] as $path){
+            if (is_array($photo['image'])) {
+                foreach ($photo['image'] as $path) {
                     @unlink($config->upload_path . $path);
                 }
             }
 
-            $comments_model->deleteComments('photos', 'photo', $photo['id']);
-            $rating_model->deleteVotes('photos', 'photo', $photo['id']);
-
             $this->delete('photos', $photo['id']);
-
         }
 
-        if($album_id){
+        list($photos, $album_id) = cmsEventsManager::hook('photos_after_delete_list', [$photos, $album_id]);
+
+        if ($album_id) {
 
             $this->setRandomAlbumCoverImage($album_id);
 
@@ -302,25 +299,26 @@ class modelPhotos extends cmsModel{
         }
 
         return true;
-
     }
 
-    public function deletePhotos($album_id){
+    public function deletePhotos($album_id) {
 
-        $photos = $this->getPhotos($album_id, 'album_id', array('image', 'id'));
-        if (!$photos) { return false; }
+        $photos = $this->getPhotos($album_id, 'album_id', ['image', 'id']);
+        if (!$photos) {
+            return false;
+        }
 
         return $this->deletePhotosByPhotoList($photos, $album_id);
-
     }
 
-    public function deleteUserPhotos($user_id){
+    public function deleteUserPhotos($user_id) {
 
-        $photos = $this->getUserPhotos($user_id, array('image', 'id'));
-        if (!$photos) { return false; }
+        $photos = $this->getUserPhotos($user_id, ['image', 'id']);
+        if (!$photos) {
+            return false;
+        }
 
         return $this->deletePhotosByPhotoList($photos);
-
     }
 
     /**************************************************************************/

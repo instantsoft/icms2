@@ -66,11 +66,6 @@ INSERT INTO `{#}uploaded_files` (`id`, `path`, `name`, `size`, `counter`, `type`
 (93, '000/u1/f/3/prodam-kvartiru-v-novostroike-photos-big.jpg', 'prodam-kvartiru-v-novostroike-photos-big.jpg', 55599, 0, 'image', 'content', 'board', 7, 1),
 (94, '000/u1/b/7/prodam-kvartiru-v-novostroike-photos-small.jpg', 'prodam-kvartiru-v-novostroike-photos-small.jpg', 1975, 0, 'image', 'content', 'board', 7, 1);
 
-INSERT INTO `{#}comments` (`id`, `parent_id`, `level`, `ordering`, `user_id`, `date_pub`, `target_controller`, `target_subject`, `target_id`, `target_url`, `target_title`, `author_name`, `author_email`, `author_ip`, `content`, `content_html`, `is_deleted`, `is_private`, `rating`) VALUES
-(3, 0, 1, 1, 6, DATE_SUB(NOW(),INTERVAL 4 MINUTE), 'content', 'articles', 4, 'articles/4-nedonasyschennyi-almaz-predposylki-i-razvitie.html', 'Недонасыщенный алмаз: предпосылки и развитие', NULL, NULL, NULL, 'Базальтовый слой <i>разогревает сталактит</i>, где присутствуют моренные суглинки днепровского возраста.', 'Базальтовый слой <i>разогревает сталактит</i>, где присутствуют моренные суглинки днепровского возраста.', 1, 0, 1),
-(4, 0, 1, 1, 1, DATE_SUB(NOW(),INTERVAL 3 MINUTE), 'content', 'articles', 11, 'articles/11-obschestvennyi-analiz-zarubezhnogo-opyta.html', 'Общественный анализ зарубежного опыта', NULL, NULL, NULL, 'Отличная статья, все очень доходчиво и познавательно', 'Отличная статья, все очень доходчиво и познавательно', NULL, 0, 0),
-(5, 4, 2, 2, 1, DATE_SUB(NOW(),INTERVAL 1 MINUTE), 'content', 'articles', 11, 'articles/11-obschestvennyi-analiz-zarubezhnogo-opyta.html', 'Общественный анализ зарубежного опыта', NULL, NULL, NULL, 'Ответ на комментарий выше', 'Ответ на комментарий выше', NULL, 0, 0);
-
 INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `ordering`, `is_visible`, `filters`, `sorting`, `index`, `groups_view`, `groups_hide`) VALUES
 (1, 5, 'all', 'Все', 1, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
 (2, 5, 'reviews', 'Рецензии', 2, 1, '---\n- \n  field: kind\n  condition: eq\n  value: 2\n', '---\n- \n  by: date_pub\n  to: desc\n', 'dataset_reviews', '---\n- 0\n', NULL),
@@ -82,7 +77,6 @@ INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `ordering`
 (8, 6, 'weekly', 'за неделю', 3, 1, '---\n- \n  field: date_pub\n  condition: dy\n  value: 7\n', '---\n- \n  by: rating\n  to: desc\n', 'dataset_daily', '---\n- 0\n', NULL),
 (9, 6, 'monthly', 'за месяц', 4, 1, '---\n- \n  field: date_pub\n  condition: dy\n  value: 31\n', '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
 (10, 10, 'latest', 'Последние', 1, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
-(11, 10, 'discussed', 'Обсуждаемые', 2, 1, NULL, '---\n- \n  by: comments\n  to: desc\n', 'dataset_discussed', '---\n- 0\n', NULL),
 (12, 10, 'popular', 'Популярные', 3, 1, NULL, '---\n- \n  by: rating\n  to: desc\n', 'dataset_popular', '---\n- 0\n', NULL),
 (13, 9, 'all', 'Новые', 1, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
 (14, 9, 'cheap', 'Сначала дешевые', 2, 1, NULL, '---\n- \n  by: price\n  to: asc\n', 'dataset_cheap', '---\n- 0\n', NULL),

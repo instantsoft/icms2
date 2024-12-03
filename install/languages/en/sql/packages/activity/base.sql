@@ -40,11 +40,8 @@ CREATE TABLE `{#}activity_types` (
 
 INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
 (1, 1, 'content', 'add.pages', 'Adding pages', 'added the page %s'),
-(2, 1, 'comments', 'vote.comment', 'Rating comments', 'evaluate a comment on the %s page'),
 (7, 1, 'users', 'friendship', 'Friendship', 'and %s became friends'),
 (8, 1, 'users', 'signup', 'New users', 'registered. Welcome!'),
-(10, 1, 'groups', 'join', 'Group joining', 'joined the group %s'),
-(11, 1, 'groups', 'leave', 'Group leaving', 'left the group %s'),
 (12, 1, 'users', 'status', 'Status changing', '&rarr; %s'),
 (19, 1, 'users', 'avatar', 'Avatar changing', 'changed avatar');
 

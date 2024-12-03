@@ -1,7 +1,6 @@
 INSERT INTO `{#}widgets_bind` (`id`, `template_layouts`, `languages`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `tpl_body`, `tpl_wrap`, `device_types`) VALUES
 (6, NULL, NULL, 8, 'Now Online', NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', NULL, 'wrapper', NULL),
 (10, NULL, NULL, 4, 'Articles', 'All | articles\r\n{Add article | articles/add}', 'columns-2', NULL, NULL, 1, 1, '---\n- 0\n', NULL, '---\nctype_id: 5\ndataset:\nimage_field:\nteaser_field:\nshow_details: 1\nlimit: 5\n', NULL, 'wrapper', NULL),
-(11, NULL, NULL, 7, 'Latest comments', 'All | comments\r\n{My friends | comments/index/friends}\r\n{My | comments/index/my}', NULL, NULL, NULL, 1, 1, '---\n- 0\n', NULL, '---\nshow_avatars: 1\nshow_text: 1\nlimit: 10\n', NULL, 'wrapper', NULL),
 (12, NULL, NULL, 5, 'Content cats', NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', NULL, 'wrapper', NULL),
 (14, NULL, NULL, 2, 'New users', 'All | users', NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', NULL, 'wrapper', NULL),
 (15, NULL, NULL, 3, 'Bottom menu', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', NULL, NULL, NULL),
@@ -12,7 +11,6 @@ INSERT INTO `{#}widgets_bind` (`id`, `template_layouts`, `languages`, `widget_id
 INSERT INTO `{#}widgets_bind_pages` (`id`, `bind_id`, `template`, `is_enabled`, `page_id`, `position`, `ordering`) VALUES
 (7, 6, 'default', 1, 1, 'right-bottom', 0),
 (10, 10, 'default', 1, 1, 'left-bottom', 1),
-(11, 11, 'default', 1, 1, 'left-bottom', 4),
 (12, 12, 'default', 1, 147, 'right-bottom', 3),
 (14, 14, 'default', 1, 1, 'right-bottom', 1),
 (15, 15, 'default', 1, 0, 'footer', 0),

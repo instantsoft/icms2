@@ -91,61 +91,6 @@ CREATE TABLE `{#}jobs` (
   KEY `attempts` (`attempts`,`is_locked`,`date_started`,`priority`,`date_created`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Очередь';
 
-DROP TABLE IF EXISTS `{#}comments`;
-CREATE TABLE `{#}comments` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) unsigned DEFAULT NULL COMMENT 'ID родительского комментария',
-  `level` tinyint(4) unsigned DEFAULT NULL COMMENT 'Уровень вложенности',
-  `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Порядковый номер в дереве',
-  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID автора',
-  `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата публикации',
-  `date_last_modified` timestamp NULL DEFAULT NULL COMMENT 'Дата изменения',
-  `target_controller` varchar(32) DEFAULT NULL COMMENT 'Контроллер комментируемого контента',
-  `target_subject` varchar(32) DEFAULT NULL COMMENT 'Объект комментирования',
-  `target_id` int(11) unsigned DEFAULT NULL COMMENT 'ID объекта комментирования',
-  `target_url` varchar(250) DEFAULT NULL COMMENT 'URL объекта комментирования',
-  `target_title` varchar(100) DEFAULT NULL COMMENT 'Заголовок объекта комментирования',
-  `author_name` varchar(100) DEFAULT NULL COMMENT 'Имя автора (гостя)',
-  `author_email` varchar(100) DEFAULT NULL COMMENT 'E-mail автора (гостя)',
-  `author_ip` varbinary(16) DEFAULT NULL COMMENT 'ip адрес',
-  `content` text COMMENT 'Текст комментария',
-  `content_html` text COMMENT 'Текст после типографа',
-  `is_deleted` tinyint(1) unsigned DEFAULT NULL COMMENT 'Комментарий удален?',
-  `is_private` tinyint(1) unsigned DEFAULT '0' COMMENT 'Только для друзей?',
-  `rating` int(11) NOT NULL DEFAULT '0',
-  `is_approved` tinyint(1) unsigned DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `target_id` (`target_id`,`target_controller`,`target_subject`,`ordering`),
-  KEY `author_ip` (`author_ip`),
-  KEY `is_approved` (`is_approved`,`is_deleted`,`date_pub`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Комментарии пользователей';
-
-DROP TABLE IF EXISTS `{#}comments_rating`;
-CREATE TABLE `{#}comments_rating` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `comment_id` int(11) unsigned DEFAULT NULL,
-  `user_id` int(11) unsigned DEFAULT NULL,
-  `score` tinyint(4) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `comment_id` (`comment_id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `{#}comments_tracks`;
-CREATE TABLE `{#}comments_tracks` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) unsigned DEFAULT NULL,
-  `target_controller` varchar(32) DEFAULT NULL,
-  `target_subject` varchar(32) DEFAULT NULL,
-  `target_id` int(11) unsigned DEFAULT NULL,
-  `target_url` varchar(250) DEFAULT NULL,
-  `target_title` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `target_id` (`target_id`,`target_controller`,`target_subject`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Подписки пользователей на новые комментарии';
-
 DROP TABLE IF EXISTS `{#}content_datasets`;
 CREATE TABLE `{#}content_datasets` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -279,7 +224,6 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (1, 'Панель управления', 'admin', 1, '---\ndashboard_order:\n  stat: 0\n  activity: 1\n  news: 2\n  sysinfo: 3\n  resources: 4\n  users_online: 5\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 0),
 (2, 'Контент', 'content', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 0),
 (3, 'Профили пользователей', 'users', 1, '---\nis_ds_online: 1\nis_ds_rating: 1\nis_ds_popular: 1\nis_filter: 1\nis_auth_only: null\nis_status: 1\nis_wall: 1\nis_themes_on: 1\nmax_tabs: 6\nis_friends_on: 1\nis_karma: 1\nis_karma_comments: 1\nkarma_time: 30\nrestricted_slugs: |\n  *admin*\r\n  *moder*\nlimit: 15\nlist_allowed: [ ]\nshow_user_groups: 1\nshow_reg_data: 1\nshow_last_visit: 1\nprofile_max_friends_count: 10\nseo_keys:\nseo_desc:\ntag_title:\ntag_desc:\ntag_h1:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(4, 'Комментарии', 'comments', 1, '---\ndisable_icms_comments: null\nis_guests: 1\nguest_ip_delay: 1\nrestricted_ips: \"\"\ndim_negative: 1\nupdate_user_rating: 1\nlimit: 20\nseo_keys: \"\"\nseo_desc: \"\"\nis_guests_moderate: 1\nrestricted_emails: \"\"\nrestricted_names: \"\"\nlimit_nesting: 5\nshow_author_email: 1\neditor: \"4\"\neditor_presets: null\nshow_list:\n  - \"0\"\ntypograph_id: \"1\"\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (5, 'Личные сообщения', 'messages', 1, '---\nlimit: 10\ngroups_allowed: [ ]\neditor: \"2\"\neditor_presets: null\ntime_delete_old: 0\nrealtime_mode: ajax\nrefresh_time: 15\nsocket_host: \"\"\nsocket_port: 3000\nuse_queue: null\nis_enable_pm: 1\nis_contact_first_select: null\ntypograph_id: \"2\"\nemail_template: \"\"\n', 'InstantCMS Team', 'https://instantcms.ru/', '2.0', 1),
 (6, 'Авторизация и регистрация', 'auth', 1, '---\nis_reg_enabled: 1\nreg_reason: >\n  К сожалению, нам пока\n  не нужны новые\n  пользователи\nis_reg_invites: null\nreg_captcha: null\nverify_email: null\nverify_exp: 48\nauth_captcha: null\nrestricted_emails: |\n  *@shitmail.me\r\n  *@mailspeed.ru\r\n  *@temp-mail.ru\r\n  *@guerrillamail.com\r\n  *@12minutemail.com\r\n  *@mytempemail.com\r\n  *@spamobox.com\r\n  *@disposableinbox.com\r\n  *@filzmail.com\r\n  *@freemail.ms\r\n  *@anonymbox.com\r\n  *@lroid.com\r\n  *@yopmail.com\r\n  *@TempEmail.net\r\n  *@spambog.com\r\n  *@mailforspam.com\r\n  *@spam.su\r\n  *@no-spam.ws\r\n  *@mailinator.com\r\n  *@spamavert.com\r\n  *@trashcanmail.com\nrestricted_names: |\n  admin*\r\n  админ*\r\n  модератор\r\n  moderator\nrestricted_ips:\nis_invites: 1\nis_invites_strict: 1\ninvites_period: 7\ninvites_qty: 3\ninvites_min_karma: 0\ninvites_min_rating: 0\ninvites_min_days: 0\nreg_auto_auth: 1\nfirst_auth_redirect: profileedit\nauth_redirect: none\ndef_groups:\n  - 3\nis_site_only_auth_users: null\nguests_allow_controllers:\n  - auth\n  - geo\nseo_keys:\nseo_desc:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (10, 'Рейтинг', 'rating', 1, '---\nis_hidden: 1\nis_show: 1\nallow_guest_vote: null\ntemplate: widget\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
@@ -466,14 +410,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (11, 'frontpage', 'auth', 11, 1),
 (12, 'page_is_allowed', 'auth', 12, 1),
 (13, 'frontpage_types', 'auth', 13, 1),
-(14, 'content_after_update', 'comments', 14, 1),
-(16, 'admin_dashboard_chart', 'comments', 16, 1),
-(17, 'user_privacy_types', 'comments', 17, 1),
-(18, 'user_login', 'comments', 18, 1),
-(19, 'user_notify_types', 'comments', 19, 1),
-(20, 'user_delete', 'comments', 20, 1),
-(21, 'user_tab_info', 'comments', 21, 1),
-(22, 'user_tab_show', 'comments', 22, 1),
 (23, 'fulltext_search', 'content', 23, 1),
 (24, 'admin_dashboard_chart', 'content', 24, 1),
 (25, 'menu_content', 'content', 25, 1),
@@ -531,7 +467,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (117, 'user_notify_types', 'wall', 117, 1),
 (118, 'user_delete', 'wall', 118, 1),
 (119, 'page_is_allowed', 'widgets', 119, 1),
-(122, 'moderation_list', 'comments', 122, 1),
 (123, 'content_groups_before_delete', 'moderation', 123, 1),
 (124, 'comments_after_refuse', 'moderation', 124, 1),
 (127, 'admin_subscriptions_list', 'content', 127, 1),
@@ -542,15 +477,10 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (151, 'images_before_upload', 'typograph', 151, 1),
 (152, 'engine_start', 'content', 152, 1),
 (155, 'user_notify_types', 'rating', 155, 1),
-(156, 'content_before_item', 'comments', 156, 1),
 (157, 'content_before_item', 'rating', 157, 1),
-(158, 'content_item_form', 'comments', 158, 1),
-(159, 'ctype_basic_form', 'comments', 159, 1),
 (160, 'ctype_basic_form', 'rating', 160, 1),
 (162, 'photos_before_item', 'rating', 162, 1),
-(163, 'photos_before_item', 'comments', 163, 1),
 (164, 'comments_targets', 'content', 164, 1),
-(166, 'content_before_list', 'comments', 166, 1),
 (167, 'admin_dashboard_block', 'admin', 167, 1),
 (169, 'user_notify_types', 'content', 169, 1),
 (170, 'form_users_password_2fa', 'authga', 170, 1),
@@ -570,14 +500,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (187, 'widget_menu_form', 'bootstrap4', 187, 1),
 (190, 'db_nested_tables', 'content', 190, 1),
 (191, 'widget_content_list_form', 'content', 191, 1),
-(202, 'content_after_delete', 'comments', 202, 1),
 (203, 'content_after_delete', 'rating', 203, 1),
-(207, 'content_after_restore', 'comments', 207, 1),
-(208, 'content_after_trash_put', 'comments', 208, 1),
 (214, 'render_widget_menu_menu', 'bootstrap4', 214, 1),
 (215, 'engine_start', 'redirect', 215, 1),
-(216, 'restore_user', 'comments', 216, 1),
-(217, 'set_user_is_deleted', 'comments', 217, 1),
 (218, 'comments_after_delete_list', 'moderation', 218, 1),
 (219, 'form_get', 'languages', 219, 1),
 (220, 'widget_options_full_form', 'languages', 220, 1),
@@ -595,7 +520,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (235, 'frontpage_action_index', 'languages', 235, 1),
 (236, 'content_before_item', 'languages', 236, 1),
 (237, 'content_before_list', 'languages', 237, 1),
-(238, 'content_item_form', 'languages', 238, 1);
+(238, 'content_item_form', 'languages', 238, 1),
+(240, 'photos_after_delete_list', 'rating', 240, 1);
 
 DROP TABLE IF EXISTS `{#}images_presets`;
 CREATE TABLE `{#}images_presets` (
@@ -675,7 +601,6 @@ INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `orde
 (36, 2, 0, 'Черновики', '{moderation:draft}', 4, '---\ntarget: _self\nclass: draft\nicon: cloud\n', '---\n- 0\n', NULL),
 (37, 2, 0, 'Модерация', '{moderation:panel}', 4, '---\ntarget: _self\nclass: checklist\nicon: user-graduate\n', '---\n- 5\n- 6\n', NULL),
 (41, 2, 0, 'На модерации', '{moderation:user_panel}', 4, '---\ntarget: _self\nclass: onchecklist\nicon: clipboard-check\n', '---\n- 0\n', NULL),
-(38, 1, 0, 'Комментарии', 'comments', 8, '---\nclass:', '---\n- 0\n', NULL),
 (43, 2, 0, 'Выйти', 'auth/logout?csrf_token={csrf_token}', 12, '---\ntarget: _self\nclass: logout\nicon: sign-out-alt\n', '---\n- 0\n', NULL);
 
 DROP TABLE IF EXISTS `{#}moderators`;
@@ -755,23 +680,15 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (6, 'content', 'delete_cat', 'flag', NULL),
 (8, 'content', 'rate', 'flag', NULL),
 (9, 'content', 'privacy', 'flag', NULL),
-(10, 'comments', 'add', 'flag', NULL),
-(11, 'comments', 'edit', 'list', 'own,all'),
-(12, 'comments', 'delete', 'list', 'own,all,full_delete'),
 (13, 'content', 'view_all', 'flag', NULL),
-(14, 'comments', 'view_all', 'flag', NULL),
 (18, 'content', 'limit', 'number', NULL),
 (19, 'users', 'vote_karma', 'flag', NULL),
-(20, 'comments', 'rate', 'flag', NULL),
-(21, 'comments', 'karma', 'number', NULL),
 (22, 'content', 'karma', 'number', NULL),
 (24, 'content', 'pub_late', 'flag', NULL),
 (25, 'content', 'pub_long', 'list', 'days,any'),
 (26, 'content', 'pub_max_days', 'number', NULL),
 (27, 'content', 'pub_max_ext', 'flag', NULL),
 (28, 'content', 'pub_on', 'flag', NULL),
-(29, 'content', 'disable_comments', 'flag', NULL),
-(30, 'comments', 'add_approved', 'flag', NULL),
 (32, 'content', 'add_to_parent', 'list', 'to_own,to_other,to_all'),
 (33,  'content',  'bind_to_parent',  'list',  'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all'),
 (34, 'content',  'bind_off_parent',  'list',  'own,all'),
@@ -787,7 +704,6 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (48, 'users', 'change_email', 'flag', NULL),
 (49, 'users', 'change_email_period', 'number', NULL),
 (50, 'users', 'change_slug', 'flag', NULL),
-(51, 'comments', 'times', 'number', NULL),
 (52, 'content', 'edit_times', 'number', NULL),
 (53, 'content', 'delete_times', 'number', NULL),
 (54, 'users', 'wall_add', 'flag', NULL),
@@ -805,24 +721,8 @@ CREATE TABLE `{#}perms_users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Привязка правил доступа к группам пользователей';
 
 INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
-(10, 4, 'comments', '1'),
-(11, 4, 'comments', 'own'),
 (19, 4, 'users', '1'),
-(10, 5, 'comments', '1'),
-(12, 5, 'comments', 'all'),
-(11, 5, 'comments', 'all'),
-(14, 5, 'comments', '1'),
-(19, 5, 'users', '1'),
-(10, 3, 'comments', '1'),
-(12, 3, 'comments', 'own'),
-(11, 3, 'comments', 'own'),
-(10, 6, 'comments', '1'),
-(12, 6, 'comments', 'all'),
-(11, 6, 'comments', 'all'),
-(20, 4, 'comments', '1'),
-(20, 5, 'comments', '1'),
-(20, 6, 'comments', '1'),
-(14, 6, 'comments', '1');
+(19, 5, 'users', '1');
 
 DROP TABLE IF EXISTS `{#}rating_log`;
 CREATE TABLE `{#}rating_log` (
@@ -1157,7 +1057,6 @@ CREATE TABLE `{#}users_tabs` (
 
 INSERT INTO `{#}users_tabs` (`id`, `title`, `controller`, `name`, `is_active`, `ordering`) VALUES
 (3, 'Друзья', 'users', 'friends', 1, 2),
-(4, 'Комментарии', 'comments', 'comments', 1, 10),
 (6, 'Репутация', 'users', 'karma', 1, 11),
 (7, 'Подписчики', 'users', 'subscribers', 1, 3);
 
@@ -1232,7 +1131,6 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (3, NULL, 'menu', 'Меню', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (4, 'content', 'list', 'Список контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (5, 'content', 'categories', 'Категории', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(7, 'comments', 'list', 'Новые комментарии', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (8, 'users', 'online', 'Кто онлайн', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (9, 'users', 'avatar', 'Аватар пользователя', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (11, 'content', 'slider', 'Слайдер контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
@@ -1325,4 +1223,4 @@ INSERT INTO `{#}wysiwygs_presets` (`id`, `wysiwyg_name`, `options`, `title`) VAL
 (1, 'markitup', '{\"buttons\":[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"7\",\"14\"],\"skin\":\"simple\"}', 'Фотографии'),
 (2, 'redactor', '{\"plugins\":[\"smiles\"],\"buttons\":[\"bold\",\"italic\",\"deleted\",\"unorderedlist\",\"image\",\"video\",\"link\"],\"convertVideoLinks\":1,\"convertDivs\":null,\"toolbarFixedBox\":null,\"autoresize\":null,\"pastePlainText\":1,\"removeEmptyTags\":1,\"linkNofollow\":1,\"minHeight\":\"58\",\"placeholder\":\"\\u0412\\u0432\\u0435\\u0434\\u0438\\u0442\\u0435 \\u0441\\u043e\\u043e\\u0431\\u0449\\u0435\\u043d\\u0438\\u0435\"}', 'Редактор для личных сообщений'),
 (3, 'tinymce', '{\"toolbar\":\"blocks codesample blockquote | bold italic underline strikethrough numlist bullist | image link unlink media table  emoticons spoiler-add | fullscreen\",\"quickbars_selection_toolbar\":\"bold italic underline | quicklink h2 h3 blockquote\",\"quickbars_insert_toolbar\":\"quickimage quicktable\",\"plugins\":[\"autoresize\"],\"skin\":\"icms\",\"forced_root_block\":\"p\",\"newline_behavior\":\"default\",\"block_formats\":[\"p\",\"h2\",\"h3\",\"h4\",\"h5\"],\"toolbar_mode\":\"floating\",\"toolbar_sticky\":null,\"image_caption\":null,\"image_title\":1,\"image_description\":null,\"image_dimensions\":null,\"image_advtab\":null,\"statusbar\":null,\"min_height\":350,\"max_height\":900,\"placeholder\":\"\",\"images_preset\":\"big\",\"allow_mime_types\":{\"3\":null,\"7\":null,\"4\":null,\"6\":null}}', 'По умолчанию'),
-(4, 'tinymce', '{\"toolbar\":\"bold italic underline strikethrough | numlist bullist blockquote | link image media spoiler-add | emoticons\",\"quickbars_selection_toolbar\":\"bold italic underline | quicklink blockquote\",\"quickbars_insert_toolbar\":\"quickimage\",\"plugins\":[\"autoresize\"],\"skin\":\"icms\",\"forced_root_block\":\"p\",\"block_formats\":[\"p\"],\"toolbar_mode\":\"floating\",\"image_caption\":null,\"image_title\":null,\"image_description\":null,\"image_dimensions\":null,\"image_advtab\":null,\"statusbar\":null,\"min_height\":350,\"max_height\":700,\"images_preset\":\"big\",\"allow_mime_types\":{\"3\":null,\"4\":null,\"5\":null,\"6\":null}}', 'Для комментариев');
+(4, 'tinymce', '{\"toolbar\":\"bold italic underline strikethrough | numlist bullist blockquote | link image media spoiler-add | emoticons\",\"quickbars_selection_toolbar\":\"bold italic underline | quicklink blockquote\",\"quickbars_insert_toolbar\":\"quickimage\",\"plugins\":[\"autoresize\"],\"skin\":\"icms\",\"forced_root_block\":\"p\",\"block_formats\":[\"p\"],\"toolbar_mode\":\"floating\",\"image_caption\":null,\"image_title\":null,\"image_description\":null,\"image_dimensions\":null,\"image_advtab\":null,\"statusbar\":null,\"min_height\":350,\"max_height\":700,\"images_preset\":\"big\",\"allow_mime_types\":{\"3\":null,\"4\":null,\"5\":null,\"6\":null}}', 'Для комментариев и стены');

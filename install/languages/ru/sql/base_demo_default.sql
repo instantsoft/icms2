@@ -14,11 +14,6 @@ INSERT INTO `{#}users_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `order
 (11, NULL, 'movies', 'Любимые фильмы', NULL, 5, 'Предпочтения', 'string', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
 (12, NULL, 'site', 'Сайт', 'Ваш персональный веб-сайт', 10, 'Контакты', 'url', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nredirect: 1\nauto_http: 1\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n');
 
-INSERT INTO `{#}comments` (`id`, `parent_id`, `level`, `ordering`, `user_id`, `date_pub`, `target_controller`, `target_subject`, `target_id`, `target_url`, `target_title`, `author_name`, `author_email`, `author_ip`, `content`, `content_html`, `is_deleted`, `is_private`, `rating`) VALUES
-(3, 0, 1, 1, 6, DATE_SUB(NOW(),INTERVAL 4 MINUTE), 'content', 'articles', 4, 'articles/4-nedonasyschennyi-almaz-predposylki-i-razvitie.html', 'Недонасыщенный алмаз: предпосылки и развитие', NULL, NULL, NULL, 'Базальтовый слой <i>разогревает сталактит</i>, где присутствуют моренные суглинки днепровского возраста.', 'Базальтовый слой <i>разогревает сталактит</i>, где присутствуют моренные суглинки днепровского возраста.', 1, 0, 1),
-(4, 0, 1, 1, 1, DATE_SUB(NOW(),INTERVAL 3 MINUTE), 'content', 'articles', 11, 'articles/11-obschestvennyi-analiz-zarubezhnogo-opyta.html', 'Общественный анализ зарубежного опыта', NULL, NULL, NULL, 'Отличная статья, все очень доходчиво и познавательно', 'Отличная статья, все очень доходчиво и познавательно', NULL, 0, 0),
-(5, 4, 2, 2, 1, DATE_SUB(NOW(),INTERVAL 1 MINUTE), 'content', 'articles', 11, 'articles/11-obschestvennyi-analiz-zarubezhnogo-opyta.html', 'Общественный анализ зарубежного опыта', NULL, NULL, NULL, 'Ответ на комментарий выше', 'Ответ на комментарий выше', NULL, 0, 0);
-
 INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `ordering`, `is_visible`, `filters`, `sorting`, `index`, `groups_view`, `groups_hide`) VALUES
 (1, 5, 'all', 'Все', 1, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
 (2, 5, 'reviews', 'Рецензии', 2, 1, '---\n- \n  field: kind\n  condition: eq\n  value: 2\n', '---\n- \n  by: date_pub\n  to: desc\n', 'dataset_reviews', '---\n- 0\n', NULL),
@@ -30,7 +25,6 @@ INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `ordering`
 (8, 6, 'weekly', 'за неделю', 3, 1, '---\n- \n  field: date_pub\n  condition: dy\n  value: 7\n', '---\n- \n  by: rating\n  to: desc\n', 'dataset_daily', '---\n- 0\n', NULL),
 (9, 6, 'monthly', 'за месяц', 4, 1, '---\n- \n  field: date_pub\n  condition: dy\n  value: 31\n', '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
 (10, 10, 'latest', 'Последние', 1, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
-(11, 10, 'discussed', 'Обсуждаемые', 2, 1, NULL, '---\n- \n  by: comments\n  to: desc\n', 'dataset_discussed', '---\n- 0\n', NULL),
 (12, 10, 'popular', 'Популярные', 3, 1, NULL, '---\n- \n  by: rating\n  to: desc\n', 'dataset_popular', '---\n- 0\n', NULL),
 (13, 9, 'all', 'Новые', 1, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
 (14, 9, 'cheap', 'Сначала дешевые', 2, 1, NULL, '---\n- \n  by: price\n  to: asc\n', 'dataset_cheap', '---\n- 0\n', NULL),

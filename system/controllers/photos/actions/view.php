@@ -6,12 +6,7 @@ class actionPhotosView extends cmsAction {
 
     private $related_title = '';
 
-    public function __construct($controller, $params = []) {
-
-        parent::__construct($controller, $params);
-
-        cmsCore::loadControllerLanguage('content');
-    }
+    protected $extended_langs = ['content'];
 
     public function run($id = false){
 

@@ -40,11 +40,8 @@ CREATE TABLE `{#}activity_types` (
 
 INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
 (1, 1, 'content', 'add.pages', 'Добавление страниц', 'добавляет страницу %s'),
-(2, 1, 'comments', 'vote.comment', 'Оценка комментария', 'оценил комментарий на странице %s'),
 (7, 1, 'users', 'friendship', 'Дружба', 'и %s становятся друзьями'),
 (8, 1, 'users', 'signup', 'Регистрация', 'регистрируется. Приветствуем!'),
-(10, 1, 'groups', 'join', 'Вступление в группу', 'вступает в группу %s'),
-(11, 1, 'groups', 'leave', 'Выход из группы', 'выходит из группы %s'),
 (12, 1, 'users', 'status', 'Изменение статуса', '&rarr; %s'),
 (19, 1, 'users', 'avatar', 'Изменение аватара', 'изменяет аватар');
 
