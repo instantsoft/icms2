@@ -198,6 +198,30 @@ function get_packages_sql_list() {
     }));
 }
 
+function get_files_list($directory, $pattern = '*.*', $is_strip_ext = false) {
+
+    $pattern = $directory . '/' . $pattern;
+
+    $list = [];
+
+    $files = glob($pattern);
+
+    if (!$files) { return $list; }
+
+    foreach ($files as $file) {
+
+        $file = basename($file);
+
+        if ($is_strip_ext) {
+            $file = pathinfo($file, PATHINFO_FILENAME);
+        }
+
+        $list[] = $file;
+    }
+
+    return $list;
+}
+
 function copy_folder($dir_source, $dir_target) {
 
     if (is_dir($dir_source)) {
@@ -278,4 +302,8 @@ function delete_manifest_files ($manifest) {
             }
         }
     }
+}
+
+function get_console_confirm() {
+    return strtolower(trim(fgets(STDIN))) === 'y' ? true : false;
 }

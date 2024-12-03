@@ -145,6 +145,7 @@
 
     define('LANG_RB_ERROR_MANIFEST',        'Complete the manifest.php file');
     define('LANG_RB_TITLE',                 'InstantCMS %s customization');
+    define('LANG_RB_DEL_ALL',               'Remove all components, leaving the minimum?');
     define('LANG_RB_CREATE_ZIP',            'Create a zip archive?');
     define('LANG_RB_START',                 'Customizing InstantCMS...');
     define('LANG_RB_DEL_COM',               'Deleting the %s component');

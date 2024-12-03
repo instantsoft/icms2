@@ -226,7 +226,6 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (3, 'User Profiles', 'users', 1, '---\nis_ds_online: 1\nis_ds_rating: 1\nis_ds_popular: 1\nis_filter: 1\nis_auth_only: null\nis_status: 1\nis_wall: 1\nis_themes_on: 1\nmax_tabs: 6\nis_friends_on: 1\nis_karma: 1\nis_karma_comments: 1\nkarma_time: 30\nrestricted_slugs: |\n  *admin*\r\n  *moder*\nlimit: 15\nlist_allowed: [ ]\nshow_user_groups: 1\nshow_reg_data: 1\nshow_last_visit: 1\nprofile_max_friends_count: 10\nseo_keys:\nseo_desc:\ntag_title:\ntag_desc:\ntag_h1:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (5, 'Private messages', 'messages', 1, '---\nlimit: 10\ngroups_allowed: [ ]\neditor: \"2\"\neditor_presets: null\ntime_delete_old: 0\nrealtime_mode: ajax\nrefresh_time: 15\nsocket_host: \"\"\nsocket_port: 3000\nuse_queue: null\nis_enable_pm: 1\nis_contact_first_select: null\ntypograph_id: \"2\"\nemail_template: \"\"\n', 'InstantCMS Team', 'https://instantcms.ru/', '2.0', 1),
 (6, 'Authorization & Registration', 'auth', 1, '---\nis_reg_enabled: 1\nreg_reason: >\n  We apologize, but,\n  we do not accept\n  new users at the moment\nis_reg_invites: null\nreg_captcha: null\nverify_email: null\nverify_exp: 48\nauth_captcha: null\nrestricted_emails: |\n  *@shitmail.me\r\n  *@mailspeed.ru\r\n  *@temp-mail.ru\r\n  *@guerrillamail.com\r\n  *@12minutemail.com\r\n  *@mytempemail.com\r\n  *@spamobox.com\r\n  *@disposableinbox.com\r\n  *@filzmail.com\r\n  *@freemail.ms\r\n  *@anonymbox.com\r\n  *@lroid.com\r\n  *@yopmail.com\r\n  *@TempEmail.net\r\n  *@spambog.com\r\n  *@mailforspam.com\r\n  *@spam.su\r\n  *@no-spam.ws\r\n  *@mailinator.com\r\n  *@spamavert.com\r\n  *@trashcanmail.com\nrestricted_names: |\n  admin*\r\n  moderator\nrestricted_ips:\nis_invites: 1\nis_invites_strict: 1\ninvites_period: 7\ninvites_qty: 3\ninvites_min_karma: 0\ninvites_min_rating: 0\ninvites_min_days: 0\nreg_auto_auth: 1\nfirst_auth_redirect: profileedit\nauth_redirect: none\ndef_groups:\n  - 3\nis_site_only_auth_users: null\nguests_allow_controllers:\n  - auth\n  - geo\nseo_keys:\nseo_desc:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(10, 'Rating', 'rating', 1, '---\nis_hidden: 1\nis_show: 1\nallow_guest_vote: null\ntemplate: widget\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (11, 'Wall', 'wall', 1, '---\nlimit: 15\norder_by: date_last_reply\nshow_entries: 5\neditor: \"4\"\neditor_presets: null\ntypograph_id: \"1\"\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (12, 'reCAPTCHA', 'recaptcha', 1, '---\npublic_key:\nprivate_key:\ntheme: light\nlang: en\nsize: normal\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (13, 'Moderation Panel', 'moderation', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
@@ -438,8 +437,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (71, 'content_after_restore', 'moderation', 71, 1),
 (72, 'content_before_delete', 'moderation', 72, 1),
 (73, 'menu_moderation', 'moderation', 73, 1),
-(83, 'user_delete', 'rating', 83, 1),
-(84, 'content_before_list', 'rating', 84, 1),
 (85, 'captcha_html', 'recaptcha', 85, 1),
 (86, 'captcha_validate', 'recaptcha', 86, 1),
 (95, 'photos_before_item', 'search', 95, 1),
@@ -476,10 +473,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (150, 'tags_search_subjects', 'content', 150, 1),
 (151, 'images_before_upload', 'typograph', 151, 1),
 (152, 'engine_start', 'content', 152, 1),
-(155, 'user_notify_types', 'rating', 155, 1),
-(157, 'content_before_item', 'rating', 157, 1),
-(160, 'ctype_basic_form', 'rating', 160, 1),
-(162, 'photos_before_item', 'rating', 162, 1),
 (164, 'comments_targets', 'content', 164, 1),
 (167, 'admin_dashboard_block', 'admin', 167, 1),
 (169, 'user_notify_types', 'content', 169, 1),
@@ -500,7 +493,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (187, 'widget_menu_form', 'bootstrap4', 187, 1),
 (190, 'db_nested_tables', 'content', 190, 1),
 (191, 'widget_content_list_form', 'content', 191, 1),
-(203, 'content_after_delete', 'rating', 203, 1),
 (214, 'render_widget_menu_menu', 'bootstrap4', 214, 1),
 (215, 'engine_start', 'redirect', 215, 1),
 (218, 'comments_after_delete_list', 'moderation', 218, 1),
@@ -520,8 +512,7 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (235, 'frontpage_action_index', 'languages', 235, 1),
 (236, 'content_before_item', 'languages', 236, 1),
 (237, 'content_before_list', 'languages', 237, 1),
-(238, 'content_item_form', 'languages', 238, 1),
-(240, 'photos_after_delete_list', 'rating', 240, 1);
+(238, 'content_item_form', 'languages', 238, 1);
 
 DROP TABLE IF EXISTS `{#}images_presets`;
 CREATE TABLE `{#}images_presets` (
@@ -723,21 +714,6 @@ CREATE TABLE `{#}perms_users` (
 INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (19, 4, 'users', '1'),
 (19, 5, 'users', '1');
-
-DROP TABLE IF EXISTS `{#}rating_log`;
-CREATE TABLE `{#}rating_log` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'User ID',
-  `target_controller` varchar(32) DEFAULT NULL COMMENT 'Component (target content owner)',
-  `target_subject` varchar(32) DEFAULT NULL COMMENT 'Subject (target content type)',
-  `target_id` int(11) unsigned DEFAULT NULL COMMENT 'Subject ID (target content items)',
-  `score` tinyint(1) DEFAULT NULL COMMENT 'Score value',
-  `ip` varbinary(16) DEFAULT NULL COMMENT 'ip-address',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `target_id` (`target_id`,`target_controller`,`target_subject`),
-  KEY `ip` (`ip`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Rating scores';
 
 DROP TABLE IF EXISTS `{#}scheduler_tasks`;
 CREATE TABLE `{#}scheduler_tasks` (

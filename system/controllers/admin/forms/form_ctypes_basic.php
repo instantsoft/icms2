@@ -29,15 +29,18 @@ class formAdminCtypesBasic extends cmsForm {
 
         $item_fields = [
             'category'   => LANG_CATEGORY,
-            'hits_count' => LANG_HITS,
-            'comments'   => LANG_COMMENTS,
-            'rating'     => LANG_RATING,
-            'tags'       => LANG_TAGS
+            'hits_count' => LANG_HITS
         ];
+
+        foreach (['comments', 'rating', 'tags'] as $fname) {
+            if (cmsController::enabled($fname)) {
+                $item_fields[$fname] = string_lang($fname);
+            }
+        }
 
         if (!empty($ctype['name'])) {
 
-            $_item_fields = cmsCore::getModel('content')->orderBy('ordering')->getContentFields($ctype['name']);
+            $_item_fields = cmsCore::getModel('content')->getContentFields($ctype['name']);
 
             foreach ($_item_fields as $field) {
                 $item_fields[$field['name']] = $field['title'];

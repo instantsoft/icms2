@@ -145,6 +145,7 @@
 
     define('LANG_RB_ERROR_MANIFEST',        'Нет информации о сборке. Заполните файл manifest.php');
     define('LANG_RB_TITLE',                 'Кастомизация InstantCMS %s');
+    define('LANG_RB_DEL_ALL',               'Удалить все компоненты, оставив минимум?');
     define('LANG_RB_CREATE_ZIP',            'Создавать ZIP архив сборки?');
     define('LANG_RB_START',                 'Собираю InstantCMS...');
     define('LANG_RB_DEL_COM',               'Удаляю компонент %s...');

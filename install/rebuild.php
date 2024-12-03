@@ -53,20 +53,39 @@ define('LANG', $_lang);
 
 include PATH . 'languages/' . LANG . '/language.php';
 
+echo PHP_EOL .'#### ##    ##  ######  ########    ###    ##    ## ########  ######  ##     ##  ######
+ ##  ###   ## ##    ##    ##      ## ##   ###   ##    ##    ##    ## ###   ### ##    ##
+ ##  ####  ## ##          ##     ##   ##  ####  ##    ##    ##       #### #### ##
+ ##  ## ## ##  ######     ##    ##     ## ## ## ##    ##    ##       ## ### ##  ######
+ ##  ##  ####       ##    ##    ######### ##  ####    ##    ##       ##     ##       ##
+ ##  ##   ### ##    ##    ##    ##     ## ##   ###    ##    ##    ## ##     ## ##    ##
+#### ##    ##  ######     ##    ##     ## ##    ##    ##     ######  ##     ##  ######  '. PHP_EOL;
+echo PHP_EOL."\e[34m\e[1m#########################   ".sprintf(LANG_RB_TITLE, $core_version['version'])."   ##########################\e[0m".PHP_EOL.PHP_EOL;
+
 $manifest = include PATH . 'manifest.php';
 
-if (!array_filter($manifest)) {
+if (!$manifest) {
 
-    echo LANG_RB_ERROR_MANIFEST . PHP_EOL;
+    fopen('php://stdin', 'r');
+
+    echo "\e[33m".LANG_RB_DEL_ALL." (Y/N): ";
+
+    $is_delete_all = get_console_confirm();
+
+    if (!$is_delete_all) {
+
+        // @todo сделать выбор из консоли
+        exit(LANG_RB_ERROR_MANIFEST . PHP_EOL);
+    }
+
+    $manifest['removed'] = get_files_list(PATH.'manifests', '*.php', true);
 }
-
-echo PHP_EOL."\e[34m\e[1m###### ".sprintf(LANG_RB_TITLE, $core_version['version'])." ######\e[0m".PHP_EOL.PHP_EOL;
 
 fopen('php://stdin', 'r');
 
 echo "\e[33m".LANG_RB_CREATE_ZIP." (Y/N): ";
 
-$is_create_archive = strtolower(trim(fgets(STDIN))) === 'y' ? true : false;
+$is_create_archive = get_console_confirm();
 
 echo PHP_EOL.LANG_RB_START.PHP_EOL.PHP_EOL;
 
@@ -120,8 +139,8 @@ if ($is_create_archive) {
 
     exec('cd '.PATH_ICMS.'; /usr/bin/zip -FSr '.$archive_path.' .');
 
-    exit(PHP_EOL."\e[32m".sprintf(LANG_RB_SUCCES_ARCH, $archive_path)."\e[0m".PHP_EOL);
+    exit(PHP_EOL."\e[32m".sprintf(LANG_RB_SUCCES_ARCH, $archive_path)."\e[0m".PHP_EOL.PHP_EOL.PHP_EOL);
 }
 
 echo PHP_EOL."\e[32m".LANG_RB_DONE.PHP_EOL;
-exit(LANG_RB_DONE_HINT."\e[0m".PHP_EOL);
+exit(LANG_RB_DONE_HINT."\e[0m".PHP_EOL.PHP_EOL.PHP_EOL);

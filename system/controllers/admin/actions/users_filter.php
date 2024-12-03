@@ -6,16 +6,20 @@ class actionAdminUsersFilter extends cmsAction {
 
         $fields = cmsCore::getModel('content')->setTablePrefix('')->getContentFields('{users}');
 
+        $user_opts = cmsController::loadOptions('users');
+
+        if (!empty($user_opts['is_karma'])) {
+            $fields[] = [
+                'title'   => LANG_KARMA,
+                'name'    => 'karma',
+                'handler' => new fieldNumber('karma')
+            ];
+        }
+
         $fields[] = [
             'title'   => LANG_RATING,
             'name'    => 'rating',
             'handler' => new fieldNumber('rating')
-        ];
-
-        $fields[] = [
-            'title'   => LANG_KARMA,
-            'name'    => 'karma',
-            'handler' => new fieldNumber('karma')
         ];
 
         $fields[] = [

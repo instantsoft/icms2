@@ -116,7 +116,7 @@ function grid_content_items($controller, $ctype) {
         ]
     ];
 
-    if ($ctype['is_rating']) {
+    if ($ctype['is_rating'] && cmsController::enabled('rating')) {
 
         $columns['rating'] = [
             'title'      => LANG_RATING,
@@ -125,7 +125,7 @@ function grid_content_items($controller, $ctype) {
             'disable'    => true
         ];
     }
-    if ($ctype['is_comments']) {
+    if ($ctype['is_comments'] && cmsController::enabled('comments')) {
 
         $columns['comments'] = [
             'title'      => LANG_COMMENTS,

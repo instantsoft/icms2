@@ -15,22 +15,6 @@ class actionAdminContentFilter extends cmsAction {
 
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
-        if ($ctype['is_rating']) {
-            $fields[] = [
-                'title'   => LANG_RATING,
-                'name'    => 'rating',
-                'handler' => new fieldNumber('rating')
-            ];
-        }
-
-        if ($ctype['is_comments']) {
-            $fields[] = [
-                'title'   => LANG_COMMENTS,
-                'name'    => 'comments',
-                'handler' => new fieldNumber('comments')
-            ];
-        }
-
         if (!empty($ctype['options']['hits_on'])) {
             $fields[] = [
                 'title'   => LANG_HITS,

@@ -1,6 +1,8 @@
 <?php
 
-function grid_users($controller){
+function grid_users($controller) {
+
+    $user_opts = cmsController::loadOptions('users');
 
     $options = [
         'advanced_filter' => $controller->cms_template->href_to('users', ['filter']),
@@ -112,6 +114,10 @@ function grid_users($controller){
             }
         ]
     ];
+
+    if (empty($user_opts['is_karma'])) {
+        unset($columns['karma']);
+    }
 
     $actions = [
         [

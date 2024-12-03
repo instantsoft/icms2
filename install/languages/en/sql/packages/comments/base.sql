@@ -76,7 +76,9 @@ INSERT INTO `{#}events` (`event`, `listener`, `ordering`, `is_enabled`) VALUES
 ('content_after_trash_put', 'comments', 208, 1),
 ('restore_user', 'comments', 216, 1),
 ('set_user_is_deleted', 'comments', 217, 1),
-('photos_after_delete_list', 'comments', 239, 1);
+('photos_after_delete_list', 'comments', 239, 1),
+('admin_content_filter', 'comments', 240, 1),
+('admin_content_dataset_fields_list', 'comments', 241, 1);
 
 INSERT INTO `{#}menu_items` (`menu_id`, `parent_id`, `title`, `url`, `ordering`, `options`, `groups_view`, `groups_hide`) VALUES
 (1, 0, 'Comments', 'comments', 8, '---\nclass:', '---\n- 0\n', NULL);
