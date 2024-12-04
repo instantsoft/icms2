@@ -4,30 +4,31 @@ class onRecaptchaCaptchaValidate extends cmsAction {
 
     private $api_url = 'https://www.google.com/recaptcha/api/siteverify';
 
-    public function run($request){
+    public function run($request) {
 
         $response = $request->get('g-recaptcha-response', false);
-        if(!$response){ return false; }
+        if (!$response) {
+            return false;
+        }
 
-        return $this->callApi(array(
+        return $this->callApi([
             'secret'   => $this->options['private_key'],
             'response' => $response,
             'remoteip' => cmsUser::getIp()
-        ));
-
+        ]);
     }
 
     private function callApi($params) {
 
-        if (!function_exists('curl_init')){
+        if (!function_exists('curl_init')) {
 
-            $data = @file_get_contents($this->api_url.'?'.http_build_query($params));
+            $data = @file_get_contents($this->api_url . '?' . http_build_query($params));
 
         } else {
 
             $curl = curl_init();
 
-            if(strpos($this->api_url, 'https') !== false){
+            if (strpos($this->api_url, 'https') !== false) {
                 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             }
@@ -41,15 +42,15 @@ class onRecaptchaCaptchaValidate extends cmsAction {
             $data = curl_exec($curl);
 
             curl_close($curl);
-
         }
 
-        if(!$data){ return false; }
+        if (!$data) {
+            return false;
+        }
 
         $data = json_decode($data, true);
 
         return !empty($data['success']);
-
     }
 
 }

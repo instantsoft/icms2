@@ -472,7 +472,8 @@
 
     //CAPTCHA
     define('LANG_CAPTCHA_CODE',               'Защита от спама');
-    define('LANG_CAPTCHA_ERROR',               'Неправильно указан код защиты от спама');
+    define('LANG_CAPTCHA_ERROR',              'Неправильно указан код защиты от спама');
+    define('LANG_CAPTCHA_TYPE',               'Тип капчи');
 
     //LISTS
     define('LANG_NO_ITEMS',                   'Нет элементов для просмотра');

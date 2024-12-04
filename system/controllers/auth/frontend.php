@@ -213,9 +213,9 @@ class auth extends cmsFrontend {
 
             $fieldset_id = $form->addFieldset(LANG_CAPTCHA_CODE, 'regcaptcha');
 
-            $form->addField($fieldset_id,
-                    new fieldCaptcha('capcha')
-            );
+            $form->addField($fieldset_id, new fieldCaptcha('capcha', [
+                'options' => ['captcha_controller' => ($this->options['reg_captcha_type'] ?? 'recaptcha')]
+            ]));
         }
 
         return cmsEventsManager::hook('form_auth_registration_full', [$form, $fieldsets]);

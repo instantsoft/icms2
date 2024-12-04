@@ -226,13 +226,8 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (3, 'Профили пользователей', 'users', 1, '---\nis_ds_online: 1\nis_ds_rating: 1\nis_ds_popular: 1\nis_filter: 1\nis_auth_only: null\nis_status: 1\nis_wall: 1\nis_themes_on: 1\nmax_tabs: 6\nis_friends_on: 1\nis_karma: 1\nis_karma_comments: 1\nkarma_time: 30\nrestricted_slugs: |\n  *admin*\r\n  *moder*\nlimit: 15\nlist_allowed: [ ]\nshow_user_groups: 1\nshow_reg_data: 1\nshow_last_visit: 1\nprofile_max_friends_count: 10\nseo_keys:\nseo_desc:\ntag_title:\ntag_desc:\ntag_h1:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (5, 'Личные сообщения', 'messages', 1, '---\nlimit: 10\ngroups_allowed: [ ]\neditor: \"2\"\neditor_presets: null\ntime_delete_old: 0\nrealtime_mode: ajax\nrefresh_time: 15\nsocket_host: \"\"\nsocket_port: 3000\nuse_queue: null\nis_enable_pm: 1\nis_contact_first_select: null\ntypograph_id: \"2\"\nemail_template: \"\"\n', 'InstantCMS Team', 'https://instantcms.ru/', '2.0', 1),
 (6, 'Авторизация и регистрация', 'auth', 1, '---\nis_reg_enabled: 1\nreg_reason: >\n  К сожалению, нам пока\n  не нужны новые\n  пользователи\nis_reg_invites: null\nreg_captcha: null\nverify_email: null\nverify_exp: 48\nauth_captcha: null\nrestricted_emails: |\n  *@shitmail.me\r\n  *@mailspeed.ru\r\n  *@temp-mail.ru\r\n  *@guerrillamail.com\r\n  *@12minutemail.com\r\n  *@mytempemail.com\r\n  *@spamobox.com\r\n  *@disposableinbox.com\r\n  *@filzmail.com\r\n  *@freemail.ms\r\n  *@anonymbox.com\r\n  *@lroid.com\r\n  *@yopmail.com\r\n  *@TempEmail.net\r\n  *@spambog.com\r\n  *@mailforspam.com\r\n  *@spam.su\r\n  *@no-spam.ws\r\n  *@mailinator.com\r\n  *@spamavert.com\r\n  *@trashcanmail.com\nrestricted_names: |\n  admin*\r\n  админ*\r\n  модератор\r\n  moderator\nrestricted_ips:\nis_invites: 1\nis_invites_strict: 1\ninvites_period: 7\ninvites_qty: 3\ninvites_min_karma: 0\ninvites_min_rating: 0\ninvites_min_days: 0\nreg_auto_auth: 1\nfirst_auth_redirect: profileedit\nauth_redirect: none\ndef_groups:\n  - 3\nis_site_only_auth_users: null\nguests_allow_controllers:\n  - auth\n  - geo\nseo_keys:\nseo_desc:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(11, 'Стена', 'wall', 1, '---\nlimit: 15\norder_by: date_last_reply\nshow_entries: 5\neditor: \"4\"\neditor_presets: null\ntypograph_id: \"1\"\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(12, 'Капча reCAPTCHA', 'recaptcha', 1, '---\npublic_key:\nprivate_key:\ntheme: light\nlang: ru\nsize: normal\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (13, 'Модерация', 'moderation', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(16, 'Генератор карты сайта и robots.txt', 'sitemap', 1, '---\nsources:\n  content|pages: 1\n  content|albums: 1\n  content|articles: 1\n  content|posts: 1\n  content|board: 1\n  content|news: 1\n  frontpage|root: 1\n  groups|profiles: 1\n  users|profiles: 1\nshow_lastmod: 1\nshow_changefreq: 1\ndefault_changefreq: daily\nshow_priority: 1\nrobots: |\n  User-agent: *\r\n  Disallow:\ngenerate_html_sitemap: null\nchangefreq:\n  content:\n    pages:\n    albums:\n    articles:\n    posts:\n    board:\n    news:\n  frontpage:\n    root:\n  groups:\n    profiles:\n  users:\n    profiles:\npriority:\n  content:\n    pages:\n    albums:\n    articles:\n    posts:\n    board:\n    news:\n  frontpage:\n    root: 1.0\n  groups:\n    profiles: 0.8\n  users:\n    profiles: 0.8\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(17, 'Поиск', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (19, 'Загрузка изображений', 'images', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(20, 'Редиректы', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\nis_check_refer: null\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (23, 'Wysiwyg редакторы', 'wysiwygs', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (25, 'Мультиязычность', 'languages', 1, '---\nservice: google\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (26, 'Типограф', 'typograph', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
@@ -437,12 +432,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (71, 'content_after_restore', 'moderation', 71, 1),
 (72, 'content_before_delete', 'moderation', 72, 1),
 (73, 'menu_moderation', 'moderation', 73, 1),
-(85, 'captcha_html', 'recaptcha', 85, 1),
-(86, 'captcha_validate', 'recaptcha', 86, 1),
-(95, 'photos_before_item', 'search', 95, 1),
-(96, 'content_before_list', 'search', 96, 1),
-(97, 'content_before_item', 'search', 97, 1),
-(98, 'before_print_head', 'search', 98, 1),
 (99, 'html_filter', 'typograph', 99, 1),
 (100, 'admin_dashboard_chart', 'users', 100, 1),
 (101, 'menu_users', 'users', 101, 1),
@@ -460,15 +449,11 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (113, 'sitemap_sources', 'users', 113, 1),
 (114, 'content_before_childs', 'users', 114, 1),
 (115, 'ctype_relation_childs', 'users', 115, 1),
-(116, 'admin_dashboard_chart', 'wall', 116, 1),
-(117, 'user_notify_types', 'wall', 117, 1),
-(118, 'user_delete', 'wall', 118, 1),
 (119, 'page_is_allowed', 'widgets', 119, 1),
 (123, 'content_groups_before_delete', 'moderation', 123, 1),
 (124, 'comments_after_refuse', 'moderation', 124, 1),
 (127, 'admin_subscriptions_list', 'content', 127, 1),
 (140, 'admin_dashboard_block', 'users', 140, 1),
-(141, 'engine_start', 'sitemap', 141, 1),
 (142, 'sitemap_sources', 'frontpage', 142, 1),
 (150, 'tags_search_subjects', 'content', 150, 1),
 (151, 'images_before_upload', 'typograph', 151, 1),
@@ -483,18 +468,11 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (174, 'users_before_edit_password', 'authga', 174, 1),
 (176, 'admin_col_scheme_options', 'bootstrap4', 176, 1),
 (178, 'admin_row_scheme_options', 'bootstrap4', 178, 1),
-(179, 'process_render_users_profile_view', 'wall', 179, 1),
-(180, 'process_render_groups_group_view', 'wall', 180, 1),
-(182, 'user_add_status', 'wall', 182, 1),
-(183, 'form_groups_options', 'wall', 183, 1),
-(184, 'form_users_options', 'wall', 184, 1),
-(185, 'user_privacy_types', 'wall', 185, 1),
 (186, 'ctype_field_users_after_update', 'bootstrap4', 186, 1),
 (187, 'widget_menu_form', 'bootstrap4', 187, 1),
 (190, 'db_nested_tables', 'content', 190, 1),
 (191, 'widget_content_list_form', 'content', 191, 1),
 (214, 'render_widget_menu_menu', 'bootstrap4', 214, 1),
-(215, 'engine_start', 'redirect', 215, 1),
 (218, 'comments_after_delete_list', 'moderation', 218, 1),
 (219, 'form_get', 'languages', 219, 1),
 (220, 'widget_options_full_form', 'languages', 220, 1),
@@ -697,8 +675,6 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (50, 'users', 'change_slug', 'flag', NULL),
 (52, 'content', 'edit_times', 'number', NULL),
 (53, 'content', 'delete_times', 'number', NULL),
-(54, 'users', 'wall_add', 'flag', NULL),
-(55, 'users', 'wall_delete', 'list', 'own,all'),
 (56, 'users', 'ban', 'flag', NULL);
 
 DROP TABLE IF EXISTS `{#}perms_users`;
@@ -736,7 +712,6 @@ CREATE TABLE `{#}scheduler_tasks` (
 
 INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`, `is_strict_period`, `date_last_run`, `is_active`, `is_new`) VALUES
 (1, 'Перевод пользователей между группами', 'users', 'migration', 1440, NULL, NULL, 1, 0),
-(2, 'Создание карты сайта', 'sitemap', 'generate', 1440, NULL, NULL, 1, 0),
 (3, 'Выдача приглашений пользователям', 'auth', 'send_invites', 1440, NULL, NULL, 1, 0),
 (4, 'Публикация контента по расписанию', 'content', 'publication', 1440, NULL, NULL, 1, 1),
 (5, 'Очистка удалённых личных сообщений', 'messages', 'clean', 1440, NULL, NULL, 1, 1),
@@ -1060,28 +1035,6 @@ CREATE TABLE `{#}users_auth_tokens` (
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Токены авторизации';
 
-DROP TABLE IF EXISTS `{#}wall_entries`;
-CREATE TABLE `{#}wall_entries` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата публикации',
-  `date_last_reply` timestamp NULL DEFAULT NULL COMMENT 'Дата последнего ответа',
-  `date_last_modified` timestamp NULL DEFAULT NULL COMMENT 'Дата изменения',
-  `controller` varchar(32) DEFAULT NULL COMMENT 'Компонент владелец профиля',
-  `profile_type` varchar(32) DEFAULT NULL COMMENT 'Тип профиля (пользователь/группа)',
-  `profile_id` int(11) unsigned DEFAULT NULL COMMENT 'ID профиля',
-  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID автора',
-  `parent_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'ID родительской записи',
-  `status_id` int(11) unsigned DEFAULT NULL COMMENT 'Связь со статусом пользователя',
-  `content` text COMMENT 'Текст записи',
-  `content_html` text COMMENT 'Текст после типографа',
-  PRIMARY KEY (`id`),
-  KEY `date_pub` (`date_pub`),
-  KEY `user_id` (`user_id`),
-  KEY `parent_id` (`parent_id`),
-  KEY `profile_id` (`profile_id`,`profile_type`),
-  KEY `status_id` (`status_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Записи на стенах профилей';
-
 DROP TABLE IF EXISTS `{#}widgets`;
 CREATE TABLE `{#}widgets` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -1111,7 +1064,6 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (9, 'users', 'avatar', 'Аватар пользователя', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (11, 'content', 'slider', 'Слайдер контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (12, 'auth', 'auth', 'Форма авторизации', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(13, 'search', 'search', 'Поиск', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (14, NULL, 'html', 'HTML блок', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (15, 'content', 'filter', 'Фильтр контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (19, 'auth', 'register', 'Форма регистрации', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),

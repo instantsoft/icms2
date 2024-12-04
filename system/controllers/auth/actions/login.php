@@ -29,7 +29,7 @@ class actionAuthLogin extends cmsAction {
 
         $form = $this->getForm('login');
 
-        if ($this->options['auth_captcha'] && cmsUser::sessionGet('is_auth_captcha')) {
+        if ($this->options['auth_captcha']) {
 
             $form = $this->addCapchaField($form);
         }
@@ -55,20 +55,11 @@ class actionAuthLogin extends cmsAction {
 
                 cmsUser::addSessionMessage(LANG_LOGIN_ERROR, 'error');
 
-                if ($this->options['auth_captcha'] && !$is_site_offline) {
-
-                    cmsUser::sessionSet('is_auth_captcha', true);
-
-                    $form = $this->addCapchaField($form);
-                }
-
             } else {
 
                 $logged_user = cmsUser::login($data['login_email'], $data['login_password'], $data['remember'], false);
 
                 if ($logged_user) {
-
-                    cmsUser::sessionUnset('is_auth_captcha');
 
                     // Включена ли двухфакторная авторизация
                     if (!empty($logged_user['2fa']) && !empty($this->options['2fa_params'][$logged_user['2fa']])) {
@@ -138,13 +129,6 @@ class actionAuthLogin extends cmsAction {
                 } else {
 
                     cmsUser::addSessionMessage(LANG_LOGIN_ERROR, 'error');
-
-                    if ($this->options['auth_captcha'] && !$is_site_offline) {
-
-                        cmsUser::sessionSet('is_auth_captcha', true);
-
-                        $form = $this->addCapchaField($form);
-                    }
                 }
             }
 
@@ -157,7 +141,7 @@ class actionAuthLogin extends cmsAction {
             cmsUser::addSessionMessage(LANG_LOGIN_REQUIRED, 'error');
         }
 
-        if ($this->request->isAjax() && cmsUser::sessionGet('is_auth_captcha')) {
+        if ($this->request->isAjax() && $this->options['auth_captcha']) {
             $ajax_page_redirect = true;
         }
 
@@ -182,9 +166,9 @@ class actionAuthLogin extends cmsAction {
 
         $fieldset_id = $form->addFieldset(LANG_CAPTCHA_CODE, 'regcaptcha');
 
-        $form->addField($fieldset_id,
-            new fieldCaptcha('capcha')
-        );
+        $form->addField($fieldset_id, new fieldCaptcha('capcha', [
+            'options' => ['captcha_controller' => ($this->options['auth_captcha_type'] ?? 'recaptcha')]
+        ]));
 
         $this->is_added_capcha_field = true;
 

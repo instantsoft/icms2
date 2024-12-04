@@ -716,11 +716,9 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (13, 6, 'news', '1');
 
 INSERT INTO `{#}users_statuses` (`id`, `user_id`, `date_pub`, `content`, `replies_count`, `wall_entry_id`) VALUES
-(1, 1, CURRENT_TIMESTAMP, 'We are all made of stars © Moby', 1, 1);
+(1, 1, CURRENT_TIMESTAMP, 'We are all made of stars © Moby', 1, NULL);
 
-INSERT INTO `{#}wall_entries` (`id`, `date_pub`, `controller`, `profile_type`, `profile_id`, `user_id`, `parent_id`, `status_id`, `content`, `content_html`) VALUES
-(1, CURRENT_TIMESTAMP, 'users', 'user', 1, 1, 0, 1, 'We are all made of stars © Moby', 'We are all made of stars © Moby'),
-(2, CURRENT_TIMESTAMP, 'users', 'user', 1, 1, 1, NULL, 'Thank you for viewing my profile page!', 'Thank you for viewing my profile page!');
+UPDATE `{#}users` SET `status_id` = 1, `status_text` = 'We are all made of stars © Moby' WHERE `id` = 1;
 
 INSERT INTO `{#}widgets_pages` (`id`, `controller`, `name`, `title_const`, `title_subject`, `title`, `url_mask`, `url_mask_not`) VALUES
 (143, 'content', 'pages.all', 'LANG_WP_CONTENT_ALL_PAGES', NULL, NULL, 'pages\npages-*\npages/*', NULL),

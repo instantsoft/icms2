@@ -19,16 +19,16 @@ class onBootstrap4WidgetMenuForm extends cmsAction {
             return $_data;
         }
 
-        $form->addField('menu_options', new fieldList('options:navbar_color_scheme', array(
+        $form->addField('menu_options', new fieldList('options:navbar_color_scheme', [
             'title' => LANG_BS4_NAVBAR_COLOR_SCHEME,
             'items' => [
                 '' => LANG_BY_DEFAULT,
                 'navbar-dark' => LANG_BS4_NAVBAR_COLOR_SCHEME_D,
                 'navbar-light' => LANG_BS4_NAVBAR_COLOR_SCHEME_L
             ]
-        )));
+        ]));
 
-        $form->addField('menu_options', new fieldList('options:menu_nav_style', array(
+        $form->addField('menu_options', new fieldList('options:menu_nav_style', [
             'title' => LANG_BS4_MENU_NAV_STYLE,
             'items' => [
                 '' => LANG_BS4_MENU_NAV_STYLE_HL,
@@ -37,9 +37,9 @@ class onBootstrap4WidgetMenuForm extends cmsAction {
                 'justify-content-end'     => LANG_BS4_MENU_NAV_STYLE_HR,
                 'flex-column'             => LANG_BS4_MENU_NAV_STYLE_V
             ]
-        )));
+        ]));
 
-        $form->addField('menu_options', new fieldList('options:menu_nav_style_add', array(
+        $form->addField('menu_options', new fieldList('options:menu_nav_style_add', [
             'title' => LANG_BS4_MENU_NAV_STYLE_ADD,
             'items' => [
                 '' => '',
@@ -60,20 +60,20 @@ class onBootstrap4WidgetMenuForm extends cmsAction {
                 'flex-lg-column' => LANG_BS4_MENU_NAV_STYLE_V.' ≥992px',
                 'flex-xl-column' => LANG_BS4_MENU_NAV_STYLE_V.' ≥1200px'
             ]
-        )));
+        ]));
 
-        $form->addField('menu_options', new fieldList('options:menu_type', array(
+        $form->addField('menu_options', new fieldList('options:menu_type', [
             'title' => LANG_BS4_MENU_TYPE,
             'items' => [
                 'navbar' => LANG_BS4_MENU_TYPE_NAVBAR,
                 'nav' => LANG_BS4_MENU_TYPE_NAV
             ]
-        )));
+        ]));
 
         // ****************************************************************** //
         //                  Опции навигационной панели                        //
         // ****************************************************************** //
-        $form->addField('menu_options', new fieldList('options:navbar_expand', array(
+        $form->addField('menu_options', new fieldList('options:navbar_expand', [
             'title' => LANG_BS4_NAVBAR_EXPAND,
             'default' => 'navbar-expand-lg',
             'items' => [
@@ -84,50 +84,52 @@ class onBootstrap4WidgetMenuForm extends cmsAction {
                 'navbar-expand-xl' => sprintf(LANG_BS4_NAVBAR_EXPAND_ON, '≥1200px')
             ],
             'visible_depend' => ['options:menu_type' => ['show' => ['navbar']]]
-        )));
+        ]));
 
-        $form->addField('menu_options', new fieldList('options:show_search_form', array(
+        $form->addField('menu_options', new fieldList('options:show_search_form', [
             'title' => LANG_BS4_SHOW_SEARCH_FORM,
+            'is_visible' => cmsController::enabled('search'),
+            'default' => 0,
             'items' => [
                 0 => LANG_CP_FIELD_LABEL_NONE,
                 1 => LANG_BS4_ALWAYS_SHOW,
                 2 => LANG_BS4_SHOW_SEARCH_FORM_2
             ],
             'visible_depend' => ['options:menu_type' => ['show' => ['navbar']]]
-        )));
+        ]));
 
-        $form->addField('menu_options', new fieldCheckbox('options:toggler_icon', array(
+        $form->addField('menu_options', new fieldCheckbox('options:toggler_icon', [
             'title' => LANG_BS4_TOGGLER_ICON,
             'hint' => LANG_BS4_TOGGLER_ICON_HINT,
             'default' => 1,
             'visible_depend' => ['options:menu_type' => ['show' => ['navbar']]]
-        )));
+        ]));
 
-        $form->addField('menu_options', new fieldCheckbox('options:toggler_show_logo', array(
+        $form->addField('menu_options', new fieldCheckbox('options:toggler_show_logo', [
             'title' => LANG_BS4_TOGGLER_SHOW_LOGO,
             'visible_depend' => ['options:toggler_icon' => ['show' => ['1']], 'options:menu_type' => ['hide' => ['nav']]]
-        )));
+        ]));
 
-        $form->addField('menu_options', new fieldCheckbox('options:toggler_right_menu', array(
+        $form->addField('menu_options', new fieldCheckbox('options:toggler_right_menu', [
             'title' => LANG_BS4_TOGGLER_RIGHT_MENU,
             'visible_depend' => ['options:toggler_icon' => ['show' => ['1']], 'options:toggler_show_logo' => ['hide' => ['0']], 'options:toggler_icon' => ['hide' => ['0']], 'options:menu_type' => ['hide' => ['nav']]]
-        )));
+        ]));
 
-        $form->addField('menu_options', new fieldCheckbox('options:toggler_show_sitename', array(
+        $form->addField('menu_options', new fieldCheckbox('options:toggler_show_sitename', [
             'title' => LANG_BS4_TOGGLER_SHOW_SITENAME,
             'visible_depend' => ['options:toggler_icon' => ['show' => ['1']], 'options:menu_type' => ['hide' => ['nav']]]
-        )));
+        ]));
 
         // ****************************************************************** //
         //                     Опции обычного меню                            //
         // ****************************************************************** //
 
-        $form->addField('menu_options', new fieldCheckbox('options:menu_is_pills', array(
+        $form->addField('menu_options', new fieldCheckbox('options:menu_is_pills', [
             'title' => LANG_BS4_MENU_IS_PILLS,
             'visible_depend' => ['options:menu_type' => ['show' => ['nav']]]
-        )));
+        ]));
 
-        $form->addField('menu_options', new fieldList('options:menu_is_fill', array(
+        $form->addField('menu_options', new fieldList('options:menu_is_fill', [
             'title' => LANG_BS4_MENU_IS_FILL,
             'items' => [
                 '' => LANG_NO,
@@ -135,7 +137,7 @@ class onBootstrap4WidgetMenuForm extends cmsAction {
                 'nav-justified' => LANG_BS4_MENU_IS_FILL_JUS
             ],
             'visible_depend' => ['options:menu_type' => ['show' => ['nav']]]
-        )));
+        ]));
 
         return [$form, $widget, $widget_object, $template_name];
     }

@@ -20,10 +20,10 @@ class cmsEventsManager {
      * @param array|string $event_name Название события/массив событий
      * @param mixed $data Параметр события
      * @param ?mixed $default_return Значение, возвращаемое по умолчанию если у события нет слушателей
-     * @param cmsRequest|false $_request Объект запроса
-     * @return array Обработанный массив данных
+     * @param ?cmsRequest $_request Объект запроса
+     * @return mixed Обработанные данные
      */
-    public static function hook($event_name, $data = false, $default_return = null, $_request = false) {
+    public static function hook($event_name, $data = false, $default_return = null, $_request = null) {
 
         // Используйте массив событий, если они с разным названиями,
         // но с одинаковыми параметрами
@@ -53,31 +53,16 @@ class cmsEventsManager {
             return is_null($default_return) ? $data : $default_return;
         }
 
+        $request = $_request ?? new cmsRequest([], cmsRequest::CTX_INTERNAL);
+
         //перебираем контроллеры и вызываем каждый из них, передавая $data
         foreach ($listeners as $listener) {
 
-            $request = ($_request === false) ? new cmsRequest([], cmsRequest::CTX_INTERNAL) : $_request;
+            $result = self::runHook($listener, $event_name, $data, $request);
 
-            $controller = cmsCore::getController($listener, $request);
-
-            if ($controller->mb_installed && !$controller->isControllerInstalled($listener)) {
-                unset($controller);
-                continue;
+            if ($result !== null) {
+                $data = $result;
             }
-
-            cmsDebugging::pointStart('events');
-
-            $data = $controller->runHook($event_name, [$data]);
-
-            cmsDebugging::pointProcess('events', [
-                'data' => 'hook :: ' . $listener . ' => ' . $event_name,
-                'context' => [
-                    'target' => $listener,
-                    'subject' => $event_name
-                ]
-            ], 1);
-
-            unset($controller);
         }
 
         return $data;
@@ -91,10 +76,10 @@ class cmsEventsManager {
      * @param string $event_name Название события
      * @param mixed $data Параметр события
      * @param mixed $default_return Значение, возвращаемое по умолчанию если у события нет слушателей
-     * @param object $_request Объект запроса
+     * @param ?cmsRequest $_request Объект запроса
      * @return array Обработанный массив данных
      */
-    public static function hookAll($event_name, $data = false, $default_return = null, $_request = false) {
+    public static function hookAll($event_name, $data = false, $default_return = null, $_request = null) {
 
         //получаем все активные контроллеры, привязанные к указанному событию
         $listeners = self::getEventListeners($event_name);
@@ -115,38 +100,56 @@ class cmsEventsManager {
 
         $results = [];
 
+        $request = $_request ?? new cmsRequest([], cmsRequest::CTX_INTERNAL);
+
         //перебираем контроллеры и вызываем каждый из них, передавая $data
         foreach ($listeners as $listener) {
 
-            $request = ($_request === false) ? new cmsRequest([], cmsRequest::CTX_INTERNAL) : $_request;
+            $result = self::runHook($listener, $event_name, $data, $request, 'hookAll');
 
-            $controller = cmsCore::getController($listener, $request);
-
-            if ($controller->mb_installed && !$controller->isControllerInstalled($listener)) {
-                unset($controller);
-                continue;
-            }
-
-            cmsDebugging::pointStart('events');
-
-            $result = $controller->runHook($event_name, [$data]);
-
-            if ($result !== false) {
+            if ($result !== false && $result !== null) {
                 $results[$listener] = $result;
             }
-
-            cmsDebugging::pointProcess('events', [
-                'data' => 'hookAll :: ' . $listener . ' => ' . $event_name,
-                'context' => [
-                    'target' => $listener,
-                    'subject' => $event_name
-                ]
-            ], 1);
-
-            unset($controller);
         }
 
         return $results;
+    }
+
+    /**
+     * Запускает слушателя
+     *
+     * @param string $listener Имя контроллера
+     * @param string $event_name Название события
+     * @param mixed $data Параметр события
+     * @param ?cmsRequest $request Объект запроса
+     * @param string $debug_type Отладочный тип
+     * @return mixed
+     */
+    public static function runHook($listener, $event_name, $data = false, $request = null, $debug_type = 'hook') {
+
+        if (!cmsController::enabled($listener)) {
+            return null;
+        }
+
+        $controller = cmsCore::getController($listener, $request, false);
+
+        if (!$controller || ($controller->mb_installed && !$controller->isControllerInstalled($listener))) {
+            return null;
+        }
+
+        cmsDebugging::pointStart('events');
+
+        $data = $controller->runHook($event_name, [$data]);
+
+        cmsDebugging::pointProcess('events', [
+            'data' => $debug_type . ' :: ' . $listener . ' => ' . $event_name,
+            'context' => [
+                'target' => $listener,
+                'subject' => $event_name
+            ]
+        ], 1);
+
+        return $data;
     }
 
     /**
@@ -154,19 +157,13 @@ class cmsEventsManager {
      * @param string $event_name Название события
      * @return array Список слушателей
      */
-    public static function getEventListeners($event_name) {
-
-        $listeners = [];
+    public static function getEventListeners(string $event_name) {
 
         if (self::$structure === null) {
             self::$structure = self::getAllListeners();
         }
 
-        if (isset(self::$structure[$event_name])) {
-            $listeners = self::$structure[$event_name];
-        }
-
-        return $listeners;
+        return self::$structure[$event_name] ?? [];
     }
 
     /**
@@ -190,11 +187,6 @@ class cmsEventsManager {
         $structure = [];
 
         foreach ($events as $controller_name => $hooks) {
-
-            if (!cmsController::enabled($controller_name)) {
-                continue;
-            }
-
             foreach ($hooks as $ordering => $event_name) {
                 $structure[$event_name][$ordering] = $controller_name;
             }

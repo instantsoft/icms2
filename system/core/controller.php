@@ -253,10 +253,7 @@ class cmsController {
      */
     public static function enabled($name) {
         self::loadControllers();
-        if (isset(self::$controllers[$name]['is_enabled'])) {
-            return self::$controllers[$name]['is_enabled'];
-        }
-        return cmsCore::isControllerExists($name);
+        return self::$controllers[$name]['is_enabled'] ?? cmsCore::isControllerExists($name);
     }
 
     /**

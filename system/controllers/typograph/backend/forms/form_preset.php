@@ -23,7 +23,8 @@ class formTypographPreset extends cmsForm {
                         'title' => LANG_TYP_IS_AUTO_LINK_MODE
                     ]),
                     new fieldCheckbox('options:build_redirect_link', [
-                        'title' => LANG_TYP_BUILD_REDIRECT_LINK
+                        'title' => LANG_TYP_BUILD_REDIRECT_LINK,
+                        'is_visible' => cmsController::enabled('redirect')
                     ]),
                     new fieldCheckbox('options:build_smiles', [
                         'title' => LANG_TYP_BUILD_SMILES,

@@ -6,6 +6,10 @@ class onBootstrap4RenderWidgetMenuMenu extends cmsAction {
 
         list($widget, $tpl_file, $data) = $_data;
 
+        if (!cmsController::enabled('search')) {
+            $widget->options['show_search_form'] = 0;
+        }
+
         // Выключен показ лого
         if(empty($widget->options['toggler_show_logo'])){
             return $_data;

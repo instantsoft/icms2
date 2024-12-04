@@ -473,7 +473,8 @@
 
     //CAPTCHA
     define('LANG_CAPTCHA_CODE',               'Spam protection');
-    define('LANG_CAPTCHA_ERROR',               'Spam protection code is incorrect');
+    define('LANG_CAPTCHA_ERROR',              'Spam protection code is incorrect');
+    define('LANG_CAPTCHA_TYPE',               'Captcha Type');
 
     //LISTS
     define('LANG_NO_ITEMS',                   'No elements to display');

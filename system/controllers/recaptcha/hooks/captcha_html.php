@@ -2,10 +2,13 @@
 
 class onRecaptchaCaptchaHtml extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        return cmsTemplate::getInstance()->renderInternal($this, 'captcha');
+        if (empty($this->options['public_key'])) {
+            return '';
+        }
 
+        return $this->cms_template->renderInternal($this, 'captcha');
     }
 
 }

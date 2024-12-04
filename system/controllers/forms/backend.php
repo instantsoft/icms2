@@ -80,6 +80,8 @@ class backendForms extends cmsBackend {
 
         $field_options = $field_object->getOptions();
 
+        $form->addFieldsetAfter('type', LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
+
         $form->mergeForm($this->makeForm(function($form) use($field_options){
 
             $form->addFieldset(LANG_CP_FIELD_TYPE_OPTS, 'field_settings');

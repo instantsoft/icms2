@@ -1,6 +1,6 @@
 <?php
 
-class backendRecaptcha extends cmsBackend{
+class backendRecaptcha extends cmsBackend {
 
     public $useDefaultOptionsAction = true;
 

@@ -17,7 +17,7 @@ class formAuthOptions extends cmsForm {
 
         $show_notify_old_auth_options = $model->filterIsNull('password_hash')->getCount('{users}');
 
-        return [
+        $data = [
             [
                 'type'   => 'fieldset',
                 'title'  => LANG_REGISTRATION,
@@ -31,9 +31,6 @@ class formAuthOptions extends cmsForm {
                     ]),
                     new fieldCheckbox('is_reg_invites', [
                         'title' => LANG_REG_CFG_IS_INVITES
-                    ]),
-                    new fieldCheckbox('reg_captcha', [
-                        'title' => LANG_REG_CFG_REG_CAPTCHA
                     ]),
                     new fieldCheckbox('reg_auto_auth', [
                         'title'   => LANG_REG_CFG_REG_AUTO_AUTH,
@@ -85,9 +82,6 @@ class formAuthOptions extends cmsForm {
                         'title' => LANG_REG_CFG_NOTIFY_OLD_AUTH,
                         'hint' => LANG_REG_CFG_NOTIFY_OLD_AUTH_HINT,
                         'is_visible' => $show_notify_old_auth_options
-                    ]),
-                    new fieldCheckbox('auth_captcha', [
-                        'title' => LANG_REG_CFG_AUTH_CAPTCHA,
                     ]),
                     new fieldList('first_auth_redirect', [
                         'title'   => LANG_REG_CFG_FIRST_AUTH_REDIRECT,
@@ -199,6 +193,53 @@ class formAuthOptions extends cmsForm {
                 ]
             ]
         ];
+
+        $captcha_list = cmsEventsManager::hookAll('captcha_list');
+
+        if ($captcha_list) {
+
+            $data[0]['childs'][] = new fieldCheckbox('reg_captcha', [
+                'title' => LANG_REG_CFG_REG_CAPTCHA
+            ]);
+
+            $data[0]['childs'][] = new fieldList('reg_captcha_type', [
+                'title' => LANG_CAPTCHA_TYPE,
+                'default' => 'recaptcha',
+                'generator' => function() use($captcha_list) {
+
+                    $items = [];
+
+                    foreach ($captcha_list as $name => $title) {
+                        $items[$name] = $title;
+                    }
+
+                    return $items;
+                },
+                'visible_depend' => ['reg_captcha' => ['show' => ['1']]]
+            ]);
+
+            $data[1]['childs'][] = new fieldCheckbox('auth_captcha', [
+                'title' => LANG_REG_CFG_AUTH_CAPTCHA,
+            ]);
+
+            $data[1]['childs'][] = new fieldList('auth_captcha_type', [
+                'title' => LANG_CAPTCHA_TYPE,
+                'default' => 'recaptcha',
+                'generator' => function() use($captcha_list) {
+
+                    $items = [];
+
+                    foreach ($captcha_list as $name => $title) {
+                        $items[$name] = $title;
+                    }
+
+                    return $items;
+                },
+                'visible_depend' => ['auth_captcha' => ['show' => ['1']]]
+            ]);
+        }
+
+        return $data;
     }
 
 }

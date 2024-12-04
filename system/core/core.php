@@ -590,7 +590,7 @@ class cmsCore {
                     $events[$event['listener']][$event['ordering']] = $event['event'];
                 } else {
                     // если вдруг по какой-то причине порядок одинаковый
-                    $events[$event['listener']][intval($event['ordering'] . '00' . $event['id'])] = $event['event'];
+                    $events[$event['listener']][(int)($event['ordering'] . '00' . $event['id'])] = $event['event'];
                 }
             }
         }
