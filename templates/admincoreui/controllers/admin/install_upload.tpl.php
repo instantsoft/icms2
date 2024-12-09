@@ -44,9 +44,11 @@
         <form action="" method="post" enctype="multipart/form-data">
 
             <?php echo html_csrf_token(); ?>
+            <?php echo html_input('hidden', 'addon_id', $addon_id); ?>
 
             <?php if ($errors){ ?>
                 <?php echo html_input('hidden', 'is_no_extract', 1); ?>
+                <p><?php echo sprintf(LANG_CP_INSTALL_NOT_WRITABLE_CUSTOM, $install_rel_root); ?></p>
             <?php } ?>
 
             <?php if (!$errors){ ?>
@@ -76,8 +78,6 @@
                     <?php } ?>
                 </fieldset>
 
-            <?php } else { ?>
-                <p><?php echo sprintf(LANG_CP_INSTALL_NOT_WRITABLE_CUSTOM, $this->site_config->upload_root.$this->controller->installer_upload_path); ?></p>
             <?php } ?>
 
             <div class="buttons mt-3">

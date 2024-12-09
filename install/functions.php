@@ -1,5 +1,8 @@
 <?php
 
+define('ADDONS_API_KEY', '8e13cb202f8bdc27dc765e0448e50d11');
+define('ADDONS_API_POINT', 'https://api.instantcms.ru/{lang}api/method/');
+
 function is_ajax_request() {
     if (!isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
         return false;
@@ -17,6 +20,26 @@ function render($template_name, $data = []) {
 function run_step($step, $is_submit = false) {
     require PATH . "steps/{$step['id']}.php";
     return step($is_submit);
+}
+
+function add_addons_step_if_needed($steps) {
+
+    $addons = get_dirs_list(PATH . 'externals', true);
+
+    if (!$addons || !function_exists('parse_ini_file')) {
+        return $steps;
+    }
+
+    $new_steps = [];
+
+    foreach ($steps as $step) {
+        $new_steps[] = $step;
+        if ($step['id'] === 'config') {
+            $new_steps[] = ['id' => 'addons', 'title' => LANG_STEP_ADDONS];
+        }
+    }
+
+    return $new_steps;
 }
 
 function is_config_exists() {
@@ -135,28 +158,7 @@ function html_bool_span($value, $condition) {
 }
 
 function get_langs() {
-
-    $dir         = PATH . 'languages';
-    $dir_context = opendir($dir);
-
-    $list = [];
-
-    while ($next = readdir($dir_context)) {
-
-        if (in_array($next, ['.', '..'])) {
-            continue;
-        }
-        if (strpos($next, '.') === 0) {
-            continue;
-        }
-        if (!is_dir($dir . '/' . $next)) {
-            continue;
-        }
-
-        $list[] = $next;
-    }
-
-    return $list;
+    return get_dirs_list(PATH . 'languages');
 }
 
 function get_templates() {
@@ -191,10 +193,21 @@ function get_packages_sql_list() {
 
     $dir_path = PATH . 'languages' . DS . LANG . DS . 'sql' . DS . 'packages' . DS;
 
-    return array_values(array_filter(scandir($dir_path, SCANDIR_SORT_ASCENDING), function ($entry) use ($dir_path) {
+    return get_dirs_list($dir_path, true);
+}
+
+function get_dirs_list($dir, $asc_sort = false) {
+
+    if (!is_dir($dir)) {
+        return [];
+    }
+
+    $sorting_order = $asc_sort ? SCANDIR_SORT_ASCENDING : SCANDIR_SORT_NONE;
+
+    return array_values(array_filter(scandir($dir, $sorting_order), function ($entry) use ($dir) {
 
         return $entry !== '.' && $entry !== '..' &&
-               is_dir($dir_path . $entry);
+               is_dir($dir . '/' . $entry);
     }));
 }
 
@@ -306,4 +319,100 @@ function delete_manifest_files ($manifest) {
 
 function get_console_confirm() {
     return strtolower(trim(fgets(STDIN))) === 'y' ? true : false;
+}
+
+function get_api_method($name, $params = []) {
+
+    if (!function_exists('curl_init')) {
+        return null;
+    }
+
+    $curl = curl_init();
+
+    $lang = LANG;
+    if ($lang === 'ru') {
+        $lang = '';
+    } else {
+        $lang = 'en/';
+    }
+
+    curl_setopt($curl, CURLOPT_URL, str_replace('{lang}', $lang, ADDONS_API_POINT) . $name . '?api_key=' . ADDONS_API_KEY . '&' . http_build_query($params, '', '&'));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+    curl_setopt($curl, CURLOPT_HTTPGET, true);
+
+    $_data = curl_exec($curl);
+    if (!$_data) {
+        return false;
+    }
+
+    $data = json_decode($_data, true);
+
+    curl_close($curl);
+
+    if ($data === false) {
+        return null;
+    }
+
+    return $data;
+}
+
+function get_addons_by_id($id) {
+
+    if (is_array($id)) {
+        $id = implode(',', $id);
+    }
+
+    $items = get_api_method('content.get.addons', ['ids' => $id]);
+
+    return $items['response']['items'] ?? [];
+}
+
+function preinstall_addon ($addon) {
+
+    $latest_version = reset($addon['versions']);
+
+    if (!$latest_version['download_url']) {
+        return false;
+    }
+
+    $version_file = tempnam(sys_get_temp_dir(), 'icms_');
+
+    file_save_from_url($latest_version['download_url'], $version_file);
+
+    $addon_name = preg_replace('/[^a-z]/u', '', $addon['slug']);
+
+    $ext_path = PATH.'externals/'.$addon_name.'/';
+
+    mkdir($ext_path);
+
+    exec('unzip '.$version_file.' -d '.$ext_path);
+
+    @unlink($version_file);
+
+    // Копируем файлы
+    files_copy_directory($ext_path.'package', rtrim(PATH_ICMS, '/'));
+
+    // Удаляем директорию package
+    files_remove_directory($ext_path.'package');
+
+    // Ставим неймспейс тут, т.к. на этапе установки
+    // Права доступа могут не дать это сделать
+    // Немного дублирования кода из cmsInstaller
+    $install_php_path = $ext_path.'install.php';
+    if (file_exists($install_php_path)) {
+
+        $install_php_text = file_get_contents($install_php_path);
+
+        $namespace_str = 'namespace installer\install\externals\\'.$addon_name.';';
+
+        $pos = mb_strpos($install_php_text, '<?php');
+
+        $modified = mb_substr($install_php_text, $pos, 5).PHP_EOL.$namespace_str.mb_substr($install_php_text, 5);
+
+        file_put_contents($install_php_path, $modified);
+    }
+
+    return true;
 }

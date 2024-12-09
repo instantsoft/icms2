@@ -16,7 +16,12 @@ a { will-change: all; transition: background 0.15s linear, color 0.2s ease-in-ou
     top:0;
     background-color:rgba(255, 255, 255, 0.7);
 }
-
+li {
+    margin-bottom: 10px;
+}
+li:last-child {
+    margin-bottom: 0;
+}
 .section{
     width:850px;
     margin-left: auto;

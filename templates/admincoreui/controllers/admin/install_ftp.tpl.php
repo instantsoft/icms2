@@ -20,6 +20,7 @@
 
 ?>
 <div class="alert alert-info" role="alert" id="cp_package_ftp_notices">
+    <?php echo LANG_CP_INSTALL_FTP_PERM; ?><br>
     <?php echo LANG_CP_INSTALL_FTP_NOTICE; ?><br>
     <?php echo LANG_CP_INSTALL_FTP_PRIVACY; ?>
 </div>
@@ -37,27 +38,25 @@
         ]
     ], $errors); ?>
 
-<input class="button btn btn-primary" style="display: none;" name="skip" value="<?php echo LANG_INSTALL; ?>" type="button" id="skip">
+<input class="button btn btn-primary" style="display: none;" name="skip" value="<?php echo LANG_INSTALL; ?>" type="submit" id="skip">
 <?php ob_start(); ?>
 <script>
     $(function() {
         $('form > .buttons').prepend($('#skip'));
         $('#is_skip').on('click', function (){
             icms.forms.submitted = true;
-            form = $(this).parents('form');
+            let form = $(this).closest('form');
             if($(this).is(':checked')){
-                $(form).find('input').not(this).not('.buttons > input').prop('disabled', true);
+                $(form).find('input:not([type=hidden])').not(this).not('.buttons > input').prop('disabled', true);
                 $(form).find('.button-submit').hide();
                 $('#skip').show();
+                $(form).attr('action', '<?php echo $this->href_to('install/finish'); ?>');
             } else {
-                $(form).find('input').prop('disabled', false);
+                $(form).find('input:not([type=hidden])').prop('disabled', false);
                 $(form).find('.button-submit').show();
                 $('#skip').hide();
+                $(form).attr('action', '');
             }
-        });
-        $('#skip').on('click', function (){
-            location.href='<?php echo $this->href_to('install/finish'); ?>';
-            return false;
         });
         $('#check_ftp').on('click', function (){
             icms.modal.openAjax($(this).attr('href'), {host: $('#host').val(), port: $('#port').val(), user: $('#user').val(), pass: $('#pass').val(), path: $('#path').val(), is_pasv: $('#is_pasv').val()}, false, '<?php echo LANG_CP_FTP_CHECK; ?>');

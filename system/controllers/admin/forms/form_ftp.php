@@ -3,83 +3,73 @@ class formAdminFtp extends cmsForm {
 
     public function init() {
 
-        return array(
+        return [
 
-            array(
+            [
                 'type' => 'fieldset',
                 'title' => LANG_CP_FTP_ACCOUNT,
-                'childs' => array(
-
-                    new fieldString('host', array(
+                'childs' => [
+                    new fieldHidden('addon_id', []),
+                    new fieldString('host', [
                         'title' => LANG_CP_FTP_HOST,
-                        'rules' => array(
-                            array('required'),
-                        )
-                    )),
-
-                    new fieldString('port', array(
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldString('port', [
                         'title'   => LANG_CP_FTP_PORT,
                         'default' => 21,
-                        'rules' => array(
-                            array('required'),
-                        )
-                    )),
-
-                    new fieldString('user', array(
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldString('user', [
                         'title' => LANG_CP_FTP_USER,
-                        'rules' => array(
-                            array('required'),
-                        )
-                    )),
-
-                    new fieldString('pass', array(
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldString('pass', [
                         'title' => LANG_CP_FTP_PASS,
                         'is_password' => true,
                         'is_clean_disable' => true
-                    )),
-
-                    new fieldString('path', array(
+                    ]),
+                    new fieldString('path', [
                         'title' => LANG_CP_FTP_PATH,
                         'hint' => LANG_CP_FTP_PATH_HINT,
                         'default' => '/',
                         'suffix' => '<a id="check_ftp" href="'.href_to('admin', 'check_ftp').'" class="ajaxlink">'.LANG_CP_CHECK.'</a>',
-                        'rules' => array(
-                            array('required'),
-                        )
-                    )),
-
-                    new fieldCheckbox('is_pasv', array(
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldCheckbox('is_pasv', [
                         'title' => LANG_CP_FTP_IS_PASV,
-                        'default' => true,
-                    ))
-
-                )
-            ),
-
-            array(
+                        'default' => true
+                    ])
+                ]
+            ],
+            [
                 'type' => 'fieldset',
-                'childs' => array(
-                    new fieldCheckbox('save_to_session', array(
+                'childs' => [
+                    new fieldCheckbox('save_to_session', [
                         'title'   => LANG_CP_FTP_SAVE_TO_SESSION,
                         'hint'    => LANG_CP_FTP_SAVE_TO_SESSION_HINT,
                         'default' => false
-                    ))
-                )
-            ),
-
-            array(
+                    ])
+                ]
+            ],
+            [
                 'type' => 'fieldset',
-                'childs' => array(
-                    new fieldCheckbox('is_skip', array(
+                'childs' => [
+                    new fieldCheckbox('is_skip', [
                         'title' => LANG_CP_FTP_SKIP,
                         'hint' => LANG_CP_FTP_SKIP_HINT,
                         'default' => false
-                    ))
-                )
-            )
-
-        );
-
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

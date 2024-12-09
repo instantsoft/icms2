@@ -276,7 +276,7 @@
     define('LANG_CREATE_ACCOUNT',            'Создайте аккаунт');
     define('LANG_LOG_IN',                    'Войти');
     define('LANG_LOG_IN_ACCOUNT',            'Войдите, используя Ваш аккаунт');
-    define('LANG_LOG_IN_OPENID',             'Войдите через социальные сети');
+    define('LANG_LOG_IN_OPENID',             'Войдите через');
     define('LANG_LOG_OUT',                   'Выйти');
     define('LANG_NO_ACCOUNT',                'Нет аккаунта?');
     define('LANG_REG_FIRST_TIME',            'Впервые у нас?');

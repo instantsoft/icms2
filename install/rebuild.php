@@ -5,7 +5,7 @@
  * - должны быть удалены из полной сборки
  * - необходимо добавить в сборку
  *
- * Для упаковки в ZIP должен быть установлен zip на сервре
+ * Для упаковки/распаковки в ZIP должен быть установлен zip/unzip на сервере
  *
  * Запуск: php -f rebuild.php
  */
@@ -81,11 +81,20 @@ if (!$manifest) {
     $manifest['removed'] = get_files_list(PATH.'manifests', '*.php', true);
 }
 
-fopen('php://stdin', 'r');
+if (!isset($manifest['create_archive'])) {
 
-echo "\e[33m".LANG_RB_CREATE_ZIP." (Y/N): ";
+    fopen('php://stdin', 'r');
 
-$is_create_archive = get_console_confirm();
+    echo "\e[33m".LANG_RB_CREATE_ZIP." (Y/N): ";
+
+    $is_create_archive = get_console_confirm();
+
+} else {
+
+    echo "\e[33m";
+
+    $is_create_archive = $manifest['create_archive'];
+}
 
 echo PHP_EOL.LANG_RB_START.PHP_EOL.PHP_EOL;
 
@@ -105,6 +114,39 @@ if (!empty($manifest['removed'])) {
 
         foreach ($all_langs as $lang) {
             files_remove_directory(PATH.'languages/'.$lang.'/sql/packages/'.$controller_name);
+        }
+    }
+}
+
+if (!empty($manifest['added'])) {
+
+    $addon_ids = [];
+
+    foreach ($manifest['added'] as $addon_id) {
+        if (!is_numeric($addon_id)) {
+            $pattern = '/\[addon\]([0-9]+)\[\/addon\]/sui';
+            preg_match($pattern, $addon_id, $matches);
+            $addon_id = $matches[1] ?? 0;
+        }
+        if (!$addon_id) {
+            continue;
+        }
+        $addon_ids[] = $addon_id;
+    }
+
+    if ($addon_ids) {
+
+        $addons = get_addons_by_id($addon_ids);
+
+        foreach ($addons as $addon) {
+
+            if ($addon['is_paid']) {
+                continue;
+            }
+
+            echo sprintf(LANG_RB_ADD_COM, $addon['title']).PHP_EOL;
+
+            preinstall_addon($addon);
         }
     }
 }

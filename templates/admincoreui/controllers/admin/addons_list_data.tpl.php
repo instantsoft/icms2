@@ -79,7 +79,7 @@
             <div class="card-footer p-2 text-muted">
                 <?php if($item['install']['need_install'] || $item['install']['need_update']){ ?>
                     <?php $btn_class = $item['install']['need_update'] ? 'warning' : 'primary'; ?>
-                    <?php if($item['price']){ ?>
+                    <?php if($item['is_paid']){ ?>
                         <?php if ($item['price'] && $item['discount']) {
                             $price = (int)$item['price'] - round((((int)$item['price']*(int)$item['discount'])/100));
                         } else {

@@ -33,7 +33,7 @@ class actionAdminWidgetsPageAutocomplete extends cmsAction {
             $result[] = [
                 'id'    => $item['id'],
                 'label' => $item['title'],
-                'value' => (!in_array($ctype['name'], $ctype_default) ? $ctype['name'] . '/' : '') . $item['slug'] . '.html'
+                'value' => $ctype['name'] . '/' . $item['slug'] . '.html'
             ];
         }
 

@@ -52,6 +52,8 @@ $steps = [
     ['id' => 'finish', 'title' => LANG_STEP_FINISH]
 ];
 
+$steps = add_addons_step_if_needed($steps);
+
 $current_step = 0;
 
 if (is_ajax_request()) {

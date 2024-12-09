@@ -12,8 +12,6 @@ class admin extends cmsFrontend {
 
     const perpage = 30;
 
-    public $installer_upload_path = 'installer';
-
     public $install_folder_exists = false;
 
     public function routeAction($action_name) {
@@ -586,139 +584,12 @@ class admin extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function parsePackageManifest(){
-
-        $path = $this->cms_config->upload_path . $this->installer_upload_path;
-
-        $ini_file = $path . '/' . "manifest.{$this->cms_config->language}.ini";
-        $ini_file_default = $path . '/manifest.ru.ini';
-
-        if (!file_exists($ini_file)){ $ini_file = $ini_file_default; }
-        if (!file_exists($ini_file)){ return false; }
-
-        $manifest = parse_ini_file($ini_file, true);
-
-        if (file_exists($this->cms_config->upload_path . $this->installer_upload_path . '/' . 'package')){
-            $manifest['contents'] = $this->getPackageContentsList();
-            if($manifest['contents']){
-                if(!empty($manifest['contents']['system']['core'])){
-                    foreach ($manifest['contents']['system']['core'] as $file) {
-                        if(file_exists($this->cms_config->root_path . 'system/core/'.$file)){
-                            $manifest['notice_system_files'] = LANG_INSTALL_NOTICE_SYSTEM_FILE;
-                            break;
-                        }
-                    }
-                }
-                if(!empty($manifest['contents']['system']['config'])){
-                    foreach ($manifest['contents']['system']['config'] as $file) {
-                        if(file_exists($this->cms_config->root_path . 'system/config/'.$file)){
-                            $manifest['notice_system_files'] = LANG_INSTALL_NOTICE_SYSTEM_FILE;
-                            break;
-                        }
-                    }
-                }
-            }
-        } else {
-            $manifest['contents'] = false;
-        }
-
-        if (isset($manifest['info']['image'])){
-            $manifest['info']['image'] = $this->cms_config->upload_host . '/' .
-                                            $this->installer_upload_path . '/' .
-                                            $manifest['info']['image'];
-        }
-
-        if (isset($manifest['info']['image_hint'])){
-            $manifest['info']['image_hint'] = $this->cms_config->upload_path .
-                                            $this->installer_upload_path . '/' .
-                                            $manifest['info']['image_hint'];
-        }
-
-        if((isset($manifest['install']) || isset($manifest['update']))){
-
-            $action = (isset($manifest['install']) ? 'install' : 'update');
-
-            if(isset($manifest[$action]['type']) && isset($manifest[$action]['name'])){
-
-                $manifest['package'] = array(
-                    'type'       => $manifest[$action]['type'],
-                    'type_hint'  => constant('LANG_CP_PACKAGE_TYPE_'.strtoupper($manifest[$action]['type']).'_'.strtoupper($action)),
-                    'action'     => $action,
-                    'name'       => $manifest[$action]['name'],
-                    'controller' => (isset($manifest[$action]['controller']) ? $manifest[$action]['controller'] : null),
-                );
-
-                // проверяем установленную версию
-                if(method_exists($this, $manifest[$action]['type'].'Installed')){
-                    $manifest['package']['installed_version'] = call_user_func(array($this, $manifest[$action]['type'].'Installed'), $manifest['package']);
-                }
-            }
-
-
-        }
-
-        // проверяем наличие контроллеров и манифестов
-        if(!empty($manifest['package_controllers']['controller'])){
-            $manifest['package_controllers'] = $manifest['package_controllers']['controller'];
-        } else {
-            $manifest['package_controllers'] = false;
-        }
-
-        $dir = $path.'/package/system/controllers';
-
-        if (!$manifest['package_controllers'] && is_dir($dir)) {
-
-            $dir_context = opendir($dir);
-            $controllers = array();
-
-            while ($next = readdir($dir_context)){
-                if (in_array($next, array('.', '..'))){ continue; }
-                if (strpos($next, '.') === 0){ continue; }
-                if (!is_dir($dir.'/'.$next)) { continue; }
-                $controllers[] = $next;
-            }
-
-            if($controllers){
-
-                asort($controllers);
-
-                $manifest['package_controllers'] = $controllers;
-
-            }
-
-        }
-
-        return $manifest;
-
-    }
-
-    public function componentInstalled($manifest_package) {
-
-        $model = new cmsModel();
-
-        return $model->filterEqual('name', $manifest_package['name'])->getFieldFiltered('controllers', 'version');
-
-    }
-
-    public function widgetInstalled($manifest_package) {
-
-        $model = new cmsModel();
-
-        return $model->filterEqual('name', $manifest_package['name'])->
-                filterEqual('controller', $manifest_package['controller'])->
-                getFieldFiltered('widgets', 'version');
-
-    }
-
-    public function getPackageContentsList() {
-
-        $path = $this->cms_config->upload_path . $this->installer_upload_path . '/' . 'package';
-
-        if (!is_dir($path)) {
-            return false;
-        }
-
-        return files_tree_to_array($path);
+    public function getInstallPackagesPath($type = 'root') {
+        return [
+            'root'     => $this->cms_config->upload_path . 'installer',
+            'rel_root' => $this->cms_config->upload_root . 'installer',
+            'url'      => $this->cms_config->upload_host . '/installer'
+        ][$type];
     }
 
     /**

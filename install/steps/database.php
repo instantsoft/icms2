@@ -23,6 +23,7 @@ function step($is_submit) {
 function get_db_collation($charset) {
     $collations = [
         'utf8'    => 'utf8_general_ci',
+        'utf8mb3' => 'utf8mb3_general_ci',
         'utf8mb4' => 'utf8mb4_general_ci'
     ];
     return isset($collations[$charset]) ? $collations[$charset] : false;

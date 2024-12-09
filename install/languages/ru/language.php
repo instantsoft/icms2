@@ -4,6 +4,8 @@
     define('LANG_INSTALLATION_WIZARD',      'Мастер установки');
     define('LANG_NEXT',                     'Далее &rarr;');
     define('LANG_ERROR',                    'Ошибка');
+    define('LANG_FROM',                     'от');
+    define('LANG_DEPRECATED',               'Устаревшее');
 
     define('LANG_MANUAL',                   '<a href="https://docs.instantcms.ru/manual/install" target="_blank" rel="noopener noreferrer">Инструкция по установке</a>');
 
@@ -19,6 +21,9 @@
     define('LANG_STEP_SITE',                'Сайт');
     define('LANG_STEP_ADMIN',               'Администратор');
     define('LANG_STEP_CONFIG',              'Конфигурация');
+    define('LANG_STEP_ADDONS',              'Дополнения');
+    define('LANG_STEP_ADDONS_WARN',         'Вы устанавливаете сборку со сторонними дополнениями.<br>Авторы InstantCMS не имеют отношения к ним.');
+    define('LANG_STEP_ADDONS_HINT',         'Устанавливаемые дополнения:');
     define('LANG_STEP_CRON',                'Планировщик');
     define('LANG_STEP_FINISH',              'Завершение');
 
@@ -148,6 +153,7 @@
     define('LANG_RB_DEL_ALL',               'Удалить все компоненты, оставив минимум?');
     define('LANG_RB_CREATE_ZIP',            'Создавать ZIP архив сборки?');
     define('LANG_RB_START',                 'Собираю InstantCMS...');
+    define('LANG_RB_ADD_COM',               'Предустанавливаю дополнение %s...');
     define('LANG_RB_DEL_COM',               'Удаляю компонент %s...');
     define('LANG_RB_DEL_SER',               'Удаляю вспомогательные файлы...');
     define('LANG_RB_SET_PERM',              'Устанавливаю правильные права доступа...');

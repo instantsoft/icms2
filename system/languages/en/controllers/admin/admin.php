@@ -1,6 +1,7 @@
 <?php
 
     define('LANG_ADMIN_CONTROLLER',     'Control Panel');
+    define('LANG_CP_DEPRECATED',                 'Deprecated');
     define('LANG_CP_NEVER',                      'Never');
     define('LANG_CP_INSTALL_FOLDER_EXISTS',     'Attention! The installation directory <b>/install</b> has not been deleted.');
     define('LANG_CP_TOOLTIP_HELP',              'Useful documentation for the section');
@@ -658,17 +659,18 @@
     define('LANG_CP_INSTALL_NOT_WRITABLE_CUSTOM', 'Click "Continue" if you unzipped the package manually into a directory <b>%s</b>');
     define('LANG_CP_INSTALL_NOT_WRITABLE_HINT', 'Automatic upload is impossible');
     define('LANG_CP_INSTALL_NOT_WRITABLE_FIX',  'Make this folder writable and reload this page');
-    define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Change the file extension to <b>.zip</b>, unpack and upload its contents to the <b>%s</b> folder');
+    define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Unpack Package and upload its contents to the <b>%s</b> folder');
     define('LANG_CP_INSTALL_NOT_ZIP',           'Server does not support automatic ZIP-archive extraction');
     define('LANG_CP_INSTALL_NOT_ZIP_HINT',      'Automatic extraction is impossible');
     define('LANG_CP_INSTALL_NOT_ZIP_FIX',       'Request your hoster to install the <b>ZipArchive</b> class for PHP on your server');
-    define('LANG_CP_INSTALL_NOT_ZIP_WA',        'Change file extension to <b>.zip</b>, unpack and upload its contents to the <b>%s</b> folder');
+    define('LANG_CP_INSTALL_NOT_ZIP_WA',        'Unpack Package and upload its contents to the <b>%s</b> folder');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE', 'Server does not support the function parse_ini_file');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE_HINT', 'Installing add-ons is not possible');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE_FIX', 'Please contact the hoster to enable the <b>parse_ini_file</b> function for PHP on your server');
     define('LANG_CP_INSTALL_ERROR',             'Package installation error');
     define('LANG_CP_INSTALL_PERM_ERROR',        'The "%s" file is not readable');
     define('LANG_CP_INSTALL_ZIP_ERROR',         'Package extraction error');
+    define('LANG_CP_INSTALL_FTP_PERM',          'InstantCMS could not copy the contents of the package because it is missing permissions.');
     define('LANG_CP_INSTALL_FTP_NOTICE',        'To install the package you must provide the details of an FTP-user that has permissions to create folders and files.');
     define('LANG_CP_INSTALL_FTP_PRIVACY',       'The details are not stored or transferred anywhere');
     define('LANG_CP_PACKAGE_DEPENDENT_TYPE',      'Requires installed %s - <a href="%s" target="_blank">%s</a>');

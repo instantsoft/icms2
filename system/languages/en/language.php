@@ -277,7 +277,7 @@
     define('LANG_CREATE_ACCOUNT',            'Sign up, please.');
     define('LANG_LOG_IN',                    'Log in');
     define('LANG_LOG_IN_ACCOUNT',            'Log in using your account');
-    define('LANG_LOG_IN_OPENID',             'Log in using social media');
+    define('LANG_LOG_IN_OPENID',             'Log in via');
     define('LANG_LOG_OUT',                   'Log out');
     define('LANG_NO_ACCOUNT',                'Don\'t have an account yet?');
     define('LANG_REG_FIRST_TIME',            'Is it your first visit?');

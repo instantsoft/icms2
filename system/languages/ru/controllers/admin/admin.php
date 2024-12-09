@@ -1,6 +1,7 @@
 <?php
 
     define('LANG_ADMIN_CONTROLLER',     'Панель управления');
+    define('LANG_CP_DEPRECATED',                 'Устаревшее');
     define('LANG_CP_NEVER',                      'Никогда');
     define('LANG_CP_INSTALL_FOLDER_EXISTS',     'Внимание! Директория установки <b>/install</b> не удалена.');
     define('LANG_CP_TOOLTIP_HELP',              'Полезная документация к разделу');
@@ -688,7 +689,7 @@
     define('LANG_CP_INSTALL_NOT_WRITABLE',      'Директория <b>%s</b> недоступна для записи');
     define('LANG_CP_INSTALL_NOT_WRITABLE_HINT', 'Автоматическая загрузка пакета невозможна');
     define('LANG_CP_INSTALL_NOT_WRITABLE_FIX',  'Выставьте права 777 на указанную директорию и обновите страницу');
-    define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в директорию <b>%s</b>');
+    define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Распакуйте пакет и загрузите содержимое в директорию <b>%s</b>');
     define('LANG_CP_INSTALL_NOT_WRITABLE_CUSTOM', 'Нажмите "Продолжить", если вы распаковали пакет вручную в директорию <b>%s</b>');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE', 'Сервер не поддерживает функцию parse_ini_file');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE_HINT', 'Установка пакетов расширения невозможна');
@@ -696,11 +697,12 @@
     define('LANG_CP_INSTALL_NOT_ZIP',           'Сервер не поддерживает автоматическую распаковку ZIP-архивов');
     define('LANG_CP_INSTALL_NOT_ZIP_HINT',      'Автоматическая распаковка архива не возможна');
     define('LANG_CP_INSTALL_NOT_ZIP_FIX',       'Обратитесь к хостеру с просьбой обеспечить работу класса <b>ZipArchive</b> для PHP на вашем сервере');
-    define('LANG_CP_INSTALL_NOT_ZIP_WA',        'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в директорию <b>%s</b>');
+    define('LANG_CP_INSTALL_NOT_ZIP_WA',        'Распакуйте пакет и загрузите содержимое в директорию <b>%s</b>');
     define('LANG_CP_INSTALL_ERROR',             'Ошибка установки пакета');
     define('LANG_CP_INSTALL_PERM_ERROR',        'Файл %s недоступен для чтения');
     define('LANG_CP_INSTALL_ZIP_ERROR',         'Ошибка распаковки пакета');
-    define('LANG_CP_INSTALL_FTP_NOTICE',        'Для загрузки содержимого пакета в нужные папки сайта необходимо указать реквизиты FTP-пользователя, имеющего права на создание папок и файлов.');
+    define('LANG_CP_INSTALL_FTP_PERM',          'InstantCMS не смог скопировать содержимое пакета, поскольку не хватает прав доступа.');
+    define('LANG_CP_INSTALL_FTP_NOTICE',        'Для загрузки содержимого пакета в нужные директории сайта необходимо указать реквизиты FTP-пользователя, имеющего права на создание директорий и файлов.');
     define('LANG_CP_INSTALL_FTP_PRIVACY',       'Введенные реквизиты никуда не передаются и могут храниться в сессии только до конца текущего сеанса');
     define('LANG_CP_PACKAGE_AUTHOR',            'Автор пакета');
     define('LANG_CP_PACKAGE_DESCRIPTION',       'Описание пакета');

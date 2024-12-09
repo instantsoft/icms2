@@ -4,6 +4,8 @@
     define('LANG_INSTALLATION_WIZARD',      'Installation wizard');
     define('LANG_NEXT',                     'Next &rarr;');
     define('LANG_ERROR',                    'Error');
+    define('LANG_FROM',                     'from');
+    define('LANG_DEPRECATED',               'Deprecated');
 
     define('LANG_MANUAL',                   '<a href="https://docs.instantcms.ru/en/manual/install" target="_blank" rel="noopener noreferrer">Installation Manual</a>');
 
@@ -19,6 +21,9 @@
     define('LANG_STEP_SITE',                'Site');
     define('LANG_STEP_ADMIN',               'Administration');
     define('LANG_STEP_CONFIG',              'Configuration');
+    define('LANG_STEP_ADDONS',              'Add-ons');
+    define('LANG_STEP_ADDONS_WARN',         'You are installing a build with third-party add-ons.<br>InstantCMS authors have nothing to do with them.');
+    define('LANG_STEP_ADDONS_HINT',         'Installable add-ons:');
     define('LANG_STEP_CRON',                'Scheduler');
     define('LANG_STEP_FINISH',              'Finish');
 
@@ -148,6 +153,7 @@
     define('LANG_RB_DEL_ALL',               'Remove all components, leaving the minimum?');
     define('LANG_RB_CREATE_ZIP',            'Create a zip archive?');
     define('LANG_RB_START',                 'Customizing InstantCMS...');
+    define('LANG_RB_ADD_COM',               'Pre-installing the %s add-on...');
     define('LANG_RB_DEL_COM',               'Deleting the %s component');
     define('LANG_RB_DEL_SER',               'Deleting service files...');
     define('LANG_RB_SET_PERM',              'Set the correct permissions...');

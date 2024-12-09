@@ -1,21 +1,36 @@
 <?php
-
+/**
+ * Копирование файлов пакета в дерево каталогов InstantCMS
+ */
 class actionAdminInstallFtp extends cmsAction {
 
     public function run() {
 
-        $package_contents_list = $this->getPackageContentsList();
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
 
-        if (!$package_contents_list) {
-            $this->redirectToAction('install/finish');
+            cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
+
+            return $this->redirectToAction('install');
+        }
+
+        $installer = new cmsInstaller($this->getInstallPackagesPath('root'), $this->controller);
+
+        $manifest = $installer->getManifest();
+
+        if (!$manifest) {
+            return $this->redirectToAction('install');
+        }
+
+        if (!$manifest['contents']) {
+            return $this->redirectToFinish();
         }
 
         // Если права доступа позволяют, копируем обычным способом
-        if ($this->isWritableDestFiles($package_contents_list)) {
+        if ($this->isWritableDestFiles($manifest['contents'])) {
 
-            files_copy_directory($this->getPackageContentsDir(), $this->cms_config->root_path);
+            files_copy_directory($installer->getPackageContentsDir(), $this->cms_config->root_path);
 
-            return $this->redirectToAction('install/finish');
+            return $this->redirectToFinish();
         }
 
         // Иначе, спрашиваем доступы FTP
@@ -24,7 +39,8 @@ class actionAdminInstallFtp extends cmsAction {
 
         $ftp_account = cmsUser::getUPS('admin.install.ftp');
 
-        $account = cmsUser::isSessionSet('ftp_account') ? cmsUser::sessionGet('ftp_account') : ($ftp_account ? $ftp_account : []);
+        $account = cmsUser::isSessionSet('ftp_account') ?: ($ftp_account ?: []);
+        $account['addon_id'] = $this->request->get('addon_id', 0);
 
         if ($this->request->has('submit')) {
 
@@ -61,19 +77,41 @@ class actionAdminInstallFtp extends cmsAction {
                     $account['path'] = '/' . trim($account['path'], '/') . '/';
                 }
 
-                $this->uploadPackageToFTP($account);
+                if ($this->uploadPackageToFTP($account, $installer->getPackageContentsDir())) {
+
+                    return $this->redirectToFinish();
+                }
             }
         }
 
         return $this->cms_template->render('install_ftp', [
-            'manifest' => $this->parsePackageManifest(),
+            'manifest' => $manifest,
             'account'  => $account,
             'form'     => $form,
             'errors'   => $errors ?? false
         ]);
     }
 
-    private function uploadPackageToFTP($account) {
+    /**
+     * Выполняет редирект на финальный шаг установки
+     *
+     * @return redirect
+     */
+    private function redirectToFinish() {
+        return $this->redirectToAction('install', ['finish'], [
+            'csrf_token' => cmsForm::getCSRFToken(),
+            'addon_id'   => $this->request->get('addon_id', 0)
+        ]);
+    }
+
+    /**
+     * Загружает файлы дополнения по FTP
+     *
+     * @param array $account Массив FTP данных для соединения
+     * @param string $src_dir Путь к директории, откуда копируем
+     * @return bool
+     */
+    private function uploadPackageToFTP(array $account, string $src_dir) {
 
         $connection = @ftp_connect($account['host'], $account['port'], 30);
 
@@ -104,7 +142,6 @@ class actionAdminInstallFtp extends cmsAction {
             return false;
         }
 
-        $src_dir = $this->getPackageContentsDir();
         $dst_dir = '/' . trim($account['path'], '/');
 
         try {
@@ -122,11 +159,16 @@ class actionAdminInstallFtp extends cmsAction {
 
         ftp_close($connection);
 
-        $this->redirectToAction('install/finish');
-
         return true;
     }
 
+    /**
+     * Проверяет, что директория FTP содержит установку InstantCMS
+     *
+     * @param resource|FTP\Connection $connection
+     * @param array $account Массив FTP данных для соединения
+     * @return bool
+     */
     private function checkDestination($connection, $account) {
 
         $ftp_path = 'ftp://' . $account['host'] . $account['path'];
@@ -166,64 +208,71 @@ class actionAdminInstallFtp extends cmsAction {
         return true;
     }
 
-    private function getPackageContentsDir() {
+    /**
+     * Загружает директорию по FTP
+     *
+     * @param resource|FTP\Connection $conn_id
+     * @param string $src_dir Директория, которую нужно загрузить
+     * @param string $dst_dir Директория внутри соединения FTP, куда нужно загрузить
+     * @throws Exception
+     */
+    private function uploadDirectoryToFTP($conn_id, string $src_dir, string $dst_dir) {
 
-        $path = $this->cms_config->upload_path . $this->installer_upload_path . '/package';
+        $directory = dir($src_dir);
+        $can_chmod = function_exists('ftp_chmod');
 
-        if (!is_dir($path)) {
-            return false;
-        }
+        while (($file = $directory->read()) !== false) {
 
-        return $path;
-    }
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
 
-    private function uploadDirectoryToFTP($conn_id, $src_dir, $dst_dir) {
+            $src_path = rtrim($src_dir, '/') . '/' . $file;
+            $dst_path = rtrim($dst_dir, '/') . '/' . $file;
 
-        $d = dir($src_dir);
-        $is_function_exists_ftp_chmod = function_exists('ftp_chmod');
+            if (is_dir($src_path)) {
 
-        while ($file = $d->read()) {
+                // Директория назначения существует?
+                if (!@ftp_chdir($conn_id, $dst_path) && !@ftp_mkdir($conn_id, $dst_path)) {
+                    throw new Exception(sprintf('%s: %s', LANG_CP_FTP_MKDIR_FAILED, $dst_path));
+                }
 
-            if ($file != '.' && $file != '..') {
+                // Права доступа
+                if ($can_chmod) {
+                    @ftp_chmod($conn_id, 0755, $dst_path);
+                }
 
-                if (is_dir($src_dir . '/' . $file)) {
+                // Рекурсивная загрузка поддиректории
+                $this->uploadDirectoryToFTP($conn_id, $src_path, $dst_path);
 
-                    if (!@ftp_chdir($conn_id, $dst_dir . '/' . $file)) {
+            } else {
 
-                        $result = @ftp_mkdir($conn_id, $dst_dir . '/' . $file);
+                // Загружаем файл
+                if (!@ftp_put($conn_id, $dst_path, $src_path, FTP_BINARY)) {
+                    throw new Exception(sprintf('%s: %s', LANG_CP_FTP_UPLOAD_FAILED, $dst_path));
+                }
 
-                        if (!$result) {
-                            throw new Exception(LANG_CP_FTP_MKDIR_FAILED . ': ' . $dst_dir . '/' . $file);
-                        }
-
-                        if ($is_function_exists_ftp_chmod) {
-                            @ftp_chmod($conn_id, 0755, $dst_dir . '/' . $file);
-                        }
-                    }
-
-                    $this->uploadDirectoryToFTP($conn_id, $src_dir . '/' . $file, $dst_dir . '/' . $file);
-
-                } else {
-
-                    $result = @ftp_put($conn_id, $dst_dir . '/' . $file, $src_dir . '/' . $file, FTP_BINARY);
-
-                    if (!$result) {
-                        throw new Exception(LANG_CP_FTP_UPLOAD_FAILED);
-                    }
-
-                    if ($is_function_exists_ftp_chmod) {
-                        @ftp_chmod($conn_id, 0644, $dst_dir . '/' . $file);
-                    }
+                // Права доступа
+                if ($can_chmod) {
+                    @ftp_chmod($conn_id, 0644, $dst_path);
                 }
             }
         }
 
-        $d->close();
+        $directory->close();
     }
 
-    private function isWritableDestFiles($package_contents_list, &$no_writable = [], $start_path = false) {
+    /**
+     * Проверяет дерево директорий InstantCMS на возможность записи
+     *
+     * @param array $package_contents_list Массив дерева директорий и файлов
+     * @param array $no_writable Сюда пишутся пути, недоступные для записи
+     * @param bool $start_path Начальная директория
+     * @return bool
+     */
+    private function isWritableDestFiles(array $package_contents_list, &$no_writable = [], $start_path = false) {
 
-        if(!$start_path){
+        if (!$start_path) {
             $start_path = $this->cms_config->root_path;
         }
 
@@ -233,14 +282,14 @@ class actionAdminInstallFtp extends cmsAction {
 
             $path = $start_path . $file;
 
-            if(is_dir($path) || is_file($path)){
+            if (is_dir($path) || is_file($path)) {
 
-                if(!$this->isCreateOrOverwriteFile($path)){
+                if (!$this->isCreateOrOverwriteFile($path)) {
                     $no_writable[] = $path;
                 }
             }
 
-            if(is_array($files)){
+            if (is_array($files)) {
 
                 $this->isWritableDestFiles($files, $no_writable, $path . '/');
 
@@ -248,7 +297,7 @@ class actionAdminInstallFtp extends cmsAction {
 
                 $path = $start_path . $files;
 
-                if(!$this->isCreateOrOverwriteFile($path)){
+                if (!$this->isCreateOrOverwriteFile($path)) {
                     $no_writable[] = $path;
                 }
             }
@@ -257,24 +306,22 @@ class actionAdminInstallFtp extends cmsAction {
         return count($no_writable) ? false : true;
     }
 
-    private function isCreateOrOverwriteFile($path) {
+    /**
+     * Проверяет возможность создания или перезаписи файла/директории
+     *
+     * @param string $path
+     * @return bool
+     */
+    private function isCreateOrOverwriteFile(string $path) {
 
-        $is_can = true;
-
-        // Если есть, проверяем на перезапись
-        if(file_exists($path)){
-
-            if(!is_writable($path)){
-                $is_can = false;
-            }
-
-        } else {
-
-            // Иначе проверяем на запись родителя
-            $is_can = $this->isCreateOrOverwriteFile(dirname($path));
+        if (file_exists($path)) {
+            return is_writable($path);
         }
 
-        return $is_can;
+        // Проверяем возможность записи в родительскую директорию
+        $parent_dir = dirname($path);
+
+        return is_writable($parent_dir) || $this->isCreateOrOverwriteFile($parent_dir);
     }
 
 }

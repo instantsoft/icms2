@@ -30,7 +30,11 @@
 <h1>
     <?php html($manifest['info']['title']); ?>
     <sup>
-        <?php html($manifest['version']['major']); ?>.<?php html($manifest['version']['minor']); ?>.<?php html($manifest['version']['build']); ?>
+        <small>
+        <?php html($manifest['version_str']); ?>
+        <?php echo LANG_FROM; ?>
+        <?php echo html_date($manifest['version']['date']); ?>
+        </small>
     </sup>
 </h1>
 
@@ -38,24 +42,26 @@
 <div id="cp_package_info" class="without-tabs card">
 <div class="card-body">
     <form action="<?php echo $this->href_to('install', 'ftp'); ?>" method="post">
-        <?php if (isset($manifest['info']['image'])) { ?>
+        <?php echo html_csrf_token(); ?>
+        <?php echo html_input('hidden', 'addon_id', $addon_id); ?>
+        <?php if (!empty($manifest['info']['image'])) { ?>
             <div class="image float-right ml-4">
-                <img class="rounded" style="max-width: 200px;" src="<?php echo $manifest['info']['image']; ?>?<?php echo mt_rand(); ?>" />
+                <img class="rounded" style="max-width: 200px;" src="<?php echo $install_url_root.'/'.$manifest['info']['image']; ?>?<?php echo mt_rand(); ?>" />
             </div>
         <?php } ?>
         <div class="info">
-            <?php if (isset($manifest['author'])) { ?>
+            <?php if (!empty($manifest['author'])) { ?>
             <fieldset>
                 <legend><?php echo LANG_CP_PACKAGE_AUTHOR; ?></legend>
-                <?php if (isset($manifest['author']['name'])) { ?>
+                <?php if (!empty($manifest['author']['name'])) { ?>
                 <p class="author m-0 d-flex align-items-center">
                     <span><?php html($manifest['author']['name']); ?></span>
-                    <?php if (isset($manifest['author']['url'])) { ?>
+                    <?php if (!empty($manifest['author']['url'])) { ?>
                         <a rel="noopener noreferrer" class="url btn btn-primary btn-sm ml-2" href="<?php echo $manifest['author']['url']; ?>" target="_blank">
                             <?php html_svg_icon('solid', 'link'); ?>
                         </a>
                     <?php } ?>
-                    <?php if (isset($manifest['author']['email'])) { ?>
+                    <?php if (!empty($manifest['author']['email'])) { ?>
                         <a class="mail btn btn-success btn-sm ml-2" href="mailto:<?php echo $manifest['author']['email']; ?>">
                             <?php html_svg_icon('solid', 'envelope-open-text'); ?>
                         </a>
@@ -65,18 +71,18 @@
             </fieldset>
             <?php } ?>
 
-            <?php if (isset($manifest['package'])) { ?>
+            <?php if (!empty($manifest['package'])) { ?>
             <fieldset>
                 <legend><?php echo LANG_CP_PACKAGE_TYPE; ?></legend>
                 <p class="m-0"><?php echo $manifest['package']['type_hint']; ?>
                 <?php if (!empty($manifest['package']['installed_version'])) { ?>
-                    <?php echo ' '.$manifest['package']['installed_version'].' => '.$manifest['version']['major'].'.'.$manifest['version']['minor'].'.'.$manifest['version']['build']; ?>
+                    <?php echo ' '.$manifest['package']['installed_version'].' => '.$manifest['version_str']; ?>
                 <?php } ?>
                 </p>
             </fieldset>
             <?php } ?>
 
-            <?php if (isset($manifest['description'])) { ?>
+            <?php if (!empty($manifest['description'])) { ?>
             <fieldset>
                 <legend><?php echo LANG_CP_PACKAGE_DESCRIPTION; ?></legend>
                 <p class="m-0">
@@ -85,11 +91,11 @@
             </fieldset>
             <?php } ?>
 
-            <?php if (isset($manifest['depends'])) { ?>
+            <?php if (!empty($manifest['depends'])) { ?>
             <fieldset>
                 <legend><?php echo LANG_CP_PACKAGE_DEPENDS; ?></legend>
                 <div class="list-group list-group-accent">
-                    <?php if (isset($manifest['depends']['php'])) { ?>
+                    <?php if (!empty($manifest['depends']['php'])) { ?>
                         <?php $hl_class = !$manifest['depends_results']['php'] ? 'danger' : 'success'; ?>
                         <div class="list-group-item list-group-item-accent-<?php echo $hl_class; ?>">
                             <?php echo LANG_CP_PACKAGE_DEPENDS_PHP; ?>
@@ -99,7 +105,7 @@
                         </div>
                         <?php if (!$manifest['depends_results']['php']){ $depends_pass = false; } ?>
                     <?php } ?>
-                    <?php if (isset($manifest['depends']['core'])) { ?>
+                    <?php if (!empty($manifest['depends']['core'])) { ?>
                         <?php $hl_class = !$manifest['depends_results']['core'] ? 'danger' : 'success'; ?>
                         <div class="list-group-item list-group-item-accent-<?php echo $hl_class; ?>">
                             <?php echo LANG_CP_PACKAGE_DEPENDS_CORE; ?>
@@ -109,7 +115,7 @@
                         </div>
                         <?php if (!$manifest['depends_results']['core']){ $depends_pass = false; } ?>
                     <?php } ?>
-                    <?php if (isset($manifest['depends']['package'])) { ?>
+                    <?php if (!empty($manifest['depends']['package'])) { ?>
                         <?php $hl_class = !$manifest['depends_results']['package'] ? 'danger' : 'success'; ?>
                         <div class="list-group-item list-group-item-accent-<?php echo $hl_class; ?>">
                             <?php echo LANG_CP_PACKAGE_DEPENDS_PACKAGE; ?>
@@ -119,7 +125,7 @@
                         </div>
                         <?php if (!$manifest['depends_results']['package']){ $depends_pass = false; } ?>
                     <?php } ?>
-                    <?php if (isset($manifest['depends']['dependent_type'])) { ?>
+                    <?php if (!empty($manifest['depends']['dependent_type'])) { ?>
                         <?php $hl_class = !$manifest['depends_results']['dependent_type'] ? 'danger' : 'success'; ?>
                         <div class="list-group-item list-group-item-accent-<?php echo $hl_class; ?>">
                             <?php echo sprintf(LANG_CP_PACKAGE_DEPENDENT_TYPE, string_lang('LANG_CP_PACKAGE_DEPENDENT_'.$manifest['depends']['dependent_type']), $manifest['depends']['dependent_url'], $manifest['depends']['dependent_title']); ?>
@@ -161,9 +167,7 @@
         </div>
         <div class="buttons mt-4">
             <?php if ($depends_pass){ ?>
-                <a href="<?php echo $this->href_to('install', 'ftp'); ?>" class="btn btn-primary">
-                    <?php echo LANG_INSTALL; ?>
-                </a>
+                <?php echo html_submit(LANG_INSTALL, 'submit_info'); ?>
             <?php } ?>
             <a href="<?php echo $this->href_to('addons_list'); ?>" class="btn btn-secondary">
                 <?php echo LANG_CANCEL; ?>

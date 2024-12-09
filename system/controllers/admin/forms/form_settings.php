@@ -421,7 +421,8 @@ class formAdminSettings extends cmsForm {
                         'default' => 'utf8',
                         'items'   => [
                             'utf8mb4' => 'UTF8mb4',
-                            'utf8'    => 'UTF8'
+                            'utf8mb3' => 'UTF8mb3',
+                            'utf8'    => 'UTF8 ['.LANG_CP_DEPRECATED.']'
                         ],
                         'rules'   => [
                             ['required']

@@ -40,7 +40,8 @@
         <div class="field">
             <label><?php echo LANG_DATABASE_CHARSET; ?></label>
             <select class="input" name="db[db_charset]">
-                <option value="utf8" <?php if(@$cfg['db_charset'] == 'utf8'){?>selected="selected"<?php } ?>>UTF8</option>
+                <option value="utf8" <?php if(@$cfg['db_charset'] == 'utf8'){?>selected="selected"<?php } ?>>UTF8 [<?php echo LANG_DEPRECATED; ?>]</option>
+                <option value="utf8mb3" <?php if(@$cfg['db_charset'] == 'utf8mb3'){?>selected="selected"<?php } ?>>UTF8mb3</option>
                 <option value="utf8mb4" <?php if(@$cfg['db_charset'] == 'utf8mb4'){?>selected="selected"<?php } ?>>UTF8mb4</option>
             </select>
         </div>

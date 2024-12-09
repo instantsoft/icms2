@@ -44,14 +44,14 @@ function formToJSON( form ){
     return o;
 };
 
-function submitStep(){
+function submitStep(url){
 
     var form_data = formToJSON($('form'));
 
     form_data.step = current_step;
     form_data.submit = 1;
 
-    var url = 'index.php';
+    url = url || 'index.php';
 
     showLoadingIndicator();
 
@@ -59,8 +59,17 @@ function submitStep(){
 
         hideLoadingIndicator();
 
-        if (result.error == false){
+        if (result.error === false){
+
             nextStep();
+
+            if (result.warning){
+                Swal.fire({
+                  type: 'info',
+                  text: result.warning
+                });
+            }
+
             return;
         }
 
@@ -72,7 +81,6 @@ function submitStep(){
         });
 
     }, 'json');
-
 }
 
 function showLoadingIndicator(){

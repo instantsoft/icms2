@@ -1466,16 +1466,7 @@ class cmsCore {
      * @return array
      */
     public static function getDirsList($root_dir, $asc_sort = false) {
-
-        $dir = cmsConfig::get('root_path') . $root_dir;
-
-        $sorting_order = $asc_sort ? SCANDIR_SORT_ASCENDING : SCANDIR_SORT_NONE;
-
-        return array_values(array_filter(scandir($dir, $sorting_order), function ($entry) use ($dir) {
-
-            return $entry !== '.' && $entry !== '..' &&
-                   is_dir($dir . '/' . $entry);
-        }));
+        return files_get_dirs_list(cmsConfig::get('root_path') . $root_dir, $asc_sort);
     }
 
     /**
