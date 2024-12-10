@@ -16,6 +16,79 @@ class formMessagesPmailing extends cmsForm {
             ],
             [
                 'type'   => 'fieldset',
+                'title'  => LANG_FILTERS,
+                'childs' => [
+                    new fieldList('filters', [
+                        'add_title'    => LANG_FILTER_ADD,
+                        'is_multiple'  => true,
+                        'dynamic_list' => true,
+                        'single_select' => 1,
+                        'select_title' => LANG_FILTER_FIELD,
+                        'multiple_keys' => [
+                            'field' => 'field', 'condition' => 'field_select', 'value' => 'field_value'
+                        ],
+                        'generator' => function () {
+
+                            $items = [];
+
+                            $items['is_admin'] = [
+                                'title' => 'is_admin',
+                                'data'  => [
+                                    'ns' => 'int'
+                                ]
+                            ];
+                            $items['date_reg'] = [
+                                'title' => 'date_reg',
+                                'data'  => [
+                                    'ns' => 'date'
+                                ]
+                            ];
+                            $items['date_log'] = [
+                                'title' => 'date_log',
+                                'data'  => [
+                                    'ns' => 'date'
+                                ]
+                            ];
+
+                            return $items;
+                        },
+                        'value_items' => [
+                            'int'  => [
+                                'eq' => '=',
+                                'gt' => '&gt;',
+                                'lt' => '&lt;',
+                                'ge' => '&ge;',
+                                'le' => '&le;',
+                                'nn' => LANG_FILTER_NOT_NULL,
+                                'ni' => LANG_FILTER_IS_NULL
+                            ],
+                            'str'  => [
+                                'eq' => '=',
+                                'lk' => LANG_FILTER_LIKE,
+                                'ln' => LANG_FILTER_NOT_LIKE,
+                                'lb' => LANG_FILTER_LIKE_BEGIN,
+                                'lf' => LANG_FILTER_LIKE_END,
+                                'nn' => LANG_FILTER_NOT_NULL,
+                                'ni' => LANG_FILTER_IS_NULL
+                            ],
+                            'date'  => [
+                                'eq' => '=',
+                                'gt' => '&gt;',
+                                'lt' => '&lt;',
+                                'ge' => '&ge;',
+                                'le' => '&le;',
+                                'dy' => LANG_FILTER_DATE_YOUNGER,
+                                'do' => LANG_FILTER_DATE_OLDER,
+                                'nn' => LANG_FILTER_NOT_NULL,
+                                'ni' => LANG_FILTER_IS_NULL
+                            ]
+                        ]
+                    ])
+                ]
+            ],
+            [
+                'type'   => 'fieldset',
+                'title'  => LANG_PM_PMAILING_MSG,
                 'childs' => [
                     new fieldHtml('message_text', [
                         'title'   => LANG_MESSAGE,

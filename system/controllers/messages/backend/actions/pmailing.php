@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @property \modelUsers $model_users
+ * @property \messages $controller_messages
+ */
 class actionMessagesPmailing extends cmsAction {
 
     public function run($group_id = 0) {
@@ -30,6 +33,10 @@ class actionMessagesPmailing extends cmsAction {
 
                 if ($mailing['groups']) {
                     $this->model_users->filterGroups($mailing['groups']);
+                }
+
+                if ($mailing['filters']) {
+                    $this->model_users->applyDatasetFilters(['filters' => $mailing['filters']]);
                 }
 
                 $recipients = $this->model_users->

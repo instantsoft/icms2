@@ -35,6 +35,7 @@
     define('LANG_PM_DO_RESTORE',            'Restore');
     define('LANG_PM_CLEAR_NOTICE',          'Clear all notifications');
     define('LANG_PM_CLEAR_NOTICE_CONFIRM',  'Really clear all notifications?');
+    define('LANG_PM_PMAILING_MSG',          'What are we sending?');
     define('LANG_PM_PMAILING',              'Mass send messages');
     define('LANG_PM_PMAILING_TYPOGRAPH',    'The message will be processed by the default typograph preset');
     define('LANG_PM_PMAILING_GROUPS',       'User groups for mailing');

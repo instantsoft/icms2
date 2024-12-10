@@ -177,7 +177,13 @@ if ($is_create_archive) {
 
     echo PHP_EOL.LANG_RB_START_ARCH.PHP_EOL;
 
-    $archive_path = dirname(PATH_ICMS)."/instantcms_{$core_version['date']}_v{$core_version['version']}-custom.zip";
+    if (!empty($manifest['archive_name'])) {
+        $archive_name = $manifest['archive_name'].'.zip';
+    } else {
+        $archive_name = "instantcms_{$core_version['date']}_v{$core_version['version']}-custom.zip";
+    }
+
+    $archive_path = dirname(PATH_ICMS).'/'.$archive_name;
 
     exec('cd '.PATH_ICMS.'; /usr/bin/zip -FSr '.$archive_path.' .');
 
