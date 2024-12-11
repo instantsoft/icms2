@@ -344,7 +344,7 @@ class cmsInstaller {
 
         if ($form && is_readable($controller_root_path . 'backend.php')) {
 
-            $backend_controller = $this->loadControllerBackend($this->manifest['package']['name'], new cmsRequest([], cmsRequest::CTX_INTERNAL));
+            $backend_controller = $this->admin->loadControllerBackend($this->manifest['package']['name'], new cmsRequest([], cmsRequest::CTX_INTERNAL));
 
             $form = $backend_controller->addControllerSeoOptions($form);
 

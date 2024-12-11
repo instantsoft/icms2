@@ -2,10 +2,10 @@ html, body{ height: 100%; margin: 0; padding: 0}
 
 body {
     background: url("../images/bg.jpg");
-    font-family: 'Trebuchet MS', Helvetica, 'DejaVu Sans', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     font-size:14px;
-	font-style: normal;
-	font-variant: normal;
+    font-style: normal;
+    font-variant: normal;
 }
 a { will-change: all; transition: background 0.15s linear, color 0.2s ease-in-out; }
 .loading-overlay{
@@ -338,8 +338,7 @@ select.input {
 
 span.root-path{
     font-weight:bold;
-    font-family: mono;
-
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 a.root-path-change{
@@ -466,4 +465,20 @@ a.root-path-change{
     -webkit-transform: scale(1);
             transform: scale(1);
   }
+}
+.animated {
+    animation-duration: .3s
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+.fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn
 }

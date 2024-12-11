@@ -388,7 +388,7 @@ class fieldNumber extends cmsFormField {
                 return null;
             }
 
-            $value = floatval(str_replace(',', '.', trim($value)));
+            $value = floatval(str_replace(',', '.', trim((string)$value)));
 
             return $this->getOption('is_abs') ? abs($value) : $value;
 

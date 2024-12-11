@@ -4,6 +4,8 @@ define('SESSION_START', true);
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+cmsCore::loadLib('template.helper');
+
 $core->initLanguage();
 
 $addons_dirs = files_get_dirs_list(PATH . '/install/externals', true);

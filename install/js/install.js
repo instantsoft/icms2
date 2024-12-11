@@ -1,31 +1,33 @@
-function nextStep(){
+function nextStep() {
 
-    if (current_step === false){
+    if (current_step === false) {
         current_step = 0;
     } else {
         current_step = current_step + 1;
         showLoadingIndicator();
     }
 
-    var url = 'index.php';
-    var data = {step: current_step};
-    var type = 'json';
+    let url = 'index.php';
+    let data = {step: current_step};
+    let type = 'json';
+    let page = $('#body > .page');
 
-    var callback = function(result){
+    page.removeClass('animated fadeIn');
 
-        if("html" in result){
-            $('#body > .page').html( result.html );
+    var callback = function (result) {
+
+        if ("html" in result) {
+            page.html(result.html);
+            page.addClass('animated fadeIn');
         }
 
         $('#steps li').removeClass('active');
         $('#steps li').eq(current_step).addClass('active');
 
         hideLoadingIndicator();
-
     };
 
     $.post(url, data, callback, type);
-
 }
 
 function formToJSON( form ){
