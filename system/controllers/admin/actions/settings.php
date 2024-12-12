@@ -139,6 +139,9 @@ class actionAdminSettings extends cmsAction {
                         $this->model->db->query("ALTER DATABASE {$this->cms_config->db_base} CHARACTER SET {$values['db_charset']} COLLATE {$collation_name}");
 
                     } else {
+
+                        cmsUser::addSessionMessage(LANG_CP_SETTINGS_DB_CHARSET_ERROR, 'error');
+
                         // Не меняем, если не поддерживается
                         $values['db_charset'] = $this->cms_config->db_charset;
                     }

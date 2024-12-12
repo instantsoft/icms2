@@ -546,6 +546,7 @@
     define('LANG_CP_SETTINGS_DB',               'База данных');
     define('LANG_CP_SETTINGS_DB_CLEAR_SQL_MODE', 'Включить режим пустого sql_mode для MySQL');
     define('LANG_CP_SETTINGS_DB_CHARSET',       'Кодировка');
+    define('LANG_CP_SETTINGS_DB_CHARSET_ERROR', 'Выбранная кодировка не поддерживается сервером');
     define('LANG_CP_SETTINGS_DB_CHARSET_HINT',  'Изменение кодировки может занять продолжительное время');
     define('LANG_CP_SETTINGS_MISC',             'Прочие');
     define('LANG_CP_SETTINGS_SECURITY',         'Безопасность');

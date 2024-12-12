@@ -77,7 +77,7 @@ class typograph extends cmsFrontend {
 
         if ($smiles) {
             foreach ($smiles as $tag => $smile_path) {
-                $text = str_replace(':' . $tag . ':', ' <img src="' . $smile_path . '" alt="' . $tag . '" /> ', $text);
+                $text = str_replace(':' . $tag . ':', ' <img src="' . $smile_path . '" alt="' . $tag . '"> ', $text);
             }
         }
 

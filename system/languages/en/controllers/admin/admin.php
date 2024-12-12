@@ -522,6 +522,7 @@
     define('LANG_CP_SETTINGS_DB',               'Database');
     define('LANG_CP_SETTINGS_DB_CLEAR_SQL_MODE', 'Enable empty sql_mode for MySQL');
     define('LANG_CP_SETTINGS_DB_CHARSET',       'Charset');
+    define('LANG_CP_SETTINGS_DB_CHARSET_ERROR', 'The selected Charset is not supported by the server');
     define('LANG_CP_SETTINGS_DB_CHARSET_HINT',  'Changing the charset may take a long time');
     define('LANG_CP_SETTINGS_MISC',             'Misc');
     define('LANG_CP_SETTINGS_SECURITY',         'Security');
