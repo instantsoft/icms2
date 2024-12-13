@@ -172,7 +172,8 @@ class users extends cmsFrontend {
                 }
 
                 // опция "показывать только владельцу профиля"
-                if ($tab['show_only_owner'] && $profile['id'] != $this->cms_user->id) {
+                // Админам показываем всегда
+                if ($tab['show_only_owner'] && $profile['id'] != $this->cms_user->id && !$this->cms_user->is_admin) {
                     continue;
                 }
 

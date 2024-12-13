@@ -248,6 +248,7 @@
     define('LANG_CP_TAB_TITLE',                 'Название вкладки');
     define('LANG_CP_TAB_IS_ACTIVE',             'Показывать вкладку');
     define('LANG_CP_TAB_SHOW_ONLY_OWNER',       'Показывать вкладку только владельцу профиля');
+    define('LANG_CP_TAB_SHOW_ONLY_OWNER_HINT',  'Глобальные администраторы видят всегда, если группам, к которым они принадлежат, разрешён показ');
 
     define('LANG_CP_FIELD',                     'Поле');
     define('LANG_CP_FIELD_FORMAT',              'Формат поля');

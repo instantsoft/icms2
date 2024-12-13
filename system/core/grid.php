@@ -58,6 +58,7 @@ class cmsGrid {
         'sortable'          => true,  // Можено сортировать по ней
         'title'             => '',    // Заголовок
         'class'             => '',    // CSS класс
+        'class_handler'     => null,  // Функция обработчик значения для CSS класса
         'key_alias'         => '',    // Псевдоним поля
         'handler'           => null,  // Функция обработчик значения колонки
         'flag'              => false, // Колонка - флаг (включена/выключена)
@@ -650,6 +651,10 @@ class cmsGrid {
 
             if (!empty($column['class'])) {
                 $class[] = $column['class'];
+            }
+
+            if (isset($column['class_handler'])) {
+                $class[] = $column['class_handler']($row);
             }
 
             if ($field === 'id') {

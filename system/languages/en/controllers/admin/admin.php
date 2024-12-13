@@ -233,6 +233,7 @@
     define('LANG_CP_TAB_TITLE',                 'Tab title');
     define('LANG_CP_TAB_IS_ACTIVE',             'Tab is enabled');
     define('LANG_CP_TAB_SHOW_ONLY_OWNER',       'Show tab to the profile owner only');
+    define('LANG_CP_TAB_SHOW_ONLY_OWNER_HINT',  'Global admins always see if the groups they belong to have permission to show');
     define('LANG_CP_FIELD',                     'Field');
     define('LANG_CP_FIELD_FORMAT',              'Field validation');
     define('LANG_CP_FIELD_REGEX',               'Regular expression');

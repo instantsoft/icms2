@@ -27,7 +27,8 @@ class formUsersTab extends cmsForm {
                     ]),
 
                     new fieldCheckbox('show_only_owner', [
-                        'title' => LANG_CP_TAB_SHOW_ONLY_OWNER
+                        'title' => LANG_CP_TAB_SHOW_ONLY_OWNER,
+                        'hint'  => LANG_CP_TAB_SHOW_ONLY_OWNER_HINT
                     ]),
 
                     new fieldListGroups('groups_view', [
