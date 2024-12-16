@@ -1332,6 +1332,9 @@ class modelContent extends cmsModel {
 
         return $this->get($this->getContentTypeTableName($ctype_name), function ($item, $model) use ($user, $callback, $ctype_name) {
 
+            // Распарсенные поля
+            $item['fields'] = [];
+
             $item['category'] = [
                 'id'    => $item['category_id'],
                 'slug'  => $item['cat_slug'],

@@ -21,6 +21,9 @@ return [
         'has_profile_themes_options' => false,
         'is_dynamic_layout'          => true,
         'is_backend'                 => false,
-        'is_frontend'                => true
+        'is_frontend'                => true,
+        'html_attr'                  => [
+            'class' => 'min-vh-100'
+        ]
     ]
 ];

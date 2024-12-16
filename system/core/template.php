@@ -2074,14 +2074,27 @@ class cmsTemplate {
     }
 
     /**
-     * Устанавливает параметры шаблон скелета
+     * Устанавливает параметры шаблона скелета
      *
      * @param array $layout_params
      * @return $this
      */
-    public function setLayoutParams($layout_params) {
+    public function setLayoutParams(array $layout_params) {
 
         $this->layout_params = $layout_params;
+
+        return $this;
+    }
+
+    /**
+     * Добавляет параметры шаблона скелета
+     *
+     * @param array $layout_params
+     * @return $this
+     */
+    public function addLayoutParams(array $layout_params) {
+
+        $this->layout_params = array_replace_recursive($this->layout_params, $layout_params);
 
         return $this;
     }
@@ -2202,6 +2215,9 @@ class cmsTemplate {
         if(!isset($this->manifest['inherit'])){
             $this->manifest['inherit'] = [];
         }
+
+        $this->layout_params['attr'] = $this->manifest['properties']['html_attr'] ?? [];
+        $this->layout_params['attr']['lang'] = cmsCore::getLanguageName();
 
         $this->setInheritNames($this->manifest['inherit']);
 

@@ -194,7 +194,6 @@ class widgetContentList extends cmsWidget {
                 $item['ctype_name']        = $ctype['name'];
                 $item['is_private_item']   = $item['is_private'] && $hide_except_title;
                 $item['private_item_hint'] = LANG_PRIVACY_HINT;
-                $item['fields']            = [];
 
                 // для приватности друзей
                 // другие проверки приватности (например для групп) в хуках content_before_list

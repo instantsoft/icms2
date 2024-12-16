@@ -10,7 +10,7 @@ class widgetContentSlider extends cmsWidget {
         $image_field      = $this->getOption('image_field');
         $big_image_field  = $this->getOption('big_image_field');
         $big_image_preset = $this->getOption('big_image_preset');
-        $teaser_fields    = $this->getOption('teaser_field');
+        $teaser_field     = $this->getOption('teaser_field');
         $limit            = $this->getOption('limit', 10);
         $delay            = $this->getOption('delay', 5);
         $teaser_len       = $this->getOption('teaser_len', 100);
@@ -72,7 +72,7 @@ class widgetContentSlider extends cmsWidget {
             'image_field'       => $image_field,
             'big_image_field'   => $big_image_field,
             'big_image_preset'  => $big_image_preset,
-            'teaser_field'      => $teaser_fields,
+            'teaser_field'      => $teaser_field,
             'items'             => $items
         ];
     }

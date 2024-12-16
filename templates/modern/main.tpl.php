@@ -6,7 +6,7 @@
 /** @var cmsTemplate $this */
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo cmsCore::getLanguageName(); ?>" class="min-vh-100">
+<html <?php echo html_attr_str(($this->layout_params['attr'] ?? []), false); ?>>
     <head>
         <title><?php $this->title(); ?></title>
         <meta charset="utf-8" />

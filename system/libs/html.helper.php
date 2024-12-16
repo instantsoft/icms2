@@ -241,7 +241,7 @@ function html_attr_str($attributes, $unset_class_key = true) {
         }
     }
 
-    return implode(' ', $attr_parts) . ' ';
+    return implode(' ', $attr_parts);
 }
 
 /**
