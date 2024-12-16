@@ -471,7 +471,7 @@ class cmsForm {
     }
 
     /**
-     * Добавляет набор после заданного
+     * Добавляет набор после заданного, если нет его, добавляет в конец
      *
      * @param string $after_id ID набора, после которого вставить
      * @param string $id ID добавляемого набора
@@ -495,13 +495,12 @@ class cmsForm {
             $before = array_slice($this->structure, 0, $pos + 1, true);
             $after  = array_slice($this->structure, $pos + 1, null, true);
 
-            $this->structure = $before + array($id => $structure) + $after;
-
+            $this->structure = $before + [$id => $structure] + $after;
 
             return $id;
         }
 
-        return null;
+        return $this->addStructure($id, $structure);
     }
 
     /**

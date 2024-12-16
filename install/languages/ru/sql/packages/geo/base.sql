@@ -14,6 +14,9 @@ CREATE TABLE `{#}geo_cities` (
   KEY `region_id` (`region_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
+INSERT INTO `{#}events` (`event`, `listener`, `ordering`, `is_enabled`) VALUES
+('form_admin_widgets_page', 'geo', 243, 1);
+
 START TRANSACTION;
 
 INSERT INTO `{#}geo_cities` (`id`, `country_id`, `region_id`, `name`) VALUES
