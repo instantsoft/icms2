@@ -710,6 +710,8 @@
     define('LANG_CP_PACKAGE_DESCRIPTION',       'Описание пакета');
     define('LANG_CP_PACKAGE_CONTENTS',          'Содержимое пакета');
     define('LANG_CP_PACKAGE_DEPENDS',           'Зависимости пакета');
+    define('LANG_CP_PACKAGE_DEPENDS_PHP_EXT',   'Требуется PHP модуль %s');
+    define('LANG_CP_PACKAGE_DEPENDS_VERSION',   'Версия %s, требуется %s');
     define('LANG_CP_PACKAGE_DEPENDS_PHP',       'Требуемая версия PHP');
     define('LANG_CP_PACKAGE_DEPENDS_CORE',      'Требуемая версия ядра');
     define('LANG_CP_PACKAGE_DEPENDENT_TYPE',      'Требуется установленный %s <a href="%s" target="_blank">%s</a>');

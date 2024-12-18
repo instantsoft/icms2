@@ -745,47 +745,49 @@ class actionContentItemView extends cmsAction {
 
     public function applyItemSeo($ctype, $item, $fields) {
 
-        $seo_desc = $seo_keys = ''; $seo_title = $item['title'];
+        $seo_desc  = $seo_keys  = '';
+        $seo_title = $item['title'];
 
         $meta_item = $this->prepareItemSeo($item, $fields, $ctype);
 
-        if(!empty($ctype['options']['seo_title_pattern'])){
+        $this->cms_template->
+                setPageKeywordsItem($meta_item)->
+                setPageDescriptionItem($meta_item)->
+                setPageTitleItem($meta_item);
 
+        if (!empty($ctype['options']['seo_title_pattern'])) {
             $seo_title = $ctype['options']['seo_title_pattern'];
-
-            $this->cms_template->setPageTitleItem($meta_item);
         }
 
-        if(!empty($ctype['options']['seo_keys_pattern'])){
-
+        if (!empty($ctype['options']['seo_keys_pattern'])) {
             $seo_keys = $ctype['options']['seo_keys_pattern'];
-
-            $this->cms_template->setPageKeywordsItem($meta_item);
         }
 
-        if(!empty($ctype['options']['seo_desc_pattern'])){
-
+        if (!empty($ctype['options']['seo_desc_pattern'])) {
             $seo_desc = $ctype['options']['seo_desc_pattern'];
-
-            $this->cms_template->setPageDescriptionItem($meta_item);
         }
 
         // приоритет за заданными в записи
-        if (!empty($item['seo_title'])){ $seo_title = $item['seo_title']; }
-        if (!empty($item['seo_keys'])){ $seo_keys = $item['seo_keys']; }
-        if (!empty($item['seo_desc'])){ $seo_desc = $item['seo_desc']; }
+        if (!empty($item['seo_title'])) {
+            $seo_title = $item['seo_title'];
+        }
+        if (!empty($item['seo_keys'])) {
+            $seo_keys = $item['seo_keys'];
+        }
+        if (!empty($item['seo_desc'])) {
+            $seo_desc = $item['seo_desc'];
+        }
 
         $this->cms_template->setPageTitle($seo_title);
         $this->cms_template->setPageKeywords($seo_keys);
         $this->cms_template->setPageDescription($seo_desc);
 
-        return array(
+        return [
             'meta_item' => $meta_item,
             'title_str' => $seo_title,
             'keys_str'  => $seo_keys,
             'desc_str'  => $seo_desc
-        );
-
+        ];
     }
 
 }

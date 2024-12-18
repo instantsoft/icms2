@@ -97,7 +97,7 @@
                 <div class="list-group list-group-accent">
                     <?php if (!empty($manifest['depends']['php'])) { ?>
                         <?php $hl_class = !$manifest['depends_results']['php'] ? 'danger' : 'success'; ?>
-                        <div class="list-group-item list-group-item-accent-<?php echo $hl_class; ?>">
+                        <div class="list-group-item p-2 list-group-item-accent-<?php echo $hl_class; ?>">
                             <?php echo LANG_CP_PACKAGE_DEPENDS_PHP; ?>
                             <span class="ml-3 badge badge-<?php echo $hl_class; ?> badge-pill">
                                 <?php echo $manifest['depends']['php']; ?>
@@ -105,9 +105,27 @@
                         </div>
                         <?php if (!$manifest['depends_results']['php']){ $depends_pass = false; } ?>
                     <?php } ?>
+                    <?php foreach ($manifest['depends_results']['php_ext'] as $ext => $ext_data) { ?>
+                        <?php $hl_class = !$ext_data['valid'] ? 'danger' : 'success'; ?>
+                        <div class="list-group-item p-2 list-group-item-accent-<?php echo $hl_class; ?>">
+                            <?php printf(LANG_CP_PACKAGE_DEPENDS_PHP_EXT, $ext); ?>
+                            <span class="ml-3 badge badge-<?php echo $hl_class; ?> badge-pill">
+                                <?php if ($ext_data['loaded']) { ?>
+                                    <?php if ($ext_data['valid']) { ?>
+                                        <?php echo $ext_data['loaded']; ?>
+                                    <?php } else { ?>
+                                        <?php printf(LANG_CP_PACKAGE_DEPENDS_VERSION, $ext_data['loaded'], $ext_data['required_version']); ?>
+                                    <?php } ?>
+                                <?php } else { ?>
+                                    <?php echo LANG_CP_NOT_INSTALLED; ?>
+                                <?php } ?>
+                            </span>
+                        </div>
+                        <?php if (!$ext_data['valid']){ $depends_pass = false; } ?>
+                    <?php } ?>
                     <?php if (!empty($manifest['depends']['core'])) { ?>
                         <?php $hl_class = !$manifest['depends_results']['core'] ? 'danger' : 'success'; ?>
-                        <div class="list-group-item list-group-item-accent-<?php echo $hl_class; ?>">
+                        <div class="list-group-item p-2 list-group-item-accent-<?php echo $hl_class; ?>">
                             <?php echo LANG_CP_PACKAGE_DEPENDS_CORE; ?>
                             <span class="ml-3 badge badge-<?php echo $hl_class; ?> badge-pill">
                                 <?php echo $manifest['depends']['core']; ?>
@@ -117,7 +135,7 @@
                     <?php } ?>
                     <?php if (!empty($manifest['depends']['package'])) { ?>
                         <?php $hl_class = !$manifest['depends_results']['package'] ? 'danger' : 'success'; ?>
-                        <div class="list-group-item list-group-item-accent-<?php echo $hl_class; ?>">
+                        <div class="list-group-item p-2 list-group-item-accent-<?php echo $hl_class; ?>">
                             <?php echo LANG_CP_PACKAGE_DEPENDS_PACKAGE; ?>
                             <span class="ml-3 badge badge-<?php echo $hl_class; ?> badge-pill">
                                 <?php echo $manifest['depends']['package']; ?>
@@ -127,7 +145,7 @@
                     <?php } ?>
                     <?php if (!empty($manifest['depends']['dependent_type'])) { ?>
                         <?php $hl_class = !$manifest['depends_results']['dependent_type'] ? 'danger' : 'success'; ?>
-                        <div class="list-group-item list-group-item-accent-<?php echo $hl_class; ?>">
+                        <div class="list-group-item p-2 list-group-item-accent-<?php echo $hl_class; ?>">
                             <?php echo sprintf(LANG_CP_PACKAGE_DEPENDENT_TYPE, string_lang('LANG_CP_PACKAGE_DEPENDENT_'.$manifest['depends']['dependent_type']), $manifest['depends']['dependent_url'], $manifest['depends']['dependent_title']); ?>
                             <span class="ml-3 badge badge-<?php echo $hl_class; ?> badge-pill">
                                 <?php echo $manifest['depends_results']['dependent_type'] ? LANG_CP_INSTALLED : LANG_CP_NOT_INSTALLED; ?>
@@ -137,7 +155,7 @@
                     <?php } ?>
                     <?php if (!empty($manifest['depends_results']['dependent_type']) && isset($manifest['depends']['dependent_version'])) { ?>
                         <?php $hl_class = !$manifest['depends_results']['dependent_version'] ? 'danger' : 'success'; ?>
-                        <div class="list-group-item list-group-item-accent-<?php echo $hl_class; ?>">
+                        <div class="list-group-item p-2 list-group-item-accent-<?php echo $hl_class; ?>">
                             <?php echo LANG_CP_PACKAGE_DEPENDS_PACKAGE; ?> <a href="<?php echo $manifest['depends']['dependent_url']; ?>" target="_blank" rel="noopener noreferrer"><?php echo $manifest['depends']['dependent_title']; ?></a>
                             <span class="ml-3 badge badge-<?php echo $hl_class; ?> badge-pill">
                                 <?php echo $manifest['depends']['dependent_version']; ?>

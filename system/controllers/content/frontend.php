@@ -1278,41 +1278,19 @@ class content extends cmsFrontend {
         $h1_pattern = $title_pattern = $keys_pattern = $desc_pattern = '';
 
         $meta_item = array_merge([
-            'title'             => null,
-            'description'       => null,
-            'ds_title'          => null,
-            'ds_description'    => null,
-            'f_title'           => null,
-            'f_description'     => null,
+            'title'             => !empty($category['title']) ? $category['title'] : null,
+            'description'       => !empty($category['description']) ? strip_tags($category['description']) : null,
+            'ds_title'          => !empty($dataset['title']) ? $dataset['title'] : null,
+            'ds_description'    => !empty($dataset['description']) ? strip_tags($dataset['description']) : null,
+            'f_title'           => $this->list_filter['title'] ?? null,
+            'f_description'     => !empty($this->list_filter['description']) ? strip_tags($this->list_filter['description']) : null,
             'ctype_title'       => $ctype['title'],
-            'ctype_description' => ($ctype['description'] ? strip_tags($ctype['description']) : null),
-            'ctype_label1'      => (!empty($ctype['labels']['one']) ? $ctype['labels']['one'] : null),
-            'ctype_label2'      => (!empty($ctype['labels']['two']) ? $ctype['labels']['two'] : null),
-            'ctype_label10'     => (!empty($ctype['labels']['many']) ? $ctype['labels']['many'] : null),
-            'filter_string'     => null
+            'ctype_description' => $ctype['description'] ? strip_tags($ctype['description']) : null,
+            'ctype_label1'      => !empty($ctype['labels']['one']) ? $ctype['labels']['one'] : null,
+            'ctype_label2'      => !empty($ctype['labels']['two']) ? $ctype['labels']['two'] : null,
+            'ctype_label10'     => !empty($ctype['labels']['many']) ? $ctype['labels']['many'] : null,
+            'filter_string'     => implode(', ', ($this->getFilterTitles() ?: [])),
         ], $add_meta_item);
-
-        $filter_titles = $this->getFilterTitles();
-
-        if (!empty($filter_titles)){
-            $meta_item['filter_string'] = implode(', ', $filter_titles);
-        }
-
-        if (!empty($dataset['title'])){
-            $meta_item['ds_title'] = $dataset['title'];
-        }
-
-        if (!empty($dataset['description'])){
-            $meta_item['ds_description'] = strip_tags($dataset['description']);
-        }
-
-        if (!empty($category['title'])){
-            $meta_item['title'] = $category['title'];
-        }
-
-        if (!empty($category['description'])){
-            $meta_item['description'] = strip_tags($category['description']);
-        }
 
         if (!empty($ctype['options']['seo_ctype_h1_pattern'])){
             $h1_pattern = $ctype['options']['seo_ctype_h1_pattern'];
@@ -1357,12 +1335,6 @@ class content extends cmsFrontend {
         }
 
         if($this->list_filter){
-            if ($this->list_filter['title']){
-                $meta_item['f_title'] = $this->list_filter['title'];
-            }
-            if ($this->list_filter['description']){
-                $meta_item['f_description'] = strip_tags($this->list_filter['description']);
-            }
             if ($this->list_filter['seo_h1']){
                 $h1_pattern = $this->list_filter['seo_h1'];
             }
@@ -1388,18 +1360,11 @@ class content extends cmsFrontend {
         }
         // есть паттерн
         if($h1_pattern){
-
             $h1_str = $h1_pattern;
-
-            $this->cms_template->setPageH1Item($meta_item);
-
         }
         // то, что задано вручную для катеории в приоритете
         if(!empty($category['seo_h1']) && empty($dataset['seo_h1'])){
-
             $h1_str = $category['seo_h1'];
-
-            $this->cms_template->setPageH1Item($meta_item);
         }
 
         /**
@@ -1407,17 +1372,11 @@ class content extends cmsFrontend {
          */
         // есть паттерн
         if($title_pattern){
-
             $title_str = $title_pattern;
-
-            $this->cms_template->setPageTitleItem($meta_item);
         }
         // заданное вручную в приоритете
         if (!empty($category['seo_title']) && empty($dataset['seo_title'])){
-
             $title_str = $category['seo_title'];
-
-            $this->cms_template->setPageTitleItem($meta_item);
         }
 
         /**
@@ -1426,18 +1385,11 @@ class content extends cmsFrontend {
         $keys_str = $ctype['seo_keys'];
         // есть паттерн
         if($keys_pattern){
-
             $keys_str = $keys_pattern;
-
-            $this->cms_template->setPageKeywordsItem($meta_item);
-
         }
         // ключи для категории в приоритете
         if (!empty($category['seo_keys']) && empty($dataset['seo_keys'])){
-
             $keys_str = $category['seo_keys'];
-
-            $this->cms_template->setPageKeywordsItem($meta_item);
         }
 
         /**
@@ -1446,19 +1398,17 @@ class content extends cmsFrontend {
         $desc_str = $ctype['seo_desc'];
         // есть паттерн
         if($desc_pattern){
-
             $desc_str = $desc_pattern;
-
-            $this->cms_template->setPageDescriptionItem($meta_item);
-
         }
         // описание для категории в приоритете
         if (!empty($category['seo_desc']) && empty($dataset['seo_desc'])){
-
             $desc_str = $category['seo_desc'];
-
-            $this->cms_template->setPageDescriptionItem($meta_item);
         }
+
+        $this->cms_template->setPageH1Item($meta_item);
+        $this->cms_template->setPageTitleItem($meta_item);
+        $this->cms_template->setPageKeywordsItem($meta_item);
+        $this->cms_template->setPageDescriptionItem($meta_item);
 
         $this->cms_template->setPageH1($h1_str);
         $this->cms_template->setPageTitle($title_str);

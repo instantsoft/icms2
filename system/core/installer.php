@@ -722,6 +722,22 @@ class cmsInstaller {
         $results['php'] = isset($this->manifest['depends']['php']) &&
                 version_compare(PHP_VERSION, $this->manifest['depends']['php']) >= 0;
 
+        // Проверка модулей php
+        $results['php_ext'] = [];
+        // Функция phpversion может быть отключена
+        if (!empty($this->manifest['depends']['php_ext']) && function_exists('phpversion')) {
+            foreach ($this->manifest['depends']['php_ext'] as $ext => $version) {
+
+                $loaded_version = phpversion($ext);
+
+                $results['php_ext'][$ext] = [
+                    'loaded'           => $loaded_version,
+                    'required_version' => $version,
+                    'valid'            => $loaded_version && version_compare($loaded_version, $version) >= 0
+                ];
+            }
+        }
+
         // Сохранение в манифест
         $this->manifest['depends_results'] = $results;
     }

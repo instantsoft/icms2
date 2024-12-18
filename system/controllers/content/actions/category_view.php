@@ -303,6 +303,7 @@ class actionContentCategoryView extends cmsAction {
             'show_h1'         => $this->cms_template->hasPageH1() && !$this->request->isInternal() && !$is_frontpage,
             'base_ds_url'     => $base_ds_url,
             'base_url'        => $base_url,
+            'page_url'        => $page_url,
             'rss_query'       => '', // Не используется, совместимость
             'list_styles'     => $list_styles,
             'is_frontpage'    => $is_frontpage,
