@@ -558,8 +558,8 @@ class cmsModel {
         return $this->db->insert($table_name, $data, false, $array_as_json, $ignore);
     }
 
-    public function insertOrUpdate($table_name, $insert_data, $update_data = false){
-        return $this->db->insertOrUpdate($table_name, $insert_data, $update_data);
+    public function insertOrUpdate($table_name, $insert_data, $update_data = false, $array_as_json = false){
+        return $this->db->insertOrUpdate($table_name, $insert_data, $update_data, $array_as_json);
     }
 
 //============================================================================//
