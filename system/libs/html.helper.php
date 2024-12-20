@@ -2,33 +2,32 @@
 
 /**
  * Выводит строку, безопасную для html
- * @param string $string Строка
+ *
+ * @param string  $string Строка
  * @param boolean $print Печатать результат или возвращать, по умолчанию true
  */
-function html($string, $print = true) {
+function html(string $string, bool $print = true) {
 
     // Должна быть строка
-    $string = ''.$string;
-
     $string = htmlentities($string, ENT_QUOTES | ENT_HTML401, 'UTF-8');
 
-    if ($print) {
-        echo $string;
-        return;
+    if (!$print) {
+        return $string;
     }
 
-    return $string;
+    echo $string;
 }
 
 /**
  * Очищает строку от тегов и обрезает до нужной длины
- * @param string $string Строка
+ *
+ * @param string  $string Строка
  * @param integer $max_length Максимальное кол-во символов, по умолчанию false
+ *
  * @return string
  */
-function html_clean($string, $max_length = false) {
-
-    $string = ''.$string;
+function html_clean(string $string, $max_length = false): string
+{
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами
@@ -44,11 +43,14 @@ function html_clean($string, $max_length = false) {
 
 /**
  * Обрезает строку до заданного кол-ва символов
- * @param string $string Строка
+ *
+ * @param string  $string Строка
  * @param integer $max_length Кол-во символов, которые нужно оставить от начала строки
+ *
  * @return string
  */
-function html_strip($string, $max_length) {
+function html_strip(string $string, int $max_length): string
+{
 
     $length = mb_strlen($string);
 
@@ -62,11 +64,14 @@ function html_strip($string, $max_length) {
 
 /**
  * Формирует ссылку по относительной (без добавления корня URL)
- * @param string $rel_link
+ *
+ * @param string  $rel_link
  * @param boolean $is_abs
+ *
  * @return string
  */
-function rel_to_href($rel_link, $is_abs = false) {
+function rel_to_href(string $rel_link, bool $is_abs = false): string
+{
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
@@ -76,21 +81,25 @@ function rel_to_href($rel_link, $is_abs = false) {
 /**
  * Возвращает ссылку на профиль пользователя
  *
- * @param mixed $user Массив данных пользователя
- * @param mixed $params
+ * @param mixed   $user Массив данных пользователя
+ * @param mixed   $params
  * @param boolean $is_abs
+ *
  * @return string
  */
-function href_to_profile($user, $params = false, $is_abs = false){
+function href_to_profile($user, $params = false, bool $is_abs = false): string
+{
 
     $href_func = 'href_to';
     if($is_abs){
         $href_func = 'href_to_abs';
     }
 
-    if(is_array($user)){
+    if (is_array($user)) {
         return $href_func('users', (empty($user['slug']) ? $user['id'] : $user['slug']), $params);
-    } elseif(is_object($user)){
+    }
+
+    if(is_object($user)) {
         return $href_func('users', (empty($user->slug) ? $user->id : $user->slug), $params);
     }
 
@@ -100,13 +109,16 @@ function href_to_profile($user, $params = false, $is_abs = false){
 /**
  * Возвращает ссылку на указанное действие контроллера
  * с добавлением пути от корня сайта
- * @param string $controller Имя контроллера
- * @param string $action Имя экшена
- * @param array|string|integer $params Параметры экшена
- * @param array $query Параметры строки запроса
+ *
+ * @param string               $controller Имя контроллера
+ * @param string               $action Имя экшена
+ * @param array|string|int $params Параметры экшена
+ * @param array                $query Параметры строки запроса
+ *
  * @return string
  */
-function href_to($controller, $action = '', $params = false, $query = []){
+function href_to(string $controller, string $action = '', $params = false, array $query = []): string
+{
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
@@ -116,12 +128,15 @@ function href_to($controller, $action = '', $params = false, $query = []){
 /**
  * Возвращает ссылку на указанное действие контроллера
  * с добавлением хоста сайта
- * @param string $controller
- * @param string $action
- * @param array|string|integer $params Параметры, массив
+ *
+ * @param string           $controller
+ * @param string           $action
+ * @param array|string|int $params Параметры, массив
+ *
  * @return string
  */
-function href_to_abs($controller, $action = '', $params = false, $query = []){
+function href_to_abs(string $controller, string $action = '', $params = false, $query = []): string
+{
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
@@ -131,13 +146,15 @@ function href_to_abs($controller, $action = '', $params = false, $query = []){
 /**
  * Возвращает ссылку на указанное действие контроллера без добавления корня URL
  *
- * @param string $controller Имя контроллера
- * @param string $action Имя действия
+ * @param string               $controller Имя контроллера
+ * @param string               $action Имя действия
  * @param array|string|integer $params Параметры, массив
- * @param array $query Параметры строки запроса
+ * @param array                $query Параметры строки запроса
+ *
  * @return string
  */
-function href_to_rel($controller, $action = '', $params = false, $query = []) {
+function href_to_rel(string $controller, string $action = '', $params = false, array $query = []): string
+{
 
     $controller = trim($controller, '/ ');
 
@@ -149,8 +166,8 @@ function href_to_rel($controller, $action = '', $params = false, $query = []) {
         }
     }
 
-    $controller_alias = cmsCore::getControllerAliasByName($controller);
-    if ($controller_alias) {
+    
+    if (($controller_alias = cmsCore::getControllerAliasByName($controller)) !== false) {
         $controller = $controller_alias;
     }
 
@@ -182,9 +199,11 @@ function href_to_rel($controller, $action = '', $params = false, $query = []) {
  * Возвращает ссылку на текущую страницу
  *
  * @param bool $add_host Добавлять http://ваш-сайт.ру
+ *
  * @return string
  */
-function href_to_current($add_host = false) {
+function href_to_current(bool $add_host = false): ?string
+{
 
     static $rel_url = null;
 
@@ -198,29 +217,35 @@ function href_to_current($add_host = false) {
 
     if ($add_host) {
         return cmsConfig::get('host') . $rel_url;
-    } else {
-        return $rel_url;
     }
+
+    return $rel_url;
 }
 
 /**
  * Возвращает ссылку на главную страницу сайта
+ *
+ * @param bool $add_host Добавлять http://ваш-сайт.ру
+ *
  * @return string
  */
-function href_to_home($add_host = false){
+function href_to_home(bool $add_host = false): string
+{
     return ($add_host ? cmsConfig::get('host').'/' : cmsConfig::get('root')).cmsCore::getLanguageHrefPrefix();
 }
 
 /**
  * Возвращает отформатированную строку аттрибутов тега
  *
- * @param array $attributes Атрибуты тега название=>значение
+ * @param array   $attributes Атрибуты тега название=>значение
  * @param boolean $unset_class_key Не формировать CSS класс
+ *
  * @return string
  */
-function html_attr_str($attributes, $unset_class_key = true) {
+function html_attr_str(array $attributes, bool $unset_class_key = true): string
+{
 
-    if (!$attributes || !is_array($attributes)) {
+    if (!$attributes) {
         return '';
     }
 
@@ -241,17 +266,20 @@ function html_attr_str($attributes, $unset_class_key = true) {
         }
     }
 
-    return implode(' ', $attr_parts);
+    return implode(' ', $attr_parts) . ' ';
 }
 
 /**
  * Печатает короткий HTML тег
+ *
  * @param string $tag_name Имя тега
- * @param array $attributes Атрибуты тега название=>значение
+ * @param array  $attributes Атрибуты тега название=>значение
  * @param string $class CSS класс, если он отдельно от атрибутов
+ *
  * @return string
  */
-function html_tag_short($tag_name, $attributes, $class = '') {
+function html_tag_short(string $tag_name, array $attributes, string $class = ''): string
+{
 
     if(!empty($attributes['class'])){
         $class .= ' ' . $attributes['class'];
@@ -261,7 +289,8 @@ function html_tag_short($tag_name, $attributes, $class = '') {
     return '<'.$tag_name.' ' . html_attr_str($attributes, false) . '/>';
 }
 
-function default_images($type, $preset) {
+function default_images($type, $preset): array
+{
     return [
         $preset => 'default/' . $type . '_' . $preset . '.png'
     ];
@@ -269,11 +298,14 @@ function default_images($type, $preset) {
 
 /**
  * Возвращает ссылку на аватар пользователя
- * @param array|yaml $avatars Все изображения аватара
+ *
+ * @param array|string  $avatars Все изображения аватара
  * @param string $size_preset Название пресета
+ *
  * @return string
  */
-function html_avatar_image_src($avatars, $size_preset = 'small', $is_relative = true) {
+function html_avatar_image_src($avatars, string $size_preset = 'small', $is_relative = true): ?string
+{
 
     $config = cmsConfig::getInstance();
 
@@ -306,13 +338,15 @@ function html_avatar_image_src($avatars, $size_preset = 'small', $is_relative = 
 
 /**
  * Возвращает путь к файлу изображения
- * @param array|yaml $image Все размеры заданного изображения
- * @param string $size_preset Название пресета
- * @param bool $is_add_host Возвращать путь отностительно директории хранения или полный путь
- * @param bool $is_relative Возвращать относительный путь или всегда с полным url
+ *
+ * @param array|string $image Все размеры заданного изображения
+ * @param string       $size_preset Название пресета
+ * @param bool         $is_add_host Возвращать путь отностительно директории хранения или полный путь
+ * @param bool         $is_relative Возвращать относительный путь или всегда с полным url
+ *
  * @return boolean|string
  */
-function html_image_src($image, $size_preset = 'small', $is_add_host = false, $is_relative = true) {
+function html_image_src($image, string $size_preset = 'small', bool $is_add_host = false, bool $is_relative = true) {
 
     $config = cmsConfig::getInstance();
 
@@ -352,10 +386,12 @@ function html_image_src($image, $size_preset = 'small', $is_add_host = false, $i
  * @param string $field_name Имя элемента
  * @param string $content Текст редактора
  * @param string $wysiwyg Имя редактора
- * @param array $config Параметры редактора
+ * @param array  $config Параметры редактора
+ *
  * @return string HTML код
  */
-function html_wysiwyg($field_name, $content = '', $wysiwyg = false, $config = []) {
+function html_wysiwyg(string $field_name, string $content = '', $wysiwyg = false, array $config = []): string
+{
 
     $dom_id = !empty($config['id']) ? $config['id'] : str_replace(['[',']'], ['_', ''], $field_name);
 
@@ -376,7 +412,7 @@ function html_wysiwyg($field_name, $content = '', $wysiwyg = false, $config = []
 
     cmsCore::loadControllerLanguage($wysiwyg);
 
-    list($field_name, $content, $wysiwyg, $config) = cmsEventsManager::hook(['display_wysiwyg_editor', 'display_' . $wysiwyg . '_wysiwyg_editor'], [$field_name, $content, $wysiwyg, $config]);
+    [$field_name, $content, $wysiwyg, $config] = cmsEventsManager::hook(['display_wysiwyg_editor', 'display_' . $wysiwyg . '_wysiwyg_editor'], [$field_name, $content, $wysiwyg, $config]);
 
     $class_name = 'cmsWysiwyg' . ucfirst($wysiwyg);
 
@@ -395,16 +431,19 @@ function html_wysiwyg($field_name, $content = '', $wysiwyg = false, $config = []
  *
  * @param string $field_name
  * @param string $content
- * @param array $options
+ * @param array  $options
+ *
  * @return string
  */
-function html_editor($field_name, $content = '', $options = []) {
+function html_editor(string $field_name, string $content = '', array $options = []): string
+{
     return html_wysiwyg($field_name, $content, 'markitup', $options);
 }
 
-function html_select_range($name, $start, $end, $step, $add_lead_zero=false, $selected='', $attributes=array()){
+function html_select_range($name, $start, $end, $step, $add_lead_zero=false, $selected='', $attributes=[]): string
+{
 
-    $items = array();
+    $items = [];
 
     for($i=$start; $i<=$end; $i+=$step){
         if ($add_lead_zero){
@@ -419,54 +458,62 @@ function html_select_range($name, $start, $end, $step, $add_lead_zero=false, $se
 
 /**
  * Возвращает строку содержащую число со знаком плюс или минус
+ *
  * @param int $number
+ *
  * @return string
  */
-function html_signed_num($number){
-    if ($number > 0){
-        return "+{$number}";
-    } else {
-        return "{$number}";
-    }
+function html_signed_num(int $number): string
+{
+    return ($number >= 0 ? '+' : '') . $number;
 }
 
 /**
  * Возвращает строку "positive" для положительных чисел,
  * "negative" для отрицательных и "zero" для ноля
+ *
  * @param int $number
+ *
  * @return string
  */
-function html_signed_class($number){
+function html_signed_class(int $number): string
+{
     if ($number > 0){
         return 'positive text-success';
-    } else if ($number < 0){
-        return 'negative text-danger';
-    } else {
-        return 'zero text-muted';
     }
+
+    if ($number < 0){
+        return 'negative text-danger';
+    }
+
+    return 'zero text-muted';
 }
 
 /**
  * Возвращает скрытое поле, содержащее актуальный CSRF-токен
  * @return string
  */
-function html_csrf_token(){
+function html_csrf_token(): string
+{
     return html_input('hidden', 'csrf_token', cmsForm::getCSRFToken());
 }
 
 /**
  * Возвращает число с числительным в нужном склонении
- * @param int $num
+ *
+ * @param int    $num
  * @param string $one
  * @param string $two
  * @param string $many
  * @param string $zero_text
+ *
  * @return string
  */
-function html_spellcount($num, $one, $two = false, $many = false, $zero_text = LANG_NO) {
+function html_spellcount(int $num, string $one, $two = false, $many = false, string $zero_text = LANG_NO): string
+{
 
     if (!$two && !$many){
-        list($one, $two, $many) = explode('|', $one);
+        [$one, $two, $many] = explode('|', $one);
     }
 
     if (!$num){
@@ -479,35 +526,39 @@ function html_spellcount($num, $one, $two = false, $many = false, $zero_text = L
 function html_spellcount_only($num, $one, $two = false, $many = false) {
 
     if (!$two && !$many) {
-        list($one, $two, $many) = explode('|', $one);
+        [$one, $two, $many] = explode('|', $one);
     }
 
-    if (strpos($num, '.') !== false) {
+    if (strpos((string)$num, '.') !== false) {
         return $two;
     }
 
-    if ($num % 10 == 1 && $num % 100 != 11) {
+    $n10 = $num % 10;
+    $n100 = $num % 100;
+
+    if ($n10 == 1 && $n100 != 11) {
         return $one;
-    } elseif ($num % 10 >= 2 && $num % 10 <= 4 && ($num % 100 < 10 || $num % 100 >= 20)) {
-        return $two;
-    } else {
-        return $many;
     }
 
-    return $one;
+    if ($n10 >= 2 && $n10 <= 4 && ($n100 < 10 || $n100 >= 20)) {
+        return $two;
+    }
+
+    return $many;
 }
 
 /**
  * Возвращает отформатированный размер файла с единицей измерения
  *
- * @param integer $bytes
+ * @param int $bytes
  * @param boolean $round
+ *
  * @return string
  */
-function html_file_size($bytes, $round = false) {
+function html_file_size(int $bytes, bool $round = false): string {
 
     if (empty($bytes)) {
-        return 0;
+        return '0';
     }
 
     $s = [LANG_B, LANG_KB, LANG_MB, LANG_GB, LANG_TB, LANG_PB];
@@ -515,12 +566,11 @@ function html_file_size($bytes, $round = false) {
 
     $pattern = $round ? '%d' : '%.2f';
 
-    $output = sprintf($pattern . ' ' . $s[$e], ($bytes / pow(1024, floor($e))));
-
-    return $output;
+    return sprintf($pattern . ' ' . $s[$e], ($bytes / (1024 ** floor($e))));
 }
 
-function html_views_format($num){
+function html_views_format($num): string
+{
 
     if(!$num) { return '0'; }
 
@@ -535,7 +585,8 @@ function html_views_format($num){
     return (string)$num;
 }
 
-function html_minutes_format($minutes){
+function html_minutes_format($minutes): string
+{
 
     if(!$minutes) { return ''; }
 
@@ -552,15 +603,18 @@ function html_minutes_format($minutes){
 
 /**
  * Возвращает склеенный в одну строку массив строк
- * @param array $array
+ *
+ * @param array|string $value
+ *
  * @return string
  */
-function html_each($array) {
+function html_each($value): string
+{
 
     $result = '';
 
-    if (is_array($array)) {
-        $result = implode('', $array);
+    if (is_array($value)) {
+        $result = implode('', $value);
     }
 
     return $result;
@@ -568,10 +622,13 @@ function html_each($array) {
 
 /**
  * Вырезает из HTML-кода пробелы, табуляции и переносы строк
+ *
  * @param string $html
+ *
  * @return string
  */
-function html_minify($html) {
+function html_minify(string $html): string
+{
     return preg_replace([
         '/\>[^\S ]+/us',
         '/[^\S ]+\</us',
@@ -585,12 +642,14 @@ function html_minify($html) {
 
 /**
  *
- * @param float $number Число
+ * @param float   $number Число
  * @param integer $decimals Знаков после запятой
- * @param string $thousands_sep Разделитель тысяч
+ * @param string  $thousands_sep Разделитель тысяч
+ *
  * @return string
  */
-function nf($number, $decimals = 2, $thousands_sep = '') {
+function nf(float $number, int $decimals = 2, string $thousands_sep = ''): string
+{
     if (!$number) { return '0'; }
     $value = number_format((double) str_replace(',', '.', $number), $decimals, '.', $thousands_sep);
     if($decimals){
