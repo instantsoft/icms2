@@ -2,11 +2,13 @@
 /**
  * Возвращает список директорий внутри указанной
  *
- * @param string $dir Полный путь к директории
+ * @param string  $dir Полный путь к директории
  * @param boolean $asc_sort Сортировать по алфавиту, по умолчанию false
+ *
  * @return array
  */
-function files_get_dirs_list($dir, $asc_sort = false) {
+function files_get_dirs_list(string $dir, bool $asc_sort = false): array
+{
 
     if (!is_dir($dir)) {
         return [];
@@ -26,9 +28,11 @@ function files_get_dirs_list($dir, $asc_sort = false) {
  *
  * @param string $directory_from Полный путь к директории, которую копируем
  * @param string $directory_to Полный путь к директории, куда копируем
+ *
  * @return bool
  */
-function files_copy_directory($directory_from, $directory_to) {
+function files_copy_directory(string $directory_from, string $directory_to)
+{
 
     if (!is_dir($directory_from)) {
         return false;
@@ -42,30 +46,33 @@ function files_copy_directory($directory_from, $directory_to) {
 
     foreach ($items as $item) {
 
-        $target = $directory_to.'/'.$item->getBasename();
+        $target = $directory_to . '/' . $item->getBasename();
 
         if ($item->isDir()) {
 
             if (!files_copy_directory($item->getPathname(), $target)) {
                 return false;
             }
-        }
-        elseif (!copy($item->getPathname(), $target)) {
+        } elseif (!copy($item->getPathname(), $target)) {
             return false;
         }
     }
 
     return true;
 }
+
 /**
  * Рекурсивно удаляет директорию
+ *
  * @param string $directory
- * @param bool $is_clear Если TRUE, то директория будет очищена, но не удалена
+ * @param bool   $is_clear Если TRUE, то директория будет очищена, но не удалена
+ *
  * @return bool
  */
-function files_remove_directory($directory, $is_clear = false) {
+function files_remove_directory(string $directory, bool $is_clear = false): bool
+{
 
-    if (substr($directory, -1) == '/') {
+    if (substr($directory, -1) === '/') {
         $directory = substr($directory, 0, -1);
     }
 
@@ -77,7 +84,7 @@ function files_remove_directory($directory, $is_clear = false) {
 
     while (false !== ($node = readdir($handle))) {
 
-        if ($node != '.' && $node != '..') {
+        if ($node !== '.' && $node !== '..') {
 
             $path = $directory . '/' . $node;
 
@@ -85,20 +92,16 @@ function files_remove_directory($directory, $is_clear = false) {
                 if (!files_remove_directory($path)) {
                     return false;
                 }
-            } else {
-                if (!@unlink($path)) {
-                    return false;
-                }
+            } else if (!@unlink($path)) {
+                return false;
             }
         }
     }
 
     closedir($handle);
 
-    if ($is_clear == false) {
-        if (!@rmdir($directory)) {
-            return false;
-        }
+    if (($is_clear === false) && !@rmdir($directory)) {
+        return false;
     }
 
     return true;
@@ -106,20 +109,26 @@ function files_remove_directory($directory, $is_clear = false) {
 
 /**
  * Очищает директорию
+ *
  * @param string $directory
+ *
  * @return bool
  */
-function files_clear_directory($directory){
+function files_clear_directory(string $directory): bool
+{
     return files_remove_directory($directory, true);
 }
 
 /**
  * Удаляет файл и его родительские директории
+ *
  * @param string $file_path Отностительный или полный путь к файлу
- * @param integer $delete_parent_dir Количество родительских директорий, которые нужно также удалить, если они пустые
+ * @param int    $delete_parent_dir Количество родительских директорий, которые нужно также удалить, если они пустые
+ *
  * @return boolean
  */
-function files_delete_file($file_path, $delete_parent_dir = 0) {
+function files_delete_file(string $file_path, int $delete_parent_dir = 0)
+{
 
     if (!is_file($file_path)) {
         $file_path = cmsConfig::get('upload_path') . $file_path;
@@ -147,10 +156,13 @@ function files_delete_file($file_path, $delete_parent_dir = 0) {
 /**
  * Возвращает дерево каталогов и файлов по указанному пути в виде
  * рекурсивного массива
+ *
  * @param string $path
+ *
  * @return array
  */
-function files_tree_to_array($path) {
+function files_tree_to_array(string $path): array
+{
 
     $data = [];
 
@@ -176,22 +188,26 @@ function files_tree_to_array($path) {
  *      /path/folder
  *
  * @param string $path
+ *
  * @return string
  */
-function files_normalize_path($path) {
+function files_normalize_path(string $path): string
+{
 
     $parts = explode('/', $path);
     $safe  = [];
 
-    foreach ($parts as $idx => $part) {
-        if (empty($part) || ('.' == $part)) {
+    foreach ($parts as $part) {
+        if (empty($part) || ('.' === $part)) {
             continue;
-        } elseif ('..' == $part) {
+        }
+
+        if ('..' === $part) {
             array_pop($safe);
             continue;
-        } else {
-            $safe[] = $part;
         }
+
+        $safe[] = $part;
     }
 
     return implode('/', $safe);
@@ -202,25 +218,27 @@ function files_normalize_path($path) {
  * Полезно при получении max_upload_size из php.ini
  *
  * @param string $value
+ *
  * @return int
  */
-function files_convert_bytes($value) {
-    if ( is_numeric( $value ) ) {
+function files_convert_bytes(string $value)
+{
+    if (is_numeric($value)) {
         return $value;
     } else {
-        $value_length = strlen( $value );
-        $qty = substr( $value, 0, $value_length - 1 );
-        $unit = strtolower( substr( $value, $value_length - 1 ) );
-        switch ( $unit ) {
+        $value_length = strlen($value);
+        $qty          = substr($value, 0, $value_length - 1);
+        $unit         = strtolower(substr($value, $value_length - 1));
+        switch ($unit) {
             case 'k':
                 $qty *= 1024;
-                break;
+            break;
             case 'm':
                 $qty *= 1048576;
-                break;
+            break;
             case 'g':
                 $qty *= 1073741824;
-                break;
+            break;
         }
         return $qty;
     }
@@ -230,10 +248,13 @@ function files_convert_bytes($value) {
 /**
  * Переводит байты в Гб, Мб или Кб и возвращает полученное число + единицу измерения
  * в виде единой строки
+ *
  * @param int $bytes
+ *
  * @return string
  */
-function files_format_bytes($bytes) {
+function files_format_bytes(int $bytes): string
+{
 
     $kb = 1024;
     $mb = 1048576;
@@ -259,20 +280,24 @@ function files_format_bytes($bytes) {
  * используется для защиты от хотлинка
  *
  * @param string $file_path Путь к файлу
+ *
  * @return string
  */
-function files_user_file_hash($file_path = ''){
-    return md5(cmsUser::getIp().md5($file_path.cmsConfig::get('root_path')));
+function files_user_file_hash(string $file_path = ''): string
+{
+    return md5(cmsUser::getIp() . md5($file_path . cmsConfig::get('root_path')));
 }
 
 /**
  * Очищает имя файла от специальных символов
  *
- * @param string $filename Имя файла
- * @param boolean $convert_slug Транслитировать?
+ * @param string  $filename Имя файла
+ * @param boolean $convert_slug Транслитерировать?
+ *
  * @return string
  */
-function files_sanitize_name($filename, $convert_slug = true) {
+function files_sanitize_name(string $filename, bool $convert_slug = true): string
+{
 
     $path_parts = pathinfo($filename);
     $name       = $path_parts['filename'] ?? '';
@@ -284,46 +309,44 @@ function files_sanitize_name($filename, $convert_slug = true) {
         $name = trim(strip_tags($name));
     }
 
-    $name = mb_strtolower($name.($extension ? '.' . $extension : ''));
+    $name = mb_strtolower($name . ($extension ? '.' . $extension : ''));
 
     $replacements = [
         '&'  => '-and-',
         '@'  => '-at-',
         '#'  => '-number-',
         ' '  => '-',
-        '\'' => ''
+        '\'' => '',
     ];
 
     $name = str_replace(array_keys($replacements), array_values($replacements), $name);
     $name = preg_replace('/[^\w\-\.]+/u', '', $name);
-    $name = preg_replace('/[\-]+/', '-', $name);
-
-    return $name;
+    return preg_replace('/[\-]+/', '-', $name);
 }
 
 /**
  * Возвращает/создаёт путь к директории хранения
  *
- * @param integer $user_id
+ * @param int $user_id
+ *
  * @return string
  */
-function files_get_upload_dir($user_id = 0) {
+function files_get_upload_dir(int $user_id = 0): string
+{
 
-    $dir_num_user = sprintf('%03d', intval($user_id / 100));
+    $dir_num_user = sprintf('%03d', (int)($user_id / 100));
 
     $file_name   = md5(microtime(true));
-    $first_dir   = substr($file_name, 0, 1);
-    $second_dir  = substr($file_name, 1, 1);
     $upload_path = cmsConfig::get('upload_path');
 
-    $dest_dir = $upload_path . "{$dir_num_user}/u{$user_id}/{$first_dir}/{$second_dir}/";
+    $dest_dir = $upload_path . "{$dir_num_user}/u{$user_id}/$file_name[0]/$file_name[1]/";
 
     if (!is_dir($dest_dir)) {
         @mkdir($dest_dir, 0777, true);
         @chmod($dest_dir, 0777);
         @chmod(pathinfo($dest_dir, PATHINFO_DIRNAME), 0777);
-        @chmod($upload_path . "{$dir_num_user}/u{$user_id}", 0777);
-        @chmod($upload_path . "{$dir_num_user}", 0777);
+        @chmod($upload_path . "$dir_num_user/u$user_id", 0777);
+        @chmod($upload_path . $dir_num_user, 0777);
     }
 
     return $dest_dir;
@@ -331,13 +354,16 @@ function files_get_upload_dir($user_id = 0) {
 
 /**
  * Получает данные по заданному url
- * @param string $url URL, откуда нужно получить данные
+ *
+ * @param string  $url URL, откуда нужно получить данные
  * @param integer $timeout Таймаут соединения
  * @param boolean $json_decode Преобразовывать JSON
- * @param array $params Дополнительные параметры
- * @return string
+ * @param array   $params Дополнительные параметры
+ *
+ * @return array | string | bool | null
  */
-function file_get_contents_from_url($url, $timeout = 5, $json_decode = false, $params = []) {
+function file_get_contents_from_url(string $url, int $timeout = 5, bool $json_decode = false, array $params = []): ?array
+{
 
     if (!function_exists('curl_init')) {
         return null;
@@ -398,17 +424,20 @@ function file_get_contents_from_url($url, $timeout = 5, $json_decode = false, $p
 
 /**
  * Сохраняет удаленно расположенный файл
+ *
  * @param string $url url файла
  * @param string $destination Полный путь куда сохраненить файл
+ *
  * @return boolean
  */
-function file_save_from_url($url, $destination) {
+function file_save_from_url(string $url, string $destination): bool
+{
 
     if (!function_exists('curl_init')) {
         return false;
     }
 
-    $dest_file = @fopen($destination, "w");
+    $dest_file = @fopen($destination, 'wb');
 
     $curl = curl_init();
     if (strpos($url, 'https') === 0) {
@@ -430,28 +459,31 @@ function file_save_from_url($url, $destination) {
 /**
  * Накладывает ваттермарк на изображение
  *
+ * @return boolean
  * @deprecated Используйте класс cmsImages
  *
- * @return boolean
  */
-function img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality = 90) {
+function img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality = 90)
+{
     return true;
 }
 
 /**
  * Изменяет размер изображения $src, сохраняя измененное в $dest
  *
- * @deprecated Используйте класс cmsImages
- *
  * @param string $src Полный путь к исходному изображению
  * @param string $dest Полный путь куда сохранять измененное изображение
- * @param int $maxwidth Максимальная ширина в px
- * @param int $maxheight Максимальная высота в px
- * @param bool $is_square Создавать квадратное изображение
- * @param int $quality Качество результирующего изображения от 1 до 100
+ * @param int    $maxwidth Максимальная ширина в px
+ * @param int    $maxheight Максимальная высота в px
+ * @param bool   $is_square Создавать квадратное изображение
+ * @param int    $quality Качество результирующего изображения от 1 до 100
+ *
  * @return boolean
+ * @deprecated Используйте класс cmsImages
+ *
  */
-function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false, $quality = 95) {
+function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false, $quality = 95)
+{
 
     if (!file_exists($src)) {
         return false;
@@ -502,9 +534,11 @@ function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false
  * Возвращает параметры изображения
  *
  * @param string $path Полный путь к файлу
+ *
  * @return boolean|array
  */
-function img_get_params($path) {
+function img_get_params(string $path)
+{
 
     if (!is_readable($path)) {
         return false;
@@ -525,14 +559,14 @@ function img_get_params($path) {
         if ($exif) {
             // Диафрагма
             $exif_data['aperturefnumber'] = $exif['COMPUTED']['ApertureFNumber'] ??
-                (isset($exif['EXIF']['FNumber']) ? 'f/' . eval_fraction($exif['EXIF']['FNumber']) : null);
+                                            (isset($exif['EXIF']['FNumber']) ? 'f/' . eval_fraction($exif['EXIF']['FNumber']) : null);
 
             // Выдержка
             $exif_data['exposuretime'] = $exif['EXIF']['ExposureTime'] ??
-                (isset($exif['EXIF']['ExposureTime']) ? '1/' . round(eval_fraction($exif['EXIF']['ExposureTime'])) . 's' : null);
+                                         (isset($exif['EXIF']['ExposureTime']) ? '1/' . round(eval_fraction($exif['EXIF']['ExposureTime'])) . 's' : null);
 
             // Камера
-            $make = isset($exif['IFD0']['Make']) ? trim($exif['IFD0']['Make']) : null;
+            $make  = isset($exif['IFD0']['Make']) ? trim($exif['IFD0']['Make']) : null;
             $model = $exif['IFD0']['Model'] ?? null;
             if ($make && !in_array($make, ['NIKON CORPORATION', 'Canon', 'Lenovo'])) {
                 $exif_data['camera'] = $model ? "$make $model" : $make;
@@ -544,11 +578,11 @@ function img_get_params($path) {
             $exif_data['date'] = $exif['EXIF']['DateTimeOriginal'] ?? $exif['EXIF']['DateTimeDigitized'] ?? null;
 
             // ISO
-            $iso = $exif['EXIF']['ISOSpeedRatings'] ?? null;
+            $iso                          = $exif['EXIF']['ISOSpeedRatings'] ?? null;
             $exif_data['isospeedratings'] = is_array($iso) ? current($iso) : $iso;
 
             // Фокусное расстояние
-            $exif_data['focallength'] = isset($exif['EXIF']['FocalLength']) ? eval_fraction($exif['EXIF']['FocalLength']) . 'mm' : null;
+            $exif_data['focallength']           = isset($exif['EXIF']['FocalLength']) ? eval_fraction($exif['EXIF']['FocalLength']) . 'mm' : null;
             $exif_data['focallengthin35mmfilm'] = isset($exif['EXIF']['FocalLengthIn35mmFilm']) ? $exif['EXIF']['FocalLengthIn35mmFilm'] . 'mm' : null;
 
             // Ориентация
@@ -571,7 +605,7 @@ function img_get_params($path) {
         'height'      => $s[1],
         'mime'        => $s['mime'],
         'exif'        => array_filter($exif_data),
-        'filesize'    => filesize($path)
+        'filesize'    => filesize($path),
     ];
 }
 
@@ -579,11 +613,13 @@ function img_get_params($path) {
  * Вспомогательная функция для вычисления дробных значений EXIF
  *
  * @param string $fraction Строка дробного числа в формате 'числитель/знаменатель'
+ *
  * @return float
  */
-function eval_fraction($fraction) {
+function eval_fraction(string $fraction)
+{
     if (strpos($fraction, '/') !== false) {
-        list($numerator, $denominator) = explode('/', $fraction);
+        [$numerator, $denominator] = explode('/', $fraction);
         return $denominator == 0 ? 0 : $numerator / $denominator;
     }
     return (float)$fraction;
@@ -594,16 +630,18 @@ function eval_fraction($fraction) {
  *
  * @param string $command Команда
  * @param string $postfix Строка после команды
+ *
  * @return ?array
  */
-function console_exec_command($command, $postfix = ' 2>&1') {
+function console_exec_command(string $command, string $postfix = ' 2>&1'): ?array
+{
 
     if (!function_exists('exec')) {
         return null;
     }
 
     $buffer = [];
-    $err    = '';
+    $err    = null;
 
     $result = exec($command . $postfix, $buffer, $err);
 
@@ -612,7 +650,7 @@ function console_exec_command($command, $postfix = ' 2>&1') {
             $buffer[0] = $result;
         }
         $b = strtolower($buffer[0]);
-        if (strstr($b, 'error') || strstr($b, ' no ') || strstr($b, 'not found') || strstr($b, 'No such file or directory')) {
+        if (preg_match('/error| no |not found|No such file or directory/i', $b)) {
             return [];
         }
     } else {
