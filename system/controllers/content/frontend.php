@@ -255,7 +255,11 @@ class content extends cmsFrontend {
         // проверяем запросы фильтрации по полям
         foreach($fields as $name => $field){
 
-            $field['handler']->setItem(['ctype_name' => $ctype['name'], 'id' => null])->setContext('filter');
+            $field['handler']->setItem([
+                'category_id' => $category_id,
+                'ctype_name'  => $ctype['name'],
+                'id' => null]
+            )->setContext('filter');
 
             if (!$this->request->has($name)){ continue; }
 

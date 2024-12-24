@@ -134,20 +134,49 @@ class fieldCategory extends cmsFormField {
             return $model;
         }
 
-        $bind_table_name = $model->getContentCategoryTableName($this->item['ctype_name']) . '_bind';
+        $content = cmsCore::getModel('content');
 
-        if(strpos($model->join, $bind_table_name.' as b ON') === false){
+        $ctype = $content->getContentTypeByName($this->item['ctype_name']);
+
+        $table_name      = $model->getContentCategoryTableName($ctype['name']);
+        $bind_table_name = $table_name . '_bind';
+
+        if (!$model->isJoined($bind_table_name, 'b')) {
             $model->joinInner($bind_table_name, 'b', 'b.item_id = i.id');
         }
 
         if (is_array($value)) {
 
-            return $model->filterIn('b.category_id', $value);
+            $model->filterIn('b.category_id', $value);
 
         } else {
 
-            return $model->filterEqual('b.category_id', $value);
+            if ($ctype['is_cats_recursive']) {
+
+                $category = $content->getCategory($ctype['name'], $value);
+
+                if (!$category) {
+                    return $model->filter('1 = 0');
+                }
+
+                if (!empty($ctype['options']['is_cats_multi'])) {
+                    $model->distinctSelect();
+                }
+
+                if (!$model->isJoined($table_name, 'c')) {
+                    $model->joinInner($table_name, 'c', 'c.id = b.category_id');
+                }
+
+                $model->filterGtEqual('c.ns_left', $category['ns_left']);
+                $model->filterLtEqual('c.ns_right', $category['ns_right']);
+
+            } else {
+
+                $model->filterEqual('b.category_id', $value);
+            }
         }
+
+        return $model;
     }
 
     public function getFilterInput($value){
@@ -166,12 +195,20 @@ class fieldCategory extends cmsFormField {
             $this->title = false;
         }
 
+        $category_id = $this->item['category_id'] ?: 1;
+
+        $tree = cmsCore::getModel('content')->
+                limit(0)->filterIsNull('is_hidden')->
+                getSubCategoriesTree($this->item['ctype_name'], $category_id, 0) ?: [];
+
+        if (!$tree) {
+            return '';
+        }
+
         $this->data['items'] = ['' => ''];
 
-        $tree = cmsCore::getModel('content')->limit(0)->filterIsNull('is_hidden')->getCategoriesTree($this->item['ctype_name']) ?: [];
-
         foreach ($tree as $c) {
-            $this->data['items'][$c['id']] = str_repeat('-- ', $c['ns_level']) . ' ' . $c['title'];
+            $this->data['items'][$c['id']] = str_repeat('-- ', ($category_id > 1 ? $c['ns_level']-1 : $c['ns_level'])) . ' ' . $c['title'];
         }
 
         $this->data['dom_attr'] = ['id' => $this->id];
