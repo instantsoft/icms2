@@ -152,9 +152,6 @@ class formAdminSettings extends cmsForm {
                     new fieldCheckbox('is_sitename_in_title', [
                         'title'   => LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE,
                         'default' => 1
-                    ]),
-                    new fieldCheckbox('page_num_in_title', [
-                        'title' => LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE
                     ])
                 ]
             ],

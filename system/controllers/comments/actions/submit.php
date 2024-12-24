@@ -283,8 +283,12 @@ class actionCommentsSubmit extends cmsAction {
         // Получаем модель целевого контроллера
         $target_model = cmsCore::getModel($this->target_controller);
 
+        $target_info = [];
         // Получаем URL и заголовок комментируемой страницы
-        $target_info = $target_model->getTargetItemInfo($this->target_subject, $this->target_id);
+        if (method_exists($target_model, 'getTargetItemInfo')) {
+            $target_info = $target_model->getTargetItemInfo($this->target_subject, $this->target_id);
+        }
+
         if (!$target_info) {
             return $this->cms_template->renderJSON([
                 'error'   => true,

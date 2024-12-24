@@ -136,6 +136,10 @@ class cmsBackend extends cmsController {
 
         if ($this->useSeoOptions) {
 
+            $meta_item_fields = [
+                'page' => LANG_PAGE
+            ];
+
             $form->addFieldset(LANG_ROOT_SEO, 'seo_basic', [
                 'childs' => [
                     new fieldText('seo_desc', [
@@ -143,6 +147,7 @@ class cmsBackend extends cmsController {
                         'hint'  => LANG_SEO_DESC_HINT,
                         'multilanguage' => true,
                         'is_strip_tags' => true,
+                        'patterns_hint' => ['patterns' => $meta_item_fields],
                         'options' => [
                             'max_length' => 256,
                             'show_symbol_count' => true
@@ -157,6 +162,7 @@ class cmsBackend extends cmsController {
                         'title'   => LANG_SEO_KEYS,
                         'hint'    => LANG_SEO_KEYS_HINT,
                         'multilanguage' => true,
+                        'patterns_hint' => ['patterns' => $meta_item_fields],
                         'options' => [
                             'max_length' => 256,
                             'show_symbol_count' => true

@@ -130,42 +130,42 @@ class cmsTemplate {
      * Тег <h1> страницы
      * @var string
      */
-    public $page_h1;
+    public $page_h1 = '';
     /**
      * Массив данных, которые используются в SEO паттернах
      * @var array
      */
-    public $page_h1_item;
+    public $page_h1_item = [];
     /**
      * Тег <title> страницы
      * @var string
      */
-    public $title;
+    public $title = '';
     /**
      * Массив данных, которые используются в SEO паттернах
      * @var array
      */
-    public $title_item;
+    public $title_item = [];
     /**
      * Тег <meta name="description"> страницы
      * @var string
      */
-    public $metadesc;
+    public $metadesc = '';
     /**
      * Массив данных, которые используются в SEO паттернах
      * @var array
      */
-    public $metadesc_item;
+    public $metadesc_item = [];
     /**
      * Тег <meta name="keywords"> страницы
      * @var string
      */
-    public $metakeys;
+    public $metakeys = '';
     /**
      * Массив данных, которые используются в SEO паттернах
      * @var array
      */
-    public $metakeys_item;
+    public $metakeys_item = [];
     /**
      * Хлебные крошки
      * @var array
@@ -356,6 +356,44 @@ class cmsTemplate {
     }
 
     /**
+     * Обрабатывает метатеги и возвращает значение
+     * После вызова этого метода не нужно менять паттерны, не применятся
+     *
+     * @staticvar array $handled Обработанные ключи метатегов
+     * @param string $key Ключ метатега: page_h1, title, metadesc, metakeys
+     * @return string
+     */
+    public function getMetaHandled(string $key) {
+
+        static $handled = [];
+
+        if (isset($handled[$key])) {
+            return $this->{$key};
+        }
+
+        $item_key = $key . '_item';
+
+        if (!property_exists($this, $key)) {
+            return '';
+        }
+
+        if (!property_exists($this, $item_key) || empty($this->{$item_key})) {
+            return $this->{$key};
+        }
+
+        // Добавляем номер страницы в массив для паттерна
+        if (($page = cmsCore::getInstance()->request->get('page', 0)) > 1) {
+            $this->{$item_key}['page'] = mb_strtolower(LANG_PAGE) . ' №' . $page;
+        }
+
+        $this->{$key} = string_replace_keys_values_extended($this->{$key}, $this->{$item_key});
+
+        $handled[$key] = true;
+
+        return $this->{$key};
+    }
+
+    /**
      * Выводит головные теги страницы
      *
      * @param boolean $is_seo_meta Выводить мета теги
@@ -368,21 +406,12 @@ class cmsTemplate {
         cmsEventsManager::hook('before_print_head', $this);
 
         if ($is_seo_meta) {
-            if (!empty($this->metakeys) && empty($this->site_config->disable_metakeys)) {
-                echo '<meta name="keywords" content="' . html((!empty($this->metakeys_item) ? string_replace_keys_values_extended($this->metakeys, $this->metakeys_item) : $this->metakeys), false) . '">' . "\n\t\t";
-            }
-            if (!empty($this->metadesc)) {
 
-                $num_postfix = '';
-                if (!empty($this->site_config->page_num_in_title)) {
-                    $page = cmsCore::getInstance()->request->get('page', 0);
-                    if ($page > 1) {
-                        $num_postfix = ' ' . LANG_PAGE . ' №' . $page;
-                    }
-                }
-
-                echo '<meta name="description" content="' . html((!empty($this->metadesc_item) ? string_replace_keys_values_extended($this->metadesc, $this->metadesc_item) : $this->metadesc), false) . $num_postfix . '">' . "\n\t\t";
+            if (empty($this->site_config->disable_metakeys)) {
+                echo '<meta name="keywords" content="' . html($this->getMetaHandled('metakeys'), false) . '">' . "\n\t\t";
             }
+
+            echo '<meta name="description" content="' . html($this->getMetaHandled('metadesc'), false) . '">' . "\n\t\t";
         }
 
         foreach ($this->head as $tag) {
@@ -469,19 +498,7 @@ class cmsTemplate {
      * Выводит заголовок текущей страницы
      */
     public function title() {
-
-        $t = !empty($this->title_item) ? string_replace_keys_values_extended($this->title, $this->title_item) : $this->title;
-
-        if (!empty($this->site_config->page_num_in_title)) {
-
-            $page = cmsCore::getInstance()->request->get('page', 0);
-
-            if ($page > 1) {
-                $t .= ' — ' . LANG_PAGE . ' №' . $page;
-            }
-        }
-
-        html($t);
+        html($this->getMetaHandled('title'));
     }
 
     /**
@@ -827,7 +844,7 @@ class cmsTemplate {
      * Возвращает значение тега h1 страницы
      */
     public function getPageH1() {
-        return !empty($this->page_h1_item) ? string_replace_keys_values_extended($this->page_h1, $this->page_h1_item) : $this->page_h1;
+        return $this->getMetaHandled('page_h1');
     }
 
     /**
@@ -3135,6 +3152,11 @@ class cmsTemplate {
         } else {
             $body_classes[] = 'icms-frontpage';
         }
+
+        list($template_file, $matched_pages, $rows, $body_classes) =
+                cmsEventsManager::hook('before_render_page', [
+                    $template_file, $matched_pages, $rows, $body_classes
+                ]);
 
         ob_start();
 

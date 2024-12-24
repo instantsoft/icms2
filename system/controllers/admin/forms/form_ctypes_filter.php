@@ -14,7 +14,8 @@ class formAdminCtypesFilter extends cmsForm {
             'ctype_label1'      => LANG_CP_NUMERALS_1_LABEL,
             'ctype_label2'      => LANG_CP_NUMERALS_2_LABEL,
             'ctype_label10'     => LANG_CP_NUMERALS_10_LABEL,
-            'filter_string'     => LANG_FILTERS
+            'filter_string'     => LANG_FILTERS,
+            'page'              => LANG_PAGE
         ];
 
         $slug_field_rules = [

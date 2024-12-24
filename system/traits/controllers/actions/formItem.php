@@ -99,13 +99,29 @@ trait formItem {
     protected $add_callback = null;
     protected $update_callback = null;
 
-    public function run($id = null){
+    /**
+     * Коллбэк JavaScript, если ответ json
+     * @var string
+     */
+    protected $json_callback = 'reloadDataGrid';
+
+    /**
+     * Имя поля с заголовком, к которому добавим (1) при копировании записи
+     * @var string
+     */
+    protected $title_field = 'title';
+
+    public function run($id = null, $is_copy = null) {
 
         $data = [];
 
         $do = 'add';
 
-        if($id){
+        if ($id) {
+
+            if (!$is_copy) {
+                $do = 'edit';
+            }
 
             $data = $this->model->localizedOff()->getItemById($this->table_name, $id, function ($item, $model) {
                 foreach ($item as $key => $value) {
@@ -117,13 +133,15 @@ trait formItem {
                 return $item;
             });
 
-            if(!$data){
+            if (!$data) {
                 return cmsCore::error404();
             }
 
-            $this->model->localizedRestore();
+            if ($is_copy && isset($data[$this->title_field])) {
+                $data[$this->title_field] .= ' (1)';
+            }
 
-            $do = 'edit';
+            $this->model->localizedRestore();
         }
 
         $form = $this->getForm($this->form_name, [$do] + $this->form_opts);
@@ -163,7 +181,7 @@ trait formItem {
                     return $this->cms_template->renderJSON([
                         'errors'   => false,
                         'text'     => LANG_SUCCESS_MSG,
-                        'callback' => 'reloadDataGrid'
+                        'callback' => $this->json_callback
                     ]);
                 }
 
@@ -191,7 +209,7 @@ trait formItem {
         $this->cms_template->addToolButtons($this->getToolButtons());
 
         $html = $this->cms_template->getRenderedAsset('ui/typical_form', [
-            'page_title'   => string_replace_keys_values($this->title, $data),
+            'page_title'   => string_replace_keys_values(is_array($this->title) ? ($this->title[$do] ?? '') : $this->title, $data),
             'breadcrumbs'  => $this->breadcrumbs,
             'submit_title' => $this->submit_title,
             'action'       => $this->cms_template->href_to($this->current_action, [$id]),
