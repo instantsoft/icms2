@@ -74,6 +74,11 @@ class cmsFormField {
      */
     public $item = [];
     /**
+     * Массив записи списка (например категория), в котором это поле используется
+     * @var array
+     */
+    protected $item_list = [];
+    /**
      * Контекст запроса
      * Устанавливается в методе parse объекта класса cmsForm
      * @var object
@@ -430,7 +435,26 @@ class cmsFormField {
      * @param array $item
      * @return $this
      */
-    public function setItem($item) { $this->item = $item; return $this; }
+    public function setItem($item) {
+
+        $this->item = $item;
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает данные текущего списка,
+     * В записях которого это поле
+     *
+     * @param array $item
+     * @return $this
+     */
+    public function setItemList($item) {
+
+        $this->item_list = $item;
+
+        return $this;
+    }
 
     /**
      * Возвращает последнюю часть строки SQL запроса

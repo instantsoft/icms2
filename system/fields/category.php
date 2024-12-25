@@ -181,7 +181,7 @@ class fieldCategory extends cmsFormField {
 
     public function getFilterInput($value){
 
-        if (empty($this->item['ctype_name'])) {
+        if (empty($this->item_list['ctype'])) {
             return '';
         }
 
@@ -195,11 +195,11 @@ class fieldCategory extends cmsFormField {
             $this->title = false;
         }
 
-        $category_id = $this->item['category_id'] ?: 1;
+        $category_id = $this->item_list['category_id'] ?: 1;
 
         $tree = cmsCore::getModel('content')->
                 limit(0)->filterIsNull('is_hidden')->
-                getSubCategoriesTree($this->item['ctype_name'], $category_id, 0) ?: [];
+                getSubCategoriesTree($this->item_list['ctype']['name'], $category_id, 0) ?: [];
 
         if (!$tree) {
             return '';
@@ -208,7 +208,10 @@ class fieldCategory extends cmsFormField {
         $this->data['items'] = ['' => ''];
 
         foreach ($tree as $c) {
-            $this->data['items'][$c['id']] = str_repeat('-- ', ($category_id > 1 ? $c['ns_level']-1 : $c['ns_level'])) . ' ' . $c['title'];
+
+            $level = ($category_id > 1 ? $c['ns_level']-2 : $c['ns_level']-1);
+
+            $this->data['items'][$c['id']] = str_repeat('-- ', $level) . $c['title'];
         }
 
         $this->data['dom_attr'] = ['id' => $this->id];

@@ -231,7 +231,7 @@ class content extends cmsFrontend {
 
         $page = $this->request->get($this->request_page_name, 1);
 
-        $perpage = (empty($ctype['options']['limit']) ? self::perpage : $ctype['options']['limit']);
+        $perpage = $ctype['options']['limit'] ?? self::perpage;
 
         // Ограничения от набора
         if ($this->max_items_count) {
@@ -240,10 +240,10 @@ class content extends cmsFrontend {
 
         if ($hide_filter) { $ctype['options']['list_show_filter'] = false; }
 
-        if ($category_id && $category_id>1){
+        if ($category_id && $category_id > 1) {
 
             // для фильтров свойств, привязанных к категории
-            if(!empty($this->list_filter['filters']['category_id'])){
+            if (!empty($this->list_filter['filters']['category_id'])) {
                 $this->active_filters['category_id'] = $category_id;
             }
 
@@ -253,33 +253,33 @@ class content extends cmsFrontend {
         }
 
         // проверяем запросы фильтрации по полям
-        foreach($fields as $name => $field){
+        foreach ($fields as $name => $field) {
 
-            $field['handler']->setItem([
-                'category_id' => $category_id,
-                'ctype_name'  => $ctype['name'],
-                'id' => null]
-            )->setContext('filter');
+            $field['handler']->setContext('filter')->
+                    setItem(['ctype_name' => $ctype['name'], 'id' => null])->
+                    setItemList(['ctype' => $ctype, 'category_id' => $category_id]);
 
-            if (!$this->request->has($name)){ continue; }
+            if (!$this->request->has($name)) {
+                continue;
+            }
 
             $value = $this->request->get($name, false, $field['handler']->getDefaultVarType());
 
             $value = $field['handler']->storeFilter($value);
-            if (is_empty_value($value)) { continue; }
+            if (is_empty_value($value)) {
+                continue;
+            }
 
-            if($field['handler']->applyFilter($this->model, $value) !== false){
+            if ($field['handler']->applyFilter($this->model, $value) !== false) {
 
                 $this->active_filters[$name] = $value;
 
                 $filter_title = $field['handler']->getStringValue($value);
 
-                if($filter_title && !isset($this->list_filter['filters'][$name])){
-                    $this->filter_titles[] = mb_strtolower($field['title'].' '.$filter_title);
+                if ($filter_title && !isset($this->list_filter['filters'][$name])) {
+                    $this->filter_titles[] = mb_strtolower($field['title'] . ' ' . $filter_title);
                 }
-
             }
-
         }
 
         // проверяем запросы фильтрации по свойствам
@@ -290,7 +290,9 @@ class content extends cmsFrontend {
 
                 $prop['handler'] = $props_fields[$prop['id']];
 
-                $prop['handler']->setItem(['ctype_name' => $ctype['name'], 'id' => null])->setContext('filter');
+                $prop['handler']->setContext('filter')->
+                        setItem(['ctype_name' => $ctype['name'], 'id' => null])->
+                        setItemList(['ctype' => $ctype, 'category_id' => $category_id]);
 
                 $props[$key] = $prop;
 
