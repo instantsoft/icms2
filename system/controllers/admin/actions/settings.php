@@ -27,6 +27,10 @@ class actionAdminSettings extends cmsAction {
 
                 $errors['session_save_handler'] = LANG_CP_MEMCACHE_NOT_AVAILABLE;
 
+            } else if($values['session_save_handler'] == 'redis' && !class_exists('Redis')){
+
+                $errors['session_save_handler'] = LANG_CP_REDISCACHE_NOT_AVAILABLE;
+
             } else if($values['session_save_handler'] == 'files'){
 
                 if(!is_dir($values['session_save_path'])){
@@ -97,6 +101,32 @@ class actionAdminSettings extends cmsAction {
 
                 }
 
+                if ($values['cache_method'] == 'redis'){
+
+                    if (!class_exists('Redis')){
+
+                        cmsUser::addSessionMessage(LANG_CP_REDISCACHE_NOT_AVAILABLE, 'error');
+
+                        $values['cache_method'] = 'files';
+
+                    } else {
+
+                        $redis_tester = new Redis();
+
+                        $redis_tester->connect($values['cache_host'], $values['cache_port']);
+
+                        if ($redis_tester->ping() === '+PONG'){
+
+                            cmsUser::addSessionMessage(LANG_CP_REDISCACHE_CONNECT_ERROR, 'error');
+
+                            $values['cache_method'] = 'files';
+
+                        }
+
+                    }
+
+                }
+
                 if (!$values['cache_enabled']){
 
                     $cacher = cmsCache::getCacher((object)array_merge($this->cms_config->getAll(), $values));
@@ -139,9 +169,6 @@ class actionAdminSettings extends cmsAction {
                         $this->model->db->query("ALTER DATABASE {$this->cms_config->db_base} CHARACTER SET {$values['db_charset']} COLLATE {$collation_name}");
 
                     } else {
-
-                        cmsUser::addSessionMessage(LANG_CP_SETTINGS_DB_CHARSET_ERROR, 'error');
-
                         // Не меняем, если не поддерживается
                         $values['db_charset'] = $this->cms_config->db_charset;
                     }

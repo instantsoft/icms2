@@ -17,7 +17,7 @@ function check_requirements() {
 
     $min_php_version  = '7.2.0';
     $extensions       = ['date', 'gd', 'json', 'mbstring', 'mysqli', 'session', 'filter', 'fileinfo'];
-    $extensions_extra = ['ftp', 'memcache', 'memcached', 'zip', 'curl'];
+    $extensions_extra = ['ftp', 'memcache', 'memcached', 'redis', 'zip', 'curl'];
 
     sort($extensions);
     sort($extensions_extra);
