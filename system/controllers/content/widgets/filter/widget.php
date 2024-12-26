@@ -8,13 +8,10 @@ class widgetContentFilter extends cmsWidget {
 
         $ctype_name = $this->getOption('ctype_name');
 
-        $core = cmsCore::getInstance();
-        $user = cmsUser::getInstance();
-
         $category = ['id' => 1];
         $item     = [];
 
-        $is_in_item = strpos($core->uri, '.html') !== false || strpos($core->uri, '/view-') !== false;
+        $is_in_item = strpos($this->cms_core->uri, '.html') !== false || strpos($this->cms_core->uri, '/view-') !== false;
 
         if (!$is_in_item) {
 
@@ -22,6 +19,7 @@ class widgetContentFilter extends cmsWidget {
             if (!empty($current_ctype_category['id'])) {
                 $category = $current_ctype_category;
             }
+
         } elseif (!$ctype_name) {
 
             $item = cmsModel::getCachedResult('current_ctype_item');
@@ -47,7 +45,7 @@ class widgetContentFilter extends cmsWidget {
                 }
             }
 
-            $page_url = href_to($ctype_name, isset($category['slug']) ? $category['slug'] : '');
+            $page_url = href_to($ctype_name, $category['slug'] ?? '');
 
             $fields       = cmsModel::getCachedResult('current_ctype_fields');
             $props        = cmsModel::getCachedResult('current_ctype_props');
@@ -58,19 +56,22 @@ class widgetContentFilter extends cmsWidget {
             }
 
             $current_child_ctype = cmsModel::getCachedResult('current_child_ctype');
+
             if ($current_child_ctype) {
                 $page_url = href_to($ctype['name'], $item['slug'] . '/view-' . $current_child_ctype['name']);
             }
+
         } else {
 
             $content_controller = cmsCore::getController('content');
 
+            $ctype  = $content_controller->model->getContentTypeByName($ctype_name);
             $fields = $content_controller->model->getContentFields($ctype_name);
             $props  = $content_controller->model->getContentProps($ctype_name, $category['id']);
 
             $props_fields = $content_controller->getPropsFields($props);
 
-            $page_url = href_to($ctype_name, isset($category['slug']) ? $category['slug'] : '');
+            $page_url = href_to($ctype_name, $category['slug'] ?? '');
         }
 
         if (!$fields && !$props) {
@@ -81,7 +82,7 @@ class widgetContentFilter extends cmsWidget {
 
         if ($fields) {
             foreach ($fields as $field) {
-                if ($field['is_in_filter'] && (empty($field['filter_view']) || $user->isInGroups($field['filter_view']))) {
+                if ($field['is_in_filter'] && (empty($field['filter_view']) || $this->cms_user->isInGroups($field['filter_view']))) {
                     $fields_count++;
                 } else {
                     unset($fields[$field['name']]);
@@ -99,24 +100,32 @@ class widgetContentFilter extends cmsWidget {
             }
         }
 
-        if (!$fields_count) { return false; }
+        if (!$fields_count) {
+            return false;
+        }
 
         $filters = [];
 
         foreach ($fields as $name => $field) {
 
-            $field['handler']->setItem(['ctype_name' => $ctype_name, 'id' => null, 'category' => $category])->setContext('filter');
+            $field['handler']->setContext('filter')->
+                    setItem(['ctype_name' => $ctype['name'], 'id' => null, 'category' => $category])->
+                    setItemList(['ctype' => $ctype, 'category_id' => $category['id']]);
 
             $field['handler']->id .= '_filter' . $this->id;
 
             $fields[$name] = $field;
 
-            if (!$core->request->has($name)) { continue; }
+            if (!$this->cms_core->request->has($name)) {
+                continue;
+            }
 
-            $value = $core->request->get($name, false, $field['handler']->getDefaultVarType());
+            $value = $this->cms_core->request->get($name, false, $field['handler']->getDefaultVarType());
 
             $value = $field['handler']->storeFilter($value);
-            if (!$value) { continue; }
+            if (is_empty_value($value)) {
+                continue;
+            }
 
             $filters[$name] = $value;
         }
@@ -128,22 +137,24 @@ class widgetContentFilter extends cmsWidget {
 
                 $prop['handler'] = $props_fields[$prop['id']];
 
-                $prop['handler']->setItem(['ctype_name' => $ctype_name, 'id' => null, 'category' => $category])->
-                        setName("p{$prop['id']}")->
-                        setContext('filter');
+                $prop['handler']->setContext('filter')->setName("p{$prop['id']}")->
+                        setItem(['ctype_name' => $ctype['name'], 'id' => null, 'category' => $category])->
+                        setItemList(['ctype' => $ctype, 'category_id' => $category['id']]);
 
                 $prop['handler']->id .= '_filter' . $this->id;
 
                 $props[$key] = $prop;
 
-                if (!$core->request->has($name)) {
+                if (!$this->cms_core->request->has($name)) {
                     continue;
                 }
 
-                $value = $core->request->get($name, false, $prop['handler']->getDefaultVarType());
+                $value = $this->cms_core->request->get($name, false, $prop['handler']->getDefaultVarType());
 
                 $value = $prop['handler']->storeFilter($value);
-                if (!$value) { continue; }
+                if (is_empty_value($value)) {
+                    continue;
+                }
 
                 $filters[$name] = $value;
             }

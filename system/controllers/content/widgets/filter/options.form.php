@@ -4,20 +4,18 @@ class formWidgetContentFilterOptions extends cmsForm {
 
     public function init() {
 
-        return array(
-
-            array(
-                'type' => 'fieldset',
-                'title' => LANG_CONTENT_TYPE,
-                'childs' => array(
-
-                    new fieldList('options:ctype_name', array(
-                        'generator' => function($ctype) {
+        return [
+            [
+                'type'   => 'fieldset',
+                'title'  => LANG_CONTENT_TYPE,
+                'childs' => [
+                    new fieldList('options:ctype_name', [
+                        'generator' => function ($ctype) {
 
                             $model = cmsCore::getModel('content');
-                            $tree = $model->getContentTypes();
+                            $tree  = $model->getContentTypes();
 
-                            $items = array(0 => LANG_WD_CONTENT_FILTER_DETECT);
+                            $items = [0 => LANG_WD_CONTENT_FILTER_DETECT];
 
                             if ($tree) {
                                 foreach ($tree as $item) {
@@ -26,15 +24,11 @@ class formWidgetContentFilterOptions extends cmsForm {
                             }
 
                             return $items;
-
                         }
-                    )),
-
-                )
-            ),
-
-        );
-
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

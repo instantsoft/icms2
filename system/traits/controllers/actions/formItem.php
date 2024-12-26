@@ -96,7 +96,7 @@ trait formItem {
      * Коллбэки после добавления/обновления записи
      * @var ?callable
      */
-    protected $add_callback = null;
+    protected $add_callback    = null;
     protected $update_callback = null;
 
     /**
@@ -125,7 +125,6 @@ trait formItem {
 
             $data = $this->model->localizedOff()->getItemById($this->table_name, $id, function ($item, $model) {
                 foreach ($item as $key => $value) {
-
                     if ($value && strpos($value, '---') === 0) {
                         $item[$key] = cmsModel::yamlToArray($value);
                     }
@@ -142,19 +141,25 @@ trait formItem {
             }
 
             $this->model->localizedRestore();
+
+            if ($is_copy) {
+                $id = null;
+            }
         }
 
         $form = $this->getForm($this->form_name, [$do] + $this->form_opts);
 
-        if ($this->request->has('csrf_token')){
+        if ($this->request->has('csrf_token')) {
 
             $data = array_merge($data, $form->parse($this->request, true, $data));
 
             $errors = $form->validate($this, $data);
 
-            if (!$errors){
+            if (!$errors) {
 
-                if($do === 'add'){
+                if ($do === 'add') {
+
+                    unset($data['id']);
 
                     $id = call_user_func_array([$this->model, $this->form_add_method], [$this->table_name, $data]);
 
@@ -171,12 +176,11 @@ trait formItem {
                     }
                 }
 
-                if($this->cache_key){
-
+                if ($this->cache_key) {
                     cmsCache::getInstance()->clean($this->cache_key);
                 }
 
-                if($this->request->isAjax()){
+                if ($this->request->isAjax()) {
 
                     return $this->cms_template->renderJSON([
                         'errors'   => false,
@@ -187,16 +191,16 @@ trait formItem {
 
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
-                if($this->success_url){
-                    $this->redirect($this->success_url);
+                if ($this->success_url) {
+                    return $this->redirect($this->success_url);
                 }
 
                 return $this->redirect($this->getRequestBackUrl($this->getBackURL()));
             }
 
-            if ($errors){
+            if ($errors) {
 
-                if($this->request->isAjax()){
+                if ($this->request->isAjax()) {
                     return $this->cms_template->renderJSON([
                         'errors' => $errors
                     ]);
@@ -222,7 +226,7 @@ trait formItem {
             $this->cms_template->addOutput($html);
         }
 
-        if($this->request->isAjax()){
+        if ($this->request->isAjax()) {
             return $this->cms_core->response->setContent($html)->sendAndExit();
         }
 
@@ -242,13 +246,12 @@ trait formItem {
                 'icon'  => 'save'
             ];
 
-            if($this->success_url){
-
+            if ($this->success_url) {
                 $btns[] = [
                     'class' => 'cancel',
                     'title' => LANG_CANCEL,
                     'href'  => $this->success_url,
-                    'icon'   => 'undo'
+                    'icon'  => 'undo'
                 ];
             }
         }

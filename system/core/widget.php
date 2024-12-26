@@ -2,6 +2,10 @@
 /**
  * Основной класс всех виджетов
  *
+ * @property \cmsConfig $cms_config
+ * @property \cmsCore $cms_core
+ * @property \cmsTemplate $cms_template
+ * @property \cmsUser $cms_user
  */
 #[\AllowDynamicProperties]
 class cmsWidget {
