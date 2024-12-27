@@ -248,7 +248,6 @@
     define('LANG_CP_TAB_TITLE',                 'Название вкладки');
     define('LANG_CP_TAB_IS_ACTIVE',             'Показывать вкладку');
     define('LANG_CP_TAB_SHOW_ONLY_OWNER',       'Показывать вкладку только владельцу профиля');
-    define('LANG_CP_TAB_SHOW_ONLY_OWNER_HINT',  'Глобальные администраторы видят всегда, если группам, к которым они принадлежат, разрешён показ');
 
     define('LANG_CP_FIELD',                     'Поле');
     define('LANG_CP_FIELD_FORMAT',              'Формат поля');
@@ -547,7 +546,6 @@
     define('LANG_CP_SETTINGS_DB',               'База данных');
     define('LANG_CP_SETTINGS_DB_CLEAR_SQL_MODE', 'Включить режим пустого sql_mode для MySQL');
     define('LANG_CP_SETTINGS_DB_CHARSET',       'Кодировка');
-    define('LANG_CP_SETTINGS_DB_CHARSET_ERROR', 'Выбранная кодировка не поддерживается сервером');
     define('LANG_CP_SETTINGS_DB_CHARSET_HINT',  'Изменение кодировки может занять продолжительное время');
     define('LANG_CP_SETTINGS_MISC',             'Прочие');
     define('LANG_CP_SETTINGS_SECURITY',         'Безопасность');
@@ -559,7 +557,7 @@
     define('LANG_CP_SETTINGS_SESSION_NAME_HINT', 'Должно быть одинаково для всех сайтов с единой авторизацией');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH', 'Путь хранения сессий');
     define('LANG_CP_SETTINGS_SESSIONS_BASEDIR', ', который должен входить в один из путей ');
-    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'Для файлов должен быть указан полный путь%s. <br />Для Memcache с префиксом "tcp://", например, <b>tcp://localhost:11211</b>. Для Memcached без префикса "tcp://", например, <b>localhost:11211</b>.');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'Для файлов должен быть указан полный путь%s. <br />Для Memcache с префиксом "tcp://", например, <b>tcp://localhost:11211</b>. <br />Для Memcached без префикса "tcp://", например, <b>localhost:11211</b>. <br />Для Redis с префиксом "tcp://", например, <b>tcp://127.0.0.1:6379</b>.');
 
     define('LANG_CP_CHECK_SPOOFING_TYPE', 'Контроль изменения IP адреса при входе в админку');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'По изменению подсети');
@@ -581,6 +579,7 @@
     define('LANG_CP_SETTINGS_DISABLE_METAKEYS', 'Отключить тег meta keywords');
     define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Использовать указанные выше слова и описание только для главной страницы');
     define('LANG_CP_SETTINGS_META_NO_DEFAULT_HINT',  'Если выключено, эти слова будут отображаться на страницах с не заданными подобными параметрами');
+    define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Добавлять номера страниц в тег title и meta description при пагинации');
     define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Добавлять в тег title страницы название сайта');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');
     define('LANG_CP_SUBMIT_COMPILE',            'Сохранить и скомпилировать %s');
@@ -629,8 +628,8 @@
     define('LANG_CP_SETTINGS_CACHE_METHOD',     'Метод кеширования');
     define('LANG_CP_SETTINGS_CACHE_METHOD_NO',  'не доступно');
     define('LANG_CP_SETTINGS_CACHE_TTL',        'Время жизни кеша, сек');
-    define('LANG_CP_SETTINGS_CACHE_HOST',       'Memcached Сервер');
-    define('LANG_CP_SETTINGS_CACHE_PORT',       'Memcached Порт');
+    define('LANG_CP_SETTINGS_CACHE_HOST',       'Сервер');
+    define('LANG_CP_SETTINGS_CACHE_PORT',       'Порт');
     define('LANG_CP_SETTINGS_CACHE_MIN_HTML',   'Минифицировать HTML');
     define('LANG_CP_SETTINGS_COOKIE_DOMAIN',    'Домен cookie');
     define('LANG_CP_SETTINGS_COOKIE_DOMAIN_HINT', 'Cookie вашего сайта будут распространяться на указанный домен и все его поддомены. Будет доступна сквозная авторизации. Если не указан, то cookie будут действовать в пределах текущего домена.');
@@ -638,6 +637,9 @@
 
     define('LANG_CP_MEMCACHE_NOT_AVAILABLE',    'Модуль Memcached не найден');
     define('LANG_CP_MEMCACHE_CONNECT_ERROR',    'Не удалось подключиться к Memcached - проверьте сервер и порт');
+
+    define('LANG_CP_REDISCACHE_NOT_AVAILABLE',    'Модуль Redis не найден');
+    define('LANG_CP_REDISCACHE_CONNECT_ERROR',    'Не удалось подключиться к Redis - проверьте сервер и порт');
 
     define('LANG_CP_FILE_NOT_WRITABLE',         'Невозможно перезаписать файл "%s". Установите для него права на запись.');
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Ошибка перезаписи файла конфигурации');
@@ -709,8 +711,6 @@
     define('LANG_CP_PACKAGE_DESCRIPTION',       'Описание пакета');
     define('LANG_CP_PACKAGE_CONTENTS',          'Содержимое пакета');
     define('LANG_CP_PACKAGE_DEPENDS',           'Зависимости пакета');
-    define('LANG_CP_PACKAGE_DEPENDS_PHP_EXT',   'Требуется PHP модуль %s');
-    define('LANG_CP_PACKAGE_DEPENDS_VERSION',   'Версия %s, требуется %s');
     define('LANG_CP_PACKAGE_DEPENDS_PHP',       'Требуемая версия PHP');
     define('LANG_CP_PACKAGE_DEPENDS_CORE',      'Требуемая версия ядра');
     define('LANG_CP_PACKAGE_DEPENDENT_TYPE',      'Требуется установленный %s <a href="%s" target="_blank">%s</a>');

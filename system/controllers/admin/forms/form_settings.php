@@ -152,6 +152,9 @@ class formAdminSettings extends cmsForm {
                     new fieldCheckbox('is_sitename_in_title', [
                         'title'   => LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE,
                         'default' => 1
+                    ]),
+                    new fieldCheckbox('page_num_in_title', [
+                        'title' => LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE
                     ])
                 ]
             ],
@@ -344,20 +347,21 @@ class formAdminSettings extends cmsForm {
                             'files'     => 'Files',
                             'memory'    => 'Memcache' . (extension_loaded('memcache') ? '' : ' (' . LANG_CP_SETTINGS_CACHE_METHOD_NO . ')'),
                             'memcached' => 'Memcached' . (extension_loaded('memcached') ? '' : ' (' . LANG_CP_SETTINGS_CACHE_METHOD_NO . ')'),
+                            'redis' => 'Redis' . (extension_loaded('redis') ? '' : ' (' . LANG_CP_SETTINGS_CACHE_METHOD_NO . ')'),
                         ],
                         'visible_depend' => ['cache_enabled' => ['show' => ['1']]]
                     ]),
                     new fieldString('cache_host', [
                         'title'          => LANG_CP_SETTINGS_CACHE_HOST,
                         'visible_depend' => [
-                            'cache_method'  => ['show' => ['memory', 'memcached']],
+                            'cache_method'  => ['show' => ['memory', 'memcached', 'redis']],
                             'cache_enabled' => ['hide' => ['0']]
                         ]
                     ]),
                     new fieldNumber('cache_port', [
                         'title'          => LANG_CP_SETTINGS_CACHE_PORT,
                         'visible_depend' => [
-                            'cache_method'  => ['show' => ['memory', 'memcached']],
+                            'cache_method'  => ['show' => ['memory', 'memcached', 'redis']],
                             'cache_enabled' => ['hide' => ['0']]
                         ]
                     ])
@@ -373,6 +377,7 @@ class formAdminSettings extends cmsForm {
                             'files'     => 'Files',
                             'memcache'  => 'Memcache' . (extension_loaded('memcache') ? '' : ' (' . LANG_CP_SETTINGS_CACHE_METHOD_NO . ')'),
                             'memcached' => 'Memcached' . (extension_loaded('memcached') ? '' : ' (' . LANG_CP_SETTINGS_CACHE_METHOD_NO . ')'),
+                            'redis' => 'Redis' . (extension_loaded('redis') ? '' : ' (' . LANG_CP_SETTINGS_CACHE_METHOD_NO . ')'),
                         ],
                         'rules' => [
                             ['required']

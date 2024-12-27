@@ -233,7 +233,6 @@
     define('LANG_CP_TAB_TITLE',                 'Tab title');
     define('LANG_CP_TAB_IS_ACTIVE',             'Tab is enabled');
     define('LANG_CP_TAB_SHOW_ONLY_OWNER',       'Show tab to the profile owner only');
-    define('LANG_CP_TAB_SHOW_ONLY_OWNER_HINT',  'Global admins always see if the groups they belong to have permission to show');
     define('LANG_CP_FIELD',                     'Field');
     define('LANG_CP_FIELD_FORMAT',              'Field validation');
     define('LANG_CP_FIELD_REGEX',               'Regular expression');
@@ -523,7 +522,6 @@
     define('LANG_CP_SETTINGS_DB',               'Database');
     define('LANG_CP_SETTINGS_DB_CLEAR_SQL_MODE', 'Enable empty sql_mode for MySQL');
     define('LANG_CP_SETTINGS_DB_CHARSET',       'Charset');
-    define('LANG_CP_SETTINGS_DB_CHARSET_ERROR', 'The selected Charset is not supported by the server');
     define('LANG_CP_SETTINGS_DB_CHARSET_HINT',  'Changing the charset may take a long time');
     define('LANG_CP_SETTINGS_MISC',             'Misc');
     define('LANG_CP_SETTINGS_SECURITY',         'Security');
@@ -534,7 +532,7 @@
     define('LANG_CP_SETTINGS_SESSION_NAME_HINT', 'Must be the same for all sites with a single authorization');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH', 'Sessions save path');
     define('LANG_CP_SETTINGS_SESSIONS_BASEDIR', ', which must enter one of the paths ');
-    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'For files, the full path must be specified%s. For Memcache "tcp://" prefixed must be specified, for example, <b>tcp://localhost:11211</b>. For Memcached must be without the "tcp://" prefix, for example, <b>localhost: 11211</b>.');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'For files, the full path must be specified%s. <br />For Memcache "tcp://" prefixed must be specified, for example, <b>tcp://localhost:11211</b>. <br />For Memcached must be without the "tcp://" prefix, for example, <b>localhost: 11211</b>. <br />For Redis, the "tcp://" prefix must be specified, e.g., tcp://127.0.0.1:6379.');
     define('LANG_CP_CHECK_SPOOFING_TYPE', 'Control of changing the IP address when entering the admin area');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'By changing the subnet');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT2', 'Strictly for ip address');
@@ -555,6 +553,7 @@
     define('LANG_CP_SETTINGS_DISABLE_METAKEYS', 'Disable meta keywords tag');
     define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Apply the above-specified words and description to the homepage only');
     define('LANG_CP_SETTINGS_META_NO_DEFAULT_HINT',  'If disabled, these words will be displayed on pages with no specified parameters.');
+    define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Add page numbers in the title and meta description tags when pagination');
     define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Add site name to the page title tag');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Language');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Default theme');
@@ -603,14 +602,16 @@
     define('LANG_CP_SETTINGS_CACHE_METHOD',     'Caching engine');
     define('LANG_CP_SETTINGS_CACHE_METHOD_NO',  'not available');
     define('LANG_CP_SETTINGS_CACHE_TTL',        'Cache TTL, sec');
-    define('LANG_CP_SETTINGS_CACHE_HOST',       'Memcached server');
-    define('LANG_CP_SETTINGS_CACHE_PORT',       'Memcached port');
+    define('LANG_CP_SETTINGS_CACHE_HOST',       'Server');
+    define('LANG_CP_SETTINGS_CACHE_PORT',       'Port');
     define('LANG_CP_SETTINGS_CACHE_MIN_HTML',   'Minify HTML');
     define('LANG_CP_SETTINGS_COOKIE_DOMAIN',    'Cookie Domain');
     define('LANG_CP_SETTINGS_COOKIE_DOMAIN_HINT', 'Your site\'s cookies will be distributed to the specified domain and all of its subdomains. End-to-end authentication will be available. If not specified, the cookie will be valid within the current domain.');
     define('LANG_CP_SETTINGS_CURRENT_DOMAIN',   'Current domain: ');
     define('LANG_CP_MEMCACHE_NOT_AVAILABLE',    'Memcached module not found');
     define('LANG_CP_MEMCACHE_CONNECT_ERROR',    'Cannot connect to Memcached - check server and port');
+    define('LANG_CP_REDISCACHE_NOT_AVAILABLE',    'Redis module not found');
+    define('LANG_CP_REDISCACHE_CONNECT_ERROR',    'Cannot connect to Redis - check server and port');
     define('LANG_CP_FILE_NOT_WRITABLE',         'Cannot overwrite file "%s". Set write permissions for it.');
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Configuration file is not writable!');
     define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Template configuration file is not writable!');
@@ -683,8 +684,6 @@
     define('LANG_CP_PACKAGE_DESCRIPTION',       'Package description');
     define('LANG_CP_PACKAGE_CONTENTS',          'Package contents');
     define('LANG_CP_PACKAGE_DEPENDS',           'Package dependencies');
-    define('LANG_CP_PACKAGE_DEPENDS_PHP_EXT',   'Requires %s PHP module');
-    define('LANG_CP_PACKAGE_DEPENDS_VERSION',   'Version %s, %s required');
     define('LANG_CP_PACKAGE_DEPENDS_PHP',       'Required PHP version');
     define('LANG_CP_PACKAGE_DEPENDS_CORE',      'Required core version');
     define('LANG_CP_PACKAGE_DEPENDS_PACKAGE',   'Required installed package version');
