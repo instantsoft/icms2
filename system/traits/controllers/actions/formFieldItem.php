@@ -251,6 +251,8 @@ trait formFieldItem {
             }
         }
 
+        $form->show_unsave_notice = false;
+
         return $this->cms_template->render($this->tpl_name, [
             'do'     => $do,
             'ctype'  => $ctype,

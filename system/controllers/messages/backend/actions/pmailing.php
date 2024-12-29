@@ -7,9 +7,11 @@ class actionMessagesPmailing extends cmsAction {
 
     public function run($group_id = 0) {
 
-        $form = $this->getForm('pmailing');
+        $history_key = 'admin_pmailing';
 
-        $mailing = ['groups' => [$group_id]];
+        $mailing = array_merge((cmsUser::getUPS($history_key) ?: []), ['groups' => [$group_id]]);
+
+        $form = $this->getForm('pmailing');
 
         if ($this->request->has('submit')) {
 
@@ -46,7 +48,7 @@ class actionMessagesPmailing extends cmsAction {
 
                 if ($recipients) {
                     if (isset($recipients[$sender_id])) {
-                        unset($recipients[$sender_id]);
+                        //unset($recipients[$sender_id]);
                     }
                 }
 
@@ -54,11 +56,15 @@ class actionMessagesPmailing extends cmsAction {
 
                     $this->controller_messages->addRecipients(array_keys($recipients))->setSender($sender_id);
 
-                    $mailing['message_text'] = cmsEventsManager::hook('html_filter', $mailing['message_text']);
+                    $message_text = cmsEventsManager::hook('html_filter', [
+                        'text'         => $mailing['message_text'],
+                        'typograph_id' => $mailing['typograph_id'],
+                        'is_auto_br'   => $mailing['is_br'] ? true : null
+                    ]);
 
                     if ($mailing['type'] === 'message') {
 
-                        $messages_ids = $this->controller_messages->sendMessage($mailing['message_text']);
+                        $messages_ids = $this->controller_messages->sendMessage($message_text);
 
                         $count = is_array($messages_ids) ? count($messages_ids) : ($messages_ids ? 1 : 0);
 
@@ -76,7 +82,7 @@ class actionMessagesPmailing extends cmsAction {
                             $this->controller_messages->sendNoticeEmail('messages_new', [
                                 'user_url'      => href_to_profile($sender, false, true),
                                 'user_nickname' => $sender_nickname,
-                                'message'       => strip_tags($mailing['message_text'])
+                                'message'       => strip_tags($message_text)
                             ]);
                         }
                     }
@@ -84,7 +90,7 @@ class actionMessagesPmailing extends cmsAction {
                     if ($mailing['type'] === 'notify') {
 
                         $notices_ids = $this->controller_messages->sendNoticePM(array(
-                            'content' => $mailing['message_text']
+                            'content' => $message_text
                         ));
 
                         $count = is_array($notices_ids) ? count($notices_ids) : ($notices_ids ? 1 : 0);
@@ -101,7 +107,7 @@ class actionMessagesPmailing extends cmsAction {
 
                         foreach ($emails as $email => $nickname) {
                             $this->controller_messages->sendEmail(['email' => $email], [
-                                'text' => $mailing['message_text']
+                                'text' => $message_text
                             ], ['nickname' => $nickname]);
                         }
 
@@ -112,6 +118,8 @@ class actionMessagesPmailing extends cmsAction {
                         LANG_PM_PMAILING_SENDED,
                         html_spellcount($count, string_lang('LANG_PM_' . $mailing['type']), false, false, 0)
                     ), ($count ? 'success' : 'info'));
+
+                    cmsUser::setUPS($history_key, $mailing);
                 }
 
                 if (!$recipients) {

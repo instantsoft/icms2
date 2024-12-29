@@ -83,7 +83,7 @@ function string_parse_list($string_list) {
 
     foreach ($rows as $row) {
 
-        if (preg_match('/^{(.*)}$/', $row, $matches)) {
+        if (preg_match('/^{(.*)}/', $row, $matches)) {
             if (!$is_logged) { continue; }
             $row = $matches[1];
         }
@@ -119,8 +119,8 @@ function string_explode_list($string_list, $index_as_value = false) {
             $index = $parts[0];
             $value = $parts[1];
         } else {
-            $index = $index_as_value ? $row : (string)($count + 1);
-            $value = $row;
+            $index = $index_as_value ? $parts[0] : (string)($count + 1);
+            $value = $parts[0];
         }
 
         $items[$index] = $value;

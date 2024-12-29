@@ -98,6 +98,20 @@ class formMessagesPmailing extends cmsForm {
                             ['required']
                         ]
                     ]),
+                    new fieldList('typograph_id', [
+                        'title'     => LANG_PARSER_TYPOGRAPH,
+                        'generator' => function ($item) {
+                            $items   = [];
+                            $presets = (new cmsModel())->get('typograph_presets') ?: [];
+                            foreach ($presets as $preset) {
+                                $items[$preset['id']] = $preset['title'];
+                            }
+                            return $items;
+                        },
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
                     new fieldList('type', [
                         'title' => LANG_PM_PMAILING_TYPE,
                         'items' => [
@@ -114,6 +128,9 @@ class formMessagesPmailing extends cmsForm {
                             ['email']
                         ],
                         'visible_depend' => ['type' => ['show' => ['message']]]
+                    ]),
+                    new fieldCheckbox('is_br', [
+                        'title' => LANG_PM_PMAILING_IS_BR
                     ])
                 ]
             ]

@@ -31,13 +31,13 @@
                 type: field_type
             }, function(data){
 
-                if (!data) { return; }
+                if (!data || data.error || !data.html) {
 
-                if(data.error){
-                    icms.modal.alert(data.message, 'ui_error'); return;
-                }
+                    if(data.error){
+                        icms.modal.alert(data.message, 'ui_error');
+                    }
 
-                if(!data.html){
+                    icms.forms.initUnsaveNotice();
                     return;
                 }
 
@@ -55,12 +55,12 @@
 
                 $('#tab-type').after($(data.html));
 
+                icms.forms.initUnsaveNotice();
+
                 icms.events.run('loadfieldtypeoptions', data.html);
 
             }, 'json');
-
         }
-
     }
 
     $(function(){

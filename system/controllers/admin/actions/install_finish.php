@@ -15,6 +15,10 @@ class actionAdminInstallFinish extends cmsAction {
             return $this->redirectToAction('install');
         }
 
+        if (function_exists('opcache_reset')) {
+            @opcache_reset();
+        }
+
         $installer = new cmsInstaller($this->getInstallPackagesPath('root'), $this->controller);
 
         // id дополнения передаётся при установке из каталога дополнений

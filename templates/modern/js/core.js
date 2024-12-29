@@ -220,6 +220,7 @@ icms.forms = (function ($) {
     this.submitted = false;
     this.form_changed = false;
     this.csrf_token = false;
+    this.is_init_unsave_notice = false;
 
     var _this = this;
 
@@ -458,7 +459,12 @@ icms.forms = (function ($) {
 
     this.initUnsaveNotice = function(){
 
-        var init_data = {};
+        if (this.is_init_unsave_notice) {
+            return;
+        }
+        this.is_init_unsave_notice = true;
+
+        let init_data = {};
 
         $('form').each(function(i){
             init_data[i] = _this.toJSON($(this));
@@ -466,24 +472,23 @@ icms.forms = (function ($) {
         });
 
         $(document).on('change', '.form-tabs input, .form-tabs select, .form-tabs textarea', function (e) {
-            var form = $(this).closest('form');
-            _this.form_changed = (JSON.stringify(init_data[form.attr('data-notice_id')]) !== JSON.stringify(_this.toJSON(form))) ? true : false;
+            let form = $(this).closest('form');
+            _this.form_changed = JSON.stringify(init_data[form.attr('data-notice_id')]) !== JSON.stringify(_this.toJSON(form));
         });
         $(document).on('submit', 'form', function () {
             $(this).find('.button-submit').addClass('disabled is-busy');
             icms.forms.submitted = true;
         });
         $(window).on('beforeunload', function (e) {
-            if (icms.forms.form_changed && !icms.forms.submitted) {
-                var e = e || window.event;
-                var msg = LANG_SUBMIT_NOT_SAVE;
-                if (e) {
-                    e.returnValue = msg;
+            if (_this.form_changed && !_this.submitted) {
+                let ev = e || window.event;
+                let msg = LANG_SUBMIT_NOT_SAVE;
+                if (ev) {
+                    ev.returnValue = msg;
                 }
                 return msg;
             }
         });
-
     };
 
     this.initCollapsedFieldset = function(form_id){
