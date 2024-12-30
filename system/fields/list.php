@@ -259,8 +259,8 @@ class fieldList extends cmsFormField {
 
         if (is_array($value)) {
             foreach ($value as $k => $v) {
-                if (!is_array($v)) {
-                    $value[$k] = (string) $v;
+                if (!is_array($v) && preg_match('/^([0-9]+)$/i', strval($v))) {
+                    $value[$k] = (int) $v;
                 }
             }
         }
