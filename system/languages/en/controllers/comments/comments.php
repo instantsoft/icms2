@@ -46,7 +46,7 @@ define('LANG_COMMENT_RATE_UP', 'Good comment');
 define('LANG_COMMENT_RATE_DOWN', 'Bad comment');
 define('LANG_COMMENTS_TRACK', 'Keep track of new comments');
 define('LANG_COMMENTS_TRACK_STOP', 'Cancel tracking');
-define('LANG_COMMENTS_TRACKED_NEW', 'Page %s has <b>&laquo;%s&raquo;</b>');
+define('LANG_COMMENTS_TRACKED_NEW', 'Page <b>&laquo;%s&raquo;</b> has %s');
 define('LANG_COMMENT1', 'comment');
 define('LANG_COMMENT2', 'comments');
 define('LANG_COMMENT10', 'comments');
