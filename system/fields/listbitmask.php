@@ -202,12 +202,32 @@ class fieldListBitmask extends cmsFormField {
 
     public function hookAfterUpdate($content_table_name, $field, $field_old, $model) {
 
+        $is_prop = !isset($field_old['name']);
+
+        // Свойства
+        if ($is_prop) {
+
+            $model->selectOnly('i.item_id')->
+                select('i.value');
+
+            $model->filterEqual('prop_id', $field['id']);
+
+            $val_field_name = 'value';
+            $unq_field_name = 'item_id';
+
+        } else {
+            // Поля
+            $model->selectOnly('i.id')->
+                select('i.'.$field_old['name']);
+
+            $val_field_name = $field_old['name'];
+            $unq_field_name = 'id';
+        }
+
         $items = $model->limit(false)->
-                selectOnly('i.id')->
-                select('i.'.$field_old['name'])->
-                get($content_table_name, function ($item, $model)use ($field_old) {
-            return $item[$field_old['name']];
-        });
+                get($content_table_name, function ($item, $model)use ($val_field_name) {
+            return $item[$val_field_name];
+        }, $unq_field_name);
 
         if (!$items || trim($field_old['values']) === trim($field['values'])) {
             return parent::hookAfterUpdate($content_table_name, $field, $field_old, $model);
@@ -248,8 +268,12 @@ class fieldListBitmask extends cmsFormField {
             }
 
             // записываем обратно в базу
-            $model->update($content_table_name, $id, [
-                $field_old['name'] => $new_item_value
+            if ($is_prop) {
+                $model->filterEqual('prop_id', $field['id']);
+            }
+
+            $model->filterEqual($unq_field_name, $id)->updateFiltered($content_table_name, [
+                $val_field_name => $new_item_value
             ], true);
         }
 

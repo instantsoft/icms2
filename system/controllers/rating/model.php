@@ -80,6 +80,34 @@ class modelRating extends cmsModel {
         return $this->getCount('rating_log', 'id', $reset);
     }
 
+    private function getGuestName($ip) {
+
+        $guest_nickname = LANG_GUEST;
+
+        if (!$ip) {
+            return $guest_nickname;
+        }
+
+        if (strpos($ip, ':') !== false) { // IPv6
+
+            $okets = explode(':', $ip);
+
+            $sum = 0;
+            foreach ($okets as $block) {
+                if (!$block) {
+                    continue;
+                }
+                $sum += hexdec($block);
+            }
+        } else { // IPv4
+
+            $okets = explode('.', $ip);
+            $sum = array_sum($okets);
+        }
+
+        return $guest_nickname . ' №' . $sum;
+    }
+
     public function getVotes() {
 
         $this->useCache('rating.votes');
@@ -88,24 +116,14 @@ class modelRating extends cmsModel {
 
         return $this->get('rating_log', function ($item, $model) {
 
-            $guest_nickname = LANG_GUEST;
-
             if($item['ip']) {
                 $item['ip'] = string_bintoip($item['ip']);
-                if($item['ip']){
-
-                    // формируем номер гостя
-                    $_okets4 = explode('.', $item['ip']);
-                    $_okets6 = explode(':', $item['ip']);
-
-                    $guest_nickname .= ' №' . array_sum(array_merge($_okets4, $_okets6));
-                }
             }
 
             $item['user'] = [
                 'id'       => $item['user_id'],
                 'slug'     => $item['user_slug'],
-                'nickname' => (!empty($item['user_nickname']) ? $item['user_nickname'] : $guest_nickname),
+                'nickname' => $item['user_nickname'] ?: $this->getGuestName($item['ip']),
                 'avatar'   => $item['user_avatar']
             ];
 

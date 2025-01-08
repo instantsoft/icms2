@@ -248,13 +248,18 @@ class fieldNumber extends cmsFormField {
 
     public function hookAfterUpdate($content_table_name, $field, $field_old, $model) {
 
-        $new_decimal_int = isset($field['options']['decimal_int']) ? $field['options']['decimal_int'] : 7;
-        $new_decimal_s   = empty($field['options']['is_ceil']) ? (isset($field['options']['decimal_s']) ? $field['options']['decimal_s'] : 2) : 0;
-        $new_unsigned    = isset($field['options']['is_abs']) ? $field['options']['is_abs'] : false;
+        // Для свойств не меняем ничего
+        if (!isset($field_old['name'])) {
+            return parent::hookAfterUpdate($content_table_name, $field, $field_old, $model);
+        }
 
-        $old_decimal_int = isset($field_old['parser']->options['decimal_int']) ? $field_old['parser']->options['decimal_int'] : 7;
-        $old_decimal_s   = empty($field_old['parser']->options['is_ceil']) ? (isset($field_old['parser']->options['decimal_s']) ? $field_old['parser']->options['decimal_s'] : 2) : 0;
-        $old_unsigned    = isset($field_old['parser']->options['is_abs']) ? $field_old['parser']->options['is_abs'] : false;
+        $new_decimal_int = $field['options']['decimal_int'] ?? 7;
+        $new_decimal_s   = empty($field['options']['is_ceil']) ? ($field['options']['decimal_s'] ?? 2) : 0;
+        $new_unsigned    = $field['options']['is_abs'] ?? false;
+
+        $old_decimal_int = $field_old['parser']->options['decimal_int'] ?? 7;
+        $old_decimal_s   = empty($field_old['parser']->options['is_ceil']) ? ($field_old['parser']->options['decimal_s'] ?? 2) : 0;
+        $old_unsigned    = $field_old['parser']->options['is_abs'] ?? false;
 
         if ($field_old['type'] === $field['type'] && ($new_decimal_int != $old_decimal_int ||
             $new_decimal_s != $old_decimal_s ||

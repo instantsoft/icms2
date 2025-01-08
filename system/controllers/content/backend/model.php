@@ -764,10 +764,20 @@ class modelBackendContent extends modelContent {
     public function getContentProp($ctype_name, $id) {
 
         $props_table_name = $this->getContentTypeTableName($ctype_name, '_props');
-        $bind_table_name  = $this->getContentTypeTableName($ctype_name, '_props_bind');
 
-        $prop = $this->getItemById($props_table_name, $id, function ($item, $model) {
+        $prop = $this->getItemById($props_table_name, $id, function ($item, $model) use($ctype_name) {
+
             $item['options'] = cmsModel::yamlToArray($item['options']);
+
+            $item['cats'] = $model->
+                    filterEqual('prop_id', $item['id'])->
+                    get(
+                        $model->getContentTypeTableName($ctype_name, '_props_bind'),
+                        function ($item, $model) {
+                            return (int) $item['cat_id'];
+                        }
+                    );
+
             return $item;
         });
 
@@ -775,18 +785,13 @@ class modelBackendContent extends modelContent {
             return false;
         }
 
-        $this->filterEqual('prop_id', $id);
-
-        $prop['cats'] = $this->get($bind_table_name, function ($item, $model) {
-            return (int) $item['cat_id'];
-        });
-
         return $prop;
     }
 
     public function updateContentProp($ctype_name, $id, $prop) {
 
         $table_name = $this->getContentTypeTableName($ctype_name, '_props');
+        $values_table_name = $this->getContentTypeTableName($ctype_name, '_props_values');
 
         $old_prop = $this->getContentProp($ctype_name, $id);
 
@@ -812,7 +817,7 @@ class modelBackendContent extends modelContent {
         $field_class   = 'field'.string_to_camel('_', $prop['type']);
         $field_handler = new $field_class(null, ['options' => $prop['options']]);
 
-        $field_handler->hookAfterUpdate($table_name, $prop, $old_prop, $this);
+        $field_handler->hookAfterUpdate($values_table_name, $prop, $old_prop, $this);
 
         cmsEventsManager::hook('ctype_prop_before_update', [$prop, $old_prop, $ctype_name, $this]);
 

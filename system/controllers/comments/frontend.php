@@ -1,6 +1,8 @@
 <?php
 /**
  * @property \modelComments $model
+ * @property \moderation $controller_moderation
+ * @property \messages $controller_messages
  */
 class comments extends cmsFrontend {
 
@@ -17,7 +19,7 @@ class comments extends cmsFrontend {
 
     protected $unknown_action_as_index_param = true;
 
-    public function __construct($request){
+    public function __construct(cmsRequest $request){
 
         parent::__construct($request);
 
@@ -27,7 +29,6 @@ class comments extends cmsFrontend {
         $this->target_user_id    = $this->request->get('target_user_id', 0);
 
         $this->setLabels($this->request->get('labels', []));
-
     }
 
     public function setLabels($labels) {
@@ -45,7 +46,6 @@ class comments extends cmsFrontend {
         ], array_filter($labels));
 
         return $this;
-
     }
 
     public function getNativeComments() {
@@ -134,118 +134,123 @@ class comments extends cmsFrontend {
 
     }
 
-    public function getWidget(){
+    public function getWidget() {
 
-        $comment_systems = cmsEventsManager::hookAll('comment_systems', $this, array());
+        $comment_systems = cmsEventsManager::hookAll('comment_systems', $this, []);
 
-        if(empty($this->options['disable_icms_comments']) || !$comment_systems){
+        if (empty($this->options['disable_icms_comments']) || !$comment_systems) {
             array_unshift($comment_systems, $this->getNativeComments());
         }
 
-        return $this->cms_template->renderInternal($this, 'tab_list', array(
-            'comment_systems' => $comment_systems,
+        return $this->cms_template->renderInternal($this, 'tab_list', [
+            'comment_systems'   => $comment_systems,
             'target_controller' => $this->target_controller,
             'target_subject'    => $this->target_subject,
             'target_id'         => $this->target_id,
             'target_user_id'    => $this->target_user_id
-        ));
-
+        ]);
     }
 
 //============================================================================//
 //============================================================================//
 
-    public function notifySubscribers($comment, $parent_comment=false){
+    public function notifySubscribers($comment, $parent_comment = false) {
 
         $subscribers = $this->model->filterCommentTarget(
-                $comment['target_controller'],
-                $comment['target_subject'],
-                $comment['target_id']
-            )->getTrackingUsers();
+                        $comment['target_controller'],
+                        $comment['target_subject'],
+                        $comment['target_id']
+                )->getTrackingUsers();
 
-        if (!$subscribers) { return; }
+        if (!$subscribers) {
+            return;
+        }
 
         // удаляем автора комментария из списка подписчиков
         $user_key = array_search($comment['user_id'], $subscribers);
-        if ($user_key!==false) { unset($subscribers[$user_key]); }
+        if ($user_key !== false) {
+            unset($subscribers[$user_key]);
+        }
 
         // удаляем автора родительского комментария из списка подписчиков,
         // поскольку он получит отдельное уведомление об ответе на комментарий
-        if ($parent_comment){
+        if ($parent_comment) {
             $parent_user_key = array_search($parent_comment['user_id'], $subscribers);
-            if ($parent_user_key!==false) { unset($subscribers[$parent_user_key]); }
+            if ($parent_user_key !== false) {
+                unset($subscribers[$parent_user_key]);
+            }
         }
 
         // проверяем что кто-либо остался в списке
-        if (!$subscribers) { return; }
+        if (!$subscribers) {
+            return;
+        }
+
+        $is_guest_comment = !$comment['user_id'];
+
+        $page_url = href_to_abs($comment['target_url']) . "#comment_{$comment['id']}";
 
         $notice_data = [
-            'page_url'        => href_to_abs($comment['target_url']) . "#comment_{$comment['id']}",
+            'page_url'        => $page_url,
             'page_title'      => $comment['target_title'],
-            'author_url'      => href_to_profile($comment['user'], false, true),
-            'author_nickname' => $comment['user_nickname'],
+            'author_url'      => $is_guest_comment ? $page_url : href_to_profile($comment['user'], false, true),
+            'author_nickname' => $is_guest_comment ? $comment['author_name'] : $comment['user_nickname'],
             'comment'         => $comment['content']
         ];
 
-        $messenger = cmsCore::getController('messages');
+        $this->controller_messages->addRecipients($subscribers);
 
-        $messenger->addRecipients($subscribers);
-
-        $messenger->sendNoticePM(array(
+        $this->controller_messages->sendNoticePM([
             'content' => sprintf(LANG_COMMENTS_NEW_NOTIFY, $notice_data['author_url'], $notice_data['author_nickname'], $notice_data['page_title']),
-            'actions' => array(
-                'view' => array(
+            'actions' => [
+                'view' => [
                     'title' => LANG_COMMENTS_VIEW,
                     'href'  => $notice_data['page_url']
-                )
-            )
-        ), 'comments_new');
+                ]
+            ]
+        ], 'comments_new');
 
-        $messenger->sendNoticeEmail('comments_new', $notice_data);
-
+        $this->controller_messages->sendNoticeEmail('comments_new', $notice_data);
     }
 
-    public function notifyParent($comment, $parent_comment){
+    public function notifyParent($comment, $parent_comment) {
 
         $success = false;
 
-        if ($comment['user_id'] && ($comment['user_id'] == $parent_comment['user_id'])) { return $success; }
-
-        $messenger = cmsCore::getController('messages');
+        if ($comment['user_id'] && ($comment['user_id'] == $parent_comment['user_id'])) {
+            return $success;
+        }
 
         $is_guest_parent  = !$parent_comment['user_id'];
         $is_guest_comment = !$comment['user_id'];
 
         $page_url = href_to_abs($comment['target_url']) . "#comment_{$comment['id']}";
 
-        $letter_data = array(
+        $letter_data = [
             'page_url'        => $page_url,
             'page_title'      => $comment['target_title'],
             'author_url'      => $is_guest_comment ? $page_url : href_to_profile($comment['user'], false, true),
             'author_nickname' => $is_guest_comment ? $comment['author_name'] : $comment['user_nickname'],
             'comment'         => $comment['content'],
             'original'        => $parent_comment['content']
-        );
+        ];
 
-        if (!$is_guest_parent){
+        if (!$is_guest_parent) {
 
-            $success = $messenger->addRecipient($parent_comment['user_id'])->
+            $success = $this->controller_messages->addRecipient($parent_comment['user_id'])->
                     sendNoticeEmail('comments_reply', $letter_data);
-
         }
 
-        if ($is_guest_parent && $parent_comment['author_email']){
+        if ($is_guest_parent && $parent_comment['author_email']) {
 
             $letter_data['nickname'] = $parent_comment['author_name'];
-            $to = array('name' => $parent_comment['author_name'], 'email' => $parent_comment['author_email']);
-            $letter = array('name' => 'comments_reply');
+            $to                      = ['name' => $parent_comment['author_name'], 'email' => $parent_comment['author_email']];
+            $letter                  = ['name' => 'comments_reply'];
 
-            $success = $messenger->sendEmail($to, $letter, $letter_data);
-
+            $success = $this->controller_messages->sendEmail($to, $letter, $letter_data);
         }
 
         return $success;
-
     }
 
 //============================================================================//
@@ -254,7 +259,7 @@ class comments extends cmsFrontend {
     public function renderCommentsList($page_url, $dataset_name = false) {
 
         $page    = $this->request->get('page', 1);
-        $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
+        $perpage = $this->options['limit'] ?? 15;
 
         // Фильтр приватности
         if ((!$dataset_name || $dataset_name == 'all') && !cmsUser::isAllowed('comments', 'view_all')) {
@@ -283,7 +288,7 @@ class comments extends cmsFrontend {
         // если запрос через URL
         if ($this->request->isStandard()) {
             if (!$items && $page > 1) {
-                cmsCore::error404();
+                return cmsCore::error404();
             }
         }
 

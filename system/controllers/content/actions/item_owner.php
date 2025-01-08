@@ -27,16 +27,8 @@ class actionContentItemOwner extends cmsAction {
             return cmsCore::error404();
         }
 
-        // автор записи?
-        $is_owner = $item['user_id'] == $this->cms_user->id;
-
         // проверяем наличие доступа
-        if (!cmsUser::isAllowed($ctype['name'], 'edit')) {
-            return cmsCore::error404();
-        }
-        if (!cmsUser::isAllowed($ctype['name'], 'edit', 'all') &&
-                !cmsUser::isAllowed($ctype['name'], 'edit', 'premod_all') &&
-                ((cmsUser::isAllowed($ctype['name'], 'edit', 'own') || cmsUser::isAllowed($ctype['name'], 'edit', 'premod_own')) && !$is_owner)) {
+        if ($item['user_id'] != $this->cms_user->id || !cmsUser::isAllowed($ctype['name'], 'change_owner')) {
             return cmsCore::error404();
         }
 

@@ -15,7 +15,7 @@
             <span><?php html($vote['user']['nickname']); ?></span>
         <?php } ?>
         <?php if($user->is_admin){ ?>
-            <span class="ml-3"> [<?php html($vote['ip']); ?>]</span>
+            <span class="ml-3 text-muted"> [<?php html($vote['ip']); ?>]</span>
         <?php } ?>
         <span class="score <?php echo html_signed_class($vote['score']); ?> h3 m-0 ml-auto">
             <?php echo html_signed_num($vote['score']); ?>

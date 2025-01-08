@@ -352,25 +352,20 @@ function string_date_format($date, $is_time = false) {
         return '';
     }
 
-    $timestamp = is_numeric($date) ? (int)$date : strtotime($date);
-    $item_date = date('j F Y', $timestamp);
+    $timestamp = is_numeric($date) ? (int) $date : strtotime($date);
 
-    $today_date     = date('j F Y');
-    $yesterday_date = date('j F Y', time() - 3600 * 24);
+    $today     = strtotime('today');
+    $yesterday = strtotime('yesterday');
 
-    switch ($item_date) {
-        case $today_date:
-            $result = LANG_TODAY;
-            break;
-        case $yesterday_date:
-            $result = LANG_YESTERDAY;
-            break;
-        default:
-            $result = lang_date($item_date);
+    if ($timestamp >= $today) {
+        $result = LANG_TODAY;
+    } elseif ($timestamp >= $yesterday) {
+        $result = LANG_YESTERDAY;
+    } else {
+        $result = lang_date(date('j F Y', $timestamp));
     }
 
     if ($is_time) {
-
         $result .= ' ' . LANG_IN . ' ' . date('H:i', $timestamp);
     }
 

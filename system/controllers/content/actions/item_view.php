@@ -541,19 +541,20 @@ class actionContentItemView extends cmsAction {
                 }
             }
 
+            if ($is_owner && cmsUser::isAllowed($ctype['name'], 'change_owner')) {
+                $tool_buttons['change_owner'] = [
+                    'title'   => sprintf(LANG_CONTENT_OWNER_ITEM, $ctype['labels']['create']),
+                    'options' => ['class' => 'change_owner ajax-modal', 'icon' => 'people-arrows'],
+                    'url'     => href_to($ctype['name'], 'owner', $item['id'])
+                ];
+            }
+
             $allow_edit = cmsUser::isAllowed($ctype['name'], 'edit', 'all') || cmsUser::isAllowed($ctype['name'], 'edit', 'premod_all');
             if($is_owner && !$allow_edit){
                 $allow_edit = cmsUser::isAllowed($ctype['name'], 'edit', 'own') || cmsUser::isAllowed($ctype['name'], 'edit', 'premod_own');
             }
 
             if ($allow_edit) {
-
-                $tool_buttons['change_owner'] = [
-                    'title'   => sprintf(LANG_CONTENT_OWNER_ITEM, $ctype['labels']['create']),
-                    'options' => ['class' => 'change_owner ajax-modal', 'icon' => 'people-arrows'],
-                    'url'     => href_to($ctype['name'], 'owner', $item['id'])
-                ];
-
                 if (!cmsUser::isPermittedLimitReached($ctype['name'], 'edit_times', ((time() - strtotime($item['date_pub'])) / 60))) {
                     $tool_buttons['edit'] = [
                         'title'   => sprintf(LANG_CONTENT_EDIT_ITEM, $ctype['labels']['create']),
