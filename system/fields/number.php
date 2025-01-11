@@ -393,7 +393,13 @@ class fieldNumber extends cmsFormField {
                 return null;
             }
 
-            $value = floatval(str_replace(',', '.', trim((string)$value)));
+            if ($this->getOption('is_ceil')) {
+                $func = 'intval';
+            } else {
+                $func = 'floatval';
+            }
+
+            $value = $func(str_replace(',', '.', trim((string)$value)));
 
             return $this->getOption('is_abs') ? abs($value) : $value;
 

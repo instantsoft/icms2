@@ -40,7 +40,7 @@ $this->addTplJSNameFromContext(['vendors/list.min']);
     <div id="tab-<?php echo $tab_name; ?>" class="tab-pane<?php if($active_tab == $tab_name){ ?> active<?php } ?>">
         <div class="row mt-3">
             <div class="col-sm">
-                <input type="search" class="form-control search" placeholder="<?php echo LANG_FIND; ?>">
+                <input type="search" class="form-control fuzzy-search" placeholder="<?php echo LANG_FIND; ?>">
             </div>
         </div>
         <div class="row list mt-4 mb-n4">

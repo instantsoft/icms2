@@ -19,93 +19,11 @@ class actionAdminSettings extends cmsAction {
             $values = array_merge($values, $form->parse($this->request, true));
             $errors = $form->validate($this,  $values);
 
-            if ($values['session_save_handler'] == 'memcache' && !class_exists('Memcache')){
-
-                $errors['session_save_handler'] = LANG_CP_MEMCACHE_NOT_AVAILABLE;
-
-            } else if($values['session_save_handler'] == 'memcached' && !class_exists('Memcached')){
-
-                $errors['session_save_handler'] = LANG_CP_MEMCACHE_NOT_AVAILABLE;
-
-            } else if($values['session_save_handler'] == 'files'){
-
-                if(!is_dir($values['session_save_path'])){
-                    if(!mkdir($values['session_save_path'], 0755, true)){
-                        $errors['session_save_path'] = LANG_CP_FTP_MKDIR_FAILED;
-                    }
-                }
-
-                if (!is_writable($values['session_save_path'])) {
-                    $errors['session_save_path'] = sprintf(LANG_CP_INSTALL_NOT_WRITABLE, $errors['session_save_path']);
-                }
-
+            if (!$errors) {
+                 list($values, $errors) = $this->checkCacheHandler($values, $errors);
             }
 
-            if (!$errors){
-
-                if ($values['cache_method'] == 'memory'){
-
-                    if (!class_exists('Memcache')){
-
-                        cmsUser::addSessionMessage(LANG_CP_MEMCACHE_NOT_AVAILABLE, 'error');
-
-                        $values['cache_method'] = 'files';
-
-                    } else {
-
-                        $memcache_tester = new Memcache();
-
-                        $memcache_result = $memcache_tester->connect($values['cache_host'], $values['cache_port']);
-
-                        if (!$memcache_result){
-
-                            cmsUser::addSessionMessage(LANG_CP_MEMCACHE_CONNECT_ERROR, 'error');
-
-                            $values['cache_method'] = 'files';
-
-                        }
-
-                    }
-
-                }
-
-                if ($values['cache_method'] == 'memcached'){
-
-                    if (!class_exists('Memcached')){
-
-                        cmsUser::addSessionMessage(LANG_CP_MEMCACHE_NOT_AVAILABLE, 'error');
-
-                        $values['cache_method'] = 'files';
-
-                    } else {
-
-                        $memcache_tester = new Memcached();
-
-                        $memcache_tester->setOption(\Memcached::OPT_BINARY_PROTOCOL, true);
-
-                        $memcache_result = $memcache_tester->addServer($values['cache_host'], $values['cache_port']);
-
-                        if (!$memcache_result){
-
-                            cmsUser::addSessionMessage(LANG_CP_MEMCACHE_CONNECT_ERROR, 'error');
-
-                            $values['cache_method'] = 'files';
-
-                        }
-
-                    }
-
-                }
-
-                if (!$values['cache_enabled']){
-
-                    $cacher = cmsCache::getCacher((object)array_merge($this->cms_config->getAll(), $values));
-
-                    $cacher->start();
-                        $cacher->clean();
-                    $cacher->stop();
-
-                }
+            if (!$errors) {
 
                 if($values['db_charset'] !== $this->cms_config->db_charset){
 
@@ -199,6 +117,105 @@ class actionAdminSettings extends cmsAction {
             'form'   => $form,
             'errors' => $errors ?? false
         ]);
+    }
+
+    private function checkCacheHandler($values, $errors) {
+
+        // Новый конфиг согласно настройкам
+        $new_config = clone $this->cms_config;
+        $new_config->setData(array_merge($this->cms_config->getConfig(), $values));
+
+        // Сессии
+        switch ($values['session_save_handler']) {
+            case 'files':
+
+                if(!is_dir($values['session_save_path'])){
+                    if(!mkdir($values['session_save_path'], 0755, true)){
+                        $errors['session_save_path'] = LANG_CP_FTP_MKDIR_FAILED;
+                    }
+                }
+
+                if (!is_writable($values['session_save_path'])) {
+                    $errors['session_save_path'] = sprintf(LANG_CP_INSTALL_NOT_WRITABLE, $values['session_save_path']);
+                }
+
+                break;
+
+            default:
+
+                list($host, $port) = explode(':', str_replace('tcp://', '', $values['session_save_path']));
+
+                $new_config->cache_method = $values['session_save_handler'];
+                $new_config->cache_host   = $host;
+                $new_config->cache_port   = $port;
+
+                $cacher = cmsCache::getCacher($new_config);
+
+                $check = $this->checkCacher($cacher);
+
+                if ($check < 1) {
+                    $errors['session_save_handler'] = sprintf(
+                        ($check === -1 ? LANG_CP_CACHE_MOD_NOT_AVAILABLE : LANG_CP_CACHE_MOD_CONNECT_ERROR),
+                        $values['session_save_handler']
+                    );
+                }
+
+                break;
+        }
+
+        if ($errors) {
+            return [$values, $errors];
+        }
+
+        // Кэширование
+
+        $new_config->cache_method = $values['cache_method'];
+        $new_config->cache_host   = $values['cache_host'];
+        $new_config->cache_port   = $values['cache_port'];
+
+        $cacher = cmsCache::getCacher($new_config);
+
+        $check = $this->checkCacher($cacher);
+
+        if ($check < 1) {
+            $errors['cache_method'] = sprintf(
+                ($check === -1 ? LANG_CP_CACHE_MOD_NOT_AVAILABLE : LANG_CP_CACHE_MOD_CONNECT_ERROR),
+                $values['cache_method']
+            );
+        }
+
+        if ($errors) {
+            return [$values, $errors];
+        }
+
+        // Был включен кэш, выключили
+        if (!$values['cache_enabled'] && $this->cms_config->cache_enabled) {
+
+            $this->cms_cache->clean();
+            $this->cms_cache->stop();
+        }
+
+        return [$values, $errors];
+    }
+
+    private function checkCacher($cacher) {
+
+        if (!$cacher->isDependencySatisfied()) {
+            return -1;
+        }
+
+        try {
+
+            $cacher->start();
+
+            $success = $cacher->testConnection();
+
+        } catch (Throwable $e) {
+
+            $success = 0;
+        }
+
+        return $success;
     }
 
 }

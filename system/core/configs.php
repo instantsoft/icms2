@@ -113,12 +113,7 @@ class cmsConfigs {
             return false;
         }
 
-        $this->data = include $cfg_file;
-
-        // Запоминаем оригинальный конфиг
-        if ($this->keep_original) {
-            $this->config = $this->data;
-        }
+        $this->setData(include $cfg_file);
 
         return true;
     }
@@ -205,6 +200,27 @@ class cmsConfigs {
      */
     public function getAll() {
         return $this->data;
+    }
+
+    /**
+     * Устанавливает конфиг
+     *
+     * @param array $data
+     * @return $this
+     */
+    public function setData(array $data) {
+
+        $this->changed = [];
+        $this->dynamic = [];
+
+        $this->data = $data;
+
+        // Запоминаем оригинальный конфиг
+        if ($this->keep_original) {
+            $this->config = $this->data;
+        }
+
+        return $this;
     }
 
     /**

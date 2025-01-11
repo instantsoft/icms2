@@ -41,10 +41,10 @@ class cmsCache {
 
     /**
      *
-     * @param stdClass|cmsConfig $config
+     * @param cmsConfigs $config
      * @return \cmsCache*
      */
-    public static function getCacher($config) {
+    public static function getCacher(cmsConfigs $config) {
 
         $cacher_class = 'cmsCache' . string_to_camel('_', $config->cache_method);
 

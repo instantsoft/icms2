@@ -559,7 +559,7 @@
     define('LANG_CP_SETTINGS_SESSION_NAME_HINT', 'Должно быть одинаково для всех сайтов с единой авторизацией');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH', 'Путь хранения сессий');
     define('LANG_CP_SETTINGS_SESSIONS_BASEDIR', ', который должен входить в один из путей ');
-    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'Для файлов должен быть указан полный путь%s. <br />Для Memcache с префиксом "tcp://", например, <b>tcp://localhost:11211</b>. Для Memcached без префикса "tcp://", например, <b>localhost:11211</b>.');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'Для файлов должен быть указан полный путь%s. <br />Для Memcache с префиксом "tcp://", например, <b>tcp://localhost:11211</b>.<br />Для Memcached без префикса "tcp://", например, <b>localhost:11211</b>.<br />Для Redis с префиксом "tcp://", например, <b>tcp://127.0.0.1:6379</b>.');
 
     define('LANG_CP_CHECK_SPOOFING_TYPE', 'Контроль изменения IP адреса при входе в админку');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'По изменению подсети');
@@ -629,15 +629,15 @@
     define('LANG_CP_SETTINGS_CACHE_METHOD',     'Метод кеширования');
     define('LANG_CP_SETTINGS_CACHE_METHOD_NO',  'не доступно');
     define('LANG_CP_SETTINGS_CACHE_TTL',        'Время жизни кеша, сек');
-    define('LANG_CP_SETTINGS_CACHE_HOST',       'Memcached Сервер');
-    define('LANG_CP_SETTINGS_CACHE_PORT',       'Memcached Порт');
+    define('LANG_CP_SETTINGS_CACHE_HOST',       'Сервер');
+    define('LANG_CP_SETTINGS_CACHE_PORT',       'Порт');
     define('LANG_CP_SETTINGS_CACHE_MIN_HTML',   'Минифицировать HTML');
     define('LANG_CP_SETTINGS_COOKIE_DOMAIN',    'Домен cookie');
     define('LANG_CP_SETTINGS_COOKIE_DOMAIN_HINT', 'Cookie вашего сайта будут распространяться на указанный домен и все его поддомены. Будет доступна сквозная авторизации. Если не указан, то cookie будут действовать в пределах текущего домена.');
     define('LANG_CP_SETTINGS_CURRENT_DOMAIN',   'Текущий домен: ');
 
-    define('LANG_CP_MEMCACHE_NOT_AVAILABLE',    'Модуль Memcached не найден');
-    define('LANG_CP_MEMCACHE_CONNECT_ERROR',    'Не удалось подключиться к Memcached - проверьте сервер и порт');
+    define('LANG_CP_CACHE_MOD_NOT_AVAILABLE',   'Модуль %s не найден');
+    define('LANG_CP_CACHE_MOD_CONNECT_ERROR',   'Не удалось подключиться к %s - проверьте сервер и порт');
 
     define('LANG_CP_FILE_NOT_WRITABLE',         'Невозможно перезаписать файл "%s". Установите для него права на запись.');
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Ошибка перезаписи файла конфигурации');

@@ -4,7 +4,11 @@ class cmsCacheFiles {
 
     private $cache_path;
 
-    public function __construct($config) {
+    public function isDependencySatisfied() {
+        return is_writable($this->cache_path);
+    }
+
+    public function __construct(cmsConfigs $config) {
         $this->cache_path = $config->cache_path . 'data/';
     }
 
@@ -91,6 +95,10 @@ class cmsCacheFiles {
 
     public function stop() {
         return true;
+    }
+
+    public function testConnection() {
+        return 1;
     }
 
     public function getStats() {

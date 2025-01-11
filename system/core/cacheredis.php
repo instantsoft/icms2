@@ -1,67 +1,62 @@
 <?php
-class cmsCacheMemcached {
+
+class cmsCacheRedis {
 
     /**
-     * @var Memcached
+     * @var Redis
      */
-    private $memcached;
+    private $redis;
+
     /**
      * @var string
      */
     private $site_namespace = '';
+
     /**
      * @var cmsConfigs
      */
     private $config;
 
     public function isDependencySatisfied() {
-        return extension_loaded('memcached') && class_exists('Memcached');
+        return extension_loaded('redis') && class_exists('Redis');
     }
 
     public function __construct(cmsConfigs $config) {
 
-        $this->config = $config;
-
+        $this->config         = $config;
         $this->site_namespace = 'instantcms.' . sprintf('%u', crc32($config->host));
     }
 
     public function set($key, $value, $ttl) {
-        return $this->memcached->set($this->getKey($key), serialize($value), $ttl);
+        return $this->redis->setex($this->getKey($key), $ttl, $this->serialize($value));
     }
 
     public function has($key) {
-        return true;
+        return $this->redis->exists($this->getKey($key)) > 0;
     }
 
     public function get($key) {
 
-        $value = $this->memcached->get($this->getKey($key));
-        if (!$value) {
-            return false;
-        }
+        $value = $this->redis->get($this->getKey($key));
 
-        return unserialize($value);
+        return !is_null($value) ? $this->unserialize($value) : false;
     }
 
     public function clean($ns = false) {
 
-        if ($ns) {
-
-            return $this->memcached->increment($this->getNamespaceKey($ns));
-
-        } else {
-
-            return $this->memcached->flush();
+        if (!$ns) {
+            return $this->redis->flushDB();
         }
+
+        return $this->redis->incr($this->getNamespaceKey($ns));
     }
 
     public function start() {
 
-        $this->memcached = new Memcached();
+        $this->redis = new Redis();
 
-        if (!$this->memcached->addServer($this->config->cache_host, $this->config->cache_port)) {
-
-            throw new Exception('Memcached connect error');
+        if (!$this->redis->connect($this->config->cache_host, $this->config->cache_port)) {
+            throw new Exception('Redis connect error');
         }
 
         return true;
@@ -69,20 +64,17 @@ class cmsCacheMemcached {
 
     public function stop() {
 
-        $this->memcached->quit();
+        $this->redis->close();
 
         return true;
     }
 
     public function testConnection() {
-
-        $this->memcached->set('ping', 'pong', 10);
-
-        return $this->memcached->get('ping') === 'pong' ? 1 : 0;
+        return $this->redis->echo('hello') === 'hello' ? 1 : 0;
     }
 
     public function getStats() {
-        return $this->memcached->getStats();
+        return $this->redis->info();
     }
 
     private function getKey($_key) {
@@ -109,13 +101,13 @@ class cmsCacheMemcached {
 
         $namespace_key = $this->getNamespaceKey($ns);
 
-        $ns_value = $this->memcached->get($namespace_key);
+        $ns_value = $this->redis->get($namespace_key);
 
         if ($ns_value === false) {
 
             $ns_value = time();
 
-            $this->memcached->set($namespace_key, $ns_value, 86400);
+            $this->redis->setex($namespace_key, 86400, $ns_value);
         }
 
         return $ns_value;
@@ -123,6 +115,14 @@ class cmsCacheMemcached {
 
     private function getNamespaceKey($ns) {
         return $this->site_namespace . '.namespace:' . $ns;
+    }
+
+    private function serialize($value) {
+        return is_numeric($value) && !in_array($value, [INF, -INF]) && !is_nan($value) ? $value : serialize($value);
+    }
+
+    private function unserialize($value) {
+        return is_numeric($value) ? $value : unserialize($value);
     }
 
 }

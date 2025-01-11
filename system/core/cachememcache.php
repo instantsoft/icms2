@@ -1,6 +1,6 @@
 <?php
 
-class cmsCacheMemory {
+class cmsCacheMemcache {
 
     /**
      * @var Memcache
@@ -11,11 +11,15 @@ class cmsCacheMemory {
      */
     private $site_namespace = '';
     /**
-     * @var object
+     * @var cmsConfigs
      */
     private $config;
 
-    public function __construct($config) {
+    public function isDependencySatisfied() {
+        return extension_loaded('memcache') && class_exists('Memcache');
+    }
+
+    public function __construct(cmsConfigs $config) {
 
         $this->config = $config;
 
@@ -71,29 +75,46 @@ class cmsCacheMemory {
         return true;
     }
 
+    public function testConnection() {
+        // Memcache сразу устанавливает соединение
+        return 1;
+    }
+
     public function getStats() {
         return [];
     }
 
     private function getKey($_key) {
 
-        $key_path = explode('.', $_key);
+        $last_dot_pos = strrpos($_key, '.');
 
-        $key = array_pop($key_path);
-        $ns  = implode('.', $key_path);
+        if ($last_dot_pos === false) {
 
-        return implode('.', [$this->site_namespace, $this->getNamespaceValue($ns), $ns, $key]);
+            $key = $_key;
+            $ns  = '';
+
+        } else {
+
+            $key = substr($_key, $last_dot_pos + 1);
+            $ns  = substr($_key, 0, $last_dot_pos);
+        }
+
+        $ns_value = $this->getNamespaceValue($ns);
+
+        return "{$this->site_namespace}.{$ns_value}.{$ns}.{$key}";
     }
 
     private function getNamespaceValue($ns) {
 
-        $ns_value = $this->memcache->get($this->getNamespaceKey($ns));
+        $namespace_key = $this->getNamespaceKey($ns);
+
+        $ns_value = $this->memcache->get($namespace_key);
 
         if ($ns_value === false) {
 
             $ns_value = time();
 
-            $this->memcache->set($this->getNamespaceKey($ns), $ns_value, false, 86400);
+            $this->memcache->set($namespace_key, $ns_value, 86400);
         }
 
         return $ns_value;

@@ -8,6 +8,15 @@ function install_package(){
     $admin = cmsCore::getController('admin');
     $content_model = cmsCore::getModel('content');
 
+    $values = cmsConfig::getInstance()->getConfig();
+
+    if ($values['cache_method'] === 'memory') {
+
+        $values['cache_method'] = 'memcache';
+
+        cmsConfig::getInstance()->save($values);
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

@@ -86,8 +86,6 @@ class cmsConfig extends cmsConfigs {
             return;
         }
 
-        $this->setData();
-
         $this->initErrorReporting();
 
         $this->ready = true;
@@ -106,7 +104,13 @@ class cmsConfig extends cmsConfigs {
      *
      * @return bool
      */
-    public function setData() {
+    public function setData(array $data) {
+
+        parent::setData($data);
+
+        if (!$this->data) {
+            return $this;
+        }
 
         if (empty($this->data['detect_ip_key']) || !isset($_SERVER[$this->data['detect_ip_key']])) {
             $this->data['detect_ip_key'] = 'REMOTE_ADDR';
@@ -133,7 +137,9 @@ class cmsConfig extends cmsConfigs {
             $this->data['bcmathscale'] = 8;
         }
         // Ставим константу, для вспомогательных функций
-        define('BCMATHSCALE', $this->data['bcmathscale']);
+        if (!defined('BCMATHSCALE')) {
+            define('BCMATHSCALE', $this->data['bcmathscale']);
+        }
         // разрядность математической библиотеки
         if(function_exists('bcscale')){
             bcscale($this->data['bcmathscale']);
@@ -177,7 +183,7 @@ class cmsConfig extends cmsConfigs {
             $this->set('current_domain', $_SERVER['HTTP_HOST']);
         }
 
-        return true;
+        return $this;
     }
 
     /**

@@ -53,6 +53,23 @@ class formAdminSettings extends cmsForm {
             }
         }
 
+        $cache_modules = [];
+        $cache_exts = cmsCore::getFilesList('system/core', 'cache*.php', true);
+        foreach ($cache_exts as $cache_ext) {
+
+            $name = preg_replace('#^cache#ui', '', $cache_ext);
+
+            if (!$name) {
+                continue;
+            }
+
+            $cacher_class = 'cmsCache' . string_to_camel('_', $name);
+
+            $cacher = new $cacher_class(cmsConfig::getInstance());
+
+            $cache_modules[$name] = ucfirst($name) . ($cacher->isDependencySatisfied() ? '' : ' (' . LANG_CP_SETTINGS_CACHE_METHOD_NO . ')');
+        }
+
         return [
             [
                 'type'   => 'fieldset',
@@ -236,6 +253,10 @@ class formAdminSettings extends cmsForm {
                     new fieldNumber('production_time', [
                         'title'   => LANG_CP_SETTINGS_PRODUCTION_TIME,
                         'hint'    => LANG_CP_SETTINGS_PRODUCTION_TIME_HINT,
+                        'options' => [
+                            'is_abs'  => true,
+                            'is_ceil' => true
+                        ],
                         'default' => time()
                     ])
                 ]
@@ -299,7 +320,11 @@ class formAdminSettings extends cmsForm {
                         'visible_depend' => ['mail_transport' => ['show' => ['smtp']]]
                     ]),
                     new fieldNumber('mail_smtp_port', [
-                        'title'          => LANG_CP_SETTINGS_MAIL_SMTP_PORT,
+                        'title' => LANG_CP_SETTINGS_MAIL_SMTP_PORT,
+                        'options' => [
+                            'is_abs'  => true,
+                            'is_ceil' => true
+                        ],
                         'visible_depend' => ['mail_transport' => ['show' => ['smtp']]]
                     ]),
                     new fieldCheckbox('mail_smtp_auth', [
@@ -334,30 +359,34 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_CACHE_ENABLED
                     ]),
                     new fieldNumber('cache_ttl', [
-                        'title'          => LANG_CP_SETTINGS_CACHE_TTL,
+                        'title' => LANG_CP_SETTINGS_CACHE_TTL,
+                        'options' => [
+                            'is_abs'  => true,
+                            'is_ceil' => true
+                        ],
                         'visible_depend' => ['cache_enabled' => ['show' => ['1']]]
                     ]),
                     new fieldList('cache_method', [
                         'title' => LANG_CP_SETTINGS_CACHE_METHOD,
                         'hint'  => !cmsConfig::get('cache_enabled') ? '' : sprintf(LANG_CP_SETTINGS_CACHE_CLEAN_MERGED, href_to('admin', 'cache_delete', cmsConfig::get('cache_method'))),
-                        'items' => [
-                            'files'     => 'Files',
-                            'memory'    => 'Memcache' . (extension_loaded('memcache') ? '' : ' (' . LANG_CP_SETTINGS_CACHE_METHOD_NO . ')'),
-                            'memcached' => 'Memcached' . (extension_loaded('memcached') ? '' : ' (' . LANG_CP_SETTINGS_CACHE_METHOD_NO . ')'),
-                        ],
+                        'items' => $cache_modules,
                         'visible_depend' => ['cache_enabled' => ['show' => ['1']]]
                     ]),
                     new fieldString('cache_host', [
                         'title'          => LANG_CP_SETTINGS_CACHE_HOST,
                         'visible_depend' => [
-                            'cache_method'  => ['show' => ['memory', 'memcached']],
+                            'cache_method'  => ['hide' => ['files']],
                             'cache_enabled' => ['hide' => ['0']]
                         ]
                     ]),
                     new fieldNumber('cache_port', [
-                        'title'          => LANG_CP_SETTINGS_CACHE_PORT,
+                        'title' => LANG_CP_SETTINGS_CACHE_PORT,
+                        'options' => [
+                            'is_abs'  => true,
+                            'is_ceil' => true
+                        ],
                         'visible_depend' => [
-                            'cache_method'  => ['show' => ['memory', 'memcached']],
+                            'cache_method'  => ['hide' => ['files']],
                             'cache_enabled' => ['hide' => ['0']]
                         ]
                     ])
@@ -369,11 +398,7 @@ class formAdminSettings extends cmsForm {
                 'childs' => [
                     new fieldList('session_save_handler', [
                         'title' => LANG_CP_SETTINGS_SESSIONS_SAVE_HANDLER,
-                        'items' => [
-                            'files'     => 'Files',
-                            'memcache'  => 'Memcache' . (extension_loaded('memcache') ? '' : ' (' . LANG_CP_SETTINGS_CACHE_METHOD_NO . ')'),
-                            'memcached' => 'Memcached' . (extension_loaded('memcached') ? '' : ' (' . LANG_CP_SETTINGS_CACHE_METHOD_NO . ')'),
-                        ],
+                        'items' => $cache_modules,
                         'rules' => [
                             ['required']
                         ]
@@ -396,6 +421,10 @@ class formAdminSettings extends cmsForm {
                         'title'   => LANG_CP_SETTINGS_SESSION_MAXLIFETIME,
                         'default' => ini_get('session.gc_maxlifetime') / 60,
                         'units'   => LANG_MINUTES,
+                        'options' => [
+                            'is_abs'  => true,
+                            'is_ceil' => true
+                        ],
                         'rules'   => [
                             ['required'],
                             ['min', 1]
