@@ -193,5 +193,5 @@
     define('LANG_SESS_IP',  'IP-address');
     define('LANG_SESS_LAST_DATE',  'Last activity');
     define('LANG_SESS_TYPE',  'Access type');
-    define('LANG_SESSIONS_HINT',  'It shows the sessions with active access authorization when you set the checkbox "Remember me" or sessions with a mobile application. You can at any time to terminate any of the sessions.');
+    define('LANG_SESSIONS_HINT',  'It shows the sessions with active access authorization when you set the checkbox "Remember me" or sessions with a mobile application. You can terminate any of the sessions at any time.');
     define('LANG_USERS_SLUG',  'Your page URL');
