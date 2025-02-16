@@ -246,10 +246,8 @@ class cmsForm {
 
                 $field->styles = [];
 
-                if (isset($field->is_visible)) {
-                    if (!$field->is_visible) {
-                        $field->styles[] = 'display:none';
-                    }
+                if (!$field->is_visible) {
+                    $field->styles[] = 'display:none';
                 }
 
                 if ($field->visible_depend) {

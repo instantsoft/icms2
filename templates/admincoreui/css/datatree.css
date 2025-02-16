@@ -23,6 +23,7 @@ ul.dynatree-container li{
     background-position: 0 0;
     margin: 0;
     padding: 5px 0 0 0;
+    white-space:normal;
 }
 ul.dynatree-container li.dynatree-lastsib{
     background-image: none;
@@ -51,6 +52,7 @@ span.dynatree-drag-helper-img,
     background-position: left;
     background-image: url("../images/datatree/icons.gif");
     background-position: 0 0;
+    flex-shrink: 0;
 }
 ul.dynatree-container img{
     width: 16px;
@@ -84,8 +86,9 @@ span.dynatree-expander{
     background-position: -32px -96px;
 }
 .dynatree-loading span.dynatree-expander{
-    background-position: 0 0;
+    background-position: -1px 3px;
     background-image: url("../images/datatree/loading.svg");
+    background-size: 90%;
 }
 span.dynatree-checkbox{
     margin-left: 3px;
@@ -126,7 +129,6 @@ span.dynatree-radio:hover{
     background-position: -48px -48px;
 }
 span.dynatree-icon{
-    margin-left: 3px;
     background-position: 0px 1px;
 }
 .dynatree-ico-cf span.dynatree-icon{

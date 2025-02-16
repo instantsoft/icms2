@@ -41,21 +41,21 @@ class actionGroupsIndex extends cmsAction {
             'first' => href_to($this->name, $dataset_name ? $dataset_name : '')
         ];
 
-        $this->cms_template->setPageTitle(LANG_GROUPS);
         $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
-
-        $h1_title = LANG_GROUPS;
 
         if ($current_dataset) {
 
-            $this->cms_template->setPageTitle(!empty($current_dataset['seo_title']) ? $current_dataset['seo_title'] : $current_dataset['title']);
-
-            if (!empty($current_dataset['seo_keys'])) {
-                $this->cms_template->setPageKeywords($current_dataset['seo_keys']);
-            }
-
-            if (!empty($current_dataset['seo_desc'])) {
-                $this->cms_template->setPageDescription($current_dataset['seo_desc']);
+            foreach ([
+                'seo_title' => 'setPageTitle',
+                'seo_h1'    => 'setPageH1',
+                'seo_keys'  => 'setPageKeywords',
+                'seo_desc'  => 'setPageDescription'
+            ] as $seo_key => $method) {
+                if (!empty($current_dataset[$seo_key])) {
+                    call_user_func([$this->cms_template, $method], $current_dataset[$seo_key]);
+                } else {
+                    call_user_func([$this->cms_template, $method . 'Item'], $current_dataset);
+                }
             }
         }
 
@@ -82,7 +82,7 @@ class actionGroupsIndex extends cmsAction {
             'base_ds_url'      => href_to_rel('groups') . '%s',
             'dataset_name'     => $dataset_name,
             'dataset'          => $current_dataset,
-            'h1_title'         => $h1_title,
+            'h1_title'         => LANG_GROUPS, // не используется, совместимость шаблонов
             'user'             => $this->cms_user,
             'groups_list_html' => $this->renderGroupsList($page_url, $dataset_name)
         ], $this->request);

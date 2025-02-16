@@ -136,22 +136,28 @@ class cmsBackend extends cmsController {
 
         if ($this->useSeoOptions) {
 
-            $meta_item_fields = [
-                'page' => LANG_PAGE
+            $meta_item_fields = [];
+
+            if (method_exists($this, 'getMetaListFields')) {
+                $meta_item_fields = $this->getMetaListFields();
+            }
+
+            $meta_item_fields['page'] = LANG_PAGE;
+
+            $field_options = [
+                'max_length' => 500,
+                'show_symbol_count' => true
             ];
 
             $form->addFieldset(LANG_ROOT_SEO, 'seo_basic', [
                 'childs' => [
                     new fieldText('seo_desc', [
-                        'title' => LANG_SEO_DESC,
-                        'hint'  => LANG_SEO_DESC_HINT,
+                        'title'         => LANG_SEO_DESC,
+                        'hint'          => LANG_SEO_DESC_HINT,
                         'multilanguage' => true,
                         'is_strip_tags' => true,
                         'patterns_hint' => ['patterns' => $meta_item_fields],
-                        'options' => [
-                            'max_length' => 256,
-                            'show_symbol_count' => true
-                        ]
+                        'options'       => $field_options
                     ])
                 ]
             ]);
@@ -159,17 +165,32 @@ class cmsBackend extends cmsController {
             if (!$this->cms_config->disable_metakeys) {
                 $form->addFieldToBeginning('seo_basic',
                     new fieldString('seo_keys', [
-                        'title'   => LANG_SEO_KEYS,
-                        'hint'    => LANG_SEO_KEYS_HINT,
+                        'title'         => LANG_SEO_KEYS,
+                        'hint'          => LANG_SEO_KEYS_HINT,
                         'multilanguage' => true,
                         'patterns_hint' => ['patterns' => $meta_item_fields],
-                        'options' => [
-                            'max_length' => 256,
-                            'show_symbol_count' => true
-                        ]
+                        'options'       => $field_options
                     ])
                 );
             }
+
+            $form->addFieldToBeginning('seo_basic',
+                new fieldString('seo_title', [
+                    'title'         => LANG_SEO_TITLE,
+                    'multilanguage' => true,
+                    'patterns_hint' => ['patterns' => $meta_item_fields],
+                    'options'       => $field_options
+                ])
+            );
+
+            $form->addFieldToBeginning('seo_basic',
+                new fieldString('seo_h1', [
+                    'title'         => LANG_SEO_H1,
+                    'multilanguage' => true,
+                    'patterns_hint' => ['patterns' => $meta_item_fields],
+                    'options'       => $field_options
+                ])
+            );
         }
 
         if ($this->useItemSeoOptions) {

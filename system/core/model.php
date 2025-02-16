@@ -1029,30 +1029,37 @@ class cmsModel {
 
     public function filterCategory($ctype_name, $category, $is_recursive = false, $is_multi_cats = false) {
 
-        $table_name = $this->getContentCategoryTableName($ctype_name);
+        $table_name      = $this->getContentCategoryTableName($ctype_name);
         $bind_table_name = $table_name . '_bind';
 
         if (!$is_recursive) {
 
-            $this->joinInner($bind_table_name, 'b', 'b.item_id = i.id')->filterEqual('b.category_id', $category['id']);
-        } else {
-
-            // для корневой категории фильтрация не нужна
-            if (!$category['parent_id']) {
-                return $this;
-            }
-
-            if($is_multi_cats){
-                $this->distinctSelect();
-            }
-
-            $this->joinInner($bind_table_name, 'b', 'b.item_id = i.id');
-            $this->joinInner($table_name, 'c', 'c.id = b.category_id');
-            $this->filterGtEqual('c.ns_left', $category['ns_left']);
-            $this->filterLtEqual('c.ns_right', $category['ns_right']);
+            return $this->joinInner($bind_table_name, 'b', 'b.item_id = i.id')->
+                    filterEqual('b.category_id', $category['id']);
         }
 
-        return $this;
+        // Если корневая категория, фильтрация не требуется
+        if (empty($category['parent_id'])) {
+            return $this;
+        }
+
+        if ($is_multi_cats) {
+
+            return $this->distinctSelect()->
+                    joinInner($bind_table_name, 'b', 'b.item_id = i.id')->
+                    joinInner($table_name, 'c', 'c.id = b.category_id')->
+                    filterGtEqual('c.ns_left', $category['ns_left'])->
+                    filterLtEqual('c.ns_right', $category['ns_right']);
+        }
+
+        $cat_ids = (new self)->selectOnly('id')->
+                filterGtEqual('ns_left', $category['ns_left'])->
+                filterLtEqual('ns_right', $category['ns_right'])->
+                get($table_name, function ($item) {
+                    return $item['id'];
+                }, false);
+
+        return $cat_ids ? $this->filterIn('i.category_id', $cat_ids) : $this->filter('1=0');
     }
 
     public function filterCategoryId($ctype_name, $category_id, $is_recursive = false) {

@@ -7,10 +7,10 @@ class frontpage extends cmsFrontend {
         $this->cms_template->addHead('<link rel="canonical" href="' . href_to_home(true) . '"/>');
 
         if ($this->cms_config->hometitle) {
-            $this->cms_template->setFrontPageTitle($this->cms_config->hometitle);
+            $this->cms_template->setPageTitle($this->cms_config->hometitle);
         }
 
-        $is_no_def_meta = isset($this->cms_config->is_no_meta) ? $this->cms_config->is_no_meta : false;
+        $is_no_def_meta = $this->cms_config->is_no_meta ?? false;
 
         if ($is_no_def_meta) {
             $this->cms_template->setPageKeywords($this->cms_config->metakeys);

@@ -1,5 +1,4 @@
 <?php
-    $this->setPageTitle(LANG_LOG_IN);
     $this->addBreadcrumb(LANG_LOG_IN);
     $is_ajax = $this->controller->request->isAjax();
 ?>
@@ -10,22 +9,25 @@
 <?php } ?>
 
 <?php if(!$is_ajax){ ?>
-    <h1 class="mb-4"><?php echo LANG_PLEASE_LOGIN; ?></h1>
+    <h1 class="mb-4">
+        <?php $this->pageH1();?>
+    </h1>
 <?php } ?>
 
 <div class="left_cell">
     <?php
-        $this->renderForm($form, $data, array(
+        $this->renderForm($form, $data, [
             'action' => href_to('auth', 'login'),
             'method' => 'post',
-            'cancel' => array(
+            'cancel' => [
                 'show'  => $is_reg_enabled,
                 'title' => LANG_NO_ACCOUNT.' '.LANG_REGISTRATION,
-                'href'  => $this->href_to('register').($back_url ? '?back='.$back_url : '')),
-            'submit' => array(
+                'href'  => $this->href_to('register').($back_url ? '?back='.$back_url : '')
+            ],
+            'submit' => [
                 'title' => LANG_LOG_IN
-            )
-        ), $errors);
+            ]
+        ], $errors);
     ?>
 </div>
 <?php if($hooks_html){ ?>

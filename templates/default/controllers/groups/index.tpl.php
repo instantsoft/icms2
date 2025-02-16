@@ -1,8 +1,5 @@
 <h1>
-    <?php echo $h1_title; ?>
-    <?php if($dataset_name){ ?>
-        <span> / <?php echo $dataset['title']; ?></span>
-    <?php } ?>
+    <?php $this->pageH1();?>
 </h1>
 
 <?php if (!empty($datasets)){

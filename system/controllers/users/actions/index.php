@@ -2,16 +2,16 @@
 
 class actionUsersIndex extends cmsAction {
 
-    public function run($dataset_name = 'all') {
+    public function run($dataset_name = '') {
 
         if (!$this->listIsAllowed()) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $datasets = $this->getDatasets();
 
-        if (!$dataset_name || !isset($datasets[$dataset_name])) {
-            cmsCore::error404();
+        if (!isset($datasets[$dataset_name])) {
+            return cmsCore::error404();
         }
 
         $dataset = $datasets[$dataset_name];
@@ -30,10 +30,10 @@ class actionUsersIndex extends cmsAction {
             'first' => href_to($this->name, $dataset_name ? $dataset_name : '')
         ];
 
-        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs('users', ($dataset_name === 'all' ? null : $dataset_name)) . '"/>');
+        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs('users', (!$dataset_name ? null : $dataset_name)) . '"/>');
 
         return $this->cms_template->render('index', [
-            'page_title'         => ($dataset_name != 'all' ? LANG_USERS . ' - ' . $dataset['title'] : LANG_USERS),
+            'page_title'         => ($dataset_name ? LANG_USERS . ' - ' . $dataset['title'] : LANG_USERS),
             'base_ds_url'        => href_to($this->name) . '%s',
             'datasets'           => $datasets,
             'dataset_name'       => $dataset_name,

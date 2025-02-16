@@ -498,6 +498,11 @@ class cmsTemplate {
      * Выводит заголовок текущей страницы
      */
     public function title() {
+
+        if ($this->site_config->is_sitename_in_title) {
+            $this->title .= ' — ' . $this->site_config->sitename;
+        }
+
         html($this->getMetaHandled('title'));
     }
 
@@ -723,7 +728,7 @@ class cmsTemplate {
             // ищем активные пункты меню
             if ($detect_active_id){
 
-                if (!isset($item['url'])) { continue; }
+                if (empty($item['url'])) { continue; }
 
                 $url = $item['url_mask'] ?? urldecode($item['url']);
                 $url = mb_substr($url, $root_len);
@@ -732,7 +737,13 @@ class cmsTemplate {
                 }
                 $url = trim($url, '/');
 
-                if (!$url) { continue; }
+                if (!$url) {
+                    // На главной
+                    if ($current_url === $url){
+                        $active_ids[] = $id;
+                    }
+                    continue;
+                }
 
                 $url_len = mb_strlen($url);
 
@@ -850,7 +861,7 @@ class cmsTemplate {
     /**
      * Устанавливает значение тега h1 страницы
      *
-     * @param string $title
+     * @param string|array $title
      * @return $this
      */
     public function setPageH1($title) {
@@ -867,7 +878,7 @@ class cmsTemplate {
     /**
      * Добавляет к значению тега h1 строку
      *
-     * @param string $title Строка
+     * @param string|array $title Строка
      * @param string $separator Разделитель
      * @return $this
      */
@@ -879,8 +890,28 @@ class cmsTemplate {
         return $this;
     }
 
-    public function setPageH1Item($item){
-        $this->page_h1_item = $item; return $this;
+    /**
+     * Устанавливает массив данных для паттерна тега h1
+     *
+     * @param array $item Массив данных для паттерна
+     */
+    public function setPageH1Item(array $item) {
+
+        $this->page_h1_item = array_merge($this->page_h1_item, $item);
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает значение тега h1 по паттерну в настройках контроллера
+     *
+     * @param array $item Массив с ключами паттерна
+     * @param string $default Ключ массива $item, если SEO паттерн не задан
+     * @param string $key Ключ массива опций контроллера, в котором задан SEO паттерн
+     * @return $this
+     */
+    public function setPagePatternH1(array $item, string $default = 'title', string $key = 'tag_h1') {
+        return $this->setPagePatternSeo('page_h1', $item, $default, $key);
     }
 
     /**
@@ -888,53 +919,66 @@ class cmsTemplate {
      * Если передано несколько аргументов, склеивает их в одну строку
      * через разделитель
      *
-     * @param string $pagetitle Заголовок
+     * @param string|array $pagetitle Заголовок
      */
     public function setPageTitle($pagetitle) {
+
         if (func_num_args() > 1) {
             $pagetitle = implode(' · ', array_filter(func_get_args()));
         }
+
         if (is_array($pagetitle)) {
             $pagetitle = implode(' ', $pagetitle);
         }
-        $this->title = $pagetitle;
-        if ($this->site_config->is_sitename_in_title) {
-            $this->title .= ' — ' . $this->site_config->sitename;
-        }
-        return $this;
-    }
 
-    public function addToPageTitle($title) {
-        $this->title .= ' ' . $title;
+        $this->title = $pagetitle;
+
         return $this;
     }
 
     /**
-     * Устанавливает заголовок странице по паттерну в настройках контроллера
+     * Добавляет фразу к заголовку страницы
      *
-     * @param array $item Массив записи
-     * @param string $default Ключ по умолчанию, если паттерн не задан
-     * @return \cmsTemplate
+     * @param string $title Фраза
+     * @param string $separator Разделитель (пробел по умолчанию)
+     * @return $this
      */
-    public function setPagePatternTitle($item, $default = 'title') {
+    public function addToPageTitle(string $title, string $separator = ' ') {
+        $this->title .= $separator . $title;
+        return $this;
+    }
 
-        $pattern = get_localized_value('tag_title', $this->controller->options);
+    /**
+     * Устанавливает массив данных для паттерна заголовка страницы
+     *
+     * @param array $item Массив данных для паттерна
+     */
+    public function setPageTitleItem(array $item) {
 
-        if ($pattern) {
-            $this->setPageTitle(string_replace_keys_values_extended($pattern, $item));
-        } else {
-            $this->setPageTitle($item[$default]);
-        }
+        $this->title_item = array_merge($this->title_item, $item);
 
         return $this;
     }
 
-    public function setPageTitleItem($item){
-        $this->title_item = $item; return $this;
+    /**
+     * @deprecated since version 2.17.2
+     * @param string $pagetitle
+     * @return $this
+     */
+    public function setFrontPageTitle($pagetitle) {
+        return $this->setPageTitle($pagetitle);
     }
 
-    public function setFrontPageTitle($pagetitle){
-        $this->title = $pagetitle; return $this;
+    /**
+     * Устанавливает заголовок страницы по паттерну в настройках контроллера
+     *
+     * @param array $item Массив с ключами паттерна
+     * @param string $default Ключ массива $item, если SEO паттерн не задан
+     * @param string $key Ключ массива опций контроллера, в котором задан SEO паттерн
+     * @return $this
+     */
+    public function setPagePatternTitle(array $item, string $default = 'title', string $key = 'tag_title') {
+        return $this->setPagePatternSeo('title', $item, $default, $key);
     }
 
     /**
@@ -950,38 +994,112 @@ class cmsTemplate {
 
     /**
      * Устанавливает ключевые слова страницы
+     *
      * @param string $keywords Ключевые слова
      */
     public function setPageKeywords($keywords) {
-        $this->metakeys = $keywords;
-        return $this;
-    }
 
-    public function setPageKeywordsItem($item) {
-        $this->metakeys_item = $item;
+        $this->metakeys = $keywords;
+
         return $this;
     }
 
     /**
+     * Устанавливает массив данных для паттерна ключевых слов страницы
+     *
+     * @param array $item Массив данных для паттерна
+     */
+    public function setPageKeywordsItem(array $item) {
+
+        $this->metakeys_item = array_merge($this->metakeys_item, $item);
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает ключевые слова по паттерну в настройках контроллера
+     *
+     * @param array $item Массив с ключами паттерна
+     * @param string $default Ключ массива $item, если SEO паттерн не задан
+     * @param string $key Ключ массива опций контроллера, в котором задан SEO паттерн
+     * @return $this
+     */
+    public function setPagePatternKeywords(array $item, string $default = 'keys', string $key = 'tag_keys') {
+        return $this->setPagePatternSeo('metakeys', $item, $default, $key);
+    }
+
+    /**
      * Устанавливает описание страницы
+     *
      * @param string $description Описание
      */
-    public function setPageDescription($description){
-        $this->metadesc = $description; return $this;
+    public function setPageDescription($description) {
+
+        $this->metadesc = $description;
+
+        return $this;
     }
 
-    public function setPageDescriptionItem($item){
-        $this->metadesc_item= $item; return $this;
+    /**
+     * Устанавливает массив данных для паттерна описания страницы
+     *
+     * @param array $item Массив данных для паттерна
+     */
+    public function setPageDescriptionItem(array $item) {
+
+        $this->metadesc_item = array_merge($this->metadesc_item, $item);
+
+        return $this;
     }
 
-    public function setPagePatternDescription($item, $default = 'description') {
+    /**
+     * Устанавливает SEO описание для контроллера
+     *
+     * @param array $item Массив с ключами паттерна
+     * @param string $default Ключ массива $item, если SEO паттерн не задан
+     * @param string $key Ключ массива опций контроллера, в котором задан SEO паттерн
+     * @return $this
+     */
+    public function setPagePatternDescription(array $item, string $default = 'description', string $key = 'tag_desc') {
+        return $this->setPagePatternSeo('metadesc', $item, $default, $key);
+    }
 
-        $pattern = get_localized_value('tag_desc', $this->controller->options);
+    /**
+     * Устанавливает SEO метатеги контроллера
+     *
+     * @param string $meta_key Ключ мета свойства
+     * @param array $item Массив с ключами паттерна
+     * @param string $default Ключ массива $item, если SEO паттерн не задан
+     * @param string $key Ключ массива опций контроллера, в котором задан SEO паттерн
+     * @return $this
+     */
+    protected function setPagePatternSeo(string $meta_key, array $item, string $default = 'description', string $key = 'tag_desc') {
 
-        if ($pattern) {
-            $this->setPageDescription(string_replace_keys_values_extended($pattern, $item));
-        } else {
-            $this->setPageDescription(string_get_meta_description($item[$default]));
+        $item_key = $meta_key . '_item';
+
+        if (!property_exists($this, $meta_key)) {
+            return $this;
+        }
+
+        $pattern = get_localized_value($key, $this->controller->options);
+
+        $this->{$item_key} = $item;
+
+        $this->{$meta_key} = $pattern ?: ($item[$default] ?? '');
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает один массив данных для всех паттернов
+     *
+     * @param array $item
+     * @return $this
+     */
+    public function setPageAllItem(array $item) {
+
+        foreach (['Title', 'H1', 'Keywords', 'Description' ] as $key) {
+            call_user_func([$this, 'setPage'.$key.'Item'], $item);
         }
 
         return $this;
@@ -1228,14 +1346,13 @@ class cmsTemplate {
      */
     public function getHeadFilePath(string $file) {
 
-        if (!preg_match('#^([a-z]*)(:?)\/\/#', $file)) {
-
-            $arg_separator = strpos($file, '?') !== false ? '&' : '?';
-
-            $file = $this->site_config->root . $file . ($this->site_config->production_time ? $arg_separator . $this->site_config->production_time : '');
+        if (filter_var($file, FILTER_VALIDATE_URL)) {
+            return $file;
         }
 
-        return $file;
+        $arg_separator = strpos($file, '?') !== false ? '&' : '?';
+
+        return $this->site_config->root . $file . ($this->site_config->production_time ? $arg_separator . $this->site_config->production_time : '');
     }
 
     /**
@@ -2617,7 +2734,7 @@ class cmsTemplate {
      * @param string $tpl_file Название файла шаблона
      * @param array $data Массив параметров, передаваемых в шаблон
      */
-    public function renderChild($tpl_file, $data = array()) {
+    public function renderChild($tpl_file, $data = []) {
         $this->renderControllerChild($this->controller->name, $tpl_file, $data);
     }
 
@@ -2631,7 +2748,7 @@ class cmsTemplate {
      * @param array $data Массив параметров, передаваемых в шаблон
      * @param object $request Объект запроса
      */
-    public function renderControllerChild($controller_name, $tpl_file, $data = array(), $request = false) {
+    public function renderControllerChild($controller_name, $tpl_file, $data = [], $request = false) {
 
         cmsDebugging::pointStart('template');
 
@@ -2783,7 +2900,7 @@ class cmsTemplate {
 
         $this->renderAsset('ui/'.$template, [
             'menu'       => $menu,
-            'menu_id'    => preg_replace('/[0-9]+/', '', md5($css_class.microtime(true))),
+            'menu_id'    => 'menu' . microtime(),
             'active_ids' => $active_ids,
             'css_class'  => $css_class,
             'max_items'  => $max_items,

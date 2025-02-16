@@ -95,10 +95,15 @@ class cmsFormField {
      */
     public $is_virtual = false;
     /**
-     * Флаг скрытого поля
+     * Флаг скрытого поля type="hidden"
      * @var boolean
      */
     public $is_hidden = false;
+    /**
+     * Флаг видимости поля при помощи display:none
+     * @var boolean
+     */
+    public $is_visible = true;
     /**
      * Массив правил валидации
      * @var array

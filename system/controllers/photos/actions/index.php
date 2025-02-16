@@ -51,7 +51,7 @@ class actionPhotosIndex extends cmsAction {
         }
 
         $page    = $this->request->get('photo_page', 1);
-        $perpage = (empty($this->options['limit']) ? 16 : $this->options['limit']);
+        $perpage = $this->options['limit'] ?? 16;
 
         return $this->cms_template->render('index', [
             'photos_html' => $this->renderPhotosList($album, 0, $page, $perpage),

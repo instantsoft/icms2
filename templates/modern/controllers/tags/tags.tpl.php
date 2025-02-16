@@ -1,8 +1,7 @@
 <?php
-    $this->setPageTitle(LANG_TAGS);
     $this->addBreadcrumb(LANG_TAGS);
 ?>
-<h1><?php echo LANG_TAGS; ?></h1>
+<h1><?php $this->pageH1();?></h1>
 <?php if ($tags){ ?>
     <div class="widget_tags_cloud">
         <ul class="<?php if ($style=='cloud'){ ?>list-unstyled m-0<?php } else { ?>list-group list-group-flush<?php } ?> tags_as_<?php echo $style; ?>">

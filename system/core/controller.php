@@ -360,52 +360,40 @@ class cmsController {
     /**
      * Вызывается до начала работы экшена
      */
-    public function before($action_name){
+    public function before($action_name) {
 
         $this->cms_template->setContext($this);
 
-        if($this->useSeoOptions && $action_name === 'index'){
-
-            if (!empty($this->options['seo_keys'])){ $this->cms_template->setPageKeywords($this->options['seo_keys']); }
-            if (!empty($this->options['seo_desc'])){ $this->cms_template->setPageDescription($this->options['seo_desc']); }
-
-        }
-
         return true;
-
     }
 
     /**
      * Вызывается после работы экшена
      */
-    public function after($action_name){
+    public function after($action_name) {
 
         $this->cms_template->restoreContext();
 
         return true;
-
     }
 
     /**
      * Вызывается до начала работы хука
      */
-    public function beforeHook($event_name){
+    public function beforeHook($event_name) {
 
-        if ($this->useOptions){
+        if ($this->useOptions) {
             $this->options = $this->getOptions();
         }
 
         return true;
-
     }
 
     /**
      * Вызывается после работы хука
      */
-    public function afterHook($event_name){
-
+    public function afterHook($event_name) {
         return true;
-
     }
 
 //============================================================================//
@@ -955,15 +943,11 @@ class cmsController {
     public function routeAction($action_name) {
 
         // Избавляемся от index в url
-        if ($this->unknown_action_as_index_param) {
-
-            if ($this->isActionExists($action_name)) {
-                return $action_name;
-            }
+        if ($this->unknown_action_as_index_param && !$this->isActionExists($action_name)) {
 
             array_unshift($this->current_params, $action_name);
 
-            return 'index';
+            $action_name = 'index';
         }
 
         return $action_name;

@@ -4,7 +4,9 @@ class widgetSearchSearch extends cmsWidget {
 
     public function run() {
 
-        return [];
+        return [
+            'query' => cmsCore::getInstance()->request->get('q', '')
+        ];
     }
 
 }

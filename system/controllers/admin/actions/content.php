@@ -92,22 +92,36 @@ class actionAdminContent extends cmsAction {
             ]
         ];
 
-        $this->list_callback = function ($model) use($category) {
+        $this->list_callback = function (cmsModel $model) use($category) {
 
             $model->filterCategory($this->ctype['name'], $category, true, !empty($this->ctype['options']['is_cats_multi']));
 
-            $model->joinUser();
-
-            $model->joinLeft(
-                'moderators_logs',
-                'mlog',
-                "mlog.target_id = i.id AND mlog.target_controller = 'content' AND mlog.target_subject = '{$this->ctype['name']}' AND mlog.date_expired IS NOT NULL"
-            );
-            $model->select('mlog.date_expired', 'trash_date_expired');
+            $model->joinUserLeft();
 
             $model->joinModerationsTasks($this->ctype['name']);
 
             return $model;
+        };
+
+        $this->items_callback = function ($items) {
+
+            if (!$items) {
+                return $items;
+            }
+
+            $this->model->selectOnly('i.date_expired')->select('target_id')->
+                    filterIn('target_id', array_keys($items))->
+                    filterEqual('target_subject', $this->ctype['name'])->
+                    filterEqual('target_controller', 'content')->
+                    filterNotNull('date_expired');
+
+            $moderators_logs = $this->model->get('moderators_logs', false, false) ?: [];
+
+            foreach ($moderators_logs as $log) {
+                $items[$log['target_id']]['trash_date_expired'] = $log['date_expired'];
+            }
+
+            return $items;
         };
     }
 

@@ -358,8 +358,8 @@ class users extends cmsFrontend {
         $datasets = [];
 
         // Все (новые)
-        $datasets['all'] = [
-            'name'  => 'all',
+        $datasets[''] = [
+            'name'  => '',
             'title' => LANG_USERS_DS_LATEST,
             'order' => ['date_reg', 'desc']
         ];

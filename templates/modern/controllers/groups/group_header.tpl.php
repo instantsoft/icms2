@@ -6,6 +6,7 @@
     $this->setPagePatternTitle($group);
     if(!empty($filter_titles)){ $this->addToPageTitle(implode(', ', $filter_titles)); }
     $this->setPagePatternDescription($group);
+    $this->setPagePatternH1($group);
 ?>
 
 <?php if(!empty($group['fields']['cover']['is_in_item']) && $group['cover']){ ?>
@@ -36,13 +37,8 @@
         </span>
 	<?php } ?>
     <?php if (!empty($group['fields']['title']['is_in_item'])){ ?>
-        <?php $pattern = get_localized_value('tag_h1', $this->controller->options); ?>
         <span>
-            <?php if ($pattern) { ?>
-                <?php echo string_replace_keys_values_extended($pattern, $group); ?>
-            <?php } else { ?>
-                <?php html($group['title']); ?>
-            <?php } ?>
+            <?php $this->pageH1(); ?>
             <?php if (!empty($group['sub_title'])) { ?>
                 <span class="d-none d-lg-inline-block text-muted"> &middot; <?php html($group['sub_title']); ?></span>
             <?php } ?>

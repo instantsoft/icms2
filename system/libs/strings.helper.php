@@ -408,10 +408,7 @@ function string_replace_user_properties($string, $user = null) {
     return preg_replace_callback(
         '/{user\.([a-z0-9_]+)}/i',
         function ($matches) use ($user) {
-
-            $property = $matches[1];
-
-            return isset($user->{$property}) ? $user->{$property} : $matches[0];
+            return $user->{$matches[1]} ?? $matches[0];
         },
         $string
     );
@@ -457,96 +454,101 @@ function string_replace_keys_values($string, $data) {
  */
 function string_replace_keys_values_extended($string, $data) {
 
-    if (!$string) {
-        return '';
-    }
+    $escape = function($str, $is_flip = true) {
 
-    $matches_count = preg_match_all('/{([а-яёa-z]{1}[^}\n]+)}/ui', $string, $matches);
+        // Массив замен для экранированных символов
+        $from = ['\?' => '{{Q}}', '\:' => '{{C}}', '\|' => '{{P}}', '\=' => '{{E}}'];
+        $to   = ['{{Q}}' => '?', '{{C}}' => ':', '{{P}}' => '|', '{{E}}' => '='];
 
-    if ($matches_count) {
+        return $is_flip ? strtr($str, $to) : strtr($str, $from);
+    };
 
-        for ($i = 0; $i < $matches_count; $i++) {
+    return preg_replace_callback('/{([\w]{1}[^}\n]+)}/ui', function ($matches) use ($data, $escape) {
 
-            $tag      = $matches[0][$i];
-            $property = $matches[1][$i];
+        $expression = $escape($matches[1], false);
 
-            $func                 = false;
-            $func_params          = [];
-            $func_params_prop_key = 0;
+        $has_pipeline  = strpos($expression, '|') !== false;
+        $has_condition = strpos($expression, '?') !== false;
+        $has_colon     = strpos($expression, ':') !== false;
 
-            // есть ли обработка функцией
-            if (strpos($property, '|') !== false) {
-                $params = explode('|', $property);
-                // второй параметр - функция
-                $func   = $params[1];
-                if (function_exists($func) || strpos($func, ':') !== false) {
+        // Обрабатываем условия
+        if ($has_condition) {
 
-                    // первый параметр остаётся как $property
-                    $property = $params[0];
-                    // $property ставим как первый параметр функции
-                    $func_params = [$property];
-                    // смотрим есть ли у функции параметры
-                    if (strpos($func, ':') !== false) {
-                        $par  = explode(':', $func);
-                        $func = $par[0];
-                        unset($par[0]);
-                        if (function_exists($func)) {
-                            foreach ($par as $k => $p) {
-                                // если параметр - массив
-                                if (strpos($p, '=') !== false) {
-                                    $out = [];
-                                    parse_str($p, $out);
-                                    $par[$k] = $out;
-                                }
-                            }
-                            $func_params = $func_params + $par;
-                        } else {
-                            $func = false;
-                        }
-                    }
-                } else {
+            list($key, $condition) = explode('?', $expression, 2);
 
-                    // значит рандомные значения из списка
-                    $values = explode('|', $property);
+            $options = explode('|', $condition, 2);
 
-                    $string = str_replace($tag, $values[mt_rand(0, (count($values) - 1))], $string);
+            if (strpos($key, '=') !== false) {
 
-                    continue;
-                }
-            } else
-            // нужно прогнать через sprintf
-            if (strpos($property, ':') !== false) {
-                $params               = explode(':', $property);
-                $property             = $params[0];
-                $func                 = 'sprintf';
-                $func_params          = array_reverse($params);
-                $func_params_prop_key = 1;
+                list($key, $compare_value) = explode('=', $key, 2);
+
+                $value = array_value_recursive($key, $data, '.');
+
+                $result = ($value == $compare_value) ? $options[0] : ($options[1] ?? '');
+
+            } else {
+
+                $value = array_value_recursive($key, $data, '.');
+
+                $result = $value ? $options[0] : ($options[1] ?? '');
             }
 
-            // Поддерживаются вложенные элементы массива, т.е. ключи вида {item.key}
-            if (strpos($property, '.') === false) {
-                $data_property = isset($data[$property]) ? $data[$property] : null;
-            } else {
-                $data_property = array_value_recursive($property, $data, '.');
+            return $escape(sprintf($result, $value));
+        }
+
+        // Разбираем выражение (ключ | функция:параметры)
+        $func   = null;
+        $params = [];
+        $add_value_func = 'array_unshift';
+
+        // Передана функция
+        if ($has_pipeline) {
+
+            $options = explode('|', $expression);
+
+            list($key, $func) = $options;
+
+            $params = explode(':', $func);
+            $func   = array_shift($params);
+
+            // Рандомный список
+            if (!function_exists($func)) {
+                return $escape($options[array_rand($options)]);
             }
 
-            if ($data_property !== null && !is_array($data_property) && !is_object($data_property)) {
+        // Функция sprintf
+        } elseif ($has_colon) {
 
-                if ($func && function_exists($func)) {
+            $params = explode(':', $expression, 2);
+            $key    = array_shift($params);
+            $func   = 'sprintf';
+            $add_value_func = 'array_push';
 
-                    $func_params[$func_params_prop_key] = $data_property;
+        // Просто ключ
+        } else {
+            $key = $expression;
+        }
 
-                    $data_property = call_user_func_array($func, $func_params);
-                }
+        // Получаем значение из массива
+        $value = array_value_recursive($key, $data, '.');
 
-                $string = str_replace($tag, $data_property, $string);
-            } else {
-                $string = str_replace($tag, '', $string);
+        if ($value === false || $value === null || !$func) {
+            return (string) $value;
+        }
+
+        // Обрабатываем параметры функции
+        foreach ($params as &$param) {
+            if (strpos($param, '=') !== false) {
+                parse_str($param, $parsed);
+                $param = $parsed;
             }
         }
-    }
 
-    return $string;
+        $add_value_func($params, $value);
+
+        return $escape(call_user_func_array($func, $params));
+
+    }, (string) $string);
 }
 
 /**

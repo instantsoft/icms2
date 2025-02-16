@@ -72,7 +72,7 @@ class actionModerationLogs extends cmsAction {
                         return $item;
                     });
 
-                    if ($item) {
+                    if (!empty($item['data']['title'])) {
                         $additional_h1[] = $item['data']['title'];
                     }
 

@@ -43,12 +43,6 @@ class modelBackendContent extends modelContent {
 
         $id = $this->insert('content_types', $ctype);
 
-        // Создаём поля (кэшировать сейчас нечего)
-        if (!empty($ctype['options']['show_items_counts'])) {
-
-            $this->cacheCategoriesItemsCount($ctype['name']);
-        }
-
         $config = cmsConfig::getInstance();
 
         // получаем структуру таблиц для хранения контента данного типа
@@ -69,6 +63,11 @@ class modelBackendContent extends modelContent {
         $this->db->createTable("{$table_name}_props", $props_table_struct, $config->db_engine);
         $this->db->createTable("{$table_name}_props_bind", $props_bind_table_struct, $config->db_engine);
         $this->db->createTable("{$table_name}_props_values", $props_values_table_struct, $config->db_engine);
+
+        // Создаём поля (кэшировать сейчас нечего)
+        if (!empty($ctype['options']['show_items_counts'])) {
+            $this->cacheCategoriesItemsCount($ctype['name']);
+        }
 
         //
         // добавляем стандартные поля

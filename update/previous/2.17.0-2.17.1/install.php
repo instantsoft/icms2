@@ -1,34 +1,31 @@
 <?php
 /**
- * 2.17.1 => 2.17.2
+ * 2.17.0 => 2.17.1
  */
 function install_package(){
 
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
+    $content_model = cmsCore::getModel('content');
 
-    save_controller_options([
-        'users' => [
-            'seo_h1' => 'Пользователи',
-            'seo_title' => 'Пользователи{page:, %s}'
-        ],
-        'auth' => [
-            'seo_h1' => 'Представьтесь, пожалуйста',
-            'seo_title' => 'Авторизация на сайте'
-        ],
-        'photos' => [
-            'seo_h1' => 'Все изображения',
-            'seo_title' => 'Все изображения{page: %s}'
-        ],
-        'search' => [
-            'seo_h1' => '{query?|Поиск}{query?Результаты поиска по запросу «%s»}',
-            'seo_title' => '{query?|Поиск}{query?Результаты поиска по запросу «%s»}'
-        ]
-    ]);
+    $values = cmsConfig::getInstance()->getConfig();
+
+    if ($values['cache_method'] === 'memory') {
+
+        $values['cache_method'] = 'memcache';
+
+        cmsConfig::getInstance()->save($values);
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
+
+    add_perms(array(
+        'content' => array(
+            'change_owner'
+        )
+    ), 'flag');
 
     ////////////////////////////////////////////////////////////////////////////
     ///////////////// Индексы //////////////////////////////////////////////////
@@ -107,11 +104,7 @@ function save_controller_options($controllers) {
 
     $model = new cmsModel();
 
-    foreach ($controllers as $controller => $new_options) {
-        if (is_numeric($controller)) {
-            $controller = $new_options;
-            $new_options = [];
-        }
+    foreach ($controllers as $controller) {
         $controller_root_path = cmsConfig::get('root_path').'system/controllers/'.$controller.'/';
         $form_file = $controller_root_path.'backend/forms/form_options.php';
         $form_name = $controller.'options';
@@ -122,7 +115,7 @@ function save_controller_options($controllers) {
             if ($form) {
                 $options = $form->parse(new cmsRequest(cmsController::loadOptions($controller)));
                 $model->filterEqual('name', $controller)->updateFiltered('controllers', array(
-                    'options' => array_merge($options, $new_options)
+                    'options' => $options
                 ));
             }
         } catch (Exception $exc) {

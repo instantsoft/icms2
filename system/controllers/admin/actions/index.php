@@ -20,7 +20,7 @@ class actionAdminIndex extends cmsAction {
         $dashboard_blocks = cmsEventsManager::hookAll('admin_dashboard_block', $this->options, []);
 
         // по умолчанию порядок заведомо большой
-        $order_id = 1000;
+        $order_id_default = 1000;
 
         foreach ($dashboard_blocks as $cname => $dashboard_block) {
 
@@ -36,15 +36,11 @@ class actionAdminIndex extends cmsAction {
                     $sub_dashboard_block['name'] = $cname . '_' . $key;
                 }
 
-                if (isset($this->options['dashboard_order'][$sub_dashboard_block['name']])) {
-                    $order_id = $this->options['dashboard_order'][$sub_dashboard_block['name']];
-                }
+                $order_id = $this->options['dashboard_order'][$sub_dashboard_block['name']] ?? $order_id_default;
 
                 $result_dashboard_blocks[$order_id] = $sub_dashboard_block;
 
-                if (!isset($this->options['dashboard_order'][$sub_dashboard_block['name']])) {
-                    $order_id += 1;
-                }
+                $order_id_default += 1;
             }
         }
 

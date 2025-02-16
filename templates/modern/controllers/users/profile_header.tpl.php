@@ -1,5 +1,8 @@
-<?php $this->addTplJSName('users'); ?>
-<?php $user = cmsUser::getInstance(); ?>
+<?php
+$this->addTplJSName('users');
+$this->setPagePatternH1($meta_profile, 'nickname');
+$user = cmsUser::getInstance();
+?>
 <div id="user_profile_title" class="d-flex align-items-center">
 
     <div class="avatar icms-user-avatar d-none d-lg-flex mr-3 <?php if (!empty($profile['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
@@ -12,12 +15,7 @@
 
     <div class="name flex-fill<?php if (!empty($profile['status'])){ ?> name_with_status<?php } ?>">
         <h1 class="h2 m-0 text-break">
-            <?php $pattern = get_localized_value('tag_h1', $this->controller->options); ?>
-            <?php if ($pattern) { ?>
-                <?php echo string_replace_keys_values_extended($pattern, $meta_profile); ?>
-            <?php } else { ?>
-                <?php html($profile['nickname']); ?>
-            <?php } ?>
+            <?php $this->pageH1(); ?>
             <?php if ($profile['is_locked']){ ?>
                 <span class="is_locked" title="<?php html(LANG_USERS_LOCKED_NOTICE_PUBLIC.($profile['lock_reason'] ? ': '.$profile['lock_reason'] : '').($profile['lock_until'] ? "\n ".sprintf(LANG_USERS_LOCKED_NOTICE_UNTIL, strip_tags(html_date($profile['lock_until']))) : '')); ?>" data-toggle="tooltip" data-placement="top">
                     <?php html_svg_icon('solid', 'lock'); ?>

@@ -520,7 +520,9 @@ class content extends cmsFrontend {
 
         list($ctype, $items) = cmsEventsManager::hook(
             ['content_before_list', 'content_'.$ctype['name'].'_before_list'],
-            [$ctype, $items]
+            [$ctype, $items],
+            null,
+            $this->request
         );
 
         cmsModel::cacheResult('current_ctype_fields', $fields);

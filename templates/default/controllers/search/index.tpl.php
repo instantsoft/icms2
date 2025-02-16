@@ -1,7 +1,5 @@
 <?php
 
-    $this->setPageTitle(LANG_SEARCH_TITLE);
-
     $this->addBreadcrumb(LANG_SEARCH_TITLE, $this->href_to(''));
     if($query){
         $this->addBreadcrumb($query);
@@ -36,19 +34,11 @@
         $content_menu[0]['url_mask'] = href_to('search');
 
         $this->addMenuItems('results_tabs', $content_menu);
-
-        $this->setPageTitle($query, $target_title, mb_strtolower(LANG_SEARCH_TITLE));
-
     }
-
 ?>
 
 <h1>
-    <?php if (!$query){ ?>
-        <?php echo LANG_SEARCH_TITLE; ?>
-    <?php } else { ?>
-        <?php printf(LANG_SEARCH_H1, html($query, false)); ?>
-    <?php } ?>
+    <?php $this->pageH1();?>
 </h1>
 
 <div id="search_form">

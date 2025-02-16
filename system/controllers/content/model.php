@@ -1277,7 +1277,7 @@ class modelContent extends cmsModel {
         if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
 
         if (!$this->order_by) {
-            $this->orderBy('date_pub', 'desc')->forceIndex('date_pub');
+            $this->orderBy('date_pub', 'desc');
         }
 
         return $this->get($table_name, false, false);
@@ -1323,7 +1323,7 @@ class modelContent extends cmsModel {
         if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
 
         if (!$this->order_by) {
-            $this->orderBy('date_pub', 'desc')->forceIndex('date_pub');
+            $this->orderBy('date_pub', 'desc');
         }
 
         $this->useCache('content.list.' . $ctype_name);

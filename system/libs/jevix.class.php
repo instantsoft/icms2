@@ -999,7 +999,7 @@ class Jevix {
     }
 
     protected function isExistsProhibitedSymbols($value) {
-        return preg_match('#^(javascript|data)#ui', $value) || preg_match("#[\n\r\t]+#u", $value);
+        return preg_match('#^(javascript|data)|[\n\r\t]+#ui', $value);
     }
 
     protected function makeTag($tag, $params, $content, $short, $parentTag = null) {
@@ -1116,7 +1116,7 @@ class Jevix {
                             break;
                         }
                         // HTTP в начале если нет
-                        $sProtocols = join('|', $this->linkProtocolAllow ? $this->linkProtocolAllow : $this->linkProtocolAllowDefault);
+                        $sProtocols = implode('|', $this->linkProtocolAllow ? $this->linkProtocolAllow : $this->linkProtocolAllowDefault);
                         if(!preg_match('/^(('.$sProtocols.'):)?\/\//ui', $value) &&
                                 !preg_match('/^(\/|\#)/ui', $value) &&
                                 !preg_match('/^(mailto):/ui', $value) ) {

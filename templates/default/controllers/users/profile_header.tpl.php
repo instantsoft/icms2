@@ -1,4 +1,4 @@
-<?php $this->addTplJSName('users'); ?>
+<?php $this->addTplJSName('users'); $this->setPagePatternH1($meta_profile, 'nickname'); ?>
 <?php $user = cmsUser::getInstance(); ?>
 <div id="user_profile_title">
 
@@ -9,11 +9,7 @@
     <div class="name<?php if (!empty($profile['status'])){ ?> name_with_status<?php } ?>">
 
         <h1>
-            <?php if (!empty($this->controller->options['tag_h1'])) { ?>
-                <?php echo string_replace_keys_values_extended($this->controller->options['tag_h1'], $profile); ?>
-            <?php } else { ?>
-                <?php html($profile['nickname']); ?>
-            <?php } ?>
+            <?php $this->pageH1(); ?>
             <?php if ($profile['is_locked']){ ?>
                 <span class="is_locked"><?php echo LANG_USERS_LOCKED_NOTICE_PUBLIC; ?></span>
             <?php } ?>

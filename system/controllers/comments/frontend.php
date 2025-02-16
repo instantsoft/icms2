@@ -312,8 +312,8 @@ class comments extends cmsFrontend {
         $datasets = [];
 
         // Все (новые)
-        $datasets['all'] = [
-            'name'  => 'all',
+        $datasets[''] = [
+            'name'  => '',
             'title' => LANG_COMMENTS_DS_ALL,
         ];
 

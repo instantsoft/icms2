@@ -1,11 +1,10 @@
-<?php
-$this->setPageTitle(LANG_PHOTOS_ALL);
-$this->addBreadcrumb(LANG_PHOTOS_ALL);
-?>
+<?php $this->addBreadcrumb(LANG_PHOTOS_ALL); ?>
 
-<h1><?php echo LANG_PHOTOS_ALL; ?></h1>
-<?php echo $this->renderChild('filter-panel', array(
+<h1><?php $this->pageH1();?></h1>
+
+<?php echo $this->renderChild('filter-panel', [
     'item' => $album,
-    'page_url' => href_to('photos'),
-)); ?>
+    'page_url' => href_to('photos')
+]); ?>
+
 <?php echo $photos_html;

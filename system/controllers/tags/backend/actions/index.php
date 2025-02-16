@@ -13,7 +13,7 @@ class actionTagsIndex extends cmsAction {
 
         $this->tool_buttons = [
             [
-                'class' => 'refresh',
+                'icon'  => 'sync',
                 'title' => LANG_TAGS_RECOUNT,
                 'href'  => $this->cms_template->href_to('recount')
             ]

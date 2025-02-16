@@ -76,7 +76,7 @@ function grid_content_items($controller, $ctype) {
             'handler' => function ($value, $item) use ($controller, $ctype) {
                 if ($item['is_deleted']) {
                     $string = '<a href="' . href_to($controller->name, 'controllers', ['edit', 'moderation', 'logs', 'content', $ctype['name'], $item['id']]) . '">';
-                    if ($item['trash_date_expired']) {
+                    if (!empty($item['trash_date_expired'])) {
                         $expired = ((time() - strtotime($item['trash_date_expired'])) > 0) ? true : false;
                         $string  .= sprintf(LANG_MODERATION_IN_TRASH_TIME, ($expired ? '-' : '') . string_date_age_max($item['trash_date_expired']));
                     } else {

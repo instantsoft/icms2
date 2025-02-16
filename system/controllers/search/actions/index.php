@@ -23,13 +23,12 @@ class actionSearchIndex extends cmsAction {
         if (!in_array($date, ['all', 'w', 'm', 'y'], true)) {
             return cmsCore::error404();
         }
-        if (!is_numeric($page)) {
-            return cmsCore::error404();
-        }
 
         if ($target && $this->validate_sysname($target) !== true) {
             return cmsCore::error404();
         }
+
+        $target_title = null;
 
         if ($this->request->has('q')) {
 
@@ -164,7 +163,13 @@ class actionSearchIndex extends cmsAction {
             $tpl = 'index';
         }
 
-        $this->cms_template->addHead('<link rel="canonical" href="' . (!$target ? href_to_abs($this->name) : href_to_abs($this->name, $target)) . '?q=' . urlencode($query) . '"/>');
+        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs($this->name, $target, false, ($query ? ['q' => $query] : [])) . '"/>');
+
+        $this->cms_template->setPageAllItem([
+            'query'        => $query,
+            'target'       => $target,
+            'target_title' => $target_title,
+        ]);
 
         return $this->cms_template->render($tpl, [
             'user'         => $this->cms_user,
@@ -173,11 +178,11 @@ class actionSearchIndex extends cmsAction {
             'type'         => $type,
             'date'         => $date,
             'target'       => $target,
-            'target_title' => (!empty($target_title) ? mb_strtolower($target_title) : ''),
+            'target_title' => $target_title,
             'page'         => $page,
             'perpage'      => $this->options['perpage'],
-            'results'      => (isset($results) ? $results : false),
-            'page_url'     => (isset($page_url) ? $page_url : false)
+            'results'      => $results ?? false,
+            'page_url'     => $page_url ?? false
         ]);
     }
 

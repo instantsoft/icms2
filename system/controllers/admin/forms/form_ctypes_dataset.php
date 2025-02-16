@@ -222,6 +222,7 @@ class formAdminCtypesDataset extends cmsForm {
                         'title' => LANG_CP_SEOMETA_ITEM_KEYS,
                         'hint' => ($meta_item_fields ? LANG_CP_SEOMETA_DS_HINT : ''),
                         'can_multilanguage' => true,
+                        'is_visible' => !cmsConfig::get('disable_metakeys'),
                         'multilanguage_params' => [
                             'is_table_field' => true,
                             'table' => 'content_datasets'
