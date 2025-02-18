@@ -802,6 +802,10 @@ class cmsFormField {
                     ksort($this->items, SORT_NATURAL);
                 }
 
+                if (!empty($this->show_empty_value)) {
+                    $this->items = ['' => ''] + $this->items;
+                }
+
                 $items = $this->items;
             }
         }

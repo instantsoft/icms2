@@ -224,6 +224,7 @@ class actionContentCategoryView extends cmsAction {
         // кешируем
         cmsModel::cacheResult('current_ctype', $ctype);
         cmsModel::cacheResult('current_ctype_category', $category);
+        cmsModel::cacheResult('current_ctype_datasets', $datasets);
         cmsModel::cacheResult('current_ctype_dataset', $current_dataset);
 
         // Получаем HTML списка записей

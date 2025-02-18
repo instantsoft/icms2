@@ -5,19 +5,21 @@ $this->addTplJSName([
     );
 ?>
 <?php if ($items){ ?>
-    <div id="comments_list" class="striped-list mt-3 mt-md-4">
-        <?php
-            echo $this->renderChild('comment', array(
-                'comments'         => $items,
-                'user'             => $user,
-                'target_user_id'   => 0,
-                'is_highlight_new' => false,
-                'is_levels'        => false,
-                'is_controls'      => false,
-                'is_moderator'     => $is_moderator,
-                'is_show_target'   => true
-            ));
-        ?>
+    <div id="comments_widget">
+        <div id="comments_list" class="striped-list mt-3 mt-md-4">
+            <?php
+                echo $this->renderChild('comment', [
+                    'comments'         => $items,
+                    'user'             => $user,
+                    'target_user_id'   => 0,
+                    'is_highlight_new' => false,
+                    'is_levels'        => false,
+                    'is_controls'      => false,
+                    'is_moderator'     => $is_moderator,
+                    'is_show_target'   => true
+                ]);
+            ?>
+        </div>
     </div>
 
     <?php if ($perpage < $total) { ?>
