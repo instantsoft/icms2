@@ -81,18 +81,24 @@ class actionUsersProfileEdit extends cmsAction {
 
         // Добавляем поле SLUG
         if (cmsUser::isAllowed('users', 'change_slug')) {
+
             $fieldset_id = $form->addFieldset(LANG_USERS_SLUG);
+
             $form->addField($fieldset_id, new fieldString('slug', [
-                'hint'  => ERR_VALIDATE_SLUGS,
+                'hint'    => ERR_VALIDATE_SLUGS,
                 'prefix'  => href_to_abs('users') . '/',
                 'options' => [
                     'min_length' => 2,
                     'max_length' => 100
                 ],
-                'rules'   => array(
+                'rules'   => [
                     ['slug_segment'],
                     ['unique_exclude', '{users}', 'slug', $profile['id']],
-                    [function($controller, $data, $value) {
+                    [function ($controller, $data, $value) {
+
+                        if (!$value) {
+                            return true;
+                        }
 
                         $datasets = $this->getDatasets();
 
@@ -105,7 +111,7 @@ class actionUsersProfileEdit extends cmsAction {
 
                         return true;
                     }]
-                )
+                ]
             ]));
         }
 

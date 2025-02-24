@@ -32,9 +32,6 @@ $this->addTplCSSNameFromContext('jquery-chosen');
         let geo_window = $('#geo_window');
         let geo_window_select = $('.list > select', geo_window);
         geo_window_select.chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', width: '100%', search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>'});
-        <?php if (!$city_id){?>
-            geo_window_select.first().triggerHandler('change');
-        <?php } ?>
         geo_window_select.on('change', function(){
             let type = $(this).attr('rel');
             if (type) {
@@ -46,5 +43,8 @@ $this->addTplCSSNameFromContext('jquery-chosen');
         $('#select-geo-city', geo_window).on('click', function(){
             icms.geo.selectCity('<?php echo $field_id; ?>');
         });
+        <?php if (!$city_id){?>
+            geo_window_select.first().trigger('change');
+        <?php } ?>
     });
 </script>

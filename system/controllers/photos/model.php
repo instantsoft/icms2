@@ -484,18 +484,28 @@ class modelPhotos extends cmsModel{
 
     }
 
-    public function getAlbum($id){
+    public function getAlbum($id) {
 
         $content_model = cmsCore::getModel('content');
 
         $album = $content_model->getContentItem('albums', $id);
-        if (!$album) { return false; }
+        if (!$album) {
+            return false;
+        }
 
-        $album['ctype'] = $content_model->getContentTypeByName('albums');
+        $album['ctype']      = $content_model->getContentTypeByName('albums');
         $album['ctype_name'] = $album['ctype']['name'];
 
-        return $album;
+        if ($album['ctype']['is_cats'] && $album['category_id'] > 1){
 
+            $album['category'] = $content_model->getCategory($album['ctype']['name'], $album['category_id']);
+
+            if(!empty($album['ctype']['options']['is_cats_multi'])){
+                $album['categories'] = $content_model->getContentItemCategoriesList($album['ctype']['name'], $album['id']);
+            }
+        }
+
+        return $album;
     }
 
 //============================================================================//

@@ -17,7 +17,7 @@
  * @author: Victor Stanciu <vic.stanciu@gmail.com> (original author)
  * @modifier InstantCMS Team
  *
- * @version 3.74.3
+ * @version 3.74.4
  *
  */
 
@@ -91,35 +91,34 @@ class Mobile_Detect
      * @var array
      */
     protected static $mobileHeaders = [
-
-            'HTTP_ACCEPT'                  => [
-                'matches' => [
-                    // Opera Mini
-                    // @reference: http://dev.opera.com/articles/view/opera-binary-markup-language/
-                    'application/x-obml2d',
-                    // BlackBerry devices.
-                    'application/vnd.rim.html',
-                    'text/vnd.wap.wml',
-                    'application/vnd.wap.xhtml+xml'
-                ]],
-            'HTTP_X_WAP_PROFILE'           => null,
-            'HTTP_X_WAP_CLIENTID'          => null,
-            'HTTP_WAP_CONNECTION'          => null,
-            'HTTP_PROFILE'                 => null,
-            // Reported by Opera on Nokia devices (eg. C3).
-            'HTTP_X_OPERAMINI_PHONE_UA'    => null,
-            'HTTP_X_NOKIA_GATEWAY_ID'      => null,
-            'HTTP_X_ORANGE_ID'             => null,
-            'HTTP_X_VODAFONE_3GPDPCONTEXT' => null,
-            'HTTP_X_HUAWEI_USERID'         => null,
-            // Reported by Windows Smartphones.
-            'HTTP_UA_OS'                   => null,
-            // Reported by Verizon, Vodafone proxy system.
-            'HTTP_X_MOBILE_GATEWAY'        => null,
-            // Seen this on HTC Sensation. SensationXE_Beats_Z715e.
-            'HTTP_X_ATT_DEVICEID'          => null,
-            // Seen this on a HTC.
-            'HTTP_UA_CPU'                  => ['matches' => ['ARM']],
+        'HTTP_ACCEPT'                  => [
+            'matches' => [
+                // Opera Mini
+                // @reference: http://dev.opera.com/articles/view/opera-binary-markup-language/
+                'application/x-obml2d',
+                // BlackBerry devices.
+                'application/vnd.rim.html',
+                'text/vnd.wap.wml',
+                'application/vnd.wap.xhtml+xml'
+            ]],
+        'HTTP_X_WAP_PROFILE'           => null,
+        'HTTP_X_WAP_CLIENTID'          => null,
+        'HTTP_WAP_CONNECTION'          => null,
+        'HTTP_PROFILE'                 => null,
+        // Reported by Opera on Nokia devices (eg. C3).
+        'HTTP_X_OPERAMINI_PHONE_UA'    => null,
+        'HTTP_X_NOKIA_GATEWAY_ID'      => null,
+        'HTTP_X_ORANGE_ID'             => null,
+        'HTTP_X_VODAFONE_3GPDPCONTEXT' => null,
+        'HTTP_X_HUAWEI_USERID'         => null,
+        // Reported by Windows Smartphones.
+        'HTTP_UA_OS'                   => null,
+        // Reported by Verizon, Vodafone proxy system.
+        'HTTP_X_MOBILE_GATEWAY'        => null,
+        // Seen this on HTC Sensation. SensationXE_Beats_Z715e.
+        'HTTP_X_ATT_DEVICEID'          => null,
+        // Seen this on a HTC.
+        'HTTP_UA_CPU'                  => ['matches' => ['ARM']]
     ];
 
     /**
@@ -636,7 +635,7 @@ class Mobile_Detect
      * @param string|null $userAgent Inject the User-Agent header. If null, will use HTTP_USER_AGENT
      *                               from the $headers array instead.
      */
-    public function __construct(array $headers = null, $userAgent = null)
+    public function __construct($headers = null, $userAgent = null)
     {
         $this->setHttpHeaders($headers);
         $this->setUserAgent($userAgent);
@@ -661,7 +660,7 @@ class Mobile_Detect
      * @param array|null $httpHeaders The headers to set. If null, then using PHP's _SERVER to extract
      *                           the headers. The default null is left for backwards compatibility.
      */
-    public function setHttpHeaders(array $httpHeaders = null)
+    public function setHttpHeaders($httpHeaders = null)
     {
         // use global _SERVER if $httpHeaders aren't defined
         if (!is_array($httpHeaders) || !count($httpHeaders)) {
@@ -749,7 +748,7 @@ class Mobile_Detect
      *
      * @return bool If there were CloudFront headers to be set
      */
-    public function setCfHeaders(array $cfHeaders = null): bool
+    public function setCfHeaders($cfHeaders = null): bool
     {
         // use global _SERVER if $cfHeaders aren't defined
         if (!is_array($cfHeaders) || !count($cfHeaders)) {
@@ -799,7 +798,7 @@ class Mobile_Detect
      *
      * @return string|null
      */
-    public function setUserAgent(string $userAgent = null)
+    public function setUserAgent($userAgent = null)
     {
         // Invalidate cache due to #375
         $this->cache = array();
@@ -1062,7 +1061,7 @@ class Mobile_Detect
      * @param array|null $httpHeaders deprecated
      * @return bool
      */
-    public function isTablet(string $userAgent = null, array $httpHeaders = null): bool
+    public function isTablet($userAgent = null, $httpHeaders = null): bool
     {
         // Check specifically for cloudfront headers if the useragent === 'Amazon CloudFront'
         if ($this->getUserAgent() === 'Amazon CloudFront') {
@@ -1093,7 +1092,7 @@ class Mobile_Detect
      *
      * @todo: The httpHeaders part is not yet used.
      */
-    public function is(string $key, string $userAgent = null, array $httpHeaders = null): bool
+    public function is(string $key, $userAgent = null, $httpHeaders = null): bool
     {
         // Set the UA and HTTP headers only if needed (eg. batch mode).
         if ($httpHeaders) {
@@ -1122,7 +1121,7 @@ class Mobile_Detect
      *
      * @todo: search in the HTTP headers too.
      */
-    public function match($regex, string $userAgent = null): bool
+    public function match($regex, $userAgent = null): bool
     {
         if (!\is_string($userAgent) && !\is_string($this->userAgent)) {
             return false;
