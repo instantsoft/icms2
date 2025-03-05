@@ -78,27 +78,27 @@ icms.modal = (function ($) {
         $(modal_el).addClass('in');
     };
 
-	this.bind = function(selector) {
+	this.bind = function (selector) {
 
-        $(selector).each(function (){
+        $(selector).each(function () {
 
-            var url = $(this).attr('href');
-
-            if((new RegExp('[^\.]\.(jpg|jpeg|png|tiff|gif|webp)\\s*$', 'i')).test(url)){
+            if ((new RegExp('[^\.]\.(jpg|jpeg|png|tiff|gif|webp)\\s*$', 'i')).test($(this).attr('href'))) {
                 self.bindGallery(this);
             } else {
 
-                $(this).off('click').on('click', function (){
+                $(this).off('click').on('click', function () {
 
-                    var title = $(this).attr('title');
-                    if(!title){
+                    let url = $(this).attr('href');
+
+                    let title = $(this).attr('title');
+                    if (!title) {
                         title = $(this).data('original-title');
                     }
 
-                    var style = $(this).data('style');
-                    var params = $(this).data('params');
+                    let style  = $(this).data('style');
+                    let params = $(this).data('params');
 
-                    if(url.charAt(0) === '#'){
+                    if (url.charAt(0) === '#') {
                         self.open(url, title, style);
                     } else {
                         self.openAjax(url, params, false, title, style);
@@ -106,12 +106,9 @@ icms.modal = (function ($) {
 
                     return false;
                 });
-
             }
-
         });
-
-	};
+    };
 
     this.loadPhotoSwipe = function (){
         icms.head.addCss('photoswipe');

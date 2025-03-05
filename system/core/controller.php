@@ -855,6 +855,11 @@ class cmsController {
 //============================================================================//
 //============================================================================//
 
+    /**
+     * Загружает и возвращает массив маршрутов контроллера
+     *
+     * @return array
+     */
     public function loadRoutes() {
 
         $file = $this->root_path . 'routes.php';
@@ -865,15 +870,13 @@ class cmsController {
 
         include_once($file);
 
-        $routes_func = 'routes_' . $this->name;
-
-        $routes = call_user_func($routes_func);
+        $routes = call_user_func('routes_' . $this->name);
 
         if (!is_array($routes)) {
             return [];
         }
 
-        return $routes;
+        return cmsEventsManager::hook($this->name . '_routes', $routes);
     }
 
 //============================================================================//
@@ -958,67 +961,46 @@ class cmsController {
 
     /**
      * Определяет экшен, по списку маршрутов из файла routes.php контроллера
-     * @param string $uri
-     * @return boolean
+     *
+     * @param string $uri Проверяемый URI
+     * @return string|false Имя экшена или false
      */
-    public function parseRoute($uri){
+    public function parseRoute($uri) {
 
         $routes = $this->loadRoutes();
 
-        // Флаг удачного перебора
-        $is_found = false;
-
-        // Название найденного экшена
-        $action_name = false;
-
         //перебираем все маршруты
-        if($routes){
-            foreach($routes as $route){
+        foreach ($routes as $route) {
 
-                //сравниваем шаблон маршрута с текущим URI
-                preg_match($route['pattern'], $uri, $matches);
+            $matches = [];
 
-                //Если найдено совпадение
-                if ($matches){
+            if (preg_match($route['pattern'], $uri, $matches)) {
 
-                    $action_name = $route['action'];
+                $action_name = $route['action'];
 
-                    // удаляем шаблон и экшен из параметров маршрута,
-                    // чтобы не мешали при переборе параметров запроса
-                    unset($route['pattern']);
-                    unset($route['action']);
+                // удаляем шаблон и экшен из параметров маршрута,
+                // чтобы не мешали при переборе параметров запроса
+                unset($route['pattern'], $route['action']);
 
-                    //перебираем параметры маршрута в виде ключ=>значение
-                    foreach($route as $key=>$value){
-                        if (is_integer($key)){
+                // Заполняем параметры запроса
+                foreach ($route as $key => $value) {
+                    //Если ключ - целое число, то значением является сегмент URI
+                    if (is_int($key)){
 
-                            //Если ключ - целое число, то значением является сегмент URI
-                            $this->request->set($value, $matches[$key]);
+                        $this->request->set($value, $matches[$key] ?? null);
 
-                        } else {
-
-                            //иначе, значение берется из маршрута
-                            $this->request->set($key, $value);
-
-                        }
+                    //иначе, значение берется из маршрута
+                    } else {
+                        $this->request->set($key, $value);
                     }
-
-                    // совпадение есть
-                    $is_found = true;
-
-                    //раз найдено совпадение, прерываем цикл
-                    break;
-
                 }
 
+                return $action_name;
             }
         }
 
-        // Если в маршруте нет совпадений
-        if(!$is_found) { return false; }
-
-        return $action_name;
-
+        // В маршруте нет совпадений
+        return false;
     }
 
 //============================================================================//
