@@ -220,7 +220,7 @@ function html_datepicker($name = '', $value = '', $attributes = [], $datepicker 
         $class .= ' ' . $attributes['class'];
     }
     $attr_str = html_attr_str($attributes);
-    $html     = '<input type="text" placeholder="' . LANG_SELECT . '" name="' . $name . '" value="' . htmlspecialchars($value) . '" class="' . $class . '"  id="' . $id . '" ' . $attr_str . '/>';
+    $html     = '<input type="text" placeholder="' . LANG_SELECT . '" name="' . $name . '" value="' . htmlspecialchars($value) . '" class="' . $class . '"  id="' . $id . '" ' . $attr_str . '>';
     $script   = '<script>';
     $script   .= '$(function(){ var datepicker_params = ' . json_encode($datepicker_default) . ';datepicker_params.onSelect = function(dateText,inst){$("#' . $id . '").trigger("input");icms.events.run("icms_datepicker_selected_' . $name . '", inst);};datepicker_params.beforeShow = function(input,inst){icms.events.run("icms_datepicker_before_show_' . $name . '", inst);};$("#' . $id . '").datepicker(datepicker_params);});';
     $script   .= '</script>';
@@ -292,7 +292,7 @@ function html_avatar_image($avatars, $size_preset = 'small', $alt = '', $is_html
 
     $src = html_avatar_image_src($avatars, $size_preset);
 
-    $img = '<img class="img-fluid" src="' . $src . '" alt="' . html($alt, false) . '" title="' . html($alt, false) . '" />';
+    $img = '<img class="img-fluid" src="' . $src . '" alt="' . html($alt, false) . '" title="' . html($alt, false) . '">';
 
     if (empty($avatars) && !empty($alt) && $is_html_empty_avatar) {
 
@@ -374,7 +374,7 @@ function html_image($image, $size_preset = 'small', $alt = '', $attributes = [])
     $attr_str = html_attr_str($attributes);
     $class    = isset($attributes['class']) ? $attributes['class'] : '';
 
-    $image_html = '<img src="' . $src . '" title="' . $title . '" alt="' . html($alt, false) . '" ' . $attr_str . ' class="img-fluid ' . $class . '" />';
+    $image_html = '<img src="' . $src . '" title="' . $title . '" alt="' . html($alt, false) . '" ' . $attr_str . ' class="img-fluid ' . $class . '">';
 
     if ($modal_preset) {
         $modal_src = html_image_src($image, $modal_preset, true);
@@ -419,7 +419,7 @@ function html_gif_image($image, $size_preset = 'small', $alt = '', $attributes =
     return '<a class="ajax-modal gif_image ' . $class . '" href="' . $original_src . '" ' . html_attr_str($attributes) . '>
                 <span class="background_overlay"></span>
                 <span class="image_label">gif</span>
-                <img class="img-fluid" src="' . $preview_src . '" alt="' . html($alt, false) . '" />
+                <img class="img-fluid" src="' . $preview_src . '" alt="' . html($alt, false) . '">
             </a>';
 }
 
@@ -560,8 +560,8 @@ function html_category_list($tree, $selected_id = 0) {
  */
 function html_switch($name, $active) {
     $html = '';
-    $html .= '<label><input type="radio" name="' . $name . '" value="1" ' . ($active ? 'checked' : '') . '/> ' . LANG_ON . "</label> \n";
-    $html .= '<label><input type="radio" name="' . $name . '" value="0" ' . (!$active ? 'checked' : '') . '/> ' . LANG_OFF . "</label> \n";
+    $html .= '<label><input type="radio" name="' . $name . '" value="1" ' . ($active ? 'checked' : '') . '> ' . LANG_ON . "</label> \n";
+    $html .= '<label><input type="radio" name="' . $name . '" value="0" ' . (!$active ? 'checked' : '') . '> ' . LANG_OFF . "</label> \n";
     return $html;
 }
 /**

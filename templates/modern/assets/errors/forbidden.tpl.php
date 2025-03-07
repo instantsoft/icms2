@@ -4,7 +4,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
         <title><?php echo ERR_FORBIDDEN; ?></title>
-        <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
+        <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>">
         <?php
         $this->addMainTplCSSName([
             'theme'
@@ -18,7 +18,7 @@
             'modal'
         ]); ?>
         <?php $this->printCssTags(); ?>
-        <meta name="robots" content="noindex" />
+        <meta name="robots" content="noindex">
     </head>
     <body class="h-100 flex-row d-flex align-items-center bg-dark">
         <div class="container">

@@ -12,7 +12,7 @@ class cmsWysiwygMarkitup {
         'resizeHandle' => false,
         'onShiftEnter' => [
             'keepDefault' => false,
-            'replaceWith' => "<br />\n",
+            'replaceWith' => "<br>\n",
         ],
         'onCtrlEnter'  => ['keepDefault' => true],
         'onTab'        => [
@@ -82,7 +82,7 @@ class cmsWysiwygMarkitup {
             ],
             [
                 'name'        => LANG_MARKITUP_IMGL,
-                'replaceWith' => '<img src="[!['.LANG_MARKITUP_IMGL1.':!:http://]!]" alt="[!['.LANG_DESCRIPTION.']!]" />',
+                'replaceWith' => '<img src="[!['.LANG_MARKITUP_IMGL1.':!:http://]!]" alt="[!['.LANG_DESCRIPTION.']!]">',
                 'className'   => 'btnImg',
             ],
             [

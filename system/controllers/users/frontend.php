@@ -87,7 +87,7 @@ class users extends cmsFrontend {
         // сам профиль
         if (!$this->cms_core->uri_params) {
 
-            $this->cms_template->addHead('<link rel="canonical" href="' . href_to_profile($profile, false, true) . '"/>');
+            $this->cms_template->addHead('<link rel="canonical" href="' . href_to_profile($profile, false, true) . '">');
 
             array_unshift($this->current_params, $this->profile);
 
@@ -97,7 +97,7 @@ class users extends cmsFrontend {
         // Ищем экшен внутри профиля
         if ($this->isActionExists('profile_' . $this->cms_core->uri_params[0])) {
 
-            $this->cms_template->addHead('<link rel="canonical" href="' . href_to_profile($profile, [$this->cms_core->uri_params[0], $this->cms_core->uri_params[1] ?? null], true) . '"/>');
+            $this->cms_template->addHead('<link rel="canonical" href="' . href_to_profile($profile, [$this->cms_core->uri_params[0], $this->cms_core->uri_params[1] ?? null], true) . '">');
 
             $this->current_params[0] = $this->profile;
 

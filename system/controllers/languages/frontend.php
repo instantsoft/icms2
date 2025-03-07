@@ -92,10 +92,10 @@ class languages extends cmsFrontend {
                 }
             }
 
-            $this->cms_template->addHead('<link rel="alternate" href="'.html($this->cms_config->host . $lang_prefix . $uri, false).'" hreflang="'.$lang.'" />');
+            $this->cms_template->addHead('<link rel="alternate" href="'.html($this->cms_config->host . $lang_prefix . $uri, false).'" hreflang="'.$lang.'">');
         }
 
-        $this->cms_template->addHead('<link rel="alternate" href="'.html($this->cms_config->host . '/' . $uri, false).'" hreflang="x-default" />');
+        $this->cms_template->addHead('<link rel="alternate" href="'.html($this->cms_config->host . '/' . $uri, false).'" hreflang="x-default">');
 
         return;
     }

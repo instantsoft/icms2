@@ -30,7 +30,7 @@ class actionUsersIndex extends cmsAction {
             'first' => href_to($this->name, $dataset_name ? $dataset_name : '')
         ];
 
-        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs('users', (!$dataset_name ? null : $dataset_name)) . '"/>');
+        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs('users', (!$dataset_name ? null : $dataset_name)) . '">');
 
         return $this->cms_template->render('index', [
             'page_title'         => ($dataset_name ? LANG_USERS . ' - ' . $dataset['title'] : LANG_USERS),

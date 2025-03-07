@@ -124,7 +124,7 @@ class actionTagsIndex extends cmsAction {
             ]);
         }
 
-        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs($this->name, $target, string_urlencode($tag_name)) . '"/>');
+        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs($this->name, $target, string_urlencode($tag_name)) . '">');
 
         return $this->cms_template->render('search', [
             'tag'       => $tag,
@@ -147,7 +147,7 @@ class actionTagsIndex extends cmsAction {
             ]);
         }
 
-        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs($this->name) . '"/>');
+        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs($this->name) . '">');
 
         return $this->cms_template->render('tags', $this->getTagsWidgetParams($this->options));
     }

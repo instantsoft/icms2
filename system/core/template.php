@@ -335,24 +335,19 @@ class cmsTemplate {
 
     /**
      * Проверяет, есть ли блок на заданной позиции (позициях)
-     * @param string $position Название позиции
+     *
+     * @param string $positions Название позиции
      * @return boolean
      */
-    public function hasBlock($position) {
-
-        if (func_num_args() > 1) {
-            $positions = func_get_args();
-        } else {
-            $positions = [$position];
-        }
-
-        $has = false;
+    public function hasBlock(...$positions) {
 
         foreach ($positions as $pos) {
-            $has = $has || !empty($this->blocks[$pos]);
+            if (!empty($this->blocks[$pos])) {
+                return true;
+            }
         }
 
-        return $has;
+        return false;
     }
 
     /**
@@ -601,25 +596,22 @@ class cmsTemplate {
     /**
      * Проверяет наличие виджетов на позиции/позициях
      *
-     * @param string|array $positions Название позиции/позиций
-     * Можно передавать сколь угодно дополнительных параметров как название позиции
-     * @return boolean
+     * @param string $positions Название позиции/позиций
+     * @return bool
      */
-    public function hasWidgetsOn($positions) {
+    public function hasWidgetsOn(...$positions) {
 
-        if (func_num_args() > 1) {
-            $positions = func_get_args();
-        } elseif (!is_array($positions)) {
-            $positions = array($positions);
+        if (is_array($positions[0])) {
+            $positions = $positions[0];
         }
-
-        $has = false;
 
         foreach ($positions as $pos) {
-            $has = $has || !empty($this->widgets[$pos]);
+            if (!empty($this->widgets[$pos])) {
+                return true;
+            }
         }
 
-        return $has;
+        return false;
     }
 
     /**
@@ -919,19 +911,16 @@ class cmsTemplate {
      * Если передано несколько аргументов, склеивает их в одну строку
      * через разделитель
      *
-     * @param string|array $pagetitle Заголовок
+     * @param string $pagetitle Заголовок
      */
-    public function setPageTitle($pagetitle) {
+    public function setPageTitle(...$pagetitle) {
 
-        if (func_num_args() > 1) {
-            $pagetitle = implode(' · ', array_filter(func_get_args()));
+        // На случай если первый аргумент массив
+        if (is_array($pagetitle[0])) {
+            $pagetitle = $pagetitle[0];
         }
 
-        if (is_array($pagetitle)) {
-            $pagetitle = implode(' ', $pagetitle);
-        }
-
-        $this->title = $pagetitle;
+        $this->title = implode(' · ', array_filter($pagetitle));
 
         return $this;
     }
@@ -1246,7 +1235,7 @@ class cmsTemplate {
      * @return boolean
      */
     public function isBreadcrumbs() {
-        return (bool) $this->breadcrumbs;
+        return !empty($this->breadcrumbs);
     }
 
 
@@ -1289,12 +1278,37 @@ class cmsTemplate {
      * @param boolean $is_include_once
      */
     public function addHead($tag, $is_include_once = true) {
+
+        static $counter = 0;
+
         if ($is_include_once) {
-            $hash = md5($tag);
+            $hash = crc32($tag);
         } else {
-            $hash = count($this->head);
+            $hash = $counter++;
         }
+
         $this->head[$hash] = $tag;
+
+        return $this;
+    }
+
+    /**
+     * Возвращает весь массив тегов головного раздела страницы
+     *
+     * @return array
+     */
+    public function getHead() {
+        return $this->head;
+    }
+
+    /**
+     * Удаляет тег из головного раздела страницы по его ключу
+     *
+     * @param string|int $key Ключ массива
+     * @return $this
+     */
+    public function removeHeadByKey($key) {
+        unset($this->head[$key]);
         return $this;
     }
 
@@ -2044,13 +2058,11 @@ class cmsTemplate {
      * @param string|array $phrases Названия констант
      * @return type
      */
-    public function getLangJS($phrases) {
+    public function getLangJS(...$phrases) {
 
-        if (func_num_args() == 1 && !is_array($phrases)) {
-            $phrases = [$phrases];
-        }
-        if (func_num_args() > 1) {
-            $phrases = func_get_args();
+        // Если передан массив в качестве первого аргумента, используем его
+        if (is_array($phrases[0])) {
+            $phrases = $phrases[0];
         }
 
         $output = '';

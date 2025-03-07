@@ -33,7 +33,7 @@ class actionActivityIndex extends cmsAction{
             ]);
         }
 
-        $this->cms_template->addHead('<link rel="canonical" href="'.href_to_abs($this->name).'"/>');
+        $this->cms_template->addHead('<link rel="canonical" href="'.href_to_abs($this->name).'">');
 
         return $this->cms_template->render('index', [
             'page_title'      => ($dataset_name != 'all' ? LANG_ACTIVITY . ' - ' . $dataset['title'] : LANG_ACTIVITY),

@@ -3,8 +3,8 @@
     <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
         <a href="<?php echo $options['home_url']; ?>" title="<?php echo LANG_HOME; ?>" itemprop="item">
             <?php html_svg_icon('solid', 'home'); ?>
-            <meta itemprop="name" content="<?php echo LANG_HOME; ?>" />
-            <meta itemprop="position" content="1" />
+            <meta itemprop="name" content="<?php echo LANG_HOME; ?>">
+            <meta itemprop="position" content="1">
         </a>
     </li>
     <?php if ($breadcrumbs) { ?>
@@ -22,7 +22,7 @@
                         <?php html($item['title']); ?>
                     </span>
                 <?php } ?>
-                <meta itemprop="position" content="<?php echo $position++; ?>" />
+                <meta itemprop="position" content="<?php echo $position++; ?>">
             </li>
             <?php $listed[] = $item['href']; ?>
         <?php } ?>

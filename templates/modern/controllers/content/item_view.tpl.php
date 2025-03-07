@@ -1,6 +1,6 @@
 <?php
 
-    $this->addHead('<link rel="canonical" href="'.href_to_abs($ctype['name'], $item['slug'] . '.html').'"/>');
+    $this->addHead('<link rel="canonical" href="'.href_to_abs($ctype['name'], $item['slug'] . '.html').'">');
 
     $this->renderContentItem($ctype['name'], [
         'item'             => $item,

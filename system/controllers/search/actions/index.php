@@ -163,10 +163,10 @@ class actionSearchIndex extends cmsAction {
             $tpl = 'index';
         }
 
-        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs($this->name, $target, false, ($query ? ['q' => $query] : [])) . '"/>');
+        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs($this->name, $target, false, ($query ? ['q' => $query] : [])) . '">');
 
         if(!$results && $query) {
-            $this->cms_template->addHead('<meta name="robots" content="noindex" />');
+            $this->cms_template->addHead('<meta name="robots" content="noindex">');
         }
 
         $this->cms_template->setPageAllItem([

@@ -4,7 +4,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
         <title><?php echo ERR_PAGE_NOT_FOUND; ?></title>
-        <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
+        <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>">
         <?php $this->addMainTplCSSName([
             'theme'
         ]); ?>
@@ -15,7 +15,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6 align-self-center">
-                    <img src="<?php echo $this->getTemplateFilePath('images/404.svg', true); ?>" alt="404" />
+                    <img src="<?php echo $this->getTemplateFilePath('images/404.svg', true); ?>" alt="404">
                 </div>
                 <div class="col-md-6 align-self-center" id="data-wrap">
                     <h1 class="display-1">404</h1>

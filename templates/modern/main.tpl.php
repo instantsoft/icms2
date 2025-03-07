@@ -9,20 +9,20 @@
 <html <?php echo html_attr_str(($this->layout_params['attr'] ?? []), false); ?>>
     <head>
         <title><?php $this->title(); ?></title>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>">
 <?php if (!$config->disable_copyright) { ?>
-        <meta name="generator" content="InstantCMS" />
+        <meta name="generator" content="InstantCMS">
 <?php } ?>
 <?php
         $this->addMainTplCSSName(['theme']);
         if(!empty($this->options['font_type']) && $this->options['font_type'] === 'gfont') {
-            $this->addHead('<link rel="dns-prefetch" href="https://fonts.googleapis.com" />');
-            $this->addHead('<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />');
-            $this->addHead('<link rel="dns-prefetch" href="https://fonts.gstatic.com" />');
-            $this->addHead('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />');
+            $this->addHead('<link rel="dns-prefetch" href="https://fonts.googleapis.com">');
+            $this->addHead('<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>');
+            $this->addHead('<link rel="dns-prefetch" href="https://fonts.gstatic.com">');
+            $this->addHead('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>');
             $this->addCSS('https://fonts.googleapis.com/css?family='.$this->options['gfont'].':400,400i,700,700i&display=swap&subset=cyrillic-ext', false);
         }
         $this->addMainTplJSName('jquery', true);

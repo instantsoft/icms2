@@ -1,4 +1,4 @@
-<?php $this->addHead('<meta name="robots" content="noindex" />'); ?>
+<?php $this->addHead('<meta name="robots" content="noindex">'); ?>
 <!--noindex-->
 <?php if(!$is_domain_banned){ ?>
 

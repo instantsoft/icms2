@@ -48,7 +48,7 @@ class actionUsersProfileTab extends cmsAction {
 
         $meta_profile = $this->prepareItemSeo($profile, $fields, ['name' => 'users']);
 
-        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_profile($profile, [$tab_name], true) . '"/>');
+        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_profile($profile, [$tab_name], true) . '">');
 
         $this->cms_template->render('profile_tab', [
             'tabs'         => $tabs_menu,

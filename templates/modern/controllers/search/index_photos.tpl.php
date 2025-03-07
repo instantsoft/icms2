@@ -55,7 +55,7 @@
 ]); ?>
 
 <?php if ($query && empty($search_data)){ ?>
-    <?php $this->addHead('<meta name="robots" content="noindex" />'); ?>
+    <?php $this->addHead('<meta name="robots" content="noindex">'); ?>
     <p id="search_no_results" class="alert alert-info">
         <?php echo LANG_SEARCH_NO_RESULTS; ?>
     </p>

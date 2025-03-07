@@ -791,7 +791,7 @@ class modelUsers extends cmsModel {
 
         $this->join('{users}_groups_members', 'm', "m.user_id = i.id AND m.group_id = '{$id}'");
 
-        $members = $this->disableDeleteFilter()->getUsers();
+        $members = $this->disableDeleteFilter()->limit(false)->getUsers();
 
         $first_group = $this->orderBy('id', 'asc')->filterNotEqual('id', GUEST_GROUP_ID)->getItem('{users}_groups');
         if (!$first_group) { return false; }

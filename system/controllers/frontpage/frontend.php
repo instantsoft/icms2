@@ -4,7 +4,7 @@ class frontpage extends cmsFrontend {
 
     public function actionIndex() {
 
-        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_home(true) . '"/>');
+        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_home(true) . '">');
 
         if ($this->cms_config->hometitle) {
             $this->cms_template->setPageTitle($this->cms_config->hometitle);

@@ -128,7 +128,7 @@ class actionContentCategoryView extends cmsAction {
         // если не на главной
         if (!$is_frontpage) {
             // canonical
-            $this->cms_template->addHead('<link rel="canonical" href="' . $this->cms_config->host . (is_array($page_url) ? $page_url['base'] : $page_url) . '"/>');
+            $this->cms_template->addHead('<link rel="canonical" href="' . $this->cms_config->host . (is_array($page_url) ? $page_url['base'] : $page_url).($page > 1 ? '?page='.$page : '') . '">');
             // если название переопределено, а мы по оригинальному адресу,
             // то редиректим со старого на новый адрес
             if ($this->remap_redirect_ctype) {
@@ -305,6 +305,7 @@ class actionContentCategoryView extends cmsAction {
             'base_ds_url'     => $base_ds_url,
             'base_url'        => $base_url,
             'page_url'        => $page_url,
+            'page'            => $page,
             'rss_query'       => '', // Не используется, совместимость
             'list_styles'     => $list_styles,
             'is_frontpage'    => $is_frontpage,

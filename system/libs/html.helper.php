@@ -258,7 +258,7 @@ function html_tag_short($tag_name, $attributes, $class = '') {
     }
     $attributes['class'] = trim($class);
 
-    return '<'.$tag_name.' ' . html_attr_str($attributes, false) . '/>';
+    return '<'.$tag_name.' ' . html_attr_str($attributes, false) . '>';
 }
 
 function default_images($type, $preset) {

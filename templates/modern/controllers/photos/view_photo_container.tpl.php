@@ -6,7 +6,7 @@
         </span>
     <?php } ?>
 </h1>
-<img class="img-fluid" data-page-url="<?php echo href_to('photos', $photo['slug'].'.html').(!empty($photos_url_params) ? '?'.$photos_url_params : ''); ?>" src="<?php echo html_image_src($photo['image'], $preset, true, false); ?>" alt="<?php html($photo['title']); ?>" itemprop="contentUrl" />
+<img class="img-fluid" data-page-url="<?php echo href_to('photos', $photo['slug'].'.html').(!empty($photos_url_params) ? '?'.$photos_url_params : ''); ?>" src="<?php echo html_image_src($photo['image'], $preset, true, false); ?>" alt="<?php html($photo['title']); ?>" itemprop="contentUrl">
 <div id="fullscreen_photo" class="<?php if ($request->isAjax()) { ?>icms-fullscreen__state_expanded<?php } else { ?>d-none<?php } ?>">
     <span class="icms-fullscreen-expand"><?php html_svg_icon('solid', 'expand-alt'); ?></span>
     <span class="icms-fullscreen-compress"><?php html_svg_icon('solid', 'compress-alt'); ?></span>

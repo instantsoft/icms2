@@ -4,14 +4,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
         <title><?php echo LANG_ERROR; ?></title>
-        <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
+        <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>">
         <?php
         $this->addMainTplCSSName([
             'theme'
         ]);
         ?>
         <?php $this->printCssTags(); ?>
-        <meta name="robots" content="noindex" />
+        <meta name="robots" content="noindex">
     </head>
     <body class="flex-row d-flex align-items-center h-100 bg-dark">
         <div class="container">

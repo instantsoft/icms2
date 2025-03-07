@@ -145,6 +145,8 @@ class typograph extends cmsFrontend {
 
         $jevix = new Jevix();
 
+        $jevix->cfgSetXHTMLMode(false);
+
         // Протокол ссылок
         $jevix->cfgSetLinkProtocol($this->cms_config->protocol);
 

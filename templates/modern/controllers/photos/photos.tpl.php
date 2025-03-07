@@ -14,7 +14,7 @@
             <?php html($photo['title']); ?>
         </h3>
         <a class="stretched-link d-block" href="<?php echo $photo_url; ?>" title="<?php html($photo['title']); ?>">
-            <img class="icms-photo-album__photo-img img-fluid" src="<?php echo html_image_src($photo['image'], $preset_small, true, false); ?>" title="<?php html($photo['title']); ?>" alt="<?php html($photo['title']); ?>" itemprop="thumbnail" />
+            <img class="icms-photo-album__photo-img img-fluid" src="<?php echo html_image_src($photo['image'], $preset_small, true, false); ?>" title="<?php html($photo['title']); ?>" alt="<?php html($photo['title']); ?>" itemprop="thumbnail">
         </a>
         <div class="icms-photo-album__photo_info d-flex align-items-center justify-content-between">
             <?php if(!empty($photo['user']['nickname'])){ ?>

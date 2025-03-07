@@ -56,7 +56,7 @@ class actionCommentsIndex extends cmsAction {
             ]);
         }
 
-        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs($this->name) . '"/>');
+        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs($this->name) . '">');
 
         // В контроллере используется свойство useSeoOptions,
         // Поэтому тайтл уже задан. Дополняем набором
