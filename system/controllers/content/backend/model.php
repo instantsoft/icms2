@@ -191,24 +191,66 @@ class modelBackendContent extends modelContent {
         return $result;
     }
 
-    public function deleteContentType($id){
+    public function deleteContentType($id) {
 
         $ctype = $this->getContentType($id);
 
-        if ($ctype['is_fixed']) { return false; }
+        if (!$ctype || $ctype['is_fixed']) {
+            return false;
+        }
 
         $this->disableDeleteFilter()->disableApprovedFilter()->
                 disablePubFilter()->disablePrivacyFilter();
 
         $items = $this->getContentItems($ctype['name']);
-        if ($items){
-            foreach($items as $item){
+        if ($items) {
+            foreach ($items as $item) {
                 $this->deleteContentItem($ctype['name'], $item['id']);
             }
         }
 
-        $this->delete('content_types', $id);
-        $this->delete('content_datasets', $id, 'ctype_id');
+        // связь как родитель
+        $relations = $this->getContentRelations($ctype['id']);
+
+        if ($relations) {
+            foreach ($relations as $relation) {
+
+                $this->deleteContentRelation($relation['id']);
+
+                $parent_field_name = "parent_{$ctype['name']}_id";
+
+                if ($relation['target_controller'] != 'content') {
+
+                    $this->setTablePrefix('');
+
+                    $target_ctype = [
+                        'name' => $relation['target_controller']
+                    ];
+
+                } else {
+
+                    $this->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
+
+                    $target_ctype = $this->getContentType($relation['child_ctype_id']);
+                }
+
+                if ($this->isContentFieldExists($target_ctype['name'], $parent_field_name)) {
+                    $this->deleteContentField($target_ctype['name'], $parent_field_name, 'name', true);
+                }
+            }
+        }
+
+        // связь как дочка
+        $relations = $this->filterEqual('child_ctype_id', $ctype['id'])->getContentRelations();
+
+        if ($relations) {
+            foreach ($relations as $relation) {
+                $this->deleteContentRelation($relation['id']);
+            }
+        }
+
+        $this->delete('content_types', $ctype['id']);
+        $this->delete('content_datasets', $ctype['id'], 'ctype_id');
 
         $table_name = $this->table_prefix . $ctype['name'];
 
@@ -222,47 +264,6 @@ class modelBackendContent extends modelContent {
         $this->db->dropTable("{$table_name}_props_values");
 
         cmsCache::getInstance()->clean('content.types');
-
-        // связь как родитель
-        $relations = $this->getContentRelations($id);
-
-        if($relations){
-            foreach ($relations as $relation) {
-
-                $this->deleteContentRelation($relation['id']);
-
-                $parent_field_name = "parent_{$ctype['name']}_id";
-
-                if($relation['target_controller'] != 'content'){
-
-                    $this->setTablePrefix('');
-
-                    $target_ctype = array(
-                        'name' => $relation['target_controller']
-                    );
-
-                } else {
-
-                    $this->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
-
-                    $target_ctype = $this->getContentType($relation['child_ctype_id']);
-
-                }
-
-                if ($this->isContentFieldExists($target_ctype['name'], $parent_field_name)){
-                    $this->deleteContentField($target_ctype['name'], $parent_field_name, 'name', true);
-                }
-
-            }
-        }
-
-        // связь как дочка
-        $relations = $this->filterEqual('child_ctype_id', $id)->getContentRelations();
-        if($relations){
-            foreach ($relations as $relation) {
-                $this->deleteContentRelation($relation['id']);
-            }
-        }
 
         return true;
     }
@@ -626,12 +627,10 @@ class modelBackendContent extends modelContent {
 
         $this->useCache('content.relations');
 
-        $relations = $this->get('content_relations', function ($item) {
+        return $this->get('content_relations', function ($item) {
             $item['options'] = cmsModel::yamlToArray($item['options']);
             return $item;
         });
-
-        return $relations;
     }
 
     public function getContentRelation($id, $by_field = 'id'){

@@ -72,7 +72,7 @@
         </sup>
     <?php } ?>
 </h1>
-<?php $this->addToBlock('before_body', ob_get_clean().($toolbar_html ? html_each($toolbar_html) : '')); } ?>
+<?php $this->addToBlock('before_body', ob_get_clean().($toolbar_html ? html_each($toolbar_html) : ''), true); } ?>
 <?php if (!empty($datasets) || $folders){ ?>
 <div class="row align-content-end">
     <?php if (!empty($datasets)){ ?>
