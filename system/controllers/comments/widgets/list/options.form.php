@@ -9,20 +9,19 @@ class formWidgetCommentsListOptions extends cmsForm {
                 'type'   => 'fieldset',
                 'title'  => LANG_OPTIONS,
                 'childs' => [
-
                     new fieldListMultiple('options:show_list', [
-                        'title' => LANG_WD_COMMENTS_SHOW_LIST,
-                        'default' => 0,
-                        'show_all'=> true,
-                        'generator' => function($item) {
+                        'title'     => LANG_WD_COMMENTS_SHOW_LIST,
+                        'default'   => 0,
+                        'show_all'  => true,
+                        'generator' => function ($item) {
 
                             $items = [];
 
                             $comments_targets = cmsEventsManager::hookAll('comments_targets');
 
-                            if (is_array($comments_targets)){
-                                foreach($comments_targets as $comments_target){
-                                    foreach($comments_target['types'] as $name => $title){
+                            if (is_array($comments_targets)) {
+                                foreach ($comments_targets as $comments_target) {
+                                    foreach ($comments_target['types'] as $name => $title) {
                                         $items[$name] = $title;
                                     }
                                 }
@@ -31,31 +30,31 @@ class formWidgetCommentsListOptions extends cmsForm {
                             return $items;
                         }
                     ]),
-
                     new fieldCheckbox('options:show_avatars', [
-                        'title' => LANG_WD_COMMENTS_LIST_SHOW_AVATARS,
+                        'title'   => LANG_WD_COMMENTS_LIST_SHOW_AVATARS,
                         'default' => true
                     ]),
-
                     new fieldCheckbox('options:show_text', [
-                        'title' => LANG_WD_COMMENTS_LIST_SHOW_TEXT,
+                        'title'   => LANG_WD_COMMENTS_LIST_SHOW_TEXT,
                         'default' => false
                     ]),
-
                     new fieldCheckbox('options:show_rating', [
-                        'title' => LANG_WD_COMMENTS_LIST_SHOW_RATING,
+                        'title'   => LANG_WD_COMMENTS_LIST_SHOW_RATING,
                         'default' => false
                     ]),
-
+                    new fieldNumber('options:offset', [
+                        'title'   => LANG_LIST_OFFSET,
+                        'hint'    => LANG_LIST_OFFSET_HINT,
+                        'default' => 0
+                    ]),
                     new fieldNumber('options:limit', [
-                        'title' => LANG_LIST_LIMIT,
+                        'title'   => LANG_LIST_LIMIT,
                         'default' => 10,
-                        'rules' => [
+                        'rules'   => [
                             ['required'],
                             ['min', 1]
                         ]
                     ])
-
                 ]
             ]
         ];

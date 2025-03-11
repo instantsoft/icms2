@@ -495,8 +495,10 @@
     define('LANG_BASIC_OPTIONS',             'Общие');
     define('LANG_YES',                       'Да');
     define('LANG_NO',                        'Нет');
+    define('LANG_LIST_OFFSET',               'Смещение записей');
+    define('LANG_LIST_OFFSET_HINT',          'Пропустить указанное количество записей. Например, если указано 1, то будут выведены записи, начиная со второй.');
     define('LANG_LIST_LIMIT',                'Записей в списке');
-    define('LANG_LIST_ALL',                     'Показать все');
+    define('LANG_LIST_ALL',                  'Показать все');
     define('LANG_LIST_EMPTY',                'Нет элементов для отображения');
     define('LANG_TARGET_LIST_EMPTY',         'Нет %s для отображения');
     define('LANG_LIST_NONE_SELECTED',        'Ничего не выделено');

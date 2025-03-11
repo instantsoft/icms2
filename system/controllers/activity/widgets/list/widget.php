@@ -1,10 +1,12 @@
 <?php
+
 class widgetActivityList extends cmsWidget {
 
-    public function run(){
+    public function run() {
 
         $show_avatars     = $this->getOption('show_avatars');
         $show_date_groups = $this->getOption('date_group');
+        $offset           = $this->getOption('offset', 0);
         $limit            = $this->getOption('limit', 10);
         $dataset          = $this->getOption('dataset', 'all');
 
@@ -12,30 +14,31 @@ class widgetActivityList extends cmsWidget {
 
         $activity->model->orderBy('date_pub', 'desc');
 
-        if ($dataset != 'all') {
+        if ($dataset !== 'all') {
 
             $datasets = $activity->getDatasets();
-            $dataset = $datasets[$dataset];
+            $dataset  = $datasets[$dataset];
 
-            if (isset($dataset['filter']) && is_callable($dataset['filter'])){
+            if (isset($dataset['filter']) && is_callable($dataset['filter'])) {
                 $dataset['filter']($activity->model);
             }
-
         }
 
         $activity->model->filterPrivacy()->enableHiddenParentsFilter()->filterEqual('is_pub', 1);
 
         cmsEventsManager::hook('activity_list_filter', $activity->model);
 
-        $items = $activity->model->limit($limit)->getEntries();
-        if (!$items) { return false; }
+        $items = $activity->model->limit($offset, $limit)->getEntries();
 
-        return array(
+        if (!$items) {
+            return false;
+        }
+
+        return [
             'show_avatars'     => $show_avatars,
             'show_date_groups' => $show_date_groups,
             'items'            => cmsEventsManager::hook('activity_before_list', $items)
-        );
-
+        ];
     }
 
 }

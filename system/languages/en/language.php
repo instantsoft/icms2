@@ -496,8 +496,10 @@
     define('LANG_BASIC_OPTIONS',             'Basic');
     define('LANG_YES',                       'Yes');
     define('LANG_NO',                        'No');
+    define('LANG_LIST_OFFSET',               'Entries Offset');
+    define('LANG_LIST_OFFSET_HINT',          'Skip the specified number of entries. For example, if 1 is specified, entries starting from the second entry will be shown.');
     define('LANG_LIST_LIMIT',                'Entries in list');
-    define('LANG_LIST_ALL',                     'Show all');
+    define('LANG_LIST_ALL',                  'Show all');
     define('LANG_LIST_EMPTY',                'No items to display');
     define('LANG_TARGET_LIST_EMPTY',         'No %s to display');
     define('LANG_LIST_NONE_SELECTED',        'Nothing selected');

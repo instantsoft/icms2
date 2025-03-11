@@ -219,7 +219,7 @@ class modelBackendContent extends modelContent {
 
                 $parent_field_name = "parent_{$ctype['name']}_id";
 
-                if ($relation['target_controller'] != 'content') {
+                if ($relation['target_controller'] !== 'content') {
 
                     $this->setTablePrefix('');
 
@@ -251,6 +251,8 @@ class modelBackendContent extends modelContent {
 
         $this->delete('content_types', $ctype['id']);
         $this->delete('content_datasets', $ctype['id'], 'ctype_id');
+
+        $this->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
 
         $table_name = $this->table_prefix . $ctype['name'];
 

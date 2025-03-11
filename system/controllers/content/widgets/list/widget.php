@@ -13,6 +13,7 @@ class widgetContentList extends cmsWidget {
         $image_field     = $this->getOption('image_field');
         $teaser_field    = $this->getOption('teaser_field');
         $is_show_details = $this->getOption('show_details');
+        $offset          = $this->getOption('offset', 0);
         $limit           = $this->getOption('limit', 10);
         $teaser_len      = $this->getOption('teaser_len', 100);
 
@@ -179,7 +180,7 @@ class widgetContentList extends cmsWidget {
         }
 
         $items = $model->
-                limit($limit)->
+                limit($offset, $limit)->
                 getContentItems($ctype['name']);
         if (!$items) {
             return false;

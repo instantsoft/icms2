@@ -61,7 +61,7 @@ class widgetUsersList extends cmsWidget {
             $this->model_users->filterGroups($groups);
         }
 
-        $profiles = $this->model_users->limit($this->getOption('limit', 10))->getUsers();
+        $profiles = $this->model_users->limit($this->getOption('offset', 0), $this->getOption('limit', 10))->getUsers();
 
         if (!$profiles) {
             return false;

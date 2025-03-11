@@ -11,6 +11,7 @@ class widgetContentSlider extends cmsWidget {
         $big_image_field  = $this->getOption('big_image_field');
         $big_image_preset = $this->getOption('big_image_preset');
         $teaser_field     = $this->getOption('teaser_field');
+        $offset           = $this->getOption('offset', 0);
         $limit            = $this->getOption('limit', 10);
         $delay            = $this->getOption('delay', 5);
         $teaser_len       = $this->getOption('teaser_len', 100);
@@ -56,7 +57,7 @@ class widgetContentSlider extends cmsWidget {
         list($ctype, $model) = cmsEventsManager::hook('content_list_filter', [$ctype, $model]);
         list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", [$ctype, $model]);
 
-        $items = $model->limit($limit)->getContentItems($ctype['name']);
+        $items = $model->limit($offset, $limit)->getContentItems($ctype['name']);
         if (!$items) {
             return false;
         }

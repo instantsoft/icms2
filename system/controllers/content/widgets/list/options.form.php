@@ -186,14 +186,19 @@ class formWidgetContentListOptions extends cmsForm {
                         'title' => LANG_WD_CONTENT_AUTO_USER,
                         'hint'  => LANG_WD_CONTENT_AUTO_USER_HINT
                     )),
-                    new fieldNumber('options:limit', array(
+                    new fieldNumber('options:offset', [
+                        'title'   => LANG_LIST_OFFSET,
+                        'hint'    => LANG_LIST_OFFSET_HINT,
+                        'default' => 0
+                    ]),
+                    new fieldNumber('options:limit', [
                         'title'   => LANG_LIST_LIMIT,
                         'default' => 10,
                         'rules'   => [
                             ['required'],
                             ['min', 1]
                         ]
-                    ))
+                    ])
                 )
             ),
             'fields_options' => array(

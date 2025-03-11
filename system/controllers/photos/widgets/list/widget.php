@@ -103,7 +103,7 @@ class widgetPhotosList extends cmsWidget {
             $photo->model->filterGtEqual('height', $this->getOption('height'));
         }
 
-        $photo->model->limit($this->getOption('limit', 10));
+        $photo->model->limit($this->getOption('offset', 0), $this->getOption('limit', 10));
 
         $photos = $photo->getPhotosList();
         if (!$photos) { return false; }

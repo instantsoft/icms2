@@ -15,6 +15,7 @@ class widgetCommentsList extends cmsWidget {
         $show_list    = array_filter($this->getOption('show_list', []));
         $show_avatars = $this->getOption('show_avatars', true);
         $show_text    = $this->getOption('show_text', false);
+        $offset       = $this->getOption('offset', 0);
         $limit        = $this->getOption('limit', 10);
 
         $model = cmsCore::getModel('comments');
@@ -39,7 +40,7 @@ class widgetCommentsList extends cmsWidget {
             $model->filterIn('target_subject', $show_targets);
         }
 
-        $items = $model->filterIsNull('is_deleted')->limit($limit)->getComments();
+        $items = $model->filterIsNull('is_deleted')->limit($offset, $limit)->getComments();
         if (!$items) {
             return false;
         }

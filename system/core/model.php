@@ -1854,12 +1854,13 @@ class cmsModel {
      */
     public function orderBy($field, $direction = '', $is_force_index_by_field = false) {
 
+        // в названии поля не может быть функции
         if (strpos($field, '(') !== false) {
             return $this;
-        } // в названии поля не может быть функции
-        if ($direction) {
-            $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
         }
+
+        $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
+
         if (strpos($field, '.') === false) {
             $field = 'i.' . $field;
         }
@@ -1903,17 +1904,10 @@ class cmsModel {
 
     public function limit($from, $howmany = 0) {
 
-        $this->limit = (int) $from;
-        $howmany     = (int) $howmany;
-
-        if ($this->limit < 0) {
-            $this->limit = 0;
-        }
+        $this->limit = max(0, (int) $from);
+        $howmany     = max(0, (int) $howmany);
 
         if ($howmany) {
-            if ($howmany <= 0) {
-                $howmany = 15;
-            }
             $this->limit .= ', ' . $howmany;
         }
 

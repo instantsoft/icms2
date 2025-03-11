@@ -61,6 +61,11 @@ class formWidgetUsersListOptions extends cmsForm {
                     new fieldListGroups('options:groups', [
                         'title' => LANG_WD_USERS_LIST_GROUPS,
                     ]),
+                    new fieldNumber('options:offset', [
+                        'title'   => LANG_LIST_OFFSET,
+                        'hint'    => LANG_LIST_OFFSET_HINT,
+                        'default' => 0
+                    ]),
                     new fieldNumber('options:limit', [
                         'title'   => LANG_LIST_LIMIT,
                         'default' => 10,
