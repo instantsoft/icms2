@@ -41,31 +41,54 @@ trait deleteItem {
      */
     protected $delete_callback = null;
 
-    public function run($id) {
+    /**
+     * Имя request переменной со списком id
+     * @var string
+     */
+    protected $ids_key = 'selected';
+
+    public function run($id = null) {
 
         if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
             return cmsCore::error404();
         }
 
-        $item = $this->model->getItemById($this->table_name, $id);
+        if ($id) {
+            $ids = [$id];
+        } else {
+            $ids = $this->request->get($this->ids_key, []);
+        }
 
-        if (!$item) {
+        if (!$ids) {
+            return cmsCore::error404();
+        }
+
+        $items = $this->model->filterIn('id', $ids)->get($this->table_name);
+
+        if (!$items) {
             return cmsCore::error404();
         }
 
         $success = true;
 
-        if($this->delete_callback){
+        foreach ($items as $item) {
 
-            $success = call_user_func_array($this->delete_callback, [$item, $this->model]);
+            if (!$success) {
+                continue;
+            }
+
+            if ($this->delete_callback) {
+                $success = call_user_func_array($this->delete_callback, [$item, $this->model]);
+            }
+
+            if ($success) {
+                $this->model->delete($this->table_name, $item['id']);
+            }
         }
 
-        if($success){
+        if ($success) {
 
-            $this->model->delete($this->table_name, $id);
-
-            if($this->cache_key){
-
+            if ($this->cache_key) {
                 cmsCache::getInstance()->clean($this->cache_key);
             }
 

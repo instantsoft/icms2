@@ -3,8 +3,17 @@
 function grid_tags($controller) {
 
     $options = [
-        'order_by' => 'tag',
-        'order_to' => 'asc',
+        'order_by'       => 'tag',
+        'order_to'       => 'asc',
+        'is_selectable'  => true,
+        'select_actions' => [
+            [
+                'title'   => LANG_DELETE,
+                'action'  => 'submit',
+                'confirm' => LANG_TAGS_TAGS_DELETE_CONFIRM,
+                'url'     => $controller->cms_template->href_to('delete')
+            ]
+        ]
     ];
 
     $columns = [
@@ -34,7 +43,7 @@ function grid_tags($controller) {
             'title'   => LANG_DELETE,
             'class'   => 'delete',
             'href'    => href_to($controller->root_url, 'delete', ['{id}']),
-            'confirm' => LANG_TAGS_TAG_DELETE_CONFIRM,
+            'confirm' => LANG_TAGS_TAG_DELETE_CONFIRM
         ]
     ];
 

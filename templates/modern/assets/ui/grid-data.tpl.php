@@ -28,30 +28,45 @@ if(!empty($page_title)) {
 <?php } ?>
 
 <div id="icms-grid" class="position-relative dataTables_wrapper mb-4">
-    <div class="d-flex" v-cloak v-if="hasToolbar">
+    <div class="d-flex mb-1" v-cloak v-if="hasToolbar">
         <div v-if="options.select_actions">
             <form-select v-model="select_action_key" :params="{items: selectActionsItems}" :disabled="selectedRows.length === 0"></form-select>
         </div>
-        <div class="ml-auto d-flex" v-if="switchable.columns || editable">
-            <div :class="{'mr-3': switchable.columns && editable}" v-if="editable">
-                <button class="btn btn-light btn-sm" @click="enableEditMode" v-if="!edit_mode_enable">
-                    <?php echo html_svg_icon('solid', 'pen'); ?><span class="d-none d-lg-inline"> <?php echo LANG_GRID_EDIT_MODE; ?></span>
-                </button>
-                <button class="btn btn-success btn-sm mr-1" @click="saveEditMode" v-if="edit_mode_enable" :disabled="save_is_busy" :class="{'is-busy': save_is_busy}">
-                    <span>
-                        <?php echo html_svg_icon('solid', 'save'); ?>
-                        <span class="d-none d-lg-inline"> <?php echo LANG_SAVE; ?></span>
-                    </span>
-                </button>
-                <button class="btn btn-light btn-sm" @click="disableEditMode" v-if="edit_mode_enable">
-                    <?php echo html_svg_icon('solid', 'reply'); ?><span class="d-none d-lg-inline"> <?php echo LANG_CANCEL; ?></span>
-                </button>
+        <div class="ml-auto d-flex">
+            <div class="text-right" v-if="options.is_selectable">
+                <div class="datagrid_navigation datagrid_select_actions">
+                    <button type="button" class="ml-2 btn btn-primary btn-sm" v-if="selectedRows.length !== rows.length" @click="selectRows">
+                        <?php echo LANG_SELECT_ALL; ?>
+                    </button>
+                    <button type="button" class="ml-2 btn btn-warning btn-sm" v-if="selectedRows.length > 0" @click="deSelectRows">
+                        <?php echo LANG_DESELECT_ALL; ?>
+                    </button>
+                    <button type="button" class="ml-2 btn btn-secondary btn-sm" v-if="selectedRows.length > 0 && selectedRows.length !== rows.length" @click="invertSelectRows">
+                        <?php echo LANG_INVERT_ALL; ?>
+                    </button>
+                </div>
             </div>
-            <form-multiselect use_slot="true" v-model="switchable_columns_names" :params="{items: switchable.columns}" v-if="switchable.columns">
-                <a class="btn btn-light btn-sm" href="#">
-                    <?php echo html_svg_icon('solid', 'eye-slash'); ?> <span v-text="switchable.title"></span>
-                </a>
-            </form-multiselect>
+            <div class="d-flex ml-2" v-if="switchable.columns || editable">
+                <div :class="{'mr-3': switchable.columns && editable}" v-if="editable">
+                    <button class="btn btn-light btn-sm" @click="enableEditMode" v-if="!edit_mode_enable">
+                        <?php echo html_svg_icon('solid', 'pen'); ?><span class="d-none d-lg-inline"> <?php echo LANG_GRID_EDIT_MODE; ?></span>
+                    </button>
+                    <button class="btn btn-success btn-sm mr-1" @click="saveEditMode" v-if="edit_mode_enable" :disabled="save_is_busy" :class="{'is-busy': save_is_busy}">
+                        <span>
+                            <?php echo html_svg_icon('solid', 'save'); ?>
+                            <span class="d-none d-lg-inline"> <?php echo LANG_SAVE; ?></span>
+                        </span>
+                    </button>
+                    <button class="btn btn-light btn-sm" @click="disableEditMode" v-if="edit_mode_enable">
+                        <?php echo html_svg_icon('solid', 'reply'); ?><span class="d-none d-lg-inline"> <?php echo LANG_CANCEL; ?></span>
+                    </button>
+                </div>
+                <form-multiselect use_slot="true" v-model="switchable_columns_names" :params="{items: switchable.columns}" v-if="switchable.columns">
+                    <a class="btn btn-light btn-sm" href="#">
+                        <?php echo html_svg_icon('solid', 'eye-slash'); ?> <span class="d-none d-lg-inline-block" v-text="switchable.title"></span>
+                    </a>
+                </form-multiselect>
+            </div>
         </div>
     </div>
     <div class="table-responsive" :style="{'overflow-x': tableResponsiveOverflow}">
@@ -101,7 +116,7 @@ if(!empty($page_title)) {
         </div>
         <div class="ml-auto col col-lg-7 text-right" v-if="options.is_selectable">
             <div class="datagrid_navigation datagrid_select_actions">
-                <small class="shint text-muted"><?php echo LANG_GRID_SELECT_HINT; ?></small>
+                <small class="shint text-muted d-none d-lg-inline-block"><?php echo LANG_GRID_SELECT_HINT; ?></small>
                 <button type="button" class="ml-2 btn btn-primary btn-sm" v-if="selectedRows.length !== rows.length" @click="selectRows">
                     <?php echo LANG_SELECT_ALL; ?>
                 </button>
