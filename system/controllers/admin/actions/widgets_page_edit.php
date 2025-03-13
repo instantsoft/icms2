@@ -26,6 +26,7 @@ class actionAdminWidgetsPageEdit extends cmsAction {
 
         if (!$id) {
             $form->removeField('urls', 'url_mask');
+            $form->removeField('title', 'layout');
         }
 
         if ($this->request->has('submit')) {

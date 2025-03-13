@@ -457,6 +457,7 @@
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Page &laquo;%s&raquo; has been created');
     define('LANG_CP_WIDGET_PAGE_URLS',          'URL binding');
     define('LANG_CP_WIDGET_PAGE_BODY_CSS',      'CSS classes for page body tag');
+    define('LANG_CP_WIDGET_PAGE_LAYOUT',        'Apply a layout for page');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Positive masks');
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Negative masks');
     define('LANG_CP_WIDGET_URL_MASK_NOT_HINT',  'On pages matching these masks, the widget will not be shown. Use a slash to specify the main page.');

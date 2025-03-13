@@ -23,6 +23,22 @@ class formAdminWidgetsPage extends cmsForm {
                         'rules' => [
                             ['max_length', 100]
                         ]
+                    ]),
+                    new fieldList('layout', [
+                        'title'   => LANG_CP_WIDGET_PAGE_LAYOUT,
+                        'generator' => function ($item) {
+                            $layouts = cmsTemplate::getInstance()->getAvailableTemplatesFiles('', '*.tpl.php');
+                            $items = ['' => LANG_BY_DEFAULT];
+                            if ($layouts) {
+                                foreach ($layouts as $layout) {
+                                    if ($layout == 'admin') {
+                                        continue;
+                                    }
+                                    $items[$layout] = string_lang('LANG_' . cmsConfig::get('template') . '_THEME_LAYOUT_' . $layout, $layout);
+                                }
+                            }
+                            return $items;
+                        }
                     ])
                 ]
             ],

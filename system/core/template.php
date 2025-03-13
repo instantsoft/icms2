@@ -3247,6 +3247,23 @@ class cmsTemplate {
 
         $config = $this->site_config;
 
+        // CSS классы для тега body
+        $body_classes = [];
+
+        $matched_pages = $core->getMatchedPages();
+        if ($matched_pages && $matched_pages != [0, 1]) {
+            foreach ($matched_pages as $matched_page) {
+                if (!empty($matched_page['body_css'])) {
+                    $body_classes[] = $matched_page['body_css'];
+                }
+                if (!empty($matched_page['layout'])) {
+                    $this->setLayout($matched_page['layout']);
+                }
+            }
+        } else {
+            $body_classes[] = 'icms-frontpage';
+        }
+
         $layout = $this->getLayout();
 
         $template_file = $this->getTplFilePath($layout . '.tpl.php');
@@ -3266,20 +3283,6 @@ class cmsTemplate {
         // Есть ли поддержка динамической схемы
         if (!empty($this->manifest['properties']['is_dynamic_layout'])) {
             $rows = cmsCore::getModel('widgets')->getLayoutRows($this->name);
-        }
-
-        // CSS классы для тега body
-        $body_classes = [];
-
-        $matched_pages = $core->getMatchedPages();
-        if ($matched_pages && $matched_pages != [0, 1]) {
-            foreach ($matched_pages as $matched_page) {
-                if (!empty($matched_page['body_css'])) {
-                    $body_classes[] = $matched_page['body_css'];
-                }
-            }
-        } else {
-            $body_classes[] = 'icms-frontpage';
         }
 
         list($template_file, $matched_pages, $rows, $body_classes) =

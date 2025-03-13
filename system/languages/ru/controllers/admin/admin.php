@@ -477,6 +477,7 @@
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Страница &laquo;%s&raquo; создана');
     define('LANG_CP_WIDGET_PAGE_URLS',          'Фильтрация URL');
     define('LANG_CP_WIDGET_PAGE_BODY_CSS',      'CSS классы для тега body страницы');
+    define('LANG_CP_WIDGET_PAGE_LAYOUT',        'Применить макет для страницы');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Положительные маски');
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Отрицательные маски');
     define('LANG_CP_WIDGET_URL_MASK_NOT_HINT',  'На страницах, соответствующим этим маскам, виджет не будет показан. Для указания главной страницы используйте косую черту (слэш).');

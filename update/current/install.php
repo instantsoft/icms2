@@ -7,6 +7,8 @@ function install_package(){
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    $core->db->addTableField('widgets_pages', 'layout', 'VARCHAR(32) NULL DEFAULT NULL');
+
     save_controller_options([
         'users' => [
             'seo_h1' => 'Пользователи',
