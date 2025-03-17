@@ -658,11 +658,11 @@ class cmsCore {
      * Подключает указанный языковой файл.
      * Если файл не указан, то подключаются все PHP-файлы из папки текущего языка
      *
-     * @param string $file Относительный путь к файлу
+     * @param ?string $file Относительный путь к файлу
      * @param string $default Язык по умолчанию, если в текущем не найдено
      * @return boolean|array
      */
-    public static function loadLanguage($file = false, $default = 'ru') {
+    public static function loadLanguage($file = null, $default = 'ru') {
 
         $lang_dir = 'system/languages/' . self::$language;
 
@@ -849,28 +849,30 @@ class cmsCore {
             return;
         }
 
-        // если в URL присутствует знак вопроса, значит есть
-        // в нем есть GET-параметры которые нужно распарсить
+        // если в URL присутствует знак вопроса, значит в нём
+        // есть GET-параметры которые нужно распарсить
         if (($pos_que = mb_strpos($uri, '?')) !== false) {
 
             parse_str(mb_substr($uri, $pos_que + 1), $this->uri_query);
             $uri = mb_substr($uri, 0, $pos_que);
         }
 
+        // Разделение URI на сегменты
+        $segments = explode('/', $uri);
+
         // Обработка смены языка
         if (!empty($config->is_user_change_lang)) {
-
-            $segments = explode('/', $uri);
-
             // язык может быть только двухбуквенный, определяем его по первому сегменту
             // язык по умолчанию без префиксов, дубли нам не нужны
             if (!empty($segments[0]) && preg_match('/^[a-z]{2}$/i', $segments[0])) {
+
                 $lang_path = $config->root_path . 'system/languages/' . $segments[0] . '/';
+
                 if (is_dir($lang_path) && $segments[0] !== $config->language) {
 
                     self::$language = self::$language_href_prefix = array_shift($segments);
 
-                    $uri = implode('/', $segments);
+                    $uri = mb_substr($uri, 3);
 
                     $config->findLocalizedOn();
                 }
@@ -881,8 +883,6 @@ class cmsCore {
         $this->uri          = $this->uri_before_remap = $uri;
         $this->uri_absolute = $config->root . $uri;
 
-        // Разделение URI на сегменты
-        $segments             = explode('/', $uri);
         // Определяем контроллер из первого сегмента
         $this->uri_controller = $segments[0] ?? '';
         // Определяем действие из второго сегмента

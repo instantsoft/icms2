@@ -1,10 +1,10 @@
-<?php $config = cmsConfig::getInstance(); ?>
-<html class="h-100">
+<!DOCTYPE html>
+<html lang="<?php echo cmsCore::getLanguageName(); ?>" class="h-100">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title><?php echo ERR_SITE_OFFLINE; ?> &mdash; <?php echo $config->sitename; ?></title>
+        <title><?php echo ERR_SITE_OFFLINE; ?> &mdash; <?php echo cmsConfig::get('sitename'); ?></title>
         <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>">
         <?php
         $this->addMainTplCSSName([

@@ -140,7 +140,23 @@ class widgetContentList extends cmsWidget {
 
                 $this->disableCache();
 
-                $model->filterRelated('title', $current_ctype_item['title']);
+                $match_fields = [];
+
+                foreach ($fields as $field) {
+
+                    // в настройках полей должно быть включено их участие в индексе
+                    $is_text = $field['handler']->getOption('in_fulltext_search');
+
+                    if ($is_text && !$field['is_private'] && (!$field['groups_read'] || $this->cms_user->isInGroups($field['groups_read']))) {
+                        $match_fields[] = $field['name'];
+                    }
+                }
+
+                if (!$match_fields) {
+                    return false;
+                }
+
+                $model->filterRelated($match_fields, $current_ctype_item['title']);
 
                 if ($current_ctype_item['ctype_name'] == $ctype['name']) {
                     $model->filterNotEqual('id', $current_ctype_item['id']);

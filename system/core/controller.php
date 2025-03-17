@@ -16,6 +16,8 @@ class cmsController {
     private static $controllers;
     private static $mapping;
 
+    private static $lang_init = [];
+
     public $name;
     public $title;
     public $model = null;
@@ -87,30 +89,36 @@ class cmsController {
      */
     protected $unknown_action_as_index_param = false;
 
-    public function __construct( cmsRequest $request){
+    public function __construct(cmsRequest $request) {
 
         self::loadControllers();
 
-        $this->name = $this->name ? $this->name : mb_strtolower(get_called_class());
+        $this->name = $this->name ? $this->name : strtolower(get_called_class());
 
         $this->root_url = $this->name;
 
         $this->root_path = $this->cms_config->root_path . 'system/controllers/' . $this->name . '/';
 
-        $this->setRequest($request);
+        $this->setRequest($request)->loadModel()->loadLanguage();
 
-        cmsCore::loadControllerLanguage($this->name);
-
-        $title_constant = 'LANG_'.strtoupper($this->name).'_CONTROLLER';
-
-        $this->title = defined($title_constant) ? constant($title_constant) : $this->name;
-
-        $this->loadModel();
-
-        if ($this->useOptions){
+        if ($this->useOptions) {
             $this->options = $this->getOptions();
         }
+    }
 
+    protected function loadLanguage() {
+
+        // Если вдруг сменили язык в хуках, а ланг файл подключили ранее
+        if (empty(self::$lang_init[$this->name])) {
+
+            cmsCore::loadControllerLanguage($this->name);
+
+            $this->title = string_lang('LANG_' . $this->name . '_CONTROLLER', $this->name);
+
+            self::$lang_init[$this->name] = true;
+        }
+
+        return $this;
     }
 
     protected function loadModel() {
@@ -118,7 +126,7 @@ class cmsController {
         // Контроллер сам решает, какая модель ему нужна
         if($this->outer_controller_model) {
             $this->model = cmsCore::getModel($this->outer_controller_model);
-            return;
+            return $this;
         }
 
         // Мы в бэкенде?
@@ -133,6 +141,8 @@ class cmsController {
         } else {
             unset($this->model);
         }
+
+        return $this;
     }
 
     public function setRequest(cmsRequest $request) {

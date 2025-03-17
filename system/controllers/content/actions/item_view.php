@@ -650,38 +650,42 @@ class actionContentItemView extends cmsAction {
 
         $_ctype_name = $this->request->get('ctype_name');
 
-        if(!$_ctype_name){ return cmsCore::error404(); }
+        if (!$_ctype_name) {
+            return cmsCore::error404();
+        }
 
         $ctype_names = is_array($_ctype_name) ? $_ctype_name : [$_ctype_name];
 
         // есть типы контента по умолчанию
-        if ($this->cms_config->ctype_default){
-            foreach ($this->cms_config->ctype_default as $ctype_default) {
-                if(!in_array($ctype_default, $ctype_names)){
-                    $ctype_names[] = $ctype_default;
-                }
-            }
+        if ($this->cms_config->ctype_default) {
+            $ctype_names = array_unique(array_merge($ctype_names, $this->cms_config->ctype_default));
         }
 
         // переопределение названий типов контента
         $mapping = cmsConfig::getControllersMapping();
 
+        $first_ctype_name = $ctype_names[0];
+
         foreach ($ctype_names as $ctype_name) {
 
             $ctype = $this->model->getContentTypeByName($ctype_name);
             // типы контента тут должны быть известные
-            if (!$ctype) { return cmsCore::error404(); }
+            if (!$ctype) {
+                return cmsCore::error404();
+            }
 
             $this->model->joinModerationsTasks($ctype['name']);
 
-            list($ctype, $this->model) = cmsEventsManager::hook(['content_item_filter', "content_{$ctype['name']}_item_filter"], array($ctype, $this->model));
+            list($ctype, $this->model) = cmsEventsManager::hook(['content_item_filter', "content_{$ctype['name']}_item_filter"], [$ctype, $this->model]);
+
+            $has_out_ctype_default = !$this->cms_config->ctype_default || !in_array($ctype['name'], $this->cms_config->ctype_default);
 
             // Получаем запись
             $item = $this->model->getContentItemBySLUG($ctype['name'], $slug);
             if (!$item) {
 
                 // если тип контента не входит в список умолчаний, сразу 404
-                if(!$this->cms_config->ctype_default || !in_array($ctype['name'], $this->cms_config->ctype_default)){
+                if ($has_out_ctype_default) {
                     return cmsCore::error404();
                 }
 
@@ -691,40 +695,40 @@ class actionContentItemView extends cmsAction {
             // редиректы на новые урлы
             if ($this->cms_config->ctype_default &&
                     empty($this->cms_core->no_uri_change_redirect) &&
-                    in_array($this->cms_core->uri_action, $this->cms_config->ctype_default)){
+                    in_array($this->cms_core->uri_action, $this->cms_config->ctype_default)) {
 
-                $this->redirect(href_to($item['slug'] . '.html'), 301);
+                return $this->redirect(href_to($item['slug'] . '.html'), 301);
 
-            } elseif(!$this->cms_config->ctype_default || !in_array($ctype['name'], $this->cms_config->ctype_default)) {
+            } elseif ($has_out_ctype_default) {
 
                 // если название переопределено, то редиректим со оригинального на переопределенный
-                if($mapping){
-                    foreach($mapping as $name => $alias){
-                        if ($name == $ctype['name'] && !$this->cms_core->uri_controller_before_remap) {
-                            $this->redirect(href_to($alias.'/'. $item['slug'].'.html'), 301);
+                if ($mapping) {
+                    foreach ($mapping as $name => $alias) {
+                        if ($name === $ctype['name'] && !$this->cms_core->uri_controller_before_remap) {
+                            return $this->redirect(href_to($alias . '/' . $item['slug'] . '.html'), 301);
                         }
                     }
                 }
-
             }
 
             // должно быть точное совпадение
-            if ($slug !== $item['slug']){
-                $this->redirect(href_to($ctype['name'], $item['slug'] . '.html'), 301);
+            if ($slug !== $item['slug']) {
+                return $this->redirect(href_to($ctype['name'], $item['slug'] . '.html'), 301);
             }
 
-            if (!$ctype['options']['item_on']) { return cmsCore::error404(); }
+            if (!$ctype['options']['item_on']) {
+                return cmsCore::error404();
+            }
 
             // если тип контента сменился
-            if($ctype['name'] !== $_ctype_name){
+            if ($ctype['name'] !== $first_ctype_name) {
 
                 // новый uri
-                $this->cms_core->uri = preg_replace("#^{$_ctype_name}/#", $ctype['name'].'/', $this->cms_core->uri);
-                $this->cms_core->uri_before_remap = preg_replace("#^{$_ctype_name}/#", $ctype['name'].'/', $this->cms_core->uri_before_remap);
+                $this->cms_core->uri              = preg_replace("#^{$first_ctype_name}/#", $ctype['name'] . '/', $this->cms_core->uri);
+                $this->cms_core->uri_before_remap = preg_replace("#^{$first_ctype_name}/#", $ctype['name'] . '/', $this->cms_core->uri_before_remap);
 
                 // обновляем страницы и маски
                 $this->cms_core->setMatchedPages(null)->loadMatchedPages();
-
             }
 
             list(

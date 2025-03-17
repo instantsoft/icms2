@@ -28,6 +28,8 @@ class actionSearchIndex extends cmsAction {
             return cmsCore::error404();
         }
 
+        $results = [];
+
         $target_title = null;
 
         if ($this->request->has('q')) {
@@ -185,7 +187,7 @@ class actionSearchIndex extends cmsAction {
             'target_title' => $target_title,
             'page'         => $page,
             'perpage'      => $this->options['perpage'],
-            'results'      => $results ?? false,
+            'results'      => $results,
             'page_url'     => $page_url ?? false
         ]);
     }

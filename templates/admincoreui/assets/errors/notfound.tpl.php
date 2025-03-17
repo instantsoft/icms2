@@ -1,16 +1,17 @@
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo cmsCore::getLanguageName(); ?>">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
         <title><?php echo ERR_PAGE_NOT_FOUND; ?></title>
-        <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
+        <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>">
         <?php $this->addMainTplCSSName([
             'vendors/simple-line-icons/css/simple-line-icons',
             'style'
             ]); ?>
         <?php $this->head(false); ?>
-        <meta name="robots" content="noindex" />
+        <meta name="robots" content="noindex">
     </head>
     <body class="app flex-row align-items-center">
         <div class="container">
