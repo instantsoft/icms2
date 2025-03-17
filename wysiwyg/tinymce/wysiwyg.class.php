@@ -93,7 +93,8 @@ class cmsWysiwygTinymce {
         'images_preset'         => 'big',
         'placeholder'           => '',
         'license_key'           => 'gpl',
-        'referrer_policy'       => 'origin'
+        'referrer_policy'       => 'origin',
+        'sandbox_iframes'       => false
     ];
 
     public function __construct($config = []) {
