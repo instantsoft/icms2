@@ -412,7 +412,7 @@ class Jevix {
         }
 
         if (!isset($this->tagsRules[$tag][self::TR_PARAM_COMBINATION])) {
-            $this->tagsRules[$tag][self::TR_PARAM_COMBINATION] = array();
+            $this->tagsRules[$tag][self::TR_PARAM_COMBINATION] = [];
         }
 
         /**
@@ -461,14 +461,14 @@ class Jevix {
      * @param array $aProtocol Список протоколов
      * @param bool $bClearDefault Удалить дефолтные протоколы?
      */
-    function cfgSetLinkProtocolAllow($aProtocol, $bClearDefault=false){
+    function cfgSetLinkProtocolAllow($aProtocol, $bClearDefault = false) {
         if (!is_array($aProtocol)) {
-            $aProtocol=array($aProtocol);
+            $aProtocol = [$aProtocol];
         }
         if ($bClearDefault) {
-            $this->linkProtocolAllow=$aProtocol;
+            $this->linkProtocolAllow = $aProtocol;
         } else {
-            $this->linkProtocolAllow=array_merge($this->linkProtocolAllowDefault,$aProtocol);
+            $this->linkProtocolAllow = array_merge($this->linkProtocolAllowDefault, $aProtocol);
         }
     }
 
@@ -560,15 +560,15 @@ class Jevix {
      * Перемещение на указанную позицию во входной строке и считывание символа
      * @return string символ в указанной позиции
      */
-    protected function goToPosition($position){
+    protected function goToPosition($position) {
         $this->curPos = $position;
-        if($this->curPos < $this->textLen){
-            $this->curCh = $this->textBuf[$this->curPos];
-            $this->curChOrd = uniord($this->curCh);
+        if ($this->curPos < $this->textLen) {
+            $this->curCh      = $this->textBuf[$this->curPos];
+            $this->curChOrd   = mb_ord($this->curCh);
             $this->curChClass = $this->getCharClass($this->curChOrd);
         } else {
-            $this->curCh = null;
-            $this->curChOrd = 0;
+            $this->curCh      = null;
+            $this->curChOrd   = 0;
             $this->curChClass = 0;
         }
         return $this->curCh;
@@ -736,8 +736,8 @@ class Jevix {
      *
      * @return int
      */
-    protected function getCharClass($ord){
-        return isset($this->chClasses[$ord]) ? $this->chClasses[$ord] : self::PRINATABLE;
+    protected function getCharClass($ord) {
+        return $this->chClasses[$ord] ?? self::PRINATABLE;
     }
 
     /**
@@ -778,7 +778,7 @@ class Jevix {
         $this->saveState();
         $tag = '';
         $closeTag = '';
-        $params = array();
+        $params = [];
         $short = false;
         if(!$this->tagOpen($tag, $params, $short)) { return false; }
         // Короткая запись тега
@@ -846,7 +846,7 @@ class Jevix {
                 // Если закрылось то, что открылось - заканчиваем и возвращаем true
                 if($isClosedTag && $tag == $insideTag) { return; }
             }
-            $content.= isset($this->entities2[$this->curCh]) ? $this->entities2[$this->curCh] : $this->curCh;
+            $content.= $this->entities2[$this->curCh] ?? $this->curCh;
             $this->getCh();
         }
     }
@@ -911,7 +911,7 @@ class Jevix {
     }
 
 
-    protected function tagParams(&$params = array()){
+    protected function tagParams(&$params = []){
         $name = null;
         $value = null;
         while($this->tagParam($name, $value)){
@@ -952,23 +952,27 @@ class Jevix {
         return true;
     }
 
-    protected function tagParamValue(&$value, $quote){
-        if($quote !== false){
+    protected function tagParamValue(&$value, $quote) {
+
+        if ($quote !== false) {
             // Нормальный параметр с кавычкамию Получаем пока не кавычки и не конец
             $escape = false;
-            while($this->curChClass && ($this->curCh != $quote || $escape)){
+            while ($this->curChClass && ($this->curCh != $quote || $escape)) {
                 $escape = false;
                 // Экранируем символы HTML которые не могут быть в параметрах
-                $value.=isset($this->entities1[$this->curCh]) ? $this->entities1[$this->curCh] : $this->curCh;
+                $value  .= $this->entities1[$this->curCh] ?? $this->curCh;
                 // Символ ескейпа <a href="javascript::alert(\"hello\")">
-                if($this->curCh === '\\') { $escape = true; }
+                if ($this->curCh === '\\') {
+                    $escape = true;
+                }
                 $this->getCh();
             }
+
         } else {
             // долбаный параметр без кавычек. получаем его пока не пробел и не > и не конец
-            while($this->curChClass && !($this->curChClass & self::SPACE) && $this->curCh !== '>'){
+            while ($this->curChClass && !($this->curChClass & self::SPACE) && $this->curCh !== '>') {
                 // Экранируем символы HTML которые не могут быть в параметрах
-                $value.=isset($this->entities1[$this->curCh]) ? $this->entities1[$this->curCh] : $this->curCh;
+                $value .= $this->entities1[$this->curCh] ?? $this->curCh;
                 $this->getCh();
             }
         }
@@ -1008,7 +1012,7 @@ class Jevix {
         $tag = mb_strtolower($tag);
 
         // Получаем правила фильтрации тега
-        $tagRules = isset($this->tagsRules[$tag]) ? $this->tagsRules[$tag] : null;
+        $tagRules = $this->tagsRules[$tag] ?? null;
 
         // Проверка - родительский тег - контейнер, содержащий только другие теги (ul, table, etc)
         $parentTagIsContainer = $parentTag && isset($this->tagsRules[$parentTag][self::TR_TAG_CONTAINER]);
@@ -1048,7 +1052,7 @@ class Jevix {
             }
 
             // Атрибут тега разрешён? Какие возможны значения? Получаем список правил
-            $paramAllowedValues = isset($tagRules[self::TR_PARAM_ALLOWED][$param]) ? $tagRules[self::TR_PARAM_ALLOWED][$param] : false;
+            $paramAllowedValues = $tagRules[self::TR_PARAM_ALLOWED][$param] ?? false;
             if (empty($paramAllowedValues)) {
                 continue;
             }
@@ -1147,7 +1151,7 @@ class Jevix {
 
         // Проверка обязятельных параметров тега
         // Если нет обязательных параметров возвращаем только контент
-        $requiredParams = isset($tagRules[self::TR_PARAM_REQUIRED]) ? array_keys($tagRules[self::TR_PARAM_REQUIRED]) : array();
+        $requiredParams = isset($tagRules[self::TR_PARAM_REQUIRED]) ? array_keys($tagRules[self::TR_PARAM_REQUIRED]) : [];
         if ($requiredParams) {
             foreach ($requiredParams as $requiredParam) {
                 if (!isset($resParams[$requiredParam])) {
@@ -1283,7 +1287,7 @@ class Jevix {
                 // Пропускаем пробелы после <br> и запрещённых тегов, которые вырезаются парсером
                 if ($tag === 'br') {
                     $this->skipNL();
-                } elseif (isset($this->tagsRules[$tag]) and isset($this->tagsRules[$tag][self::TR_TAG_BLOCK_TYPE])) {
+                } elseif (isset($this->tagsRules[$tag][self::TR_TAG_BLOCK_TYPE])) {
                     $count = 0;
                     $this->skipNL($count, 2);
                 } elseif (!$tagText) {
@@ -1505,7 +1509,7 @@ class Jevix {
 
             // автопреобразование сущностей...
             if (!$spCount && $this->curCh === '&' && $this->htmlEntity($entity)){
-                $text.= isset($this->entities2[$entity]) ? $this->entities2[$entity] : $entity;
+                $text.= $this->entities2[$entity] ?? $entity;
             } elseif ($typoEnabled && ($this->curChClass & self::PUNCTUATUON) && $this->punctuation($punctuation)){
                 // Автопунктуация выключена
                 // Если встретилась пунктуация - добавляем ее
@@ -1536,7 +1540,6 @@ class Jevix {
             } elseif ($this->skipNL($brCount)){
                 // Перенос строки
                 if ($this->curParentTag
-                  and isset($this->tagsRules[$this->curParentTag])
                   and isset($this->tagsRules[$this->curParentTag][self::TR_TAG_NO_AUTO_BR])
                   and (is_null($this->openedTag) or isset($this->tagsRules[$this->openedTag][self::TR_TAG_NO_AUTO_BR]))
                   ) {
@@ -1551,10 +1554,10 @@ class Jevix {
                 // !!!Добавление слова
             } elseif ($newWord && $this->isAutoLinkMode && ($this->curChClass & self::LAT) && $this->openedTag!=='a' && $this->url($url, $href)){
                 // URL
-                $text.= $this->makeTag('a' , array('href' => $href), $url, false);
+                $text.= $this->makeTag('a' , ['href' => $href], $url, false);
             } elseif($this->curChClass & self::PRINATABLE){
                 // Экранируем символы HTML которые нельзя сувать внутрь тега (но не те? которые не могут быть в параметрах)
-                $text.=isset($this->entities2[$this->curCh]) ? $this->entities2[$this->curCh] : $this->curCh;
+                $text.= $this->entities2[$this->curCh] ?? $this->curCh;
                 $this->getCh();
                 $newWord = false;
                 $newLine = false;
@@ -1622,68 +1625,21 @@ class Jevix {
         return false;
     }
 
-    protected function eror($message){
-        $str = '';
+    protected function eror($message) {
+
+        $str    = '';
         $strEnd = min($this->curPos + 8, $this->textLen);
-        for($i = $this->curPos; $i < $strEnd; $i++){
-            $str.=$this->textBuf[$i];
+        for ($i = $this->curPos; $i < $strEnd; $i++) {
+            $str .= $this->textBuf[$i];
         }
 
-        $this->errors[] = array(
+        $this->errors[] = [
             'message' => $message,
             'pos'     => $this->curPos,
             'ch'      => $this->curCh,
             'line'    => 0,
             'str'     => $str,
-        );
+        ];
     }
-}
 
-/**
- * Функция ord() для мультибайтовых строк
- *
- * @param string $c символ utf-8
- * @return int код символа
- */
-function uniord($c) {
-    $h = ord($c[0]);
-    if ($h <= 0x7F) {
-    return $h;
-    } else if ($h < 0xC2) {
-    return false;
-    } else if ($h <= 0xDF) {
-    return ($h & 0x1F) << 6 | (ord($c[1]) & 0x3F);
-    } else if ($h <= 0xEF) {
-    return ($h & 0x0F) << 12 | (ord($c[1]) & 0x3F) << 6
-                 | (ord($c[2]) & 0x3F);
-    } else if ($h <= 0xF4) {
-    return ($h & 0x0F) << 18 | (ord($c[1]) & 0x3F) << 12
-                 | (ord($c[2]) & 0x3F) << 6
-                 | (ord($c[3]) & 0x3F);
-    } else {
-    return false;
-    }
-}
-
-/**
- * Функция chr() для мультибайтовых строк
- *
- * @param int $c код символа
- * @return string символ utf-8
- */
-function unichr($c) {
-    if ($c <= 0x7F) {
-    return chr($c);
-    } else if ($c <= 0x7FF) {
-    return chr(0xC0 | $c >> 6) . chr(0x80 | $c & 0x3F);
-    } else if ($c <= 0xFFFF) {
-    return chr(0xE0 | $c >> 12) . chr(0x80 | $c >> 6 & 0x3F)
-                    . chr(0x80 | $c & 0x3F);
-    } else if ($c <= 0x10FFFF) {
-    return chr(0xF0 | $c >> 18) . chr(0x80 | $c >> 12 & 0x3F)
-                    . chr(0x80 | $c >> 6 & 0x3F)
-                    . chr(0x80 | $c & 0x3F);
-    } else {
-    return false;
-    }
 }

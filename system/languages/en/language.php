@@ -492,7 +492,7 @@
     define('LANG_DELETE_FOLDER_CONFIRM',     'Are you sure you want to delete the folder? Its contents will be deleted too!');
     define('LANG_CP_ACTIONS',                'Actions');
     define('LANG_SELECTED_ACTIONS',          'Actions on selected');
-    define('LANG_BY_DEFAULT',                'Default');
+    define('LANG_BY_DEFAULT',                'By Default');
     define('LANG_BASIC_OPTIONS',             'Basic');
     define('LANG_YES',                       'Yes');
     define('LANG_NO',                        'No');

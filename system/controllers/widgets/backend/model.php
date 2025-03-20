@@ -144,7 +144,7 @@ class modelBackendWidgets extends modelWidgets {
 
         $this->useCache('widgets.pages');
 
-        $this->joinLeft('content_types', 'ct', "i.name LIKE concat(ct.name, '.%')")->select('ct.title', 'title_subject');
+        $this->joinLeft('content_types', 'ct', "i.name LIKE concat(ct.name, '.%')")->select('ct.title', 'title_subject_ctype');
 
         return $this->getItemById('widgets_pages', $id, function ($item, $model) {
 
@@ -152,6 +152,10 @@ class modelBackendWidgets extends modelWidgets {
             $item['countries'] = cmsModel::yamlToArray($item['countries']);
 
             $item['is_custom'] = !empty($item['title']);
+
+            if (!$item['title_subject']) {
+                $item['title_subject'] = $item['title_subject_ctype'];
+            }
 
             $item['title'] = !empty($item['title']) ?
                     $item['title'] :
