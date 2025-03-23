@@ -1,11 +1,32 @@
 <?php
 /**
- * 2.17.2 => 2.17.3
+ * 2.17.1 => 2.17.2
  */
 function install_package(){
 
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
+
+    $core->db->addTableField('widgets_pages', 'layout', 'VARCHAR(32) NULL DEFAULT NULL');
+
+    save_controller_options([
+        'users' => [
+            'seo_h1' => 'Пользователи',
+            'seo_title' => 'Пользователи{page:, %s}'
+        ],
+        'auth' => [
+            'seo_h1' => 'Представьтесь, пожалуйста',
+            'seo_title' => 'Авторизация на сайте'
+        ],
+        'photos' => [
+            'seo_h1' => 'Все изображения',
+            'seo_title' => 'Все изображения{page: %s}'
+        ],
+        'search' => [
+            'seo_h1' => '{query?|Поиск}{query?Результаты поиска по запросу «%s»}',
+            'seo_title' => '{query?|Поиск}{query?Результаты поиска по запросу «%s»}'
+        ]
+    ]);
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////

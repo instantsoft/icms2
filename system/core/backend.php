@@ -466,7 +466,7 @@ class cmsBackend extends cmsController {
 
         $user = cmsCore::getModel('users')->filterEqual('email', $name)->getUser();
 
-        if ($user === false) {
+        if (!$user) {
             return $this->cms_template->renderJSON([
                 'error'   => true,
                 'message' => sprintf(LANG_CP_USER_NOT_FOUND, $name)

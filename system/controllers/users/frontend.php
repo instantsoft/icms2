@@ -361,7 +361,9 @@ class users extends cmsFrontend {
         $datasets[''] = [
             'name'  => '',
             'title' => LANG_USERS_DS_LATEST,
-            'order' => ['date_reg', 'desc']
+            'filter' => function ($model, $dset) {
+                return $model->orderBy('i.date_reg', 'desc');
+            }
         ];
 
         // Онлайн
@@ -369,8 +371,8 @@ class users extends cmsFrontend {
             $datasets['online'] = [
                 'name'   => 'online',
                 'title'  => LANG_USERS_DS_ONLINE,
-                'order'  => ['date_log', 'desc'],
                 'filter' => function ($model, $dset) {
+                    $model->orderBy('i.date_log', 'desc');
                     return $model->joinSessionsOnline('i')->filterOnlineUsers();
                 }
             ];
@@ -381,16 +383,23 @@ class users extends cmsFrontend {
             $datasets['rating'] = [
                 'name'  => 'rating',
                 'title' => LANG_USERS_DS_RATED,
-                'order' => ['karma desc, rating desc', '']
+                'filter' => function ($model, $dset) {
+                    return $model->orderByList([
+                        ['by' => 'karma', 'to' => 'desc'],
+                        ['by' => 'rating', 'to' => 'desc']
+                    ]);
+                }
             ];
         }
 
         // Популярные
         if ($this->options['is_ds_popular']) {
             $datasets['popular'] = [
-                'name'  => 'popular',
-                'title' => LANG_USERS_DS_POPULAR,
-                'order' => ['friends_count', 'desc']
+                'name'   => 'popular',
+                'title'  => LANG_USERS_DS_POPULAR,
+                'filter' => function ($model, $dset) {
+                    return $model->orderBy('i.friends_count', 'desc');
+                }
             ];
         }
 
@@ -402,8 +411,8 @@ class users extends cmsFrontend {
                 $datasets[$group['name']] = [
                     'name'   => $group['name'],
                     'title'  => $group['title'],
-                    'order'  => ['date_reg', 'desc'],
                     'filter' => function ($model, $dset) {
+                        $model->orderBy('i.date_reg', 'desc');
                         return $model->filterGroupByName($dset['name']);
                     }
                 ];

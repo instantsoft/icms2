@@ -14,7 +14,10 @@
 
     $is_can_add = !empty($permissions['reply']) && $entry['parent_id'] == 0;
     $is_can_edit = ($entry['user']['id']==$user->id) || $user->is_admin;
-    $is_can_delete = ($entry['user']['id']==$user->id) || $permissions['delete'];
+    $is_can_delete = ($entry['user']['id']==$user->id) || !empty($permissions['delete']);
+    if(isset($permissions['delete_handler'])){
+        $is_can_delete = $permissions['delete_handler']($entry);
+    }
 
     if (empty($entry['replies_count'])){ $entry['replies_count'] = 0; }
 

@@ -254,7 +254,7 @@ class cmsDatabase {
      * Возвращает информацию о сервере
      * Версию и тип (mysql или mariadb)
      * ['version' => '8.0.0', 'type' => 'MySQL']
-     * 
+     *
      * @return array
      */
     public function getServerInfo() {
@@ -603,6 +603,23 @@ class cmsDatabase {
         return $result->fetch_row();
     }
 
+    public function fetchAll($result) {
+
+        // Если драйвер mysqlnd или PHP >= 8.1.0
+        if (method_exists($result, 'fetch_all')) {
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        // совместимость с libmysqlclient
+        $data = [];
+
+        while ($item = $result->fetch_assoc()) {
+            $data[] = $item;
+        }
+
+        return $data;
+    }
+
     public function error() {
         return $this->mysqli->error;
     }
@@ -776,10 +793,7 @@ class cmsDatabase {
         $result = $this->query($sql, false, $quiet);
 
         if (!$this->mysqli->errno) {
-            $data = [];
-            while ($item = $this->fetchAssoc($result)) {
-                $data[] = $item;
-            }
+            $data = $this->fetchAll($result);
             $this->freeResult($result);
             return $data;
         } else {

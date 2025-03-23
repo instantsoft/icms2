@@ -113,10 +113,10 @@ class cmsController {
 
             cmsCore::loadControllerLanguage($this->name);
 
-            $this->title = string_lang('LANG_' . $this->name . '_CONTROLLER', $this->name);
-
             self::$lang_init[$this->name] = true;
         }
+
+        $this->title = string_lang('LANG_' . $this->name . '_CONTROLLER', $this->name);
 
         return $this;
     }

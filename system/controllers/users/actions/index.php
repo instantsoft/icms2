@@ -20,10 +20,6 @@ class actionUsersIndex extends cmsAction {
             $this->model = $dataset['filter']($this->model, $dataset);
         }
 
-        if (!empty($datasets[$dataset_name]['order'])) {
-            $this->model->orderBy($datasets[$dataset_name]['order'][0], $datasets[$dataset_name]['order'][1]);
-        }
-
         // Формируем базовые URL для страниц
         $page_url = [
             'base'  => href_to($this->name, $dataset_name ? $dataset_name : ''),

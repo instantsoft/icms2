@@ -649,7 +649,7 @@ class cmsModel {
         self::$global_localized = false;
     }
 
-    public function replaceTranslatedField($item, $table_name = false) {
+    public function replaceTranslatedField(array $item) {
 
         // предполагается, что язык в настройках -
         // основной язык и основные тексты хранятся
@@ -658,27 +658,23 @@ class cmsModel {
             return $item;
         }
 
-        if (!is_array($item)) {
-            return $item;
-        }
-
         $postfix = '_' . $this->lang;
 
-        foreach ($item as $key => $value) {
+        foreach ($item as $key => &$value) {
 
             $lang_key = $key . $postfix;
 
-            if (!isset($item[$lang_key])) {
-
-                if (is_array($value) && $value) {
-                    $item[$key] = $this->replaceTranslatedField($value, $table_name);
-                }
-
+            if (isset($item[$lang_key])) {
+                $value = $item[$lang_key];
                 continue;
             }
 
-            $item[$key] = $item[$lang_key];
+            if (is_array($value)) {
+                $value = $this->replaceTranslatedField($value);
+            }
         }
+
+        unset($value);
 
         return $item;
     }
@@ -1353,7 +1349,7 @@ class cmsModel {
             }
         }
 
-        if (!empty($dataset['sorting']) && !$only_filters) {
+        if (!empty($dataset['sorting']) && is_array($dataset['sorting']) && !$only_filters) {
 
             $success = true;
 
@@ -1834,14 +1830,48 @@ class cmsModel {
     /**
      * Устанавливает сортировку
      *
-     * @param string $order_by
+     * @param string $order_by Строка сортировки
+     * @param bool $is_append  Добавлять к существующей
      * @return $this
      */
-    public function orderByRaw($order_by) {
+    public function orderByRaw($order_by, $is_append = false) {
 
-        $this->order_by = $order_by;
+        if ($is_append && $this->order_by) {
+
+            $this->order_by .= ', ' . $order_by;
+
+        } else {
+
+            $this->order_by = $order_by;
+        }
 
         return $this;
+    }
+
+    /**
+     * Подготавливает строку сортировки
+     *
+     * @param string $field Поле для сортировки
+     * @param string $direction Направление сортировки
+     * @param bool $strict_field_name Если передано true, то в $field не будет подставляться алиас i
+     * @return string
+     */
+    protected function prepareOrderBy($field, $direction = '', $strict_field_name = false) {
+
+        if ($direction) {
+            $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
+        }
+
+        // в названии поля не может быть функции
+        if (strpos($field, '(') !== false) {
+            return '';
+        }
+
+        if (!$strict_field_name && strpos($field, '.') === false) {
+            $field = 'i.' . $field;
+        }
+
+        return $field . ' ' . $direction;
     }
 
     /**
@@ -1853,19 +1883,7 @@ class cmsModel {
      * @return $this
      */
     public function orderBy($field, $direction = '', $is_force_index_by_field = false) {
-
-        // в названии поля не может быть функции
-        if (strpos($field, '(') !== false) {
-            return $this;
-        }
-
-        $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
-
-        if (strpos($field, '.') === false) {
-            $field = 'i.' . $field;
-        }
-
-        return $this->orderByRaw($field . ' ' . $direction);
+        return $this->orderByRaw($this->prepareOrderBy($field, $direction));
     }
 
     /**
@@ -1874,29 +1892,12 @@ class cmsModel {
      * @param array $list Массив сортировок с ключами by и to
      * @return $this
      */
-    public function orderByList($list) {
+    public function orderByList(array $list) {
 
         $this->order_by = '';
 
-        if (is_array($list)) {
-
-            foreach ($list as $o) {
-
-                if (strpos($o['by'], '(') !== false) {
-                    continue;
-                }
-
-                $field     = $o['by'];
-                $direction = strtolower($o['to']) === 'desc' ? 'desc' : 'asc';
-
-                if (empty($o['strict']) && strpos($field, '.') === false) {
-                    $field = 'i.' . $field;
-                }
-                if ($this->order_by) {
-                    $this->order_by .= ', ';
-                }
-                $this->order_by .= $field . ' ' . $direction;
-            }
+        foreach ($list as $o) {
+            $this->orderByRaw($this->prepareOrderBy($o['by'], $o['to'], !empty($o['strict'])), true);
         }
 
         return $this;
@@ -1977,7 +1978,45 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getItem($table_name, $item_callback = false) {
+    /**
+     * Применяет коллбэк, локализацию и разбирает шифрованные поля
+     * для массива одной строки БД
+     *
+     * @param array $item              Массив одной строки БД
+     * @param ?callable $item_callback Коллбэк
+     * @param ?array $encoded_fields   Шифрованные поля
+     * @return type
+     */
+    protected function makeItem($item, $item_callback, $encoded_fields = null) {
+
+        if ($encoded_fields) {
+            foreach ($encoded_fields as $field) {
+                $item[$field] = $item[$field] ? base64_decode($item[$field]) : null;
+                unset($item['enc_' . $field]);
+            }
+        }
+
+        if (is_callable($item_callback)) {
+            $item = call_user_func_array($item_callback, [$item, $this]);
+        }
+
+        if ($this->localized && $item !== false) {
+            $item = $this->replaceTranslatedField($item);
+        }
+
+        return $item;
+    }
+
+    /**
+     * Возвращает одну запись из базы, применяя все наложенные ранее фильтры
+     *
+     * @param string $table_name Имя таблицы
+     * @param ?callable $item_callback Коллбэк
+     * @return bool
+     */
+    public function getItem($table_name, $item_callback = null) {
+
+        $item = false;
 
         $this->table = $table_name;
 
@@ -1993,82 +2032,66 @@ class cmsModel {
         // то пробуем получить результаты из кеша
         if ($this->cache_key) {
 
-            $cache_key = $this->cache_key . '.' . md5($sql);
-            $cache     = cmsCache::getInstance();
+            $cache_key = $this->cache_key . '.' . hash('crc32b', $sql);
+
+            $cache = cmsCache::getInstance();
 
             $item = $cache->get($cache_key);
 
-            if ($item) {
-
-                if (is_callable($item_callback)) {
-                    $item = call_user_func_array($item_callback, [$item, $this]);
-                }
-
-                if ($this->localized) {
-                    $item = $this->replaceTranslatedField($item, $table_name);
-                }
-
-                $this->stopCache();
-
-                return $item;
-            }
-        }
-
-        $result = $this->db->query($sql);
-
-        if (!$this->db->numRows($result)) {
-            return false;
-        }
-
-        $item = $this->db->fetchAssoc($result);
-
-        // для кеша формируем массив без обработки коллбэком
-        if ($this->cache_key) {
-            $_item = $item;
-        }
-
-        if ($encoded_fields) {
-            foreach ($encoded_fields as $field) {
-                $item[$field] = $item[$field] ? base64_decode($item[$field]) : null;
-                unset($item['enc_' . $field]);
-            }
-        }
-
-        if (is_callable($item_callback)) {
-            $item = call_user_func_array($item_callback, [$item, $this]);
-        }
-
-        if ($this->localized) {
-            $item = $this->replaceTranslatedField($item, $table_name);
-        }
-
-        // если указан ключ кеша для этого запроса
-        // то сохраняем результаты в кеше
-        if ($this->cache_key) {
-            $cache->set($cache_key, $_item);
             $this->stopCache();
         }
 
-        $this->db->freeResult($result);
+        if ($item === false) {
 
-        return $item;
+            $result = $this->db->query($sql);
+
+            if (!$result || !($item = $this->db->fetchAssoc($result))) {
+                return false;
+            }
+
+            $this->db->freeResult($result);
+
+            // если указан ключ кеша для этого запроса
+            // то сохраняем результаты в кеше
+            if (isset($cache_key)) {
+                $cache->set($cache_key, $item);
+            }
+        }
+
+        return $this->makeItem($item, $item_callback, $encoded_fields);
     }
 
-    public function getItemById($table_name, $id, $item_callback = false) {
+    /**
+     * Возвращает одну запись из базы по полю id
+     *
+     * @param string $table_name       Имя таблицы
+     * @param int|string $id           Идентификатор поля id таблицы
+     * @param ?callable $item_callback Коллбэк
+     * @return type
+     */
+    public function getItemById($table_name, $id, $item_callback = null) {
 
         return $this->getItemByField($table_name, 'id', $id, $item_callback);
     }
 
-    public function getItemByField($table_name, $field_name, $field_value, $item_callback = false) {
+    /**
+     * Возвращает одну запись из базы,
+     * фильтруя по переданному имени поля и его значению
+     *
+     * @param string $table_name       Имя таблицы
+     * @param string $field_name       Имя поля
+     * @param mixed $field_value       Значение поля
+     * @param ?callable $item_callback Коллбэк
+     * @return type
+     */
+    public function getItemByField($table_name, $field_name, $field_value, $item_callback = null) {
 
         return $this->filterEqual($field_name, $field_value)->
                 getItem($table_name, $item_callback);
     }
 
-//============================================================================//
-//============================================================================//
     /**
-     * Возвращает количество записей по условиям
+     * Возвращает количество записей, применяя все наложенные ранее фильтры
      *
      * @param string $table_name Имя таблицы
      * @param string $by_field Поле подсчёта
@@ -2077,21 +2100,9 @@ class cmsModel {
      */
     public function getCount($table_name, $by_field = 'id', $reset = false) {
 
-        if(!$by_field){
-            $select = "{$this->distinct} 1";
-        } else {
-            $select = "COUNT({$this->distinct} i.{$by_field} ) as `count`";
-        }
+        $this->table = $table_name;
 
-        $sql = "SELECT {$this->straight_join} {$select}
-                FROM {#}{$table_name} i
-                {$this->index_action}";
-
-        if ($this->join) { $sql .= $this->join; }
-
-        if ($this->where) { $sql .= 'WHERE ' . $this->where . PHP_EOL; }
-
-        if ($this->group_by) { $sql .= 'GROUP BY ' . $this->group_by . PHP_EOL; }
+        $sql = $this->getSQL($by_field ? ['COUNT('.$this->distinct.' i.' . $by_field . ') as `count`'] : ['1']);
 
         if ($reset) {
             $this->resetFilters();
@@ -2101,38 +2112,40 @@ class cmsModel {
         // то пробуем получить результаты из кеша
         if ($this->cache_key) {
 
-            $cache_key = $this->cache_key . '.' . md5($sql);
+            $cache_key = $this->cache_key . '.' . hash('crc32b', $sql);
+
             $cache = cmsCache::getInstance();
 
+            $this->stopCache();
+
             if (false !== ($result = $cache->get($cache_key))) {
-                $this->stopCache();
                 return $result;
             }
         }
 
         $result = $this->db->query($sql);
 
-        $num_rows = $this->db->numRows($result);
+        if (!$result) {
+            return 0;
+        }
 
         if(!$by_field){
 
-            $count = $num_rows;
+            $count = $this->db->numRows($result);
 
         } else {
 
-            if (!$num_rows) {
+            if (!($item = $this->db->fetchAssoc($result))) {
                 $count = 0;
             } else {
-                $item  = $this->db->fetchAssoc($result);
-                $count = intval($item['count']);
+                $count = (int)$item['count'];
             }
         }
 
         // если указан ключ кеша для этого запроса
         // то сохраняем результаты в кеше
-        if ($this->cache_key) {
+        if (isset($cache_key)) {
             $cache->set($cache_key, $count);
-            $this->stopCache();
         }
 
         $this->db->freeResult($result);
@@ -2140,139 +2153,90 @@ class cmsModel {
         return $count;
     }
 
-//============================================================================//
-//============================================================================//
-
     /**
      * Возвращает записи из базы, применяя все наложенные ранее фильтры
      *
      * @param string $table_name Имя таблицы
-     * @param callable $item_callback Коллбэк функция
-     * @param string $key_field Имя ячейки массива из БД, значение которой станет ключём в результирующем массиве
+     * @param ?callable $item_callback Коллбэк
+     * @param ?string $key_field Имя ячейки массива из БД, значение которой станет ключём в результирующем массиве
      * @return array
      */
-    public function get($table_name, $item_callback = false, $key_field = 'id') {
+    public function get($table_name, $item_callback = null, $key_field = 'id') {
 
         $this->table = $table_name;
 
-        $items = $_items = [];
+        $raw_items = false;
 
         $sql = $this->getSQL();
 
         $encoded_fields = $this->encoded_fields;
 
-        // сбрасываем фильтры
         $this->resetFilters();
 
         // если указан ключ кеша для этого запроса
         // то пробуем получить результаты из кеша
         if ($this->cache_key) {
 
-            $cache_key = $this->cache_key . '.' . md5($sql);
+            $cache_key = $this->cache_key . '.' . hash('crc32b', $sql);
 
             $cache = cmsCache::getInstance();
 
-            $_items = $cache->get($cache_key);
+            $raw_items = $cache->get($cache_key);
 
-            if ($_items !== false) {
-
-                $this->stopCache();
-
-                // обрабатываем коллбэком
-                if (is_callable($item_callback)) {
-
-                    foreach ($_items as $key => $item) {
-
-                        $item = call_user_func_array($item_callback, [$item, $this]);
-                        if ($item === false) {
-                            continue;
-                        }
-
-                        if ($this->localized) {
-                            $item = $this->replaceTranslatedField($item, $table_name);
-                        }
-
-                        $items[$key] = $item;
-                    }
-                } else {
-                    return $_items;
-                }
-
-                return $items;
-            } else {
-                $_items = [];
-            }
-        }
-
-        $result = $this->db->query($sql);
-
-        // если запрос ничего не вернул, возвращаем ложь
-        if (!$this->db->numRows($result)) {
-            return false;
-        }
-
-        // перебираем все вернувшиеся строки
-        while ($item = $this->db->fetchAssoc($result)) {
-
-            $key = ($key_field && isset($item[$key_field])) ? $item[$key_field] : false;
-
-            // для кеша формируем массив без обработки коллбэком
-            if ($this->cache_key) {
-                if ($key) {
-                    $_items[$key] = $item;
-                } else {
-                    $_items[] = $item;
-                }
-            }
-
-            if ($encoded_fields) {
-                foreach ($encoded_fields as $efield) {
-                    $item[$efield] = $item[$efield] ? base64_decode($item[$efield]) : null;
-                    unset($item['enc_' . $efield]);
-                }
-            }
-
-            // если задан коллбек для обработки строк,
-            // то пропускаем строку через него
-            if (is_callable($item_callback)) {
-                $item = call_user_func_array($item_callback, [$item, $this]);
-                if ($item === false) {
-                    continue;
-                }
-            }
-
-            if ($this->localized) {
-                $item = $this->replaceTranslatedField($item, $table_name);
-            }
-
-            // добавляем обработанную строку в результирующий массив
-            if ($key) {
-                $items[$key] = $item;
-            } else {
-                $items[] = $item;
-            }
-        }
-
-        // если указан ключ кеша для этого запроса
-        // то сохраняем результаты в кеше
-        // сохраняем не обработанный коллбэком массив
-        if ($this->cache_key) {
-            $cache->set($cache_key, $_items);
             $this->stopCache();
         }
 
-        $this->db->freeResult($result);
+        // Ничего нет - получаем из базы
+        if ($raw_items === false) {
 
-        // возвращаем строки
-        return $items;
+            $result = $this->db->query($sql);
+
+            if (!$result || !($raw_items = $this->db->fetchAll($result))) {
+                return false;
+            }
+
+            $this->db->freeResult($result);
+
+            // если указан ключ кеша для этого запроса
+            // то сохраняем необработанный результат в кеше
+            if (isset($cache_key)) {
+                $cache->set($cache_key, $raw_items);
+            }
+        }
+
+        $result_items = [];
+
+        // Применяем всё что надо для записей и формируем результирующий массив
+        foreach ($raw_items as $item) {
+
+            $item = $this->makeItem($item, $item_callback, $encoded_fields);
+
+            if ($item === false) {
+                continue;
+            }
+
+            $key = $item[$key_field] ?? null;
+
+            if ($key !== null) {
+                $result_items[$key] = $item;
+            } else {
+                $result_items[] = $item;
+            }
+        }
+
+        return $result_items;
     }
 
-//============================================================================//
-//============================================================================//
+    /**
+     * Собирает SQL запрос
+     *
+     * @param ?array $custom_select Свой набор полей для выборки.
+     *                       Если передан, то ORDER BY и LIMIT не учитываются.
+     * @return string
+     */
+    public function getSQL($custom_select = null) {
 
-    public function getSQL() {
-
-        $select = implode(', ', $this->select);
+        $select = implode(', ', ($custom_select ?? $this->select));
 
         $sql = "SELECT {$this->distinct} {$this->straight_join} {$select}
                 FROM {#}{$this->table} i
@@ -2290,13 +2254,17 @@ class cmsModel {
             $sql .= 'GROUP BY ' . $this->group_by . PHP_EOL;
         }
 
-        if ($this->order_by) {
-            $sql .= 'ORDER BY ' . $this->order_by . PHP_EOL;
+        if (!$custom_select) {
+
+            if ($this->order_by) {
+                $sql .= 'ORDER BY ' . $this->order_by . PHP_EOL;
+            }
+
+            if ($this->limit) {
+                $sql .= 'LIMIT ' . $this->limit . PHP_EOL;
+            }
         }
 
-        if ($this->limit) {
-            $sql .= 'LIMIT ' . $this->limit . PHP_EOL;
-        }
 
         if ($this->read_type) {
             $sql .= $this->read_type . PHP_EOL;
