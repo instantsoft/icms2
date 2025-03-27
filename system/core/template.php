@@ -224,28 +224,13 @@ class cmsTemplate {
         return self::$instance;
     }
 
-    public function __construct($name = '') {
+    public function __construct($name = null) {
 
         $this->inherit_names[] = self::TEMPLATE_BASE_NAME;
 
         $this->site_config = cmsConfig::getInstance();
 
-        if (!$name) {
-
-            $device_type = cmsRequest::getDeviceType();
-
-            $name = $this->site_config->template;
-
-            // шаблон в зависимости от девайса
-            if ($device_type !== 'desktop') {
-                $device_template = cmsConfig::get('template_' . $device_type);
-                if ($device_template) {
-                    $name = $device_template;
-                }
-            }
-        }
-
-        $this->setBaseTemplate($name);
+        $this->setBaseTemplate($name ?? $this->site_config->http_template);
 
         $this->title = $this->site_config->sitename;
 

@@ -476,7 +476,7 @@ class cmsUser {
             $cookie_domain = '.' . $config->cookie_domain;
         }
 
-        session_set_cookie_params(0, '/;SameSite=Lax', $cookie_domain, cmsConfig::isSecureProtocol(), true);
+        session_set_cookie_params(0, '/;SameSite=Lax', $cookie_domain, cmsCore::getInstance()->request->isSecure(), true);
 
         session_start();
 
@@ -584,7 +584,7 @@ class cmsUser {
                 'path'     => $path,
                 'domain'   => $domain,
                 'samesite' => 'Lax',
-                'secure'   => cmsConfig::isSecureProtocol(),
+                'secure'   => cmsCore::getInstance()->request->isSecure(),
                 'httponly' => $http_only
             ]);
         }

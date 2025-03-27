@@ -2209,13 +2209,13 @@ class cmsModel {
         // Применяем всё что надо для записей и формируем результирующий массив
         foreach ($raw_items as $item) {
 
+            $key = $item[$key_field] ?? null;
+
             $item = $this->makeItem($item, $item_callback, $encoded_fields);
 
             if ($item === false) {
                 continue;
             }
-
-            $key = $item[$key_field] ?? null;
 
             if ($key !== null) {
                 $result_items[$key] = $item;

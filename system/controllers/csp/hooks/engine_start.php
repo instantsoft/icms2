@@ -28,7 +28,7 @@ class onCspEngineStart extends cmsAction {
 
             // Если для HTTP включить, то отчёты
             // не будут отсылаться, даже при заданной report-uri
-            if (cmsConfig::isSecureProtocol()) {
+            if ($this->cms_core->request->isSecure()) {
                 $list[] = 'report-to '.$endpoint_name;
             }
         }

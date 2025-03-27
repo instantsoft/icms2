@@ -112,10 +112,6 @@ class cmsConfig extends cmsConfigs {
             return $this;
         }
 
-        if (empty($this->data['detect_ip_key']) || !isset($_SERVER[$this->data['detect_ip_key']])) {
-            $this->data['detect_ip_key'] = 'REMOTE_ADDR';
-        }
-
         if (empty($this->data['session_save_path'])) {
 
             $this->data['session_save_path'] = session_save_path();
@@ -129,10 +125,6 @@ class cmsConfig extends cmsConfigs {
             }
         }
 
-        // Переходное для 2.14.0
-        if (!array_key_exists('allow_users_time_zone', $this->data)) {
-            $this->data['allow_users_time_zone'] = 1;
-        }
         if (!array_key_exists('bcmathscale', $this->data)) {
             $this->data['bcmathscale'] = 8;
         }
@@ -155,7 +147,6 @@ class cmsConfig extends cmsConfigs {
             $url_parts = parse_url(trim($this->host, '/'));
             $host = empty($url_parts['path']) ? $this->host : $url_parts['scheme'] . '://' . $url_parts['host'];
             $this->upload_host = str_replace($host, '', $this->upload_host);
-            $replace_upload_host_protocol = true;
         }
 
         $this->set('document_root', preg_replace('#(.*)('.preg_quote($this->root).')$#u', '$1', PATH . DIRECTORY_SEPARATOR));
@@ -163,25 +154,8 @@ class cmsConfig extends cmsConfigs {
         $this->set('system_path', $this->root_path . 'system' . DIRECTORY_SEPARATOR);
         $this->set('upload_path', realpath($this->document_root . $this->upload_root) . DIRECTORY_SEPARATOR);
         $this->set('cache_path', realpath($this->document_root . $this->cache_root) . DIRECTORY_SEPARATOR);
-
-        $protocol = 'http://';
-        if (
-                (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
-                (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ||
-                (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
-        ) {
-            $protocol = 'https://';
-            $this->host = str_replace('http://', $protocol, $this->host);
-            if (!empty($replace_upload_host_protocol)) {
-                $this->upload_host_abs = str_replace('http://', $protocol, $this->upload_host_abs);
-            }
-        }
-
-        $this->set('protocol', $protocol);
-
-        if (!empty($_SERVER['HTTP_HOST'])) {
-            $this->set('current_domain', $_SERVER['HTTP_HOST']);
-        }
+        // Шаблон для HTTP ответов. Может быть изменён.
+        $this->set('http_template', $this->data['template']);
 
         return $this;
     }
@@ -203,12 +177,12 @@ class cmsConfig extends cmsConfigs {
     }
 
     /**
-     * Проверяет, что текущий протокол HTTPS
-     *
+     * use cmsCore::getInstance()->request->isSecure()
+     * @deprecated since version 2.17.3
      * @return boolean
      */
     public static function isSecureProtocol() {
-        return self::get('protocol') === 'https://';
+        return false;
     }
 
 }

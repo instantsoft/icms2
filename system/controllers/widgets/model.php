@@ -22,73 +22,68 @@ class modelWidgets extends cmsModel {
             ['by' => 'i.ordering', 'to' => 'asc']
         ]);
 
-        $items = $this->get('layout_cols', function($item, $model) {
-            $item['positions'] = [$item['name']];
-            $item['options'] = cmsModel::stringToArray($item['options']);
+        $rows = [];
+        $child_positions = [];
+        $ns_rows = [];
+
+        $items = $this->get('layout_cols', function($item, $model) use(&$child_positions) {
+
+            $item['positions']   = [$item['name']];
+            $item['options']     = cmsModel::stringToArray($item['options']);
             $item['row_options'] = cmsModel::stringToArray($item['row_options']);
+
+            if ($item['parent_id']) {
+                $child_positions[$item['parent_id']]   = $child_positions[$item['parent_id']] ?? [];
+                $child_positions[$item['parent_id']][] = $item['name'];
+            }
+
             return $item;
-        }, false);
+        }, false) ?: [];
 
-        $rows = $ns_rows = $child_positions = [];
+        foreach ($items as $item) {
 
-        if($items){
+            $positions         = $child_positions[$item['id']] ?? [];
+            $positions[]       = $item['name'];
+            $item['positions'] = $positions;
 
-            $getRowItem = function($item, $positions){
-                $item['positions'] = $positions;
-                return [
-                    'id'        => $item['row_id'],
-                    'parent_id' => $item['parent_id'],
-                    'title'     => $item['row_title'],
-                    'tag'       => $item['row_tag'],
-                    'class'     => $item['row_class'],
-                    'options'   => $item['row_options'],
-                    'positions' => $positions,
-                    'cols'      => [$item['id'] => $item]
-                ];
-            };
+            $row_id          = $item['row_id'];
+            $parent_id       = $item['parent_id'];
+            $nested_position = $item['nested_position'];
 
-            foreach ($items as $item) {
-                if($item['parent_id']){
+            $row_data = [
+                'id'        => $row_id,
+                'parent_id' => $parent_id,
+                'title'     => $item['row_title'],
+                'tag'       => $item['row_tag'],
+                'class'     => $item['row_class'],
+                'options'   => $item['row_options'],
+                'positions' => $positions,
+                'cols'      => [$item['id'] => $item]
+            ];
 
-                    if(!isset($child_positions[$item['parent_id']])){
-                        $child_positions[$item['parent_id']] = [$item['name']];
-                    } else {
-                        $child_positions[$item['parent_id']][] = $item['name'];
-                    }
-
-                    if(!isset($ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']])){
-                        $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']] = $getRowItem($item, [$item['name']]);
-                    } else {
-                        $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['positions'][] = $item['name'];
-                        $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['cols'][$item['id']] = $item;
-                    }
-                }
-            }
-
-            foreach ($items as $item) {
-
-                if($item['parent_id']){
-                    continue;
-                }
-                if(isset($ns_rows[$item['id']])){
-                    $item['rows'] = $ns_rows[$item['id']];
-                }
-
-                if(!isset($rows[$item['row_id']])){
-
-                    $positions = [];
-                    if(isset($child_positions[$item['id']])){
-                        $positions = $child_positions[$item['id']];
-                    }
-                    $positions[] = $item['name'];
-
-                    $rows[$item['row_id']] = $getRowItem($item, $positions);
+            if ($parent_id) {
+                if (!isset($ns_rows[$parent_id][$nested_position][$row_id])) {
+                    $ns_rows[$parent_id][$nested_position][$row_id] = $row_data;
                 } else {
-                    $rows[$item['row_id']]['positions'][] = $item['name'];
-                    $rows[$item['row_id']]['cols'][$item['id']] = $item;
+                    $ns_rows[$parent_id][$nested_position][$row_id]['positions'][] = $item['name'];
+                    $ns_rows[$parent_id][$nested_position][$row_id]['cols'][$item['id']] = $item;
+                }
+            } else {
+                if (!isset($rows[$row_id])) {
+                    $rows[$row_id] = $row_data;
+                } else {
+                    $rows[$row_id]['positions'] = array_merge($rows[$row_id]['positions'], $positions);
+                    $rows[$row_id]['cols'][$item['id']] = $item;
                 }
             }
+        }
 
+        foreach ($rows as &$row) {
+            foreach ($row['cols'] as $col_id => &$col) {
+                if (isset($ns_rows[$col_id])) {
+                    $col['rows'] = $ns_rows[$col_id];
+                }
+            }
         }
 
         return $rows;

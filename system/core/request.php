@@ -508,6 +508,28 @@ class cmsRequest {
         return $ip;
     }
 
+    /**
+     * Проверяет, является ли запрос по протоколу HTTPS
+     *
+     * @return bool
+     */
+    public function isSecure() {
+
+        return (($https = $this->getServer('HTTPS')) && strtolower($https) !== 'off') ||
+                $this->getServer('SERVER_PORT') == 443 ||
+                $this->getServer('X_FORWARDED_PROTO') === 'https' ||
+                $this->getServer('X_FORWARDED_SSL') === 'on';
+    }
+
+    /**
+     * Возвращает схему запроса
+     *
+     * @return string https или http
+     */
+    public function getScheme() {
+        return $this->isSecure() ? 'https' : 'http';
+    }
+
 //============================================================================//
 //============================================================================//
 

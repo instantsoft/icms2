@@ -148,7 +148,7 @@ class typograph extends cmsFrontend {
         $jevix->cfgSetXHTMLMode(false);
 
         // Протокол ссылок
-        $jevix->cfgSetLinkProtocol($this->cms_config->protocol);
+        $jevix->cfgSetLinkProtocol($this->cms_core->request->getScheme() . '://');
 
         // Устанавливаем разрешённые теги. (Все не разрешенные теги считаются запрещенными.)
         $jevix->cfgAllowTags($this->preset['options']['allowed_tags']);

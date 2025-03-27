@@ -12,11 +12,11 @@ class actionAdminWidgetsRowAdd extends cmsAction {
 
         $form = $this->getSchemeRowForm('add', ['template' => $template_name]);
 
+        $form->removeField('basic', 'nested_position');
+
         $is_submitted = $this->request->has('title');
 
         $row = array_merge($form->parse($this->request, $is_submitted), ['template' => $template_name]);
-
-        $form->removeField('basic', 'nested_position');
 
         if ($is_submitted){
 

@@ -134,7 +134,20 @@ class formAdminSettings extends cmsForm {
                     new fieldString('detect_ip_key', [
                         'title'   => LANG_CP_SETTINGS_DETECT_IP_KEY,
                         'hint'    => LANG_CP_SETTINGS_DETECT_IP_KEY_HINT,
-                        'default' => 'REMOTE_ADDR'
+                        'default' => 'REMOTE_ADDR',
+                        'rules' => [
+                            ['required'],
+                            [function ($controller, $data, $value) {
+
+                                if ($value) {
+                                    if (!$controller->request->getServer($value, false)) {
+                                        return LANG_CP_SETTINGS_DETECT_IP_KEY_ERROR;
+                                    }
+                                }
+
+                                return true;
+                            }]
+                        ]
                     ])
                 ]
             ],
@@ -195,6 +208,11 @@ class formAdminSettings extends cmsForm {
                     new fieldList('template_tablet', [
                         'title' => LANG_CP_SETTINGS_TEMPLATE_TABLET,
                         'hint'  => '<a class="theme_settings theme_settings_options" href="#" data-url="' . href_to('admin', 'settings', 'theme') . '">' . LANG_CP_SETTINGS_TEMPLATE_OPTIONS . '</a>',
+                        'items' => ['' => LANG_BY_DEFAULT] + $frontend_templates
+                    ]),
+                    new fieldList('template_dev', [
+                        'title' => LANG_CP_SETTINGS_TEMPLATE_DEV,
+                        'hint'  => LANG_CP_SETTINGS_TEMPLATE_DEV_HINT.'<a class="theme_settings theme_settings_options" href="#" data-url="' . href_to('admin', 'settings', 'theme') . '">' . LANG_CP_SETTINGS_TEMPLATE_OPTIONS . '</a>',
                         'items' => ['' => LANG_BY_DEFAULT] + $frontend_templates
                     ]),
                     new fieldList('language', [

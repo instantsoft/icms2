@@ -44,8 +44,13 @@
                 }
                 $col_class = $value;
             }
+            if (!empty($col['rows'])) {
+                $col_class .= ' bg-gray-500';
+            } else {
+                $col_class .= ' bg-white';
+            }
             ?>
-            <div class="<?php echo $col_class; ?> p-1 bg-white widgets-layout-scheme-col" id="col-<?php echo $col['id']; ?>" data-id="<?php echo $col['id']; ?>">
+            <div class="<?php echo $col_class; ?> p-1 widgets-layout-scheme-col" id="col-<?php echo $col['id']; ?>" data-id="<?php echo $col['id']; ?>">
                 <?php if(!empty($col['rows']['before'])){ ?>
                     <?php $this->renderChild('widgets_scheme', ['rows' => $col['rows']['before'], 'rows_titles_pos' => $rows_titles_pos]); ?>
                 <?php } ?>

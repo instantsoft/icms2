@@ -363,24 +363,20 @@ function html_image($image, $size_preset = 'small', $alt = '', $attributes = [])
         $modal_preset = false;
     }
 
-    $src = html_image_src($image, $small_preset, true);
-    if (!$src) {
+    if (!$src = html_image_src($image, $small_preset, true)) {
         return '';
     }
 
-    $title = html((isset($attributes['title']) ? $attributes['title'] : $alt), false);
+    $title = html(($attributes['title'] ?? $alt), false);
     unset($attributes['title']);
 
     $attr_str = html_attr_str($attributes);
-    $class    = isset($attributes['class']) ? $attributes['class'] : '';
+    $class    = $attributes['class'] ?? '';
 
     $image_html = '<img src="' . $src . '" title="' . $title . '" alt="' . html($alt, false) . '" ' . $attr_str . ' class="img-fluid ' . $class . '">';
 
-    if ($modal_preset) {
-        $modal_src = html_image_src($image, $modal_preset, true);
-        if ($modal_src) {
-            return '<a title="' . $title . '" class="ajax-modal modal_image hover_image" href="' . $modal_src . '">' . $image_html . '</a>';
-        }
+    if ($modal_preset && ($modal_src = html_image_src($image, $modal_preset, true))) {
+        return '<a title="' . $title . '" class="ajax-modal modal_image hover_image" href="' . $modal_src . '">' . $image_html . '</a>';
     }
 
     return $image_html;
@@ -404,8 +400,8 @@ function html_gif_image($image, $size_preset = 'small', $alt = '', $attributes =
         $modal_preset = false;
     }
 
-    $class = isset($attributes['class']) ? $attributes['class'] : '';
-    if ($small_preset == 'micro') {
+    $class = $attributes['class'] ?? '';
+    if ($small_preset === 'micro') {
         $class .= ' micro_image';
     }
 

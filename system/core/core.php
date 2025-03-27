@@ -181,6 +181,9 @@ class cmsCore {
         // Локализация
         $this->initLanguage();
 
+        // Выясняем какой шаблон надо показать по умолчанию
+        $this->detectHttpTemplate();
+
         // Инициализируем шаблонизатор
         $template = cmsTemplate::getInstance();
 
@@ -800,6 +803,34 @@ class cmsCore {
 
 //============================================================================//
 //============================================================================//
+
+    /**
+     * Определяет шаблон HTTP ответа
+     *
+     * @return void
+     */
+    private function detectHttpTemplate() {
+
+        if (cmsUser::isAdmin()) {
+            $dev_template = cmsConfig::get('template_dev');
+            if ($dev_template) {
+                cmsConfig::getInstance()->set('http_template', $dev_template);
+                return;
+            }
+        }
+
+        $device_type = cmsRequest::getDeviceType();
+
+        // шаблон в зависимости от девайса
+        if ($device_type !== 'desktop') {
+            $device_template = cmsConfig::get('template_' . $device_type);
+            if ($device_template) {
+                cmsConfig::getInstance()->set('http_template', $device_template);
+            }
+        }
+
+        return;
+    }
 
     /**
      * Определяет язык браузера

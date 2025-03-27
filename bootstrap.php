@@ -53,6 +53,14 @@ if ($config->debug) {
     cmsDebugging::enable();
 }
 
+// Подключаем все необходимые хелперы
+cmsCore::loadLib('html.helper');
+cmsCore::loadLib('strings.helper');
+cmsCore::loadLib('files.helper');
+
+// Инициализируем ядро
+$core = cmsCore::getInstance();
+
 // Стартуем сессию если константа SESSION_START объявлена
 if (defined('SESSION_START')) {
 
@@ -62,14 +70,6 @@ if (defined('SESSION_START')) {
 // Устанавливаем часовую зону
 // Могла быть изменена в cmsUser::sessionStart
 date_default_timezone_set($config->time_zone);
-
-// Подключаем все необходимые хелперы
-cmsCore::loadLib('html.helper');
-cmsCore::loadLib('strings.helper');
-cmsCore::loadLib('files.helper');
-
-// Инициализируем ядро
-$core = cmsCore::getInstance();
 
 // Подключаем базу
 $core->connectDB();

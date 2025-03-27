@@ -28,10 +28,10 @@ class comments extends cmsFrontend {
         $this->target_id         = $this->request->get('target_id', 0);
         $this->target_user_id    = $this->request->get('target_user_id', 0);
 
-        $this->setLabels($this->request->get('labels', []));
+        $this->setLabels();
     }
 
-    public function setLabels($labels) {
+    public function setLabels($labels = []) {
 
         $this->labels = (object) array_merge([
             'comments'   => LANG_COMMENTS,

@@ -84,7 +84,19 @@
             </div>
         </div>
         <div id="addons_list_wrap">
-            <div id="addons_list"></div>
+            <div id="addons_list">
+                <div class="row align-items-stretch">
+                    <?php for ($i = 1; $i <= 6; $i++) { ?>
+                    <div class="col-xl-6 col-xxl-4 mb-4">
+                        <div class="card h-100 mb-0">
+                            <div class="card-header mx-0 skeleton skeleton-loading">&nbsp;</div>
+                            <div class="card-body d-flex flex-column h-100 skeleton skeleton-loading">&nbsp;</div>
+                            <div class="card-footer skeleton skeleton-loading">&nbsp;</div>
+                        </div>
+                    </div>
+                    <?php } ?>
+                </div>
+            </div>
             <button type="button" class="btn btn-primary btn-block" style="display: none" id="show_more" data-to-first="<?php echo LANG_RETURN_TO_FIRST; ?>" data-more="<?php echo LANG_SHOW_MORE; ?>">
                 <div class="spinner">
                     <div class="bounce1"></div>

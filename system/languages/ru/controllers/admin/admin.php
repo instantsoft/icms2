@@ -571,6 +571,7 @@
     define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Каждый с новой строки. Не указано - разрешено всем. Текущий ip адрес: %s');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'Как определять ip посетителя');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY_HINT', 'Ключ массива $_SERVER, содержащий реальный ip адрес посетителя. Не меняйте это значение, если не уверены. Значение по умолчанию подходит для большинства. Но, например, для CloudFlare необходимо указать HTTP_CF_CONNECTING_IP');
+    define('LANG_CP_SETTINGS_DETECT_IP_KEY_ERROR', 'Заданный вами ключ массива $_SERVER не найден.');
     define('LANG_CP_SETTINGS_SITE_ONLY_TO_USERS', 'Сайт доступен только авторизованным пользователям');
     define('LANG_CP_SETTINGS_SITE_ENABLED',     'Сайт включен');
     define('LANG_CP_SETTINGS_SITE_REASON',      'Причина отключения сайта');
@@ -589,6 +590,8 @@
     define('LANG_CP_SETTINGS_TEMPLATE_ADMIN',   'Тема оформления для панели управления');
     define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Тема оформления для мобильных устройств');
     define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Тема оформления для планшетов');
+    define('LANG_CP_SETTINGS_TEMPLATE_DEV',     'Тема оформления для разработчиков');
+    define('LANG_CP_SETTINGS_TEMPLATE_DEV_HINT', 'Будет показана администраторам. Используйте эту опцию для разработки шаблона.');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Настройки темы');
     define('LANG_CP_SETTINGS_TEMPLATE_INTH',    'Создать свою тему');
     define('LANG_CP_SETTINGS_EDITOR',           'HTML редактор по умолчанию');

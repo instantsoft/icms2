@@ -43,7 +43,7 @@
     var templates_has_options = <?php echo json_encode($templates_has_options); ?>;
 
     $(function(){
-        $('#template, #template_mobile, #template_tablet, #template_admin').each(function(){
+        $('#template, #template_mobile, #template_tablet, #template_admin, #template_dev').each(function(){
             $(this).change(function(){
                 setThemeConfigURL(this);
             }).triggerHandler('change');
