@@ -366,6 +366,11 @@ trait fieldable {
             $this->alterContentField($ctype_name, $field);
         }
 
+        // Таблица, где будет создана ячейка поля
+        $content_table_name = $this->getContentTypeTableName($ctype_name);
+
+        $field['parser']->hookAfterAdd($content_table_name, $field, $this);
+
         cmsEventsManager::hook('ctype_field_after_add', [$field, $ctype_name, $this]);
 
         return $field['id'];
@@ -387,8 +392,6 @@ trait fieldable {
         $field_parser = new $field_class(null, (isset($field['options']) ? ['options' => $field['options']] : null));
 
         $this->db->addTableField($content_table_name, $field['name'], $field_parser->getSQL());
-
-        $field_parser->hookAfterAdd($content_table_name, $field, $this);
 
         if ($field_parser->is_denormalization) {
 
