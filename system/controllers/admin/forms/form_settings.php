@@ -215,6 +215,12 @@ class formAdminSettings extends cmsForm {
                         'hint'  => LANG_CP_SETTINGS_TEMPLATE_DEV_HINT.'<a class="theme_settings theme_settings_options" href="#" data-url="' . href_to('admin', 'settings', 'theme') . '">' . LANG_CP_SETTINGS_TEMPLATE_OPTIONS . '</a>',
                         'items' => ['' => LANG_BY_DEFAULT] + $frontend_templates
                     ]),
+                    new fieldText('template_dev_allow_ips', [
+                        'title'         => LANG_CP_SETTINGS_TEMPLATE_DEV_IP,
+                        'hint'          => sprintf(LANG_CP_SETTINGS_ALLOW_IPS_HINT, cmsUser::getIp()),
+                        'is_strip_tags' => true,
+                        'visible_depend' => ['template_dev' => ['hide' => ['']]]
+                    ]),
                     new fieldList('language', [
                         'title'     => LANG_CP_SETTINGS_LANGUAGE,
                         'generator' => function ($item) {

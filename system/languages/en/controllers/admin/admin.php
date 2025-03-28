@@ -565,6 +565,7 @@
     define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Tablet theme');
     define('LANG_CP_SETTINGS_TEMPLATE_DEV',     'Theme for developers');
     define('LANG_CP_SETTINGS_TEMPLATE_DEV_HINT', 'Will be shown for administrators. Use this option to develop a template.');
+    define('LANG_CP_SETTINGS_TEMPLATE_DEV_IP',  'IP addresses from which a template will be available for developers');
     define('LANG_CP_SUBMIT_COMPILE',            'Save and compile %s');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Theme Settings');
     define('LANG_CP_SETTINGS_TEMPLATE_INTH',    'Create your own theme');

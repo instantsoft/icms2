@@ -814,8 +814,14 @@ class cmsCore {
         if (cmsUser::isAdmin()) {
             $dev_template = cmsConfig::get('template_dev');
             if ($dev_template) {
-                cmsConfig::getInstance()->set('http_template', $dev_template);
-                return;
+
+                $allow_ips = cmsConfig::get('template_dev_allow_ips');
+
+                if (!$allow_ips || string_in_mask_list(cmsUser::getIp(), $allow_ips)) {
+
+                    cmsConfig::getInstance()->set('http_template', $dev_template);
+                    return;
+                }
             }
         }
 

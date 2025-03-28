@@ -592,6 +592,7 @@
     define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Тема оформления для планшетов');
     define('LANG_CP_SETTINGS_TEMPLATE_DEV',     'Тема оформления для разработчиков');
     define('LANG_CP_SETTINGS_TEMPLATE_DEV_HINT', 'Будет показана администраторам. Используйте эту опцию для разработки шаблона.');
+    define('LANG_CP_SETTINGS_TEMPLATE_DEV_IP',  'IP адреса, с которых будет доступна тема для разработчиков');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Настройки темы');
     define('LANG_CP_SETTINGS_TEMPLATE_INTH',    'Создать свою тему');
     define('LANG_CP_SETTINGS_EDITOR',           'HTML редактор по умолчанию');

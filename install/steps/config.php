@@ -48,6 +48,8 @@ function create_config($path, $file) {
         'template_admin'              => $_SESSION['install']['site']['template_admin'],
         'template_mobile'             => '',
         'template_tablet'             => '',
+        'template_dev'                => '',
+        'template_dev_allow_ips'      => '',
         'db_host'                     => $_SESSION['install']['db']['host'],
         'db_base'                     => $_SESSION['install']['db']['base'],
         'db_user'                     => $_SESSION['install']['db']['user'],
@@ -113,21 +115,23 @@ function create_config($path, $file) {
 
 function write_config($file, $config) {
 
-    $dump = "<?php\n" .
-            "return array(\n\n";
+    $dump = '<?php' . PHP_EOL . PHP_EOL .
+            'return [' . PHP_EOL;
 
     foreach ($config as $key => $value) {
 
         $value = var_export($value, true);
 
-        $tabs = 10 - ceil((mb_strlen($key) + 3) / 4);
+        $gap = 28 - strlen($key);
 
-        $dump .= "\t'{$key}'";
-        $dump .= str_repeat("\t", $tabs);
-        $dump .= "=> $value,\n";
+        $dump .= str_repeat(' ', 4) . var_export($key, true);
+        $dump .= str_repeat(' ', $gap > 0 ? $gap : 0);
+        $dump .= '=> ' . $value . ',' . PHP_EOL;
     }
 
-    $dump .= "\n);\n";
+    $dump = rtrim($dump, ',' . PHP_EOL);
+
+    $dump .= PHP_EOL . '];' . PHP_EOL;
 
     return @file_put_contents($file, $dump);
 }
