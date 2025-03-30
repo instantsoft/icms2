@@ -32,10 +32,7 @@ class actionWallDelete extends cmsAction {
         $controller = cmsCore::getController($entry['controller']);
 
         // Получаем права доступа
-        $permissions = $controller->runHook('wall_permissions', [
-            'profile_type' => $entry['profile_type'],
-            'profile_id'   => $entry['profile_id']
-        ]);
+        $permissions = $controller->runHook('wall_permissions', [$entry['profile_type'], $entry['profile_id']]);
 
         if (!$permissions || !is_array($permissions)) {
             return $this->cms_template->renderJSON([

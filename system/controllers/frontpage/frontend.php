@@ -42,7 +42,7 @@ class frontpage extends cmsFrontend {
 
         $controller = cmsCore::getController($controller_name, $this->request);
 
-        return $controller->runHook('frontpage', ['action' => $action]);
+        return $controller->runHook('frontpage', [$action]);
     }
 
 }

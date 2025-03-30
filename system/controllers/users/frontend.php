@@ -188,7 +188,7 @@ class users extends cmsFrontend {
                     $controller = $this->tabs_controllers[$tab['controller']];
                 }
 
-                $tab_info = $controller->runHook('user_tab_info', ['profile' => $profile, 'tab_name' => $tab['name']]);
+                $tab_info = $controller->runHook('user_tab_info', [$profile, $tab['name']]);
 
                 if ($tab_info === false) {
                     unset($this->tabs[$tab['name']]);

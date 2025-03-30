@@ -38,36 +38,34 @@ function lang_date($date_string) {
 
 /**
  * Converts string from current language to SLUG
+ *
  * @param string $string Input string
  * @param boolean $disallow_numeric Disallow numeric SLUG
  * @return string
  */
-function lang_slug($string, $disallow_numeric = true) {
+function lang_slug(string $string, $disallow_numeric = true) {
 
-    $string = strip_tags(trim($string));
-    $string = mb_strtolower($string);
-    $string = str_replace(' ', '-', $string);
+    $string = mb_strtolower(strip_tags(trim($string)));
 
-    $slug = preg_replace('/[^a-zа-яё0-9\-\/]/u', '-', $string);
-    $slug = preg_replace('/([-]+)/i', '-', $slug);
-    $slug = trim($slug, '-');
+    $string = strtr($string, [
+        'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e',
+        'ё' => 'yo', 'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'i',
+        'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p',
+        'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h',
+        'ц' => 'c', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sch', 'ъ' => '',
+        'ы' => 'y', 'ь' => '', 'э' => 'e', 'ю' => 'yu', 'я' => 'ja'
+    ]);
 
-    $ru_en = [
-        'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd',
-        'е' => 'e', 'ё' => 'yo', 'ж' => 'zh', 'з' => 'z',
-        'и' => 'i', 'й' => 'i', 'к' => 'k', 'л' => 'l', 'м' => 'm',
-        'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's',
-        'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c',
-        'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sch', 'ъ' => '', 'ы' => 'y',
-        'ь' => '', 'э' => 'e', 'ю' => 'yu', 'я' => 'ja'
-    ];
-
-    $slug = strtr($slug, $ru_en);
+    $slug = preg_replace('/[^a-z0-9\-\/]+/u', '-', $string);
+    $slug = preg_replace('/-+/', '-', $slug);
+    $slug = preg_replace('/\/+/', '/', $slug);
+    $slug = trim($slug, '-/');
 
     if (!$slug) {
         $slug = 'untitled';
     }
-    if ($disallow_numeric && is_numeric($slug)) {
+
+    if ($disallow_numeric && ctype_digit($slug)) {
         $slug .= strtolower(date('F'));
     }
 

@@ -18,10 +18,7 @@ class onWallProcessRenderUsersProfileView extends cmsAction {
             'profile_id'   => $data['profile']['id']
         ];
 
-        $wall_permissions = cmsCore::getController('users', $request)->runHook('wall_permissions', [
-            'profile_type' => 'user',
-            'profile_id'   => $data['profile']
-        ]);
+        $wall_permissions = cmsCore::getController('users', $request)->runHook('wall_permissions', ['user', $data['profile']]);
 
         $wall_html = $this->getWidget(LANG_USERS_PROFILE_WALL, $wall_target, $wall_permissions);
 

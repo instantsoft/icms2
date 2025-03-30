@@ -44,10 +44,7 @@ class actionWallSubmit extends cmsAction {
         //
         // Получаем права доступа
         //
-        $permissions = $controller->runHook('wall_permissions', [
-            'profile_type' => $profile_type,
-            'profile_id'   => $profile_id
-        ]);
+        $permissions = $controller->runHook('wall_permissions', [$profile_type, $profile_id]);
 
         if (!$permissions || !is_array($permissions)) {
             return $this->error();
@@ -157,12 +154,7 @@ class actionWallSubmit extends cmsAction {
                 ]);
 
                 // действия после добавления
-                $controller->runHook('wall_after_add', [
-                    'profile_type' => $profile_type,
-                    'profile_id'   => $profile_id,
-                    'entry'        => reset($entries),
-                    'wall_model'   => $this->model
-                ]);
+                $controller->runHook('wall_after_add', [$profile_type, $profile_id, reset($entries), $this->model]);
             }
         }
 
@@ -171,8 +163,8 @@ class actionWallSubmit extends cmsAction {
             'error'     => $entry_id ? false : true,
             'message'   => $entry_id ? LANG_WALL_ENTRY_SUCCESS : LANG_WALL_ENTRY_ERROR,
             'id'        => $entry_id,
-            'parent_id' => isset($entry['parent_id']) ? $entry['parent_id'] : 0,
-            'html'      => isset($entry_html) ? $entry_html : false
+            'parent_id' => $entry['parent_id'] ?? 0,
+            'html'      => $entry_html ?? false
         ]);
     }
 
