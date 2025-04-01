@@ -92,7 +92,7 @@ if(!empty($page_title)) {
                 <tr v-cloak :class="{selected: (row.selected || row.edited)}" v-for="(row, key) in rows" :key="key" @click="selectRow(row)" @dragstart="dragStart(key, $event)" @dragover.prevent @dragend="dragEnd($event)" @dragenter.prevent="dragEnter(key, $event)" @dragleave="dragLeave($event)" @drop="dragFinish(key, $event)" @mousedown="prepareDragStart($event)" @touchstart="prepareDragStart($event)" @mouseup="cancelDragStart($event)" class="animated-row">
                     <td v-for="(col, index) in row.columns" :key="index" :class="colClass(col)">
                         <component v-if="!col.editable.edit_mode" :is="'row-column-'+col.renderer" :col="col" :col_key="index" :row_key="key" v-tooltip="col.tooltip" :title="col.tooltip"></component>
-                        <inline-save-form v-if="col.editable" :col="col" :col_key="index" :row_key="key" @changeoverflow="toggleOverflow"></inline-save-form>
+                        <inline-save-form v-if="col.editable" :col="col" :col_key="index" :row_key="key" :key="col.row_id+index" @changeoverflow="toggleOverflow"></inline-save-form>
                     </td>
                 </tr>
             </tbody>

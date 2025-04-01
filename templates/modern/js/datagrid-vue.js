@@ -680,7 +680,7 @@ icms.datagrid = (function () {
                     <span>{{col.editable.lang_save}}</span>
                 </button>
             </div>
-            <teleport to="#icms-grid">
+            <teleport defer to="#icms-grid">
                 <div class="datagrid-backdrop" v-if="show_form"></div>
             </teleport>
             `

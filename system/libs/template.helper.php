@@ -1,24 +1,27 @@
 <?php
 /**
  * Выводит инлайновую svg иконку
+ *
  * @staticvar string $template_path
  * @param string $file Имя файла SVG спрайта в templates/NAME/images/icons/
  * @param string $name Имя иконки
  * @param integer $size Размер
  * @param boolean $print Печатать или возвращать строку
  */
-function html_svg_icon($file, $name, $size = 16, $print = true){
+function html_svg_icon(string $file, string $name, $size = 16, $print = true) {
     static $template_path = [];
-    if(!isset($template_path[$file])){
-        $template_path[$file] = cmsTemplate::getInstance()->getTemplateFilePath('images/icons/'.$file.'.svg', true);
+    if (!isset($template_path[$file])) {
+        $pt = cmsConfig::get('production_time');
+        $template_path[$file] = cmsTemplate::getInstance()->getTemplateFilePath('images/icons/' . $file . '.svg', true) . ($pt ? '?' . $pt : '');
     }
-    $icon = '<svg class="icms-svg-icon w-'.$size.'" fill="currentColor"><use href="'.$template_path[$file].'#'.$name.'"></use></svg>';
-    if($print){
+    $icon = '<svg class="icms-svg-icon w-' . $size . '" fill="currentColor"><use href="' . $template_path[$file] . '#' . $name . '"></use></svg>';
+    if ($print) {
         echo $icon;
     } else {
         return $icon;
     }
 }
+
 /**
  * Выводит тег <a>
  * @param string $title Название
