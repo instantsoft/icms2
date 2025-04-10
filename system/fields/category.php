@@ -42,7 +42,7 @@ class fieldCategory extends cmsFormField {
             ]),
             new fieldString('btn_icon', [
                 'title'  => LANG_F_CATEGORY_BTN_ICON,
-                'suffix' => '<a href="#" class="icms-icon-select" data-href="' . href_to('admin', 'settings', ['theme', cmsConfig::get('template'), 'icon_list']) . '"><span>' . (defined('LANG_CP_ICON_SELECT') ? LANG_CP_ICON_SELECT : '') . '</span></a>'
+                'suffix' => '<a href="#" class="icms-icon-select" data-href="' . href_to('admin', 'settings', ['theme', cmsConfig::get('http_template'), 'icon_list']) . '"><span>' . (defined('LANG_CP_ICON_SELECT') ? LANG_CP_ICON_SELECT : '') . '</span></a>'
             ]),
             new fieldCheckbox('filter_multiple', [
                 'title'   => LANG_PARSER_LIST_FILTER_MULTI,

@@ -233,6 +233,8 @@
     define('LANG_PARSER_IMAGE_SIZE_BIG',     'Big');
     define('LANG_PARSER_IMAGE_SIZE_ORIGINAL','Original');
     define('LANG_PARSER_IMAGE_TO_ITEM_LINK', 'Link to the entry when viewing the list');
+    define('LANG_PARSER_IMAGE_ATTR',         'IMG tag attributes in json format');
+    define('LANG_PARSER_IMAGE_ATTR_HINT',    'For example: {"loading": "lazy"}');
     define('LANG_PARSER_COLOR',              'Colorpicker');
     define('LANG_PARSER_COLOR_CT',           'Color selection block type');
     define('LANG_PARSER_COLOR_OPACITY',      'Enable color transparency');

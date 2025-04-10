@@ -216,18 +216,22 @@ class formModernTemplateOptions extends cmsForm {
                             'Cuprum'                    => 'Cuprum',
                             'EB+Garamond'               => 'EB Garamond',
                             'Fira+Sans+Extra+Condensed' => 'Fira Sans Extra Condensed',
+                            'Inter'                     => 'Inter',
                             'Lora'                      => 'Lora',
                             'Montserrat'                => 'Montserrat',
                             'Montserrat+Alternates'     => 'Montserrat Alternates',
+                            'Nunito'                    => 'Nunito',
                             'Noto+Serif'                => 'Noto Serif',
+                            'Open+Sans'                 => 'Open Sans',
                             'PT+Serif'                  => 'PT Serif',
                             'Philosopher'               => 'Philosopher',
                             'Roboto'                    => 'Roboto',
                             'Roboto+Condensed'          => 'Roboto+Condensed',
+                            'Rubik'                     => 'Rubik',
                             'Scada'                     => 'Scada',
                             'Tinos'                     => 'Tinos',
                             'Vollkorn'                  => 'Vollkorn',
-                            'Open+Sans'                 => 'Open Sans'
+                            'Ubuntu'                    => 'Ubuntu'
                         )
                     )),
 
@@ -322,6 +326,11 @@ class formModernTemplateOptions extends cmsForm {
                             'extensions' => 'ico,svg'
                         ]
                     )),
+
+                    new fieldHtml('head_html_top', [
+                        'title'   => LANG_MODERN_HEAD_TOP,
+                        'options' => ['editor' => 'ace']
+                    ]),
 
                     new fieldHtml('favicon_head_html', [
                         'title'   => LANG_MODERN_FAVICON_HEAD,

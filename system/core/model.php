@@ -2506,21 +2506,42 @@ class cmsModel {
     /**
      * Сортирует элементы массива $items в виде плоского дерева
      * на основании связей через parent_id
+     *
      * @param array $items
      * @param array $result_tree
      * @param int $parent_id
      * @param int $level
      */
-    public static function buildTreeRecursive($items, &$result_tree, $parent_id=0, $level=1){
-        $level++;
-        foreach($items as $item){
-            if ($item['parent_id']==$parent_id){
-                $item['level'] = $level-1;
-                if (!isset($result_tree[$item['id']])){
-                    $result_tree[$item['id']] = $item;
-                }
-                self::buildTreeRecursive($items, $result_tree, $item['id'], $level);
-            }
+    public static function buildTreeRecursive($items, &$result_tree, $parent_id = 0, $level = 1) {
+        // Предварительная группировка элементов по parent_id
+        $grouped = [];
+
+        foreach ($items as $item) {
+            $grouped[$item['parent_id']][] = $item;
+        }
+
+        self::buildTreeFlat($grouped, $result_tree, $parent_id, $level);
+    }
+
+    /**
+     * Вспомогательный метод к buildTreeRecursive
+     *
+     * @param array $grouped
+     * @param array $result_tree
+     * @param int $parent_id
+     * @param int $level
+     * @return void
+     */
+    private static function buildTreeFlat(&$grouped, &$result_tree, $parent_id, $level) {
+
+        if (empty($grouped[$parent_id])) {
+            return;
+        }
+
+        foreach ($grouped[$parent_id] as $item) {
+            $item['level']            = $level;
+            $result_tree[$item['id']] = $item;
+            self::buildTreeFlat($grouped, $result_tree, $item['id'], $level + 1);
         }
     }
 

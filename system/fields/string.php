@@ -55,6 +55,10 @@ class fieldString extends cmsFormField {
                 'hint'            => LANG_PARSER_LIST_IS_AUTOLINK_HINT . LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
                 'default'         => false,
                 'extended_option' => true
+            ]),
+            new fieldString('input_icon', [
+                'title'  => defined('LANG_CP_ICON') ? LANG_CP_ICON : '',
+                'suffix' => '<a href="#" class="icms-icon-select" data-href="' . href_to('admin', 'settings', ['theme', cmsConfig::get('http_template'), 'icon_list']) . '"><span>' . (defined('LANG_CP_ICON_SELECT') ? LANG_CP_ICON_SELECT : '') . '</span></a>'
             ])
         ];
     }
@@ -168,6 +172,7 @@ class fieldString extends cmsFormField {
         $this->data['type']         = $this->getProperty('is_password') ? 'password' : $this->getProperty('type');
         $this->data['autocomplete'] = $this->getProperty('autocomplete');
         $this->data['attributes']   = $this->getProperty('attributes') ?: ['autocomplete' => 'off'];
+        $this->data['input_icon']   = $this->getOption('input_icon');
 
         if ($this->data['autocomplete']) {
             if (empty($this->data['autocomplete']['data'])) {
@@ -179,6 +184,16 @@ class fieldString extends cmsFormField {
             if (empty($this->data['autocomplete']['multiple_separator'])) {
                 $this->data['autocomplete']['multiple_separator'] = ', ';
             }
+        }
+
+        if ($this->data['input_icon']) {
+
+            $icon_params = explode(':', $this->data['input_icon']);
+            if(!isset($icon_params[1])){ array_unshift($icon_params, 'solid'); }
+
+            $icon = html_svg_icon($icon_params[0], $icon_params[1], 16, false);
+
+            $this->prefix = $icon . ($this->prefix ?? '');
         }
 
         $this->data['attributes']['placeholder'] = $this->data['attributes']['placeholder'] ?? $this->getOption('placeholder', false);

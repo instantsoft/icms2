@@ -11,12 +11,11 @@ if($field->context === 'filter' && $in_filter_as && $in_filter_as !== 'input'){ 
 
 <?php } else { ?>
 
-    <?php if(!isset($field->prefix) && !isset($field->suffix)){ ?>
+    <?php if(empty($field->prefix) && empty($field->suffix)) { ?>
         <?php echo html_input($field->data['type'], $field->element_name, $value, $field->data['attributes']); ?>
-    <?php } ?>
+    <?php } else { ?>
 
-    <?php if(isset($field->prefix) || isset($field->suffix)){ ?>
-        <div class="input-group input-prefix-suffix">
+        <div class="input-group input-prefix-suffix<?php if ($field->data['input_icon']) { ?> input-has-icon<?php } ?>">
             <?php if(isset($field->prefix)) { ?>
             <div class="input-group-prepend">
                 <span class="prefix input-group-text"><?php echo $field->prefix; ?></span>

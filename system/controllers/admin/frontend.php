@@ -463,7 +463,7 @@ class admin extends cmsFrontend {
 
             $menu[] = [
                 'title'   => LANG_CP_SETTINGS_TEMPLATE_OPTIONS,
-                'url'     => href_to($this->name, 'settings', ['theme', $this->cms_config->template]),
+                'url'     => href_to($this->name, 'settings', ['theme', $this->cms_config->http_template]),
                 'childs_count' => $is_icon_list_exists ? 1 : null,
                 'options' => [
                     'icon' => 'palette'
@@ -473,7 +473,7 @@ class admin extends cmsFrontend {
                 $menu[] = [
                     'title'   => LANG_CP_TEMPLATE_ICONS,
                     'level' => 2,
-                    'url'     => href_to($this->name, 'settings', ['theme', $this->cms_config->template, 'icon_list']),
+                    'url'     => href_to($this->name, 'settings', ['theme', $this->cms_config->http_template, 'icon_list']),
                     'options' => [
                         'icon' => 'icons'
                     ]

@@ -48,7 +48,9 @@ class content extends cmsFrontend {
         $result = ['url' => '#', 'items' => []];
 
         $ctypes = $this->model->getContentTypes();
-        if (!$ctypes) { return $result; }
+        if (!$ctypes) {
+            return $result;
+        }
 
         foreach ($ctypes as $ctype) {
 
@@ -56,16 +58,14 @@ class content extends cmsFrontend {
                 continue;
             }
 
-            if (!empty($ctype['labels']['create'])) {
-                $result['items'][] = [
-                    'id'           => 'content_add' . $ctype['id'],
-                    'parent_id'    => $menu_item_id,
-                    'title'        => $full_string ? sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']) : string_ucfirst($ctype['labels']['create']),
-                    'childs_count' => 0,
-                    'options'      => ['icon' => 'plus-circle'],
-                    'url'          => href_to($ctype['name'], 'add')
-                ];
-            }
+            $result['items'][] = [
+                'id'           => 'content_add' . $ctype['id'],
+                'parent_id'    => $menu_item_id,
+                'title'        => $full_string ? sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']) : string_ucfirst($ctype['labels']['create']),
+                'childs_count' => 0,
+                'options'      => ['icon' => $ctype['labels']['icon'] ?? ''],
+                'url'          => href_to($ctype['name'], 'add')
+            ];
         }
 
         return $result;
@@ -795,7 +795,7 @@ class content extends cmsFrontend {
         }
 
         // Если ручной ввод SLUG, то добавляем поле для этого
-        if (!$ctype['is_auto_url']) {
+        if (!$ctype['is_auto_url'] && !($ctype['is_fixed_url'] && $action === 'edit')) {
 
             $slug_field_rules = [['required'], ['slug']];
 

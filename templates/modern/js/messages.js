@@ -588,10 +588,7 @@ icms.messages = (function ($) {
         if (value > 0){
             var html = '<span class="counter badge">' + value + '</span>';
             $('a', button).append(html);
-        } else {
-            $(button).remove();
         }
-
     };
 
 	return this;

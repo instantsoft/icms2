@@ -74,6 +74,10 @@ class fieldImage extends cmsFormField {
             new fieldCheckbox('show_to_item_link', [
                 'title' => LANG_PARSER_IMAGE_TO_ITEM_LINK,
                 'default' => true
+            ]),
+            new fieldString('img_attr', [
+                'title' => LANG_PARSER_IMAGE_ATTR,
+                'hint' => LANG_PARSER_IMAGE_ATTR_HINT
             ])
         ];
     }
@@ -100,17 +104,24 @@ class fieldImage extends cmsFormField {
 
         $size_teaser = $this->getOption('size_teaser');
 
-        if (!$paths || !isset($paths[$size_teaser])){ return ''; }
+        if (!$paths || !isset($paths[$size_teaser])) {
+            return '';
+        }
 
-        $url = $this->teaser_url ?
-                $this->teaser_url :
-                href_to($this->item['ctype']['name'], $this->item['slug'] . '.html');
+        $url = $this->teaser_url ?: href_to($this->item['ctype']['name'], $this->item['slug'] . '.html');
 
         if (!empty($this->item['is_private_item'])) {
             $paths = default_images('private', $size_teaser);
         }
 
-        $img_html = html_image($paths, $size_teaser, (empty($this->item['title']) ? $this->name : $this->item['title']));
+        $img_attr_json = $this->getOption('img_attr');
+        $img_attr = [];
+
+        if ($img_attr_json) {
+            $img_attr = json_decode($img_attr_json, true) ?? [];
+        }
+
+        $img_html = html_image($paths, $size_teaser, ($this->item['title'] ?? $this->name), $img_attr);
 
         return (!empty($this->item['is_private_item']) || !$this->getOption('show_to_item_link')) ?
                 $img_html :
@@ -124,7 +135,9 @@ class fieldImage extends cmsFormField {
         $size_full = $this->getOption('size_full');
         $size_modal = $this->getOption('size_modal');
 
-        if (!$paths || !isset($paths[$size_full])){ return ''; }
+        if (!$paths || !isset($paths[$size_full])) {
+            return '';
+        }
 
         $presets = [$size_full, false];
 
@@ -136,7 +149,14 @@ class fieldImage extends cmsFormField {
             if($size_modal){ $presets[1] = $size_modal; }
         }
 
-        return $img_func($paths, $presets, (empty($this->item['title']) ? $this->name : $this->item['title']));
+        $img_attr_json = $this->getOption('img_attr');
+        $img_attr = [];
+
+        if ($img_attr_json) {
+            $img_attr = json_decode($img_attr_json, true) ?? [];
+        }
+
+        return $img_func($paths, $presets, ($this->item['title'] ?? $this->name), $img_attr);
     }
 
     public function getStringValue($value){ return ''; }

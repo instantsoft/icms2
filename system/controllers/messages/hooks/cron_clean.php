@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelMessages $model
+ */
 class onMessagesCronClean extends cmsAction {
 
     public $disallow_event_db_register = true;

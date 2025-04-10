@@ -3,9 +3,9 @@
     $this->setPageTitle(LANG_CP_SETTINGS_TEMPLATE_OPTIONS);
 
     $this->addBreadcrumb(LANG_CP_SECTION_SETTINGS, $this->href_to('settings'));
-    $this->addBreadcrumb(LANG_CP_SETTINGS_TEMPLATE_OPTIONS);
+    $this->addBreadcrumb(LANG_CP_SETTINGS_TEMPLATE_OPTIONS . (!empty($manifest['title']) ? ': ' . $manifest['title'] : ''));
 
-    if($template_name === $this->site_config->template){
+    if($template_name === $this->site_config->http_template){
         $this->addMenuItems('admin_toolbar', $this->controller->getSettingsMenu());
     }
 

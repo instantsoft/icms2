@@ -32,7 +32,7 @@ class fieldForms extends cmsFormField {
             ]),
             new fieldString('form_in_modal_btn_icon', [
                 'title' => LANG_FORMS_CP_FORM_IN_MODAL_BTN_ICON,
-                'suffix' => '<a href="#" class="icms-icon-select" data-href="'.href_to('admin', 'settings', ['theme', cmsConfig::get('template'), 'icon_list']).'"><span>'.(defined('LANG_CP_ICON_SELECT') ? LANG_CP_ICON_SELECT : '').'</span></a>',
+                'suffix' => '<a href="#" class="icms-icon-select" data-href="'.href_to('admin', 'settings', ['theme', cmsConfig::get('http_template'), 'icon_list']).'"><span>'.(defined('LANG_CP_ICON_SELECT') ? LANG_CP_ICON_SELECT : '').'</span></a>',
             ]),
             new fieldCheckbox('show_title', [
                 'title' => LANG_SHOW_TITLE

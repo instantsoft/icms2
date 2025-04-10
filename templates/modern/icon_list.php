@@ -72,6 +72,8 @@ foreach ($files as $file_path) {
     ];
 }
 
+$pt = ($this->site_config->production_time ? '?' . $this->site_config->production_time : '');
+
 $icon_list = [];
 
 foreach ($list as $file_name => $item) {
@@ -80,7 +82,7 @@ foreach ($list as $file_name => $item) {
         $icon_list[$file_name][] = [
             'title' => $name,
             'name'  => $file_name.':'.$name,
-            'html'  => '<svg class="icms-svg-icon w-16" fill="currentColor"><use href="'.$item['url'].'#'.$name.'"></use></svg>'
+            'html'  => '<svg class="icms-svg-icon w-16" fill="currentColor"><use href="'.$item['url']. $pt . '#'.$name.'"></use></svg>'
         ];
     }
 }

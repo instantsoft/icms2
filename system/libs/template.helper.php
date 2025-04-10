@@ -370,16 +370,15 @@ function html_image($image, $size_preset = 'small', $alt = '', $attributes = [])
         return '';
     }
 
-    $title = html(($attributes['title'] ?? $alt), false);
-    unset($attributes['title']);
+    $attributes['title'] = $attributes['title'] ?? ($alt ?: false);
+    $attributes['class'] = ($attributes['class'] ?? '') . ' img-fluid';
+    $attributes['src']   = $src;
+    $attributes['alt']   = $alt ?: false;
 
-    $attr_str = html_attr_str($attributes);
-    $class    = $attributes['class'] ?? '';
-
-    $image_html = '<img src="' . $src . '" title="' . $title . '" alt="' . html($alt, false) . '" ' . $attr_str . ' class="img-fluid ' . $class . '">';
+    $image_html = '<img ' . html_attr_str($attributes, false) . '>';
 
     if ($modal_preset && ($modal_src = html_image_src($image, $modal_preset, true))) {
-        return '<a title="' . $title . '" class="ajax-modal modal_image hover_image" href="' . $modal_src . '">' . $image_html . '</a>';
+        return '<a title="' . html($attributes['title'], false) . '" class="ajax-modal modal_image hover_image" href="' . $modal_src . '">' . $image_html . '</a>';
     }
 
     return $image_html;

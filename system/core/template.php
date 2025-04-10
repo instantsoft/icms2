@@ -575,7 +575,7 @@ class cmsTemplate {
 
         $this->widgets($position);
 
-        echo str_replace('{position}', ob_get_clean(), $wrapper_html);
+        echo str_replace('{position}', ob_get_clean(), string_replace_svg_icons($wrapper_html));
     }
 
     /**
@@ -655,43 +655,44 @@ class cmsTemplate {
         $root_len = strlen($this->site_config->root);
         $lang_len = $href_lang ? strlen($href_lang) : 0;
 
-        foreach ($menu as $id => $item) {
+        foreach ($menu as $id => &$item) {
 
             // Строим атрибуты ссылок
-            $menu[$id]['attributes'] = $item['attributes'] ?? [];
+            $item['attributes'] = $item['attributes'] ?? [];
 
             $onclick = isset($item['options']['confirm']) ? "return confirm('{$item['options']['confirm']}');" : ($item['options']['onclick'] ?? false);
             if($onclick){
-                $menu[$id]['onclick'] = $onclick;
+                $item['onclick'] = $onclick;
             }
 
-            if(!empty($item['options']['target'])){
-                $menu[$id]['attributes']['target'] = $item['options']['target'];
+            if (!empty($item['options']['target'])) {
+                $item['attributes']['target'] = $item['options']['target'];
             }
 
             if (!empty($item['data'])) {
                 foreach ($item['data'] as $key => $val) {
-                    $menu[$id]['attributes']['data-' . $key] = html($val, false);
+                    $item['attributes']['data-' . $key] = html($val, false);
                 }
             }
 
-            $menu[$id]['attributes']['id'] = $item['attributes']['id'] ?? 'menu-item-id-'.$menu_name.'-'.($item['id']??$id);
+            $item['attributes']['id'] = $item['attributes']['id'] ?? 'menu-item-id-'.$menu_name.'-'.($item['id']??$id);
 
-            $menu[$id]['disabled']     = !empty($item['disabled']);
-            $menu[$id]['level']        = $item['level'] ?? 1;
-            $menu[$id]['childs_count'] = $item['childs_count'] ?? 0;
+            $item['disabled']     = !empty($item['disabled']);
+            $item['level']        = $item['level'] ?? 1;
+            $item['childs_count'] = $item['childs_count'] ?? 0;
 
-            if (!isset($item['url']) &&  !empty($item['controller'])) {
-                if (!isset($item['action'])) { $item['action'] = ''; }
-                if (!isset($item['params'])) { $item['params'] = []; }
+            if (!isset($item['url']) && !empty($item['controller'])) {
+
+                $item['action'] = $item['action'] ?? '';
+                $item['params'] = $item['params'] ?? [];
+
                 $item['url'] = href_to($item['controller'], $item['action'], $item['params']);
-                $menu[$id]['url'] = $item['url'];
             }
 
             // Если нужно, считаем количество пунктов первого уровня
             if ($max_items) {
 
-                if ($menu[$id]['level'] == 1) {
+                if ($item['level'] == 1) {
                     $first_level_count++;
                 }
 
@@ -703,42 +704,34 @@ class cmsTemplate {
             }
 
             // ищем активные пункты меню
-            if ($detect_active_id){
-
-                if (empty($item['url'])) { continue; }
+            if ($detect_active_id && !empty($item['url'])) {
 
                 $url = $item['url_mask'] ?? urldecode($item['url']);
-                $url = mb_substr($url, $root_len);
-                if($href_lang){
-                    $url = mb_substr($url, $lang_len);
-                }
-                $url = trim($url, '/');
-
-                if (!$url) {
-                    // На главной
-                    if ($current_url === $url){
-                        $active_ids[] = $id;
-                    }
-                    continue;
-                }
-
-                $url_len = mb_strlen($url);
+                $url = trim(mb_substr($url, $root_len + $lang_len), '/');
 
                 //полное совпадение ссылки и адреса?
-                if ($current_url === $url){
+                if ($current_url === $url) {
+
                     $active_ids[] = $id;
+
                 } else {
 
+                    $url_len = mb_strlen($url);
+
                     //частичное совпадение ссылки и адреса (по началу строки)?
-                    $url_first_parts = [mb_substr($current_ourl, 0, $url_len), mb_substr($current_url, 0, $url_len)];
-                    if (in_array($url, $url_first_parts)){
+                    if (
+                        mb_substr($current_ourl, 0, $url_len) === $url ||
+                        mb_substr($current_url, 0, $url_len) === $url
+                    ) {
                         $active_ids[] = $id;
                     }
                 }
             }
         }
 
-        if ($max_items && $first_level_limit){
+        unset($item);
+
+        if ($max_items && $first_level_limit) {
 
             //
             // Если на первом уровне больше пунктов, чем нужно то
@@ -746,7 +739,7 @@ class cmsTemplate {
             //
 
             $visible_items = array_slice($menu, 0, $first_level_limit, true);
-            $more_items    = array_slice($menu, $first_level_limit, count($menu) - $first_level_limit, true);
+            $more_items    = array_slice($menu, $first_level_limit, null, true);
 
             $item_more_id = 10000;
 
@@ -764,25 +757,25 @@ class cmsTemplate {
                 ]
             ];
 
-            foreach ($more_items as $id => $item) {
+            foreach ($more_items as &$item) {
                 if ($item['level'] == 1) {
-                    $more_items[$id]['parent_id'] = $item_more_id;
+                    $item['parent_id'] = $item_more_id;
                 }
-                $more_items[$id]['level']++;
+                $item['level']++;
             }
+            unset($item);
 
             $menu = $visible_items + $item_more + $more_items;
-
         }
 
-        if (!$is_allow_multiple_active && (count($active_ids)>1)){
-            $active_ids = [$active_ids[count($active_ids)-1]];
+        if (!$is_allow_multiple_active && $active_ids) {
+            $active_ids = [end($active_ids)];
         }
 
-        if($css_class){
-            $css_class .= ' menu-'.$menu_name;
+        if ($css_class) {
+            $css_class .= ' menu-' . $menu_name;
         } else {
-            $css_class = 'nav menu menu-'.$menu_name;
+            $css_class = 'nav menu menu-' . $menu_name;
         }
 
         $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template, $menu_title);
@@ -3025,25 +3018,30 @@ class cmsTemplate {
 
                 $file_name = $file_title = str_replace('.tpl', '', $file);
 
-                if(in_array($file_name, $excluded)){ continue; }
+                if (in_array($file_name, $excluded)) {
+                    continue;
+                }
 
                 $file_path = $template_instance->getTemplateFileName($path.'/'.$file_name, true);
-                if(!$file_path){ continue; }
+                if (!$file_path) {
+                    continue;
+                }
 
                 // Ищем название шаблона внутри файла
                 $file_header = [];
                 if(preg_match( '|Template Name:(.*)$|umi', file_get_contents($file_path), $file_header) && !empty($file_header[1])){
-                    $file_title = string_lang(trim(preg_replace('/\s*(?:\*\/|\?>).*/', '', $file_header[1]))).' ('.$file_name.')';
+                    $tpl_title = trim(preg_replace('/\s*(?:\*\/|\?>).*/', '', $file_header[1]));
+                    $file_title = string_lang($tpl_title, $tpl_title) . ' (' . $file_name . ')';
                 }
 
                 $__files[$file_name] = $file_title;
             }
-            $files = $__files; asort($files);
+            $files = $__files;
+            asort($files);
         }
 
         return $files;
     }
-
 
     /**
      * Возвращает все названия шаблонов для списка записей типов контента

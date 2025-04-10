@@ -16,6 +16,9 @@
 <?php if (!$config->disable_copyright) { ?>
         <meta name="generator" content="InstantCMS">
 <?php } ?>
+    <?php if(!empty($this->options['head_html_top'])) { ?>
+        <?php echo $this->options['head_html_top']."\n"; ?>
+    <?php } ?>
 <?php
         $this->addMainTplCSSName(['theme']);
         if(!empty($this->options['font_type']) && $this->options['font_type'] === 'gfont') {

@@ -239,8 +239,11 @@ form {
         .invalid-feedback {
             display: block;
         }
-        .chosen-container-single .chosen-single, select, textarea, .form-control {
+        .chosen-container-single .chosen-single, select, textarea, .form-control, .input-group-text {
             border-color: $form-feedback-invalid-color;
+            &:focus {
+                border-color: $form-feedback-invalid-color !important;
+            }
         }
     }
     .reguired_field {

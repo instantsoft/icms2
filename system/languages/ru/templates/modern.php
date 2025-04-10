@@ -81,5 +81,6 @@ define('LANG_MODERN_FONT_TYPE_STR', 'Указать строку шрифта в
 define('LANG_MODERN_FONT_STRING', 'Укажите приоритетный список из одного или нескольких названий семейства шрифтов c гладкими окончаниями');
 define('LANG_MODERN_FONT_GOOGLE', 'Шрифт Google');
 define('LANG_MODERN_FAVICON_FILE', 'Файл фавиконки');
-define('LANG_MODERN_FAVICON_HEAD', 'Готовый HTML, добавляемый в тег &lt;head&gt; страницы');
+define('LANG_MODERN_HEAD_TOP', 'Готовый HTML, добавляемый перед всеми стилями и JavaScript файлами &lt;head&gt; страницы');
+define('LANG_MODERN_FAVICON_HEAD', 'Готовый HTML, добавляемый в конец тега &lt;head&gt; страницы');
 define('LANG_MODERN_JS_PRINT_HEAD', 'Подключать JavaScript в head страницы');

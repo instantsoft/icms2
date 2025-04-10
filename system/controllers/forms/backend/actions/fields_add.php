@@ -58,6 +58,8 @@ class actionFormsFieldsAdd extends cmsAction {
             }
         }
 
+        $form->show_unsave_notice = false;
+
         return $this->cms_template->render([
             'menu'      => $this->getFormMenu('edit', $form_data['id']),
             'do'        => 'add',

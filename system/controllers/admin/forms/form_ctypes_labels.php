@@ -123,6 +123,16 @@ class formAdminCtypesLabels extends cmsForm {
                         ]
                     ])
                 ]
+            ],
+            [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_ICON,
+                'childs' => [
+                    new fieldString('labels:icon', [
+                        'title' => LANG_CP_MENU_ITEM_ICON,
+                        'suffix' => '<a href="#" class="icms-icon-select" data-href="' . href_to('admin', 'settings', ['theme', cmsConfig::get('http_template'), 'icon_list']) . '"><span>' . LANG_CP_ICON_SELECT . '</span></a>',
+                    ])
+                ]
             ]
         ];
     }

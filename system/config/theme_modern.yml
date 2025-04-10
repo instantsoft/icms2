@@ -75,6 +75,7 @@ logo_svg: null
 logo_small: null
 logo_small_svg: null
 favicon: null
+head_html_top: ""
 favicon_head_html: ""
 custom_scss:
   body-bg: ""

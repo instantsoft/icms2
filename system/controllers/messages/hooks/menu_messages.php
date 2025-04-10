@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelMessages $model
+ */
 class onMessagesMenuMessages extends cmsAction {
 
     public function run($item) {
@@ -8,26 +10,31 @@ class onMessagesMenuMessages extends cmsAction {
             return false;
         }
 
-        $action = $item['action'];
+        switch ($item['action']) {
+            case 'view':
 
-        if ($action == 'view' && !empty($this->options['is_enable_pm'])) {
+                if (!empty($this->options['is_enable_pm'])) {
 
-            $count = $this->model->getNewMessagesCount($this->cms_user->id);
+                    $count = $this->model->getNewMessagesCount($this->cms_user->id);
 
-            return [
-                'url'     => href_to($this->name),
-                'counter' => $count
-            ];
-        }
+                    return [
+                        'url'     => href_to($this->name),
+                        'counter' => $count
+                    ];
+                }
 
-        if ($action == 'notices') {
+                break;
+            case 'notices':
 
-            $count = $this->model->getNoticesCount($this->cms_user->id);
+                $count = $this->model->getNoticesCount($this->cms_user->id);
 
-            return $count ? [
-                'url'     => href_to($this->name, 'notices'),
-                'counter' => $count
-            ] : false;
+                return [
+                    'url'     => href_to($this->name, 'notices'),
+                    'counter' => $count
+                ];
+
+            default:
+                break;
         }
 
         return false;

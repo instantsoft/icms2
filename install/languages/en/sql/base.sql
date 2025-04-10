@@ -564,7 +564,7 @@ INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `orde
 (24, 2, 0, 'Add', '{content:add}', 6, '---\ntarget: _self\nclass: add', '---\n- 0\n', NULL),
 (25, 2, 0, 'Control panel', '{admin:menu}', 7, '---\ntarget: _self\nclass: cpanel', '---\n- 6\n', NULL),
 (29, 1, 0, 'Users', 'users', 8, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
-(30, 6, 0, 'Notifications', '{messages:notices}', 1, '---\ntarget: _self\nclass: bell ajax-modal notices-counter\nicon: bell\n', '---\n- 0\n', '---\n- 1\n'),
+(30, 6, 0, 'Notifications', '{messages:notices}', 1, '---\ntarget: _self\nclass: bell ajax-modal notices-counter\nicon: bell\nhide_title: 1\n', '---\n- 0\n', '---\n- 1\n'),
 (34, 5, 0, 'Log in', 'auth/login', 9, '---\ntarget: _self\nclass: ajax-modal key\nicon: sign-in-alt\n', '---\n- 1\n', NULL),
 (35, 5, 0, 'Sign up', 'auth/register', 10, '---\ntarget: _self\nclass: user_add\nicon: user-plus\n', '---\n- 1\n', NULL),
 (36, 2, 0, 'Drafts', '{moderation:draft}', 4, '---\ntarget: _self\nclass: draft\nicon: cloud\n', '---\n- 0\n', NULL),

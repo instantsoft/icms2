@@ -28,12 +28,14 @@ $this->addTplJSNameFromContext(['vendors/list.min']);
             </a>
         </li>
     <?php } ?>
+    <?php if(!$is_ajax){ ?>
     <li class="nav-item ml-auto align-items-center d-flex">
         <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="copy-dev">
             <label class="custom-control-label" for="copy-dev"><?php echo LANG_CP_TEMPLATE_ICONS_PHP; ?></label>
         </div>
     </li>
+    <?php } ?>
 </ul>
 <div class="tab-content<?php if(!$is_ajax){ ?> mb-4<?php } ?>">
 <?php foreach($icon_list as $tab_name => $list) { ?>

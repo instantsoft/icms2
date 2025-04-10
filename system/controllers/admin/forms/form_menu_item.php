@@ -83,7 +83,7 @@ class formAdminMenuItem extends cmsForm {
                     ]),
                     new fieldString('options:icon', [
                         'title' => LANG_CP_MENU_ITEM_ICON,
-                        'suffix' => '<a href="#" class="icms-icon-select" data-href="' . href_to('admin', 'settings', ['theme', cmsConfig::get('template'), 'icon_list']) . '"><span>' . LANG_CP_ICON_SELECT . '</span></a>',
+                        'suffix' => '<a href="#" class="icms-icon-select" data-href="' . href_to('admin', 'settings', ['theme', cmsConfig::get('http_template'), 'icon_list']) . '"><span>' . LANG_CP_ICON_SELECT . '</span></a>',
                     ]),
                     new fieldCheckbox('options:hide_title', [
                         'title' => LANG_CP_MENU_ITEM_HIDE_TITLE,

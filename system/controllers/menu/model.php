@@ -112,56 +112,47 @@ class modelMenu extends cmsModel {
 
     public static function buildMenu($menus, $parse_hooks = true) {
 
-        $replaced = [
-            'csrf_token' => cmsForm::getCSRFToken()
-        ];
+        $user     = cmsUser::getInstance();
+        $replaced = ['csrf_token' => cmsForm::getCSRFToken()];
 
         $items = [];
         $delta = [];
 
-        $user = cmsUser::getInstance();
-
-        // перебираем все вернувшиеся пункты меню
         foreach ($menus as $item) {
 
-            $is_root_added = false;
-
-            if (($item['groups_view'] && !$user->isInGroups($item['groups_view'])) ||
-                    ($item['groups_hide'] && $user->isInGroups($item['groups_hide']))) {
-
+            // Проверка доступа
+            if (
+                ($item['groups_view'] && !$user->isInGroups($item['groups_view'])) ||
+                ($item['groups_hide'] && $user->isInGroups($item['groups_hide']))
+            ) {
                 if ($item['parent_id']) {
-                    if (!isset($delta[$item['parent_id']])) {
-                        $delta[$item['parent_id']] = 1;
-                    } else {
-                        $delta[$item['parent_id']] += 1;
-                    }
+                    $delta[$item['parent_id']] = ($delta[$item['parent_id']] ?? 0) + 1;
                 }
-
                 continue;
             }
 
             $hook_result = ['items' => []];
 
-            if ($item['title'] && $parse_hooks) {
-                if (strpos($item['title'], '{user.') !== false) {
-                    $item['title'] = string_replace_user_properties($item['title']);
-                }
+            if ($parse_hooks && !empty($item['title']) && strpos($item['title'], '{user.') !== false) {
+                $item['title'] = string_replace_user_properties($item['title']);
             }
 
-            if ($item['url'] && $parse_hooks) {
+            $is_root_added = false;
+
+            // Обработка URL
+            if ($parse_hooks && !empty($item['url'])) {
 
                 $matches = [];
 
-                // Общие замены
                 $item['url'] = string_replace_keys_values($item['url'], $replaced);
 
                 // если URL пункта меню содержит свойство пользователя
                 if (strpos($item['url'], '{user.') !== false) {
+
                     $item['url'] = string_replace_user_properties($item['url']);
-                } else
 
                 // если URL пункта меню содержит шаблон {controller:action}
-                if (preg_match('/^{([a-z0-9]+):*([a-z0-9_]*)}$/i', $item['url'], $matches)) {
+                } elseif (preg_match('/^{([a-z0-9]+):*([a-z0-9_]*)}$/i', $item['url'], $matches)) {
 
                     // то вызываем хук menu указанного контроллера
                     $controller = $matches[1];
@@ -174,28 +165,16 @@ class modelMenu extends cmsModel {
                         'menu_item'     => $item
                     ], false);
 
-                    // если хук вернул результат
-                    if ($hook_result) {
-
-                        // получаем новый URL пункта меню
-                        $item['url'] = isset($hook_result['url']) ? $hook_result['url'] : '';
-
-                        if (isset($hook_result['counter'])) {
-                            $item['counter'] = $hook_result['counter'];
-                        }
-
-                        if (isset($hook_result['title'])) {
-                            $item['title'] = $hook_result['title'];
-                        }
-
-                        if (!empty($hook_result['items'])) {
-                            $item['childs_count'] = count($hook_result['items']);
-                        }
-
-                        $is_root_added = true;
-                    } else {
+                    if (!$hook_result) {
                         continue;
                     }
+
+                    $item['url']          = $hook_result['url'] ?? '';
+                    $item['counter']      = $hook_result['counter'] ?? ($item['counter'] ?? 0);
+                    $item['title']        = $hook_result['title'] ?? $item['title'];
+                    $item['childs_count'] = !empty($hook_result['items']) ? count($hook_result['items']) : $item['childs_count'];
+
+                    $is_root_added = true;
                 }
 
                 $is_external = mb_strpos($item['url'], '://') !== false;
@@ -206,25 +185,25 @@ class modelMenu extends cmsModel {
                 }
             }
 
-            // добавляем обработанную строку в результирующий массив
+            // Добавляем основной пункт меню
             $items[$item['id']] = $item;
 
             // получаем дополнительные пункты меню
             if (!empty($hook_result['items'])) {
                 foreach ($hook_result['items'] as $i) {
                     $i['menu_id']    = $item['menu_id'];
-                    $i['options']    = isset($i['options']) ? $i['options'] : [];
-                    $i['options']    = array_merge($item['options'], $i['options']);
+                    $options = $i['options'] ?? [];
+                    $options['class'] = $options['class'] ?? '';
+                    $i['options']    = array_merge($item['options'], $options);
                     $items[$i['id']] = $i;
                 }
             }
         }
 
-        if ($delta) {
-            foreach ($delta as $item_id => $d) {
-                if (isset($items[$item_id])) {
-                    $items[$item_id]['childs_count'] -= $d;
-                }
+        // Коррекция счетчиков дочерних элементов
+        foreach ($delta as $item_id => $d) {
+            if (isset($items[$item_id])) {
+                $items[$item_id]['childs_count'] -= $d;
             }
         }
 
@@ -232,7 +211,6 @@ class modelMenu extends cmsModel {
 
         cmsModel::buildTreeRecursive($items, $tree);
 
-        // возвращаем дерево
         return $tree;
     }
 

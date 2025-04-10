@@ -158,3 +158,22 @@ form .without-tabs fieldset {
         }
     }
 }
+.input-has-icon {
+    .input-group-text {
+        background-color: $input-bg;
+        border-right: none;
+        padding-left: $input-padding-x/1.5;
+        padding-right: 0;
+    }
+    .icms-svg-icon {
+        font-size: $input-font-size*1.5;
+        color: $input-color;
+    }
+    &.input-group>.form-control:not(:first-child), &.input-group>.custom-select:not(:first-child) {
+        border-left: none;
+        &:focus {
+            border-color: $input-border-color;
+            box-shadow: none;
+        }
+    }
+}
