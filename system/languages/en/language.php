@@ -222,6 +222,7 @@
     define('LANG_PARSER_IMAGE_MAX_COUNT_HINT', 'Maximum %s');
     define('LANG_PARSER_IMAGE_VIEW_AS_SLIDER', 'Display images with a slider');
     define('LANG_PARSER_IMAGE_SLIDER_DOTS',  'Show slider dots');
+    define('LANG_PARSER_IMAGE_DISPLAY_FIRST_IN_LIST',  'Only the first image in the list');
     define('LANG_PARSER_SMALL_IMAGE_PRESET', 'Thumbnail preset');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Create thumbnails');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Image size in list');

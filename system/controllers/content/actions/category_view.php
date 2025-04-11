@@ -388,6 +388,11 @@ class actionContentCategoryView extends cmsAction {
             // значит переданный $_ctype_name = корневая страница типа контента
             if ($slug === 'index') {
 
+                // список выключен
+                if (empty($ctype['options']['list_on'])) {
+                    return cmsCore::error404();
+                }
+
                 // Если просмотр главной страницы типа контента выключен
                 if (!empty($ctype['options']['list_off_index']) && empty($_GET)) {
                     return cmsCore::error404();

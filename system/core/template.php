@@ -714,17 +714,12 @@ class cmsTemplate {
 
                     $active_ids[] = $id;
 
-                } else {
-
-                    $url_len = mb_strlen($url);
-
-                    //частичное совпадение ссылки и адреса (по началу строки)?
-                    if (
-                        mb_substr($current_ourl, 0, $url_len) === $url ||
-                        mb_substr($current_url, 0, $url_len) === $url
-                    ) {
-                        $active_ids[] = $id;
-                    }
+                } else if (
+                    $is_allow_multiple_active &&
+                    (strpos($current_ourl, $url . '/') === 0 ||
+                     strpos($current_url, $url . '/') === 0)
+                ) {
+                    $active_ids[] = $id;
                 }
             }
         }
@@ -766,10 +761,6 @@ class cmsTemplate {
             unset($item);
 
             $menu = $visible_items + $item_more + $more_items;
-        }
-
-        if (!$is_allow_multiple_active && $active_ids) {
-            $active_ids = [end($active_ids)];
         }
 
         if ($css_class) {
@@ -2990,9 +2981,9 @@ class cmsTemplate {
      * @param array $excluded Исключения
      * @return array
      */
-    public function getAvailableTemplatesFiles($path, $pattern='*.*', $template_name = false, $excluded = []) {
+    public function getAvailableTemplatesFiles($path, $pattern = '*.*', $template_name = false, $excluded = []) {
 
-        if(!$template_name){
+        if (!$template_name) {
             $template_instance = new cmsTemplate($this->site_config->template);
         } else {
             $template_instance = new cmsTemplate($template_name);
@@ -3002,34 +2993,34 @@ class cmsTemplate {
 
         $files = $__files = [];
 
-        if(!$template_name){
+        if (!$template_name) {
             $template_name = $this->site_config->template;
         }
 
         foreach ($inherit_names as $name) {
-            $_files = cmsCore::getFilesList(self::TEMPLATE_BASE_PATH.$name.'/'.$path, $pattern, true);
-            $files = array_merge($files, $_files);
+            $_files = cmsCore::getFilesList(self::TEMPLATE_BASE_PATH . $name . '/' . $path, $pattern, true);
+            $files  = array_merge($files, $_files);
         }
 
         $files = array_unique($files);
 
-        if($files){
+        if ($files) {
             foreach ($files as $file) {
 
-                $file_name = $file_title = str_replace('.tpl', '', $file);
+                $file_name  = $file_title = str_replace('.tpl', '', $file);
 
                 if (in_array($file_name, $excluded)) {
                     continue;
                 }
 
-                $file_path = $template_instance->getTemplateFileName($path.'/'.$file_name, true);
+                $file_path = $template_instance->getTemplateFileName($path . '/' . $file_name, true);
                 if (!$file_path) {
                     continue;
                 }
 
                 // Ищем название шаблона внутри файла
                 $file_header = [];
-                if(preg_match( '|Template Name:(.*)$|umi', file_get_contents($file_path), $file_header) && !empty($file_header[1])){
+                if (preg_match('|Template Name:(.*)$|umi', file_get_contents($file_path), $file_header) && !empty($file_header[1])) {
                     $tpl_title = trim(preg_replace('/\s*(?:\*\/|\?>).*/', '', $file_header[1]));
                     $file_title = string_lang($tpl_title, $tpl_title) . ' (' . $file_name . ')';
                 }

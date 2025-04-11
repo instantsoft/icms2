@@ -7,6 +7,8 @@ class fieldImages extends cmsFormField {
     public $allow_index = false;
     public $var_type    = 'array';
 
+    protected $teaser_url = '';
+
     public function getOptions() {
 
         $preset_generator = function () {
@@ -68,6 +70,13 @@ class fieldImages extends cmsFormField {
                 'generator' => function () {
                     return cmsTemplate::getInstance()->getAvailableTemplatesFiles('assets/fields', $this->field_type.'_view*.tpl.php');
                 }
+            ]),
+            new fieldCheckbox('display_first_in_list', [
+                'title' => LANG_PARSER_IMAGE_DISPLAY_FIRST_IN_LIST
+            ]),
+            new fieldCheckbox('show_to_item_link', [
+                'title' => LANG_PARSER_IMAGE_TO_ITEM_LINK,
+                'visible_depend' => ['options:display_first_in_list' => ['show' => ['1']]]
             ])
         ];
     }
@@ -121,15 +130,46 @@ class fieldImages extends cmsFormField {
         return isset($image) ? true : false;
     }
 
+    public function parseTeaser($value) {
+
+        if (!$this->getOption('display_first_in_list')) {
+            return $this->parse($value);
+        }
+
+        $paths = cmsModel::yamlToArray($value);
+
+        if (!$paths) {
+            return '';
+        }
+
+        $first_paths = reset($paths);
+
+        $size_teaser = $this->getOption('size_teaser');
+
+        if (!isset($first_paths[$size_teaser])) {
+            return '';
+        }
+
+        $url = $this->teaser_url ?: href_to($this->item['ctype']['name'], $this->item['slug'] . '.html');
+
+        if (!empty($this->item['is_private_item'])) {
+            $first_paths = default_images('private', $size_teaser);
+        }
+
+        $img_html = html_image($first_paths, $size_teaser, ($this->item['title'] ?? $this->name));
+
+        return (!empty($this->item['is_private_item']) || !$this->getOption('show_to_item_link')) ?
+                $img_html :
+                '<a href="'.$url.'">'.$img_html.'</a>';
+    }
+
     public function parse($value) {
 
         if (is_empty_value($value)) {
             return '';
         }
 
-        if (!is_array($value)) {
-            $value = cmsModel::yamlToArray($value);
-        }
+        $value = cmsModel::yamlToArray($value);
 
         return cmsTemplate::getInstance()->renderFormField($this->getOption('template', $this->class . '_view'), [
             'block_id' => 'slider-' . uniqid(),

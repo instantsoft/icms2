@@ -220,6 +220,7 @@
     define('LANG_PARSER_IMAGE_MAX_COUNT_HINT', 'Максимум %s');
     define('LANG_PARSER_IMAGE_VIEW_AS_SLIDER', 'Выводить изображения слайдером');
     define('LANG_PARSER_IMAGE_SLIDER_DOTS',  'Показывать точки слайдера');
+    define('LANG_PARSER_IMAGE_DISPLAY_FIRST_IN_LIST',  'В списке показывать только первое изображение');
     define('LANG_PARSER_SMALL_IMAGE_PRESET', 'Пресет миниатюр');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Создавать превью-изображения');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Размер в списке');
