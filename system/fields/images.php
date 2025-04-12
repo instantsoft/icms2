@@ -195,8 +195,8 @@ class fieldImages extends cmsFormField {
 
         return cmsTemplate::getInstance()->renderFormField($this->getOption('template', $this->class . '_view'), [
             'block_id' => 'slider-' . uniqid(),
+            'img_attr' => $img_attr,
             'slider_params' => [
-                'img_attr'       => $img_attr,
                 'dots'           => (bool)$this->getOption('slider_dots'),
                 'variableWidth'  => true,
                 'adaptiveHeight' => true,
