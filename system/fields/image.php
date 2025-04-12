@@ -78,6 +78,10 @@ class fieldImage extends cmsFormField {
             new fieldString('img_attr', [
                 'title' => LANG_PARSER_IMAGE_ATTR,
                 'hint' => LANG_PARSER_IMAGE_ATTR_HINT
+            ]),
+            new fieldString('img_attr_item', [
+                'title' => LANG_PARSER_IMAGE_ATTR_ITEM,
+                'hint' => LANG_PARSER_IMAGE_ATTR_HINT
             ])
         ];
     }
@@ -149,7 +153,7 @@ class fieldImage extends cmsFormField {
             if($size_modal){ $presets[1] = $size_modal; }
         }
 
-        $img_attr_json = $this->getOption('img_attr');
+        $img_attr_json = $this->getOption('img_attr_item');
         $img_attr = [];
 
         if ($img_attr_json) {

@@ -233,7 +233,8 @@
     define('LANG_PARSER_IMAGE_SIZE_ORIGINAL','Оригинальный');
     define('LANG_PARSER_IMAGE_DELETE',       'Удалить изображение с сервера?');
     define('LANG_PARSER_IMAGE_TO_ITEM_LINK', 'Ссылка на запись при просмотре списка');
-    define('LANG_PARSER_IMAGE_ATTR',         'Атрибуты тега img в формате JSON');
+    define('LANG_PARSER_IMAGE_ATTR',         'Атрибуты тега img в формате JSON для списка');
+    define('LANG_PARSER_IMAGE_ATTR_ITEM',    'Атрибуты тега img в формате JSON для записи');
     define('LANG_PARSER_IMAGE_ATTR_HINT',    'Например, {"loading": "lazy"}');
     define('LANG_PARSER_COLOR',              'Цвет');
     define('LANG_PARSER_COLOR_CT',           'Тип блока выбора цвета');

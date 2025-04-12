@@ -77,6 +77,14 @@ class fieldImages extends cmsFormField {
             new fieldCheckbox('show_to_item_link', [
                 'title' => LANG_PARSER_IMAGE_TO_ITEM_LINK,
                 'visible_depend' => ['options:display_first_in_list' => ['show' => ['1']]]
+            ]),
+            new fieldString('img_attr', [
+                'title' => LANG_PARSER_IMAGE_ATTR,
+                'hint' => LANG_PARSER_IMAGE_ATTR_HINT
+            ]),
+            new fieldString('img_attr_item', [
+                'title' => LANG_PARSER_IMAGE_ATTR_ITEM,
+                'hint' => LANG_PARSER_IMAGE_ATTR_HINT
             ])
         ];
     }
@@ -156,7 +164,14 @@ class fieldImages extends cmsFormField {
             $first_paths = default_images('private', $size_teaser);
         }
 
-        $img_html = html_image($first_paths, $size_teaser, ($this->item['title'] ?? $this->name));
+        $img_attr_json = $this->getOption('img_attr');
+        $img_attr = [];
+
+        if ($img_attr_json) {
+            $img_attr = json_decode($img_attr_json, true) ?? [];
+        }
+
+        $img_html = html_image($first_paths, $size_teaser, ($this->item['title'] ?? $this->name), $img_attr);
 
         return (!empty($this->item['is_private_item']) || !$this->getOption('show_to_item_link')) ?
                 $img_html :
@@ -171,9 +186,17 @@ class fieldImages extends cmsFormField {
 
         $value = cmsModel::yamlToArray($value);
 
+        $img_attr_json = $this->getOption('img_attr_item');
+        $img_attr = [];
+
+        if ($img_attr_json) {
+            $img_attr = json_decode($img_attr_json, true) ?? [];
+        }
+
         return cmsTemplate::getInstance()->renderFormField($this->getOption('template', $this->class . '_view'), [
             'block_id' => 'slider-' . uniqid(),
             'slider_params' => [
+                'img_attr'       => $img_attr,
                 'dots'           => (bool)$this->getOption('slider_dots'),
                 'variableWidth'  => true,
                 'adaptiveHeight' => true,
