@@ -20,3 +20,8 @@
     define('LANG_SEARCH_QUERY',              'Поисковый запрос');
     define('LANG_SEARCH_TARGET_TITLE',       'Заголовок назначения поиска');
     define('LANG_SEARCH_TARGET',             'Название назначения поиска');
+    define('LANG_SEARCH_DISPLAY',           'Страница поиска');
+    define('LANG_SEARCH_SHOW_PARAMS',       'Показывать параметры поиска');
+    define('LANG_SEARCH_DISPLAY_TYPE',      'Тип вывода результатов поиска');
+    define('LANG_SEARCH_DISPLAY_TYPE0',     'Единый вид с подсветкой искомых слов');
+    define('LANG_SEARCH_DISPLAY_TYPE1',     'Как оригинальный список записей контента');

@@ -385,22 +385,22 @@ class groups extends cmsFrontend {
 
     }
 
-    public function renderGroupsList($page_url, $dataset_name = false){
+    public function renderGroupsList($page_url, $dataset_name = false, $ext_hidden_params = []) {
 
-        $page = $this->request->get('page', 1);
-        $perpage = (empty($this->options['limit']) ? 10 : $this->options['limit']);
+        $page    = $this->request->get('page', 1);
+        $perpage = $this->options['limit'] ?? 10;
 
         $fields = $this->loadGroupsFields()->getGroupsFields();
 
         // Постраничный вывод
         $this->model->limitPage($page, $perpage);
 
-        list($fields, $this->model) = cmsEventsManager::hook('groups_list_filter', array($fields, $this->model));
+        list($fields, $this->model) = cmsEventsManager::hook('groups_list_filter', [$fields, $this->model]);
 
-        $filters = array();
+        $filters = [];
 
         // проверяем запросы фильтрации по полям
-        foreach($fields as $name => $field){
+        foreach ($fields as $name => $field) {
 
             if (!$field['is_in_filter']) { continue; }
 
@@ -408,60 +408,77 @@ class groups extends cmsFrontend {
 
             $fields[$name] = $field;
 
-            if (!$this->request->has($name)){ continue; }
-
-            $value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
-            if (!$value) { continue; }
-
-            $value = $field['handler']->storeFilter($value);
-            if (!$value) { continue; }
-
-            if($field['handler']->applyFilter($this->model, $value) !== false){
-                $filters[$name] = $value;
+            if (!$this->request->has($name)) {
+                continue;
             }
 
+            $value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
+
+            $value = $field['handler']->storeFilter($value);
+            if (is_empty_value($value)) {
+                continue;
+            }
+
+            if ($field['handler']->applyFilter($this->model, $value) !== false) {
+                $filters[$name] = $value;
+            }
         }
 
         // Получаем количество и список записей
-        $total  = $this->model->getGroupsCount();
+        $total = $this->model->getGroupsCount();
 
-        if($this->request->has('show_count')){
+        if ($this->request->has('show_count')) {
 
-            $hint = LANG_SHOW.' '.html_spellcount($total, LANG_GROUPS_GROUP_SPELLCOUNT, false, false, 0);
+            $hint = LANG_SHOW . ' ' . html_spellcount($total, LANG_GROUPS_GROUP_SPELLCOUNT, false, false, 0);
 
             return $this->cms_template->renderJSON([
                 'count'       => $total,
                 'filter_link' => false,
                 'hint'        => $hint
             ]);
-
         }
 
         $groups = $this->model->getGroups();
 
         // если задано максимальное кол-во, ограничиваем им
-        if($this->max_items_count){
+        if ($this->max_items_count) {
             $total = min($total, $this->max_items_count);
             $pages = ceil($total / $perpage);
-            if($page > $pages){
+            if ($page > $pages) {
                 $groups = false;
             }
         }
 
-        if($this->request->isStandard()){
-            if(!$groups && $page > 1){ cmsCore::error404(); }
+        if ($this->request->isStandard()) {
+            if (!$groups && $page > 1) {
+                cmsCore::error404();
+            }
         }
 
-        list($groups, $fields) = cmsEventsManager::hook('groups_before_list', array($groups, $fields));
+        list($groups, $fields) = cmsEventsManager::hook('groups_before_list', [$groups, $fields]);
 
         // строим массив полей для списка
-        if($groups){
-            foreach ($groups as $key => $group) {
-                foreach($fields as $name => $field){
+        if ($groups) {
+            foreach ($groups as &$group) {
+                foreach ($fields as $name => $field) {
 
-                    if ($field['is_system'] || !$field['is_in_list'] || !isset($group[$field['name']])) { continue; }
-                    if ($field['groups_read'] && !$this->cms_user->isInGroups($field['groups_read'])) { continue; }
-                    if (!$group[$field['name']] && $group[$field['name']] !== '0') { continue; }
+                    if ($field['is_system'] || !$field['is_in_list']) {
+                        continue;
+                    }
+
+                    if ($field['groups_read'] && !$this->cms_user->isInGroups($field['groups_read'])) {
+                        continue;
+                    }
+
+                    if (!array_key_exists($field['name'], $group)) {
+
+                        // Виртуальное поле. В таблице ячейки может не быть.
+                        if($field['handler']->is_virtual){
+                            $group[$field['name']] = '';
+                        } else {
+                            continue;
+                        }
+                    }
 
                     if (!isset($field['options']['label_in_list'])) {
                         $label_pos = 'none';
@@ -470,32 +487,31 @@ class groups extends cmsFrontend {
                     }
 
                     $field_html = $field['handler']->setItem($group)->parseTeaser($group[$field['name']]);
-                    if (!$field_html) { continue; }
+                    if (is_empty_value($field_html)) { continue; }
 
-                    $groups[$key]['fields'][$field['name']] = array(
+                    $group['fields'][$field['name']] = [
                         'label_pos' => $label_pos,
                         'type'      => $field['type'],
                         'name'      => $field['name'],
                         'title'     => $field['title'],
                         'html'      => $field_html
-                    );
-
+                    ];
                 }
             }
         }
 
-        return $this->cms_template->renderInternal($this, 'list', array(
+        return $this->cms_template->renderInternal($this, 'list', [
             'page_url'     => $page_url,
             'fields'       => $fields,
             'filters'      => $filters,
+            'filter_query' => array_merge($filters, $ext_hidden_params), // Используется в пагинации
             'page'         => $page,
             'perpage'      => $perpage,
             'total'        => $total,
             'groups'       => $groups,
             'dataset_name' => $dataset_name,
             'user'         => $this->cms_user
-        ));
-
+        ]);
     }
 
     public function getGroupContentCounts($group) {

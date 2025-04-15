@@ -11,6 +11,8 @@ class onContentTagsSearch extends cmsAction {
             return '';
         }
 
+        cmsModel::cacheResult('current_ctype', $ctype);
+
         $this->model->
                 join('tags_bind', 't', "t.target_id = i.id AND t.target_subject = '{$ctype['name']}' AND t.target_controller = 'content'")->
                 filterEqual('t.tag_id', $tag['id']);

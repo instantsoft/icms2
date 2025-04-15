@@ -3005,11 +3005,25 @@ class cmsTemplate {
         $files = array_unique($files);
 
         if ($files) {
+
+            $is_js_css_pattern = false;
+            // Отдельно проверяем JS и CSS файлы
+            if (substr($pattern, -3) === '.js' || substr($pattern, -4) === '.css') {
+                $is_js_css_pattern = true;
+            }
+
             foreach ($files as $file) {
 
                 $file_name  = $file_title = str_replace('.tpl', '', $file);
 
                 if (in_array($file_name, $excluded)) {
+                    continue;
+                }
+
+                if ($is_js_css_pattern) {
+
+                    $__files[$file_name] = $file_title;
+
                     continue;
                 }
 

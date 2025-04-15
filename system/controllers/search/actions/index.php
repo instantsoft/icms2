@@ -6,7 +6,7 @@ class actionSearchIndex extends cmsAction {
 
     public function run($target = false) {
 
-        $default_order_by = !empty($this->options['order_by']) ? $this->options['order_by']: 'fsort';
+        $default_order_by = $this->options['order_by'] ?? 'fsort';
 
         $query    = $this->request->get('q', '');
         $type     = $this->request->get('type', 'words');
@@ -49,6 +49,11 @@ class actionSearchIndex extends cmsAction {
                 $page_url = href_to($this->name);
             } else {
                 $page_url = href_to($this->name, $target);
+            }
+
+            // Если по трём символам, то сортировка принудительно по дате
+            if($this->model->isThreeSymbolSearch()){
+                $order_by = 'date_pub';
             }
 
             // найден ли результат
@@ -97,50 +102,72 @@ class actionSearchIndex extends cmsAction {
 
                         $result = [];
 
-                        if (!$is_results_found && (($target && $target == $sources_name) || !$target)) {
+                        if (!$is_results_found && ($target === $sources_name || !$target)) {
 
-                            // Поля, какие хотим подсветить, если они отличаются от match_fields
-                            if(!empty($search_controller['highlight_fields'][$sources_name])){
-                                $this->model->setHighlightFields($search_controller['highlight_fields'][$sources_name]);
+                            $list_html = null;
+
+                            $order_raw = ($order_by === 'date_pub' ? 'i.' : '') . $order_by . ' desc';
+
+                            if (!empty($this->options['list_type_as_original'])) {
+
+                                // результат поиска получаем только по переданному контроллеру
+                                $controller = cmsCore::getController($search_controller['name'], $this->request);
+
+                                $list_html = $controller->runHook('fulltext_search_html', [$sources_name, [
+                                    'filter_query' => $this->model->getFilterQuery(),
+                                    'filters'      => [$this->model->filterDateInterval($date, true)],
+                                    'order_raw'    => $order_raw,
+                                    'http_query'   => ['q' => $query, 'order_by' => $order_by, 'type' => $type, 'date' => $date]
+                                ], $page_url], false);
+
                             }
 
-                            // Если по трём символам, то сортировка принудительно по дате
-                            if($this->model->isThreeSymbolSearch()){
-                                $order_by = 'date_pub';
-                            }
-                            // Сортировка
-                            $this->model->orderByRaw(($order_by === 'date_pub' ? 'i.' : '').$order_by.' desc');
+                            if (empty($this->options['list_type_as_original']) || !$list_html) {
 
-                            // Разбивка на страницы
-                            $this->model->limitPage($page, $this->options['perpage']);
+                                // Поля, какие хотим подсветить, если они отличаются от match_fields
+                                if(!empty($search_controller['highlight_fields'][$sources_name])){
+                                    $this->model->setHighlightFields($search_controller['highlight_fields'][$sources_name]);
+                                }
 
-                            // Поля для выборки
-                            $this->model->selectList($search_controller['select_fields'][$sources_name]);
+                                // Сортировка
+                                $this->model->orderByRaw($order_raw);
 
-                            $result = $this->model->getSearchResults($search_controller['table_names'][$sources_name]);
+                                // Разбивка на страницы
+                                $this->model->limitPage($page, $this->options['perpage']);
 
-                            // Применяем коллбэк
-                            foreach ($result as $key => $item) {
+                                // Поля для выборки
+                                $this->model->selectList($search_controller['select_fields'][$sources_name]);
 
-                                if (is_callable($search_controller['item_callback'])) {
+                                $result = $this->model->getSearchResults($search_controller['table_names'][$sources_name]);
 
-                                    $result[$key] = call_user_func_array($search_controller['item_callback'], [
-                                        $item,
-                                        $this->model,
-                                        $sources_name,
-                                        $search_controller['match_fields'][$sources_name],
-                                        $search_controller['select_fields'][$sources_name]
-                                    ]);
+                                // Применяем коллбэк
+                                foreach ($result as $key => $item) {
 
-                                    if ($result[$key] === false) {
-                                        unset($result[$key]);
+                                    if (is_callable($search_controller['item_callback'])) {
+
+                                        $result[$key] = call_user_func_array($search_controller['item_callback'], [
+                                            $item,
+                                            $this->model,
+                                            $sources_name,
+                                            $search_controller['match_fields'][$sources_name],
+                                            $search_controller['select_fields'][$sources_name]
+                                        ]);
+
+                                        if ($result[$key] === false) {
+                                            unset($result[$key]);
+                                        }
                                     }
                                 }
+
+                                $result = cmsEventsManager::hook("content_{$sources_name}_search_list", $result);
                             }
 
-                            $result = cmsEventsManager::hook("content_{$sources_name}_search_list", $result);
-
                             $is_results_found = true;
+
+                            // Для активности пункта меню
+                            if (!$target) {
+                                $this->cms_core->uri_before_remap .= '/'.$sources_name;
+                            }
 
                             $target       = $sources_name;
                             $target_title = $sources_title;
@@ -150,6 +177,7 @@ class actionSearchIndex extends cmsAction {
                             'title' => $sources_title,
                             'name'  => $sources_name,
                             'items' => $result,
+                            'html'  => $list_html ?? null,
                             'count' => $results_count
                         ];
                     }
@@ -178,17 +206,18 @@ class actionSearchIndex extends cmsAction {
         ]);
 
         return $this->cms_template->render($tpl, [
-            'user'         => $this->cms_user,
-            'order_by'     => $order_by,
-            'query'        => $query,
-            'type'         => $type,
-            'date'         => $date,
-            'target'       => $target,
-            'target_title' => $target_title,
-            'page'         => $page,
-            'perpage'      => $this->options['perpage'],
-            'results'      => $results,
-            'page_url'     => $page_url ?? false
+            'user'               => $this->cms_user,
+            'order_by'           => $order_by,
+            'query'              => $query,
+            'type'               => $type,
+            'date'               => $date,
+            'target'             => $target,
+            'target_title'       => $target_title,
+            'page'               => $page,
+            'perpage'            => $this->options['perpage'],
+            'show_search_params' => $this->getOption('show_search_params'),
+            'results'            => $results,
+            'page_url'           => $page_url ?? false
         ]);
     }
 

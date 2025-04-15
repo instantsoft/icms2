@@ -44,6 +44,24 @@ class formSearchOptions extends cmsForm {
             ],
             [
                 'type'   => 'fieldset',
+                'title'  => LANG_SEARCH_DISPLAY,
+                'childs' => [
+                    new fieldList('list_type_as_original', [
+                        'title' => LANG_SEARCH_DISPLAY_TYPE,
+                        'default' => 0,
+                        'items' => [
+                            0 => LANG_SEARCH_DISPLAY_TYPE0,
+                            1 => LANG_SEARCH_DISPLAY_TYPE1
+                        ]
+                    ]),
+                    new fieldCheckbox('show_search_params', [
+                        'title' => LANG_SEARCH_SHOW_PARAMS,
+                        'default' => 1
+                    ])
+                ]
+            ],
+            [
+                'type'   => 'fieldset',
                 'title'  => LANG_SEARCH_PERPAGE,
                 'childs' => [
                     new fieldNumber('perpage', [

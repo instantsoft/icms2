@@ -425,6 +425,7 @@
     define('LANG_CP_WIDGETS_COL_WIDTH',         'Ширина для разрешений %s');
     define('LANG_CP_WIDGETS_COL_WIDTH_ALL',     'Ширина для всех разрешений');
     define('LANG_CP_WIDGETS_COL_AUTO',          'По ширине содержимого');
+    define('LANG_CP_WIDGETS_COL_ADD_JS',        'Подключаемые JavaScript файлы для колонки, если на позиции будут виджеты');
     define('LANG_CP_WIDGETS_ADD_COL',           'Добавить колонку');
     define('LANG_CP_WIDGETS_ROWS_TITLE',        'Заголовки рядов');
     define('LANG_CP_WIDGETS_ADD_ROW',           'Добавить ряд');

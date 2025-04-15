@@ -1,67 +1,75 @@
 <?php
+
 class formAdminWidgetsCols extends cmsForm {
 
     public function init($do, $col_id, $row) {
 
-        return array(
-            'basic' => array(
-                'type' => 'fieldset',
-                'childs' => array(
+        return [
+            'basic' => [
+                'type'   => 'fieldset',
+                'childs' => [
                     new fieldHidden('row_id'),
-                    new fieldString('title', array(
+                    new fieldString('title', [
                         'title' => LANG_TITLE,
-                        'rules' => array(
-                            array('required'),
-                            array('max_length', 255)
-                        )
-                    )),
-                    new fieldString('name', array(
+                        'rules' => [
+                            ['required'],
+                            ['max_length', 255]
+                        ]
+                    ]),
+                    new fieldString('name', [
                         'title' => LANG_CP_WIDGETS_COL_NAME,
-                        'hint' => LANG_CP_WIDGETS_COL_NAME_HINT,
-                        'rules' => array(
-                            array('max_length', 50),
-                            array('sysname'),
-                            array(function($controller, $data, $value) use($do, $col_id, $row){
+                        'hint'  => LANG_CP_WIDGETS_COL_NAME_HINT,
+                        'rules' => [
+                            ['max_length', 50],
+                            ['sysname'],
+                            [function ($controller, $data, $value) use ($do, $col_id, $row) {
 
-                                if (empty($value)) { return true; }
-                                if (!in_array(gettype($value), array('integer','string','double'))) { return ERR_VALIDATE_INVALID; }
+                                if (empty($value)) {
+                                    return true;
+                                }
+                                if (!in_array(gettype($value), ['integer', 'string', 'double'])) {
+                                    return ERR_VALIDATE_INVALID;
+                                }
 
                                 $model = new cmsModel();
 
                                 $model->filterEqual('name', $value);
                                 $model->filterEqual('r.template', $row['template']);
 
-                                if($col_id){
+                                if ($col_id) {
                                     $model->filterNotEqual('id', $col_id);
                                 }
                                 $model->joinInner('layout_rows', 'r', 'r.id = i.row_id');
                                 $count = $model->getCount('layout_cols');
 
-                                if ($count) { return ERR_VALIDATE_UNIQUE; }
+                                if ($count) {
+                                    return ERR_VALIDATE_UNIQUE;
+                                }
+
                                 return true;
-                            })
-                        )
-                    )),
-                    new fieldList('type', array(
-                        'title' => LANG_CP_WIDGETS_COL_TYPE,
+                            }]
+                        ]
+                    ]),
+                    new fieldList('type', [
+                        'title'   => LANG_CP_WIDGETS_COL_TYPE,
                         'default' => 'typical',
-                        'items' => array(
+                        'items'   => [
                             'typical' => LANG_CP_WIDGETS_COL_TYPE1,
                             'custom'  => LANG_CP_WIDGETS_COL_TYPE2
-                        )
-                    )),
-                    new fieldHtml('wrapper', array(
-                        'title' => LANG_CP_WIDGETS_COL_WRAPPER,
-                        'hint'  => LANG_CP_WIDGETS_COL_WRAPPER_H,
-                        'options' => array(
+                        ]
+                    ]),
+                    new fieldHtml('wrapper', [
+                        'title'   => LANG_CP_WIDGETS_COL_WRAPPER,
+                        'hint'    => LANG_CP_WIDGETS_COL_WRAPPER_H,
+                        'options' => [
                             'editor' => 'ace'
-                        ),
-                        'visible_depend' => array('type' => array('hide' => array('typical')))
-                    )),
-                    new fieldList('tag', array(
-                        'title' => LANG_CP_WIDGETS_COL_TAG,
+                        ],
+                        'visible_depend' => ['type' => ['hide' => ['typical']]]
+                    ]),
+                    new fieldList('tag', [
+                        'title'   => LANG_CP_WIDGETS_COL_TAG,
                         'default' => 'div',
-                        'items' => array(
+                        'items'   => [
                             'div'     => '<div>',
                             'article' => '<article>',
                             'aside'   => '<aside>',
@@ -70,20 +78,27 @@ class formAdminWidgetsCols extends cmsForm {
                             'header'  => '<header>',
                             'nav'     => '<nav>',
                             'section' => '<section>'
-                        ),
-                        'visible_depend' => array('type' => array('hide' => array('custom')))
-                    )),
-                    new fieldString('class', array(
+                        ],
+                        'visible_depend' => ['type' => ['hide' => ['custom']]]
+                    ]),
+                    new fieldString('class', [
                         'title' => LANG_CP_WIDGETS_COL_CLASS,
-                        'rules' => array(
-                            array('max_length', 100)
-                        ),
-                        'visible_depend' => array('type' => array('hide' => array('custom')))
-                    ))
-                )
-            )
-        );
-
+                        'rules' => [
+                            ['max_length', 100]
+                        ],
+                        'visible_depend' => ['type' => ['hide' => ['custom']]]
+                    ]),
+                    new fieldList('options:add_js_files', [
+                        'title' => LANG_CP_WIDGETS_COL_ADD_JS,
+                        'hint'  => sprintf(LANG_PARSER_TEMPLATE_HINT, 'js/', 'layout-col-'),
+                        'is_chosen_multiple' => true,
+                        'generator' => function () use($row) {
+                            return cmsTemplate::getInstance()->getAvailableTemplatesFiles('js', 'layout-col-*.js', $row['template']);
+                        }
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

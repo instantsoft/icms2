@@ -20,4 +20,8 @@
     define('LANG_SEARCH_QUERY',              'Search request');
     define('LANG_SEARCH_TARGET_TITLE',       'Search Target Title');
     define('LANG_SEARCH_TARGET',             'Search Target Name');
-    
+    define('LANG_SEARCH_DISPLAY',           'Search Page');
+    define('LANG_SEARCH_SHOW_PARAMS',       'Show the search parameters');
+    define('LANG_SEARCH_DISPLAY_TYPE',      'Display type of search results');
+    define('LANG_SEARCH_DISPLAY_TYPE0',     'Unified view with highlighting of searched words');
+    define('LANG_SEARCH_DISPLAY_TYPE1',     'Like the original list of content items');

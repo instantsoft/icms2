@@ -7,35 +7,36 @@ class photos extends cmsFrontend {
     protected $useOptions = true;
     public $useSeoOptions = true;
 
-    public function route($uri){
+    public function route($uri) {
 
         $action_name = $this->parseRoute($this->cms_core->uri);
-        if (!$action_name) { cmsCore::error404(); }
+        if (!$action_name) {
+            cmsCore::error404();
+        }
 
         $this->runAction($action_name);
-
     }
 
-    public function getOptions(){
-
+    public function getOptions() {
         return $this->model->config;
-
     }
 
     public function getRowHeight($preset_options_name = 'preset_small') {
 
-        if(isset(self::$row_height)){ return self::$row_height; }
+        if (isset(self::$row_height)) {
+            return self::$row_height;
+        }
 
-        $preset_small = array('width' => 160, 'height'=>160);
-        if (!empty($this->options[$preset_options_name])){
+        $preset_small = ['width' => 160, 'height' => 160];
+
+        if (!empty($this->options[$preset_options_name])) {
             $preset_small = cmsCore::getModel('images')->getPresetByName($this->options[$preset_options_name]);
         }
 
-        self::$row_height = ($preset_small['height'] ? $preset_small['height'] : $preset_small['width']);
+        self::$row_height   = ($preset_small['height'] ? $preset_small['height'] : $preset_small['width']);
         self::$preset_small = $preset_small['name'];
 
         return self::$row_height;
-
     }
 
     public function getPhotosList($item_type_id = 0, $item_type = '') {
@@ -43,19 +44,22 @@ class photos extends cmsFrontend {
         cmsEventsManager::hook('photos_list_filter', $this->model);
 
         $photos = $this->model->getPhotos($item_type_id, $item_type);
-        if(!$photos){ return false; }
+        if (!$photos) {
+            return false;
+        }
 
         return cmsEventsManager::hook('photos_before_list', $photos);
-
     }
 
-    public function renderPhotosList($item, $item_type, $page, $perpage = false, $show_next = true){
+    public function renderPhotosList($item, $item_type, $page, $perpage = false, $show_next = true) {
 
-        $perpage  = ($perpage ? $perpage : (empty($this->options['limit']) ? 16 : $this->options['limit']));
+        $perpage = $perpage ?: ($this->options['limit'] ?? 16);
 
-        if (!$this->model->order_by){ $this->model->orderBy($this->options['ordering'], $this->options['orderto']); }
+        if (!$this->model->order_by) {
+            $this->model->orderBy($this->options['ordering'], $this->options['orderto']);
+        }
 
-        if($show_next){
+        if ($show_next) {
             // получаем на одну страницу больше
             $this->model->limitPagePlus($page, $perpage);
         } else {
@@ -63,23 +67,26 @@ class photos extends cmsFrontend {
         }
 
         // если альбом не общий, фильтруем для всех и для друзей
-        if(empty($item['is_public']) && $this->cms_user->isFriend($item['user_id'])){
+        if (empty($item['is_public']) && $this->cms_user->isFriend($item['user_id'])) {
             $this->model->disablePrivacyFilterForFriends();
         }
 
         $photos = $this->getPhotosList($item['id'], $item_type);
-        if(!$photos && $page > 1){ cmsCore::error404(); }
+        if (!$photos && $page > 1) {
+            cmsCore::error404();
+        }
 
-        if($show_next && $photos && (count($photos) > $perpage)){
-            $has_next = true; array_pop($photos);
+        if ($show_next && $photos && (count($photos) > $perpage)) {
+            $has_next = true;
+            array_pop($photos);
         } else {
             $has_next = false;
         }
 
         $is_owner = cmsUser::isAllowed('albums', 'delete', 'all') ||
-            (cmsUser::isAllowed('albums', 'delete', 'own') && $item['user_id'] == $this->cms_user->id);
+                (cmsUser::isAllowed('albums', 'delete', 'own') && $item['user_id'] == $this->cms_user->id);
 
-        $tpl_data = array(
+        $tpl_data = [
             'row_height'   => $this->getRowHeight(),
             'user'         => $this->cms_user,
             'item'         => $item,
@@ -89,14 +96,13 @@ class photos extends cmsFrontend {
             'is_owner'     => $is_owner,
             'item_type'    => $item_type,
             'preset_small' => $this->options['preset_small']
-        );
+        ];
 
-        if (!$this->request->isAjax()){
+        if (!$this->request->isAjax()) {
             return $this->cms_template->renderInternal($this, 'album', $tpl_data);
-        } else {
-            $this->halt($this->cms_template->renderInternal($this, 'photos', $tpl_data));
         }
 
+        return $this->halt($this->cms_template->renderInternal($this, 'photos', $tpl_data));
     }
 
     public function getDownloadHash() {

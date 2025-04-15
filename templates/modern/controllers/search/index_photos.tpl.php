@@ -30,14 +30,10 @@
                 'counter'  => $result['count']
             ];
 
-            if($result['items']){
+            if($result['items'] || $result['html']) {
                 $search_data = $result;
             }
-
         }
-
-        $content_menu[0]['url'] = href_to('search') . '?' . $uri_query;
-        $content_menu[0]['url_mask'] = href_to('search');
 
         $this->addMenuItems('results_tabs', $content_menu);
     }
@@ -48,10 +44,11 @@
 </h1>
 
 <?php $this->renderChild('search_form', [
-    'query'    => $query,
-    'type'     => $type,
-    'date'     => $date,
-    'order_by' => $order_by
+    'show_search_params' => $show_search_params,
+    'query'              => $query,
+    'type'               => $type,
+    'date'               => $date,
+    'order_by'           => $order_by
 ]); ?>
 
 <?php if ($query && empty($search_data)){ ?>
@@ -61,9 +58,13 @@
     </p>
 <?php } ?>
 
-<?php if (!empty($search_data)){ ?>
+<?php if (empty($search_data)){ return; } ?>
 
-    <?php $this->menu('results_tabs', true, 'nav nav-pills mb-3 mb-md-4'); ?>
+<?php $this->menu('results_tabs', true, 'nav nav-pills mb-3 mb-md-4'); ?>
+
+<?php if (!empty($search_data['html'])) { ?>
+    <?php echo $search_data['html']; ?>
+<?php } else { ?>
 
     <div class="album-photos-wrap d-flex flex-wrap m-n1 mb-3 mb-md-4" id="album-photos-list" data-delete-url="<?php echo href_to('photos', 'delete'); ?>">
         <?php $this->renderControllerChild('photos', 'photos', [

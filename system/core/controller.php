@@ -207,7 +207,7 @@ class cmsController {
         if (!$this->useOptions) {
             return null;
         }
-        return isset($this->options[$key]) ? $this->options[$key] : null;
+        return array_key_exists($key, $this->options) ? $this->options[$key] : null;
     }
 
     /**

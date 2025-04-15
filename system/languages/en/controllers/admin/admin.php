@@ -404,6 +404,7 @@
     define('LANG_CP_WIDGETS_COL_WIDTH',         'Width for %s resolutions');
     define('LANG_CP_WIDGETS_COL_WIDTH_ALL',     'Width for all resolutions');
     define('LANG_CP_WIDGETS_COL_AUTO',          'Variable width content');
+    define('LANG_CP_WIDGETS_COL_ADD_JS',        'JavaScript files for the column, if there will be widgets on the position');
     define('LANG_CP_WIDGETS_ADD_COL',           'Add col');
     define('LANG_CP_WIDGETS_ROWS_TITLE',        'Row Headers');
     define('LANG_CP_WIDGETS_ADD_ROW',           'Add row');

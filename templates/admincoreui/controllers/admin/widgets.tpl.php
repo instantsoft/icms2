@@ -131,7 +131,7 @@
                                 <div id="accordion">
                                     <?php foreach($widgets_list as $controller_name => $widgets){ ?>
                                         <div class="section">
-                                            <?php $controller_title = $controller_name ? constant("LANG_".mb_strtoupper($controller_name)."_CONTROLLER") : LANG_CP_WIDGETS_MISC; ?>
+                                            <?php $controller_title = $controller_name ? string_lang($controller_name . '_CONTROLLER', $controllers[$controller_name] ?? $controller_name) : LANG_CP_WIDGETS_MISC; ?>
                                             <a class="btn btn-primary btn-block mb-1 text-left rounded-0" href="#" rel="<?php echo $controller_name; ?>" data-toggle="collapse" data-target="#w-<?php echo $controller_name; ?>">
                                                 <?php echo $controller_title; ?>
                                             </a>
