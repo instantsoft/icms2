@@ -17,7 +17,7 @@ define('LANG_MODERN_THEME_COPYRIGHT_URL_HINT', 'If not specified, leads to the m
 define('LANG_MODERN_THEME_COPYRIGHT_YEAR', 'Copyright Year');
 define('LANG_MODERN_THEME_COPYRIGHT_YEAR_HINT', 'If not specified, displays the current one');
 define('LANG_MODERN_THEME_ENABLE_ROUNDED', 'Turn on corner rounding');
-define('LANG_MODERN_THEME_ENABLE_TOPBTN', 'Show Top Button');
+define('LANG_MODERN_THEME_ENABLE_TOPBTN', 'Show "Scroll to Top" Button');
 define('LANG_MODERN_THEME_SHOW_COOKIEALERT', 'Show agreement with Cookie');
 define('LANG_MODERN_THEME_COOKIEALERT_TEXT', 'Cookie Text agreement');
 define('LANG_MODERN_THEME_COOKIEALERT_AGREE', 'I agree');
