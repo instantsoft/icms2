@@ -90,8 +90,17 @@ class comments extends cmsFrontend {
             ]);
         }
 
-        if(!$this->comments_title){
-            $this->comments_title = ($comments_count ? html_spellcount($comments_count, $this->labels->spellcount) : $this->labels->comments);
+        $comments_spell_count = $comments_count ? html_spellcount($comments_count, $this->labels->spellcount) : $this->labels->comments;
+
+        if (!$this->comments_title) {
+            $this->comments_title = $comments_spell_count;
+        } else  if (is_array($this->comments_title)) {
+
+            list($pattern, $item_data) = $this->comments_title;
+
+            $item_data['comments_spell_count'] = $comments_spell_count;
+
+            $this->comments_title = string_replace_keys_values_extended($pattern, $item_data);
         }
 
         $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([

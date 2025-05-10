@@ -557,7 +557,13 @@ class cmsTemplate {
 
                 $widgets = $group;
 
-                include($this->getTemplateFileName('widgets/wrapper_tabbed'));
+                // Проверяем обёртку у последнего сгруппированного виджета
+                $last_widget = end($group);
+                if (strpos($last_widget['wrapper'], 'wrapper_tabbed') !== 0) {
+                    $last_widget['wrapper'] = 'wrapper_tabbed';
+                }
+
+                include($this->getTemplateFileName('widgets/' . $last_widget['wrapper']));
             }
         }
     }

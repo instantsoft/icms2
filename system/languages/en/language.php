@@ -76,6 +76,7 @@
     define('LANG_WP_ALL_PAGES',              'All pages');
     define('LANG_WP_HOME_PAGE',              'Main page');
     define('LANG_WIDGET_TAB_PREV',           'Group with the previous widget');
+    define('LANG_WIDGET_TAB_PREV_HINT',      'If enabled, you can select container templates starting with <b>wrapper_tabbed</b>. The output container template of a widget group is determined by the last widget in the group.');
     define('LANG_WIDGET_TITLE_LINKS',        'Links in the widget header');
     define('LANG_WIDGET_TITLE_LINKS_HINT',   'In the <b><em>Title | URL</em></b> format, for example, <b><em>Google | http://www.google.com</em></b><br>If a link is wrapped in curly brackets <b>{ }</b>, it will be shown to authorized users only<br>One link in a line');
     define('LANG_WIDGET_WRAPPER_TPL',         'Container template');
@@ -184,11 +185,12 @@
     define('LANG_PARSER_LIST_MULTIPLE_SHOW_ALL',      'Show "All" item');
     define('LANG_PARSER_URL',                'Link');
     define('LANG_PARSER_URL_REDIRECT',       'Links through a redirect');
-    define('LANG_PARSER_URL_AUTO_HTTP',      'Add http:// automatically');
+    define('LANG_PARSER_URL_AUTO_HTTP',      'Add https:// automatically');
     define('LANG_PARSER_URL_NOFOLLOW',       'Add rel="nofollow" attribute');
+    define('LANG_PARSER_URL_ONLY_ICON',      'Show only the icon');
     define('LANG_PARSER_URL_CSS_CLASS',      'Link CSS class');
     define('LANG_PARSER_URL_TITLE',          'Set link title option');
-    define('LANG_PARSER_URL_TITLE_HINT',     'To display the link title, enter its name through the sign "|", for example: http://google.com|Google');
+    define('LANG_PARSER_URL_TITLE_HINT',     'To display the link title, enter its name through the sign "|", for example: https://google.com|Google');
     define('LANG_PARSER_AGE',                'Age');
     define('LANG_PARSER_AGE_DATE_TITLE',     'Starting date title');
     define('LANG_PARSER_AGE_FILTER_RANGE',   'Filter by range');

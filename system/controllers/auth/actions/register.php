@@ -40,7 +40,7 @@ class actionAuthRegister extends cmsAction {
         if ($this->request->has('submit')){
 
             if (!$this->options['is_reg_enabled']){
-                cmsCore::error404();
+                return cmsCore::error404();
             }
 
             //

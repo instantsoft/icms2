@@ -7,7 +7,7 @@ class actionAdminWidgetsAdd extends cmsAction {
     public function run() {
 
         if (!$this->request->isAjax()) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $widget_id     = $this->request->get('widget_id', 0);
@@ -46,11 +46,13 @@ class actionAdminWidgetsAdd extends cmsAction {
 
         $form = $this->getWidgetOptionsForm($widget_bind['name'], $widget_bind['controller'], false, $template_name, $widget_object->isAllowCacheableOption());
 
-        $widget_event_name = 'widget_' . ($widget_bind['controller'] ? $widget_bind['controller'] . '_' : '') . $widget_bind['name'] . '_form';
+        $widget_event_name = 'widget_' . ($widget_bind['controller'] ? $widget_bind['controller'] . '_' : '') . $widget_bind['name'];
 
-        list($form, $widget_bind, $widget_object, $template_name) = cmsEventsManager::hook(['widget_form', $widget_event_name], [$form, $widget_bind, $widget_object, $template_name], null, $this->request);
+        list($form, $widget_bind, $widget_object, $template_name) = cmsEventsManager::hook(['widget_form', $widget_event_name . '_form'], [$form, $widget_bind, $widget_object, $template_name], null, $this->request);
 
         $data = $form->parse(new cmsRequest($widget_bind));
+
+        list($widget_id, $data, $template_name) = cmsEventsManager::hook(['widget_before_update_bind', $widget_event_name . '_before_update_bind'], [$res['id'], $data, $template_name], null, $this->request);
 
         $this->model_backend_widgets->updateWidgetBinding($res['id'], $data);
 

@@ -14,24 +14,24 @@ class actionContentItemBind extends cmsAction {
         $selected_ids     = explode(',', $this->request->get('selected_ids', ''));
 
         if (!$ctype_name || !$child_ctype_name || !$item_id || !$selected_ids){
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         if (!cmsUser::isAllowed($child_ctype_name, 'bind_to_parent')) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $ctype = $this->model->getContentTypeByName($ctype_name);
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype) { return cmsCore::error404(); }
 
         $parent_item = $this->model->getContentItem($ctype_name, $item_id);
-        if (!$parent_item) { cmsCore::error404(); }
+        if (!$parent_item) { return cmsCore::error404(); }
 
         $child_ctype = $this->model->getContentTypeByName($child_ctype_name);
-        if (!$child_ctype) { cmsCore::error404(); }
+        if (!$child_ctype) { return cmsCore::error404(); }
 
         $relation = $this->model->getContentRelationByTypes($ctype['id'], $child_ctype['id']);
-        if (!$relation) { cmsCore::error404(); }
+        if (!$relation) { return cmsCore::error404(); }
 
         $perm = cmsUser::getPermissionValue($child_ctype_name, 'bind_to_parent');
 
@@ -44,32 +44,31 @@ class actionContentItemBind extends cmsAction {
             if (!$child_item) { continue; }
 
             $is_allowed_to_bind = $perm && (
-                                    ($perm == 'all_to_all') ||
-                                    ($perm == 'all_to_own' && $parent_item['user_id'] == $user->id) ||
-                                    ($perm == 'all_to_other' && $parent_item['user_id'] != $user->id) ||
-                                    ($perm == 'own_to_own' && $parent_item['user_id'] == $user->id && $child_item['user_id'] == $user->id) ||
-                                    ($perm == 'own_to_other' && $parent_item['user_id'] != $user->id && $child_item['user_id'] == $user->id) ||
-                                    ($perm == 'own_to_all' && $child_item['user_id'] == $user->id) ||
-                                    ($perm == 'other_to_own' && $parent_item['user_id'] == $user->id && $child_item['user_id'] != $user->id) ||
-                                    ($perm == 'other_to_other' && $parent_item['user_id'] != $user->id && $child_item['user_id'] != $user->id) ||
-                                    ($perm == 'other_to_all' && $child_item['user_id'] != $user->id)
-                                ) || $user->is_admin;
+                                ($perm == 'all_to_all') ||
+                                ($perm == 'all_to_own' && $parent_item['user_id'] == $user->id) ||
+                                ($perm == 'all_to_other' && $parent_item['user_id'] != $user->id) ||
+                                ($perm == 'own_to_own' && $parent_item['user_id'] == $user->id && $child_item['user_id'] == $user->id) ||
+                                ($perm == 'own_to_other' && $parent_item['user_id'] != $user->id && $child_item['user_id'] == $user->id) ||
+                                ($perm == 'own_to_all' && $child_item['user_id'] == $user->id) ||
+                                ($perm == 'other_to_own' && $parent_item['user_id'] == $user->id && $child_item['user_id'] != $user->id) ||
+                                ($perm == 'other_to_other' && $parent_item['user_id'] != $user->id && $child_item['user_id'] != $user->id) ||
+                                ($perm == 'other_to_all' && $child_item['user_id'] != $user->id)
+                            ) || $user->is_admin;
 
             if (!$is_allowed_to_bind) { continue; }
 
-            $this->model->bindContentItemRelation(array(
+            $this->model->bindContentItemRelation([
                 'parent_ctype_name' => $ctype['name'],
                 'parent_ctype_id'   => $ctype['id'],
                 'parent_item_id'    => $parent_item['id'],
                 'child_ctype_name'  => $child_ctype['name'],
                 'child_ctype_id'    => $child_ctype['id'],
                 'child_item_id'     => $child_item['id']
-            ));
+            ]);
 
         }
 
-        $this->redirectBack();
-
+        return $this->redirectBack();
     }
 
 }

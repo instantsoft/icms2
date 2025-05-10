@@ -97,7 +97,8 @@ function create_config($path, $file) {
         'session_save_path'           => $_SESSION['install']['paths']['session_save_path'],
         'session_maxlifetime'         => ini_get('session.gc_maxlifetime') / 60,
         'controllers_without_widgets' => ['admin'],
-        'ctype_default'               => []
+        'ctype_default'               => [],
+        'is_404_layout'               => 0
     ];
 
     write_config($file, $config);

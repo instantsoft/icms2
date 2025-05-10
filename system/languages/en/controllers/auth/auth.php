@@ -68,7 +68,7 @@ define('LANG_REG_SUCCESS_VERIFIED', 'E-mail address has been successfully verifi
 define('LANG_REG_SUCCESS_VERIFIED_AND_AUTH', 'E-mail address has been successfully verified. Welcome!');
 define('LANG_VERIFY_EMAIL_ERROR', 'User with this verification code not found. Is possible already activated or activation time is expired');
 define('LANG_VERIFY_EMAIL_CODE', 'Registration verification code');
-define('LANG_PROCESS_VERIFY_EMAIL', 'E-mailverification');
+define('LANG_PROCESS_VERIFY_EMAIL', 'E-mail Verification');
 define('LANG_RESTORE_TOKEN_EXPIRED', 'Password recovery request is expired ');
 define('LANG_RESTORE_TOKEN_IS_SEND', 'Password recovery instruction has been sent, check the "Spam" folder');
 define('LANG_RESTORE_BLOCK', 'Account is blocked');

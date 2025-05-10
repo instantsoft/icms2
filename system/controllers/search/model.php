@@ -111,7 +111,7 @@ class modelSearch extends cmsModel {
 
         $query = mb_strtolower(strip_tags(urldecode($query)));
         $query = preg_replace(
-            ['#[' . preg_quote(implode('', $this->special_chars)) . ']+#u', '#\s+#u'],
+            ['#[' . preg_quote(implode('', self::SPECIAL_CHARS)) . ']+#u', '#\s+#u'],
             ' ',
             $query
         );

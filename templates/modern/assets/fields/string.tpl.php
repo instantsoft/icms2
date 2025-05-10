@@ -58,7 +58,13 @@ if($field->context === 'filter' && $in_filter_as && $in_filter_as !== 'input'){ 
             ob_start(); ?>
         <script>
             $(function(){
-                $('#<?php echo $field->id; ?>').wrap("<div class='icms-form__password-field position-relative'></div>");
+                let field = $('#<?php echo $field->id; ?>');
+                let input_group = field.closest('.input-group');
+                if (input_group.length === 0) {
+                    field.wrap("<div class='icms-form__password-field position-relative'></div>");
+                } else {
+                    input_group.addClass('icms-form__password-field');
+                }
                 $('#f_<?php echo $field->id; ?> .icms-form__password-field').append('<a tabindex="1" href="#" class="icms-form__password-field-icon"><?php html_svg_icon('solid', 'eye'); ?></a>');
                 let password_field_icon = $('#f_<?php echo $field->id; ?> .icms-form__password-field-icon');
                 $(password_field_icon).on('click', function (){

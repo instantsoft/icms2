@@ -397,6 +397,7 @@ CREATE TABLE `{#}events` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Binding hooks to events';
 
 INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VALUES
+(6, 'widget_content_list_before_update_bind', 'content', 6, 1),
 (7, 'menu_admin', 'admin', 7, 1),
 (8, 'user_login', 'admin', 8, 1),
 (9, 'admin_confirm_login', 'admin', 9, 1),

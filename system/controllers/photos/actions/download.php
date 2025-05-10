@@ -40,7 +40,7 @@ class actionPhotosDownload extends cmsAction {
 
         $ext = strtolower(pathinfo($photo['image'][$preset], PATHINFO_EXTENSION));
 
-        $name = htmlspecialchars($photo['title']) . ' ' . $photo['sizes'][$preset]['width'] . '×' . $photo['sizes'][$preset]['height'] . '.' . $ext;
+        $name = $photo['title'] . ' ' . $photo['sizes'][$preset]['width'] . '×' . $photo['sizes'][$preset]['height'] . '.' . $ext;
 
         return $this->cms_core->response->sendDownloadFile($photo['image'][$preset], $name);
     }

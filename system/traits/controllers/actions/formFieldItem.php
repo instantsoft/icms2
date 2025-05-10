@@ -161,7 +161,6 @@ trait formFieldItem {
                 $form->hideField('visibility', 'options:relation_id');
                 $form->setFieldProperty('visibility', 'options:visible_depend', 'is_visible', false);
                 $form->setFieldProperty('visibility', 'options:is_in_item_pos', 'is_visible', false);
-                $form->hideFieldset('group');
                 $form->hideFieldset('format');
                 $form->hideFieldset('values');
                 $form->hideFieldset('labels');

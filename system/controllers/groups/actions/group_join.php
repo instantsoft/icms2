@@ -7,11 +7,11 @@ class actionGroupsGroupJoin extends cmsAction {
     public function run($group) {
 
         if ($group['access']['is_member']) {
-            $this->redirectToAction($group['slug']);
+            return $this->redirectToAction($group['slug']);
         }
 
         if (!$group['access']['is_can_join']) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $result = cmsEventsManager::hook('group_before_join', [
@@ -27,13 +27,13 @@ class actionGroupsGroupJoin extends cmsAction {
                 cmsUser::addSessionMessage($result['access_text'], 'error');
 
                 if (isset($result['redirect_url'])) {
-                    $this->redirect($result['redirect_url']);
+                    return $this->redirect($result['redirect_url']);
                 } else {
-                    $this->redirectToAction($group['slug']);
+                    return $this->redirectToAction($group['slug']);
                 }
             }
 
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $group  = $result['group'];
@@ -54,7 +54,7 @@ class actionGroupsGroupJoin extends cmsAction {
 
         cmsUser::addSessionMessage(LANG_GROUPS_JOIN_MESSAGE, 'success');
 
-        $this->redirectToAction($group['slug']);
+        return $this->redirectToAction($group['slug']);
     }
 
 }

@@ -136,12 +136,16 @@ class users extends cmsFrontend {
 
     public function getProfileMenu($profile) {
 
-        $menu = [
-            [
-                'title'    => LANG_USERS_PROFILE_INDEX,
-                'url'      => href_to_profile($profile),
-                'url_mask' => href_to_profile($profile)
-            ]
+        static $menu = [];
+
+        if ($menu !== []) {
+            return $menu;
+        }
+
+        $menu[] = [
+            'title'    => LANG_USERS_PROFILE_INDEX,
+            'url'      => href_to_profile($profile),
+            'url_mask' => href_to_profile($profile)
         ];
 
         if ($profile['is_deleted']) {
@@ -199,7 +203,7 @@ class users extends cmsFrontend {
                     $tab_info = array_merge($default_tab_info, $tab_info);
                 }
 
-                $menu[] = $tab_info;
+                $menu[$tab['name']] = $tab_info;
 
                 $this->tabs_controllers[$tab['controller']] = $controller;
             }
@@ -332,7 +336,7 @@ class users extends cmsFrontend {
 
         if ($this->request->isStandard()) {
             if (!$profiles && $page > 1) {
-                cmsCore::error404();
+                return cmsCore::error404();
             }
         }
 

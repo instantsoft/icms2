@@ -5,6 +5,8 @@
     $this->setPageDescription($seo_desc);
 
     $this->addBreadcrumb($seo_title);
+
+    $this->addHead('<link rel="canonical" href="' . href_to_abs('tags', $target, string_urlencode($tag['tag'])) . ($page > 1 ? '?page='.$page : '') . '">');
 ?>
 
 <h1><?php echo $seo_h1; ?></h1>

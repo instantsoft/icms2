@@ -31,9 +31,8 @@ class cmsModel {
      * Булевы операторы, которых быть не должно при fulltext search
      * https://dev.mysql.com/doc/refman/8.0/en/fulltext-boolean.html
      *
-     * @var array
      */
-    protected $special_chars = ['+', '-', '>','<', '(', ')', '~', '*', '"', '@'];
+    const SPECIAL_CHARS = ['+', '-', '>','<', '(', ')', '~', '*', '"', '@'];
 
     /**
      * Префикс по умолчанию таблиц контента
@@ -955,7 +954,7 @@ class cmsModel {
         }
 
         $value = trim(strip_tags(mb_strtolower($value)));
-        $value = trim(preg_replace('/[' . preg_quote(implode('', $this->special_chars)) . ']+/', ' ', $value));
+        $value = trim(preg_replace('/[' . preg_quote(implode('', self::SPECIAL_CHARS)) . ']+/', ' ', $value));
 
         // После очистки осталось не более 3х символов
         // MySQL не умеет искать в полнотекстовогом индексе по 3м и менее символам

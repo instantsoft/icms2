@@ -353,11 +353,10 @@ class modelContent extends cmsModel {
 
         $this->orderBy('ordering', 'asc');
 
-        $parents = $this->get('content_relations');
-        if (!$parents) { return []; }
+        $parents = $this->get('content_relations') ?: [];
 
-        foreach ($parents as $id => $parent) {
-            $parents[$id]['id_param_name'] = 'parent_' . $parent['ctype_name'] . '_id';
+        foreach ($parents as &$parent) {
+            $parent['id_param_name'] = 'parent_' . $parent['ctype_name'] . '_id';
         }
 
         return $parents;
@@ -1276,7 +1275,7 @@ class modelContent extends cmsModel {
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
         if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
 
-        if (!$this->order_by) {
+        if ($this->order_by === '') {
             $this->orderBy('date_pub', 'desc');
         }
 
@@ -1322,7 +1321,7 @@ class modelContent extends cmsModel {
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
         if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
 
-        if (!$this->order_by) {
+        if ($this->order_by === '') {
             $this->orderBy('date_pub', 'desc');
         }
 

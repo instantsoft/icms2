@@ -79,13 +79,14 @@
 }
 .icms-form__password-field {
     $blockName: &;
-    > input {
+    input {
         padding-right: $input-padding-x*4;
 
     }
     &:focus-within {
         #{$blockName}-icon {
             opacity: 1;
+            z-index: 3;
         }
     }
     &-icon {

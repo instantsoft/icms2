@@ -134,7 +134,7 @@ class activity extends cmsFrontend {
         // если запрос через URL
         if ($this->request->isStandard()) {
             if (!$items && $page > 1) {
-                cmsCore::error404();
+                return cmsCore::error404();
             }
         }
 

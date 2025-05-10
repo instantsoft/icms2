@@ -58,7 +58,7 @@ class actionGroupsDeclineRequest extends cmsAction {
 
         } else {
 
-            cmsCore::error404();
+            return cmsCore::error404();
 
         }
 

@@ -5,10 +5,10 @@ class actionAdminWidgetsColDelete extends cmsAction {
     public function run($id){
 
         $col = $this->model_backend_widgets->getLayoutCol($id);
-        if (!$col) { cmsCore::error404(); }
+        if (!$col) { return cmsCore::error404(); }
 
         $row = $this->model_backend_widgets->getLayoutRow($col['row_id']);
-        if (!$row) { cmsCore::error404(); }
+        if (!$row) { return cmsCore::error404(); }
 
         $this->model_backend_widgets->
                 filterEqual('template', $row['template'])->
@@ -43,8 +43,7 @@ class actionAdminWidgetsColDelete extends cmsAction {
 
         cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
-        $this->redirectBack();
-
+        return $this->redirectBack();
     }
 
 }

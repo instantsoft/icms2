@@ -17,7 +17,7 @@ class redirect extends cmsFrontend {
         $original_url = $url;
 
         if ($this->request->isAjax()) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $url_host = parse_url($url, PHP_URL_HOST);

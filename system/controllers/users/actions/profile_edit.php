@@ -7,7 +7,7 @@ class actionUsersProfileEdit extends cmsAction {
     public function run($profile, $do = false, $param = false) {
 
         if (!$this->cms_user->is_logged) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         // если нужно, передаем управление другому экшену
@@ -20,7 +20,7 @@ class actionUsersProfileEdit extends cmsAction {
 
         // проверяем наличие доступа
         if (!$this->is_own_profile && !$this->cms_user->is_admin) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         // Получаем поля
@@ -167,9 +167,9 @@ class actionUsersProfileEdit extends cmsAction {
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
                 if ($back_url) {
-                    $this->redirect($back_url);
+                    return $this->redirect($back_url);
                 } else {
-                    $this->redirectTo('users', (empty($profile['slug']) ? $profile['id'] : $profile['slug']));
+                    return $this->redirectTo('users', (empty($profile['slug']) ? $profile['id'] : $profile['slug']));
                 }
             }
 

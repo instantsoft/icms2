@@ -7,7 +7,7 @@ class actionActivityIndex extends cmsAction{
         $datasets = $this->getDatasets();
 
         if(!$dataset_name || !isset($datasets[$dataset_name])){
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $dataset = $datasets[$dataset_name];

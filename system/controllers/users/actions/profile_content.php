@@ -91,6 +91,8 @@ class actionUsersProfileContent extends cmsAction {
             return cmsCore::error404();
         }
 
+        $is_dataset_set = !empty($dataset);
+
         // Если есть наборы, применяем фильтры текущего
         $current_dataset = [];
         if ($datasets){
@@ -151,7 +153,7 @@ class actionUsersProfileContent extends cmsAction {
         cmsModel::cacheResult('current_ctype', $ctype);
         cmsModel::cacheResult('current_ctype_dataset', $current_dataset);
 
-        $list_html = $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''), false, 0, [], $dataset);
+        $list_html = $this->controller_content->renderItemsList($ctype, $page_url.($is_dataset_set ? '/'.$dataset : ''), false, 0, [], $dataset);
 
         $list_header = $list_header_h1 = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
 

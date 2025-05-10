@@ -16,10 +16,10 @@ class actionGroupsGroupLeave extends cmsAction {
 
             cmsUser::addSessionMessage(LANG_GROUPS_LEAVE_MESSAGE, 'info');
 
-            $this->redirectToAction($group['slug']);
+            return $this->redirectToAction($group['slug']);
         }
 
-        cmsCore::error404();
+        return cmsCore::error404();
     }
 
 }

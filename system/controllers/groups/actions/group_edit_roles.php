@@ -4,12 +4,14 @@ class actionGroupsGroupEditRoles extends cmsAction {
 
     public $lock_explicit_call = true;
 
-    public function run($group){
+    public function run($group) {
 
-         // проверяем наличие доступа
-        if (!$group['access']['is_owner'] && !$this->cms_user->is_admin) { cmsCore::error404(); }
+        // проверяем наличие доступа
+        if (!$group['access']['is_owner'] && !$this->cms_user->is_admin) {
+            return cmsCore::error404();
+        }
 
-        if ($this->request->isAjax()){
+        if ($this->request->isAjax()) {
             return $this->submit($group);
         }
 
@@ -20,21 +22,20 @@ class actionGroupsGroupEditRoles extends cmsAction {
         $this->cms_template->addBreadcrumb(LANG_GROUPS_EDIT, href_to('groups', $group['slug'], 'edit'));
         $this->cms_template->addBreadcrumb(LANG_GROUPS_EDIT_ROLES);
 
-        return $this->cms_template->render('group_edit_roles', array(
-            'group'   => $group,
-            'user'    => $this->cms_user
-        ));
-
+        return $this->cms_template->render('group_edit_roles', [
+            'group' => $group,
+            'user'  => $this->cms_user
+        ]);
     }
 
-    public function submit($group){
+    public function submit($group) {
 
         $role = trim(strip_tags($this->request->get('role', '')));
-        if (!$role){
-            return $this->cms_template->renderJSON(array(
+        if (!$role) {
+            return $this->cms_template->renderJSON([
                 'error'   => true,
                 'message' => ERR_VALIDATE_REQUIRED
-            ));
+            ]);
         }
 
         $role_id = $this->request->get('role_id', 0);
@@ -43,22 +44,20 @@ class actionGroupsGroupEditRoles extends cmsAction {
 
             $this->model->editRole($group, $role, $role_id);
 
-            return $this->cms_template->renderJSON(array(
+            return $this->cms_template->renderJSON([
                 'error' => false,
                 'role'  => $role
-            ));
-
+            ]);
         }
 
         $role_id = $this->model->addRole($group, $role);
 
-        return $this->cms_template->renderJSON(array(
+        return $this->cms_template->renderJSON([
             'error' => false,
-            'html'  => $this->cms_template->render('group_edit_role', array(
-                'roles' => array($role_id => $role)
-            ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL))
-        ));
-
+            'html'  => $this->cms_template->render('group_edit_role', [
+                'roles' => [$role_id => $role]
+            ], new cmsRequest([], cmsRequest::CTX_INTERNAL))
+        ]);
     }
 
 }

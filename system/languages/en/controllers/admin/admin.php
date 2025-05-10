@@ -462,7 +462,7 @@
     define('LANG_CP_WIDGET_PAGE_LAYOUT',        'Apply a layout for page');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Positive masks');
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Negative masks');
-    define('LANG_CP_WIDGET_URL_MASK_NOT_HINT',  'On pages matching these masks, the widget will not be shown. Use a slash to specify the main page.');
+    define('LANG_CP_WIDGET_URL_MASK_NOT_HINT',  'On pages matching these masks, the widget will not be shown. Use a slash to specify the main page. To reference pages with a 404 (not found) code, write 404.');
     define('LANG_CP_WIDGETS_UNUSED',            'Unused Widgets');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Here you can place the widgets that have to be temporarily hidden or moved to another page without losing their settings');
     define('LANG_CP_WIDGETS_BINDED',            'Binded widgets');
@@ -569,6 +569,7 @@
     define('LANG_CP_SETTINGS_TEMPLATE_DEV_HINT', 'Will be shown for administrators. Use this option to develop a template.');
     define('LANG_CP_SETTINGS_TEMPLATE_DEV_IP',  'IP addresses from which a template will be available for developers');
     define('LANG_CP_SUBMIT_COMPILE',            'Save and compile %s');
+    define('LANG_CP_SETTINGS_404_LAYOUT',       'Display widgets on page 404');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Theme Settings');
     define('LANG_CP_SETTINGS_TEMPLATE_INTH',    'Create your own theme');
     define('LANG_CP_SETTINGS_EDITOR',           'Default HTML editor');

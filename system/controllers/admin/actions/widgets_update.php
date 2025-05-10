@@ -42,15 +42,17 @@ class actionAdminWidgetsUpdate extends cmsAction {
             $widget_object->isAllowCacheableOption()
         );
 
-        $widget_event_name = 'widget_' . ($widget['controller'] ? $widget['controller'] . '_' : '') . $widget['name'] . '_form';
+        $widget_event_name = 'widget_' . ($widget['controller'] ? $widget['controller'] . '_' : '') . $widget['name'];
 
-        list($form, $widget, $widget_object, $template_name) = cmsEventsManager::hook(['widget_form', $widget_event_name], [$form, $widget, $widget_object, $template_name], null, $this->request);
+        list($form, $widget, $widget_object, $template_name) = cmsEventsManager::hook(['widget_form', $widget_event_name . '_form'], [$form, $widget, $widget_object, $template_name], null, $this->request);
 
         $widget = $form->parse($this->request, true, $widget);
 
         $errors = $form->validate($this, $widget);
 
         if (!$errors) {
+
+            list($widget_id, $widget, $template_name) = cmsEventsManager::hook(['widget_before_update_bind', $widget_event_name . '_before_update_bind'], [$widget_id, $widget, $template_name], null, $this->request);
 
             $this->model_backend_widgets->updateWidgetBinding($widget_id, $widget);
 

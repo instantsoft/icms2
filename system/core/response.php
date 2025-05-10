@@ -213,7 +213,7 @@ class cmsResponse {
             $file_name = pathinfo($file_path, PATHINFO_BASENAME);
         }
 
-        return $this->sendFile($file_path, ['Content-Disposition' => 'attachment; filename="' . $file_name . '"']);
+        return $this->sendFile($file_path, ['Content-Disposition' => 'attachment; filename="' . htmlspecialchars($file_name, ENT_COMPAT) . '"']);
     }
 
     /**
@@ -315,6 +315,15 @@ class cmsResponse {
         $this->status_code = $code;
 
         return $this;
+    }
+
+    /**
+     * Возвращает код состояния HTTP ответа
+     *
+     * @return int
+     */
+    public function getStatusCode() {
+        return $this->status_code;
     }
 
     /**

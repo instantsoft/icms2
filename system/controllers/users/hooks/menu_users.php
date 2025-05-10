@@ -2,58 +2,102 @@
 
 class onUsersMenuUsers extends cmsAction {
 
-    public function run($item){
+    public function run($item) {
 
-        if (!$this->cms_user->is_logged) { return false; }
+        $profile = cmsModel::getCachedResult('current_profile');
 
-        $action = $item['action'];
+        // Табы
+        if ($profile && strpos($item['action'], 'profile_') === 0) {
 
-        if ($action == 'profile'){
+            $action = str_replace('profile_', '', $item['action']);
 
-            return array(
-                'url'   => href_to_profile($this->cms_user),
-                'items' => false
-            );
+            $menus = $this->getProfileMenu($profile);
 
+            if (!isset($menus[$action])) {
+                return false;
+            }
+
+            $menu = $menus[$action];
+
+            unset($menu['title']);
+
+            return $menu;
         }
 
-        if ($action == 'settings'){
-
-            return array(
-                'url'   => href_to_profile($this->cms_user, array('edit')),
-                'items' => false
-            );
-
+        if (!$this->cms_user->is_logged) {
+            return false;
         }
 
-        if ($action == 'subscribers' && $this->cms_user->subscribers_count){
+        switch ($item['action']) {
+            case 'profile':
 
-            return array(
-                'url'     => href_to_profile($this->cms_user, array('subscribers')),
-                'counter' => $this->cms_user->subscribers_count
-            );
+                return [
+                    'url'   => href_to_profile($this->cms_user),
+                    'items' => false
+                ];
 
-        }
+            case 'logout':
 
-        if ($action == 'subscriptions'){
+                if (!$profile || $profile['id'] != $this->cms_user->id) {
+                    return false;
+                }
 
-            $this->model->filterEqual('user_id', $this->cms_user->id);
+                return [
+                    'url'   => href_to('auth', 'logout') . '?csrf_token=' . cmsForm::getCSRFToken(),
+                    'items' => false
+                ];
 
-            $subscriptions_count = $this->model->getCount('subscriptions_bind');
+            case 'edit':
 
-            $this->model->resetFilters();
+                if (!$profile || $profile['id'] != $this->cms_user->id) {
+                    return false;
+                }
 
-            if (!$subscriptions_count) { return false; }
+                return [
+                    'url'   => href_to_profile($this->cms_user, ['edit']),
+                    'items' => false
+                ];
 
-            return array(
-                'url'     => href_to_profile($this->cms_user, array('subscriptions')),
-                'counter' => $subscriptions_count
-            );
+            case 'settings':
 
+                return [
+                    'url'   => href_to_profile($this->cms_user, ['edit']),
+                    'items' => false
+                ];
+
+            case 'subscribers':
+
+                if (!$this->cms_user->subscribers_count) {
+                    return false;
+                }
+
+                return [
+                    'url'     => href_to_profile($this->cms_user, ['subscribers']),
+                    'counter' => $this->cms_user->subscribers_count
+                ];
+
+            case 'subscriptions':
+
+                $this->model->filterEqual('user_id', $this->cms_user->id);
+
+                $subscriptions_count = $this->model->getCount('subscriptions_bind');
+
+                $this->model->resetFilters();
+
+                if (!$subscriptions_count) {
+                    return false;
+                }
+
+                return [
+                    'url'     => href_to_profile($this->cms_user, ['subscriptions']),
+                    'counter' => $subscriptions_count
+                ];
+
+            default:
+                break;
         }
 
         return false;
-
     }
 
 }

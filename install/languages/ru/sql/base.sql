@@ -147,7 +147,7 @@ CREATE TABLE `{#}content_relations` (
   PRIMARY KEY (`id`),
   KEY `ctype_id` (`ctype_id`,`ordering`),
   KEY `child_ctype_id` (`child_ctype_id`,`target_controller`,`ordering`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Свзяи типов контента';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Связи типов контента';
 
 DROP TABLE IF EXISTS `{#}content_relations_bind`;
 CREATE TABLE `{#}content_relations_bind` (
@@ -397,6 +397,7 @@ CREATE TABLE `{#}events` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Привязка хуков к событиям';
 
 INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VALUES
+(6, 'widget_content_list_before_update_bind', 'content', 6, 1),
 (7, 'menu_admin', 'admin', 7, 1),
 (8, 'user_login', 'admin', 8, 1),
 (9, 'admin_confirm_login', 'admin', 9, 1),

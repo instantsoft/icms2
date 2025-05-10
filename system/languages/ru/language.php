@@ -75,6 +75,7 @@
     define('LANG_WP_ALL_PAGES',              'Все страницы');
     define('LANG_WP_HOME_PAGE',              'Главная страница');
     define('LANG_WIDGET_TAB_PREV',           'Объединять с предыдущим виджетом');
+    define('LANG_WIDGET_TAB_PREV_HINT',      'Если включено, то вы можете выбирать шаблоны контейнера, начинающиеся на <b>wrapper_tabbed</b>. Шаблон контейнера вывода группы виджетов определяется по последнему виджету группы.');
     define('LANG_WIDGET_TITLE_LINKS',        'Ссылки в заголовке виджета');
     define('LANG_WIDGET_TITLE_LINKS_HINT',   'В формате <b><em>Заголовок | URL</em></b>, например <b><em>Яндекс | https://www.yandex.ru</em></b><br>Если ссылка обернута в фигурные скобки <b>{ }</b> она будет показана только авторизованным пользователям<br>Одна ссылка в каждой строке');
     define('LANG_WIDGET_WRAPPER_TPL',         'Шаблон контейнера');
@@ -183,11 +184,12 @@
     define('LANG_PARSER_LIST_MULTIPLE_SHOW_ALL',      'Показывать пункт "Все"');
     define('LANG_PARSER_URL',                'Ссылка');
     define('LANG_PARSER_URL_REDIRECT',       'Ссылки через редирект');
-    define('LANG_PARSER_URL_AUTO_HTTP',      'Автоматически добавлять http://');
+    define('LANG_PARSER_URL_AUTO_HTTP',      'Автоматически добавлять https://');
     define('LANG_PARSER_URL_TITLE',          'Возможность установить заголовок для ссылки');
     define('LANG_PARSER_URL_NOFOLLOW',       'Добавлять атрибут rel="nofollow"');
+    define('LANG_PARSER_URL_ONLY_ICON',      'Показывать только иконку');
     define('LANG_PARSER_URL_CSS_CLASS',      'CSS класс ссылки');
-    define('LANG_PARSER_URL_TITLE_HINT',     'Для отображения названия ссылки, введите ее название через знак "|", например: http://yandex.ru|Яндекс');
+    define('LANG_PARSER_URL_TITLE_HINT',     'Для отображения названия ссылки, введите ее название через знак "|", например: https://ya.ru|Яндекс');
     define('LANG_PARSER_AGE',                'Возраст');
     define('LANG_PARSER_AGE_DATE_TITLE',     'Заголовок даты начала отсчета');
     define('LANG_PARSER_AGE_FILTER_RANGE',   'Фильтр по диапазону');

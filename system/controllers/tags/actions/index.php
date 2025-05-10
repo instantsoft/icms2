@@ -124,9 +124,9 @@ class actionTagsIndex extends cmsAction {
             ]);
         }
 
-        $this->cms_template->addHead('<link rel="canonical" href="' . href_to_abs($this->name, $target, string_urlencode($tag_name)) . '">');
-
         return $this->cms_template->render('search', [
+            'page'      => $this->request->get('page', 1),
+            'target'    => $target,
             'tag'       => $tag,
             'seo_title' => $seo_title,
             'seo_keys'  => $seo_keys,

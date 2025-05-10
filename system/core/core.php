@@ -1006,7 +1006,7 @@ class cmsCore {
         $this->defineController();
 
         if (!preg_match('/^[a-z]{1}[a-z0-9_]*$/', $this->controller)) {
-            self::error404();
+            return self::error404();
         }
 
         // загружаем контроллер
@@ -1087,6 +1087,8 @@ class cmsCore {
 
     /**
      * Запускает все виджеты, привязанные к текущей странице
+     *
+     * @return $this
      */
     public function runWidgets() {
 
@@ -1101,82 +1103,85 @@ class cmsCore {
         $controllers_without_widgets = cmsConfig::get('controllers_without_widgets');
 
         if ($controllers_without_widgets && in_array($this->controller, $controllers_without_widgets)) {
-            return;
+            return $this;
         }
 
         $matched_pages = $this->loadMatchedPages()->getMatchedPages();
-        if (!$matched_pages) { return; }
+        if (!$matched_pages) {
+            return $this;
+        }
 
         $widgets_list = self::getModel('widgets')->getWidgetsForPages(array_keys($matched_pages), $template->getName());
 
-        if (is_array($widgets_list)) {
+        $full_uri = $this->uri . ($this->uri_query ? '?' . http_build_query($this->uri_query) : '');
 
-            $full_uri = $this->uri . ($this->uri_query ? '?' . http_build_query($this->uri_query) : '');
+        // Для исключения главной страницы
+        if (!$full_uri) {
+            $full_uri = '/';
+        }
+        // Для 404 страниц единый URI
+        if ($this->response->getStatusCode() === 404) {
+            $full_uri = '404';
+        }
 
-            // Для исключения главной страницы
-            if (!$full_uri) {
-                $full_uri = '/';
+        $device_type = cmsRequest::getDeviceType();
+        $layout      = $template->getLayout();
+        $user        = cmsUser::getInstance();
+
+        if ($user->is_admin) {
+            self::loadControllerLanguage('admin');
+        }
+
+        foreach ($widgets_list as $widget) {
+
+            // Проверяем отрицательные маски виджета
+            if (!empty($widget['url_mask_not'])) {
+                if (string_matches_mask_list($widget['url_mask_not'], $full_uri)) {
+                    continue;
+                }
             }
 
-            $device_type = cmsRequest::getDeviceType();
-            $layout = $template->getLayout();
-            $user = cmsUser::getInstance();
-
-            if ($user->is_admin) {
-                self::loadControllerLanguage('admin');
+            // не выводим виджеты контроллеров, которые отключены
+            if (!empty($widget['controller']) && !cmsController::enabled($widget['controller'])) {
+                continue;
             }
 
-            foreach ($widgets_list as $widget) {
-
-                // Проверяем отрицательные маски виджета
-                if (!empty($widget['url_mask_not'])) {
-                    if (string_matches_mask_list($widget['url_mask_not'], $full_uri)) {
-                        continue;
-                    }
-                }
-
-                // не выводим виджеты контроллеров, которые отключены
-                if (!empty($widget['controller']) && !cmsController::enabled($widget['controller'])) {
-                    continue;
-                }
-
-                // проверяем доступ для виджетов
-                if (!$user->isInGroups($widget['groups_view'])) {
-                    continue;
-                }
-                if (!empty($widget['groups_hide']) && $user->isInGroups($widget['groups_hide']) && !$user->is_admin) {
-                    continue;
-                }
-
-                // проверяем для каких устройств показывать
-                if ($widget['device_types'] && !in_array($device_type, $widget['device_types'])) {
-                    continue;
-                }
-
-                // проверяем для каких макетов показывать
-                if ($widget['template_layouts'] && !in_array($layout, $widget['template_layouts'])) {
-                    continue;
-                }
-
-                // проверяем для каких языков показывать
-                if ($widget['languages'] && !in_array(self::getLanguageName(), $widget['languages'])) {
-                    continue;
-                }
-
-                cmsDebugging::pointStart('widgets');
-
-                $this->runWidget($widget);
-
-                cmsDebugging::pointProcess('widgets', function () use($widget) {
-                    return [
-                        'data' => $widget['title'] . ' => /system/' . self::getWidgetPath($widget['name'], $widget['controller']) . '/widget.php',
-                        'context' => [
-                            'target' => $widget['controller'],
-                            'subject' => $widget['name']
-                        ]
-                    ];
-                }, 0);
+            // проверяем доступ для виджетов
+            if (!$user->isInGroups($widget['groups_view'])) {
+                continue;
             }
+            if (!empty($widget['groups_hide']) && $user->isInGroups($widget['groups_hide']) && !$user->is_admin) {
+                continue;
+            }
+
+            // проверяем для каких устройств показывать
+            if ($widget['device_types'] && !in_array($device_type, $widget['device_types'])) {
+                continue;
+            }
+
+            // проверяем для каких макетов показывать
+            if ($widget['template_layouts'] && !in_array($layout, $widget['template_layouts'])) {
+                continue;
+            }
+
+            // проверяем для каких языков показывать
+            if ($widget['languages'] && !in_array(self::getLanguageName(), $widget['languages'])) {
+                continue;
+            }
+
+            cmsDebugging::pointStart('widgets');
+
+            $this->runWidget($widget);
+
+            cmsDebugging::pointProcess('widgets', function () use ($widget) {
+                return [
+                    'data'    => $widget['title'] . ' => /system/' . self::getWidgetPath($widget['name'], $widget['controller']) . '/widget.php',
+                    'context' => [
+                        'target'  => $widget['controller'],
+                        'subject' => $widget['name']
+                    ]
+                ];
+            }, 0);
         }
 
         return $this;
@@ -1372,11 +1377,26 @@ class cmsCore {
      */
     public static function error404() {
 
-        self::getInstance()->displayError(
-            404,
-            cmsTemplate::getInstance()->getRenderedAsset('errors/notfound', [], false, true),
-            'error_404'
-        );
+        $self = self::getInstance();
+
+        if (!cmsConfig::get('is_404_layout')) {
+
+            return $self->displayError(
+                404,
+                cmsTemplate::getInstance()->getRenderedAsset('errors/notfound', [], false, true),
+                'error_404'
+            );
+        }
+
+        cmsEventsManager::hook('error_404', $self->uri);
+
+        $self->response->setStatusCode(404);
+
+        self::getController('error404', $self->request)->runAction('index');
+
+        $self->runWidgets();
+
+        $self->response->setContent(cmsTemplate::getInstance()->getRenderedPage())->sendAndExit();
     }
 
     /**

@@ -2,14 +2,16 @@
 
 class actionImagesPresetsDelete extends cmsAction {
 
-    public function run($id){
+    public function run($id) {
 
-        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))){
-            cmsCore::error404();
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
         }
 
         $preset = $this->model->getPreset($id);
-        if (!$preset) { cmsCore::error404(); }
+        if (!$preset) {
+            return cmsCore::error404();
+        }
 
         $this->model->deletePreset($preset['id']);
 
@@ -17,8 +19,7 @@ class actionImagesPresetsDelete extends cmsAction {
 
         cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
-        $this->redirectToAction('presets');
-
+        return $this->redirectToAction('presets');
     }
 
 }

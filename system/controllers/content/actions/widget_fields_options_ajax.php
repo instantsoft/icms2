@@ -28,6 +28,10 @@ class actionContentWidgetFieldsOptionsAjax extends cmsAction {
 
         $form = $this->getForm('widget_content_list', [$ctype, $fields]);
 
+        if ($this->cms_config->template_admin) {
+            $this->cms_template->setBaseTemplate($this->cms_config->template_admin);
+        }
+
         ob_start();
 
         $this->cms_template->renderForm($form, [], [

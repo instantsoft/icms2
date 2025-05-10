@@ -26,7 +26,7 @@ class actionAdminCtypesModerators extends cmsAction {
             case 'delete': $this->delete();
                 break;
 
-            default : cmsCore::error404();
+            default : return cmsCore::error404();
         }
 
         return;

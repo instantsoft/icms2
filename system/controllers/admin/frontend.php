@@ -909,6 +909,7 @@ class admin extends cmsFrontend {
         // Флаг объединения с предыдущим виджетом
         $form->addField($title_fieldset_id, new fieldCheckbox('is_tab_prev', [
             'title'   => LANG_WIDGET_TAB_PREV,
+            'hint'    => LANG_WIDGET_TAB_PREV_HINT,
             'default' => false
         ]));
 

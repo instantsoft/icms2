@@ -3,7 +3,7 @@
 /**
  * Выводит строку, безопасную для html
  * @param string $string Строка
- * @param boolean $print Печатать результат или возвращать, по умолчанию true
+ * @param boolean $print Печатать результат или возвращать, по умолчанию печатать
  */
 function html($string, $print = true) {
 
@@ -237,7 +237,7 @@ function html_attr_str($attributes, $unset_class_key = true) {
             }
         } else {
             // Формируем строку атрибута с экранированием значения
-            $attr_parts[] = $key . '="' . html($val, false) . '"';
+            $attr_parts[] = $key . '="' . html((!is_array($val) ? $val : implode(' ', $val)), false) . '"';
         }
     }
 

@@ -2,28 +2,36 @@
 
 class actionContentTrash extends cmsAction {
 
-    public function run($ctype_name = null){
+    public function run($ctype_name = null) {
 
         $_ctypes = $this->model->getContentTypes();
-        if (!$_ctypes) { cmsCore::error404(); }
+        if (!$_ctypes) {
+            return cmsCore::error404();
+        }
 
-        $ctypes = array();
+        $ctypes = [];
 
-        foreach($_ctypes as $ctype){
-            if (!cmsUser::isAllowed($ctype['name'], 'restore')) { continue; }
+        foreach ($_ctypes as $ctype) {
+            if (!cmsUser::isAllowed($ctype['name'], 'restore')) {
+                continue;
+            }
             $ctypes[$ctype['name']] = $ctype;
         }
 
-        if(!$ctypes){ cmsCore::error404(); }
+        if (!$ctypes) {
+            return cmsCore::error404();
+        }
 
         $counts = $this->getDeletedCounts($ctypes);
 
-        foreach($counts as $_ctype_name => $count){
-            if(!$count){ unset($ctypes[$_ctype_name]); }
+        foreach ($counts as $_ctype_name => $count) {
+            if (!$count) {
+                unset($ctypes[$_ctype_name]);
+            }
         }
 
-        if(empty($ctypes)){
-            return $this->cms_template->render('trash_empty', array(), $this->request);
+        if (empty($ctypes)) {
+            return $this->cms_template->render('trash_empty', [], $this->request);
         }
 
         $is_index = false;
@@ -32,12 +40,14 @@ class actionContentTrash extends cmsAction {
 
         if (!$ctype_name) {
 
-            $ctype_name = $ctypes_list[0]; $is_index = true;
+            $ctype_name = $ctypes_list[0];
+            $is_index   = true;
 
         } else {
 
-            if(!isset($ctypes[$ctype_name])){ cmsCore::error404(); }
-
+            if (!isset($ctypes[$ctype_name])) {
+                return cmsCore::error404();
+            }
         }
 
         $page_url = $is_index ? href_to($this->name, 'trash') : href_to($this->name, 'trash', $ctype_name);
@@ -46,50 +56,49 @@ class actionContentTrash extends cmsAction {
 
         $list_html = $this->filterDeleted($ctype)->setListContext('trash')->renderItemsList($ctype, $page_url, true);
 
-        return $this->cms_template->render('trash', array(
+        return $this->cms_template->render('trash', [
             'is_index'   => $is_index,
             'counts'     => $counts,
             'ctype'      => $ctype,
             'ctypes'     => $ctypes,
             'ctype_name' => $ctype_name,
             'list_html'  => $list_html
-        ), $this->request);
-
+        ], $this->request);
     }
 
-    private function getDeletedCounts($ctypes){
+    private function getDeletedCounts($ctypes) {
 
-        $counts = array();
+        $counts = [];
 
-        foreach($ctypes as $ctype){
+        foreach ($ctypes as $ctype) {
 
             $this->filterDeleted($ctype);
-                $counts[$ctype['name']] = $this->model->getCount($this->model->table_prefix . $ctype['name']);
+
+            $counts[$ctype['name']] = $this->model->getCount($this->model->table_prefix . $ctype['name']);
+
             $this->model->resetFilters();
         }
 
         return $counts;
-
     }
 
-    private function filterDeleted($ctype){
+    private function filterDeleted($ctype) {
 
         $is_moderator = $this->controller_moderation->userIsContentModerator($ctype['name'], $this->cms_user->id);
 
-        if($is_moderator){
+        if ($is_moderator) {
             $this->model->disableApprovedFilter()->disablePubFilter()->disablePrivacyFilter();
         }
 
         $this->model->disableDeleteFilter()->filterDeleteOnly();
 
-        if(cmsUser::isAllowed($ctype['name'], 'restore', 'own') && !cmsUser::isAllowed($ctype['name'], 'restore', 'all')){
+        if (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && !cmsUser::isAllowed($ctype['name'], 'restore', 'all')) {
 
             $this->model->filterEqual('user_id', $this->cms_user->id);
 
             $this->model->disableApprovedFilter();
             $this->model->disablePubFilter();
             $this->model->disablePrivacyFilter();
-
         }
 
         return $this;

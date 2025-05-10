@@ -282,6 +282,9 @@ class formAdminSettings extends cmsForm {
                             'is_ceil' => true
                         ],
                         'default' => time()
+                    ]),
+                    new fieldCheckbox('is_404_layout', [
+                        'title' => LANG_CP_SETTINGS_404_LAYOUT
                     ])
                 ]
             ],

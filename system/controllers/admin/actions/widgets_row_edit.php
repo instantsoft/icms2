@@ -5,7 +5,7 @@ class actionAdminWidgetsRowEdit extends cmsAction {
     public function run($id){
 
         $row = $this->model_backend_widgets->getLayoutRow($id);
-        if (!$row) { cmsCore::error404(); }
+        if (!$row) { return cmsCore::error404(); }
 
         $form = $this->getSchemeRowForm('edit', $row);
 

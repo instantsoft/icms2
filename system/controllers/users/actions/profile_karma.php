@@ -29,6 +29,8 @@ class actionUsersProfileKarma extends cmsAction {
 
         $meta_profile = $this->prepareItemSeo($profile, $fields, ['name' => 'users']);
 
+        $meta_profile['tab_title'] = $this->tabs['karma']['title'];
+
         $this->cms_template->render('profile_karma', [
             'user'         => $this->cms_user,
             'meta_profile' => $meta_profile,

@@ -7,7 +7,7 @@ class actionWallDelete extends cmsAction {
     public function run() {
 
         if (!$this->request->isAjax()) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $entry_id = $this->request->get('id', 0);

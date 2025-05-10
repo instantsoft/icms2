@@ -77,6 +77,8 @@ class actionUsersProfile extends cmsAction {
             return cmsUser::get('id') == $profile['id'] ? true : $this->controller_content->checkListPerm($ctype['name']);
         });
 
+        cmsModel::cacheResult('current_profile_content_counts', $content_counts);
+
         $fieldsets = cmsForm::mapFieldsToFieldsets($profile['fields'], function ($field, $user) {
             return empty($field['is_system']);
         });

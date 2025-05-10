@@ -204,7 +204,11 @@ blockquote, .bb_quote {
     color: $orange;
     font-size: $font-size-base;
 }
-
+.has-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacer*0.5;
+}
 @if $enable-modal-blur {
     .modal.show ~ *:not(.ui-widget):not(.tox):not(#toast-container):not(.tooltip):not(.unblured) > * {
         -webkit-filter: blur(2px);

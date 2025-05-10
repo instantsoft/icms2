@@ -61,7 +61,7 @@ class actionGroupsAcceptRequest extends cmsAction {
                 'error' => false
             ]);
         } else {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
     }
 

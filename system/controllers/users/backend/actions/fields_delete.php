@@ -4,10 +4,12 @@ class actionUsersFieldsDelete extends cmsAction {
 
     public function run($field_id) {
 
-        if (!$field_id) { cmsCore::error404(); }
+        if (!$field_id) {
+            return cmsCore::error404();
+        }
 
-        if (!cmsForm::validateCSRFToken( $this->request->get('csrf_token', '') )){
-            cmsCore::error404();
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
         }
 
         $content_model = cmsCore::getModel('content');
@@ -18,8 +20,7 @@ class actionUsersFieldsDelete extends cmsAction {
 
         cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
-        $this->redirectToAction('fields');
-
+        return $this->redirectToAction('fields');
     }
 
 }

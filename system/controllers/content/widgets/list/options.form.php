@@ -6,7 +6,7 @@ class formWidgetContentListOptions extends cmsForm {
 
         $content_model = cmsCore::getModel('content');
 
-        $field_generator = function ($item, $request) use($content_model) {
+        $field_generator = function ($item, $request) use ($content_model) {
             $list     = ['' => ''];
             $ctype_id = is_array($item) ? array_value_recursive('options:ctype_id', $item) : false;
             if (!$ctype_id && $request) {
@@ -26,26 +26,37 @@ class formWidgetContentListOptions extends cmsForm {
             return $list;
         };
 
-        return array(
-            'woptions' => array(
+        return [
+            'woptions' => [
                 'type'   => 'fieldset',
                 'title'  => LANG_OPTIONS,
-                'childs' => array(
-                    new fieldList('options:widget_type', array(
+                'childs' => [
+                    new fieldList('options:widget_type', [
                         'title'   => LANG_WD_CONTENT_WIDGET_TYPE,
                         'default' => 'list',
-                        'items'   => array(
+                        'items'   => [
                             'list'    => LANG_WD_CONTENT_WIDGET_TYPE1,
-                            'related' => LANG_WD_CONTENT_WIDGET_TYPE2
-                        )
-                    )),
-                    new fieldList('options:ctype_id', array(
+                            'related' => LANG_WD_CONTENT_WIDGET_TYPE2,
+                            'random'  => LANG_WD_CONTENT_WIDGET_TYPE3
+                        ]
+                    ]),
+                    new fieldList('options:related_type', [
+                        'title'   => LANG_WD_CONTENT_RELATED_TYPE,
+                        'default' => 'title',
+                        'items'   => [
+                            'title' => LANG_WD_CONTENT_RELATED_TYPE1,
+                            'tags'  => LANG_WD_CONTENT_RELATED_TYPE2,
+                            'cat'   => LANG_WD_CONTENT_RELATED_TYPE3
+                        ],
+                        'visible_depend' => ['options:widget_type' => ['show' => ['related']]]
+                    ]),
+                    new fieldList('options:ctype_id', [
                         'title'     => LANG_CONTENT_TYPE,
-                        'generator' => function($ctype) use($content_model) {
+                        'generator' => function ($ctype) use ($content_model) {
 
                             $tree = $content_model->getContentTypes();
 
-                            $items = array(0 => LANG_WD_CONTENT_FILTER_DETECT);
+                            $items = [0 => LANG_WD_CONTENT_FILTER_DETECT];
 
                             if ($tree) {
                                 foreach ($tree as $item) {
@@ -54,14 +65,14 @@ class formWidgetContentListOptions extends cmsForm {
                             }
                             return $items;
                         },
-                    )),
-                    new fieldList('options:category_id', array(
+                    ]),
+                    new fieldList('options:category_id', [
                         'title'     => LANG_CATEGORY,
-                        'parent'    => array(
+                        'parent'    => [
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_cats_ajax')
-                        ),
-                        'generator' => function($item, $request) use($content_model) {
+                        ],
+                        'generator' => function ($item, $request) use ($content_model) {
                             $list     = ['' => ''];
                             $ctype_id = is_array($item) ? array_value_recursive('options:ctype_id', $item) : false;
                             if (!$ctype_id && $request) {
@@ -87,15 +98,15 @@ class formWidgetContentListOptions extends cmsForm {
                             }
                             return $list;
                         },
-                        'visible_depend' => array('options:ctype_id' => array('hide' => array('0')))
-                    )),
-                    new fieldList('options:dataset', array(
+                        'visible_depend' => ['options:ctype_id' => ['hide' => ['0']]]
+                    ]),
+                    new fieldList('options:dataset', [
                         'title'     => LANG_WD_CONTENT_LIST_DATASET,
-                        'parent'    => array(
+                        'parent'    => [
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_datasets_ajax')
-                        ),
-                        'generator' => function($item, $request) use($content_model) {
+                        ],
+                        'generator' => function ($item, $request) use ($content_model) {
                             $list     = ['0' => ''];
                             $ctype_id = is_array($item) ? array_value_recursive('options:ctype_id', $item) : false;
                             if (!$ctype_id && $request) {
@@ -110,15 +121,15 @@ class formWidgetContentListOptions extends cmsForm {
                             }
                             return $list;
                         },
-                        'visible_depend' => array('options:ctype_id' => array('hide' => array('0')))
-                    )),
-                    new fieldList('options:relation_id', array(
+                        'visible_depend' => ['options:ctype_id' => ['hide' => ['0']]]
+                    ]),
+                    new fieldList('options:relation_id', [
                         'title'     => LANG_WD_CONTENT_LIST_RELATION,
-                        'parent'    => array(
+                        'parent'    => [
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_relations_ajax')
-                        ),
-                        'generator' => function($item, $request) use($content_model) {
+                        ],
+                        'generator' => function ($item, $request) use ($content_model) {
                             $list     = ['0' => ''];
                             $ctype_id = is_array($item) ? array_value_recursive('options:ctype_id', $item) : false;
                             if (!$ctype_id && $request) {
@@ -139,15 +150,15 @@ class formWidgetContentListOptions extends cmsForm {
                             }
                             return $list;
                         },
-                        'visible_depend' => array('options:ctype_id' => array('hide' => array('0')))
-                    )),
-                    new fieldList('options:filter_id', array(
+                        'visible_depend' => ['options:ctype_id' => ['hide' => ['0']]]
+                    ]),
+                    new fieldList('options:filter_id', [
                         'title'     => LANG_WD_CONTENT_LIST_FILTER,
-                        'parent'    => array(
+                        'parent'    => [
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_filters_ajax')
-                        ),
-                        'generator' => function($item, $request) use($content_model) {
+                        ],
+                        'generator' => function ($item, $request) use ($content_model) {
                             $list     = ['0' => ''];
                             $ctype_id = is_array($item) ? array_value_recursive('options:ctype_id', $item) : false;
                             if (!$ctype_id && $request) {
@@ -160,7 +171,7 @@ class formWidgetContentListOptions extends cmsForm {
                             if (!$ctype) {
                                 return $list;
                             }
-                            if(!$content_model->isFiltersTableExists($ctype['name'])){
+                            if (!$content_model->isFiltersTableExists($ctype['name'])) {
                                 return $list;
                             }
                             $filters = $content_model->getContentFilters($ctype['name']);
@@ -171,21 +182,21 @@ class formWidgetContentListOptions extends cmsForm {
                             }
                             return $list;
                         },
-                        'visible_depend' => array('options:ctype_id' => array('hide' => array('0')))
-                    )),
-                    new fieldString('options:filter_hook', array(
-                        'title' => LANG_WD_CONTENT_LIST_FILTER_HOOK,
-                        'hint' => LANG_WD_CONTENT_LIST_FILTER_HOOK_HINT,
-                        'visible_depend' => array('options:ctype_id' => array('hide' => array('0')))
-                    )),
-                    new fieldCheckbox('options:auto_group', array(
+                        'visible_depend' => ['options:ctype_id' => ['hide' => ['0']]]
+                    ]),
+                    new fieldString('options:filter_hook', [
+                        'title'          => LANG_WD_CONTENT_LIST_FILTER_HOOK,
+                        'hint'           => LANG_WD_CONTENT_LIST_FILTER_HOOK_HINT,
+                        'visible_depend' => ['options:ctype_id' => ['hide' => ['0']]]
+                    ]),
+                    new fieldCheckbox('options:auto_group', [
                         'title' => LANG_CP_WO_AUTO_GROUP,
                         'hint'  => LANG_CP_WO_AUTO_GROUP_HINT
-                    )),
-                    new fieldCheckbox('options:auto_user', array(
+                    ]),
+                    new fieldCheckbox('options:auto_user', [
                         'title' => LANG_WD_CONTENT_AUTO_USER,
                         'hint'  => LANG_WD_CONTENT_AUTO_USER_HINT
-                    )),
+                    ]),
                     new fieldNumber('options:offset', [
                         'title'   => LANG_LIST_OFFSET,
                         'hint'    => LANG_LIST_OFFSET_HINT,
@@ -199,59 +210,58 @@ class formWidgetContentListOptions extends cmsForm {
                             ['min', 1]
                         ]
                     ])
-                )
-            ),
-            'fields_options' => array(
-                'type'   => 'fieldset',
-                'title'  => LANG_CP_CTYPE_FIELDS,
+                ]
+            ],
+            'fields_options' => [
+                'type'     => 'fieldset',
+                'title'    => LANG_CP_CTYPE_FIELDS,
                 'is_empty' => true,
-                'parent' => array(
+                'parent'   => [
                     'list' => 'options:ctype_id',
                     'url'  => href_to('content', 'widget_fields_options_ajax')
-                ),
-                'childs' => array(
-                    new cmsFormField('fake',array(
+                ],
+                'childs'   => [
+                    new cmsFormField('fake', [
                         'title' => LANG_CP_CTYPE_NOT_SET,
-                        'html' => ''
-                    ))
-                )
-            ),
-            'deprecated' => array(
+                        'html'  => ''
+                    ])
+                ]
+            ],
+            'deprecated'     => [
                 'type'   => 'fieldset',
                 'title'  => LANG_WD_CONTENT_DEPRECATED,
-                'childs' => array(
-                    new cmsFormField('fake_deprecated_hint',array(
+                'childs' => [
+                    new cmsFormField('fake_deprecated_hint', [
                         'title' => '',
-                        'hint' => LANG_WD_CONTENT_LIST_FIELD_HINT,
-                        'html' => ''
-                    )),
-                    new fieldList('options:image_field', array(
-                        'title'  => LANG_WD_CONTENT_LIST_IMAGE,
-                        'parent' => array(
+                        'hint'  => LANG_WD_CONTENT_LIST_FIELD_HINT,
+                        'html'  => ''
+                    ]),
+                    new fieldList('options:image_field', [
+                        'title'     => LANG_WD_CONTENT_LIST_IMAGE,
+                        'parent'    => [
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_fields_ajax')
-                        ),
+                        ],
                         'generator' => $field_generator
-                    )),
-                    new fieldList('options:teaser_field', array(
-                        'title'  => LANG_WD_CONTENT_LIST_TEASER,
-                        'parent' => array(
+                    ]),
+                    new fieldList('options:teaser_field', [
+                        'title'     => LANG_WD_CONTENT_LIST_TEASER,
+                        'parent'    => [
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_fields_ajax')
-                        ),
+                        ],
                         'generator' => $field_generator
-                    )),
-                    new fieldNumber('options:teaser_len', array(
+                    ]),
+                    new fieldNumber('options:teaser_len', [
                         'title' => LANG_PARSER_HTML_TEASER_LEN,
                         'hint'  => LANG_PARSER_HTML_TEASER_LEN_HINT
-                    )),
-                    new fieldCheckbox('options:show_details', array(
+                    ]),
+                    new fieldCheckbox('options:show_details', [
                         'title' => LANG_WD_CONTENT_LIST_DETAILS
-                    ))
-                )
-            )
-        );
-
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

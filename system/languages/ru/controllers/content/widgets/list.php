@@ -20,6 +20,11 @@ define('LANG_WD_CONTENT_LIST_STYLE_CUSTOM', 'Шаблон, заданный во
 define('LANG_WD_CONTENT_WIDGET_TYPE', 'Режим виджета');
 define('LANG_WD_CONTENT_WIDGET_TYPE1', 'Выводить обычный список');
 define('LANG_WD_CONTENT_WIDGET_TYPE2', 'Выводить список похожих');
+define('LANG_WD_CONTENT_WIDGET_TYPE3', 'Выводить рандомный список');
+define('LANG_WD_CONTENT_RELATED_TYPE', 'Выбирать похожие по');
+define('LANG_WD_CONTENT_RELATED_TYPE1', 'Заголовку');
+define('LANG_WD_CONTENT_RELATED_TYPE2', 'Тегам если есть, иначе по текущей категории');
+define('LANG_WD_CONTENT_RELATED_TYPE3', 'Категории');
 define('LANG_WD_CONTENT_DEPRECATED', 'Устаревшие опции');
 define('LANG_WD_CONTENT_AUTO_USER', 'Показывать только записи автора');
-define('LANG_WD_CONTENT_AUTO_USER_HINT', 'Если виджет выведен на страницах записей');
+define('LANG_WD_CONTENT_AUTO_USER_HINT', 'Если виджет выведен на страницах записей или профилях пользователей.');
