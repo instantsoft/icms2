@@ -115,15 +115,12 @@ class actionContentItemEdit extends cmsAction {
         list($ctype, $item) = cmsEventsManager::hook('content_edit', [$ctype, $item]);
         list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", [$form, $item]);
 
-        // Категории записи
+        // Категории записи, отдельно дополнительные категории
         $item['add_cats'] = $item_cats = $this->model->getContentItemCategories($ctype['name'], $id);
         if ($item['add_cats']) {
-            // Отдельно дополнительные категории
-            foreach ($item['add_cats'] as $index => $cat_id) {
-                if ($cat_id == $item['category_id']) {
-                    unset($item['add_cats'][$index]);
-                    break;
-                }
+            $current_cat_key = array_search($item['category_id'], $item['add_cats']);
+            if ($current_cat_key !== false) {
+                unset($item['add_cats'][$current_cat_key]);
             }
         }
 

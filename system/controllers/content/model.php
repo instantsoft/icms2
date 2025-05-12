@@ -978,7 +978,7 @@ class modelContent extends cmsModel {
         return $this->filterEqual('item_id', $id)->
                 get($this->getContentTypeTableName($ctype_name, '_cats_bind'), function ($item, $model) {
             return $item['category_id'];
-        }, false);
+        }, false) ?: [];
     }
 
     public function getContentItemCategoriesList($ctype_name, $id) {

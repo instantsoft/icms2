@@ -7,7 +7,11 @@ class frontpage extends cmsFrontend {
         $this->cms_template->addHead('<link rel="canonical" href="' . href_to_home(true) . '">');
 
         if ($this->cms_config->hometitle) {
+
             $this->cms_template->setPageTitle($this->cms_config->hometitle);
+
+            // Для главной отключаем добавление в тег title название сайта
+            $this->cms_config->is_sitename_in_title = false;
         }
 
         $is_no_def_meta = $this->cms_config->is_no_meta ?? false;

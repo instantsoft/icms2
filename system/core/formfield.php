@@ -497,13 +497,27 @@ class cmsFormField {
      * Возвращает булево значение наличия умолчания у поля
      * @return boolean
      */
-    public function hasDefaultValue() { return isset($this->default); }
+    public function hasDefaultValue() {
+
+        $default_lang_key = 'default_' . $this->lang;
+
+        return isset($this->default) || isset($this->{$default_lang_key});
+    }
 
     /**
      * Возвращает значение по умолчанию у поля
      * @return mixed
      */
-    public function getDefaultValue() { return $this->hasDefaultValue() ? $this->default : null; }
+    public function getDefaultValue() {
+
+        if (!$this->multilanguage) {
+            return $this->default ?? null;
+        }
+
+        $default_lang_key = 'default_' . $this->lang;
+
+        return $this->{$default_lang_key} ?? ($this->default ?? null);
+    }
 
     /**
      * Возвращает тип переменной для поля

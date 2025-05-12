@@ -1466,6 +1466,9 @@ class cmsModel {
             $field_name = $field;
         }
 
+        // Оригинальное значение с постфиксом языка по умолчанию
+        $this->select($field, ($as ? $as : $select_as_name) . '_' . $this->default_lang);
+
         return $this->select($field_name, ($as ? $as : $select_as_name));
     }
 
@@ -1999,7 +2002,7 @@ class cmsModel {
             $item = call_user_func_array($item_callback, [$item, $this]);
         }
 
-        if ($this->localized && $item !== false) {
+        if ($this->localized && is_array($item)) {
             $item = $this->replaceTranslatedField($item);
         }
 

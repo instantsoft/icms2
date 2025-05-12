@@ -71,6 +71,12 @@ trait fieldable {
      */
     protected function fieldCallback($item, $table, $item_id = 0) {
 
+        foreach ($item as $key => $value) {
+            if (strpos($key, 'values_') === 0) {
+                $item[str_replace('values_', 'default_', $key)] = $value;
+            }
+        }
+
         foreach (['options', 'groups_read', 'groups_add', 'groups_edit', 'filter_view'] as $key) {
             $item[$key] = self::yamlToArray($item[$key] ?? []);
         }
