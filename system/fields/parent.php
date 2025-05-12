@@ -311,11 +311,7 @@ class fieldParent extends cmsFormField {
             return parent::applyFilter($model, $values);
         }
 
-        $alias_name = 'rr_' . $this->name;
-
-        $model->joinInner('content_relations_bind', $alias_name, $alias_name . '.child_item_id = i.id AND ' . $alias_name . '.child_ctype_id ' . ($this->ctype_id ? '=' . $this->ctype_id : 'IS NULL'));
-
-        return $model->filterIn($alias_name . '.parent_item_id', $ids);
+        return $model->filter('i.id IN (SELECT child_item_id FROM {#}content_relations_bind WHERE child_ctype_id' . ($this->ctype_id ? ' = ' . $this->ctype_id : ' IS NULL').' AND parent_item_id IN ('.implode(',', $ids).'))');
     }
 
     private function idsStringToArray($ids_list) {
@@ -327,10 +323,11 @@ class fieldParent extends cmsFormField {
         }
 
         foreach (explode(',', $ids_list) as $id) {
+            $id = trim($id);
             if (!is_numeric($id)) {
                 continue;
             }
-            $ids[] = trim($id);
+            $ids[] = (int) $id;
         }
 
         return $ids;
