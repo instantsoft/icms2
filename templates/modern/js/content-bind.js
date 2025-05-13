@@ -12,7 +12,7 @@ icms.contentBind = (function ($) {
         initModal();
     }
 
-	this.start = function(options){
+    this.start = function(options){
 
         if (mode != 'childs' && mode != 'unbind'){
             icms.modal.openAjax(options.url, {}, function(){
@@ -20,47 +20,47 @@ icms.contentBind = (function ($) {
             }, options.modal_title);
         }
 
-		return false;
+        return false;
 
-	};
+    };
 
-	function initModal(options){
+    function initModal(options){
 
-		$form = $('#content_bind_form');
+        $form = $('#content_bind_form');
 
-		var $input = $form.find('#item-find-input');
-		var $field = $form.find('#item-find-field');
-		var $button = $form.find('.find .button');
-		var $submitButton = $form.find('.buttons .button-submit');
-		var $resultPane = $form.find('.result-pane');
+        var $input = $form.find('#item-find-input');
+        var $field = $form.find('#item-find-field');
+        var $button = $form.find('.find .button');
+        var $submitButton = $form.find('.buttons .button-submit');
+        var $resultPane = $form.find('.result-pane');
 
-		values = {}, valuesCount = 0;
+        values = {}, valuesCount = 0;
         mode = $form.data('mode');
         authors = $form.find('.pills-menu a.active').data('mode');
 
-		$input.keyup(function(e){
-			if (e.keyCode == 13){
-				findItems();
-			}
-		});
+        $input.keyup(function(e){
+            if (e.keyCode == 13){
+                findItems();
+            }
+        });
 
-		$button.click(function(e){
-			e.preventDefault();
-			findItems();
-		});
+        $button.click(function(e){
+            e.preventDefault();
+            findItems();
+        });
 
-		$form.find('.pills-menu a').click(function(e){
-			e.preventDefault();
-			var $link = $(this);
-			authors = $link.data('mode');
-			$form.find('.pills-menu .active').removeClass('active');
-			$link.addClass('active');
-			findItems();
-		});
+        $form.find('.pills-menu a').click(function(e){
+            e.preventDefault();
+            var $link = $(this);
+            authors = $link.data('mode');
+            $form.find('.pills-menu .active').removeClass('active');
+            $link.addClass('active');
+            findItems();
+        });
 
-		$submitButton.click(function(e){
+        $submitButton.click(function(e){
 
-			e.preventDefault();
+            e.preventDefault();
 
             if (mode == 'childs' || mode == 'unbind'){
                 var $postForm = $form.find('form');
@@ -73,66 +73,66 @@ icms.contentBind = (function ($) {
                 options.callback(values);
             }
 
-			icms.modal.close();
+            icms.modal.close();
 
-		});
+        });
 
-		findItems();
+        findItems();
 
-		function findItems(){
+        function findItems(){
 
             $form.find('.pills-menu .active').addClass('is-busy');
 
-			var text = $input.val();
+            var text = $input.val();
 
             text = text ? text.trim() : '';
 
-			var query = {
-				field: $field.val(),
-				authors: authors,
-				text: text,
-				mode: mode
-			};
+            var query = {
+                field: $field.val(),
+                authors: authors,
+                text: text,
+                mode: mode
+            };
 
-			$.post($form.data('filter-url'), query, function(result){
+            $.post($form.data('filter-url'), query, function(result){
 
-				$resultPane.find('.list-bind-item').remove();
-				$resultPane.prepend(result);
+                $resultPane.find('.list-bind-item').remove();
+                $resultPane.prepend(result);
 
-				$resultPane.find('ul li .button').click(function(){
+                $resultPane.find('ul li .button').click(function(){
 
-					var $item = $(this).closest('li');
+                    var $item = $(this).closest('li');
 
-					var id = $item.data('id');
-					values[id] = $item.find('.title a').text();
-					valuesCount++;
+                    var id = $item.data('id');
+                    values[id] = $item.find('.title a').text();
+                    valuesCount++;
 
-					$item.fadeOut(150, function(){
-						$item.remove();
-					});
+                    $item.fadeOut(150, function(){
+                        $item.remove();
+                    });
 
-					$submitButton.val($submitButton.data('title') + ' (' + valuesCount + ')');
+                    $submitButton.val($submitButton.data('title') + ' (' + valuesCount + ')');
 
-					$form.find('.buttons').removeClass('invisible');
+                    $form.find('.buttons').removeClass('invisible');
 
-				});
+                });
 
-				$resultPane.find('ul li').each(function(){
-					var $item = $(this);
-					var id = $item.data('id');
-					if (id in values) {
-						$item.remove();
-					}
-				});
+                $resultPane.find('ul li').each(function(){
+                    var $item = $(this);
+                    var id = $item.data('id');
+                    if (id in values) {
+                        $item.remove();
+                    }
+                });
 
                 $form.find('.pills-menu .active').removeClass('is-busy');
 
-			});
+            });
 
-		}
+        }
 
     }
 
-	return this;
+    return this;
 
 }).call(icms.contentBind || {}, jQuery);

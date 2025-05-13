@@ -24,6 +24,6 @@ icms.files = (function ($) {
         }, 'json');
     };
 
-	return this;
+    return this;
 
 }).call(icms.files || {},jQuery);

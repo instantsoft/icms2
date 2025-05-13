@@ -564,13 +564,22 @@ class admin extends cmsFrontend {
 
     public function loadControllerBackend($controller_name, $request) {
 
-        $ctrl_file = $this->cms_config->root_path . 'system/controllers/' . $controller_name . '/backend.php';
+        // Фронтенд контроллера
+        $front_ctrl_file = $this->cms_config->root_path . 'system/controllers/' . $controller_name . '/frontend.php';
+        // Бэкенд контроллера
+        $back_ctrl_file = $this->cms_config->root_path . 'system/controllers/' . $controller_name . '/backend.php';
 
-        if (!file_exists($ctrl_file)) {
+        // Фронтенд просто подключаем, без создания объекта
+        // Для доступа к константам и другим статическим свойствам и методам
+        if (is_readable($front_ctrl_file)) {
+            include_once($front_ctrl_file);
+        }
+
+        if (!file_exists($back_ctrl_file)) {
             cmsCore::error(sprintf(LANG_CP_ERR_BACKEND_NOT_FOUND, $controller_name));
         }
 
-        include_once($ctrl_file);
+        include_once($back_ctrl_file);
 
         $controller_class = 'backend' . ucfirst($controller_name);
 

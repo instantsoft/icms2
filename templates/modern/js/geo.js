@@ -78,7 +78,7 @@ icms.geo = (function ($) {
         }
     };
 
-	this.changeParent = function(list, child_list_id) {
+    this.changeParent = function(list, child_list_id) {
 
         var geo_window = $('#geo_window');
         var geo_form = $('form', geo_window);
@@ -121,7 +121,7 @@ icms.geo = (function ($) {
             }
 
         }, 'json');
-	};
+    };
 
     this.changeCity = function(list){
 
@@ -154,6 +154,6 @@ icms.geo = (function ($) {
         icms.modal.close();
     };
 
-	return this;
+    return this;
 
 }).call(icms.geo || {},jQuery);

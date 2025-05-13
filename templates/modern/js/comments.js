@@ -196,21 +196,21 @@ icms.comments = (function ($) {
 
         var form = $('#comments_add_form form');
 
-		var is_guest = $('.author_data', form).length >0 ? true : false;
+        var is_guest = $('.author_data', form).length >0 ? true : false;
 
-		if (is_guest){
+        if (is_guest){
 
-			var name = $('.author_data .name input', form).val();
-			var email = $('.author_data .email input', form).val();
+            var name = $('.author_data .name input', form).val();
+            var email = $('.author_data .email input', form).val();
 
-			if (!name) { $('.author_data .name input', form).addClass('is-invalid').focus(); return; }
+            if (!name) { $('.author_data .name input', form).addClass('is-invalid').focus(); return; }
 
             $.cookie('icms[comments_guest_name]', name, {expires: 100, path: '/'});
             $.cookie('icms[comments_guest_email]', email, {expires: 100, path: '/'});
 
-			$('.author_data .name input', form).removeClass('is-invalid');
+            $('.author_data .name input', form).removeClass('is-invalid');
 
-		}
+        }
 
         var form_data = icms.forms.toJSON( form );
         var url = form.attr('action');
@@ -263,7 +263,7 @@ icms.comments = (function ($) {
             return;
         }
 
-		if (result.html){
+        if (result.html){
             if(!preview_box_target){
                 var form = $('#comments_add_form');
                 var preview_box = $('.preview_box', form).html(result.html);
@@ -272,7 +272,7 @@ icms.comments = (function ($) {
             } else {
                 $(preview_box_target).html(result.html);
             }
-		}
+        }
 
         this.restoreForm(false);
 
@@ -387,18 +387,18 @@ icms.comments = (function ($) {
             return;
         }
 
-		if (result.on_moderate){
+        if (result.on_moderate){
             this.error(result.message);
             this.restoreForm();
             return;
-		}
+        }
 
-		if (result.html){
-			this.append(result);
-		}
+        if (result.html){
+            this.append(result);
+        }
 
-		this.restoreForm();
-		this.show(result.id);
+        this.restoreForm();
+        this.show(result.id);
 
     };
 
@@ -422,7 +422,7 @@ icms.comments = (function ($) {
             return false;
         }
 
-		$('#comments_list #comment_'+result.id+' .icms-comment-html').html( result.html );
+        $('#comments_list #comment_'+result.id+' .icms-comment-html').html( result.html );
 
         this.restoreForm();
         this.show(result.id);
@@ -638,6 +638,6 @@ icms.comments = (function ($) {
         this.restoreForm(false);
     };
 
-	return this;
+    return this;
 
 }).call(icms.comments || {}, jQuery);

@@ -3,11 +3,11 @@ var icms = icms || {};
 icms.datagrid = (function ($) {
 
     var _this = this;
-	this.options = {};
+    this.options = {};
     this.selected_rows = [];
     this.is_loading = true;
     this.callback = false;
-	this.was_init = false;
+    this.was_init = false;
     this.timeout_order = 0;
 
     this.setOptions = function(options){
@@ -80,7 +80,7 @@ icms.datagrid = (function ($) {
 
         if (_this.options.is_sortable){
             console.log('sortable');
-			_this.bind_sortable();
+            _this.bind_sortable();
         } else {
             console.log('not sortable');
         }
@@ -356,7 +356,7 @@ icms.datagrid = (function ($) {
     };
 
     this.loadRows = function (callback){
-		if(!_this.was_init){return false;}
+        if(!_this.was_init){return false;}
 
         _this.is_loading = true;
 
@@ -488,36 +488,36 @@ icms.datagrid = (function ($) {
 
         _this.options.pages_count = result.pages_count;
 
-		$('.datagrid .flag_trigger > a').on('click', function(){
+        $('.datagrid .flag_trigger > a').on('click', function(){
 
-			var url = $(this).attr('href');
-			var link = $(this);
+            var url = $(this).attr('href');
+            var link = $(this);
 
-			link.parent('.flag_trigger').addClass('loading');
+            link.parent('.flag_trigger').addClass('loading');
 
-			$.post(url, {}, function(result){
+            $.post(url, {}, function(result){
 
-				var flag = link.parent('.flag_trigger').removeClass('loading');
-				if (result.error){ return; }
+                var flag = link.parent('.flag_trigger').removeClass('loading');
+                if (result.error){ return; }
 
-				var flag_class = flag.data('class');
-				var flag_class_on = flag_class + '_on';
-				var flag_class_off = flag_class + '_off';
-				var flag_class_middle = flag_class + '_middle';
+                var flag_class = flag.data('class');
+                var flag_class_on = flag_class + '_on';
+                var flag_class_off = flag_class + '_off';
+                var flag_class_middle = flag_class + '_middle';
 
-				if (result.is_on > 0){
-					flag.removeClass(flag_class_off+' '+flag_class_middle).addClass(flag_class_on);
-				} else if(result.is_on === 0) {
+                if (result.is_on > 0){
+                    flag.removeClass(flag_class_off+' '+flag_class_middle).addClass(flag_class_on);
+                } else if(result.is_on === 0) {
                     flag.removeClass(flag_class_on+' '+flag_class_middle).addClass(flag_class_off);
-				} else {
-					flag.removeClass(flag_class_on+' '+flag_class_off).addClass(flag_class_middle);
-				}
+                } else {
+                    flag.removeClass(flag_class_on+' '+flag_class_off).addClass(flag_class_middle);
+                }
 
-			}, 'json');
+            }, 'json');
 
-			return false;
+            return false;
 
-		});
+        });
 
         $('[data-toggle="tooltip"]').tooltip();
 
@@ -540,14 +540,14 @@ icms.datagrid = (function ($) {
         $('.datagrid_loading').fadeOut('fast');
     };
 
-	this.escapeHtml = function(text) {
-		return text
-			.replace(/&/g, "&amp;")
-			.replace(/</g, "&lt;")
-			.replace(/>/g, "&gt;")
-			.replace(/"/g, "&quot;")
-			.replace(/'/g, "&#039;");
-	};
+    this.escapeHtml = function(text) {
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    };
 
     this.fieldValToFilter = function(link, field_name){
         $('#filter_'+field_name).val($(link).text()).triggerHandler('input');
@@ -562,6 +562,6 @@ icms.datagrid = (function ($) {
         return false;
     };
 
-	return this;
+    return this;
 
 }).call(icms.datagrid || {},jQuery);

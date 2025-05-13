@@ -224,18 +224,18 @@ icms.photos = (function ($) {
         if(!confirm(LANG_PHOTOS_DELETE_PHOTO_CONFIRM)){ return false; }
 
         $.post($('#album-photo-item').data('item-delete-url'), {id: $('#album-photo-item').data('id')}, function(result){
-			if (result.success){
-				window.location.href=result.album_url;
-			}
-		}, 'json');
+            if (result.success){
+                window.location.href=result.album_url;
+            }
+        }, 'json');
 
         return false;
     };
 
-	this.flexImagesInit = function(selector){
+    this.flexImagesInit = function(selector){
         selector = selector || '#album-photos-list';
         $(selector).flexImages({rowHeight: this.row_height, container: '.icms-photo-album__photo', truncate: this.has_next});
-	};
+    };
 
     this.showMore = function(link){
 
@@ -284,6 +284,6 @@ icms.photos = (function ($) {
 
     };
 
-	return this;
+    return this;
 
 }).call(icms.photos || {},jQuery);

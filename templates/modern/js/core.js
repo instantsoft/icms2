@@ -504,7 +504,7 @@ icms.forms = (function ($) {
         });
     };
 
-	this.toJSON = function(form) {
+    this.toJSON = function(form) {
         _this.wysiwygBeforeSubmit();
         var o = {};
         var a = form.serializeArray();
@@ -519,7 +519,7 @@ icms.forms = (function ($) {
             }
         });
         return o;
-	};
+    };
 
     this.submit = function(selector){
         selector = selector || '.button-submit';
@@ -527,7 +527,7 @@ icms.forms = (function ($) {
         $(selector).addClass('disabled is-busy').trigger('click');
     };
 
-	this.initFieldsetChildList = function (form_id){
+    this.initFieldsetChildList = function (form_id){
         $('#'+form_id+' .icms-form-tab__demand').each(function (){
             var demand_wrap = $(this).attr('href');
             var url = $(this).data('parent_url');
@@ -540,7 +540,7 @@ icms.forms = (function ($) {
         });
     };
 
-	this.updateChildList = function (child_id, url, value, current_value, filter_field_name) {
+    this.updateChildList = function (child_id, url, value, current_value, filter_field_name) {
 
         var child_list = $('#' + child_id);
 
@@ -847,7 +847,7 @@ icms.forms = (function ($) {
         }}
     };
 
-	return this;
+    return this;
 
 }).call(icms.forms || {},jQuery);
 
@@ -899,7 +899,7 @@ icms.head = (function ($) {
         return this;
     };
 
-	return this;
+    return this;
 
 }).call(icms.head || {},jQuery);
 
@@ -928,7 +928,7 @@ icms.events = (function ($) {
         return this;
     };
 
-	return this;
+    return this;
 
 }).call(icms.events || {},jQuery);
 
@@ -1035,9 +1035,9 @@ function getCaretPosition(field) {
     return 0;
 }
 function addTextToPosition(field_id, text, spacer, spacer_stop){
-	var field = $(field_id);
-	var value = $(field).val();
-	var pos = getCaretPosition(field);
+    var field = $(field_id);
+    var value = $(field).val();
+    var pos = getCaretPosition(field);
     var value1 = value.substring(0, pos);
     var value2 = value.substring(pos, value.length);
     if(spacer){
@@ -1098,12 +1098,12 @@ function initMultyTabs(selector, tab_wrap_field){
     $(selector).each(function(indx, element){
         let tabs = $(' > li > a', $(element));
         $(tabs).eq(0).addClass('active');
-		$(tabs).on('click', function() {
+        $(tabs).on('click', function() {
             let tab_field = $(this).attr('href');
-			$(this).addClass('active').closest('li').siblings().find('a').removeClass('active');
+            $(this).addClass('active').closest('li').siblings().find('a').removeClass('active');
             $(element).nextAll(tab_wrap_field+':lt('+$(tabs).closest('li').length+')').hide();
             $(tab_field).show();
             return false;
-		});
+        });
     });
 }

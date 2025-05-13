@@ -22,12 +22,12 @@
         'icon'  => 'save'
     ]);
 
-	$this->addToolButton([
+    $this->addToolButton([
         'icon'  => 'envelope-open-text',
-		'class' => 'ajax-modal',
-		'title' => LANG_MAILCHECK_MENU,
-		'href'  => $this->href_to('settings', ['mail_check'])
-	]);
+        'class' => 'ajax-modal',
+        'title' => LANG_MAILCHECK_MENU,
+        'href'  => $this->href_to('settings', ['mail_check'])
+    ]);
 
 ?>
 

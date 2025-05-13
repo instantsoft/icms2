@@ -99,6 +99,6 @@ icms.adminModerators = (function ($) {
         return false;
     };
 
-	return this;
+    return this;
 
 }).call(icms.adminModerators || {},jQuery);

@@ -41,7 +41,7 @@ icms.modal = (function ($) {
         $(modal_el).modal('show'); return this;
     };
 
-	this.open = function (selector, title, style) {
+    this.open = function (selector, title, style) {
         $(modal_el).modal('show');
         var parent = $(selector).parent();
         var content = $(selector).detach();
@@ -78,7 +78,7 @@ icms.modal = (function ($) {
         $(modal_el).addClass('in');
     };
 
-	this.bind = function (selector) {
+    this.bind = function (selector) {
 
         $(selector).each(function () {
 
@@ -127,10 +127,10 @@ icms.modal = (function ($) {
         self.loadPhotoSwipe();
     };
 
-	this.openHtml = function(html, title, style, style_body) {
+    this.openHtml = function(html, title, style, style_body) {
         $(modal_el).modal('show');
-		self.showContent(title, html, style, style_body);
-	};
+        self.showContent(title, html, style, style_body);
+    };
 
     this.openIframe = function(url, title){
         this.openHtml('<div class="embed-responsive"><iframe class="embed-responsive-item" src="'+url+'"></iframe></div>', title, false, 'p-0');
@@ -192,13 +192,13 @@ icms.modal = (function ($) {
 
     this.setHeight = function(height){};
 
-	this.alert = function(text, type) {
+    this.alert = function(text, type) {
         type = type || 'primary';
         type = type.replace('ui_', '');
         type = type.replace('error', 'danger');
-		this.openHtml('<div class="alert alert-'+type+' border-0 rounded-0 m-n3">'+text+'</div>', '<b>ⓘ</b>', type);
-	};
+        this.openHtml('<div class="alert alert-'+type+' border-0 rounded-0 m-n3">'+text+'</div>', '<b>ⓘ</b>', type);
+    };
 
-	return this;
+    return this;
 
 }).call(icms.modal || {},jQuery);

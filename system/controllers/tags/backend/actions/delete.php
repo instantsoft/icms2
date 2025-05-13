@@ -18,7 +18,7 @@ class actionTagsDelete extends cmsAction {
 
             $model->filterEqual('tag_id', $item['id'])->deleteFiltered('tags_bind');
 
-			foreach ($targets as $target) {
+            foreach ($targets as $target) {
 
                 $tags = $model->getTagsForTarget($target['target_controller'], $target['target_subject'], $target['target_id']);
 

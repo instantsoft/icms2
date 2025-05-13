@@ -19,14 +19,14 @@
 
 <?php
 
-	$this->addToolButton([
+    $this->addToolButton([
         'class' => 'menu d-xl-none',
-		'data'  => [
+        'data'  => [
             'toggle' =>'quickview',
             'toggle-element' => '#left-quickview'
         ],
-		'title' => LANG_CATEGORIES
-	]);
+        'title' => LANG_CATEGORIES
+    ]);
 
     foreach ($datasets as $dataset) {
         $this->addToolButton([

@@ -2,14 +2,14 @@
 
     $this->addBreadcrumb(LANG_CP_MENU.' «'.$menu['title'].'»', $this->href_to('menu'));
 
-    if ($do=='add'){
+    if ($do === 'add') {
         $this->addBreadcrumb(LANG_CP_MENU_ITEM_ADD);
-		$this->setPageTitle(LANG_CP_MENU_ITEM_ADD);
+        $this->setPageTitle(LANG_CP_MENU_ITEM_ADD);
     }
 
-    if ($do=='edit'){
+    if ($do === 'edit') {
         $this->addBreadcrumb($item['title']);
-		$this->setPageTitle(LANG_CP_MENU_ITEM.': '.$item['title']);
+        $this->setPageTitle(LANG_CP_MENU_ITEM . ': ' . $item['title']);
     }
 
     $this->addToolButton([

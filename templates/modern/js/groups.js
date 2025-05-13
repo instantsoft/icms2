@@ -42,7 +42,7 @@ icms.groups = (function ($) {
         }).on('click', '.icms-group-roles__delete', function(){
             return self.deleteRole($(this).data('id'));
         });
-	};
+    };
 
     this.addRole = function(){
 
@@ -178,6 +178,6 @@ icms.groups = (function ($) {
         return false;
     };
 
-	return this;
+    return this;
 
 }).call(icms.groups || {},jQuery);

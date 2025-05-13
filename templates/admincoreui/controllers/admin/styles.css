@@ -160,6 +160,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+.cp_toolbar .nav-link::before, .flag_trigger::before, .flag_trigger a::before, .flag_lock_off::before {
+    margin: 0;
+}
 .datagrid .actions{
     display: flex;
 }
@@ -1356,7 +1359,6 @@ td > .spinner > div {
 }
 .nav-pills .nav-link>.icms-svg-icon {
     font-size: 120%;
-    margin: 0 0.35rem 0 0;
 }
 .app-header .nav-link>.icms-svg-icon {
     font-size: 140%;
@@ -1391,4 +1393,10 @@ td > .spinner > div {
 }
 .sidebar {
     background-image: linear-gradient(45deg, #374550 0%, #2f353a 100%);
+}
+.nav-link {
+    gap: 0.5rem;
+}
+.nav-link.active>.counter.badge {
+    background-color: #26c2f9;
 }

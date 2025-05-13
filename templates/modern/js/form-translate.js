@@ -43,6 +43,6 @@ icms.translate = (function ($) {
         return false;
     };
 
-	return this;
+    return this;
 
 }).call(icms.translate || {},jQuery);

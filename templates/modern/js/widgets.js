@@ -2,10 +2,10 @@ if ( window.addEventListener ){
     window.addEventListener("message", receiveFormMessage, false);
 }
 if ( window.attachEvent ) {
-	window.attachEvent("onmessage", receiveFormMessage);
+    window.attachEvent("onmessage", receiveFormMessage);
 }
 if ( document.attachEvent ) {
-	document.attachEvent("onmessage", receiveFormMessage);
+    document.attachEvent("onmessage", receiveFormMessage);
 }
 $(function(){
     $('.edit_wlinks .edit').on('click', function (){

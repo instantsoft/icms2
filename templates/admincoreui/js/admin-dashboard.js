@@ -99,8 +99,8 @@ $(function(){
             type: type,
             options: {
                 animation: {
-					onComplete: function() {
-						$(progress).hide();
+                    onComplete: function() {
+                        $(progress).hide();
                     }
                 },
                 legend: {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title><?php $this->title(); ?></title>
+    <title><?php $this->title(); ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />

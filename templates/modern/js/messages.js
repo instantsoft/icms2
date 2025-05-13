@@ -329,10 +329,10 @@ icms.messages = (function ($) {
             return self.error(result.errors.content ? result.errors.content : result.message);
         }
 
-		if (result.message){
-			$('#pm_contact .icms-messages-chat', pm_window).append(result.message);
-			this.scrollChat();
-		}
+        if (result.message){
+            $('#pm_contact .icms-messages-chat', pm_window).append(result.message);
+            this.scrollChat();
+        }
 
     };
 
@@ -591,6 +591,6 @@ icms.messages = (function ($) {
         }
     };
 
-	return this;
+    return this;
 
 }).call(icms.messages || {},jQuery);

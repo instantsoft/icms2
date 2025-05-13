@@ -434,6 +434,6 @@ icms.images = (function ($) {
         return false;
     };
 
-	return this;
+    return this;
 
 }).call(icms.images || {},jQuery);

@@ -78,7 +78,7 @@ $(function() {
                 var id = ui.item.attr('data-id');
                 ui.item.attr('rel', '');
                 ui.item.attr('data-widget-id', id);
-				ui.item.removeAttr('style');
+                ui.item.removeAttr('style');
                 widgetsAdd(id, pos, ui.item);
             }else{
                 if(ui.item.parent().attr('rel') !== '_copy'){

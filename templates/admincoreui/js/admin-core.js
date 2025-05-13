@@ -273,7 +273,7 @@ icms.notices = (function ($) {
 
     };
 
-	return this;
+    return this;
 
 }).call(icms.notices || {},jQuery);
 var toolbarScroll = {

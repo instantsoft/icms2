@@ -156,6 +156,6 @@ icms.users = (function ($) {
         icms.modal.openAjax(link, {}, false, title);
     };
 
-	return this;
+    return this;
 
 }).call(icms.users || {},jQuery);

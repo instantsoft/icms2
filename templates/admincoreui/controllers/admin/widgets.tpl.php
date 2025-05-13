@@ -21,14 +21,14 @@
         ]
     ]);
 
-	$this->addToolButton([
+    $this->addToolButton([
         'class' => 'menu d-xl-none',
-		'data'  => [
+        'data'  => [
             'toggle' =>'quickview',
             'toggle-element' => '#left-quickview'
         ],
-		'title' => LANG_MENU
-	]);
+        'title' => LANG_MENU
+    ]);
 
     $this->addToolButton([
         'icon'  => 'list',

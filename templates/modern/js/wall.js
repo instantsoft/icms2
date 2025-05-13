@@ -333,6 +333,6 @@ icms.wall = (function ($) {
         }
     };
 
-	return this;
+    return this;
 
 }).call(icms.wall || {},jQuery);
