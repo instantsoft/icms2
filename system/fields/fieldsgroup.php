@@ -46,6 +46,7 @@ class fieldFieldsgroup extends cmsFormField {
     public function getInput($value) {
 
         $this->data['form'] = $this->getChildForm(true);
+        $this->data['is_counter_list'] = $this->getProperty('is_counter_list');
 
         if($value && !is_array($value)){
             $value = cmsModel::yamlToArray($value);

@@ -16,6 +16,10 @@ class fieldNumber extends cmsFormField {
                     'number' => 'number'
                 ]
             ]),
+            new fieldString('placeholder', [
+                'title' => LANG_PARSER_PLACEHOLDER,
+                'can_multilanguage' => true
+            ]),
             new fieldCheckbox('is_abs', [
                 'title'   => LANG_PARSER_NUMBER_IS_ABS,
                 'default' => false
@@ -435,6 +439,7 @@ class fieldNumber extends cmsFormField {
         $this->data['attributes']['step']     = 'any';
         $this->data['attributes']['inputmode'] = $this->getOption('is_ceil') ? 'numeric' : 'decimal';
         $this->data['attributes']['required'] = (array_search(['required'], $this->getRules()) !== false);
+        $this->data['attributes']['placeholder'] = $this->data['attributes']['placeholder'] ?? $this->getOption('placeholder', false);
 
         if(empty($this->data['attributes']['class'])){
             $this->data['attributes']['class'] = 'input-number';

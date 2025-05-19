@@ -45,6 +45,12 @@ trait formItem {
     protected $form_opts = [];
 
     /**
+     * Значения по умолчанию для формы
+     * @var array
+     */
+    protected $default_item = [];
+
+    /**
      * URL, на который будет редирект после сохранения формы
      * @var string
      */
@@ -64,7 +70,7 @@ trait formItem {
 
     /**
      * Заголовок страницы
-     * @var string
+     * @var string|array
      */
     protected $title = '';
 
@@ -113,7 +119,7 @@ trait formItem {
 
     public function run($id = null, $is_copy = null) {
 
-        $data = [];
+        $data = $this->default_item;
 
         $do = 'add';
 
@@ -147,7 +153,10 @@ trait formItem {
             }
         }
 
-        $form = $this->getForm($this->form_name, [$do] + $this->form_opts);
+        $form_opts = $this->form_opts;
+        array_unshift($form_opts, $do);
+
+        $form = $this->getForm($this->form_name, $form_opts);
 
         if ($this->request->has('csrf_token')) {
 

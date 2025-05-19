@@ -124,19 +124,24 @@ class cmsController {
     protected function loadModel() {
 
         // Контроллер сам решает, какая модель ему нужна
-        if($this->outer_controller_model) {
+        if ($this->outer_controller_model) {
+
             $this->model = cmsCore::getModel($this->outer_controller_model);
+
             return $this;
         }
 
         // Мы в бэкенде?
-        if($this instanceof cmsBackend){
-            if (cmsCore::isModelExists($this->name.'/backend')){
-                $this->model = cmsCore::getModel('backend_'.$this->name);
+        if ($this instanceof cmsBackend) {
+            if (cmsCore::isModelExists($this->name . '/backend')) {
+
+                $this->model = cmsCore::getModel('backend_' . $this->name);
+
+                return $this;
             }
         }
 
-        if ($this->model === null && cmsCore::isModelExists($this->name)){
+        if ($this->model === null && cmsCore::isModelExists($this->name)) {
             $this->model = cmsCore::getModel($this->name);
         } else {
             unset($this->model);

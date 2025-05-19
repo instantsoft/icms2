@@ -20,7 +20,6 @@ function grid_scheduler($controller) {
         ],
         'controller' => [
             'title'         => LANG_CP_SCHEDULER_TASK_CONTROLLER,
-            'class'         => 'd-none d-lg-table-cell',
             'width'         => 150,
             'filter'        => 'exact',
             'filter_select' => [

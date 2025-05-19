@@ -138,9 +138,7 @@ trait listgrid {
 
         // если нужно, передаем управление другому экшену
         if ($do && !is_numeric($do)) {
-
-            $this->executeAction($this->external_action_prefix.$do, array_slice($this->params, 1));
-            return;
+            return $this->executeAction($this->external_action_prefix.$do, array_slice($this->params, 1));
         }
 
         $this->prepareRun();

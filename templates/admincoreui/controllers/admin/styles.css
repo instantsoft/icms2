@@ -472,6 +472,9 @@ form .ft_date select {
 form .ft_number .input-group, form .field .input-small {
     width: 220px;
 }
+form .fieldsgroup-item .ft_number .input-group {
+    width: auto;
+}
 form .date-input, form .short-input {
     width: 150px;
     display: inline-block;
@@ -582,6 +585,7 @@ ul.field_tabbed > li > a {
 #cp-widgets-list li:last-child,
 #cp-widgets-layout .position li:last-child,
 .without-tabs .form-group:last-child,
+fieldset > .form-group:last-child,
 .without-tabs .form-group.multilanguage:nth-last-child(-n+2){
     margin-bottom: 0 !important;
 }
@@ -591,6 +595,12 @@ ul.field_tabbed > li > a {
     border-radius: 4px;
     border: solid 1px #c8ced3;
     margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.without-tabs fieldset > .form-group {
+    margin-bottom: 0;
 }
 legend {
   font-size: 1.2rem;
@@ -1358,7 +1368,7 @@ td > .spinner > div {
     align-items: center;
 }
 .nav-pills .nav-link>.icms-svg-icon {
-    font-size: 120%;
+    font-size: 130%;
 }
 .app-header .nav-link>.icms-svg-icon {
     font-size: 140%;
@@ -1399,4 +1409,37 @@ td > .spinner > div {
 }
 .nav-link.active>.counter.badge {
     background-color: #26c2f9;
+}
+@media (max-width: 767.98px) {
+    .menu-admin_toolbar, .menu-toolbar {
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        font-size: 97%;
+    }
+}
+.fieldsgroup_wrap__counter {
+    counter-reset: list-number;
+}
+.fieldsgroup_wrap__counter > .fieldsgroup-item > div:before {
+    counter-increment: list-number;
+    content: counter(list-number);
+    display: block;
+    padding: 0 1rem 0 0;
+    font-weight: bold;
+}
+.datagrid .icms-user-avatar>img {
+    max-width: 1.25rem;
+    min-width: auto;
+    min-height: auto;
+}
+.datagrid .icms-user-avatar.peer_online:after, .datagrid .icms-user-avatar.peer_no_online:after {
+    bottom: -2px;
+    right: -2px;
+    border-width: 1px;
+    height: 10px;
+    width: 10px;
 }

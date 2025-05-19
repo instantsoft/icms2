@@ -315,3 +315,15 @@
         }
     }
 }
+.fieldsgroup_wrap {
+    &__counter {
+        counter-reset: list-number;
+        > .fieldsgroup-item > div:before {
+            counter-increment: list-number;
+            content: counter(list-number);
+            display: block;
+            padding: 0 $spacer 0 0;
+            font-weight: bold;
+        }
+    }
+}

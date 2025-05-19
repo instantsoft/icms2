@@ -125,18 +125,6 @@ table.dataTable{clear:both;margin-bottom:6px !important;max-width:none !importan
     transform: scaleY(1);
     opacity: 1;
 }
-.datagrid .icms-user-avatar>img {
-    max-width: 1.25rem;
-    min-width: auto;
-    min-height: auto;
-}
-.datagrid .icms-user-avatar.peer_online:after, .datagrid .icms-user-avatar.peer_no_online:after {
-    bottom: -2px;
-    right: -2px;
-    border-width: 1px;
-    height: 10px;
-    width: 10px;
-}
 .animated-row {
     animation-duration: 0.5s;
     animation-name: fadeRow;

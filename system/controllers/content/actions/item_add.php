@@ -141,8 +141,8 @@ class actionContentItemAdd extends cmsAction {
         $is_moderator = $this->controller_moderation->userIsContentModerator($ctype['name'], $this->cms_user->id, $item);
         $is_premoderation = cmsUser::isAllowed($ctype['name'], 'add', 'premod', true);
 
-        $ctype = cmsEventsManager::hook('content_add', $ctype);
-        list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", [$form, $item]);
+        $ctype = cmsEventsManager::hook('content_add', $ctype, null, $this->request);
+        list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", [$form, $item], null, $this->request);
 
         // Форма отправлена?
         $is_submitted = $this->request->has('submit') || $this->request->has('to_draft');

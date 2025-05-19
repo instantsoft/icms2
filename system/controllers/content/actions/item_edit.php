@@ -112,8 +112,8 @@ class actionContentItemEdit extends cmsAction {
             'folders_list' => $folders_list
         ], $id, $item);
 
-        list($ctype, $item) = cmsEventsManager::hook('content_edit', [$ctype, $item]);
-        list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", [$form, $item]);
+        list($ctype, $item) = cmsEventsManager::hook('content_edit', [$ctype, $item], null, $this->request);
+        list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", [$form, $item], null, $this->request);
 
         // Категории записи, отдельно дополнительные категории
         $item['add_cats'] = $item_cats = $this->model->getContentItemCategories($ctype['name'], $id);

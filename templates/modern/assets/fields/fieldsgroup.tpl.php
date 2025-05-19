@@ -4,7 +4,7 @@
 <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 <div id="fieldsgroup_<?php echo $field->id; ?>">
 
-    <div class="fieldsgroup_wrap"></div>
+    <div class="fieldsgroup_wrap<?php if ($field->data['is_counter_list']) { ?> fieldsgroup_wrap__counter<?php } ?>"></div>
 
     <div class="d-flex align-items-center">
         <a class="btn btn-success add_link" href="#">
@@ -13,7 +13,7 @@
     </div>
     <template class="fieldsgroup-template">
         <div class="fieldsgroup-item">
-            <div class="d-flex mb-3 bg-light p-2 p-md-3">
+            <div class="d-flex mb-3 bg-light p-2 p-md-3 rounded">
                 <div class="form-row flex-grow-1">
                     <?php foreach($field->data['form']->getFormStructure($data) as $fieldset_id => $fieldset) { ?>
                         <?php foreach($fieldset['childs'] as $child_field) { ?>
@@ -30,7 +30,7 @@
                     <?php } ?>
                 </div>
                 <div class="d-flex align-items-start">
-                    <a href="#" class="ml-3 btn btn-sm btn-danger delete">
+                    <a href="#" class="ml-3 text-danger delete">
                         <?php echo html_svg_icon('solid', 'times'); ?>
                     </a>
                 </div>

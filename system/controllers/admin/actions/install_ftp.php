@@ -39,7 +39,7 @@ class actionAdminInstallFtp extends cmsAction {
 
         $ftp_account = cmsUser::getUPS('admin.install.ftp');
 
-        $account = cmsUser::isSessionSet('ftp_account') ?: ($ftp_account ?: []);
+        $account = cmsUser::sessionGet('ftp_account') ?: ($ftp_account ?: []);
         $account['addon_id'] = $this->request->get('addon_id', 0);
 
         if ($this->request->has('submit')) {
