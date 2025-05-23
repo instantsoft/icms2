@@ -456,14 +456,14 @@ function html_csrf_token(){
 
 /**
  * Возвращает число с числительным в нужном склонении
- * @param int $num
+ * @param int|float $num
  * @param string $one
- * @param string $two
- * @param string $many
+ * @param ?string $two
+ * @param ?string $many
  * @param string $zero_text
  * @return string
  */
-function html_spellcount($num, $one, $two = false, $many = false, $zero_text = LANG_NO) {
+function html_spellcount($num, $one, $two = null, $many = null, $zero_text = LANG_NO) {
 
     if (!$two && !$many){
         list($one, $two, $many) = explode('|', $one);
@@ -473,7 +473,7 @@ function html_spellcount($num, $one, $two = false, $many = false, $zero_text = L
         return $zero_text.' '.$many;
     }
 
-    return nf($num, 0, ' ').' '.html_spellcount_only($num, $one, $two, $many);
+    return nf($num, 2, ' ').' '.html_spellcount_only($num, $one, $two, $many);
 }
 
 function html_spellcount_only($num, $one, $two = false, $many = false) {
@@ -585,15 +585,16 @@ function html_minify($html) {
 
 /**
  *
- * @param float $number Число
+ * @param string $number Число
  * @param integer $decimals Знаков после запятой
  * @param string $thousands_sep Разделитель тысяч
+ * @param bool $trim_zero Обрезать нули
  * @return string
  */
-function nf($number, $decimals = 2, $thousands_sep = '') {
-    if (!$number) { return '0'; }
+function nf($number, $decimals = 2, $thousands_sep = '', $trim_zero = true) {
+    if (!$number) { $number = '0'; }
     $value = number_format((double) str_replace(',', '.', $number), $decimals, '.', $thousands_sep);
-    if($decimals){
+    if($decimals && $trim_zero){
         return rtrim(rtrim($value, '0'), '.');
     }
     return $value;

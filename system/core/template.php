@@ -3110,10 +3110,10 @@ class cmsTemplate {
      * Рендерит шаблон списка записей контента
      * @param array $ctype Массив данных типа контента
      * @param array $data Массив данных для шаблона
-     * @param mixed $request Объект запроса
+     * @param ?cmsRequest $request Объект запроса
      * @return string
      */
-    public function renderContentList($ctype, $data = [], $request = false) {
+    public function renderContentList($ctype, $data = [], $request = null) {
 
         $tpl_file = $this->getTemplateFileName('content/' . $ctype['name'] . '_list', true);
 
@@ -3160,10 +3160,10 @@ class cmsTemplate {
      * Рендерит шаблон просмотра записи контента
      * @param string $ctype_name Имя типа контента
      * @param array $data Массив данных для шаблона
-     * @param mixed $request Объект запроса
+     * @param ?cmsRequest $request Объект запроса
      * @return string
      */
-    public function renderContentItem($ctype_name, $data = [], $request = false) {
+    public function renderContentItem($ctype_name, $data = [], $request = null) {
 
         // опеределен ли в записи шаблон
         if (!empty($data['item']['template'])) {
@@ -3180,10 +3180,16 @@ class cmsTemplate {
         }
 
         if (!$request) {
-            $request = $this->controller->request;
+            $request = new cmsRequest($this->controller->request->getAll(), cmsRequest::CTX_INTERNAL);
         }
 
-        return $this->processRender($tpl_file, $data, $request);
+        $html = $this->processRender($tpl_file, $data, $request);
+
+        if ($request->isInternal()) {
+            echo $html;
+        } else {
+            return $html;
+        }
     }
 
 //============================================================================//

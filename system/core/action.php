@@ -40,6 +40,20 @@ class cmsAction {
         }
     }
 
+    /**
+     * Вызывается до начала работы экшена
+     */
+    public function before() {
+        return true;
+    }
+
+    /**
+     * Вызывается после работы экшена
+     */
+    public function after() {
+        return true;
+    }
+
     public function &__get($name) {
         return $this->controller->$name;
     }

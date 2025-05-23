@@ -28,6 +28,7 @@ return [
         'system/languages/en/letters/billing_remind.txt',
         'system/languages/en/letters/billing_transfer.txt',
         'system/languages/en/letters/billing_transfer_notify.txt',
+        'system/fields/paypal.php',
         'templates/default/js/billing.js',
         'templates/modern/js/billing.js'
     ]

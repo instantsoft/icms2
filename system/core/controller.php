@@ -603,13 +603,26 @@ class cmsController {
 
             if ($this->request->isAjax()) {
 
-                return $this->cms_template->renderJSON(['error' => true, 'errors' => $params_error, 'message' => sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error)))]);
+                return $this->cms_template->renderJSON([
+                    'error'   => true,
+                    'errors'  => $params_error,
+                    'message' => sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error)))
+                ]);
+
             } else {
                 return cmsCore::error(LANG_ERROR, sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error))));
             }
         }
 
-        return call_user_func_array([$action_object, 'run'], $params);
+        if ($action_object->before() === false) {
+            return false;
+        }
+
+        $result = call_user_func_array([$action_object, 'run'], $params);
+
+        $action_object->after();
+
+        return $result;
     }
 
     /**
@@ -668,7 +681,7 @@ class cmsController {
             }
         }
 
-        if (!count($errors)) { return false; }
+        if (!$errors) { return false; }
 
         return $errors;
     }
@@ -1054,7 +1067,7 @@ class cmsController {
     public function redirectToLogin(string $back_url = '') {
 
         if (!$back_url) {
-            $back_url = rel_to_href($this->cms_core->uri_before_remap);
+            $back_url = rel_to_href($this->cms_core->uri_before_remap) . ($this->cms_core->uri_query ? '?' . http_build_query($this->cms_core->uri_query) : '');
         }
 
         return $this->redirectTo('auth', 'login', [], ['back' => $back_url]);
@@ -1183,10 +1196,8 @@ class cmsController {
 
     public function validate_min($min, $value) {
 
-        if (empty($value)) { $value = 0; }
-
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", strval($value))) {
-            return ERR_VALIDATE_NUMBER;
+        if (($result = $this->validate_number($value)) !== true) {
+            return $result;
         }
 
         if (floatval($value) < $min) {
@@ -1198,10 +1209,8 @@ class cmsController {
 
     public function validate_max($max, $value) {
 
-        if (empty($value)) { $value = 0; }
-
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", strval($value))) {
-            return ERR_VALIDATE_NUMBER;
+        if (($result = $this->validate_number($value)) !== true) {
+            return $result;
         }
 
         if (floatval($value) > $max) {
@@ -1220,17 +1229,21 @@ class cmsController {
      * @return boolean
      */
     public function validate_minfloat($min, $value) {
-        if (empty($value)) { return true; }
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match('/^([\-]?)([0-9\.,]+)$/i', strval($value))) {
-            return ERR_VALIDATE_NUMBER;
+
+        if (($result = $this->validate_number($value)) !== true) {
+            return $result;
         }
-        $value = bc_format(str_replace(',', '.', $value));
+
+        $value = bc_format(str_replace(',', '.', strval($value)));
         $min   = bc_format($min);
+
         if (bccomp($min, $value) === 1) {
             return sprintf(ERR_VALIDATE_MIN, $min);
         }
+
         return true;
     }
+
     /**
      * Валидация float чисел: максимум
      * Требуется библиотека bcmath
@@ -1240,15 +1253,18 @@ class cmsController {
      * @return boolean
      */
     public function validate_maxfloat($max, $value) {
-        if (empty($value)) { return true; }
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match('/^([\-]?)([0-9\.,]+)$/i', strval($value))) {
-            return ERR_VALIDATE_NUMBER;
+
+        if (($result = $this->validate_number($value)) !== true) {
+            return $result;
         }
-        $value = bc_format(str_replace(',', '.', $value));
+
+        $value = bc_format(str_replace(',', '.', strval($value)));
         $max   = bc_format($max);
+
         if (bccomp($max, $value) === -1) {
             return sprintf(ERR_VALIDATE_MAX, $max);
         }
+
         return true;
     }
 
@@ -1366,9 +1382,22 @@ class cmsController {
         return true;
     }
 
-    public function validate_number($value){
-        if (empty($value)) { return true; }
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !is_numeric($value)){ return ERR_VALIDATE_NUMBER; }
+    public function validate_number($value) {
+
+        if (!$value) {
+            return true;
+        }
+
+        $type = gettype($value);
+
+        if (!in_array($type, ['integer', 'string', 'double'])) {
+            return ERR_VALIDATE_INVALID;
+        }
+
+        if ($type === 'string' && !preg_match('^-?[0-9]+([.,][0-9]+)?$', $value)) {
+            return ERR_VALIDATE_NUMBER;
+        }
+
         return true;
     }
 

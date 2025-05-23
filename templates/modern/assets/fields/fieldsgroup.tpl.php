@@ -5,12 +5,13 @@
 <div id="fieldsgroup_<?php echo $field->id; ?>">
 
     <div class="fieldsgroup_wrap<?php if ($field->data['is_counter_list']) { ?> fieldsgroup_wrap__counter<?php } ?>"></div>
-
-    <div class="d-flex align-items-center">
-        <a class="btn btn-success add_link" href="#">
-            <span><?php echo html_svg_icon('solid', 'plus-circle'); ?> <?php echo $field->add_title ?? LANG_ADD; ?></span>
-        </a>
-    </div>
+    <?php if ($field->data['is_dynamic']) { ?>
+        <div class="d-flex align-items-center">
+            <a class="btn btn-success add_link" href="#">
+                <span><?php echo html_svg_icon('solid', 'plus-circle'); ?> <?php echo $field->add_title ?? LANG_ADD; ?></span>
+            </a>
+        </div>
+    <?php } ?>
     <template class="fieldsgroup-template">
         <div class="fieldsgroup-item">
             <div class="d-flex mb-3 bg-light p-2 p-md-3 rounded">
@@ -29,11 +30,13 @@
                         <?php } ?>
                     <?php } ?>
                 </div>
-                <div class="d-flex align-items-start">
-                    <a href="#" class="ml-3 text-danger delete">
-                        <?php echo html_svg_icon('solid', 'times'); ?>
-                    </a>
-                </div>
+                <?php if ($field->data['is_dynamic']) { ?>
+                    <div class="d-flex align-items-start">
+                        <a href="#" class="ml-3 text-danger delete">
+                            <?php echo html_svg_icon('solid', 'times'); ?>
+                        </a>
+                    </div>
+                <?php } ?>
             </div>
         </div>
     </template>
@@ -42,7 +45,7 @@
 <?php ob_start(); ?>
 <script>
     $(function(){
-        new icms.fieldsgroup('<?php echo $field->id; ?>', '<?php echo $field->element_name; ?>', <?php echo json_encode($value); ?>, <?php echo json_encode($field->getError() ?? []); ?>);
+        new icms.fieldsgroup('<?php echo $field->id; ?>', '<?php echo $field->element_name; ?>', <?php echo json_encode($value); ?>, <?php echo json_encode($field->getError() ?? []); ?>, <?php echo $field->data['is_dynamic'] ? 'true' : 'false'; ?>);
     });
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

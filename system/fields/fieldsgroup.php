@@ -8,7 +8,26 @@ class fieldFieldsgroup extends cmsFormField {
     public $allow_index = false;
     public $var_type    = 'array';
 
-    public $childs = []; // только простой массив с последовательной нумерацией с ноля
+    /**
+     * Массив полей
+     * только простой массив с последовательной нумерацией с ноля
+     *
+     * @var array
+     */
+    public $childs = [];
+    /**
+     * Может динамически добавлять
+     * новую строку полей из $childs
+     *
+     * @var bool
+     */
+    public $is_dynamic = true;
+    /**
+     * Нумерует каждую строку полей
+     *
+     * @var bool
+     */
+    public $is_counter_list = false;
 
     public function getRules() {
 
@@ -31,8 +50,11 @@ class fieldFieldsgroup extends cmsFormField {
 
             $form_field = clone $field;
 
-            if($context_name){
-                $form_field->setName($this->name.'::'.$form_field->getName());
+            if ($context_name) {
+
+                $separator = $this->is_dynamic ? '::' : ':';
+
+                $form_field->setName($this->name . $separator . $form_field->getName());
             }
 
             $form_field->setItem($this->item);
@@ -45,19 +67,16 @@ class fieldFieldsgroup extends cmsFormField {
 
     public function getInput($value) {
 
-        $this->data['form'] = $this->getChildForm(true);
-        $this->data['is_counter_list'] = $this->getProperty('is_counter_list');
+        $this->data['form']            = $this->getChildForm(true);
+        $this->data['is_counter_list'] = $this->is_counter_list;
+        $this->data['is_dynamic']      = $this->is_dynamic;
 
-        if($value && !is_array($value)){
-            $value = cmsModel::yamlToArray($value);
-        }
-
-        return parent::getInput($value);
+        return parent::getInput(cmsModel::yamlToArray($value));
     }
 
-    public function store($_value, $is_submitted, $old_value = null){
+    public function store($_value, $is_submitted, $old_value = null) {
 
-        if(!$_value){
+        if (!$_value) {
             $_value = [];
         }
 
@@ -66,9 +85,11 @@ class fieldFieldsgroup extends cmsFormField {
         $total_fields = count($this->childs);
         $total_values = count($_value);
 
-        // Валидация
-        if($total_fields > $total_values || $total_values % $total_fields !== 0){
-            return $value;
+        // Валидация для динамического списка
+        if ($this->is_dynamic) {
+            if ($total_fields > $total_values || $total_values % $total_fields !== 0) {
+                return $value;
+            }
         }
 
         foreach ($this->childs as $key => $field) {
@@ -77,52 +98,74 @@ class fieldFieldsgroup extends cmsFormField {
 
             $field->setItem($this->item);
 
-            $value_key = 0;
+            if ($this->is_dynamic) {
 
-            for ($i = $key; $i < $total_values; $i += $total_fields) {
+                $value_key = 0;
 
-                // Валидация
-                if(!array_key_exists($i, $_value) || !is_array($_value[$i])){
-                    return [];
+                for ($i = $key; $i < $total_values; $i += $total_fields) {
+
+                    // Валидация
+                    if (!array_key_exists($i, $_value) || !is_array($_value[$i])) {
+                        return [];
+                    }
+
+                    $value[$value_key][$name] = $this->getChildFieldValue($field, $_value[$i], $is_submitted);
+
+                    $value_key++;
                 }
 
-                // По сути упрощённый кусок из парсинга значений полей в классе форм
-                $request = new cmsRequest($_value[$i]);
-
-                $field_value = $request->get($name, null, $field->getDefaultVarType());
-
-                if (is_null($field_value) && $field->hasDefaultValue() && !$is_submitted) { $field_value = $field->getDefaultValue(); }
-
-                $value[$value_key][$name] = $field->store($field_value, $is_submitted, $old_value);
-
-                $value_key++;
+            } else {
+                $value[$name] = $this->getChildFieldValue($field, $_value, $is_submitted);
             }
         }
 
         return parent::store($value, $is_submitted, $old_value);
     }
 
+    private function getChildFieldValue($field, $data, $is_submitted) {
+
+        $request = new cmsRequest($data);
+
+        $field_value = $request->get($field->getName(), null, $field->getDefaultVarType());
+
+        if (is_null($field_value) && $field->hasDefaultValue() && !$is_submitted) {
+            $field_value = $field->getDefaultValue();
+        }
+
+        return $field->store($field_value, $is_submitted);
+    }
+
     /**
      * Сюда придёт значение после обработки в store
-     * @param string $value JSON
+     *
+     * @param array $value
      * @return mixed
      */
     public function validate_fieldsgroup($value) {
 
-        if (empty($value)) {
-            return true;
+        if (!is_array($value)) {
+            return ERR_VALIDATE_INVALID;
         }
 
         $form = $this->getChildForm();
 
         $errors = [];
 
-        foreach ($value as $key => $data) {
+        if ($this->is_dynamic) {
 
-            $errors[$key] = $form->validate(new cmsController($this->request), $data);
+            if (empty($value)) {
+                return true;
+            }
+
+            foreach ($value as $key => $data) {
+                $errors[$key] = $form->validate(new cmsController($this->request), $data, false);
+            }
+
+            $errors = array_filter($errors);
+
+        } else {
+            $errors = $form->validate(new cmsController($this->request), $value, false);
         }
-
-        $errors = array_filter($errors);
 
         return $errors ? $errors : true;
     }
