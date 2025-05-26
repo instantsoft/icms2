@@ -53,6 +53,10 @@ trait transactable {
         return $success;
     }
 
+    public function isTransactionStarted() {
+        return $this->is_transaction_started;
+    }
+
     public function startTransaction() {
 
         $this->is_transaction_started = true;

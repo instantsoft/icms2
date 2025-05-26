@@ -1,39 +1,42 @@
 <?php
 
 /**
- * Выводит строку, безопасную для html
- * @param string $string Строка
- * @param boolean $print Печатать результат или возвращать, по умолчанию печатать
+ * Экранирует значение для безопасного вывода в HTML
+ *
+ * @param mixed $string Значение для экранирования
+ * @param bool $print Печатать результат (true) или вернуть как строку (false). По умолчанию true.
+ * @return string|null Экранированная строка или null, если напечатано
  */
 function html($string, $print = true) {
 
-    // Должна быть строка
-    $string = ''.$string;
-
-    $string = htmlentities($string, ENT_QUOTES | ENT_HTML401, 'UTF-8');
+    $escaped = htmlentities((string)$string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
 
     if ($print) {
-        echo $string;
-        return;
+        echo $escaped;
+        return null;
     }
 
-    return $string;
+    return $escaped;
 }
 
 /**
  * Очищает строку от тегов и обрезает до нужной длины
- * @param string $string Строка
- * @param integer $max_length Максимальное кол-во символов, по умолчанию false
+ *
+ * @param mixed  $string     Входной HTML-текст
+ * @param ?int   $max_length Максимальное кол-во символов, по умолчанию — не обрезать
  * @return string
  */
-function html_clean($string, $max_length = false) {
-
-    $string = ''.$string;
+function html_clean($string, $max_length = null) {
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами
-    $string = str_replace(["\n", "\r", '<br>', '<br/>'], ' ', $string);
-    $string = strip_tags($string);
+    $string = str_ireplace(
+            ['<br>', '<br/>', '<br />'],
+            ' ',
+            (string) $string
+    );
+
+    $string = trim(preg_replace('/\s+/u', ' ', strip_tags($string)));
 
     if ($max_length) {
         $string = html_strip($string, $max_length);
@@ -402,19 +405,18 @@ function html_editor($field_name, $content = '', $options = []) {
     return html_wysiwyg($field_name, $content, 'markitup', $options);
 }
 
-function html_select_range($name, $start, $end, $step, $add_lead_zero=false, $selected='', $attributes=array()){
+function html_select_range($name, $start, $end, $step, $add_lead_zero = false, $selected = '', $attributes = []) {
 
-    $items = array();
+    $items = [];
 
-    for($i=$start; $i<=$end; $i+=$step){
-        if ($add_lead_zero){
+    for ($i = $start; $i <= $end; $i += $step) {
+        if ($add_lead_zero) {
             $i = $i > 9 ? $i : "0{$i}";
         }
         $items[$i] = $i;
     }
 
     return html_select($name, $items, $selected, $attributes);
-
 }
 
 /**
@@ -422,8 +424,8 @@ function html_select_range($name, $start, $end, $step, $add_lead_zero=false, $se
  * @param int $number
  * @return string
  */
-function html_signed_num($number){
-    if ($number > 0){
+function html_signed_num($number) {
+    if ($number > 0) {
         return "+{$number}";
     } else {
         return "{$number}";
@@ -436,10 +438,10 @@ function html_signed_num($number){
  * @param int $number
  * @return string
  */
-function html_signed_class($number){
-    if ($number > 0){
+function html_signed_class($number) {
+    if ($number > 0) {
         return 'positive text-success';
-    } else if ($number < 0){
+    } else if ($number < 0) {
         return 'negative text-danger';
     } else {
         return 'zero text-muted';
@@ -450,51 +452,64 @@ function html_signed_class($number){
  * Возвращает скрытое поле, содержащее актуальный CSRF-токен
  * @return string
  */
-function html_csrf_token(){
+function html_csrf_token() {
     return html_input('hidden', 'csrf_token', cmsForm::getCSRFToken());
 }
 
 /**
  * Возвращает число с числительным в нужном склонении
- * @param int|float $num
- * @param string $one
- * @param ?string $two
- * @param ?string $many
- * @param string $zero_text
+ *
+ * @param int|float $num    Число, можно строкой
+ * @param string|array $one Одно число или число|числа|чисел или ['число','числа','чисел']
+ * @param ?string $two      Два числа
+ * @param ?string $many     Много чисел
+ * @param string $zero_text Нет чисел
  * @return string
  */
 function html_spellcount($num, $one, $two = null, $many = null, $zero_text = LANG_NO) {
 
-    if (!$two && !$many){
-        list($one, $two, $many) = explode('|', $one);
+    $numeral = html_spellcount_only($num, $one, $two, $many);
+
+    if (!$num) {
+        return $zero_text . ' ' . $numeral;
     }
 
-    if (!$num){
-        return $zero_text.' '.$many;
-    }
-
-    return nf($num, 2, ' ').' '.html_spellcount_only($num, $one, $two, $many);
+    return nf($num, 2, ' ') . ' ' . $numeral;
 }
 
-function html_spellcount_only($num, $one, $two = false, $many = false) {
+/**
+ * Возвращает числительное в нужном склонении от переданного числа
+ *
+ * @param int|float $num    Число, можно строкой
+ * @param string|array $one Одно число или число|числа|чисел или ['число','числа','чисел']
+ * @param ?string $two      Два числа
+ * @param ?string $many     Много чисел
+ * @return string
+ */
+function html_spellcount_only($num, $one, $two = null, $many = null) {
 
-    if (!$two && !$many) {
-        list($one, $two, $many) = explode('|', $one);
+    if ($two === null || $many === null) {
+        [$one, $two, $many] = is_array($one) ? $one : explode('|', $one);
     }
 
-    if (strpos($num, '.') !== false) {
+    $num = (float)$num;
+
+    if (floor($num) != $num) {
         return $two;
     }
 
-    if ($num % 10 == 1 && $num % 100 != 11) {
+    $mod10  = $num % 10;
+    $mod100 = $num % 100;
+
+    if ($mod10 === 1 && $mod100 !== 11) {
         return $one;
-    } elseif ($num % 10 >= 2 && $num % 10 <= 4 && ($num % 100 < 10 || $num % 100 >= 20)) {
-        return $two;
-    } else {
-        return $many;
     }
 
-    return $one;
+    if ($mod10 >= 2 && $mod10 <= 4 && ($mod100 < 10 || $mod100 >= 20)) {
+        return $two;
+    }
+
+    return $many;
 }
 
 /**
@@ -520,50 +535,72 @@ function html_file_size($bytes, $round = false) {
     return $output;
 }
 
-function html_views_format($num){
+/**
+ * Форматирует число просмотров, сокращая большие числа с суффиксами 'K' и 'M'.
+ *
+ * Примеры:
+ * - 0         → 0
+ * - 999       → 999
+ * - 1500      → 1.5K
+ * - 2350000   → 2.35M
+ *
+ * @param int|float $num Количество просмотров
+ * @return string Отформатированное число с сокращением
+ */
+function html_views_format($num) {
 
-    if(!$num) { return '0'; }
+    if (!$num) { return '0'; }
 
-    if($num >= 1000000){
-        return nf($num/1000000, 2, ' ').'M';
+    if ($num >= 1000000) {
+        return nf($num / 1000000, 2, ' ') . 'M';
     }
 
-    if($num >= 1000){
-        return nf($num/1000, 2, ' ').'K';
+    if ($num >= 1000) {
+        return nf($num / 1000, 2, ' ') . 'K';
     }
 
-    return (string)$num;
+    return (string) $num;
 }
 
-function html_minutes_format($minutes){
+/**
+ * Форматирует количество минут в строку с правильными склонениями: часы и минуты.
+ *
+ * Примеры:
+ * - 0      →
+ * - 45     → 45 минут
+ * - 60     → 1 час
+ * - 125    → 2 часа 5 минут
+ *
+ * @param int $minutes Количество минут (целое число 0 и больше)
+ * @return string Отформатированная строка с учетом склонений
+ */
+function html_minutes_format($minutes) {
 
-    if(!$minutes) { return ''; }
+    $result = '';
 
-    if($minutes >= 60){
+    if ($minutes >= 60) {
 
-        $hours = floor($minutes / 60);
-        $min = $minutes - ($hours * 60);
+        $hours   = intdiv($minutes, 60);
+        $minutes = $minutes % 60;
 
-        return html_spellcount($hours, LANG_HOUR1, LANG_HOUR2, LANG_HOUR10).($min ? ' '.html_spellcount($min, LANG_MINUTE1, LANG_MINUTE2, LANG_MINUTE10) : '');
+        $result = html_spellcount($hours, LANG_HOUR1, LANG_HOUR2, LANG_HOUR10) ;
     }
 
-    return html_spellcount($minutes, LANG_MINUTE1, LANG_MINUTE2, LANG_MINUTE10);
+    if ($minutes) {
+        $result .= ($result ? ' ' : '') . html_spellcount($minutes, LANG_MINUTE1, LANG_MINUTE2, LANG_MINUTE10);
+    }
+
+    return $result;
 }
 
 /**
  * Возвращает склеенный в одну строку массив строк
+ *
  * @param array $array
  * @return string
  */
 function html_each($array) {
-
-    $result = '';
-
-    if (is_array($array)) {
-        $result = implode('', $array);
-    }
-
-    return $result;
+    return is_array($array) ? implode('', $array) : '';
 }
 
 /**
@@ -573,17 +610,20 @@ function html_each($array) {
  */
 function html_minify($html) {
     return preg_replace([
-        '/\>[^\S ]+/us',
-        '/[^\S ]+\</us',
-        '/(\s)+/us'
+        '/>(?=\S)/u',
+        '/(?<=\S)</u',
+        '/\s{2,}/u',
+        '/[\r\n\t]+/u'
     ], [
-        '>',
-        '<',
-        '\\1'
+        '> ',
+        ' <',
+        ' ',
+        '',
     ], $html);
 }
 
 /**
+ * Форматирует число с группировкой классов многозначного числа
  *
  * @param string $number Число
  * @param integer $decimals Знаков после запятой
@@ -592,10 +632,12 @@ function html_minify($html) {
  * @return string
  */
 function nf($number, $decimals = 2, $thousands_sep = '', $trim_zero = true) {
-    if (!$number) { $number = '0'; }
-    $value = number_format((double) str_replace(',', '.', $number), $decimals, '.', $thousands_sep);
-    if($decimals && $trim_zero){
-        return rtrim(rtrim($value, '0'), '.');
-    }
-    return $value;
+
+    $number = (float)str_replace(',', '.', (string)$number);
+
+    $value = number_format($number, $decimals, '.', $thousands_sep);
+
+    return ($trim_zero && $decimals)
+        ? rtrim(rtrim($value, '0'), '.')
+        : $value;
 }

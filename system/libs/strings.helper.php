@@ -663,9 +663,8 @@ function string_short($string, $length = 0, $postfix = '', $type = 's', $clean_t
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами
-    $string = str_replace(["\n", "\r", '<br>', '<br/>', '</p>'], ' ', $string);
-    $string = strip_tags($string);
-    $string = preg_replace('#\s\s+#u', ' ', $string);
+    $string = strip_tags(str_ireplace(['<br>', '<br/>', '</p>', "\n", "\r"], ' ', $string));
+    $string = preg_replace('/\s{2,}/u', ' ', $string);
 
     if (!$length || mb_strlen($string) <= $length) {
         return $string;

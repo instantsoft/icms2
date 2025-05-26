@@ -32,7 +32,7 @@ class actionAdminUsersAdd extends cmsAction {
 
                     $user['id'] = $result['id'];
 
-                    $user = cmsEventsManager::hook('user_registered', $user);
+                    $user = cmsEventsManager::hook('user_registered', $user, null, $this->request);
 
                     cmsUser::addSessionMessage(sprintf(LANG_CP_USER_CREATED, $user['nickname']), 'success');
 

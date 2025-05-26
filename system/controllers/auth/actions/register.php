@@ -194,7 +194,7 @@ class actionAuthRegister extends cmsAction {
 
                     } else {
 
-                        $user = cmsEventsManager::hook('user_registered', $user);
+                        $user = cmsEventsManager::hook('user_registered', $user, null, $this->request);
 
                         $this->sendGreetMsg($user);
 
