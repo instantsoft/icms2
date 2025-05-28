@@ -1,4 +1,4 @@
-<?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
+<?php if ($field->title) { ?><label for="<?php echo $field->id; ?>" class="mb-0"><?php echo $field->title; ?></label><?php } ?>
 <div class="mt-2">
     <div class="input_checkbox_list" id="<?php echo $field->id; ?>">
         <?php foreach ($field->data['groups'] as $v => $title){ ?>

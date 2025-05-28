@@ -514,6 +514,10 @@ icms.datagrid = (function () {
                 }
             },
             methods: {
+                clear: function() {
+                    this.selected = [];
+                    this.close();
+                },
                 toggle: function() {
                     this.$emit('changeoverflow');
                     this.is_show = !this.is_show;
@@ -538,6 +542,7 @@ icms.datagrid = (function () {
                             {{title}}
                         </label>
                     </div>
+                    <a v-if="selected.length > 0" class="btn btn-primary btn-sm btn-block mt-1 mb-3" href="#"@click.prevent="clear">Очистить фильтр</a>
                 </div>
             </div>
             `

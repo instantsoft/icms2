@@ -29,3 +29,4 @@
 /templates/modern/js/billing.js
 /templates/modern/controllers/billing/
 /system/fields/paypal.php
+/templates/modern/scss/controllers/billing/
