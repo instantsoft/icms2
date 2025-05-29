@@ -7,8 +7,34 @@ class fieldCheckbox extends cmsFormField {
     public $filter_type = 'int';
     public $var_type    = 'integer';
 
+    public function getOptions(){
+        return [
+            new fieldFieldsgroup('urls', [
+                'title'            => LANG_PARSER_CHECKBOX_LINKS,
+                'hint'             => LANG_PARSER_CHECKBOX_LINKS_HINT,
+                'add_title'        => LANG_PARSER_CHECKBOX_LINKS_ADD,
+                'is_counter_list'  => true,
+                'childs' => [
+                    new fieldString('title', [
+                        'title' => LANG_TITLE,
+                        'rules' => [['required']]
+                    ]),
+                    new fieldString('href', [
+                        'title' => LANG_SLUG,
+                        'hint'  => LANG_PARSER_CHECKBOX_LINKS_SLASH,
+                        'rules' => [['required']]
+                    ])
+                ]
+            ])
+        ];
+    }
+
+    public function getTitle() {
+        return $this->element_title ? string_replace_keys_values($this->element_title, $this->getTitleLinks()) : $this->title;
+    }
+
     public function parse($value) {
-        return ($value ? LANG_YES : LANG_NO);
+        return $value ? LANG_YES : LANG_NO;
     }
 
     public function applyFilter($model, $value) {
@@ -16,6 +42,8 @@ class fieldCheckbox extends cmsFormField {
     }
 
     public function getInput($value) {
+
+        $this->element_title = string_replace_keys_values($this->element_title, $this->getTitleLinks());
 
         $this->data['attributes']             = $this->getProperty('attributes') ?: [];
         $this->data['attributes']['id']       = $this->id;
@@ -28,6 +56,24 @@ class fieldCheckbox extends cmsFormField {
         }
 
         return parent::getInput($value);
+    }
+
+    private function getTitleLinks() {
+
+        $links = [];
+
+        $urls = $this->getOption('urls', []);
+
+        foreach ($urls as $key => $link) {
+
+            if (stripos($link['href'], 'http') !== 0) {
+                $link['href'] = rel_to_href($link['href']);
+            }
+
+            $links['link' . ($key+1)] = '<a href="'.html($link['href'], false).'" target="_blank">'.html($link['title'], false).'</a>';
+        }
+
+        return $links;
     }
 
 }

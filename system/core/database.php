@@ -341,7 +341,11 @@ class cmsDatabase {
      * @return $this
      */
     public function autocommitOn() {
+
+        $this->query_quiet = null;
+
         $this->mysqli->autocommit(true);
+
         return $this;
     }
 
@@ -351,7 +355,12 @@ class cmsDatabase {
      * @return $this
      */
     public function autocommitOff() {
+
         $this->mysqli->autocommit(false);
+
+        // чтобы внутри транзакции при ошибке запроса всё не умирало
+        $this->query_quiet = true;
+
         return $this;
     }
 

@@ -29,11 +29,17 @@ class actionGroupsIndex extends cmsAction {
 
         $this->item_callback = function ($item, $model) {
 
+            $item['options'] = cmsModel::yamlToArray($item['options']);
+
             $field_class = 'field' . string_to_camel('_', $item['type']);
 
             $handler = new $field_class($item['name']);
 
             $item['handler_title'] = $handler->getTitle();
+
+            $handler->setOptions($item);
+
+            $item['title'] = strip_tags($handler->getTitle());
 
             return $item;
         };

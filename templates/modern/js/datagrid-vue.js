@@ -478,6 +478,10 @@ icms.datagrid = (function () {
                 params: {
                     default: {items: [], attributes: {}}
                 },
+                show_clear_btn: {
+                    type: Boolean,
+                    default: true
+                },
                 modelValue: {
                     default: []
                 },
@@ -542,7 +546,7 @@ icms.datagrid = (function () {
                             {{title}}
                         </label>
                     </div>
-                    <a v-if="selected.length > 0" class="btn btn-primary btn-sm btn-block mt-1 mb-3" href="#"@click.prevent="clear">Очистить фильтр</a>
+                    <a v-if="show_clear_btn && selected.length > 0" class="btn btn-primary btn-sm btn-block mt-1 mb-3" href="#"@click.prevent="clear">`+LANG_FILTER_CLEAR+`</a>
                 </div>
             </div>
             `

@@ -61,7 +61,7 @@ if(!empty($page_title)) {
                         <?php echo html_svg_icon('solid', 'reply'); ?><span class="d-none d-lg-inline"> <?php echo LANG_CANCEL; ?></span>
                     </button>
                 </div>
-                <form-multiselect use_slot="true" v-model="switchable_columns_names" :params="{items: switchable.columns}" v-if="switchable.columns">
+                <form-multiselect use_slot="true" v-model="switchable_columns_names" :show_clear_btn="false" :params="{items: switchable.columns}" v-if="switchable.columns">
                     <a class="btn btn-light btn-sm" href="#">
                         <?php echo html_svg_icon('solid', 'eye-slash'); ?> <span class="d-none d-lg-inline-block" v-text="switchable.title"></span>
                     </a>
@@ -133,7 +133,7 @@ if(!empty($page_title)) {
 
 <?php ob_start(); ?>
 <script>
-    <?php echo $this->getLangJS('LANG_LIST_NONE_SELECTED'); ?>
+    <?php echo $this->getLangJS('LANG_LIST_NONE_SELECTED', 'LANG_FILTER_CLEAR'); ?>
     icms.datagrid.initApp(<?php echo json_encode($rows, JSON_UNESCAPED_UNICODE); ?>);
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

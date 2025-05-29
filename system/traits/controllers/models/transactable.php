@@ -16,10 +16,6 @@ trait transactable {
 
     public function processTransaction($payload_callback, $after_autocommit_on = false) {
 
-        // нам не нужно, чтобы внутри транзакции при ошибке запроса
-        // всё умирало
-        $this->db->query_quiet = true;
-
         // флаг результата выполнения
         $success = true;
 
@@ -42,8 +38,6 @@ trait transactable {
 
             $success = false;
         }
-
-        $this->db->query_quiet = null;
 
         if ($is_autocommit_on || $after_autocommit_on) {
 

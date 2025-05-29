@@ -1082,7 +1082,7 @@ class cmsModel {
     }
 
     public function disablePrivacyFilterForFriends(){
-        $this->privacy_filter_value = array(0, 1);
+        $this->privacy_filter_value = [0, 1];
         return $this;
     }
 

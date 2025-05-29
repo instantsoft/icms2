@@ -34,6 +34,8 @@ class actionFormsFormFields extends cmsAction {
 
         $this->list_callback = function ($model) use($form_data) {
 
+            $model->selectTranslatedField('i.values', $this->table_name, 'default');
+
             $model->filterEqual('form_id', $form_data['id']);
 
             $model->orderBy('ordering', 'asc');
@@ -43,11 +45,17 @@ class actionFormsFormFields extends cmsAction {
 
         $this->item_callback = function ($item, $model) {
 
+            $item['options'] = cmsModel::stringToArray($item['options']);
+
             $field_class = 'field' . string_to_camel('_', $item['type']);
 
             $handler = new $field_class($item['name']);
 
             $item['handler_title'] = $handler->getTitle();
+
+            $handler->setOptions($item);
+
+            $item['title'] = strip_tags($handler->getTitle());
 
             return $item;
         };

@@ -1287,13 +1287,17 @@ class modelUsers extends cmsModel {
 
         $this->filterEqual('id', $user_id);
 
-        $score = intval($score);
+        $score = (int) $score;
 
         if ($score > 0) {
-            $this->increment('{users}', 'rating', abs($score));
+            $success = $this->increment('{users}', 'rating', abs($score));
         }
         if ($score < 0) {
-            $this->decrement('{users}', 'rating', abs($score));
+            $success = $this->decrement('{users}', 'rating', abs($score));
+        }
+
+        if (!$success) {
+            return false;
         }
 
         cmsCache::getInstance()->clean('users.list');

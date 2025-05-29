@@ -29,6 +29,7 @@
     define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Введите часть значения');
     define('LANG_CONTENT_OWN_ITEMS',          'Только мои');
     define('LANG_SHOW_FILTER',               'Показать фильтр');
+    define('LANG_FILTER_CLEAR',              'Очистить фильтр');
     define('LANG_FILTER',                    'Фильтр');
     define('LANG_FILTERS',                   'Фильтры');
     define('LANG_FILTER_FIELD',              'Фильтр по полю');
@@ -146,6 +147,10 @@
     define('LANG_PARSER_CITY_OUTPUT_STRING', 'Строка вывода значения поля');
     define('LANG_PARSER_CITY_OUTPUT_STRING_HINT', 'Например, "{country}, {city}", где country и city системные имена полей. Полезно использовать, отключая для вывода остальные поля группировки, показывая нужные значения в этом поле. Если не указано - выводится значение текущего поля.');
     define('LANG_PARSER_CHECKBOX',           'Флаг');
+    define('LANG_PARSER_CHECKBOX_LINKS',     'Ссылки в названии поля');
+    define('LANG_PARSER_CHECKBOX_LINKS_HINT', 'Используйте комбинации {link1}, {link2} и т.д. для вставки в название поля.');
+    define('LANG_PARSER_CHECKBOX_LINKS_ADD', 'Добавить ссылку');
+    define('LANG_PARSER_CHECKBOX_LINKS_SLASH', 'Для внутренних ссылок начальный слэш не указывайте.');
     define('LANG_PARSER_TEXT',               'Текст');
     define('LANG_PARSER_TEXT_MAX_LEN',       'Максимальная длина');
     define('LANG_PARSER_TEXT_MIN_LEN',       'Минимальная длина');

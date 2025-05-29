@@ -30,6 +30,7 @@
     define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Type part of the field value');
 
     define('LANG_SHOW_FILTER',               'Show filter');
+    define('LANG_FILTER_CLEAR',              'Clean Filter');
     define('LANG_FILTER',                    'Filter');
     define('LANG_FILTERS',                   'Filters');
     define('LANG_FILTER_FIELD',              'Filter by field');
@@ -67,7 +68,7 @@
     define('LANG_GROUP',                     'Group');
     define('LANG_GROUPS',                    'Groups');
     define('LANG_WROTE_IN_GROUP',            'in');
-    define('LANG_DESIGN',                     'Design');
+    define('LANG_DESIGN',                    'Design');
     define('LANG_TABLE',                     'Table');
 
     //WIDGETS
@@ -147,6 +148,10 @@
     define('LANG_PARSER_CITY_OUTPUT_STRING', 'Field value output string');
     define('LANG_PARSER_CITY_OUTPUT_STRING_HINT', 'For example, "{country}, {city}", where country and city system field names. It is useful to use, disabling output for the rest of the field groups, showing the desired values in this field. If not specified - output value of the current field.');
     define('LANG_PARSER_CHECKBOX',           'Checkbox');
+    define('LANG_PARSER_CHECKBOX_LINKS',     'Links in the field name');
+    define('LANG_PARSER_CHECKBOX_LINKS_HINT', 'Use combinations {link1}, {link2}, etc. For inserting in the field name.');
+    define('LANG_PARSER_CHECKBOX_LINKS_ADD', 'Add the link');
+    define('LANG_PARSER_CHECKBOX_LINKS_SLASH', 'For internal links, do not indicate the initial slash.');
     define('LANG_PARSER_TEXT',               'Textarea');
     define('LANG_PARSER_TEXT_MAX_LEN',       'Maximum length');
     define('LANG_PARSER_TEXT_MIN_LEN',       'Minimum length');
