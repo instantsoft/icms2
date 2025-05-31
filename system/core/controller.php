@@ -1352,33 +1352,43 @@ class cmsController {
         return true;
     }
 
-    public function validate_sysname($value){
+    public function validate_sysname($value) {
         if (empty($value)) { return true; }
-        if (!is_string($value) || !preg_match("/^([a-z0-9\_]*[a-z]+[a-z0-9\_]*)$/", $value)){ return ERR_VALIDATE_SYSNAME; }
+        if (!is_string($value) || !preg_match('/^([a-z0-9\_]*[a-z]+[a-z0-9\_]*)$/', $value)) {
+            return ERR_VALIDATE_SYSNAME;
+        }
         return true;
     }
 
-    public function validate_phone($value){
+    public function validate_phone($value) {
         if (empty($value)) { return true; }
-        if (!is_string($value) || !preg_match("/^([0-9\-\+\(\)\s]*)$/", $value)){ return ERR_VALIDATE_INVALID; }
+        if (!is_string($value) || !preg_match('/^([0-9\-\+\(\)\s]*)$/', $value)) {
+            return ERR_VALIDATE_INVALID;
+        }
         return true;
     }
 
-    public function validate_slug_segment($value){
+    public function validate_slug_segment($value) {
         if (empty($value)) { return true; }
-        if (!is_string($value) || !preg_match("/^([a-z0-9\-]*[a-z]+[a-z0-9\-]*)$/", $value)){ return ERR_VALIDATE_SLUGS; }
+        if (!is_string($value) || !preg_match('/^([a-z0-9\-]*[a-z]+[a-z0-9\-]*)$/', $value)) {
+            return ERR_VALIDATE_SLUGS;
+        }
         return true;
     }
 
-    public function validate_slug($value){
+    public function validate_slug($value) {
         if (empty($value)) { return true; }
-        if (!is_string($value) || !preg_match("/^([a-z0-9\-\/]*)$/", $value)){ return ERR_VALIDATE_SLUG; }
+        if (!is_string($value) || !preg_match('/^([a-z0-9\-\/]*)$/', $value)) {
+            return ERR_VALIDATE_SLUG;
+        }
         return true;
     }
 
-    public function validate_digits($value){
+    public function validate_digits($value) {
         if (empty($value)) { return true; }
-        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match("/^([0-9]+)$/i", strval($value))){ return ERR_VALIDATE_DIGITS; }
+        if (!in_array(gettype($value), ['integer', 'string', 'double']) || !preg_match('/^([0-9]+)$/', strval($value))) {
+            return ERR_VALIDATE_DIGITS;
+        }
         return true;
     }
 
@@ -1394,7 +1404,7 @@ class cmsController {
             return ERR_VALIDATE_INVALID;
         }
 
-        if ($type === 'string' && !preg_match('^-?[0-9]+([.,][0-9]+)?$', $value)) {
+        if ($type === 'string' && !preg_match('/^-?[0-9]+([.,][0-9]+)?$/', $value)) {
             return ERR_VALIDATE_NUMBER;
         }
 
@@ -1410,7 +1420,7 @@ class cmsController {
                 return true;
             }
         } else {
-            if (preg_match("/^rgba\((\s*\d+\s*,){3} [\d\.]+\)$/i", $value)) {
+            if (preg_match('/^rgba\((\s*\d+\s*,){3} [\d\.]+\)$/i', $value)) {
                 return true;
             }
         }
