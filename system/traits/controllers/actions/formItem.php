@@ -134,6 +134,11 @@ trait formItem {
                     if ($value && strpos($value, '---') === 0) {
                         $item[$key] = cmsModel::yamlToArray($value);
                     }
+                    // Если ячейка в БД начинается на date_, то cmsDatabase->prepareValue
+                    // null будет CURRENT_TIMESTAMP
+                    if (strpos($key, 'date_') === 0 && $value === null) {
+                        $item[$key] = 0;
+                    }
                 }
                 return $item;
             });

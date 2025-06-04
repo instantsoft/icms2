@@ -2,13 +2,119 @@
 
 class cmsPermissions {
 
+    private $perms = [];
+
+    private $is_admin = false;
+
+    public function __construct(array $user) {
+
+        $this->perms = self::getUserPermissions($user['groups']);
+
+        $this->is_admin = !empty($user['is_admin']);
+    }
+
+    /**
+     * Возвращает значение конкретного разрешения для указанного субъекта
+     *
+     * @param string $subject     Субъект (например, имя контроллера)
+     * @param string $permission  Название разрешения
+     *
+     * @return mixed Возвращает значение разрешения или false, если разрешение не установлено
+     */
+    public function getPermissionValue(string $subject, string $permission) {
+        return $this->perms[$subject][$permission] ?? false;
+    }
+
+    /**
+     * Проверяет, запрещено ли выполнение действия по заданному разрешению
+     *
+     * @param string  $subject          Субъект (например, имя контроллера)
+     * @param string  $permission       Название разрешения (например, 'delete', 'manage')
+     * @param mixed   $value            Значение, которое считается запрещающим (по умолчанию true)
+     * @param bool    $is_admin_strict  Строгая проверка для администратора (true — админ проверяется как обычный пользователь)
+     *
+     * @return bool Возвращает true, если значение разрешения совпадает с указанным ($value)
+     */
+    public function isDenied($subject, $permission, $value = true, $is_admin_strict = false) {
+
+        if (!$is_admin_strict && $this->is_admin) {
+            return false;
+        }
+
+        return ($this->perms[$subject][$permission] ?? false) == $value;
+    }
+
+    /**
+     * Проверяет, разрешено ли выполнение действия по заданному разрешению
+     *
+     * @param string  $subject          Субъект (например, имя контроллера)
+     * @param string  $permission       Название разрешения (например, 'edit', 'view')
+     * @param mixed   $value            Ожидаемое значение разрешения (по умолчанию true)
+     * @param bool    $is_admin_strict  Строгая проверка для администратора (true — админ проверяется как обычный пользователь)
+     *
+     * @return bool Возвращает true, если значение разрешения совпадает с ожидаемым ($value)
+     */
+    public function isAllowed(string $subject, string $permission, $value = true, $is_admin_strict = false) {
+
+        if (!$is_admin_strict && $this->is_admin) {
+            return true;
+        }
+
+        // Нестрогое сравнение, поскольку наличие
+        // строкового значения в $this->perms[$subject][$permission]
+        // при сравнении с true даёт истину
+        return ($this->perms[$subject][$permission] ?? false) == $value;
+    }
+
+    /**
+     * Проверяет, достигнуто ли разрешённое ограничение по значению
+     *
+     * @param string  $subject          Субъект (например, имя контроллера)
+     * @param string  $permission       Название разрешения (например, 'max_items')
+     * @param int     $current_value    Текущее значение, которое сравнивается с лимитом
+     * @param bool    $is_admin_strict  Строгая проверка для админа (true — админ проверяется как обычный пользователь)
+     *
+     * @return bool Возвращает true, если текущее значение больше либо равно установленному лимиту
+     */
+    public function isPermittedLimitReached(string $subject, string $permission, $current_value = 0, $is_admin_strict = false) {
+
+        if (!$is_admin_strict && $this->is_admin) {
+            return false;
+        }
+
+        $limit = $this->perms[$subject][$permission] ?? null;
+
+        return $limit !== null && (int)$current_value >= $limit;
+    }
+
+    /**
+     * Проверяет, не превышено ли установленное ограничение
+     *
+     * @param string  $subject          Субъект (например, имя контроллера)
+     * @param string  $permission       Название разрешения (например, 'max_items')
+     * @param int     $current_value    Текущее значение, которое сравнивается с лимитом
+     * @param bool    $is_admin_strict  Строгая проверка для админа (true — админ проверяется как обычный пользователь)
+     *
+     * @return bool Возвращает true, если текущее значение меньше разрешённого лимита
+     */
+    public function isPermittedLimitHigher(string $subject, string $permission, $current_value = 0, $is_admin_strict = false) {
+
+        if (!$is_admin_strict && $this->is_admin) {
+            return false;
+        }
+
+        $limit = $this->perms[$subject][$permission] ?? null;
+
+        return $limit !== null && (int)$current_value < $limit;
+    }
+
     /**
      * Добавляет правило доступа в каталог правил
      * @param string $controller Название контроллера
      * @param array $rule Массив данных правила
      * @return integer|false
      */
-    static function addRule($controller, $rule) {
+    public static function addRule(string $controller, array $rule) {
 
         $core = cmsCore::getInstance();
 
@@ -35,7 +141,7 @@ class cmsPermissions {
      * @param string $controller Название контроллера
      * @return array
      */
-    static function getRulesList($controller) {
+    public static function getRulesList(string $controller) {
 
         $model = new cmsModel();
 
@@ -74,7 +180,7 @@ class cmsPermissions {
      * @param string $subject
      * @return array
      */
-    static function getPermissions($subject = false) {
+    public static function getPermissions($subject = false) {
 
         $model = new cmsModel();
 
@@ -102,7 +208,7 @@ class cmsPermissions {
      * @param array $user_groups id групп
      * @return array
      */
-    static function getUserPermissions($user_groups) {
+    public static function getUserPermissions($user_groups) {
 
         $model = new cmsModel();
 
@@ -111,7 +217,7 @@ class cmsPermissions {
         return self::getPermissionsData($model);
     }
 
-    static function getRuleSubjectPermissions($controller, $subject, $permission) {
+    public static function getRuleSubjectPermissions($controller, $subject, $permission) {
 
         $model = new cmsModel();
 
@@ -171,7 +277,7 @@ class cmsPermissions {
      * Возвращает массив контроллеров, для которых есть правила доступа
      * @return array
      */
-    static function getControllersWithRules() {
+    public static function getControllersWithRules() {
 
         $model = new cmsModel();
 
@@ -187,7 +293,7 @@ class cmsPermissions {
      * @param string $subject Субъект действия правила
      * @param array $perms Правила и их значения
      */
-    static function savePermissions($subject, $perms) {
+    public static function savePermissions($subject, $perms) {
 
         $model = new cmsModel();
 

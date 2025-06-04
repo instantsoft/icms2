@@ -1393,6 +1393,10 @@ class modelContent extends cmsModel {
                 'avatar'          => $item['user_avatar']
             ];
 
+            $item['ctype_name'] = $ctype['name'];
+            $item['ctype_id']   = $ctype['id'];
+            $item['ctype_data'] = $ctype;
+
             $item['is_draft'] = false;
 
             if (!$item['is_approved']) {

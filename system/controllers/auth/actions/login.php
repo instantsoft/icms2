@@ -61,6 +61,8 @@ class actionAuthLogin extends cmsAction {
 
                 if ($logged_user) {
 
+                    $perms = new cmsPermissions($logged_user);
+
                     // Включена ли двухфакторная авторизация
                     if (!empty($logged_user['2fa']) && !empty($this->options['2fa_params'][$logged_user['2fa']])) {
 
@@ -88,7 +90,7 @@ class actionAuthLogin extends cmsAction {
                     // Не даём авторизоваться
                     // если сайт выключен и доступа к просмотру нет
                     if ($is_site_offline) {
-                        if (empty($logged_user['permissions']['auth']['view_closed']) && empty($logged_user['is_admin'])) {
+                        if (!$perms->isAllowed('auth', 'view_closed')) {
 
                             cmsUser::addSessionMessage(LANG_LOGIN_ADMIN_ONLY, 'error');
 

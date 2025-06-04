@@ -242,8 +242,6 @@ class actionContentItemAdd extends cmsAction {
                     $item['date_pub_end'] = false;
                 }
 
-                unset($item['pub_days']);
-
                 if (!$is_pub_control) {
                     unset($item['is_pub']);
                 }

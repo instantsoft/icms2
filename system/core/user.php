@@ -8,6 +8,9 @@ class cmsUser {
     const USER_ONLINE_INTERVAL      = 180;
     const AUTH_TOKEN_EXPIRATION_INT = 8640000; // 100 дней
 
+    /**
+     * @var cmsUser
+     */
     private static $instance;
     private static $_ip;
     public static $auth_token;
@@ -22,6 +25,10 @@ class cmsUser {
     public $is_logged  = false;
     public $friends    = [];
     public $subscribes = [];
+    /**
+     * @var cmsPermissions
+     */
+    private $perms;
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -192,7 +199,7 @@ class cmsUser {
         // восстанавливаем те поля, которые не должны
         // изменяться в течении сессии
         $this->date_log  = self::sessionGet('user:date_log');
-        $this->perms     = self::getPermissions($user['groups']);
+        $this->perms     = new cmsPermissions($user);
         $this->is_logged = true;
 
         return cmsEventsManager::hook('user_loaded', $user);
@@ -210,7 +217,6 @@ class cmsUser {
             'is_old_auth' => !empty($user['is_old_auth']),
             'groups'      => $user['groups'],
             'time_zone'   => $user['time_zone'],
-            'perms'       => isset($user['permissions']) ? $user['permissions'] : self::getPermissions($user['groups']),
             'is_admin'    => $user['is_admin']
         ]);
 
@@ -292,8 +298,6 @@ class cmsUser {
         }
 
         $user = cmsEventsManager::hook('user_login', $user);
-
-        $user['permissions'] = self::getPermissions($user['groups']);
 
         if ($complete_login) {
 
@@ -724,114 +728,24 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
-    public static function getPermissions($groups) {
-        return cmsPermissions::getUserPermissions($groups);
-    }
-
     public static function getPermissionValue($subject, $permission) {
-
-        $user = self::getInstance();
-
-        if (!isset($user->perms[$subject])) {
-            return false;
-        }
-        if (!isset($user->perms[$subject][$permission])) {
-            return false;
-        }
-
-        return $user->perms[$subject][$permission];
+        return self::getInstance()->perms->getPermissionValue($subject, $permission);
     }
-
-//============================================================================//
-//============================================================================//
 
     public static function isDenied($subject, $permission, $value = true, $is_admin_strict = false) {
-
-        $user = self::getInstance();
-
-        if (!$is_admin_strict) {
-            if ($user->is_admin) {
-                return false;
-            }
-        }
-
-        if (!isset($user->perms[$subject])) {
-            return false;
-        }
-        if (!isset($user->perms[$subject][$permission])) {
-            return false;
-        }
-
-        return $user->perms[$subject][$permission] == $value;
+        return self::getInstance()->perms->isDenied($subject, $permission, $value, $is_admin_strict);
     }
 
     public static function isAllowed($subject, $permission, $value = true, $is_admin_strict = false) {
-
-        $user = self::getInstance();
-
-        if (!$is_admin_strict) {
-            if ($user->is_admin) {
-                return true;
-            }
-        }
-
-        if (!isset($user->perms[$subject])) {
-            return false;
-        }
-        if (!isset($user->perms[$subject][$permission])) {
-            return false;
-        }
-        if ($user->perms[$subject][$permission] != $value) {
-            return false;
-        }
-
-        return true;
+        return self::getInstance()->perms->isAllowed($subject, $permission, $value, $is_admin_strict);
     }
 
     public static function isPermittedLimitReached($subject, $permission, $current_value = 0, $is_admin_strict = false) {
-
-        $user = self::getInstance();
-
-        if (!$is_admin_strict) {
-            if ($user->is_admin) {
-                return false;
-            }
-        }
-
-        if (!isset($user->perms[$subject])) {
-            return false;
-        }
-        if (!isset($user->perms[$subject][$permission])) {
-            return false;
-        }
-        if ((int) $current_value >= $user->perms[$subject][$permission]) {
-            return true;
-        }
-
-        return false;
+        return self::getInstance()->perms->isPermittedLimitReached($subject, $permission, $current_value, $is_admin_strict);
     }
 
     public static function isPermittedLimitHigher($subject, $permission, $current_value = 0, $is_admin_strict = false) {
-
-        $user = self::getInstance();
-
-        if (!$is_admin_strict) {
-            if ($user->is_admin) {
-                return false;
-            }
-        }
-
-        if (!isset($user->perms[$subject])) {
-            return false;
-        }
-        if (!isset($user->perms[$subject][$permission])) {
-            return false;
-        }
-        if ((int) $current_value < $user->perms[$subject][$permission]) {
-            return true;
-        }
-
-        return false;
+        return self::getInstance()->perms->isPermittedLimitHigher($subject, $permission, $current_value, $is_admin_strict);
     }
 
 //============================================================================//

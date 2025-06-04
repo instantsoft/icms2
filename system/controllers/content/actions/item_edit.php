@@ -219,8 +219,6 @@ class actionContentItemEdit extends cmsAction {
                     $item['date_pub_end'] = date('Y-m-d', $date_pub_end_time);
                 }
 
-                unset($item['pub_days']);
-
                 if (!$is_pub_control) {
                     unset($item['is_pub']);
                 }
@@ -256,10 +254,10 @@ class actionContentItemEdit extends cmsAction {
                         if (empty($item['date_approved'])) {
                             cmsEventsManager::hook('content_after_add_approve', ['ctype_name' => $ctype['name'], 'item' => $item]);
                             cmsEventsManager::hook("content_{$ctype['name']}_after_add_approve", $item);
+                        } else {
+                            cmsEventsManager::hook('content_after_update_approve', ['ctype_name' => $ctype['name'], 'item' => $item]);
+                            cmsEventsManager::hook("content_{$ctype['name']}_after_update_approve", $item);
                         }
-
-                        cmsEventsManager::hook('content_after_update_approve', ['ctype_name' => $ctype['name'], 'item' => $item]);
-                        cmsEventsManager::hook("content_{$ctype['name']}_after_update_approve", $item);
 
                         cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
@@ -267,7 +265,7 @@ class actionContentItemEdit extends cmsAction {
 
                         $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
 
-                        $succes_text = cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, false);
+                        $succes_text = cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, empty($item['date_approved']));
 
                         if ($succes_text) {
                             cmsUser::addSessionMessage($succes_text, 'info');
