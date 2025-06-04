@@ -59,6 +59,7 @@ class cmsUser {
         $this->groups   = [GUEST_GROUP_ID];
         $this->ip       = self::getIp();
         $this->date_log = date('Y-m-d H:i:s');
+        $this->perms    = new cmsPermissions(['groups' => $this->groups]);
 
         if(PHP_SAPI === 'cli') {
             return;
