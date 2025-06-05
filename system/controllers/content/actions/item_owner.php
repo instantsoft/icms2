@@ -8,7 +8,7 @@ class actionContentItemOwner extends cmsAction {
 
     public function run() {
 
-        if(!$this->request->isAjax()){
+        if(!$this->request->isAjax()) {
             return cmsCore::error404();
         }
 
@@ -38,7 +38,7 @@ class actionContentItemOwner extends cmsAction {
 
         if ($this->request->has('email')) {
 
-            $ups_key = 'change_owner_' . $ctype['name'] . $this->cms_user->id;
+            $ups_key = 'change_owner_' . $ctype['name'] . $item['id'] . '_' . $this->cms_user->id;
 
             $data = $form->parse($this->request, true);
 
@@ -51,7 +51,7 @@ class actionContentItemOwner extends cmsAction {
             }
 
             if (!$errors && cmsUser::getUPS($ups_key, $user['id'])) {
-                $errors['email'] = LANG_OFFER_OWNER_SEND;
+                $errors['email'] = LANG_OFFER_OWNER_SEND_ERROR;
             }
 
             if ($errors) {

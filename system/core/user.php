@@ -21,6 +21,7 @@ class cmsUser {
     public $password;
     public $nickname;
     public $date_log;
+    public $groups = [GUEST_GROUP_ID];
     public $is_admin   = 0;
     public $is_logged  = false;
     public $friends    = [];
@@ -56,12 +57,13 @@ class cmsUser {
 
     public function __construct() {
 
-        $this->groups   = [GUEST_GROUP_ID];
         $this->ip       = self::getIp();
         $this->date_log = date('Y-m-d H:i:s');
-        $this->perms    = new cmsPermissions(['groups' => $this->groups]);
 
         if(PHP_SAPI === 'cli') {
+
+            $this->perms = new cmsPermissions(['groups' => []]);
+
             return;
         }
 
@@ -104,6 +106,8 @@ class cmsUser {
 
             $this->date_log = date('Y-m-d H:i:s', self::sessionGet('user:date_log'));
         }
+
+        $this->perms = new cmsPermissions(['groups' => $this->groups, 'is_admin' => $this->is_admin]);
     }
 
     public static function restrictSessionToIp($ip = false) {
@@ -200,7 +204,6 @@ class cmsUser {
         // восстанавливаем те поля, которые не должны
         // изменяться в течении сессии
         $this->date_log  = self::sessionGet('user:date_log');
-        $this->perms     = new cmsPermissions($user);
         $this->is_logged = true;
 
         return cmsEventsManager::hook('user_loaded', $user);

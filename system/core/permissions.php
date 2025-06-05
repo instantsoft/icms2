@@ -210,6 +210,10 @@ class cmsPermissions {
      */
     public static function getUserPermissions($user_groups) {
 
+        if (!$user_groups) {
+            return [];
+        }
+
         $model = new cmsModel();
 
         $model->filterIn('group_id', $user_groups);

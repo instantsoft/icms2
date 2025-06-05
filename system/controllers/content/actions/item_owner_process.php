@@ -35,7 +35,7 @@ class actionContentItemOwnerProcess extends cmsAction {
             return false;
         }
 
-        $ups_key = 'change_owner_' . $ctype['name'] . $user['id'];
+        $ups_key = 'change_owner_' . $ctype['name'] . $item['id'] . '_' . $user['id'];
 
         if (!cmsUser::getUPS($ups_key)) {
             return false;

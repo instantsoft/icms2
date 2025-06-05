@@ -668,6 +668,7 @@
     define('LANG_OWNER_NEW_EMAIL',           'E-mail address of the new owner');
     define('LANG_OWNER_NEW_EMAIL_HINT',      'Attention! This action is irreversible.');
     define('LANG_OFFER_OWNER_SEND',          'Offer sent to user');
+    define('LANG_OFFER_OWNER_SEND_ERROR',    'Offer has already been sent to the user');
     define('LANG_OFFER_OWNER_NOTICE',        '%s is offering you ownership of the %s &laquo;%s&raquo;');
     define('LANG_CHOWN_NOTICE_ACCEPT',       'Your proposal to transfer the rights to the &laquo;%s&raquo; was accepted %s');
     define('LANG_CHOWN_NOTICE_DECLINE',      'Your proposal to transfer the rights to the &laquo;%s&raquo; was rejected %s');

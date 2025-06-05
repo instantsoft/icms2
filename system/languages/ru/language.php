@@ -667,6 +667,7 @@
     define('LANG_OWNER_NEW_EMAIL',           'E-mail адрес нового владельца');
     define('LANG_OWNER_NEW_EMAIL_HINT',      'Внимание! Это действие необратимое.');
     define('LANG_OFFER_OWNER_SEND',          'Предложение отправлено пользователю');
+    define('LANG_OFFER_OWNER_SEND_ERROR',    'Предложение уже было отправлено пользователю');
     define('LANG_OFFER_OWNER_NOTICE',        '%s предлагает вам стать владельцем %s &laquo;%s&raquo;');
     define('LANG_CHOWN_NOTICE_ACCEPT',       'Ваше предложение о передачи прав на &laquo;%s&raquo; было принято пользователем %s.');
     define('LANG_CHOWN_NOTICE_DECLINE',      'Ваше предложение о передачи прав на &laquo;%s&raquo; было отклонено пользователем %s.');
