@@ -30,6 +30,7 @@ trait fieldsParseable {
         foreach ($fields as $name => $field) {
             $fields[$name]['string_value'] = $field['handler']->setItem($item_parsed)->getStringValue($item[$name] ?? '');
             $fields[$name]['html'] = $field['handler']->afterParse($fields[$name]['html'], $item_parsed);
+            $fields[$name]['title'] = $field['handler']->getTitle();
         }
 
         return $fields;

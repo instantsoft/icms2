@@ -5,6 +5,7 @@
 class activity extends cmsFrontend {
 
     protected $useOptions = true;
+    public $useSeoOptions = true;
 
     protected $unknown_action_as_index_param = true;
 
@@ -157,8 +158,8 @@ class activity extends cmsFrontend {
         $datasets = [];
 
         // Все (новые)
-        $datasets['all'] = [
-            'name'  => 'all',
+        $datasets[''] = [
+            'name'  => '',
             'title' => LANG_ACTIVITY_DS_ALL,
         ];
 

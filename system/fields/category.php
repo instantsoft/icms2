@@ -197,9 +197,7 @@ class fieldCategory extends cmsFormField {
 
         $category_id = $this->item_list['category_id'] ?: 1;
 
-        $tree = cmsCore::getModel('content')->
-                limit(0)->filterIsNull('is_hidden')->
-                getSubCategoriesTree($this->item_list['ctype']['name'], $category_id, 0) ?: [];
+        $tree = cmsCore::getModel('content')->getSubCategoriesTree($this->item_list['ctype']['name'], $category_id, 0, false) ?: [];
 
         if (!$tree) {
             return '';

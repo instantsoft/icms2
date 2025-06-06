@@ -2,45 +2,36 @@
 
 class formActivityOptions extends cmsForm {
 
+    public $is_tabbed = true;
+
     public function init() {
 
-        return array(
+        return [
+            [
+                'type'   => 'fieldset',
+                'title'  => LANG_BASIC_OPTIONS,
 
-            array(
-                'type' => 'fieldset',
-                'title' => LANG_ACTIVITY_OPT_TYPES,
-                'childs' => array(
-
-                    new fieldList('types', array(
-                        'is_multiple' => true,
+                'childs' => [
+                    new fieldList('types', [
+                        'title'                    => LANG_ACTIVITY_OPT_TYPES,
+                        'is_multiple'              => true,
                         'multiple_select_deselect' => true,
-                        'generator' => function(){
+                        'generator' => function () {
                             $types = cmsCore::getModel('activity')->getTypes();
                             return array_collection_to_list($types, 'id', 'title');
                         }
-                    )),
-
-                )
-            ),
-
-            array(
-                'type' => 'fieldset',
-                'title' => LANG_LIST_LIMIT,
-                'childs' => array(
-
-                    new fieldNumber('limit', array(
+                    ]),
+                    new fieldNumber('limit', [
+                        'title'   => LANG_LIST_LIMIT,
                         'default' => 15,
-                        'rules' => [
+                        'rules'   => [
                             ['required'],
                             ['min', 1]
                         ]
-                    ))
-
-                )
-            )
-
-        );
-
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

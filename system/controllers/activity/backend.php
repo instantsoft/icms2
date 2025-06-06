@@ -4,6 +4,7 @@ class backendActivity extends cmsBackend {
 
     public $useDefaultOptionsAction = true;
     public $useDefaultPermissionsAction = true;
+    public $useSeoOptions = true;
 
     public function __construct(cmsRequest $request) {
 

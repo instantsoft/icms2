@@ -266,7 +266,7 @@ class cmsModel {
         return $this->get($this->getContentCategoryTableName($ctype_name), $item_callback);
     }
 
-    public function getSubCategoriesTree($ctype_name, $parent_id = 1, $level = 1) {
+    public function getSubCategoriesTree($ctype_name, $parent_id = 1, $level = 1, $show_hidden = true) {
 
         $parent = $this->getCategory($ctype_name, $parent_id);
 
@@ -277,11 +277,15 @@ class cmsModel {
             $this->filterLtEqual('ns_level', $parent['ns_level'] + $level);
         }
 
+        if (!$show_hidden) {
+            $this->filterIsNull('is_hidden');
+        }
+
         $this->orderBy('ns_left');
 
         $this->useCache('content.categories');
 
-        return $this->get($this->getContentCategoryTableName($ctype_name));
+        return $this->limit(false)->get($this->getContentCategoryTableName($ctype_name));
     }
 
 //============================================================================//

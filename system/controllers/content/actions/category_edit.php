@@ -77,13 +77,15 @@ class actionContentCategoryEdit extends cmsAction {
                 ]);
 
                 if ($back_url) {
-                    $this->redirect($back_url);
+                    return $this->redirect($back_url);
                 } else {
                     if ($ctype['options']['list_on']) {
-                        $this->redirectTo($ctype_name, $new_category['slug']);
-                    } else {
-                        $this->redirectToHome();
+                        if (empty($new_category['is_hidden'])) {
+                            return $this->redirectTo($ctype_name, $new_category['slug']);
+                        }
+                        return $this->redirectTo($ctype_name);
                     }
+                    return $this->redirectToHome();
                 }
             }
 
