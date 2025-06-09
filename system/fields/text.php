@@ -187,6 +187,10 @@ class fieldText extends cmsFormField {
             return trim(strip_tags($value), " \0");
         }
 
+        if ($this->getProperty('is_trim')) {
+            return trim($value);
+        }
+
         return parent::store($value, $is_submitted, $old_value);
     }
 

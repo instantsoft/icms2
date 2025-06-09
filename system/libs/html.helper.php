@@ -605,11 +605,22 @@ function html_each($array) {
 
 /**
  * Вырезает из HTML-кода пробелы, табуляции и переносы строк
+ * 
  * @param string $html
  * @return string
  */
-function html_minify($html) {
-    return preg_replace([
+function html_minify(string $html) {
+
+    $tag_pattern = '#<(textarea|pre|code)(\b[^>]*)>(.*?)</\1>#is';
+
+    $preserved = [];
+    $html = preg_replace_callback($tag_pattern, function($m) use (&$preserved) {
+        $key = '___HTMLMIN_' . count($preserved) . '___';
+        $preserved[$key] = $m[0];
+        return $key;
+    }, $html);
+
+    $html = preg_replace([
         '/>(?=\S)/u',
         '/(?<=\S)</u',
         '/\s{2,}/u',
@@ -620,6 +631,12 @@ function html_minify($html) {
         ' ',
         '',
     ], $html);
+
+    if ($preserved) {
+        return strtr($html, $preserved);
+    }
+
+    return $html;
 }
 
 /**

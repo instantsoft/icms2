@@ -1,11 +1,13 @@
 <?php
 /**
- * 2.17.3 => 2.18.0
+ * 2.17.2 => 2.17.3
  */
 function install_package(){
 
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
+
+    save_controller_options(['search']);
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////

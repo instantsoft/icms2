@@ -2,45 +2,52 @@
 
 class actionModerationIndex extends cmsAction {
 
-    public function run($ctype_name = false){
+    public function run($ctype_name = false) {
 
         $counts = $this->model->getTasksCounts($this->cms_user->id, $this->cms_user->is_admin);
 
         $is_moderator = $this->model->isUserModerator($this->cms_user->id) || $this->cms_user->is_admin;
-        if (!$is_moderator) { cmsCore::error404(); }
+        if (!$is_moderator) {
+            return cmsCore::error404();
+        }
 
-        if (!$counts){
-            return $this->cms_template->render('empty', array(
+        if (!$counts) {
+            return $this->cms_template->render('empty', [
                 'page_title' => LANG_MODERATION,
                 'empty_hint' => LANG_MODERATION_NO_TASKS
-            ));
+            ]);
         }
 
         $is_index = false;
 
         $ctypes_list = array_keys($counts);
 
-        if (!$ctype_name) { $ctype_name = $ctypes_list[0]; $is_index = true; }
+        if (!$ctype_name) {
+            $ctype_name = $ctypes_list[0];
+            $is_index   = true;
+        }
 
         $page_url = $is_index ? href_to($this->name) : href_to($this->name, 'index', $ctype_name);
 
-        $titles = array(); $list_html = '';
+        $titles    = [];
+        $list_html = '';
 
-        $moderations = cmsEventsManager::hookAll('moderation_list', array($counts, $ctype_name, $page_url, 'index'), array(), $this->request);
+        $moderations = cmsEventsManager::hookAll('moderation_list', [$counts, $ctype_name, $page_url, 'index'], [], $this->request);
 
         foreach ($moderations as $moderation) {
 
             $titles = array_merge($titles, $moderation['titles']);
 
-            if(!empty($moderation['list_html'])){
+            if (!empty($moderation['list_html'])) {
                 $list_html = $moderation['list_html'];
             }
-
         }
 
-        if(!isset($titles[$ctype_name])){ cmsCore::error404(); }
+        if (!isset($titles[$ctype_name])) {
+            return cmsCore::error404();
+        }
 
-        if (!$is_index){
+        if (!$is_index) {
 
             $this->cms_template->addBreadcrumb(LANG_MODERATION, href_to($this->name));
             $this->cms_template->addBreadcrumb($titles[$ctype_name]);
@@ -52,29 +59,30 @@ class actionModerationIndex extends cmsAction {
             $this->cms_template->setPageTitle(LANG_MODERATION);
 
             $this->cms_template->addBreadcrumb(LANG_MODERATION);
-
         }
 
-        $content_menu = array();
+        $content_menu = [];
 
         $is_first = true;
 
-        foreach($counts as $c_name => $count){
-            $content_menu[] = array(
+        foreach ($counts as $c_name => $count) {
+            $content_menu[] = [
                 'title'   => $titles[$c_name],
                 'url'     => $is_first ? href_to($this->name) : href_to($this->name, 'index', $c_name),
-                'counter' => $count
-            );
+                'counter' => $count,
+                'options' => [
+                    'class' => 'moderation-menu-' . $c_name
+                ]
+            ];
             $is_first = false;
         }
 
         $this->cms_template->addMenuItems('moderation_content_types', $content_menu);
 
-        return $this->cms_template->render('index', array(
-            'list_html' => $list_html,
+        return $this->cms_template->render('index', [
+            'list_html'  => $list_html,
             'page_title' => LANG_MODERATION
-        ));
-
+        ]);
     }
 
 }

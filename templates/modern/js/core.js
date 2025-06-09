@@ -134,9 +134,9 @@ icms.menu = (function ($) {
 
     this.onDocumentReady = function(){
 
-        this.horizontalMenuAutoScroll();
-
         var device_type = $('body').data('device');
+
+        this.horizontalMenuAutoScroll(device_type);
 
         if(device_type === 'desktop'){
             $('.icms-menu-hovered a.dropdown-toggle').on( 'click', function (e) {
@@ -187,11 +187,20 @@ icms.menu = (function ($) {
         }
     };
 
-    this.horizontalMenuAutoScroll = function(){
+    this.horizontalMenuAutoScroll = function(device_type){
         $('.mobile-menu-wrapper').each(function(){
             let active_link = $(this).find('.active');
             if(active_link.length > 0){
                 $(active_link).get(0).scrollIntoView({block: "end", inline: "nearest"});
+            }
+            if (device_type !== 'desktop') {
+                let more = $(this).find('.nav-item.dropdown.more');
+                if (more.length > 0) {
+                    let ns = $(more).find('> .dropdown-menu li');
+                    $('.dropdown-item', ns).toggleClass('dropdown-item nav-link');
+                    $(this).find('> ul').append(ns);
+                    more.remove();
+                }
             }
         });
     };

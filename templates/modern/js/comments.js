@@ -433,19 +433,16 @@ icms.comments = (function ($) {
 
     this.setModerationCounter = function(){
 
-        var menu = $('#moderation_content_pills .nav-link.active .counter');
+        let menu = $('#moderation_content_pills .moderation-menu-comments .counter');
 
-        var current_count = $('#comments_list > .comment').length;
-        var new_count = +$(menu).html(); current_count--;
+        let current_count = $('#comments_list > .comment').length;
+        let new_count = +menu.text()-1;
 
         if (current_count > 0){
-            $(menu).html(new_count);
-        } else if($('#comments_list + .pagebar').length > 0) {
-            location.reload();
-        } else if($('#moderation_content_pills .nav-item').length > 1) {
+            menu.text(new_count);
+        } else {
             location.reload();
         }
-
     };
 
     this.approve = function (id){

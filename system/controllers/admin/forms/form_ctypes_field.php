@@ -315,6 +315,7 @@ class formAdminCtypesField extends cmsForm {
                 'childs' => [
                     new fieldText('values', [
                         'can_multilanguage' => true,
+                        'is_trim'           => true,
                         'multilanguage_params' => [
                             'is_table_field' => true,
                             'table' => $table

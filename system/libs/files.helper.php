@@ -399,7 +399,7 @@ function file_get_contents_from_url($url, $timeout = 5, $json_decode = false, $p
 /**
  * Сохраняет удаленно расположенный файл
  * @param string $url url файла
- * @param string $destination Полный путь куда сохраненить файл
+ * @param string $destination Полный путь куда сохранить файл
  * @return boolean
  */
 function file_save_from_url($url, $destination) {
@@ -409,6 +409,10 @@ function file_save_from_url($url, $destination) {
     }
 
     $dest_file = @fopen($destination, "w");
+
+    if ($dest_file === false) {
+        return false;
+    }
 
     $curl = curl_init();
     if (strpos($url, 'https') === 0) {
