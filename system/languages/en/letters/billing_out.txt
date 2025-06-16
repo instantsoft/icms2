@@ -1,0 +1,17 @@
+[subject:Withdrawal Confirmation - {site}]
+
+Hello,
+
+You have requested a withdrawal to your personal account.
+
+Withdrawal amount: {amount}
+Amount to be received: {summ}
+Withdrawal method: {system}
+Account number: {purse}
+
+To confirm the request, please follow the link:
+<a href="{confirm_url}">{confirm_url}</a>
+
+--
+ Best regards, {site}
+ <small>This message was sent automatically, please do not reply.</small>

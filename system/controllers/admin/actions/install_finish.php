@@ -37,6 +37,7 @@ class actionAdminInstallFinish extends cmsAction {
 
         return $this->cms_template->render([
             'is_cleared'      => $is_cleared,
+            'undeleted_files' => $installer->getUndeletedFiles(),
             'redirect_action' => $result,
             'path_relative'   => $this->getInstallPackagesPath('rel_root')
         ]);

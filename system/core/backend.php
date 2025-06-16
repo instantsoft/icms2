@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \cmsModel $model
+ */
 class cmsBackend extends cmsController {
 
     use icms\traits\eventDispatcher;
@@ -235,7 +237,9 @@ class cmsBackend extends cmsController {
             return cmsCore::error404();
         }
 
-        $options = $this->getOptions();
+        $options = cmsModel::yamlToArray($this->model->
+                localizedOff()->filterEqual('name', $this->name)->
+                getFieldFiltered('controllers', 'options') ?: []);
 
         $form = $this->getForm('options', [$options]);
         if (!$form) {

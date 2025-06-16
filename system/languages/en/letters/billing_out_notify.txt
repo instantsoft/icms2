@@ -1,0 +1,22 @@
+[subject:New Withdrawal Request - {site}]
+
+Hello,
+
+A new withdrawal request has been created.
+
+User: <a href="{user_url}">{user_name}</a>
+Withdrawal amount: {amount}
+Amount to be received: {summ}
+Withdrawal method: {system}
+Account number: {purse}
+
+To close the request (after the transfer), please follow the link:
+<a href="{done_url}">{done_url}</a>
+You must be logged in as an administrator.
+
+You can also view and close this request
+in the billing admin panel on the site.
+
+--
+ Best regards, {site}
+ <small>This message was sent automatically, please do not reply.</small>

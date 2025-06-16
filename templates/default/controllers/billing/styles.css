@@ -1,0 +1,432 @@
+/* Вкладка в профиле */
+
+.balance-info {
+	overflow: hidden;
+}
+
+.balance-info h3 {
+	height:24px;
+	line-height:24px;
+	margin: 0;
+	margin-bottom: 5px;
+}
+
+.balance-info h3 span {
+	color: #666;
+	margin-left: 10px;
+}
+
+.balance-info h3 span small {
+	font-size:11px;
+	color:#888;
+}
+
+.balance-info.balance h3 span {
+	background:url("../../images/icons/coin.png") no-repeat left center;
+	padding-left: 20px;
+}
+
+.balance-actions {
+	margin:10px 0;
+}
+
+.balance-actions a {
+	padding-left:20px;
+	margin-right: 10px;
+	background-repeat:no-repeat;
+	background-position: left center;
+}
+
+.balance-actions .deposit {
+	background-image:url("../../images/billing/icons/coins_add.png");
+}
+.balance-actions .buy-plan {
+	background-image:url("../../images/billing/icons/plan.png");
+}
+
+.balance-actions .out {
+	background-image:url("../../images/billing/icons/out.png");
+}
+
+.balance-actions .refs {
+	background-image:url("../../images/billing/icons/referals.png");
+}
+
+.balance-actions .exchange {
+	background-image:url("../../images/billing/icons/exchange.png");
+}
+
+.billing-deposit-modal {
+	padding:10px;
+}
+
+/* История операций */
+
+table.billing-log {
+	border-collapse: collapse;
+	width:100%;
+}
+
+table.billing-log td {
+	height: 30px;
+	line-height: 20px;
+	padding:0 10px;
+	font-size:12px;
+}
+
+table.billing-log thead td {
+	background: #ecf0f1;
+	color: #34495e;
+	text-align: left;
+	border-bottom: solid 2px #95a5a6;
+}
+
+table.billing-log tbody tr:nth-child(even) td {
+	background:#ecf0f1;
+}
+table.billing-log tbody td.col-date {
+	color:#95a5a6;
+}
+
+table.billing-log .col-id { width:30px; }
+table.billing-log .col-date { width:100px; }
+table.billing-log .col-summ { width:80px; }
+table.billing-log .col-amount { width:80px; }
+
+table.billing-log .col-desc a {
+	color:#2980b9;
+	text-decoration: none;
+}
+
+table.billing-log .col-desc a:hover {
+	text-decoration: underline;
+}
+
+table.billing-log .col-desc .status-0 { color: #999; }
+table.billing-log .col-desc .status-1 { color: #34495e; }
+table.billing-log .col-desc .status-2 { color: green; }
+table.billing-log .col-desc .status-3 { color: #c0392b; }
+table.billing-log .col-desc a.delete-out { margin-left: 10px; }
+
+table.billing-log .zero { color:#999; }
+
+/* Результат оплаты */
+
+.billing-result-page .status{
+	margin-bottom: 20px;
+	color:#34495e;
+}
+
+.billing-result-page .status .result {
+	display:none;
+}
+
+.billing-result-page .status .done{
+	color:green;
+}
+.billing-result-page .status .balance{
+	font-weight: bold;
+	padding-left:30px;
+	background:url("../../images/icons/coin.png") no-repeat 10px center;
+}
+
+.billing-result-page .notice {
+	margin-bottom:20px;
+	line-height: 25px;
+}
+
+.billing-result-page .continue {
+	font-size: 21px;
+	font-weight: bold;
+}
+
+/* Пополнение баланса */
+
+.billing-deposit-ticket{
+	margin-bottom:15px;
+}
+
+.billing-deposit-ticket .info{
+	margin-bottom:10px;
+	color:#c0392b;
+}
+
+.billing-deposit-ticket table {
+	border-collapse: collapse;
+}
+
+.billing-deposit-ticket table .serie{
+	width:200px;
+}
+
+.billing-deposit-ticket table .cancel {
+	margin-left: 10px;
+}
+
+.billing-deposit{
+	overflow: hidden;
+}
+
+.billing-deposit h3,
+.billing-order h3{
+	margin-top: 0;
+}
+
+.billing-deposit-form {
+	float:left;
+}
+
+.billing-prices-info{
+	float:right;
+}
+
+.billing-deposit-form .min-pack-error{
+	display:none;
+	font-size:12px;
+	color:#c0392b;
+}
+
+.billing-deposit-form table,
+.billing-order table {
+	width:350px;
+	border-collapse: collapse;
+	margin-bottom: 15px;
+}
+
+.billing-order table {
+	width:100%;
+}
+
+.billing-order table .title {
+	width:130px;
+}
+
+.billing-deposit-ticket table td,
+.billing-deposit-form table td,
+.billing-order table td{
+	padding: 6px 0;
+}
+
+.billing-deposit-form select {
+	width:180px !important;
+}
+
+.billing-deposit-form .input-number {
+	width:60px !important;
+	margin-right: 5px;
+}
+
+.billing-deposit-form .summ{
+	font-weight: bold;
+}
+
+.billing-prices-info table {
+	width:320px;
+	border-collapse: collapse;
+	color:#34495E;
+}
+
+.billing-prices-info table th,
+.billing-prices-info table td {
+	padding:10px;
+	text-align: center;
+	border:solid 1px #B8D6FB;
+}
+
+.billing-prices-info table th {
+	background: #F4F8FD;
+}
+.billing-prices-info table td {
+	color: #68809B;
+}
+
+.billing-order .back-btn{
+	margin-left:15px;
+}
+
+.billing-order-form fieldset label{
+	margin-bottom: 5px;
+	color:#34495e;
+	display: block;
+}
+
+.billing-order-form fieldset .hint{
+	margin-top:5px;
+}
+
+/* Покупка тарифа */
+
+.billing-plan-form table{
+	border-collapse: collapse;
+	width: 100%;
+	margin-bottom: 30px;
+}
+
+.billing-plan-form table td{
+	padding:0;
+	height:35px;
+	line-height:35px;
+}
+
+.billing-plan-form table td.title{
+	width:160px;
+	font-weight: bold;
+}
+
+.billing-plan-form select {
+	width:200px;
+}
+
+.billing-plan-form .plan-desc,
+.billing-plan-form .plan-len {
+	display:none;
+}
+
+.billing-plan-form .back-btn{
+	margin-left:15px;
+}
+
+.billing-plan-form .plan-system-select {
+	margin-bottom:20px;
+}
+
+.billing-plan-form .plan-system-select .title {
+	font-weight:bold;
+	margin-bottom:5px;
+}
+
+/* Переводы */
+
+.billing-transfer > .error {
+	color: #c0392b;
+	margin-bottom:20px;
+}
+
+.billing-transfer .error-actions {
+	margin-bottom: 20px;
+}
+
+.billing-transfer .error-actions a {
+	margin-right: 10px;
+}
+
+.billing-transfer .error-actions a.pay {
+	font-weight: bold;
+	background: url("../../images/billing/icons/coins_add.png") no-repeat left center;
+	padding-left: 20px;
+}
+
+.billing-transfer-form table{
+	border-collapse: collapse;
+	width: 100%;
+	margin-bottom: 30px;
+}
+
+.billing-transfer-form table td{
+	padding:0;
+	height:35px;
+	line-height:35px;
+}
+
+.billing-transfer-form .input-number {
+	width:60px !important;
+	margin-right:5px;
+}
+
+.billing-transfer-form select {
+	width:200px;
+}
+
+.billing-transfer-form .ajaxlink{
+	font-size:12px;
+	margin-left: 10px;
+	color:#999;
+	border-color:#999;
+}
+
+.billing-transfer-form img{
+	float: left;
+	margin-right: 10px;
+}
+
+.billing-transfer-form table td.title{
+	width:160px;
+	font-weight: bold;
+}
+
+.billing-transfer-form .back-btn{
+	margin-left:15px;
+}
+
+.billing-transfer-form .error{
+	display:none;
+	color:#c0392b;
+	margin:0;
+}
+
+/* Кнопка "Купить" для поля контента */
+
+.billing-buy-field a {
+	text-decoration: none;
+	color:#FFF;
+	background:#2980b9;
+	padding:6px 8px;
+	display: inline-block;
+	border-radius: 5px;
+}
+
+.billing-buy-field a:hover {
+	background:#3498db;
+}
+
+.billing-buy-field a .price{
+	padding-left: 18px;
+	background:url("../../images/icons/coin.png") no-repeat left center;
+	margin-left:6px;
+}
+
+#b_pub_price,
+.b_field_price {
+	padding-left: 18px;
+	background:url("../../images/icons/coin.png") no-repeat left center;
+	font-size:12px;
+}
+
+#b_pub_price{
+	margin-top:10px;
+}
+
+.b_field_price {
+	color:#333;
+	font-size:11px;
+	margin-left:10px;
+}
+
+/* Рефералы */
+
+#billing-refs .link h4{ margin-top:0; }
+
+#billing-refs .link .url{ font-size: 18px; }
+
+#billing-refs .income { line-height: 24px; }
+
+.billing-ref-tree{
+	overflow:hidden;
+	margin-bottom:15px;
+}
+
+.billing-ref-tree .break-line{
+	width:100%;
+	clear:both;
+}
+.billing-ref-tree .ref-node{
+	float:left;
+	box-sizing:border-box;
+}
+
+.billing-ref-tree .ref-node .ref-block{
+	text-align:center;
+	background:#ECF0F1;
+	margin:5px;
+	padding:10px;
+}

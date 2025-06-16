@@ -1,0 +1,14 @@
+[subject:Subscription Ending Soon - {site}]
+
+Hello,
+
+Your subscription to the "{plan}" plan will expire in {days}.
+
+Subscription end date: {date_until}
+
+You can renew your subscription in the "Balance" section of your personal account:
+<a href="{plan_url}">{plan_url}</a>
+
+--
+ Best regards, {site}
+ <small>This message was sent automatically, please do not reply.</small>

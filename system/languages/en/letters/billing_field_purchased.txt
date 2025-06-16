@@ -1,0 +1,12 @@
+[subject:New Purchase - {site}]
+
+Hello,
+
+User <a href="{buyer_url}">{buyer_name}</a> has made a purchase.
+
+Purchase date: {date}
+Page: <a href="{item_url}">{item_title}</a>
+
+--
+ Best regards, {site}
+ <small>This message was sent automatically, please do not reply.</small>

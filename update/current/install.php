@@ -2,10 +2,14 @@
 /**
  * 2.17.3 => 2.18.0
  */
-function install_package(){
+function install_package() {
 
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
+
+    if (!update_billing()) {
+        install_billing();
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
@@ -55,6 +59,145 @@ function install_package(){
     }
 
     //compile_scss_if_necessary();
+
+    return true;
+}
+
+function install_billing() {
+
+    $model = cmsCore::getModel('content');
+
+    if ($model->filterEqual('version', '2.1.0')->getItemByField('controllers', 'name', 'billing')) {
+        return false;
+    }
+
+    $file = cmsConfig::get('upload_path') . 'installer/' . 'install_billing.sql';
+
+    $model->db->importDump($file);
+
+    $ctypes = $model->getContentTypes() ?: [];
+
+    foreach ($ctypes as $ctype) {
+
+        $name  = $model->db->escape($ctype['name'] . '_add');
+        $title = $model->db->escape($ctype['title'] . ': добавление');
+
+        $sql = "INSERT INTO `{#}billing_actions` (`controller`, `name`, `title`) VALUES
+                ('content',  '{$name}',  '{$title}')";
+
+        $model->db->query($sql);
+    }
+
+    if ($model->db->isFieldExists('{users}', 'balance', false)) {
+        $model->db->query("ALTER TABLE `{users}` CHANGE `balance` `balance` DECIMAL(12,2) NULL DEFAULT '0.00';");
+    } else {
+        $model->db->query("ALTER TABLE `{users}` ADD `balance` decimal(12,2) DEFAULT 0.00 AFTER  `email`");
+    }
+
+    $model->db->addTableField('{users}', 'plan_id', 'int(11) UNSIGNED DEFAULT NULL AFTER  `balance`');
+
+    $model->db->addIndex('{users}', 'balance');
+    $model->db->addIndex('{users}', 'plan_id');
+}
+
+function update_billing() {
+
+    $core = cmsCore::getInstance();
+    $model = new cmsModel();
+
+    $billing = $model->getItemByField('controllers', 'name', 'billing');
+
+    if (!$billing) {
+        return false;
+    }
+
+    if ($billing['version'] === '2.1.0') {
+        return true;
+    }
+
+    // На всякий случай проверяем наличие таблиц
+    foreach (['billing_systems', 'billing_log', 'billing_paid_fields'] as $table) {
+        if (!$core->db->isTableExists($table)) {
+            return false;
+        }
+    }
+
+    $core->db->query("ALTER TABLE `{#}billing_systems` CHANGE `rate` `rate` DECIMAL(8,4) UNSIGNED NULL DEFAULT '1';");
+    $core->db->query("ALTER TABLE `{users}` CHANGE `balance` `balance` DECIMAL(12,2) NULL DEFAULT '0';");
+
+    $core->db->addTableField('billing_log', 'system_id', 'INT(11) UNSIGNED NULL DEFAULT NULL');
+    $core->db->addTableField('billing_paid_fields', 'btn_titles', 'TEXT NULL DEFAULT NULL');
+
+    $options = cmsController::loadOptions('billing');
+
+    $formatted_prices = [];
+    foreach ($options['prices']['amount']??[] as $key => $value) {
+        $formatted_prices[] = [
+            'amount' => $value,
+            'price'  => $options['prices']['price'][$key] ?? 0
+        ];
+    }
+
+    $ref_levels = [];
+    foreach ($options['ref_levels']??[] as $key => $value) {
+        if (!is_array($value)) {
+            $ref_levels[] = [
+                'percent' => $value
+            ];
+        }
+    }
+
+    if ($ref_levels) {
+        $options['ref_levels'] = $ref_levels;
+    }
+
+    if ($formatted_prices) {
+        $options['prices'] = $formatted_prices;
+    }
+
+    cmsController::saveOptions('billing', $options);
+
+    $replace_floats = [
+        'billing_log' => [
+            'amount', 'summ'
+        ],
+        'billing_outs' => [
+            'amount', 'summ'
+        ],
+        'billing_payouts' => [
+            'amount'
+        ],
+        'billing_plans' => [
+            'max_out'
+        ],
+        'billing_transfers' => [
+            'amount'
+        ]
+    ];
+
+    foreach ($replace_floats as $table_name => $columns) {
+        if (!$core->db->isTableExists($table_name)) {
+            continue;
+        }
+        foreach ($columns as $column) {
+            $core->db->query("ALTER TABLE `{#}{$table_name}` CHANGE `{$column}` `{$column}` DECIMAL(10,2) NULL DEFAULT NULL;");
+        }
+    }
+
+    $logs = $model->filterNotNull('url')->limit(false)->selectOnly('id')->select('url')->get('billing_log') ?: [];
+
+    foreach ($logs as $log) {
+
+        $lang_href = cmsCore::getLanguageHrefPrefix();
+
+        $replace = cmsConfig::get('root') .($lang_href ? $lang_href.'/' : '');
+
+        $log['url'] = preg_replace('#^('.preg_quote($replace).')(.*)$#u', '$2', $log['url']);
+
+        $model->update('billing_log', $log['id'], [
+            'url' => $log['url']
+        ]);
+    }
 
     return true;
 }

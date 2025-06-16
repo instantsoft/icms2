@@ -58,6 +58,14 @@ class cmsInstaller {
     private $use_namespace = false;
 
     /**
+     * Файлы, которые установщик пакета не удалил
+     * Их необходимо удалить вручную
+     *
+     * @var array
+     */
+    private $undeleted_files = [];
+
+    /**
      * Работает с пакетом дополнения, распакованным по пути $package_path
      *
      * @param string $package_path Полный путь к директории с распакованным пакетом, без конечного слэша
@@ -159,6 +167,8 @@ class cmsInstaller {
             return null;
         }
 
+        $this->deleteUnusedFiles();
+
         $redirect_action = $this->doPackage();
 
         // если в файле install.php есть функция after_install_package, вызываем ее
@@ -166,6 +176,49 @@ class cmsInstaller {
         $this->callInstallFunc('after_install_package');
 
         return $redirect_action;
+    }
+
+    /**
+     * Удаляет ненужные файлы после установки/обновления
+     * Файл в пакете должен быть назван deleted.files.txt
+     * В нём, относительно корня установки, без начального слэша,
+     * необходимо указать пути к файлам, каждый с новой строки
+     *
+     * @return bool
+     */
+    private function deleteUnusedFiles() {
+
+        $deleted_files_path = $this->package_path . '/deleted.files.txt';
+
+        if (!is_readable($deleted_files_path)) {
+            return false;
+        }
+
+        $root = cmsConfig::get('root_path');
+
+        $files = file($deleted_files_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+
+        foreach ($files as $path) {
+            if (strpos($path, '#') === 0) {
+                continue;
+            }
+            if (is_readable($root . $path)) {
+                if (!@unlink($root . $path)) {
+                    $this->undeleted_files[] = $path;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Возвращает файлы, которые установщик не смог удалить
+     *
+     * @return array
+     */
+    public function getUndeletedFiles() {
+        return $this->undeleted_files;
     }
 
     /**

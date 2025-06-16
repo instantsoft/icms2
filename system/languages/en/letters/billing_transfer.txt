@@ -1,0 +1,18 @@
+[subject:Transfer Confirmation - {site}]
+
+Hello,
+
+You have requested a transfer to another user.
+
+	Recipient: <a href="{to_url}">{to_name}</a>
+
+	Transfer amount: {amount}
+
+	Comment: {description}
+
+To confirm the transfer, please follow the link:
+<a href="{confirm_url}">{confirm_url}</a>
+
+--
+ Best regards, {site}
+ <small>This message was sent automatically, please do not reply.</small>

@@ -658,6 +658,7 @@
     define('LANG_CP_INSTALL_PACKAGE_DONE',      'Installation completed');
     define('LANG_CP_INSTALL_PACKAGE_DONE_INFO', 'Extension package has been successfully installed');
     define('LANG_CP_INSTALL_PACKAGE_NOT_CLEARED', 'The <b>%s</b> folder has not been cleared due to lack of permissions, clear it manually');
+    define('LANG_CP_INSTALL_PACKAGE_MANUAL_DELETE', 'The listed files are not deleted due to a lack of access rights. Remove them manually on the server.');
     define('LANG_CP_INSTALL_PACKAGE_INFO',      'Package Info');
     define('LANG_CP_INSTALL_PACKAGE_FILE',      'Package file');
     define('LANG_CP_INSTALL_PACKAGE_FILE_HINT', 'File with the <b>.zip</b> extension');
