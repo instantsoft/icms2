@@ -79,7 +79,7 @@ DROP TABLE IF EXISTS `{#}jobs`;
 CREATE TABLE `{#}jobs` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `queue` varchar(100) DEFAULT NULL COMMENT 'Название очереди',
-  `payload` text COMMENT 'Данные задания',
+  `payload` MEDIUMTEXT COMMENT 'Данные задания',
   `last_error` varchar(200) DEFAULT NULL COMMENT 'Последняя ошибка',
   `priority` tinyint(1) UNSIGNED DEFAULT '1' COMMENT 'Приоритет',
   `attempts` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Попытки выполнения',

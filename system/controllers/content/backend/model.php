@@ -461,14 +461,16 @@ class modelBackendContent extends modelContent {
             } else {
 
                 // если нет, то создаем новый
-                $this->db->addIndex($content_table_name, $fields, $index_name);
+                if ($this->db->addIndex($content_table_name, $fields, $index_name) === false) {
+                    return null;
+                }
             }
         }
 
         return $index_name;
     }
 
-    public function addContentDataset($dataset, $ctype){
+    public function addContentDataset($dataset, $ctype) {
 
         $table_name = 'content_datasets';
 
@@ -484,26 +486,24 @@ class modelBackendContent extends modelContent {
 
         $dataset['id'] = $this->insert($table_name, $dataset);
 
-        cmsEventsManager::hook('ctype_dataset_add', array($dataset, $ctype, $this));
+        cmsEventsManager::hook('ctype_dataset_add', [$dataset, $ctype, $this]);
 
         cmsCache::getInstance()->clean('content.datasets');
 
         return $dataset['id'];
-
     }
 
     public function deleteContentDatasetIndex($ctype_name, $index_name) {
 
         // если используется в других датасетах, не удаляем
-        if($this->getItemByField('content_datasets', 'index', $index_name)){
+        if ($this->getItemByField('content_datasets', 'index', $index_name)) {
             return false;
         }
 
-        return $this->db->dropIndex($this->table_prefix.$ctype_name, $index_name);
-
+        return $this->db->dropIndex($this->table_prefix . $ctype_name, $index_name);
     }
 
-    public function updateContentDataset($id, $dataset, $ctype, $old_dataset){
+    public function updateContentDataset($id, $dataset, $ctype, $old_dataset) {
 
         $dataset['ctype_id'] = $ctype['id'];
 
@@ -512,44 +512,51 @@ class modelBackendContent extends modelContent {
         $success = $this->update('content_datasets', $id, $dataset);
 
         $dataset['id'] = $id;
-        cmsEventsManager::hook('ctype_dataset_update', array($dataset, $ctype, $this));
+
+        cmsEventsManager::hook('ctype_dataset_update', [$dataset, $ctype, $this]);
 
         cmsCache::getInstance()->clean('content.datasets');
 
-        if(($old_dataset['sorting'] != $dataset['sorting']) || ($old_dataset['filters'] != $dataset['filters'])){
+        if (($old_dataset['sorting'] != $dataset['sorting']) || ($old_dataset['filters'] != $dataset['filters'])) {
 
             $this->deleteContentDatasetIndex($ctype['name'], $old_dataset['index']);
 
             $index = $this->addContentDatasetIndex($dataset, $ctype['name']);
 
-            $this->update('content_datasets', $id, array('index'=>$index));
+            $this->update('content_datasets', $id, ['index' => $index]);
 
             cmsCache::getInstance()->clean('content.datasets');
-
         }
 
         return $success;
-
     }
 
-    public function deleteContentDataset($id){
+    public function deleteContentDataset($id) {
 
         $dataset = $this->getContentDataset($id);
-        if(!$dataset){ return false; }
+        if (!$dataset) {
+            return false;
+        }
 
-        if($dataset['ctype_id']){
+        if ($dataset['ctype_id']) {
+
             $ctype = $this->getContentType($dataset['ctype_id']);
-            if (!$ctype) { return false; }
+            if (!$ctype) {
+                return false;
+            }
+
         } else {
-            $ctype = array(
-                'title' => string_lang($dataset['target_controller'].'_controller'),
+
+            $ctype = [
+                'title' => string_lang($dataset['target_controller'] . '_controller'),
                 'name'  => $dataset['target_controller'],
                 'id'    => null
-            );
+            ];
+
             $this->setTablePrefix('');
         }
 
-        cmsEventsManager::hook('ctype_dataset_before_delete', array($dataset, $ctype, $this));
+        cmsEventsManager::hook('ctype_dataset_before_delete', [$dataset, $ctype, $this]);
 
         $this->delete('content_datasets', $id);
 
@@ -558,7 +565,6 @@ class modelBackendContent extends modelContent {
         cmsCache::getInstance()->clean('content.datasets');
 
         return true;
-
     }
 
 //============================================================================//

@@ -7,6 +7,8 @@ function install_package() {
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    $core->db->query("ALTER TABLE `{#}jobs` CHANGE `payload` `payload` MEDIUMTEXT NULL DEFAULT NULL;");
+
     if (!update_billing()) {
         install_billing();
     }

@@ -1433,7 +1433,7 @@ class cmsDatabase {
             if ($force) {
                 $this->query("ALTER TABLE `{#}{$table}` DROP INDEX `{$index_name}`");
             } else {
-                return false;
+                return null;
             }
         }
 
