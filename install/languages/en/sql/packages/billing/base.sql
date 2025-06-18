@@ -103,6 +103,7 @@ CREATE TABLE `{#}billing_payouts` (
   `title` varchar(128) DEFAULT NULL COMMENT 'Payout title',
   `groups` text DEFAULT NULL COMMENT 'User groups eligible for the payout',
   `user_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'User ID for the payout',
+  `is_topup_balance` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Top up the balance up to the specified amount',
   `is_passed` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Restrict by time since registration',
   `is_rating` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Restrict by user rating',
   `is_karma` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Restrict by user reputation',

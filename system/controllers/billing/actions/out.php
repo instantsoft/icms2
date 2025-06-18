@@ -34,10 +34,16 @@ class actionBillingOut extends cmsAction {
         $amount     = $min_amount;
         $out_rate   = (float) $this->options['out_rate'];
         $systems    = array_map(function ($s) {
-            return trim($s);
+
+            $parts = array_map('trim', explode('|', $s, 2));
+
+            return [
+                'title' => $parts[0],
+                'placeholder' => $parts[1] ?? ''
+            ];
         }, explode("\n", $this->options['out_systems']));
 
-        $system = 0;
+        $system = $this->request->get('system', 0);
         $purse  = '';
 
         $is_pending = $this->model->isUserHasPendingOuts($this->cms_user->id);
@@ -75,16 +81,14 @@ class actionBillingOut extends cmsAction {
                 return $this->redirectToAction('out');
             }
 
-            $system = $this->request->get('system', 0);
-
-            if (!isset($systems[$system])) {
+            if (!isset($systems[$system]['title'])) {
 
                 cmsUser::addSessionMessage(LANG_BILLING_OUT_INCORRECT_SYSTEM, 'error');
 
                 return $this->redirectToAction('out');
             }
 
-            $system_title = $systems[$system];
+            $system_title = $systems[$system]['title'];
 
             $purse = trim(strip_tags($this->request->get('purse', '')));
 

@@ -98,37 +98,37 @@
         </div>
 	</div>
 
-	<div class="billing-prices-info col-sm-6 mt-3 mt-lg-0">
-
-        <div class="card bg-light">
-            <div class="card-body">
-                <h4 class="card-title mb-3 mb-lg-4">
-                    <?php printf(LANG_BILLING_DEPOSIT_PRICES, $b_spellcount_arr[2]); ?>
-                </h4>
-                <table class="table table-hover m-0">
-                    <thead>
-                        <tr>
-                            <th><?php echo LANG_BILLING_CP_DSC_VOLUME; ?></th>
-                            <th><?php echo LANG_BILLING_CP_DSC_PRICE; ?>, <?php echo $curr; ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($prices as $price) { ?>
+    <?php if ($show_price_block) { ?>
+        <div class="billing-prices-info col-sm-6 mt-3 mt-lg-0">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h4 class="card-title mb-3 mb-lg-4">
+                        <?php printf(LANG_BILLING_DEPOSIT_PRICES, $b_spellcount_arr[2]); ?>
+                    </h4>
+                    <table class="table table-hover m-0">
+                        <thead>
                             <tr>
-                                <td>
-                                    <?php html($price['amount']); ?>
-                                </td>
-                                <td>
-                                    <?php html($price['price']); ?> <?php echo $curr_symb; ?>
-                                </td>
+                                <th><?php echo LANG_BILLING_CP_DSC_VOLUME; ?></th>
+                                <th><?php echo LANG_BILLING_CP_DSC_PRICE; ?>, <?php echo $curr; ?></th>
                             </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach($prices as $price) { ?>
+                                <tr>
+                                    <td>
+                                        <?php html($price['amount']); ?>
+                                    </td>
+                                    <td>
+                                        <?php html($price['price']); ?> <?php echo $curr_symb; ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-		</div>
-
-	</div>
+        </div>
+    <?php } ?>
 </div>
 
 <?php ob_start(); ?>

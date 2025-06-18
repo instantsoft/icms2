@@ -825,7 +825,7 @@ class modelBilling extends cmsModel {
      */
     public function payRefBonus($amount, $user_id, $max_level = null) {
 
-        if (!$this->options['is_refs']) {
+        if (!$this->options['is_refs'] || !$this->options['ref_levels']) {
             return true;
         }
 

@@ -389,9 +389,6 @@ class formBillingOptions extends cmsForm {
                                     ['max', 100]
                                 ]
                             ])
-                        ],
-                        'rules' => [
-                            ['required']
                         ]
                     ]),
                     new fieldNumber('limit_refs', [

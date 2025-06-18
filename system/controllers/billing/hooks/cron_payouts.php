@@ -15,25 +15,23 @@ class onBillingCronPayouts extends cmsAction {
 
         foreach ($payouts as $payout) {
 
-            extract($payout);
-
-            if ($date_last) {
-                $time_last = strtotime($date_last);
+            if ($payout['date_last']) {
+                $time_last = strtotime($payout['date_last']);
                 $time_now  = time();
                 $days_diff = floor(($time_now - $time_last) / 60 / 60 / 24);
-                if ($days_diff < $period) {
+                if ($days_diff < $payout['period']) {
                     continue;
                 }
             }
 
-            if (!$user_id) {
+            if (!$payout['user_id']) {
 
-                if (!in_array('0', $groups)) {
-                    $this->model_users->filterGroups($groups);
+                if ($payout['groups'] && !in_array('0', $payout['groups'])) {
+                    $this->model_users->filterGroups($payout['groups']);
                 }
 
             } else {
-                $this->model_users->filterEqual('id', $user_id);
+                $this->model_users->filterEqual('id', $payout['user_id']);
             }
 
             $users = $this->model_users->limit(false)->getUsers();
@@ -43,55 +41,65 @@ class onBillingCronPayouts extends cmsAction {
 
             foreach ($users as $user) {
 
-                $is_payout = true;
-
-                if ($is_passed) {
+                if ($payout['is_passed']) {
 
                     $start_time = strtotime($user['date_reg']);
                     $end_time   = time();
 
                     $days = round(($end_time - $start_time) / 60 / 60 / 24);
 
-                    if ($days < $passed_days) {
-                        $is_payout = false;
+                    if ($days < $payout['passed_days']) {
+                        continue;
                     }
                 }
 
-                if ($is_rating) {
-                    if ($user['rating'] < $rating) {
-                        $is_payout = false;
+                if ($payout['is_rating']) {
+                    if ($user['rating'] < $payout['rating']) {
+                        continue;
                     }
                 }
 
-                if ($is_karma) {
-                    if ($user['karma'] < $karma) {
-                        $is_payout = false;
+                if ($payout['is_karma']) {
+                    if ($user['karma'] < $payout['karma']) {
+                        continue;
                     }
                 }
 
-                if ($is_field) {
-                    if ($user[$field] != $field_value) {
-                        $is_payout = false;
+                if ($payout['is_field']) {
+                    if ($user[$payout['field']] != $payout['field_value']) {
+                        continue;
                     }
                 }
 
-                if (!$is_payout) {
-                    continue;
-                }
+                $amount = $payout['field_amount'] ? (float)($user[$payout['field_amount']]??0) : (float)$payout['amount'];
 
-                $amount = $field_amount ? floatval($user[$field_amount]??0) : $amount;
-
-                if (!$amount) {
+                if ($amount == 0) {
                     continue;
                 }
 
                 $amount = round($amount, 2);
 
+                if ($payout['is_topup_balance']) {
+
+                    $user['balance'] = (float) $user['balance'];
+
+                    if ($user['balance'] < $amount) {
+
+                        $amount = $amount - $user['balance'];
+
+                    } else {
+
+                        $this->model->updatePayoutDate($payout['id']);
+
+                        continue;
+                    }
+                }
+
                 $this->model->startTransaction();
 
-                $success = $this->model->changeUserBalance($user['id'], $amount, $title);
+                $success = $this->model->changeUserBalance($user['id'], $amount, $payout['title']);
 
-                $success = $success && $this->model->updatePayoutDate($id);
+                $success = $success && $this->model->updatePayoutDate($payout['id']);
 
                 $this->model->endTransaction($success);
             }

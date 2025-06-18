@@ -111,7 +111,16 @@ $this->addBreadcrumb(LANG_BILLING_OUT);
                         <div class="form-group row">
                             <label class="font-weight-bolder col-sm-4 col-form-label"><?php echo LANG_BILLING_OUT_SYSTEM; ?></label>
                             <div class="col-sm-8">
-                                <?php echo html_select('system', $systems, $system); ?>
+                                <select class="form-control" name="system" id="system_out">
+                                    <?php foreach ($systems as $sys_id => $system_data) { ?>
+                                        <option
+                                            value="<?php html($sys_id); ?>"
+                                            data-placeholder="<?php html($system_data['placeholder']); ?>"
+                                            <?php if ($system == $sys_id) { ?>selected<?php } ?>>
+                                            <?php html($system_data['title']); ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
                             </div>
                         </div>
 
@@ -119,7 +128,7 @@ $this->addBreadcrumb(LANG_BILLING_OUT);
                             <label class="font-weight-bolder col-sm-4 col-form-label"><?php echo LANG_BILLING_OUT_PURSE; ?></label>
                             <div class="col-sm-8">
                                 <div class="input-group">
-                                    <?php echo html_input('text', 'purse', $purse, ['maxlength' => 32, 'required' => true]); ?>
+                                    <?php echo html_input('text', 'purse', $purse, ['maxlength' => 32, 'required' => true, 'id' => 'purse']); ?>
                                 </div>
                             </div>
                         </div>
@@ -143,6 +152,10 @@ $this->addBreadcrumb(LANG_BILLING_OUT);
                 $('#trf-amount').val(Number($(this).data('balance'))).trigger('input');
                 return false;
             });
+            $('#system_out').on('change', function() {
+                let placeholder = $(this).find('option:selected').data('placeholder');
+                $('#purse').attr('placeholder', placeholder);
+            }).trigger('change');
         });
     </script>
     <?php $this->addBottom(ob_get_clean()); ?>

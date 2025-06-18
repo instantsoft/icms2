@@ -202,7 +202,7 @@ class cmsInstaller {
             if (strpos($path, '#') === 0) {
                 continue;
             }
-            if (is_readable($root . $path)) {
+            if (file_exists($root . $path)) {
                 if (!@unlink($root . $path)) {
                     $this->undeleted_files[] = $path;
                 }

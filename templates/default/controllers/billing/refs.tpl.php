@@ -22,22 +22,24 @@
                 <a href="<?php echo $ref_url; ?>"><?php echo $ref_url; ?></a>
             </div>
         </div>
-        <div class="income">
-            <p><?php echo LANG_BILLING_REFS_INCOME; ?>:</p>
-            <ul>
-                <?php if ($ref_bonus) { ?>
-                    <li><?php printf(LANG_BILLING_REFS_INCOME_REG, html_spellcount($ref_bonus, $b_spellcount)); ?></li>
-                <?php } ?>
-                <?php foreach($ref_levels as $level => $percent) {?>
-                    <?php if ($ref_mode == 'dep') { ?>
-                        <li><?php printf(LANG_BILLING_REFS_INCOME_DEP, $percent['percent'].'%', $level+1); ?></li>
+        <?php if ($ref_bonus || $ref_levels) { ?>
+            <div class="income">
+                <p><?php echo LANG_BILLING_REFS_INCOME; ?>:</p>
+                <ul>
+                    <?php if ($ref_bonus) { ?>
+                        <li><?php printf(LANG_BILLING_REFS_INCOME_REG, html_spellcount($ref_bonus, $b_spellcount)); ?></li>
                     <?php } ?>
-                    <?php if ($ref_mode == 'all') { ?>
-                        <li><?php printf(LANG_BILLING_REFS_INCOME_ALL, $percent['percent'].'%', $level+1); ?></li>
+                    <?php foreach($ref_levels as $level => $percent) {?>
+                        <?php if ($ref_mode == 'dep') { ?>
+                            <li><?php printf(LANG_BILLING_REFS_INCOME_DEP, $percent['percent'].'%', $level+1); ?></li>
+                        <?php } ?>
+                        <?php if ($ref_mode == 'all') { ?>
+                            <li><?php printf(LANG_BILLING_REFS_INCOME_ALL, $percent['percent'].'%', $level+1); ?></li>
+                        <?php } ?>
                     <?php } ?>
-                <?php } ?>
-            </ul>
-        </div>
+                </ul>
+            </div>
+        <?php } ?>
         <div class="legal">
             <p><?php echo LANG_BILLING_REFS_LEGAL; ?></p>
             <?php if ($terms_url){ ?>

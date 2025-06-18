@@ -23,7 +23,7 @@ class formBillingPayout extends cmsForm {
                         ]
                     ]),
                     new fieldCheckbox('is_enabled', [
-                        'title' => LANG_BILLING_CP_PO_ENABLED,
+                        'title' => LANG_BILLING_CP_PO_ENABLED
                     ]),
                     new fieldNumber('period', [
                         'title' => LANG_BILLING_CP_PO_PERIOD,
@@ -51,6 +51,10 @@ class formBillingPayout extends cmsForm {
                     new fieldString('amount', [
                         'title' => LANG_BILLING_CP_PO_AMOUNT,
                         'hint'  => LANG_BILLING_CP_PO_AMOUNT_HINT
+                    ]),
+                    new fieldCheckbox('is_topup_balance', [
+                        'title' => LANG_BILLING_CP_IS_TOPUP_BALANCE,
+                        'hint'  => LANG_BILLING_CP_IS_TOPUP_BALANCE_HINT
                     ]),
                     new fieldList('field_amount', [
                         'title' => LANG_BILLING_CP_PO_AMOUNT_FIELD,

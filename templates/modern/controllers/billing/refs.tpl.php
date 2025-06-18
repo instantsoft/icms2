@@ -26,22 +26,24 @@
                 <div class="card-text">
                     <?php echo html_input('text', 'ref', $ref_url, ['readonly' => true, 'class' => 'icms-click-select']); ?>
                 </div>
-                <h4 class="card-title mt-3 mt-lg-4"><?php echo LANG_BILLING_REFS_INCOME; ?></h4>
-                <div class="alert alert-success mb-0">
-                    <ul class="mb-0">
-                        <?php if ($ref_bonus) { ?>
-                            <li><?php printf(LANG_BILLING_REFS_INCOME_REG, html_spellcount($ref_bonus, $b_spellcount)); ?>;</li>
-                        <?php } ?>
-                        <?php foreach ($ref_levels as $level => $percent) { ?>
-                            <?php if ($ref_mode == 'dep') { ?>
-                                <li><?php printf(LANG_BILLING_REFS_INCOME_DEP, $percent['percent'] . '%', $level + 1); ?>;</li>
+                <?php if ($ref_bonus || $ref_levels) { ?>
+                    <h4 class="card-title mt-3 mt-lg-4"><?php echo LANG_BILLING_REFS_INCOME; ?></h4>
+                    <div class="alert alert-success mb-0">
+                        <ul class="mb-0">
+                            <?php if ($ref_bonus) { ?>
+                                <li><?php printf(LANG_BILLING_REFS_INCOME_REG, html_spellcount($ref_bonus, $b_spellcount)); ?>;</li>
                             <?php } ?>
-                            <?php if ($ref_mode == 'all') { ?>
-                                <li><?php printf(LANG_BILLING_REFS_INCOME_ALL, $percent['percent'] . '%', $level + 1); ?>;</li>
+                            <?php foreach ($ref_levels as $level => $percent) { ?>
+                                <?php if ($ref_mode == 'dep') { ?>
+                                    <li><?php printf(LANG_BILLING_REFS_INCOME_DEP, $percent['percent'] . '%', $level + 1); ?>;</li>
+                                <?php } ?>
+                                <?php if ($ref_mode == 'all') { ?>
+                                    <li><?php printf(LANG_BILLING_REFS_INCOME_ALL, $percent['percent'] . '%', $level + 1); ?>;</li>
+                                <?php } ?>
                             <?php } ?>
-                        <?php } ?>
-                    </ul>
-                </div>
+                        </ul>
+                    </div>
+                <?php } ?>
             </div>
         </div>
     </div>

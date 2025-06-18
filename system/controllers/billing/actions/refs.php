@@ -31,7 +31,7 @@ class actionBillingRefs extends cmsAction {
         $page    = $this->request->get('page', 1);
         $perpage = $this->options['limit_refs'];
 
-        $max_level = count($this->options['ref_levels']);
+        $max_level = !empty($this->options['ref_levels']) ? count($this->options['ref_levels']) : 0;
         $type      = $this->options['ref_type'];
 
         $this->model->filterEqual('ref_id', $user_id)->orderBy('id', 'desc');

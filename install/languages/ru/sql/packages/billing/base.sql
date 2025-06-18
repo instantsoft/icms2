@@ -103,6 +103,7 @@ CREATE TABLE `{#}billing_payouts` (
   `title` varchar(128) DEFAULT NULL COMMENT 'Название выплаты',
   `groups` text DEFAULT NULL COMMENT 'Группы пользователей для выплаты',
   `user_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID пользователя для выплаты',
+  `is_topup_balance` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Пополнить баланс до указанной суммы',
   `is_passed` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Ограничение по времени с момента регистрации',
   `is_rating` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Ограничение по рейтингу',
   `is_karma` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Ограничение по репутации',

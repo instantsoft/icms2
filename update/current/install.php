@@ -129,6 +129,7 @@ function update_billing() {
 
     $core->db->addTableField('billing_log', 'system_id', 'INT(11) UNSIGNED NULL DEFAULT NULL');
     $core->db->addTableField('billing_paid_fields', 'btn_titles', 'TEXT NULL DEFAULT NULL');
+    $core->db->addTableField('billing_payouts', 'is_topup_balance', 'TINYINT(1) UNSIGNED NULL DEFAULT NULL');
 
     $options = cmsController::loadOptions('billing');
 

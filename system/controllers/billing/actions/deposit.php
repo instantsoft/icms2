@@ -25,6 +25,15 @@ class actionBillingDeposit extends cmsAction {
 
         $balance = $this->model->getUserBalance($this->cms_user->id);
 
+        $show_price_block = true;
+
+        if (count($this->options['prices']) === 1) {
+            $price = reset($this->options['prices']);
+            if ($price['amount'] == $price['price']) {
+                $show_price_block = false;
+            }
+        }
+
         return $this->cms_template->render([
             'user'             => $this->cms_user,
             'balance'          => $balance,
@@ -37,7 +46,8 @@ class actionBillingDeposit extends cmsAction {
             'b_spellcount_arr' => $b_spellcount_arr,
             'curr'             => $this->options['currency_real'],
             'curr_symb'        => $this->options['cur_real_symb'],
-            'prices'           => $this->options['prices']
+            'prices'           => $this->options['prices'],
+            'show_price_block' => $show_price_block
         ]);
     }
 
