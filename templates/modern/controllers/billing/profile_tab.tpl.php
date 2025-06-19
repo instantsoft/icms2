@@ -33,7 +33,7 @@
                     <?php echo $dep_link_text; ?>
                 </a>
             <?php } ?>
-            <?php if ($plan_url && count($plans) > 1) { ?>
+            <?php if ($plan_url && (!$plan || count($plans) > 1)) { ?>
                 <a class="btn btn-outline-success" href="<?php echo $plan_url ?>">
                     <?php html_svg_icon('solid', 'clock'); ?>
                     <?php echo $plan_link_title; ?>

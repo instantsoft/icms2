@@ -67,9 +67,10 @@ class billing extends cmsFrontend {
      *
      * @param string $controller Имя контроллера
      * @param string $name       Имя действия
+     * @param ?string $back_url  URI для редиректа после оплаты
      * @return bool|redirect
      */
-    public function checkBalanceForAction(string $controller, string $name) {
+    public function checkBalanceForAction(string $controller, string $name, $back_url = null) {
 
         if ($this->cms_user->is_admin) {
             return true;
@@ -100,7 +101,7 @@ class billing extends cmsFrontend {
             'title'       => $action['title'],
             'amount'      => $price,
             'diff_amount' => round($price - $balance['total'], 2),
-            'back_url'    => $this->cms_core->uri_absolute
+            'back_url'    => $back_url ?? $this->cms_core->uri_absolute
         ]);
 
         return $this->redirectTo('billing', 'deposit');

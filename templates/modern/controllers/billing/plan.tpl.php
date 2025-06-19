@@ -89,7 +89,7 @@
 
                     <div class="buttons mt-3 mt-lg-4">
                         <?php echo html_submit(LANG_BILLING_BUY); ?>
-                        <?php if ($is_renew_plan) { ?>
+                        <?php if ($is_renew_plan && count($plans) > 1) { ?>
                             <a class="btn btn-outline-primary ml-2" href="<?php echo $this->href_to('plan') ?>"><?php echo LANG_BILLING_CHANGE_PLAN; ?></a>
                         <?php } ?>
                         <a class="back-btn btn btn-link ml-2" href="<?php echo href_to_profile($user, ['balance']); ?>"><?php echo LANG_CANCEL; ?></a>
