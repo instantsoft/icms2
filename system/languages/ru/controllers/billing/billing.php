@@ -234,6 +234,7 @@ define('LANG_BILLING_ERR', 'ERR: Платеж не выполнен');
 define('LANG_BILLING_ERR_SUMM', 'ERR: Неверная сумма заказа');
 define('LANG_BILLING_ERR_SHOP_ID', 'ERR: Неверный идентификатор магазина');
 define('LANG_BILLING_ERR_ORDER_ID', 'ERR: Неверный номер заказа');
+define('LANG_BILLING_ERR_STATUS', 'ERR: Заказ уже оплачен');
 define('LANG_BILLING_ERR_SIG', 'ERR: Неверная подпись');
 define('LANG_BILLING_ACTION_ADD_CONTENT', '%s: добавление');
 define('LANG_BILLING_ACTION_PRICE_NOTICE', 'Стоимость данной операции: <b>%s</b>');

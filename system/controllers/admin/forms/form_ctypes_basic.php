@@ -172,6 +172,12 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_CATEGORIES_ONLY_LAST,
                         'visible_depend' => ['is_cats' => ['show' => ['1']]]
                     ]),
+                    new fieldCheckbox('options:is_item_form_add_cat', [
+                        'title' => LANG_CP_IS_ITEM_FORM_ADD_CAT,
+                        'hint'  => LANG_CP_IS_ITEM_FORM_ADD_CAT_HINT,
+                        'default'  => true,
+                        'visible_depend' => ['is_cats' => ['show' => ['1']]]
+                    ]),
                     new fieldCheckbox('options:is_show_cats', [
                         'title' => LANG_CP_CATEGORIES_SHOW,
                         'visible_depend' => ['is_cats' => ['show' => ['1']]]

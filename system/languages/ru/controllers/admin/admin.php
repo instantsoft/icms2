@@ -137,6 +137,8 @@
     define('LANG_CP_CATEGORIES_CHANGE',         'Разрешить изменение категории после создания записи');
     define('LANG_CP_CATEGORIES_OPEN_ROOT',      'Разрешить добавлять записи в корневую категорию');
     define('LANG_CP_CATEGORIES_ONLY_LAST',      'Разрешить добавлять записи только в категории последнего уровня вложенности');
+    define('LANG_CP_IS_ITEM_FORM_ADD_CAT',      'Разрешить создавать категорию в форме добавления записи');
+    define('LANG_CP_IS_ITEM_FORM_ADD_CAT_HINT', 'Если создание категорий разрешено правами доступа');
     define('LANG_CP_CATEGORIES_SHOW',           'Показывать список категорий над списком записей');
     define('LANG_CP_CTYPE_CATEGORIES_OFF',      'Для данного типа контента показ категорий отключен в <a href="%s">настройках</a>. Они не будут отображаться на сайте');
     define('LANG_CP_FOLDERS',                   'Личные папки');

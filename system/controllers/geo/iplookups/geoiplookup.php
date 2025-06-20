@@ -1,6 +1,6 @@
 <?php
 /**
- * Провайдер сервиса ip.nf
+ * Провайдер сервиса ip-api.com
  * Имя класса оставлено для совместимости
  */
 class icmsGeoiplookup {
@@ -19,7 +19,7 @@ class icmsGeoiplookup {
      *
      * @var string
      */
-    public static $title = 'ip.nf';
+    public static $title = 'ip-api.com';
 
     /**
      * Основной метод, возвращающий массив с данными
@@ -29,18 +29,18 @@ class icmsGeoiplookup {
      */
     public static function detect($ip) {
 
-        $result = file_get_contents_from_url('https://ip.nf/' . $ip . '.json', 3, true);
+        $result = file_get_contents_from_url('http://ip-api.com/json/' . $ip . '?lang=' . cmsCore::getLanguageName(), 3, true);
 
-        if (!$result || empty($result['ip'])) {
+        if (!$result || empty($result['countryCode'])) {
             return [];
         }
 
         return [
-            'city'         => $result['ip']['city'],
-            'country'      => $result['ip']['country'],
-            'country_code' => $result['ip']['country_code'],
-            'latitude'     => $result['ip']['latitude'],
-            'longitude'    => $result['ip']['longitude']
+            'city'         => $result['city'],
+            'country'      => $result['country'],
+            'country_code' => $result['countryCode'],
+            'latitude'     => $result['lat'],
+            'longitude'    => $result['lon']
         ];
     }
 

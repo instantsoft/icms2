@@ -44,7 +44,7 @@ class onBillingUserTabShow extends cmsAction {
 
         $plan_link_title = LANG_BILLING_BUY_PLAN;
         $plan_url = '';
-        if ($this->options['is_plans'] && $is_own_profile) {
+        if ($this->options['is_plans'] && $is_own_profile && $plans) {
             $plan_url = href_to($this->name, 'plan');
             if ($plan) {
                 $plan_link_title = LANG_BILLING_CHANGE_PLAN;

@@ -677,6 +677,7 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (52, 'content', 'edit_times', 'number', NULL),
 (53, 'content', 'delete_times', 'number', NULL),
 (54, 'content', 'change_owner', 'flag', NULL),
+(55, 'content', 'manage_seo', 'flag', NULL),
 (56, 'users', 'ban', 'flag', NULL);
 
 DROP TABLE IF EXISTS `{#}perms_users`;

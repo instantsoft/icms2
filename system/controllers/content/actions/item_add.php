@@ -214,7 +214,7 @@ class actionContentItemAdd extends cmsAction {
                     $item['is_approved'] = !$is_premoderation || $is_moderator;
                 }
 
-                $is_pub_control = cmsUser::isAllowed($ctype['name'], 'pub_on');
+                $is_pub_control = cmsUser::isAllowed($ctype['name'], 'pub_on', true, true);
                 $is_date_pub_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_late');
                 $is_date_pub_end_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'any');
                 $is_date_pub_days_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'days');

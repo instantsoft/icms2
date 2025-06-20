@@ -696,7 +696,8 @@ class content extends cmsFrontend {
                 ])
             );
 
-            if (cmsUser::isAllowed($ctype['name'], 'add_cat')) {
+            if (cmsUser::isAllowed($ctype['name'], 'add_cat') &&
+                    (array_key_exists('is_item_form_add_cat', $ctype['options']) ? $ctype['options']['is_item_form_add_cat'] : true)) {
                 $form->addField($fieldset_id, new fieldString('new_category', [
                     'title' => LANG_ADD_CATEGORY_QUICK
                 ]));
@@ -817,7 +818,7 @@ class content extends cmsFrontend {
         }
 
         // Если разрешено управление видимостью, то добавляем поле
-        if (cmsUser::isAllowed($ctype['name'], 'privacy')) {
+        if (cmsUser::isAllowed($ctype['name'], 'privacy', true, true)) {
 
             $fieldset_id = $form->addFieldset(LANG_PRIVACY, 'privacy_wrap', ['is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('privacy_wrap', $ctype['options']['is_collapsed'])]);
 
@@ -851,7 +852,8 @@ class content extends cmsFrontend {
         //
         // Если ручной ввод ключевых слов или описания, то добавляем поля для этого
         //
-        if (!empty($ctype['options']['is_manual_title']) || !$ctype['is_auto_keys'] || !$ctype['is_auto_desc']) {
+        if (cmsUser::isAllowed($ctype['name'], 'manage_seo', true, true) &&
+                (!empty($ctype['options']['is_manual_title']) || !$ctype['is_auto_keys'] || !$ctype['is_auto_desc'])) {
 
             $fieldset_id = $form->addFieldset(LANG_SEO, 'seo_wrap', ['is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('seo_wrap', $ctype['options']['is_collapsed'])]);
 
@@ -914,7 +916,7 @@ class content extends cmsFrontend {
         $is_pub_start_date = cmsUser::isAllowed($ctype['name'], 'pub_late');
         $is_pub_end_date   = cmsUser::isAllowed($ctype['name'], 'pub_long', 'any');
         $is_pub_end_days   = cmsUser::isAllowed($ctype['name'], 'pub_long', 'days');
-        $is_pub_control    = cmsUser::isAllowed($ctype['name'], 'pub_on');
+        $is_pub_control    = cmsUser::isAllowed($ctype['name'], 'pub_on', true, true);
         $is_pub_ext        = cmsUser::isAllowed($ctype['name'], 'pub_max_ext');
         $pub_max_days      = intval(cmsUser::getPermissionValue($ctype['name'], 'pub_max_days'));
 

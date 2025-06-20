@@ -7,7 +7,7 @@ class onCommentsContentItemForm extends cmsAction {
         list($form, $item, $ctype) = $data;
 
         // если разрешено отключать комментарии к записи
-        if (cmsUser::isAllowed($ctype['name'], 'disable_comments') && !empty($ctype['is_comments'])) {
+        if (cmsUser::isAllowed($ctype['name'], 'disable_comments', true, true) && !empty($ctype['is_comments'])) {
 
             $labels = get_localized_value('comments_labels', $ctype['options']);
 

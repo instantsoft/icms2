@@ -49,6 +49,8 @@
     define('LANG_RULE_CONTENT_PUB_MAX_EXT',     'Продление срока публикации');
     define('LANG_RULE_CONTENT_PUB_ON',         'Отключение публикации');
     define('LANG_RULE_CONTENT_CHANGE_OWNER',   'Смена владельца своих записей');
+    define('LANG_RULE_CONTENT_MANAGE_SEO',      'Управление SEO параметрами записей');
+    define('LANG_RULE_CONTENT_MANAGE_SEO_HINT', 'Если включены опции ручного ввода');
     define('LANG_PERM_OPTION_DAYS', 'Дни');
     define('LANG_PERM_OPTION_ANY', 'Любая дата');
     define('LANG_CONTENT_CATS_ALLOW_ADD',     'Группы, участники которой могут добавлять записи в эту категорию');

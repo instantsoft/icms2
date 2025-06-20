@@ -234,6 +234,7 @@ define('LANG_BILLING_ERR', 'ERR: Payment not completed');
 define('LANG_BILLING_ERR_SUMM', 'ERR: Invalid order amount');
 define('LANG_BILLING_ERR_SHOP_ID', 'ERR: Invalid shop ID');
 define('LANG_BILLING_ERR_ORDER_ID', 'ERR: Invalid order number');
+define('LANG_BILLING_ERR_STATUS', 'ERR: The order has already been paid');
 define('LANG_BILLING_ERR_SIG', 'ERR: Invalid signature');
 define('LANG_BILLING_ACTION_ADD_CONTENT', '%s: content addition');
 define('LANG_BILLING_ACTION_PRICE_NOTICE', 'Cost of this operation: <b>%s</b>');

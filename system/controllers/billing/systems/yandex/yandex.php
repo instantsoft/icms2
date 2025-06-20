@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * ЮMoney
+ * https://yoomoney.ru/docs/wallet/using-api/notification-p2p-incoming
+ */
 class systemYandex extends billingPaymentSystem {
 
     public function getPaymentFormFields($order) {
@@ -30,28 +33,32 @@ class systemYandex extends billingPaymentSystem {
         $op_codepro = $request->get('codepro', '');
         $op_sig     = $request->get('sha1_hash', '');
 
-        if ($op_type !== 'p2p-incoming' && $op_type !== 'card-incoming') {
+        if ($request->has('test_notification')) {
             return LANG_BILLING_ERR;
         }
 
+        if (!in_array($op_type, ['p2p-incoming', 'card-incoming'])) {
+            return $this->log(LANG_BILLING_ERR . 'notification_type: '.$op_type);
+        }
+
         if (!$op_id) {
-            return LANG_BILLING_ERR_ORDER_ID;
+            return $this->log(LANG_BILLING_ERR_ORDER_ID);
         }
 
         $operation = $model->getOperation($op_id);
 
         if (!$operation) {
-            return LANG_BILLING_ERR_ORDER_ID;
+            return $this->log(LANG_BILLING_ERR_ORDER_ID . 'label: '.$op_id);
         }
 
         if ($operation['status'] != modelBilling::STATUS_CREATED) {
-            return LANG_BILLING_ERR_ORDER_ID;
+            return $this->log(LANG_BILLING_ERR_STATUS);
         }
 
         $summ = $this->getPaymentOrderSumm($operation['summ']);
 
         if ($summ != $op_sum) {
-            return LANG_BILLING_ERR_SUMM;
+            return $this->log(LANG_BILLING_ERR_SUMM . 'withdraw_amount: '.$op_sum);
         }
 
         $sig = hash('sha1', implode('&', [
@@ -60,7 +67,7 @@ class systemYandex extends billingPaymentSystem {
         ]));
 
         if ($sig !== $op_sig) {
-            return LANG_BILLING_ERR_SIG;
+            return $this->log(LANG_BILLING_ERR_SIG);
         }
 
         return $model->acceptPayment($op_id);

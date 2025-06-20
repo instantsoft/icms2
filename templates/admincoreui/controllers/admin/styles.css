@@ -163,8 +163,15 @@
 .cp_toolbar .nav-link::before, .flag_trigger::before, .flag_trigger a::before, .flag_lock_off::before {
     margin: 0;
 }
-.datagrid .actions{
+.datagrid .actions {
     display: flex;
+    gap: 0.5rem;
+}
+.datagrid .actions .icms-svg-icon.w-16 {
+    width: 2em;
+}
+.datagrid td > .actions > a::before {
+    margin: 0;
 }
 .datagrid .actions a {
     display: inline-block;

@@ -36,8 +36,14 @@ function grid_systems($controller) {
     $actions = [
         [
             'title' => LANG_CONFIG,
-            'class' => 'config',
+            'icon'  => 'cogs',
             'href'  => href_to($controller->root_url, 'systems_edit', ['{id}'])
+        ],
+        [
+            'title'  => LANG_HELP,
+            'icon'   => 'question-circle',
+            'target' => '_blank',
+            'href'   => 'https://docs.instantcms.ru/manual/components/billing/systems/{name}'
         ]
     ];
 

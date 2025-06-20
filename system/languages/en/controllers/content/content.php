@@ -49,6 +49,8 @@
     define('LANG_RULE_CONTENT_PUB_MAX_EXT',     'Extending publication period');
     define('LANG_RULE_CONTENT_PUB_ON',         'Disabling publication');
     define('LANG_RULE_CONTENT_CHANGE_OWNER',   'Changing ownership of your entries');
+    define('LANG_RULE_CONTENT_MANAGE_SEO',      'SEO management of your entries');
+    define('LANG_RULE_CONTENT_MANAGE_SEO_HINT', 'If the options of manual SEO input are enabled');
     define('LANG_PERM_OPTION_DAYS', 'Days');
     define('LANG_PERM_OPTION_ANY', 'Any date');
     define('LANG_CONTENT_CATS_ALLOW_ADD',     'Groups whose members can add entries in this category');

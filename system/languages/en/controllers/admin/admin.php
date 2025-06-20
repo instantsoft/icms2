@@ -125,6 +125,8 @@
     define('LANG_CP_CATEGORIES_CHANGE',         'Allow to change the category of an already existing entry');
     define('LANG_CP_CATEGORIES_OPEN_ROOT',      'Allow to add entries to the root category');
     define('LANG_CP_CATEGORIES_ONLY_LAST',      'Allow to add entries only to the last level of nested categories');
+    define('LANG_CP_IS_ITEM_FORM_ADD_CAT',      'Allow to create a category in the item form');
+    define('LANG_CP_IS_ITEM_FORM_ADD_CAT_HINT', 'If the creation of categories is allowed by access rights');
     define('LANG_CP_CATEGORIES_SHOW',           'Show categories list above entries list');
     define('LANG_CP_CTYPE_CATEGORIES_OFF',      'Categories for this content type were disabled in the <a href="%s">Settings</a>. Categories will not be shown on the site');
     define('LANG_CP_FOLDERS',                   'Private folders');
