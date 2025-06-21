@@ -23,6 +23,9 @@ class fieldCheckbox extends cmsFormField {
                         'title' => LANG_SLUG,
                         'hint'  => LANG_PARSER_CHECKBOX_LINKS_SLASH,
                         'rules' => [['required']]
+                    ]),
+                    new fieldString('class', [
+                        'title' => LANG_PARSER_URL_CSS_CLASS
                     ])
                 ]
             ])
@@ -70,7 +73,12 @@ class fieldCheckbox extends cmsFormField {
                 $link['href'] = rel_to_href($link['href']);
             }
 
-            $links['link' . ($key+1)] = '<a href="'.html($link['href'], false).'" target="_blank">'.html($link['title'], false).'</a>';
+            $css_class = '';
+            if (!empty($link['class'])) {
+                $css_class = ' class="' . html($link['class'], false) . '"';
+            }
+
+            $links['link' . ($key+1)] = '<a'.$css_class.' href="'.html($link['href'], false).'" target="_blank">'.html($link['title'], false).'</a>';
         }
 
         return $links;

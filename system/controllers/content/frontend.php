@@ -366,7 +366,7 @@ class content extends cmsFrontend {
             if(!empty($ctype['labels']['many'])){
                 $hint = LANG_SHOW.' '.html_spellcount($total, $ctype['labels']['one_accusative'], $ctype['labels']['two_accusative'], $ctype['labels']['many_accusative'], 0);
             } else {
-                $hint = LANG_SHOW.' '.html_spellcount($total, LANG_CONTENT_SHOW_FILTER_COUNT, false, false, 0);
+                $hint = LANG_SHOW.' '.html_spellcount($total, LANG_CONTENT_SHOW_FILTER_COUNT, null, null, 0);
             }
 
             // урлы фильтров только для категорий

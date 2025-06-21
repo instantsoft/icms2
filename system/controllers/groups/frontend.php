@@ -429,7 +429,7 @@ class groups extends cmsFrontend {
 
         if ($this->request->has('show_count')) {
 
-            $hint = LANG_SHOW . ' ' . html_spellcount($total, LANG_GROUPS_GROUP_SPELLCOUNT, false, false, 0);
+            $hint = LANG_SHOW . ' ' . html_spellcount($total, LANG_GROUPS_GROUP_SPELLCOUNT, null, null, 0);
 
             return $this->cms_template->renderJSON([
                 'count'       => $total,

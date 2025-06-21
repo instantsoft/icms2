@@ -69,6 +69,8 @@ class fieldUrl extends cmsFormField {
 
     public function parse($value) {
 
+        $url_title = '';
+
         if (!$value) {
             return '';
         }
@@ -84,7 +86,10 @@ class fieldUrl extends cmsFormField {
             $href = trim($result[0]);
 
             if (!empty($result[1])) {
+
                 $value = trim($result[1]);
+
+                $url_title = $value;
             }
         }
 
@@ -92,6 +97,10 @@ class fieldUrl extends cmsFormField {
             if (!preg_match('/^([a-z]+):\/\/(.+)$/i', $href)) {
                 $href = 'https://' . $href;
             }
+        }
+
+        if (!$url_title) {
+            $url_title = parse_url($href, PHP_URL_HOST);
         }
 
         if ($this->getOption('redirect') && cmsController::enabled('redirect')) {
@@ -128,7 +137,7 @@ class fieldUrl extends cmsFormField {
         }
 
         if (!$this->getOption('only_input_icon') || !$input_icon) {
-            $link_text .= html(parse_url($value, PHP_URL_HOST), false);
+            $link_text .= html($url_title, false);
         }
 
         return '<a ' . html_attr_str($attr, false) . '>' . $link_text . '</a>';

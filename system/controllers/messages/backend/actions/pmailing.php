@@ -116,7 +116,7 @@ class actionMessagesPmailing extends cmsAction {
 
                     cmsUser::addSessionMessage(sprintf(
                         LANG_PM_PMAILING_SENDED,
-                        html_spellcount($count, string_lang('LANG_PM_' . $mailing['type']), false, false, 0)
+                        html_spellcount($count, string_lang('LANG_PM_' . $mailing['type']), null, null, 0)
                     ), ($count ? 'success' : 'info'));
 
                     cmsUser::setUPS($history_key, $mailing);

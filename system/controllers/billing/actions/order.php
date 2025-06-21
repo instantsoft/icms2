@@ -32,7 +32,7 @@ class actionBillingOrder extends cmsAction {
 
             cmsUser::addSessionMessage(sprintf(
                 LANG_BILLING_DEPOSIT_MIN_ERROR,
-                html_spellcount($min_pack, $this->options['currency'], false, false, '0')
+                html_spellcount($min_pack, $this->options['currency'], null, null, '0')
             ), 'error');
 
             return $this->redirectToAction('deposit');

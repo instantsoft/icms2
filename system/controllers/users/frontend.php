@@ -323,7 +323,7 @@ class users extends cmsFrontend {
 
         if ($this->request->has('show_count')) {
 
-            $hint = LANG_SHOW . ' ' . html_spellcount($total, LANG_USERS_SPELL, false, false, 0);
+            $hint = LANG_SHOW . ' ' . html_spellcount($total, LANG_USERS_SPELL, null, null, 0);
 
             return $this->cms_template->renderJSON([
                 'count'       => $total,
