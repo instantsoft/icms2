@@ -9,7 +9,7 @@
 
     $no_approved_class = $entry['is_approved'] ? '' : 'no_approved';
 
-    $author_url = href_to_profile($entry['user']);
+    $author_url = !$entry['user']['is_deleted'] ? href_to_profile($entry['user']) : '';
 
     if ($is_show_target){
         $target_url = rel_to_href($entry['target_url']) . "#comment_{$entry['id']}";
@@ -56,7 +56,7 @@
 
         <h6 class="d-md-flex align-items-center mb-3">
             <span class="d-none d-sm-inline-block mr-2">
-                <?php if ($entry['user_id']) { ?>
+                <?php if ($author_url) { ?>
                     <a href="<?php echo $author_url; ?>" class="icms-user-avatar <?php if (!empty($entry['user']['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
                         <?php echo html_avatar_image($entry['user']['avatar'], 'micro', $entry['user']['nickname']); ?>
                     </a>
@@ -66,10 +66,10 @@
                     </span>
                 <?php } ?>
             </span>
-            <?php if ($entry['user_id']) { ?>
+            <?php if ($author_url) { ?>
                 <a href="<?php echo $author_url; ?>" class="user <?php if($entry['user_id'] && $target_user_id == $entry['user_id']){ ?>btn btn-success btn-sm border-0<?php } ?>"><?php echo $entry['user']['nickname']; ?></a>
             <?php } else { ?>
-                <span class="guest_name user"><?php echo $entry['author_name']; ?></span>
+                <span class="guest_name user"><?php echo $entry['author_name'] ?? LANG_GUEST; ?></span>
                 <?php if ($user->is_admin && !empty($entry['author_ip'])) { ?>
                     <span class="guest_ip">
                         [<?php echo $entry['author_ip']; ?>]

@@ -488,7 +488,7 @@ function html_spellcount($num, $one, $two = null, $many = null, $zero_text = LAN
  */
 function html_spellcount_only($num, $one, $two = null, $many = null) {
 
-    if ($two === null || $many === null) {
+    if (!$two || !$many) {
         [$one, $two, $many] = is_array($one) ? $one : explode('|', $one);
     }
 
@@ -605,7 +605,7 @@ function html_each($array) {
 
 /**
  * Вырезает из HTML-кода пробелы, табуляции и переносы строк
- * 
+ *
  * @param string $html
  * @return string
  */

@@ -339,11 +339,12 @@ class modelComments extends cmsModel {
             $item['author_ip'] = string_bintoip($item['author_ip']);
 
             $item['user'] = [
-                'id'        => $item['user_id'],
-                'slug'      => $item['user_slug'],
-                'nickname'  => $item['user_nickname'],
-                'is_online' => $item['is_online'],
-                'avatar'    => $item['user_avatar']
+                'id'         => $item['user_id'],
+                'slug'       => $item['user_slug'],
+                'nickname'   => $item['user_nickname'],
+                'is_online'  => $item['is_online'],
+                'avatar'     => $item['user_avatar'],
+                'is_deleted' => empty($item['user_date_log']) || $item['user_is_deleted']
             ];
 
             $item['actions'] = [];

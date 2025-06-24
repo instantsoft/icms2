@@ -12,7 +12,7 @@ class actionUsersProfileEdit extends cmsAction {
 
         // если нужно, передаем управление другому экшену
         if ($do) {
-            $this->runExternalAction('profile_edit_' . $do, array($profile) + array_slice($this->params, 2, null, true));
+            $this->runExternalAction('profile_edit_' . $do, [$profile] + array_slice($this->params, 2, null, true));
             return;
         }
 
@@ -24,10 +24,8 @@ class actionUsersProfileEdit extends cmsAction {
         }
 
         // Получаем поля
-        $content_model = cmsCore::getModel('content');
-        $content_model->setTablePrefix('');
-        $content_model->orderBy('ordering');
-        $fields = $content_model->getContentFields('{users}', $profile['id']);
+        $fields = $this->model_content->setTablePrefix('')->
+                getContentFields('{users}', $profile['id']);
 
         // Строим форму
         $form = new cmsForm();
@@ -144,24 +142,23 @@ class actionUsersProfileEdit extends cmsAction {
 
             if (!$errors) {
 
-                list($profile, $old) = cmsEventsManager::hook('users_before_update', [$profile, $old, $fields]);
+                [$profile, $old, $fields] = cmsEventsManager::hook('users_before_update', [$profile, $old, $fields]);
 
                 // Обновляем профиль и редиректим на его просмотр
                 $this->model->updateUser($profile['id'], $profile);
 
                 $this->model->fieldsAfterStore($profile, $fields, 'edit');
 
-                list($profile, $old) = cmsEventsManager::hook('users_after_update', [$profile, $old, $fields]);
+                [$profile, $old, $fields] = cmsEventsManager::hook('users_after_update', [$profile, $old, $fields]);
 
                 // Отдельно обновляем часовой пояс в сессии
                 cmsUser::sessionSet('user:time_zone', $profile['time_zone']);
 
-                $content = cmsCore::getController('content', $this->request);
-
-                $parents = $content->model->getContentTypeParents(null, $this->name);
+                $parents = $this->model_content->getContentTypeParents(null, $this->name);
 
                 if ($parents) {
-                    $content->bindItemToParents(['id' => null, 'name' => $this->name, 'controller' => $this->name], $profile, $parents);
+                    cmsCore::getController('content', $this->request)->
+                            bindItemToParents(['id' => null, 'name' => $this->name, 'controller' => $this->name], $profile, $parents);
                 }
 
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
