@@ -1,23 +1,11 @@
 <?php
 
-	$user = cmsUser::getInstance();
-
     $this->setPageTitle(LANG_BILLING_BALANCE_ADD);
 
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
-    $this->addBreadcrumb($user->nickname, href_to('users', $user->id));
-    $this->addBreadcrumb(LANG_BILLING_BALANCE, href_to('users', $user->id, 'balance'));
+    $this->addBreadcrumb($user->nickname, href_to_profile($user));
+    $this->addBreadcrumb(LANG_BILLING_BALANCE, href_to_profile($user, ['balance']));
     $this->addBreadcrumb(LANG_BILLING_BALANCE_ADD);
-
-	$b_spellcount = $this->controller->options['currency'];
-
-	$curr = $this->controller->options['currency_real'];
-
-	if (!mb_strstr($payment_url, 'http://') && !mb_strstr($payment_url, 'https://')){
-		$payment_url = href_to($payment_url);
-	}
-
-	$is_plan_order = !empty($ticket['is_plan_ticket']);
 
 ?>
 
@@ -27,7 +15,10 @@
 
 	<div class="billing-order-form">
 		<h3><?php echo LANG_BILLING_ORDER_CHECK;  ?></h3>
-		<form action="<?php echo $payment_url; ?>" method="post">
+		<form action="<?php echo $payment_url; ?>" method="post" accept-charset="UTF-8">
+            <?php if (strpos($payment_url, 'http') !== 0) { ?>
+                <?php echo html_csrf_token(); ?>
+            <?php } ?>
 			<table>
 				<tbody>
 					<?php if ($ticket){ ?>
@@ -55,7 +46,7 @@
 					<tr>
 						<td><?php echo LANG_BILLING_DEPOSIT_SYSTEM; ?>:</td>
 						<td>
-							<?php html($systems_list[$system_name]); ?>
+							<?php html($system->getTitle()); ?>
 						</td>
 					</tr>
 				</tbody>
@@ -74,11 +65,12 @@
 					<?php } ?>
 				<?php } ?>
 			<?php } ?>
-			<input type="submit" class="button-submit" value="<?php echo LANG_BILLING_ORDER_PAY; ?>">
+            <button class="button-submit" type="submit">
+                <span><?php echo LANG_BILLING_ORDER_PAY; ?></span>
+            </button>
 			<?php if (!$is_plan_order){ ?>
 				<a class="back-btn" href="<?php echo $this->href_to('deposit') . "?amount={$amount}"; ?>"><?php echo LANG_BILLING_ORDER_BACK; ?></a>
 			<?php } ?>
 		</form>
 	</div>
-
 </div>

@@ -15,7 +15,7 @@
                         <?php } ?>
                     </a>
                 <?php } else {?>
-                    <span class="peer_no_online">
+                    <span class="icms-user-avatar mr-3 peer_no_online">
                         <?php echo html_avatar_image_empty(($profile['guest_name'] ? $profile['guest_name'] : LANG_GUEST), 'avatar__inlist'); ?>
                     </span>
                 <?php }?>

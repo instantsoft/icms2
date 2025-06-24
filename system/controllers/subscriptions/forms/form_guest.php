@@ -4,36 +4,33 @@ class formSubscriptionsGuest extends cmsForm {
 
     public function init() {
 
-        return array(
-
-            'basic' => array(
+        return [
+            'basic' => [
                 'type' => 'fieldset',
-                'childs' => array(
-                    new fieldString('email', array(
+                'childs' => [
+                    new fieldString('email', [
                         'title' => LANG_EMAIL,
-                        'options'=>array(
+                        'options'=>[
                             'max_length'=> 100
-                        ),
-                        'rules' => array(
-                            array('required'),
-                            array('email')
-                        )
-                    )),
-                    new fieldString('name', array(
+                        ],
+                        'rules' => [
+                            ['required'],
+                            ['email']
+                        ]
+                    ]),
+                    new fieldString('name', [
                         'title' => LANG_NAME,
-                        'options'=>array(
+                        'options'=>[
                             'max_length'=> 50
-                        ),
-                        'rules' => array(
-                            array('required'),
-                            array('regexp', '/^([0-9a-zа-яёй\.\@\,\ \-]+)$/ui')
-                        )
-                    ))
-                )
-            )
-
-        );
-
+                        ],
+                        'rules' => [
+                            ['required'],
+                            ['regexp', '/^([0-9a-zа-яёй\.\@\,\ \-]+)$/ui']
+                        ]
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

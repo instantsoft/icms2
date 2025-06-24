@@ -40,7 +40,7 @@ class actionSubscriptionsSubscribe extends cmsAction {
 
         $this->target['controller'] = $this->request->get('controller');
         $this->target['subject']    = $this->request->get('subject');
-        $this->target['params']     = $this->request->get('params');
+        $this->target['params']     = array_filter($this->request->get('params'));
         $this->target['hash']       = md5(serialize($this->target));
 
         if (!cmsCore::isControllerExists($this->target['controller']) ||

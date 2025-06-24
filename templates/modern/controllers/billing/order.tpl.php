@@ -17,8 +17,10 @@
                 <h4 class="card-title mb-3 mb-lg-4">
                     <?php echo LANG_BILLING_ORDER_CHECK; ?>
                 </h4>
-                <form action="<?php echo $payment_url; ?>" method="post">
-                    <?php echo html_csrf_token(); ?>
+                <form action="<?php echo $payment_url; ?>" method="post" accept-charset="UTF-8">
+                    <?php if (strpos($payment_url, 'http') !== 0) { ?>
+                        <?php echo html_csrf_token(); ?>
+                    <?php } ?>
 
                     <?php if ($ticket) { ?>
                         <div class="form-group row">
@@ -80,7 +82,9 @@
                     <?php } ?>
 
                     <div class="mt-4 d-flex">
-                        <?php echo html_submit(LANG_BILLING_ORDER_PAY); ?>
+                        <button class="button btn button-submit btn-primary" type="submit">
+                            <span><?php echo LANG_BILLING_ORDER_PAY; ?></span>
+                        </button>
                         <?php if (!$is_plan_order) { ?>
                             <a class="btn btn-light ml-3 flex-fill" href="<?php echo $this->href_to('deposit') . "?amount={$amount}"; ?>">
                                 <?php echo LANG_BILLING_ORDER_BACK; ?>
