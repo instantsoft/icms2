@@ -787,7 +787,7 @@ class cmsGrid {
                 'renderer' => 'actions'
             ];
 
-            foreach($this->grid['actions'] as $action){
+            foreach ($this->grid['actions'] as $action) {
 
                 if (isset($action['handler'])) {
 
@@ -802,20 +802,15 @@ class cmsGrid {
                     continue;
                 }
 
-                // парсим шаблон адреса, заменяя значения полей
-                if (isset($action['href'])){
-                    $action['href'] = string_replace_keys_values_extended($action['href'], $row);
-                }
-
-                // парсим шаблон запроса подтверждения, заменяя значения полей
-                if (isset($action['confirm'])) {
-
-                    $action['confirm'] = string_replace_keys_values_extended($action['confirm'], $row);
+                // парсим шаблон если есть, заменяя значения полей
+                foreach ($action as $akey => $aval) {
+                    if (is_string($aval)) {
+                        $action[$akey] = string_replace_keys_values_extended($aval, $row);
+                    }
                 }
 
                 // все действия с подтверждением снабжаем csrf_token
                 if (isset($action['confirm']) && !empty($action['href'])) {
-
                     $action['href'] .= (strpos($action['href'], '?') !== false ? '&' : '?') . 'csrf_token=' . cmsForm::getCSRFToken();
                 }
 

@@ -70,7 +70,11 @@ class systemYandex extends billingPaymentSystem {
             return $this->log(LANG_BILLING_ERR_SIG);
         }
 
-        return $model->acceptPayment($op_id);
+        if (!$model->acceptPayment($op_id)) {
+            return $this->log(LANG_BILLING_ERR_TRANS);
+        }
+
+        return true;
     }
 
 }

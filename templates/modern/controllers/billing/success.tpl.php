@@ -5,7 +5,10 @@
 
 <div class="jumbotron billing-result-page">
 
-    <h1 class="display-4"><?php echo LANG_BILLING_SUCCESS; ?></h1>
+    <h1 class="display-4">
+        <span id="payment-success"<?php if ($order_id && !$is_plan_activated) { ?> style="display: none"<?php } ?>><?php echo LANG_BILLING_SUCCESS; ?></span>
+        <span id="payment-pending"<?php if (!$order_id || $is_plan_activated) { ?> style="display: none"<?php } ?>><?php echo LANG_BILLING_PENDING; ?></span>
+    </h1>
 
 	<?php if ($is_plan_activated) { ?>
 		<p class="lead">

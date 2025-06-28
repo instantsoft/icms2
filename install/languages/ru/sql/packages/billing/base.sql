@@ -189,7 +189,7 @@ INSERT INTO `{#}billing_systems` (`id`, `name`, `title`, `payment_url`, `rate`, 
 (8, 'w1', 'Электронные деньги, карты, терминалы (W1)', 'https://wl.walletone.com/checkout/checkout/Index', 1.0000, '---\nmerchant_id: \"\"\nkey: \"\"\ncurrency_id: \"\"\n', NULL, 8),
 (9, 'test', 'Тест (мгновенное пополнение)', 'billing/prepare/test', 0.1000, NULL, 1, 1),
 (10, 'yandex', 'ЮMoney (Яндекс.Деньги)', 'https://yoomoney.ru/quickpay/confirm.xml', 1.0000, '---\nreceiver: \"\"\nsecret_key: \"\"\n', 0, 12),
-(11, 'yakassa', 'ЮKassa (Яндекс.Касса)', 'https://money.yandex.ru/eshop.xml', 1.0000, '---\nshop_id: \"\"\nscid: \"\"\nkey: \"\"\n', NULL, 13),
+(11, 'yakassa', 'ЮKassa (Яндекс.Касса)', 'billing/prepare/yakassa', 1.0000, '---\nshop_id: \"\"\nkey: \"\"\n', NULL, 13),
 (13, 'moneta', 'Монета.Ру', 'https://www.payanyway.ru/assistant.htm', 1.0000, '---\nmnt_id: \"\"\nkey: \"\"\ncurrency: RUB\n', NULL, 15),
 (14, 'paypal', 'PayPal', 'https://api.sandbox.paypal.com', 1.0000, '---\naccount: \"\"\ncurrency: RUB\nclient_id: \"\"\nsecret: \"\"\n', 0, 10),
 (16, 'liqpay', 'LiqPay', 'https://www.liqpay.ua/api/3/checkout', 1.0000, '---\npublic_key: \"\"\nprivate_key: \"\"\ncurrency: UAH\naction: pay\n', NULL, 16);

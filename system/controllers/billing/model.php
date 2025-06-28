@@ -7,8 +7,9 @@ class modelBilling extends cmsModel {
     const OP_TYPE_PAY    = 0;
     const OP_TYPE_INCOME = 1;
 
-    const STATUS_CREATED = 0;
-    const STATUS_DONE    = 1;
+    const STATUS_CREATED  = 0;
+    const STATUS_DONE     = 1;
+    const STATUS_CANCELED = 2;
 
     const OUT_STATUS_CREATED   = 0;
     const OUT_STATUS_CONFIRMED = 1;
@@ -108,6 +109,25 @@ class modelBilling extends cmsModel {
             'date_done' => null,
             'status'    => $status
         ]);
+    }
+
+    /**
+     * Отменяет платёж
+     *
+     * @param int $operation_id ID операции из billing_log
+     * @return bool
+     */
+    public function cancelPayment($operation_id) {
+
+        $this->startTransaction();
+
+        $operation = $this->forUpdate()->getOperation($operation_id);
+
+        $success = $this->setOperationStatus($operation['id'], self::STATUS_CANCELED);
+
+        $this->endTransaction($success);
+
+        return $success;
     }
 
     /**

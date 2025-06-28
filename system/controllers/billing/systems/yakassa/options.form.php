@@ -14,12 +14,6 @@ class formYakassaSystemOptions extends cmsForm {
                             ['required']
                         ]
                     ]),
-                    new fieldString('options:scid', [
-                        'title' => LANG_BILLING_SYSTEM_YAKASSA_SCID,
-                        'rules' => [
-                            ['required']
-                        ]
-                    ]),
                     new fieldString('options:key', [
                         'title' => LANG_BILLING_SYSTEM_YAKASSA_KEY,
                         'rules' => [

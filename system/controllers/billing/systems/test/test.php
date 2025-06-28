@@ -17,7 +17,7 @@ class systemTest extends billingPaymentSystem {
         $order_id = $request->get('order_id', 0);
 
         if (!$model->acceptPayment($order_id)) {
-            return false;
+            return $this->error(LANG_BILLING_ERR_TRANS);
         }
 
         return href_to('billing', 'success', [$this->name], ['order_id' => $order_id]);

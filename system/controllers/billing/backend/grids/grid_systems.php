@@ -40,6 +40,12 @@ function grid_systems($controller) {
             'href'  => href_to($controller->root_url, 'systems_edit', ['{id}'])
         ],
         [
+            'title' => sprintf(LANG_BILLING_CP_SYSTEM_LOG, '{title}'),
+            'class' => 'ajax-modal',
+            'icon'  => 'list-ul',
+            'href'  => href_to($controller->root_url, 'systems_log', ['{id}'])
+        ],
+        [
             'title'  => LANG_HELP,
             'icon'   => 'question-circle',
             'target' => '_blank',

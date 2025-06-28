@@ -2,110 +2,227 @@
 
 class systemYakassa extends billingPaymentSystem {
 
+    const API_ENDPOINT = 'https://api.yookassa.ru/v3';
+
+    const PAYMENTS_PATH = '/payments';
+
+    private $trusted_list = [
+        '185.71.76.0/27',
+        '185.71.77.0/27',
+        '77.75.153.0/25',
+        '77.75.154.128/25',
+        '77.75.156.11',
+        '77.75.156.35',
+        [
+            '2a02:5180:0000:1509:0000:0000:0000:0000',
+            '2a02:5180:0000:1509:ffff:ffff:ffff:ffff'
+        ],
+        [
+            '2a02:5180:0000:2655:0000:0000:0000:0000',
+            '2a02:5180:0000:2655:ffff:ffff:ffff:ffff'
+        ],
+        [
+            '2a02:5180:0000:1533:0000:0000:0000:0000',
+            '2a02:5180:0000:1533:ffff:ffff:ffff:ffff'
+        ],
+        [
+            '2a02:5180:0000:2669:0000:0000:0000:0000',
+            '2a02:5180:0000:2669:ffff:ffff:ffff:ffff'
+        ]
+    ];
+
+    /**
+     * Успешно оплачен покупателем, ожидает подтверждения магазином
+     */
+    const PAYMENT_WAITING_FOR_CAPTURE = 'payment.waiting_for_capture';
+
+    /**
+     * Успешно оплачен и подтвержден магазином
+     */
+    const PAYMENT_SUCCEEDED = 'payment.succeeded';
+
+    /**
+     * Неуспех оплаты или отменен магазином
+     */
+    const PAYMENT_CANCELED = 'payment.canceled';
+
     public function getPaymentFormFields($order) {
 
         return [
-            'paymentType'    => 'PC',
-            'shopId'         => $this->options['shop_id'] ?? '',
-            'scid'           => $this->options['scid'] ?? '',
-            'sum'            => $this->getPaymentOrderSumm($order['summ']),
-            'customerNumber' => cmsUser::get('id'),
-            'orderNumber'    => $order['id'],
-            'cps_phone'      => '',
-            'cps_email'      => $order['email'],
-            'successURL'     => href_to_abs('billing', 'success') . '?tid=' . $order['id'],
-            'failURL'        => href_to_abs('billing', 'fail')
+            'summ'     => $this->getPaymentOrderSumm($order['summ']),
+            'order_id' => $order['id'],
+            'comment'  => $order['description']
         ];
     }
 
-    private function check(cmsRequest $request, modelBilling $model) {
+    public function preparePayment(cmsRequest $request, modelBilling $model) {
 
-        $r['action']                  = $request->get('action');
-        $r['orderSumAmount']          = $request->get('orderSumAmount');
-        $r['orderSumCurrencyPaycash'] = $request->get('orderSumCurrencyPaycash');
-        $r['orderSumBankPaycash']     = $request->get('orderSumBankPaycash');
-        $r['shopId']                  = $request->get('shopId');
-        $r['invoiceId']               = $request->get('invoiceId');
-        $r['customerNumber']          = $request->get('customerNumber');
+        $order_id = $request->get('order_id', 0);
 
-        $op_id     = $request->get('orderNumber');
-        $signature = $request->get('md5');
-
-        if ($this->buildSignature($r) != $signature) {
-            return $this->response('checkOrderResponse', '1', $r['invoiceId'], $this->options['shop_id'], LANG_BILLING_ERR_SIG);
-        }
-
-        $operation = $model->getOperation($op_id);
-
+        $operation = $model->getOperation($order_id);
         if (!$operation) {
-            return $this->response('checkOrderResponse', '100', $r['invoiceId'], $this->options['shop_id'], LANG_BILLING_ERR_ORDER_ID);
+            return $this->error(LANG_BILLING_ERR_ORDER_ID);
         }
 
-        if ($operation['status'] != modelBilling::STATUS_CREATED) {
-            return $this->response('checkOrderResponse', '100', $r['invoiceId'], $this->options['shop_id'], LANG_BILLING_ERR_ORDER_ID);
+        $data = [
+            'amount' => [
+                'value' => $request->get('summ', 0.00),
+                'currency' => 'RUB'
+            ],
+            'capture' => true,
+            'confirmation' => [
+                'type' => 'redirect',
+                'return_url' => href_to_abs('billing', 'success', 'yakassa') . '?tid=' . $order_id
+            ],
+            'metadata' => [
+                'order_id' => $order_id
+            ],
+            'description' => mb_substr($request->get('comment', ''), 0, 128)
+        ];
+
+        $result = $this->execute(self::PAYMENTS_PATH, $data);
+
+        if ($result->error) {
+            return $this->error($result->error);
         }
 
-        $summ = $this->getPaymentOrderSumm($operation['summ']);
-
-        if ($summ != $r['orderSumAmount']) {
-            return $this->response('checkOrderResponse', '100', $r['invoiceId'], $this->options['shop_id'], LANG_BILLING_ERR_SUMM);
+        if (!is_array($result->body)) {
+            return $this->error(LANG_BILLING_ERR);
         }
 
-        return $this->response('checkOrderResponse', '0', $r['invoiceId'], $this->options['shop_id']);
+        if (isset($result->body['type']) && $result->body['type'] === 'error') {
+            return $this->error($result->body['description']);
+        }
+
+        if (!isset($result->body['confirmation']['confirmation_url'])) {
+            return $this->error(LANG_BILLING_ERR);
+        }
+
+        return $result->body['confirmation']['confirmation_url'];
     }
 
     public function processPayment(cmsRequest $request, modelBilling $model) {
 
-        $action = $request->get('action', '');
+        $ip = new cmsIp($this->trusted_list);
 
-        if ($action == 'checkOrder') {
-            return $this->check($request, $model);
+        if (!$ip->isIPTrusted(cmsUser::getIp())) {
+            return $this->log('Attempting to connect from ' . cmsUser::getIp());
         }
 
-        if ($action != 'paymentAviso') {
-            return false;
+        $source = (string) $request->getContent();
+        $data = json_decode($source, true);
+
+        if ($data === false) {
+            return $this->log('JSON Input Error: ' . json_last_error_msg());
         }
 
-        $r['action']                  = $action;
-        $r['orderSumAmount']          = $request->get('orderSumAmount');
-        $r['orderSumCurrencyPaycash'] = $request->get('orderSumCurrencyPaycash');
-        $r['orderSumBankPaycash']     = $request->get('orderSumBankPaycash');
-        $r['shopId']                  = $request->get('shopId');
-        $r['invoiceId']               = $request->get('invoiceId');
-        $r['customerNumber']          = $request->get('customerNumber');
-
-        $op_id     = $request->get('orderNumber');
-        $signature = $request->get('md5');
-
-        if ($this->buildSignature($r) != $signature) {
-            return $this->response('paymentAvisoResponse', '1', $r['invoiceId'], $this->options['shop_id'], LANG_BILLING_ERR_SIG);
+        if (!array_key_exists('event', $data) || !is_string($data['event'])) {
+            return $this->log(sprintf(LANG_BILLING_ERR_PARAM, 'event'));
         }
 
-        if (!$model->acceptPayment($op_id)) {
-            return $this->response('paymentAvisoResponse', '1', $r['invoiceId'], $this->options['shop_id'], LANG_BILLING_ERR);
+        if (!in_array($data['event'], [self::PAYMENT_CANCELED, self::PAYMENT_WAITING_FOR_CAPTURE, self::PAYMENT_SUCCEEDED])) {
+            return $this->log(sprintf(LANG_BILLING_ERR_PARAM, 'event'));
         }
 
-        return $this->response('paymentAvisoResponse', '0', $r['invoiceId'], $this->options['shop_id']);
+        if (!array_key_exists('object', $data) || !is_array($data['object'])) {
+            return $this->log(sprintf(LANG_BILLING_ERR_PARAM, 'object'));
+        }
+
+        $object = $data['object'];
+
+        if (empty($object['metadata']['order_id']) || !is_numeric($object['metadata']['order_id'])) {
+            return $this->log(LANG_BILLING_ERR_ORDER_ID);
+        }
+
+        if (empty($object['amount']['value']) || !is_numeric($object['amount']['value'])) {
+            return $this->log(sprintf(LANG_BILLING_ERR_PARAM, 'amount'));
+        }
+
+        $operation = $model->getOperation($object['metadata']['order_id']);
+        if (!$operation) {
+            return $this->log(LANG_BILLING_ERR_ORDER_ID);
+        }
+
+        if ($operation['status'] != modelBilling::STATUS_CREATED) {
+            return $this->log(LANG_BILLING_ERR_STATUS);
+        }
+
+        $summ = $this->getPaymentOrderSumm($operation['summ']);
+
+        if ($summ != $object['amount']['value']) {
+            return $this->log(LANG_BILLING_ERR_SUMM . 'withdraw_amount: '.$object['amount']['value']);
+        }
+
+        // Оплачен и подтверждён, ничего не делаем
+        if ($data['event'] === self::PAYMENT_SUCCEEDED) {
+            return true;
+        }
+
+        // Отменён
+        if ($data['event'] === self::PAYMENT_CANCELED) {
+
+            $model->cancelPayment($operation['id']);
+
+            return true;
+        }
+
+        // Оплачен, ждёт подтверждения
+        if ($data['event'] === self::PAYMENT_WAITING_FOR_CAPTURE) {
+
+            if (!$model->acceptPayment($operation['id'])) {
+                return $this->log(LANG_BILLING_ERR_TRANS);
+            }
+
+            return true;
+        }
+
+        // На все другие уведомления отвечаем кодом 200
+        return true;
     }
 
-    private function response($type, $code, $invoice_id, $shop_id, $message = false) {
+    private function execute(string $path, array $data, array $headers = []) {
 
-        $date = date('Y-m-d') . 'T' . date('H:i:s') . '.000' . date('P');
+        $attempts = 3;
+        $response = $this->call($path, $data, $headers);
 
-        $xml = '<?xml version="1.0" encoding="UTF-8"?><' . $type . ' performedDatetime="' . $date . '" code="' . $code . '" invoiceId="' . $invoice_id . '" shopId="' . $shop_id . '"';
-        if ($message) {
-            $xml .= ' message="' . $message . '" techMessage="' . $message . '"';
+        while (in_array($response->http_code, [202, 500], true) && $attempts > 0) {
+            --$attempts;
+            $response = $this->call($path, $data, $headers);
         }
-        $xml .= ' />';
 
-        return $this->processPaymentResult($xml, [
-            'Content-Type' => 'text/xml'
-        ]);
+        return $response;
     }
 
-    private function buildSignature($r) {
-        return strtoupper(md5(implode(';', $r) . ';' . $this->options['key']));
+    private function call(string $path, array $data, array $headers = []) {
 
+        $ch = curl_init(self::API_ENDPOINT . $path);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Idempotence-Key: ' . uniqid();
+        $headers[] = 'Authorization: Basic ' . base64_encode($this->options['shop_id'] . ':' . $this->options['key']);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+        $response = new stdClass();
+
+        $response->body = curl_exec($ch);
+        $response->http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $response->error = false;
+
+        if ($response->body === false) {
+            $response->error = curl_error($ch);
+        } else {
+            $response->body = json_decode($response->body, true) ?? $response->body;
+        }
+
+        curl_close($ch);
+
+        return $response;
     }
 
 }

@@ -154,6 +154,8 @@ icms.billing = (function ($) {
                 $('.billing-result-page .status .result .balance > b').html(result.balance);
                 $('.billing-result-page .status .result').show();
                 $('.billing-result-page .continue').show();
+                $('#payment-success').show();
+                $('#payment-pending').hide();
                 return;
             }
 

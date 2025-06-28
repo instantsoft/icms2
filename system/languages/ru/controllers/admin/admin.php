@@ -572,8 +572,8 @@
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT2', 'Строго по ip адресу');
     define('LANG_CP_SETTINGS_USER_CHANGE_LANG', 'Разрешить смену языка пользователями (подстановкой префикса в URL)');
     define('LANG_CP_SETTINGS_BROWSER_AUTO_LANG', 'Автоматически определять язык по локали браузера');
-    define('LANG_CP_SETTINGS_ALLOW_IPS',        'Разрешенные ip адреса для доступа в админку');
-    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Каждый с новой строки. Не указано - разрешено всем. Текущий ip адрес: %s');
+    define('LANG_CP_SETTINGS_ALLOW_IPS',        'Разрешенные IP-адреса для доступа в админку');
+    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Каждый IP-адрес с новой строки. Можно указывать в формате CIDR и диапазон ОТ-ДО. Не указано - разрешено всем. Текущий ip адрес: %s.');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'Как определять ip посетителя');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY_HINT', 'Ключ массива $_SERVER, содержащий реальный ip адрес посетителя. Не меняйте это значение, если не уверены. Значение по умолчанию подходит для большинства. Но, например, для CloudFlare необходимо указать HTTP_CF_CONNECTING_IP');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY_ERROR', 'Заданный вами ключ массива $_SERVER не найден.');
