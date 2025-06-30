@@ -27,6 +27,10 @@ class onBillingContentBeforeItem extends cmsAction {
                 continue;
             }
 
+            if (is_empty_value($fields[$name]['html'] ?? '')) {
+                continue;
+            }
+
             $price = $this->getPaidFieldPrice($paid_field, $item);
 
             if ($this->cms_user->is_logged) {

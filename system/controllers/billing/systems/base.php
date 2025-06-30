@@ -192,6 +192,40 @@ class billingPaymentSystem {
     }
 
     /**
+     * Выполняет HTTP POST запрос
+     *
+     * @param string         $path URL
+     * @param string|array   $data Массив параметров или JSON
+     * @param array $headers Заголовки запроса
+     * @return \stdClass
+     */
+    protected function callHttp(string $path, $data, array $headers = []) {
+
+        $ch = curl_init($path);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+        $response = new stdClass();
+
+        $response->body = curl_exec($ch);
+        $response->http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $response->error = false;
+
+        if ($response->body === false) {
+            $response->error = curl_error($ch);
+        } else {
+            $response->body = json_decode($response->body, true) ?? $response->body;
+        }
+
+        curl_close($ch);
+
+        return $response;
+    }
+
+    /**
      * Фиксирует ошибку и возвращает NULL
      *
      * @param string $text

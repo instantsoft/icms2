@@ -182,7 +182,7 @@ CREATE TABLE `{#}billing_systems` (
 
 INSERT INTO `{#}billing_systems` (`id`, `name`, `title`, `payment_url`, `rate`, `options`, `is_enabled`, `ordering`) VALUES
 (2, 'wmz', 'Webmoney WMZ', 'https://merchant.webmoney.ru/lmi/payment.asp', 1.0000, '---\npurse: \"\"\nsecret_key: \"\"\ntest_mode: \"0\"\n', NULL, 2),
-(3, 'robokassa', 'Электронные деньги, карты, терминалы (Робокасса)', 'https://test.robokassa.ru/Index.aspx', 1.0000, '---\nmerchant_login: \"\"\npassword1: \"\"\npassword2: \"\"\nfiscal_on: null\nfiscal_sno: osn\nfiscal_method: full_payment\nfiscal_object: service\nfiscal_name: \"\"\nfiscal_tax: none\n', NULL, 6),
+(3, 'robokassa', 'Электронные деньги, карты, терминалы (Робокасса)', 'billing/prepare/robokassa', 1.0000, '---\nmerchant_login: \"\"\npassword1: \"\"\npassword2: \"\"\nfiscal_on: null\nfiscal_sno: osn\nfiscal_method: full_payment\nfiscal_object: service\nfiscal_name: \"\"\nfiscal_tax: none\n', NULL, 6),
 (4, 'interkassa', 'Электронные деньги, карты, терминалы (Интеркасса)', 'https://sci.interkassa.com', 1.0000, '---\nik_co_id: \"\"\nik_secret_key: \"\"\n', NULL, 7),
 (5, 'qiwi', 'Qiwi кошелек', 'billing/prepare/qiwi', 1.0000, '---\nshop_id: 0\napi_id: \"\"\napi_password: \"\"\npassword: \"\"\n', 0, 4),
 (7, 'onpay', 'Электронные деньги, карты, терминалы (OnPay)', 'https://secure.onpay.ru/pay/{merchant_login}', 1.0000, '---\nmerchant_login: \"\"\npassword1: \"\"\n', NULL, 9),

@@ -3,3 +3,6 @@
 define('LANG_BILLING_SYSTEM_ROBOKASSA_ID', 'Store ID');
 define('LANG_BILLING_SYSTEM_ROBOKASSA_P1', 'Password #1');
 define('LANG_BILLING_SYSTEM_ROBOKASSA_P2', 'Password #2');
+define('LANG_BILLING_SYSTEM_ROBOKASSA_MODE', 'Operating mode');
+define('LANG_BILLING_SYSTEM_ROBOKASSA_MODE0', 'Production mode');
+define('LANG_BILLING_SYSTEM_ROBOKASSA_MODE1', 'Test mode');

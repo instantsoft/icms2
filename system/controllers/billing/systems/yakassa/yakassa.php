@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * https://yookassa.ru/developers
+ */
 class systemYakassa extends billingPaymentSystem {
 
     const API_ENDPOINT = 'https://api.yookassa.ru/v3';
@@ -47,9 +49,7 @@ class systemYakassa extends billingPaymentSystem {
     const PAYMENT_CANCELED = 'payment.canceled';
 
     public function getPaymentFormFields($order) {
-
         return [
-            'summ'     => $this->getPaymentOrderSumm($order['summ']),
             'order_id' => $order['id'],
             'comment'  => $order['description']
         ];
@@ -66,7 +66,7 @@ class systemYakassa extends billingPaymentSystem {
 
         $data = [
             'amount' => [
-                'value' => $request->get('summ', 0.00),
+                'value' => $this->getPaymentOrderSumm($operation['summ']),
                 'currency' => 'RUB'
             ],
             'capture' => true,
@@ -77,7 +77,7 @@ class systemYakassa extends billingPaymentSystem {
             'metadata' => [
                 'order_id' => $order_id
             ],
-            'description' => mb_substr($request->get('comment', ''), 0, 128)
+            'description' => mb_substr(strip_tags($request->get('comment', '')), 0, 128)
         ];
 
         $result = $this->execute(self::PAYMENTS_PATH, $data);
@@ -183,46 +183,23 @@ class systemYakassa extends billingPaymentSystem {
     private function execute(string $path, array $data, array $headers = []) {
 
         $attempts = 3;
-        $response = $this->call($path, $data, $headers);
+        $response = $this->callHttp($path, $data, $headers);
 
         while (in_array($response->http_code, [202, 500], true) && $attempts > 0) {
             --$attempts;
-            $response = $this->call($path, $data, $headers);
+            $response = $this->callHttp($path, $data, $headers);
         }
 
         return $response;
     }
 
-    private function call(string $path, array $data, array $headers = []) {
-
-        $ch = curl_init(self::API_ENDPOINT . $path);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    protected function callHttp(string $path, $data, array $headers = []) {
 
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Idempotence-Key: ' . uniqid();
         $headers[] = 'Authorization: Basic ' . base64_encode($this->options['shop_id'] . ':' . $this->options['key']);
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-
-        $response = new stdClass();
-
-        $response->body = curl_exec($ch);
-        $response->http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $response->error = false;
-
-        if ($response->body === false) {
-            $response->error = curl_error($ch);
-        } else {
-            $response->body = json_decode($response->body, true) ?? $response->body;
-        }
-
-        curl_close($ch);
-
-        return $response;
+        return parent::callHttp(self::API_ENDPOINT . $path, json_encode($data), $headers);
     }
 
 }

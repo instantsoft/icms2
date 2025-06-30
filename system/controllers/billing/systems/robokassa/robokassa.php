@@ -1,11 +1,21 @@
 <?php
-
+/**
+ * https://docs.robokassa.ru/
+ */
 class systemRobokassa extends billingPaymentSystem {
+
+    const PAYMENTCURL = 'https://auth.robokassa.ru/Merchant/Indexjson.aspx';
+    const PAYMENTURL  = 'https://auth.robokassa.ru/Merchant/Index/';
+
+    private $hash_type = 'md5';
 
     protected $options = [
         'merchant_login' => '',
+        'test_mode'      => 0,
         'password1'      => '',
         'password2'      => '',
+        'password1_test' => '',
+        'password2_test' => '',
         'fiscal_name'    => '',
         'fiscal_on'      => false,
         'fiscal_sno'     => 'osn',
@@ -15,31 +25,54 @@ class systemRobokassa extends billingPaymentSystem {
     ];
 
     public function getPaymentFormFields($order) {
+        return [
+            'order_id' => $order['id'],
+            'comment'  => $order['description']
+        ];
+    }
 
-        $summ = $this->getPaymentOrderSumm($order['summ']);
+    public function preparePayment(cmsRequest $request, modelBilling $model) {
 
-        if ($this->options['fiscal_on']) {
-            $receipt = $this->buildReceipt($order['description'], $summ);
-            $sig     = [$this->options['merchant_login'], $summ, $order['id'], $receipt, $this->options['password1']];
-        } else {
-            $sig = [$this->options['merchant_login'], $summ, $order['id'], $this->options['password1']];
+        $order_id = $request->get('order_id', 0);
+
+        $operation = $model->getOperation($order_id);
+        if (!$operation) {
+            return $this->error(LANG_BILLING_ERR_ORDER_ID);
         }
 
-        $sig = md5(implode(':', $sig));
-
-        $fields = [
-            'MrchLogin'      => $this->options['merchant_login'],
-            'OutSum'         => $summ,
-            'InvId'          => $order['id'],
-            'Desc'           => $order['description'],
-            'SignatureValue' => $sig
+        $payload = [
+            'InvoiceID'   => $order_id,
+            'OutSum'      => $this->getPaymentOrderSumm($operation['summ']),
+            'Description' => mb_substr(strip_tags($request->get('comment', '')), 0, 100)
         ];
 
         if ($this->options['fiscal_on']) {
-            $fields['Receipt'] = $receipt;
+            $payload['Receipt'] = $this->buildReceipt($payload['Description'], $payload['OutSum']);
         }
 
-        return $fields;
+        if (!empty($this->options['test_mode'])) {
+            $payload['IsTest'] = 1;
+        }
+
+        $result = $this->sendPaymentRequest($payload);
+
+        if ($result->error) {
+            return $this->error($result->error);
+        }
+
+        if (!is_array($result->body)) {
+            return $this->error(LANG_BILLING_ERR);
+        }
+
+        if (!empty($result->body['errorCode'])) {
+            return $this->error('Error Code ' . $result->body['errorCode']);
+        }
+
+        if (empty($result->body['invoiceID'])) {
+            return $this->error(LANG_BILLING_ERR);
+        }
+
+        return self::PAYMENTURL . $result->body['invoiceID'];
     }
 
     private function buildReceipt($description, $summ) {
@@ -69,33 +102,78 @@ class systemRobokassa extends billingPaymentSystem {
         $out_signature = $request->get('SignatureValue', '');
 
         if (!$op_id) {
-            return LANG_BILLING_ERR_ORDER_ID;
+            return $this->log(LANG_BILLING_ERR_ORDER_ID);
         }
-
         $operation = $model->getOperation($op_id);
 
         if (!$operation) {
-            return LANG_BILLING_ERR_ORDER_ID;
+            return $this->log(LANG_BILLING_ERR_ORDER_ID);
         }
 
         if ($operation['status'] != modelBilling::STATUS_CREATED) {
-            return LANG_BILLING_ERR_ORDER_ID;
+            return $this->log(LANG_BILLING_ERR_STATUS);
         }
 
         $summ = $this->getPaymentOrderSumm($operation['summ']);
-
         if ($summ != $out_summ) {
-            return LANG_BILLING_ERR_SUMM;
+            return $this->log(LANG_BILLING_ERR_SUMM . 'OutSum: '.$out_summ);
         }
 
-        $sig = [$out_summ, $op_id, $this->options['password2']];
-        $sig = strtoupper(md5(implode(':', $sig)));
+        $password2 = !empty($this->options['test_mode']) ?
+                $this->options['password2_test'] :
+                $this->options['password2'];
 
-        if ($sig != $out_signature) {
-            return LANG_BILLING_ERR_SIG;
+        $sig = [$out_summ, $op_id, $password2];
+        $sig = strtoupper(hash($this->hash_type, implode(':', $sig)));
+
+        if ($sig !== $out_signature) {
+            return $this->log(LANG_BILLING_ERR_SIG);
         }
 
-        return $model->acceptPayment($op_id);
+        if (!$model->acceptPayment($operation['id'])) {
+            return $this->log(LANG_BILLING_ERR_TRANS);
+        }
+
+        return 'OK' . $op_id;
+    }
+
+    private function sendPaymentRequest(array $payload) {
+
+        $payload['MerchantLogin'] = $this->options['merchant_login'];
+
+        $signature_params = [
+            'OutSum'    => $payload['OutSum'],
+            'InvoiceID' => $payload['InvoiceID']
+        ];
+
+        if (!empty($payload['Receipt'])) {
+            $signature_params['Receipt'] = $payload['Receipt'];
+        }
+
+        $payload['SignatureValue'] = $this->generateSignature($signature_params);
+
+        return parent::callHttp(self::PAYMENTCURL, $payload);
+    }
+
+    private function generateSignature($params) {
+
+        $required = [
+            $this->options['merchant_login'],
+            $params['OutSum'],
+            $params['InvoiceID']
+        ];
+
+        if (!empty($params['Receipt'])) {
+            $required[] = $params['Receipt'];
+        }
+
+        $required[] = !empty($this->options['test_mode']) ?
+                $this->options['password1_test'] :
+                $this->options['password1'];
+
+        $hash = implode(':', $required);
+
+        return strtoupper(hash($this->hash_type, $hash));
     }
 
 }
