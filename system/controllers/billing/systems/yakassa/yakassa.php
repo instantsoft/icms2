@@ -51,6 +51,7 @@ class systemYakassa extends billingPaymentSystem {
     public function getPaymentFormFields($order) {
         return [
             'order_id' => $order['id'],
+            'email'    => $order['email'],
             'comment'  => $order['description']
         ];
     }
@@ -60,7 +61,7 @@ class systemYakassa extends billingPaymentSystem {
         $order_id = $request->get('order_id', 0);
 
         $operation = $model->getOperation($order_id);
-        if (!$operation) {
+        if (!$operation || $operation['user_id'] != cmsUser::get('id')) {
             return $this->error(LANG_BILLING_ERR_ORDER_ID);
         }
 
@@ -72,13 +73,17 @@ class systemYakassa extends billingPaymentSystem {
             'capture' => true,
             'confirmation' => [
                 'type' => 'redirect',
-                'return_url' => href_to_abs('billing', 'success', 'yakassa') . '?tid=' . $order_id
+                'return_url' => href_to_abs('billing', 'success', 'yakassa') . '?tid=' . $operation['id']
             ],
             'metadata' => [
-                'order_id' => $order_id
+                'order_id' => $operation['id']
             ],
             'description' => mb_substr(strip_tags($request->get('comment', '')), 0, 128)
         ];
+
+        if (!empty($this->options['fiscal_on'])) {
+            $data['receipt'] = $this->buildReceipt($data['description'], $data['amount']['value'], $operation['user_email']);
+        }
 
         $result = $this->execute(self::PAYMENTS_PATH, $data);
 
@@ -99,6 +104,28 @@ class systemYakassa extends billingPaymentSystem {
         }
 
         return $result->body['confirmation']['confirmation_url'];
+    }
+
+    private function buildReceipt($description, $summ, $email) {
+        return [
+            'customer' => [
+                'email' => $email
+            ],
+            'items' => [
+                [
+                    'description'    => $description,
+                    'quantity'       => 1,
+                    'amount' => [
+                        'value' => $summ,
+                        'currency' => 'RUB'
+                    ],
+                    'measure' => 'another',
+                    'payment_mode'    => $this->options['fiscal_method'],
+                    'payment_subject' => $this->options['fiscal_object'],
+                    'vat_code'        => $this->options['fiscal_tax']
+                ]
+            ]
+       ];
     }
 
     public function processPayment(cmsRequest $request, modelBilling $model) {
@@ -153,11 +180,6 @@ class systemYakassa extends billingPaymentSystem {
             return $this->log(LANG_BILLING_ERR_SUMM . 'withdraw_amount: '.$object['amount']['value']);
         }
 
-        // Оплачен и подтверждён, ничего не делаем
-        if ($data['event'] === self::PAYMENT_SUCCEEDED) {
-            return true;
-        }
-
         // Отменён
         if ($data['event'] === self::PAYMENT_CANCELED) {
 
@@ -166,8 +188,8 @@ class systemYakassa extends billingPaymentSystem {
             return true;
         }
 
-        // Оплачен, ждёт подтверждения
-        if ($data['event'] === self::PAYMENT_WAITING_FOR_CAPTURE) {
+        // Двухстадийный платеж не используем
+        if ($data['event'] === self::PAYMENT_SUCCEEDED) {
 
             if (!$model->acceptPayment($operation['id'])) {
                 return $this->log(LANG_BILLING_ERR_TRANS);
@@ -175,6 +197,8 @@ class systemYakassa extends billingPaymentSystem {
 
             return true;
         }
+
+        $this->log('Unprocessed request: ' . $data['event']);
 
         // На все другие уведомления отвечаем кодом 200
         return true;

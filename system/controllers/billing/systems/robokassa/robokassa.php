@@ -36,12 +36,12 @@ class systemRobokassa extends billingPaymentSystem {
         $order_id = $request->get('order_id', 0);
 
         $operation = $model->getOperation($order_id);
-        if (!$operation) {
+        if (!$operation || $operation['user_id'] != cmsUser::get('id')) {
             return $this->error(LANG_BILLING_ERR_ORDER_ID);
         }
 
         $payload = [
-            'InvoiceID'   => $order_id,
+            'InvoiceID'   => $operation['id'],
             'OutSum'      => $this->getPaymentOrderSumm($operation['summ']),
             'Description' => mb_substr(strip_tags($request->get('comment', '')), 0, 100)
         ];

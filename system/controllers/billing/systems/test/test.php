@@ -16,11 +16,16 @@ class systemTest extends billingPaymentSystem {
 
         $order_id = $request->get('order_id', 0);
 
-        if (!$model->acceptPayment($order_id)) {
+        $operation = $model->getOperation($order_id);
+        if (!$operation || $operation['user_id'] != cmsUser::get('id')) {
+            return $this->error(LANG_BILLING_ERR_ORDER_ID);
+        }
+
+        if (!$model->acceptPayment($operation['id'])) {
             return $this->error(LANG_BILLING_ERR_TRANS);
         }
 
-        return href_to('billing', 'success', [$this->name], ['order_id' => $order_id]);
+        return href_to('billing', 'success', [$this->name], ['order_id' => $operation['id']]);
     }
 
 }

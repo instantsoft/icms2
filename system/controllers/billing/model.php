@@ -101,6 +101,11 @@ class modelBilling extends cmsModel {
     }
 
     public function getOperation($id) {
+
+        $this->select('u.email', 'user_email');
+
+        $this->joinLeft('{users}', 'u', 'u.id = i.user_id');
+
         return $this->getItemById('billing_log', $id);
     }
 
