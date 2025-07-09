@@ -66,7 +66,7 @@ class fieldHtmlcross extends cmsFormField {
     }
 
     public function afterParse($value, $item){
-        return string_replace_keys_values_extended($this->getOption('item_html'), $item);
+        return string_replace_keys_values_extended($value, $item);
     }
 
 }
