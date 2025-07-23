@@ -520,51 +520,60 @@ class cmsGrid {
                 $filter_field = $field;
             }
 
+            $value = $filter[$field];
+
             switch ($column['filter']) {
                 case 'range_date':
-                    if (isset($filter[$field]['from']) && !is_empty_value($filter[$field]['from'])) {
-                        $date_from = date('Y-m-d', strtotime($filter[$field]['from']));
+                    if (isset($value['from']) && !is_empty_value($value['from'])) {
+                        $date_from = date('Y-m-d', strtotime($value['from']));
                         $model->filterGtEqual($filter_field, $date_from);
                     }
-                    if (isset($filter[$field]['to']) && !is_empty_value($filter[$field]['to'])) {
-                        $date_to = date('Y-m-d', strtotime($filter[$field]['to']));
+                    if (isset($value['to']) && !is_empty_value($value['to'])) {
+                        $date_to = date('Y-m-d', strtotime($value['to']));
                         $model->filterLtEqual($filter_field, $date_to);
                     }
                 case 'range':
-                    if (isset($filter[$field]['from']) && !is_empty_value($filter[$field]['from'])) {
-                        $model->filterGtEqual($filter_field, $filter[$field]['from']);
+                    if (isset($value['from']) && !is_empty_value($value['from'])) {
+                        $model->filterGtEqual($filter_field, $value['from']);
                     }
-                    if (isset($filter[$field]['to']) && !is_empty_value($filter[$field]['to'])) {
-                        $model->filterLtEqual($filter_field, $filter[$field]['to']);
+                    if (isset($value['to']) && !is_empty_value($value['to'])) {
+                        $model->filterLtEqual($filter_field, $value['to']);
                     }
                     break;
                 case 'zero':
-                    if($filter[$field]) {
+                    if($value) {
                         $model->filterEqual($filter_field, 0);
                     }
                 case 'nn':
-                    if($filter[$field]) {
+                    if($value) {
                         $model->filterNotNull($filter_field);
                     }
                     break;
                 case 'ni':
-                    if($filter[$field]) {
+                    if($value) {
                         $model->filterIsNull($filter_field);
                     }
                     break;
-                case 'in': $model->filterIn($filter_field, !is_array($filter[$field]) ? explode(',', $filter[$field]) : $filter[$field]);
+                case 'in': $model->filterIn($filter_field, !is_array($value) ? explode(',', $value) : $value);
                     break;
-                case 'filled': ($filter[$field] ? $model->filterNotNull($filter_field) : $model->filterIsNull($filter_field));
+                case 'filled': ($value ? $model->filterNotNull($filter_field) : $model->filterIsNull($filter_field));
                     break;
-                case 'exact': $model->filterEqual($filter_field, $filter[$field]);
+                case 'exact': $model->filterEqual($filter_field, $value);
                     break;
-                case 'ip': $model->filterEqual($filter_field, string_iptobin($filter[$field]), true);
+                case 'ip': $model->filterEqual($filter_field, string_iptobin($value), true);
                     break;
-                case 'like': $model->filterLike($filter_field, "%{$filter[$field]}%");
+                case 'like': $model->filterLike($filter_field, "%{$value}%");
                     break;
                 case 'date':
-                    $date = date('Y-m-d', strtotime($filter[$field]));
+                    $date = date('Y-m-d', strtotime($value));
                     $model->filterLike($filter_field, "%{$date}%");
+                    break;
+                case 'callback':
+                    if (empty($column['filter_callback'])) {
+                        $model->filter('1 = 0');
+                    } else if (is_callable($column['filter_callback'])) {
+                        call_user_func_array($column['filter_callback'], [$filter_field, $value, $model]);
+                    }
                     break;
             }
         }

@@ -116,27 +116,25 @@ class modelAdmin extends cmsModel {
 
         $tasks = $this->filterEqual('is_active', 1)->
                 orderBy('ordering', 'asc')->
-                get('scheduler_tasks');
+                get('scheduler_tasks') ?: [];
 
         $pending = [];
 
-        if ($tasks) {
-            foreach ($tasks as $task) {
+        foreach ($tasks as $task) {
 
-                if ($task['is_new']) {
-                    $pending[] = $task;
-                    continue;
-                }
+            if ($task['is_new'] || !$task['date_last_run']) {
+                $pending[] = $task;
+                continue;
+            }
 
-                $time_last_run = strtotime($task['date_last_run']);
-                $time_now      = time();
+            $time_last_run = strtotime($task['date_last_run']);
+            $time_now      = time();
 
-                $minutes_ago = floor(($time_now - $time_last_run) / 60);
+            $minutes_ago = floor(($time_now - $time_last_run) / 60);
 
-                if ($minutes_ago >= $task['period']) {
-                    $pending[] = $task;
-                    continue;
-                }
+            if ($minutes_ago >= $task['period']) {
+                $pending[] = $task;
+                continue;
             }
         }
 

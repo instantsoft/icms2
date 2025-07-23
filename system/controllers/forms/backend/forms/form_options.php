@@ -19,42 +19,35 @@ class formFormsOptions extends cmsForm {
             'ip'         => 'IP'
         ];
 
-        return array(
-
-            array(
+        return [
+            [
                 'type' => 'fieldset',
                 'childs' => [
-
-                    new fieldCheckbox('allow_shortcode', array(
-                        'title' => LANG_FORMS_CP_ALLOW_SHORTCODE,
-                    )),
-
-                    new fieldCheckbox('allow_embed', array(
+                    new fieldCheckbox('allow_shortcode', [
+                        'title' => LANG_FORMS_CP_ALLOW_SHORTCODE
+                    ]),
+                    new fieldCheckbox('allow_embed', [
                         'title' => LANG_FORMS_CP_ALLOW_EMBED
-                    )),
-
-                    new fieldString('allow_embed_domain', array(
+                    ]),
+                    new fieldString('allow_embed_domain', [
                         'title' => LANG_FORMS_CP_ALLOW_EMBED_DOMAIN,
                         'hint' => LANG_FORMS_CP_ENTER_DOMAIN.LANG_FORMS_CP_ALLOW_EMBED_DOMAIN_HINT,
-                        'visible_depend' => array('allow_embed' => array('show' => array('1')))
-                    )),
-
-                    new fieldString('denied_embed_domain', array(
+                        'visible_depend' => ['allow_embed' => ['show' => ['1']]]
+                    ]),
+                    new fieldString('denied_embed_domain', [
                         'title' => LANG_FORMS_CP_DENIED_EMBED_DOMAIN,
                         'hint'  => LANG_FORMS_CP_ENTER_DOMAIN.LANG_FORMS_CP_DENIED_EMBED_DOMAIN_HINT,
-                        'visible_depend' => array('allow_embed' => array('show' => array('1')))
-                    )),
-
-                    new fieldText('send_text', array(
+                        'visible_depend' => ['allow_embed' => ['show' => ['1']]]
+                    ]),
+                    new fieldText('send_text', [
                         'title' => LANG_FORMS_CP_SEND_TEXT,
                         'patterns_hint' => [
                             'patterns' =>  $meta_fields,
                             'text_panel' => '',
                             'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN
                         ]
-                    )),
-
-                    new fieldHtml('letter', array(
+                    ]),
+                    new fieldHtml('letter', [
                         'title' => LANG_FORMS_CP_LETTER,
                         'hint' => LANG_FORMS_CP_LETTER_HINT,
                         'options' => [
@@ -66,9 +59,8 @@ class formFormsOptions extends cmsForm {
                             'always_show' => true,
                             'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN
                         ]
-                    )),
-
-                    new fieldHtml('notify_text', array(
+                    ]),
+                    new fieldHtml('notify_text', [
                         'title' => LANG_FORMS_CP_NOTIFY_TEXT,
                         'hint' => LANG_FORMS_CP_NOTIFY_TEXT_HINT,
                         'patterns_hint' => [
@@ -77,12 +69,10 @@ class formFormsOptions extends cmsForm {
                             'always_show' => true,
                             'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN
                         ]
-                    ))
+                    ])
                 ]
-            )
-
-        );
-
+            ]
+        ];
     }
 
 }

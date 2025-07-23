@@ -213,6 +213,9 @@ class cmsResponse {
             $file_name = pathinfo($file_path, PATHINFO_BASENAME);
         }
 
+        // Удаляем ранее установленный Content-Type чтобы автоматически по типу файла стал
+        $this->removeHeader('Content-Type');
+
         return $this->sendFile($file_path, ['Content-Disposition' => 'attachment; filename="' . htmlspecialchars($file_name, ENT_COMPAT) . '"']);
     }
 

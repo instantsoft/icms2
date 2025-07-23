@@ -143,7 +143,9 @@ icms.menu = (function ($) {
                 e.stopPropagation();
             });
         } else {
-
+            $('.icms-menu-hovered .disable-dropdown a.dropdown-toggle').on( 'click', function (e) {
+                e.stopPropagation();
+            });
             $('.dropdown-menu a.dropdown-toggle').on( 'click', function (e) {
                 var $el = $(this);
                 $el.toggleClass('active-dropdown');

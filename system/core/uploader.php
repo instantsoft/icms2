@@ -558,11 +558,11 @@ class cmsUploader {
      *
      * @param string $file_bin
      * @param int $allowed_size Максимальный размер файла (в байтах)
-     * @param string $destination Директория назначения (внутри пути upload)
-     * @param string $dest_name Имя файла
+     * @param ?string $destination Директория назначения (внутри пути upload)
+     * @param ?string $dest_name Имя файла
      * @return array
      */
-    private function saveFileFromString($file_bin, $allowed_size, $destination, $dest_name) {
+    public function saveFileFromString($file_bin, $allowed_size = 0, $destination = null, $dest_name = null) {
 
         $file = cmsUploadfile::fromString($file_bin, $this->allowed_mime, $this->allowed_exts);
 

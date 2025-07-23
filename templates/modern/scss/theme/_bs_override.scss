@@ -247,7 +247,7 @@ form {
         }
     }
     .reguired_field {
-        > label {
+        > label, label>span {
             &:after{
                 content: '*';
                 color: theme-color("danger");
