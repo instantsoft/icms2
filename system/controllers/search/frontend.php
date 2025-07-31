@@ -20,9 +20,13 @@ class search extends cmsFrontend {
             $link = href_to('search', $this->cms_core->controller);
         }
 
-        if (preg_match_all('/\B#([а-яёa-z]{1}[а-яёa-z0-9\-_]{3,19})/ui', $text, $match) && !empty($match[1])) {
+        if (preg_match_all('/(?<![\w=:"\'#\/-])#(?![0-9a-f]{3,6}(?![a-z0-9\-_]))([а-яёa-z][а-яёa-z0-9\-_]{3,19})/ui', $text, $match) && !empty($match[1])) {
             foreach ($match[1] as $hash_tag) {
-                $text = str_replace('#' . $hash_tag, '<a class="hashtag" href="' . $link . '?q=' . urlencode('#' . $hash_tag) . '">#' . $hash_tag . '</a>', $text);
+                $text = str_replace(
+                    '#' . $hash_tag,
+                    '<a class="hashtag" href="' . $link . '?q=' . urlencode('#' . $hash_tag) . '">#' . $hash_tag . '</a>',
+                    $text
+                );
             }
         }
 

@@ -29,10 +29,6 @@ class auth extends cmsFrontend {
         return $options;
     }
 
-    public function actionIndex() {
-        $this->executeAction('login');
-    }
-
     public function actionLogout() {
 
         if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
