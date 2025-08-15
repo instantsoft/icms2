@@ -987,6 +987,10 @@ class cmsGrid {
         // Добавляем ID строки
         $save_action_query['id'] = $row[$id_field];
 
+        if (isset($column['editable']['items']) && is_callable($column['editable']['items'])) {
+            $column['editable']['items'] = $column['editable']['items']($row[$field], $row);
+        }
+
         return [
             'component'   => $column['editable']['renderer'] ?? 'form-input',
             'items'       => $column['editable']['items'] ?? [],
