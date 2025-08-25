@@ -17,8 +17,9 @@ function grid_queue($controller, $contex_controller) {
             'title'   => LANG_CP_QUEUE_DATE_CREATED,
             'width'   => 130,
             'handler' => function ($value, $item) {
-                $is_expired = (time() - strtotime($value) > 36400);
-                return html_bool_span(html_date($value, true), !$is_expired);
+                $is_expired = time() - strtotime($value) > 36400;
+                $is_expired_start = $item['date_started'] && !$item['attempts'] && time() - strtotime($item['date_started']) > 36400;
+                return html_bool_span(html_date($value, true), (!$is_expired || !$is_expired_start));
             }
         ],
         'date_started' => [
@@ -26,10 +27,13 @@ function grid_queue($controller, $contex_controller) {
             'class'   => 'd-none d-lg-table-cell',
             'width'   => 130,
             'handler' => function ($value, $item) {
-                if (!$value || ($value && !$item['attempts'])) {
+                if (!$value) {
                     return '–';
                 }
-                $is_expired    = (time() - strtotime($value) > 36400);
+                if (!$item['attempts']) {
+                    return html_date($value, true);
+                }
+                $is_expired = (time() - strtotime($value) > 36400);
                 return html_bool_span(html_date($value, true), !$is_expired);
             }
         ],

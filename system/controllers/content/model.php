@@ -6,6 +6,7 @@ class modelContent extends cmsModel {
 
     protected $pub_filter_disabled = false;
     protected $pub_filtered = false;
+    protected $cache_categories_items_count = true;
 
     protected static $all_ctypes = null;
 
@@ -926,7 +927,21 @@ class modelContent extends cmsModel {
         }
     }
 
+    public function enableCacheCategoriesItemsCount(){
+        $this->cache_categories_items_count = true;
+        return $this;
+    }
+
+    public function disableCacheCategoriesItemsCount(){
+        $this->cache_categories_items_count = false;
+        return $this;
+    }
+
     public function cacheCategoriesItemsCount($ctype_name) {
+
+        if (!$this->cache_categories_items_count) {
+            return $this;
+        }
 
         $ctype = $this->getContentTypeByName($ctype_name);
 
@@ -934,6 +949,7 @@ class modelContent extends cmsModel {
             return $this;
         }
 
+        $table_name = $this->getContentTypeTableName($ctype_name);
         $cats_table_name = $this->getContentCategoryTableName($ctype_name);
         $bind_table_name = $this->getContentTypeTableName($ctype_name, '_cats_bind');
 
@@ -942,8 +958,9 @@ class modelContent extends cmsModel {
         }
 
         $this->db->query("UPDATE {#}{$cats_table_name} "
-        . "SET item_count=(SELECT COUNT(category_id) FROM {#}{$bind_table_name} "
-        . "WHERE category_id = {#}{$cats_table_name}.id)");
+        . "SET item_count=(SELECT COUNT(i.category_id) FROM {#}{$bind_table_name} AS i "
+        . "LEFT JOIN {#}{$table_name} AS items ON items.id=i.item_id "
+        . "WHERE i.category_id = {#}{$cats_table_name}.id AND items.is_pub>=1 AND items.is_approved=1 AND items.is_deleted IS NULL)");
 
         cmsCache::getInstance()->clean('content.categories');
 

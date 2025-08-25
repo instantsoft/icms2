@@ -83,11 +83,13 @@ class fieldList extends cmsFormField {
             ]),
             new fieldString('list_where_id', [
                 'title' => LANG_PARSER_LIST_WHERE_ID,
-                'visible_depend' => ['options:list_where' => ['show' => ['table']]]
+                'visible_depend' => ['options:list_where' => ['show' => ['table']]],
+                'default' => 'id'
             ]),
             new fieldString('list_where_title', [
                 'title' => LANG_PARSER_LIST_WHERE_TITLE,
-                'visible_depend' => ['options:list_where' => ['show' => ['table']]]
+                'visible_depend' => ['options:list_where' => ['show' => ['table']]],
+                'default' => 'title'
             ]),
             new fieldList('list_sorting', [
                 'title' => LANG_SORTING,

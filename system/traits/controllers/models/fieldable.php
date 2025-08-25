@@ -243,7 +243,6 @@ trait fieldable {
      * @return array
      */
     public function getContentFieldByName(string $ctype_name, $name) {
-
         return $this->getContentField($ctype_name, $name, 'name');
     }
 
@@ -255,8 +254,21 @@ trait fieldable {
      * @return bool
      */
     public function isContentFieldExists(string $ctype_name, $name) {
-
         return $this->getContentFieldByName($ctype_name, $name) ? true : false;
+    }
+
+    /**
+     * Проверяет, что таблица с полями существует
+     *
+     * @param string $ctype_name    Имя типа контента
+     * @param string $table_postfix Последняя часть названия таблицы с полями
+     * @return type
+     */
+    public function isContentFieldTableExists(string $ctype_name, string $table_postfix = '_fields') {
+
+        $table_name = $this->getContentTypeTableName($ctype_name, $table_postfix);
+
+        return $this->db->isTableExists($table_name);
     }
 
     /**

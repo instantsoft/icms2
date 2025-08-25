@@ -69,7 +69,8 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
                         $target_ctype = $this->model_backend_content->getContentType($relation['child_ctype_id']);
                     }
 
-                    if (!$this->model_backend_content->isContentFieldExists($target_ctype['name'], $parent_field_name)) {
+                    if ($this->model_backend_content->isContentFieldTableExists($target_ctype['name']) &&
+                        !$this->model_backend_content->isContentFieldExists($target_ctype['name'], $parent_field_name)) {
 
                         $this->model_backend_content->addContentField($target_ctype['name'], [
                             'type'          => 'parent',

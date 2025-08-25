@@ -178,6 +178,7 @@ icms.datagrid = (function () {
                                 self.alert(result.error);
                             }
                         } else {
+                            icms.events.run('datagrid-inline-save-rows', {rows: modified});
                             self.loadRows();
                         }
                     });
@@ -653,17 +654,19 @@ icms.datagrid = (function () {
                 save: function() {
                     let vm = this;
                     this.is_busy = true;
-                    self.ajax(this.col.editable.save_action, {
+                    let params = {
                         value: (this.current_value ? this.current_value : ''),
                         name: this.col.name,
                         save_row_field: 1
-                    }, function(result){
+                    };
+                    self.ajax(this.col.editable.save_action, params, function(result){
                         vm.is_busy = false;
                         if (result.error) {
                             self.alert(result.error);
                         } else {
                             vm.hideFrom();
                             vm.$root.rows[vm.row_key] = result.row;
+                            icms.events.run('datagrid-inline-save-row', {row: result.row, params: params});
                         }
                     });
                 },

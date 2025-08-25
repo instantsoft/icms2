@@ -53,13 +53,14 @@ class actionAdminMenu extends cmsAction {
             ]
         ];
 
-        $tree_key = $params[0] ?? ltrim(cmsUser::getCookie('menu_tree_path'), '/');
+        $tree_path = $params[0] ?? ltrim(cmsUser::getCookie('menu_tree_path'), '/');
 
-        if (!preg_match('/^([0-9\.]+)$/i', $tree_key)) {
-            $tree_key = '1.0';
+        if (!preg_match('/^([0-9\/\.]+)$/i', $tree_path)) {
+            $tree_path = '1.0';
         }
 
-        $tree_key = explode('.', $tree_key);
+        $tree_keys = explode('/', $tree_path);
+        $tree_key = explode('.', end($tree_keys));
 
         $menu_id   = $tree_key[0] ?? 1;
         $parent_id = $tree_key[1] ?? 0;

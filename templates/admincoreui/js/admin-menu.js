@@ -1,5 +1,6 @@
 var icms = icms || {};
-icms.events.on('datagrid_mounted', function(app){
+
+icms.events.on('datagrid_mounted', function(app) {
     let datatree = $("#datatree");
     let base_url = datatree.data('base_url');
     let is_init = false;
@@ -39,4 +40,47 @@ icms.events.on('datagrid_mounted', function(app){
             });
         }
     });
+});
+
+icms.events.on('datagrid-inline-save-row', function(data) {
+
+    let tree = $("#datatree").dynatree("getTree");
+
+    let activeNode = tree.getActiveNode();
+
+    let keys = activeNode.data.key.split('.');
+
+    keys[1] = data.row.id;
+
+    let nodeToUpdate = tree.getNodeByKey(keys.join('.'));
+
+    if (nodeToUpdate) {
+        nodeToUpdate.data.title = data.params.value;
+        nodeToUpdate.render();
+    }
+});
+
+icms.events.on('datagrid-inline-save-rows', function(data) {
+
+    let tree = $("#datatree").dynatree("getTree");
+
+    let activeNode = tree.getActiveNode();
+
+    let keys = activeNode.data.key.split('.');
+
+    for (let row_id in data.rows) {
+
+        if (!data.rows[row_id].title) {
+            continue;
+        }
+
+        keys[1] = row_id;
+
+        let nodeToUpdate = tree.getNodeByKey(keys.join('.'));
+
+        if (nodeToUpdate) {
+            nodeToUpdate.data.title = data.rows[row_id].title;
+            nodeToUpdate.render();
+        }
+    }
 });
