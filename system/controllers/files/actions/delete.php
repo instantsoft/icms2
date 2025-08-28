@@ -5,7 +5,7 @@ class actionFilesDelete extends cmsAction {
     public function run() {
 
         if (!$this->cms_user->is_logged) {
-            return $this->cms_template->renderJSON(['error' => false]);
+            return $this->cms_template->renderJSON(['error' => true]);
         }
 
         if (!$this->request->isAjax()) {
@@ -20,7 +20,7 @@ class actionFilesDelete extends cmsAction {
 
         if (!$path) {
             return $this->cms_template->renderJSON([
-                'error' => false
+                'error' => true
             ]);
         }
 
@@ -31,7 +31,7 @@ class actionFilesDelete extends cmsAction {
         $file = $this->model->getFileByPath($path);
         if (!$file) {
             return $this->cms_template->renderJSON([
-                'error' => false
+                'error' => true
             ]);
         }
 
