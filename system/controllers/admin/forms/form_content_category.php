@@ -3,15 +3,13 @@ class formAdminContentCategory extends cmsForm {
 
     public function init($ctype) {
 
-        return array(
-
-            'basic' => array(
+        return [
+            'basic' => [
                 'type' => 'fieldset',
-                'childs' => array(
-
-                    new fieldList('parent_id', array(
+                'childs' => [
+                    new fieldList('parent_id', [
                         'title' => LANG_PARENT_CATEGORY,
-                        'generator' => function($cat) use ($ctype){
+                        'generator' => function($cat) use ($ctype) {
 
                             $content_model = cmsCore::getModel('content');
                             $tree = $content_model->limit(0)->getCategoriesTree($ctype['name']);
@@ -23,29 +21,25 @@ class formAdminContentCategory extends cmsForm {
                             }
 
                             return $items;
-
                         }
-                    )),
-
-                    new fieldText('title', array(
+                    ]),
+                    new fieldText('title', [
                         'title' => LANG_CP_CONTENT_CATS_TITLES,
-                        'hint' => LANG_CP_CONTENT_CATS_TITLES_HINT,
+                        'hint'  => LANG_CP_CONTENT_CATS_TITLES_HINT,
                         'is_strip_tags' => true,
-                        'rules' => array(
-                            array('required'),
-                        )
-                    )),
-
-                    new fieldCheckbox('is_inherit_binds', array(
-                        'title' => LANG_CP_CONTENT_CATS_BIND,
-                    )),
-
-                )
-            )
-
-
-        );
-
+                        'options' => [
+                            'max_length' => 12288
+                        ],
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldCheckbox('is_inherit_binds', [
+                        'title' => LANG_CP_CONTENT_CATS_BIND
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

@@ -3,40 +3,32 @@ class formAdminMailCheck extends cmsForm {
 
     public function init() {
 
-        return array(
-
-            array(
+        return [
+            [
                 'type' => 'fieldset',
-                'childs' => array(
-
-                    new fieldString('email', array(
+                'childs' => [
+                    new fieldString('email', [
                         'title' => LANG_MAILCHECK_TO,
-                        'rules' => array(
-                            array('required'),
-                            array('email')
-                        )
-                    )),
-
-                    new fieldString('subject', array(
+                        'rules' => [
+                            ['required'],
+                            ['email']
+                        ]
+                    ]),
+                    new fieldString('subject', [
                         'title' => LANG_MAILCHECK_SUBJECT,
-                        'rules' => array(
-                            array('required')
-                        )
-                    )),
-
-                    new fieldText('body', array(
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldText('body', [
                         'title' => LANG_MAILCHECK_BODY,
-                        'rules' => array(
-                            array('required')
-                        )
-                    ))
-
-                )
-            )
-
-        );
-
+                        'rules' => [
+                            ['required']
+                        ]
+                    ])
+                ]
+            ]
+        ];
     }
-
 
 }

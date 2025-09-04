@@ -127,6 +127,7 @@
     define('LANG_PARSER_NUMBER_TYPE',        'Тип поля ввода');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');
     define('LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE','Выбор диапазона ползунком');
+    define('LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE_HINT','Не работает со свойствами');
     define('LANG_PARSER_NUMBER_FILTER_STEP', 'Шаг ползунка');
     define('LANG_PARSER_NUMBER_FILTER_RANGE_SI', 'Показывать поля ввода вместе с ползунком');
     define('LANG_PARSER_NUMBER_UNITS',       'Единица измерения');

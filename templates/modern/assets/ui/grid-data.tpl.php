@@ -99,7 +99,7 @@ if(!empty($page_title)) {
         </table>
     </div>
     <div class="row" v-if="options.is_pagination || options.is_selectable" v-cloak>
-        <div class="col-auto col-lg-5 d-flex" v-if="options.is_pagination">
+        <div class="col-sm-auto d-flex order-1 order-sm-0" v-if="options.is_pagination">
             <pagination v-model="filter.page" @applyfilter="applyFilter" :is_loading="is_loading" :perpage="filter.perpage" :total="total" lang_first="<?php echo LANG_PAGE_FIRST; ?>" lang_last="<?php echo LANG_PAGE_LAST; ?>"></pagination>
             <div class="dataTables_length datagrid_resize">
                 <label>
@@ -114,7 +114,7 @@ if(!empty($page_title)) {
                 </label>
             </div>
         </div>
-        <div class="ml-auto col col-lg-7 text-right" v-if="options.is_selectable">
+        <div class="ml-auto col-sm text-right mb-2 mr-2 m-sm-0 order-0 order-sm-1" v-if="options.is_selectable">
             <div class="datagrid_navigation datagrid_select_actions">
                 <small class="shint text-muted d-none d-lg-inline-block"><?php echo LANG_GRID_SELECT_HINT; ?></small>
                 <button type="button" class="ml-2 btn btn-primary btn-sm" v-if="selectedRows.length !== rows.length" @click="selectRows">

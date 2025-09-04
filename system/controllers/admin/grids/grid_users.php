@@ -101,7 +101,16 @@ function grid_users($controller) {
                 if (!$user['is_locked']) {
                     return '';
                 }
-                return ($user['lock_reason'] ? $user['lock_reason'].', ' : '') . LANG_TO . ' ' . strip_tags(html_date($user['lock_until']));
+
+                $tooltip = $user['lock_reason'] ? $user['lock_reason'] . ', ' : '';
+
+                if ($user['lock_until']) {
+                    $tooltip .= LANG_TO . ' ' . strip_tags(html_date($user['lock_until']));
+                } else {
+                    $tooltip .= LANG_MODERATION_TRASH_NO_REMOVE;
+                }
+
+                return $tooltip;
             }
         ],
         'is_deleted' => [

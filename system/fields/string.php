@@ -149,6 +149,7 @@ class fieldString extends cmsFormField {
             // Разрешены HTML теги, - прогоняем через типограф
             $value = cmsEventsManager::hook('html_filter', [
                 'text'                => $value,
+                'is_process_callback' => false,
                 'is_auto_br'          => false,
                 'build_redirect_link' => false
             ]);

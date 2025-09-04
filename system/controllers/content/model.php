@@ -957,34 +957,46 @@ class modelContent extends cmsModel {
             $this->db->addTableField($cats_table_name, $cache_field_name, "int(11) unsigned NOT NULL DEFAULT '0'");
         }
 
-        $this->db->query("UPDATE {#}{$cats_table_name} "
-        . "SET item_count=(SELECT COUNT(i.category_id) FROM {#}{$bind_table_name} AS i "
-        . "LEFT JOIN {#}{$table_name} AS items ON items.id=i.item_id "
-        . "WHERE i.category_id = {#}{$cats_table_name}.id AND items.is_pub>=1 AND items.is_approved=1 AND items.is_deleted IS NULL)");
+        $this->db->query("
+            UPDATE {#}{$cats_table_name} c
+            LEFT JOIN (
+                SELECT i.category_id, COUNT(*) AS cnt
+                FROM {#}{$bind_table_name} i
+                JOIN {#}{$table_name} items
+                  ON items.id = i.item_id
+                 AND items.is_pub >= 1
+                 AND items.is_approved = 1
+                 AND items.is_deleted IS NULL
+                GROUP BY i.category_id
+            ) x ON c.id = x.category_id
+            SET c.item_count = COALESCE(x.cnt, 0)
+        ");
 
         cmsCache::getInstance()->clean('content.categories');
 
         $cats = $this->selectOnly('ns_level')->select('item_count')->
-                select('ns_left')->select('ns_right')->select('id')->
-                filterGt('parent_id', 0)->orderBy('ns_left')->
+                select('parent_id')->select('id')->
+                filterGt('parent_id', 0)->orderBy('ns_right', 'desc')->
                 get($cats_table_name) ?: [];
 
+        $recursive_counts = [];
         foreach ($cats as $cat) {
+            $recursive_counts[$cat['id']] = ($recursive_counts[$cat['id']] ?? 0) + (int) $cat['item_count'];
+            $recursive_counts[$cat['parent_id']] =
+                ($recursive_counts[$cat['parent_id']] ?? 0) + (int) $recursive_counts[$cat['id']];
+        }
 
-            $cat['item_count_recursive'] = $cat['item_count'];
+        // готовим bulk update
+        $values = [];
+        foreach ($recursive_counts as $id => $cnt) {
+            $values[] = "({$id}, {$cnt})";
+        }
 
-            $paths = array_filter($cats, function ($item) use ($cat) {
-                return ($item['ns_left'] > $cat['ns_left'] &&
-                $item['ns_level'] > $cat['ns_level'] &&
-                $item['ns_right'] < $cat['ns_right'] &&
-                $item['ns_level'] > 0);
-            });
-
-            foreach ($paths as $path) {
-                $cat['item_count_recursive'] += $path['item_count'];
-            }
-
-            $this->db->query("UPDATE {#}{$cats_table_name} SET item_count_recursive = {$cat['item_count_recursive']} WHERE id='{$cat['id']}'");
+        if ($values) {
+            $sql = "INSERT INTO {#}{$cats_table_name} (`id`, `item_count_recursive`)
+                    VALUES " . implode(',', $values) . "
+                    ON DUPLICATE KEY UPDATE `item_count_recursive` = VALUES(`item_count_recursive`)";
+            $this->db->query($sql);
         }
 
         return $this;

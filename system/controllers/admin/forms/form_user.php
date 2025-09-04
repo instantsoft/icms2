@@ -3,111 +3,94 @@ class formAdminUser extends cmsForm {
 
     public function init($do) {
 
-        return array(
-
-            array(
+        return [
+            [
                 'type' => 'fieldset',
                 'title' => LANG_USER,
-                'childs' => array(
-
-                    new fieldString('email', array(
+                'childs' => [
+                    new fieldString('email', [
                         'title' => LANG_EMAIL,
-                        'rules' => array(
-                            array('required'),
-                            array('email'),
-                            $do=='add' ? array('unique', '{users}', 'email') : false
-                        )
-                    )),
-
-                    new fieldString('nickname', array(
+                        'rules' => [
+                            ['required'],
+                            ['email'],
+                            $do === 'add' ? ['unique', '{users}', 'email'] : false
+                        ]
+                    ]),
+                    new fieldString('nickname', [
                         'title' => LANG_NICKNAME,
-                        'options'=>array(
+                        'options'=>[
                             'max_length'=> 100
-                        ),
-                        'rules' => array(
-                            array('required'),
-                        )
-                    )),
-
-                    new fieldString('password1', array(
+                        ],
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldString('password1', [
                         'title' => LANG_NEW_PASS,
                         'is_password' => true,
-                        'options'=>array(
+                        'options'=>[
                             'min_length'=> 6,
                             'max_length'=> 72
-                        ),
-                        'rules' => array(
-                            $do=='add' ? array('required') : false,
-                        )
-                    )),
-
-                    new fieldString('password2', array(
+                        ],
+                        'rules' => [
+                            $do === 'add' ? ['required'] : false
+                        ]
+                    ]),
+                    new fieldString('password2', [
                         'title' => LANG_RETYPE_NEW_PASS,
                         'is_password' => true,
-                        'options'=>array(
+                        'options'=>[
                             'min_length'=> 6,
                             'max_length'=> 72
-                        ),
-                        'rules' => array(
-                            $do=='add' ? array('required') : false,
-                        )
-                    ))
-
-                )
-            ),
-
-            'permissions' => array(
+                        ],
+                        'rules' => [
+                            $do === 'add' ? ['required'] : false
+                        ]
+                    ])
+                ]
+            ],
+            'permissions' => [
                 'type' => 'fieldset',
                 'title' => LANG_PERMISSIONS,
-                'childs' => array(
-                    new fieldCheckbox('is_admin', array(
+                'childs' => [
+                    new fieldCheckbox('is_admin', [
                         'title' => LANG_USER_IS_ADMIN,
                         'default' => false
-                    ))
-                )
-            ),
-
-            'groups' => array(
+                    ])
+                ]
+            ],
+            'groups' => [
                 'type' => 'fieldset',
                 'title' => LANG_USER_GROUP,
-                'childs' => array(
-
-                    new fieldListGroups('groups', array(
+                'childs' => [
+                    new fieldListGroups('groups', [
                         'show_all' => false,
-                        'rules' => array(
-                            array('required')
-                        )
-                    ))
-
-                )
-            ),
-
-            'locked' => array(
-                'type' => 'fieldset',
+                        'rules' => [
+                            ['required']
+                        ]
+                    ])
+                ]
+            ],
+            'locked' => [
+                'type'  => 'fieldset',
                 'title' => LANG_CP_USER_LOCKING,
-                'childs' => array(
-
-                    new fieldCheckbox('is_locked', array(
+                'childs' => [
+                    new fieldCheckbox('is_locked', [
                         'title' => LANG_CP_USER_IS_LOCKED
-                    )),
-
-                    new fieldDate('lock_until', array(
+                    ]),
+                    new fieldDate('lock_until', [
                         'title' => LANG_CP_USER_LOCK_UNTIL
-                    )),
-
-                    new fieldString('lock_reason', array(
+                    ]),
+                    new fieldString('lock_reason', [
                         'title' => LANG_CP_USER_LOCK_REASON,
-                        'rules' => array(
-                            array('max_length', 250)
-                        )
-                    ))
-
-                )
-            )
-
-        );
+                        'rules' => [
+                            ['max_length', 250]
+                        ]
+                    ])
+                ]
+            ]
+        ];
 
     }
-
 
 }

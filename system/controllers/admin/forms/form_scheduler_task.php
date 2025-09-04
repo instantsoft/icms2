@@ -3,61 +3,50 @@ class formAdminSchedulerTask extends cmsForm {
 
     public function init() {
 
-        return array(
-
-            array(
+        return [
+            [
                 'type' => 'fieldset',
-                'childs' => array(
-
-                    new fieldString('title', array(
+                'childs' => [
+                    new fieldString('title', [
                         'title' => LANG_DESCRIPTION,
-                        'rules' => array(
-                            array('required'),
-                        )
-                    )),
-
-                    new fieldString('controller', array(
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldString('controller', [
                         'title' => LANG_CP_SCHEDULER_TASK_CONTROLLER,
-                        'rules' => array(
-                            array('required'),
-                        )
-                    )),
-
-                    new fieldString('hook', array(
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldString('hook', [
                         'title' => LANG_CP_SCHEDULER_TASK_HOOK,
-                        'rules' => array(
-                            array('required'),
-                        )
-                    )),
-
-                    new fieldNumber('period', array(
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldNumber('period', [
                         'title' => LANG_CP_SCHEDULER_TASK_PERIOD,
-                        'rules' => array(
-                            array('required'),
-                            array('min', 1)
-                        )
-                    )),
-
-                    new fieldCheckbox('is_strict_period', array(
+                        'rules' => [
+                            ['required'],
+                            ['min', 1]
+                        ]
+                    ]),
+                    new fieldCheckbox('is_strict_period', [
                         'title' => LANG_CP_SCHEDULER_IS_STRICT_PERIOD
-                    )),
-
-                    new fieldDate('date_last_run', array(
+                    ]),
+                    new fieldDate('date_last_run', [
                         'title' => LANG_CP_SCHEDULER_TASK_LAST_RUN,
-                        'options' => array(
+                        'options' => [
                             'show_time' => true
-                        )
-                    )),
-
-                    new fieldCheckbox('is_active', array(
+                        ]
+                    ]),
+                    new fieldCheckbox('is_active', [
                         'title' => LANG_CP_SCHEDULER_TASK_IS_ACTIVE
-                    ))
-
-                )
-            )
-
-        );
-
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

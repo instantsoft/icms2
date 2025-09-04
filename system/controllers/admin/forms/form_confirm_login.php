@@ -4,24 +4,21 @@ class formAdminConfirmLogin extends cmsForm {
 
     public function init() {
 
-        return array(
-
-            'basic' => array(
+        return [
+            'basic' => [
                 'type' => 'fieldset',
                 'title' => LANG_PASSWORD,
-                'childs' => array(
-                    new fieldString('password', array(
+                'childs' => [
+                    new fieldString('password', [
                         'is_password' => true,
-                        'rules' => array(
-                            array('required'),
-                            array('min_length', 6)
-                        )
-                    ))
-                )
-            )
-
-        );
-
+                        'rules' => [
+                            ['required'],
+                            ['min_length', 6]
+                        ]
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

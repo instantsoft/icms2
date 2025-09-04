@@ -86,7 +86,7 @@ class redirect extends cmsFrontend {
                 ];
 
                 $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, 'https://api.vk.com/method/utils.checkLink?' . http_build_query($params));
+                curl_setopt($ch, CURLOPT_URL, 'https://api.vk.ru/method/utils.checkLink?' . http_build_query($params));
                 curl_setopt($ch, CURLOPT_HEADER, false);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_TIMEOUT, 2);

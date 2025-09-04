@@ -105,6 +105,7 @@ class fieldNumber extends cmsFormField {
             ]),
             new fieldCheckbox('filter_range_slide', [
                 'title' => LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE,
+                'hint' => LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE_HINT,
                 'default' => false,
                 'visible_depend' => ['options:filter_range' => ['show' => ['1']]]
             ]),
@@ -318,7 +319,8 @@ class fieldNumber extends cmsFormField {
 
             $tpl_name = $this->class . '_range';
 
-            if ($this->getOption('filter_range_slide') && strpos($this->name, ':') === false) {
+            // С массивами и свойствами не работает
+            if ($this->getOption('filter_range_slide') && strpos($this->name, ':') === false && !preg_match('/^p\d+$/', $this->name)) {
 
                 // получаем минимум и максимум
                 if (!empty($this->item['ctype_name'])) {

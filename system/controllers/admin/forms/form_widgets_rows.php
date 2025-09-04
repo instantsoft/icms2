@@ -3,42 +3,42 @@ class formAdminWidgetsRows extends cmsForm {
 
     public function init($do) {
 
-        return array(
-            'basic' => array(
-                'type' => 'fieldset',
+        return [
+            'basic' => [
+                'type'  => 'fieldset',
                 'title' => LANG_CP_BASIC,
-                'childs' => array(
+                'childs' => [
                     new fieldHidden('template'),
-                    new fieldString('title', array(
+                    new fieldString('title', [
                         'title' => LANG_TITLE,
-                        'rules' => array(
-                            array('required'),
-                            array('max_length', 255)
-                        )
-                    )),
-                    new fieldNumber('cols_count', array(
+                        'rules' => [
+                            ['required'],
+                            ['max_length', 255]
+                        ]
+                    ]),
+                    new fieldNumber('cols_count', [
                         'title' => LANG_CP_WIDGETS_COL_COUNT,
                         'default' => 2,
                         'options' => [
-                            'is_abs' => true,
+                            'is_abs'  => true,
                             'is_ceil' => true
                         ],
                         'rules' => [
-                            array('min', 1),
-                            array('max', 12),
+                            ['min', 1],
+                            ['max', 12]
                         ]
-                    )),
-                    new fieldList('nested_position', array(
+                    ]),
+                    new fieldList('nested_position', [
                         'title' => LANG_CP_WIDGETS_ROW_NESTED_POSITION,
-                        'items' => array(
-                            'before'  => LANG_CP_WIDGETS_ROW_NESTED_POSITION1,
-                            'after' => LANG_CP_WIDGETS_ROW_NESTED_POSITION2
-                        )
-                    )),
-                    new fieldList('tag', array(
-                        'title' => LANG_CP_WIDGETS_ROW_TAG,
+                        'items' => [
+                            'before' => LANG_CP_WIDGETS_ROW_NESTED_POSITION1,
+                            'after'  => LANG_CP_WIDGETS_ROW_NESTED_POSITION2
+                        ]
+                    ]),
+                    new fieldList('tag', [
+                        'title'   => LANG_CP_WIDGETS_ROW_TAG,
                         'default' => 'div',
-                        'items' => array(
+                        'items' => [
                             ''        => LANG_NO,
                             'article' => '<article>',
                             'aside'   => '<aside>',
@@ -48,19 +48,18 @@ class formAdminWidgetsRows extends cmsForm {
                             'header'  => '<header>',
                             'nav'     => '<nav>',
                             'section' => '<section>'
-                        )
-                    )),
-                    new fieldString('class', array(
+                        ]
+                    ]),
+                    new fieldString('class', [
                         'title' => LANG_CP_WIDGETS_ROW_CLASS,
-                        'rules' => array(
-                            array('max_length', 100)
-                        ),
-                        'visible_depend' => array('tag' => array('hide' => array('')))
-                    ))
-                )
-            )
-        );
-
+                        'rules' => [
+                            ['max_length', 100]
+                        ],
+                        'visible_depend' => ['tag' => ['hide' => ['']]]
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

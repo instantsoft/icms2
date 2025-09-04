@@ -1028,17 +1028,13 @@ class Jevix {
         }
 
         // Если тег находится внутри другого - может ли он там находится?
-        if ($parentTagIsContainer) {
-            if (!isset($this->tagsRules[$parentTag][self::TR_TAG_CHILD_TAGS][$tag])) {
-                return '';
-            }
+        if ($parentTagIsContainer && !isset($this->tagsRules[$parentTag][self::TR_TAG_CHILD_TAGS][$tag])) {
+            return '';
         }
 
         // Тег может находится только внтури другого тега
-        if (isset($tagRules[self::TR_TAG_CHILD])) {
-            if (!isset($tagRules[self::TR_TAG_PARENT][$parentTag])) {
-                return $content;
-            }
+        if (isset($tagRules[self::TR_TAG_CHILD]) && !isset($tagRules[self::TR_TAG_PARENT][$parentTag])) {
+            return $content;
         }
 
         $resParams = [];
@@ -1053,7 +1049,7 @@ class Jevix {
 
             // Атрибут тега разрешён? Какие возможны значения? Получаем список правил
             $paramAllowedValues = $tagRules[self::TR_PARAM_ALLOWED][$param] ?? false;
-            if (empty($paramAllowedValues)) {
+            if (!$paramAllowedValues) {
                 continue;
             }
 
@@ -1102,7 +1098,7 @@ class Jevix {
                             $this->eror('Попытка вставить JavaScript в параметр тега');
                             continue(2);
                         }
-                        $value = htmlentities($value, ENT_QUOTES | ENT_HTML401, 'UTF-8');
+                        $value = htmlentities($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
                         break;
 
                     case '#link':
@@ -1111,8 +1107,8 @@ class Jevix {
                             $this->eror('Попытка вставить JavaScript в URI');
                             continue(2);
                         }
-                        // Первый символ должен быть a-z, 0-9, #, /
-                        elseif (!preg_match('/^[a-z0-9\/\#]/ui', $value)) {
+                        // Первый символ должен быть a-z, 0-9, #, /, %
+                        elseif (!preg_match('/^[a-z0-9\/\#%]/ui', $value)) {
                             $this->eror('URI: Первый символ адреса должен быть буквой или цифрой');
                             continue(2);
                         } // Пропускаем относительные url и ipv6
@@ -1122,7 +1118,7 @@ class Jevix {
                         // HTTP в начале если нет
                         $sProtocols = implode('|', $this->linkProtocolAllow ? $this->linkProtocolAllow : $this->linkProtocolAllowDefault);
                         if(!preg_match('/^(('.$sProtocols.'):)?\/\//ui', $value) &&
-                                !preg_match('/^(\/|\#)/ui', $value) &&
+                                !preg_match('/^(\/|\#|%)/ui', $value) &&
                                 !preg_match('/^(mailto):/ui', $value) ) {
                             $value = $this->linkProtocol.$value;
                         }

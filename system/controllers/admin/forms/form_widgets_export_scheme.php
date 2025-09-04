@@ -9,16 +9,16 @@ class formAdminWidgetsExportScheme extends cmsForm {
                 'type'   => 'fieldset',
                 'childs' => [
                     new fieldHidden('submit'),
-                    new fieldCheckbox('save_widgets', array(
+                    new fieldCheckbox('save_widgets', [
                         'title' => LANG_CP_WIDGETS_SAVE_WIDGETS
-                    )),
-                    new fieldList('save_widgets_list', array(
+                    ]),
+                    new fieldList('save_widgets_list', [
                         'is_multiple' => true,
                         'multiple_select_deselect' => true,
                         'items' => $widgets,
                         'default' => array_keys($widgets),
-                        'visible_depend' => array('save_widgets' => array('hide' => array('0')))
-                    ))
+                        'visible_depend' => ['save_widgets' => ['hide' => ['0']]]
+                    ])
                 ]
             ]
         ];
