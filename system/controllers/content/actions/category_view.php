@@ -39,7 +39,7 @@ class actionContentCategoryView extends cmsAction {
 
         // Получаем список наборов
         $datasets = $this->getCtypeDatasets($ctype, [
-            'cat_id' => $category['id']
+            'cat_id' => $category['id'] ?: 1
         ]);
 
         // Если это не главная, но данный контент выводится на главной и сейчас

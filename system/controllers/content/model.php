@@ -963,7 +963,7 @@ class modelContent extends cmsModel {
                 SELECT i.category_id, COUNT(*) AS cnt
                 FROM {#}{$bind_table_name} i
                 JOIN {#}{$table_name} items
-                  ON items.id = i.item_id
+                 ON items.id = i.item_id
                  AND items.is_pub >= 1
                  AND items.is_approved = 1
                  AND items.is_deleted IS NULL
@@ -976,14 +976,19 @@ class modelContent extends cmsModel {
 
         $cats = $this->selectOnly('ns_level')->select('item_count')->
                 select('parent_id')->select('id')->
-                filterGt('parent_id', 0)->orderBy('ns_right', 'desc')->
-                get($cats_table_name) ?: [];
+                filterGt('parent_id', 0)->orderBy('ns_right', 'asc')->
+                limit(false)->get($cats_table_name) ?: [];
 
-        $recursive_counts = [];
+        $recursive_counts = [1 => 0];
+
+        // сначала у каждой категории рекурсивный счёт = её собственный item_count
         foreach ($cats as $cat) {
-            $recursive_counts[$cat['id']] = ($recursive_counts[$cat['id']] ?? 0) + (int) $cat['item_count'];
-            $recursive_counts[$cat['parent_id']] =
-                ($recursive_counts[$cat['parent_id']] ?? 0) + (int) $recursive_counts[$cat['id']];
+            $recursive_counts[$cat['id']] = (int) $cat['item_count'];
+        }
+
+        // теперь идём по категориям в порядке от внуков к родителям
+        foreach ($cats as $cat) {
+            $recursive_counts[$cat['parent_id']] += $recursive_counts[$cat['id']];
         }
 
         // готовим bulk update
@@ -1526,13 +1531,17 @@ class modelContent extends cmsModel {
 
     public function hideExpiredContentItems($ctype_name) {
 
-        return $this->filterIsNull('is_deleted')->
+        $success = $this->filterIsNull('is_deleted')->
                 filterGtEqual('is_pub', 1)->
                 filterNotNull('date_pub_end')->
                 filter('i.date_pub_end <= NOW()')->
                 updateFiltered($this->getContentTypeTableName($ctype_name), [
                     'is_pub' => 0
                 ]);
+
+        $this->cacheCategoriesItemsCount($ctype_name);
+
+        return $success;
     }
 
     public function deleteExpiredContentItems($ctype_name) {

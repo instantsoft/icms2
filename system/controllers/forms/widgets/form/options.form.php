@@ -6,12 +6,12 @@ class formWidgetFormsFormOptions extends cmsForm {
 
         cmsCore::loadControllerLanguage('forms');
 
-        return array(
-            array(
+        return [
+            [
                 'type'   => 'fieldset',
                 'title'  => LANG_OPTIONS,
-                'childs' => array(
-                    new fieldList('options:form_id', array(
+                'childs' => [
+                    new fieldList('options:form_id', [
                         'title'   => LANG_PARSER_FORMS,
                         'generator' => function() {
 
@@ -19,14 +19,13 @@ class formWidgetFormsFormOptions extends cmsForm {
 
                             return array_collection_to_list($model->get('forms'), 'id', 'title');
                         }
-                    )),
-                    new fieldCheckbox('options:show_title', array(
+                    ]),
+                    new fieldCheckbox('options:show_title', [
                         'title' => LANG_SHOW_TITLE
-                    ))
-                )
-            )
-        );
-
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

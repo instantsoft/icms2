@@ -184,15 +184,12 @@ INSERT INTO `{#}billing_systems` (`id`, `name`, `title`, `payment_url`, `rate`, 
 (2, 'wmz', 'Webmoney WMZ', 'https://merchant.webmoney.ru/lmi/payment.asp', 1.0000, '---\npurse: \"\"\nsecret_key: \"\"\ntest_mode: \"0\"\n', NULL, 2),
 (3, 'robokassa', 'Электронные деньги, карты, терминалы (Робокасса)', 'billing/prepare/robokassa', 1.0000, '---\nmerchant_login: \"\"\npassword1: \"\"\npassword2: \"\"\nfiscal_on: null\nfiscal_sno: osn\nfiscal_method: full_payment\nfiscal_object: service\nfiscal_name: \"\"\nfiscal_tax: none\n', NULL, 6),
 (4, 'interkassa', 'Электронные деньги, карты, терминалы (Интеркасса)', 'https://sci.interkassa.com', 1.0000, '---\nik_co_id: \"\"\nik_secret_key: \"\"\n', NULL, 7),
-(5, 'qiwi', 'Qiwi кошелек', 'billing/prepare/qiwi', 1.0000, '---\nshop_id: 0\napi_id: \"\"\napi_password: \"\"\npassword: \"\"\n', 0, 4),
-(7, 'onpay', 'Электронные деньги, карты, терминалы (OnPay)', 'https://secure.onpay.ru/pay/{merchant_login}', 1.0000, '---\nmerchant_login: \"\"\npassword1: \"\"\n', NULL, 9),
 (8, 'w1', 'Электронные деньги, карты, терминалы (W1)', 'https://wl.walletone.com/checkout/checkout/Index', 1.0000, '---\nmerchant_id: \"\"\nkey: \"\"\ncurrency_id: \"\"\n', NULL, 8),
 (9, 'test', 'Тест (мгновенное пополнение)', 'billing/prepare/test', 0.1000, NULL, 1, 1),
 (10, 'yandex', 'ЮMoney (Яндекс.Деньги)', 'https://yoomoney.ru/quickpay/confirm.xml', 1.0000, '---\nreceiver: \"\"\nsecret_key: \"\"\n', 0, 12),
 (11, 'yakassa', 'ЮKassa (Яндекс.Касса)', 'billing/prepare/yakassa', 1.0000, '---\nshop_id: \"\"\nkey: \"\"\n', NULL, 13),
-(13, 'moneta', 'Монета.Ру', 'https://www.payanyway.ru/assistant.htm', 1.0000, '---\nmnt_id: \"\"\nkey: \"\"\ncurrency: RUB\n', NULL, 15),
 (14, 'paypal', 'PayPal', 'https://api.sandbox.paypal.com', 1.0000, '---\naccount: \"\"\ncurrency: RUB\nclient_id: \"\"\nsecret: \"\"\n', 0, 10),
-(16, 'liqpay', 'LiqPay', 'https://www.liqpay.ua/api/3/checkout', 1.0000, '---\npublic_key: \"\"\nprivate_key: \"\"\ncurrency: UAH\naction: pay\n', NULL, 16);
+(16, 'payeer', 'PAYEER', 'https://payeer.com/merchant/', 1.0000, '---\nshop_id: \"\"\nsecret_key: \"\"\nsig_key: \"\"\ncurr: RUB\n', NULL, 16);
 
 DROP TABLE IF EXISTS `{#}billing_terms`;
 CREATE TABLE `{#}billing_terms` (

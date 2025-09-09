@@ -97,3 +97,6 @@ vars:
   1:
     name: dropdown-item-padding-x
     value: 1rem
+  2:
+    name: label-margin-bottom
+    value: .35rem

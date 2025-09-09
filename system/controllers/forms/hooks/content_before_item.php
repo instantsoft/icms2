@@ -12,7 +12,7 @@ class onFormsContentBeforeItem extends cmsAction {
 
         foreach ($fields as $field) {
 
-            if (!in_array($field['type'], array('text', 'html'))) {
+            if (!in_array($field['type'], ['text', 'html'])) {
                 continue;
             }
             if (!$field['is_in_item']) {

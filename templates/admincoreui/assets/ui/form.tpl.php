@@ -49,7 +49,7 @@
 
     <?php echo $attributes['append_html']; ?>
 
-    <div class="buttons <?php if (!$this->controller->request->isAjax()){ ?>my-3<?php } ?>">
+    <div class="buttons<?php if (!$this->controller->request->isAjax()){ ?> my-3<?php } else { ?> mt-3<?php } ?>">
         <?php if ($attributes['submit']['show']) { ?>
             <?php echo html_submit($attributes['submit']['title'], 'submit', $attributes['submit']); ?>
         <?php } ?>

@@ -54,6 +54,7 @@
     define('LANG_PM_SENDER_USER_ID_HINT',   'Введите email пользователя. Если не указан, сообщение будет отправлено от вас.');
     define('LANG_PM_PMAILING_NOT_RECIPIENTS', 'Нет получателей по заданным критериям');
     define('LANG_PM_PMAILING_IS_BR',        'Заменять перенос строк на HTML тег br');
+    define('LANG_PM_HIDE_ZERO_NOTICES_MENU', 'Скрывать пустой пункт меню уведомлений');
     define('LANG_PM_IS_ENABLE_PM', 'Включить личные сообщения');
     define('LANG_PM_SELECT_FIRST_CONTACT', 'Автоматически выбирать первый контакт из списка');
     define('LANG_PM_SELECT_FIRST_CONTACT_HINT', 'При открытии окна сообщений');

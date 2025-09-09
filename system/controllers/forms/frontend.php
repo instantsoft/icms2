@@ -140,17 +140,21 @@ class forms extends cmsFrontend {
 
             $fieldset_id = $form->addFieldset($fieldset['title'], $fid);
 
-            foreach($fieldset['fields'] as $field){
-                $field['handler']->setName($submit_form_name.':'.$field['handler']->getName());
+            foreach ($fieldset['fields'] as $field) {
+                $field['handler']->setName($submit_form_name . ':' . $field['handler']->getName());
                 // Говорим, к чему это поле относится
                 $field['handler']->context_params = [
                     'target_controller' => 'forms',
                     'target_subject'    => null,
                     'target_id'         => $form_data['id']
                 ];
+
+                if (!empty($field['options']['profile_value']) && $this->cms_user->is_logged) {
+                    $field['handler']->default = $this->cms_user->{$field['options']['profile_value']};
+                }
+
                 $form->addField($fieldset_id, $field['handler']);
             }
-
         }
 
         // Запоминаем идентификатор формы

@@ -11,6 +11,9 @@ class formMessagesOptions extends cmsForm {
                 'childs' => [
                     new fieldCheckbox('use_queue', [
                         'title' => LANG_PM_USE_QUEUE
+                    ]),
+                    new fieldCheckbox('hide_zero_notices_menu', [
+                        'title' => LANG_PM_HIDE_ZERO_NOTICES_MENU
                     ])
                 ]
             ],

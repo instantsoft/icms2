@@ -5,7 +5,7 @@ class actionFormsEmbed extends cmsAction {
     public function run($hash){
 
         if(!$this->isAllowEmbed() || is_numeric($hash)){
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $_form_data = $this->getFormData($hash);
@@ -27,7 +27,7 @@ class actionFormsEmbed extends cmsAction {
         $submited_data = $this->getSavedUserFormData($form_data['id']);
 
         if($submited_data && !empty($form_data['options']['hide_after_submit'])){
-            $this->halt();
+            return $this->halt();
         }
 
         return $this->cms_template->render('form_view', [

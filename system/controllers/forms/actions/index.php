@@ -5,7 +5,7 @@ class actionFormsIndex extends cmsAction {
     public function run($name){
 
         if(is_numeric($name)){
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $_form_data = $this->getFormData($name);

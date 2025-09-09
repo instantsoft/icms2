@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * https://docs.interkassa.com/
+ */
 class systemInterkassa extends billingPaymentSystem {
 
     public function getPaymentFormFields($order) {
@@ -25,11 +27,11 @@ class systemInterkassa extends billingPaymentSystem {
         $out_sign   = $request->get('ik_sign', '');
         $out_inv_st = $request->get('ik_inv_st', '');
 
-        if ($out_inv_st != 'process' && $out_inv_st != 'success') {
+        if ($out_inv_st !== 'process' && $out_inv_st !== 'success') {
             return LANG_BILLING_ERR;
         }
 
-        if ($this->options['ik_co_id'] != $out_co_id) {
+        if ($this->options['ik_co_id'] !== $out_co_id) {
             return LANG_BILLING_ERR_SHOP_ID;
         }
 
@@ -54,7 +56,7 @@ class systemInterkassa extends billingPaymentSystem {
 
         $dataSet = [];
 
-        foreach ($_REQUEST as $key => $val) {
+        foreach ($request->getAll() as $key => $val) {
             if (mb_strpos($key, 'ik_') === 0) {
                 $dataSet[$key] = $val;
             }
@@ -68,11 +70,15 @@ class systemInterkassa extends billingPaymentSystem {
         $sig = implode(':', $dataSet);
         $sig = base64_encode(md5($sig, true));
 
-        if ($sig != $out_sign) {
+        if ($sig !== $out_sign) {
             return LANG_BILLING_ERR_SIG;
         }
 
-        return $model->acceptPayment($op_id);
+        if (!$model->acceptPayment($operation['id'])) {
+            return $this->log(LANG_BILLING_ERR_TRANS);
+        }
+
+        return true;
     }
 
 }

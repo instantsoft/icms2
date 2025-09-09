@@ -28,6 +28,10 @@ class onMessagesMenuMessages extends cmsAction {
 
                 $count = $this->model->getNoticesCount($this->cms_user->id);
 
+                if (!empty($this->options['hide_zero_notices_menu']) && !$count) {
+                    return false;
+                }
+
                 return [
                     'url'     => href_to($this->name, 'notices'),
                     'counter' => $count

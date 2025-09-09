@@ -62,17 +62,25 @@ class onContentSitemapUrls extends cmsAction {
 
                 $ds_counter = 0;
 
-                foreach($datasets as $ds){
+                foreach($datasets as $ds) {
 
                     // На первый набор не надо
-                    if($ds_counter){
-
-                        $urls[] = [
-                            'last_modified' => date('Y-m-d'),
-                            'title'         => $ds['title'],
-                            'url'           => href_to_abs($ctype['name']).'-'.$ds['name']
-                        ];
+                    if(!$ds_counter){
+                        continue;
                     }
+
+                    $is_view      = !$ds['cats_view'] || in_array(1, $ds['cats_view']);
+                    $is_user_hide = $ds['cats_hide'] && in_array(1, $ds['cats_hide']);
+
+                    if (!$is_view || $is_user_hide) {
+                        continue;
+                    }
+
+                    $urls[] = [
+                        'last_modified' => date('Y-m-d'),
+                        'title'         => $ds['title'],
+                        'url'           => href_to_abs($ctype['name']).'-'.$ds['name']
+                    ];
 
                     $ds_counter++;
                 }

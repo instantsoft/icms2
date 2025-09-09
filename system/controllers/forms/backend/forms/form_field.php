@@ -112,6 +112,20 @@ class formFormsField extends cmsForm {
                     ]),
                     new fieldCheckbox('options:is_url', [
                         'title' => LANG_VALIDATE_URL,
+                    ]),
+                    new fieldCheckbox('options:is_regexp', [
+                        'title' => LANG_CP_FIELD_REGEX
+                    ]),
+                    new fieldString('options:rules_regexp_str', [
+                        'title' => LANG_CP_FIELD_REGEX_TEXT,
+                        'hint' => LANG_CP_FIELD_REGEX_TEXT_HINT,
+                        'visible_depend' => ['options:is_regexp' => ['show' => ['1']]]
+                    ]),
+                    new fieldString('options:rules_regexp_error', [
+                        'title' => LANG_CP_FIELD_REGEX_ERROR,
+                        'hint' => LANG_CP_FIELD_REGEX_ERROR_HINT,
+                        'multilanguage' => true,
+                        'visible_depend' => ['options:is_regexp' => ['show' => ['1']]]
                     ])
                 ]
             ],
@@ -127,6 +141,25 @@ class formFormsField extends cmsForm {
                             'table' => 'forms_fields'
                         ],
                         'size' => 8
+                    ])
+                ]
+            ],
+            'profile' => [
+                'type'   => 'fieldset',
+                'title'  => LANG_CP_FIELD_PROFILE_VALUE,
+                'childs' => [
+                    new fieldList('options:profile_value', [
+                        'hint'      => LANG_CP_FIELD_PROFILE_VALUE_HINT,
+                        'generator' => function ($field) {
+                            $model = cmsCore::getModel('content');
+                            $model->setTablePrefix('');
+                            $fields = $model->filterIn('type', ['string', 'text', 'html', 'list', 'city'])->getContentFields('{users}');
+                            return [
+                                ''      => LANG_NO,
+                                'id'    => 'ID',
+                                'email' => 'Email',
+                            ] + array_collection_to_list($fields, 'name', 'title');
+                        }
                     ])
                 ]
             ]

@@ -81,13 +81,13 @@ class modelForms extends cmsModel {
             $item['options'] = cmsModel::stringToArray($item['options']);
             $item['default'] = $item['values'];
 
-            $rules = array();
-            if (!empty($item['options']['is_required'])) {  $rules[] = array('required'); }
-            if (!empty($item['options']['is_digits'])) {  $rules[] = array('digits'); }
-            if (!empty($item['options']['is_number'])) {  $rules[] = array('number'); }
-            if (!empty($item['options']['is_alphanumeric'])) {  $rules[] = array('alphanumeric'); }
-            if (!empty($item['options']['is_email'])) {  $rules[] = array('email'); }
-            if (!empty($item['options']['is_url'])) {  $rules[] = array('url'); }
+            $rules = [];
+            if (!empty($item['options']['is_required'])) {  $rules[] = ['required']; }
+            if (!empty($item['options']['is_digits'])) {  $rules[] = ['digits']; }
+            if (!empty($item['options']['is_number'])) {  $rules[] = ['number']; }
+            if (!empty($item['options']['is_alphanumeric'])) {  $rules[] = ['alphanumeric']; }
+            if (!empty($item['options']['is_email'])) {  $rules[] = ['email']; }
+            if (!empty($item['options']['is_url'])) {  $rules[] = ['url']; }
 
             $item['rules'] = $rules;
 

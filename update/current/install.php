@@ -206,6 +206,16 @@ function update_billing() {
         ]);
     }
 
+    if(!$model->db->getRowsCount('billing_systems', "name = 'payeer'", 1)){
+        $model->insert('billing_systems', [
+            'name'        => 'payeer',
+            'title'       => 'PAYEER',
+            'payment_url' => 'https://payeer.com/merchant/',
+            'rate'        => '1.0000',
+            'options'     => "---\nshop_id: \"\"\nsecret_key: \"\"\nsig_key: \"\"\ncurr: RUB\n"
+        ]);
+    }
+
     return true;
 }
 

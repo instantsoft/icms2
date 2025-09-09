@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelAdmin $model
+ */
 class actionAdminSettingsCheckNested extends cmsAction {
 
     public function run() {
@@ -110,78 +112,71 @@ class actionAdminSettingsCheckNested extends cmsAction {
         return $i_value;
     }
 
-    private function checkNestedSet($table, $differ = '') {
-
-        $errors = [];
+    /**
+     * Проверяет NS дерево
+     *
+     * @param string $table Имя таблицы
+     * @return type
+     */
+    private function checkNestedSet(string $table) {
 
         $db = $this->model->db;
 
-        $differ = $db->escape($differ);
+        $errors = [];
 
-        // Шаг 1
-        $sql = "SELECT id FROM {#}{$table} WHERE `ns_left` >= `ns_right` AND `ns_differ` = '{$differ}'";
+        // Шаг 1: ns_left >= ns_right
+        $sql = "SELECT 1 FROM `{#}{$table}` WHERE `ns_left` >= `ns_right` LIMIT 1";
+        $res = $db->query($sql, false, true);
+        $errors[1] = ($res === false) ? true : ($db->numRows($res) > 0);
 
-        $result = $db->query($sql, false, true);
-        if ($result !== false) {
-            $errors[1] = $db->numRows($result) > 0;
-        } else {
-            $errors[1] = true;
-        }
-
-        // Шаг 2 и 3
-        $sql = "SELECT COUNT(`id`) as rows_count, MIN(`ns_left`) as min_left, MAX(`ns_right`) as max_right FROM {#}{$table} WHERE `ns_differ` = '{$differ}'";
-
+        // Шаг 2 и 3: проверка min_left и max_right
+        $sql = "SELECT COUNT(`id`) AS rows_count, MIN(`ns_left`) AS min_left, MAX(`ns_right`) AS max_right FROM `{#}{$table}`";
         $result = $db->query($sql);
         if ($result !== false) {
             $data      = $db->fetchAssoc($result);
-            $errors[2] = $data['min_left'] != 1;
-            $errors[3] = $data['max_right'] != 2 * $data['rows_count'];
+
+            $rows = (int)($data['rows_count'] ?? 0);
+            $minL = isset($data['min_left'])  ? (int)$data['min_left']  : null;
+            $maxR = isset($data['max_right']) ? (int)$data['max_right'] : null;
+
+            $errors[2] = ($minL !== 1);         // левый край должен быть 1
+            $errors[3] = ($maxR !== 2 * $rows); // правый край = 2*N
+
         } else {
             $errors[2] = true;
         }
 
-        // Шаг 4
-        $sql = "SELECT `id`, `ns_right`, `ns_left`
-                FROM {#}{$table}
-                WHERE MOD((`ns_right`-`ns_left`), 2) = 0 AND `ns_differ` = '{$differ}'";
+        // Шаг 4: (ns_right - ns_left) должно быть НЕчётным
+        $sql = "SELECT 1 FROM `{#}{$table}`
+                WHERE MOD(`ns_right` - `ns_left`, 2) = 0
+                LIMIT 1";
+        $res = $db->query($sql, false, true);
+        $errors[4] = ($res === false) ? true : ($db->numRows($res) > 0);
 
-        $result = $db->query($sql, false, true);
-        if ($result !== false) {
-            $errors[4] = $db->numRows($result) > 0;
-        } else {
-            $errors[4] = true;
-        }
+        // Шаг 5: паритет уровня
+        $sql = "SELECT 1 FROM `{#}{$table}`
+                WHERE MOD(`ns_left` - `ns_level` + 2, 2) = 0
+                LIMIT 1";
+        $res = $db->query($sql, false, true);
+        $errors[5] = ($res === false) ? true : ($db->numRows($res) > 0);
 
-        // Шаг 5
-        $sql = "SELECT `id`
-                FROM {#}{$table}
-                WHERE MOD((`ns_left`-`ns_level`+2), 2) = 0 AND `ns_differ` = '$differ'";
+        // Шаг 6: уникальность всех значений ns_left и ns_right
+        // (каждое число в [1..max_right] встречается ровно 1 раз)
+        $sql = "SELECT x.val
+                FROM (
+                    SELECT `ns_left` AS val
+                    FROM `{#}{$table}`
+                    UNION ALL
+                    SELECT `ns_right`
+                    FROM `{#}{$table}`
+                ) x
+                GROUP BY x.val
+                HAVING COUNT(*) <> 1
+                LIMIT 1";
+        $res = $db->query($sql, false, true);
+        $errors[6] = ($res === false) ? true : ($db->numRows($res) > 0);
 
-        $result = $db->query($sql, false, true);
-        if ($result !== false) {
-            $errors[5] = $db->numRows($result) > 0;
-        } else {
-            $errors[5] = true;
-        }
-
-        // Шаг 6
-        $sql = "SELECT t1.id,
-                        COUNT(t1.id) AS rep,
-                        MAX(t3.ns_right) AS max_right
-                FROM {#}{$table} AS t1, {#}{$table} AS t2, {#}{$table} AS t3
-                WHERE t1.ns_left <> t2.ns_left AND t1.ns_left <> t2.ns_right AND t1.ns_right <> t2.ns_left AND t1.ns_right <> t2.ns_right
-                        AND t1.ns_differ = '{$differ}' AND t2.ns_differ = '{$differ}' AND t3.ns_differ = '{$differ}'
-                GROUP BY t1.id
-                HAVING max_right <> SQRT(4 * rep + 1) + 1";
-
-        $result = $db->query($sql, false, true);
-        if ($result !== false) {
-            $errors[6] = $db->numRows($result) > 0;
-        } else {
-            $errors[6] = true;
-        }
-
-        return in_array(true, $errors);
+        return in_array(true, $errors, true);
     }
 
 }

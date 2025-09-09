@@ -51,11 +51,11 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
 
         if ($ctype['id']) {
 
-            $cats = $this->model_backend_content->getCategoriesTree($ctype['name'], false);
+            $cats = $this->model_backend_content->getCategoriesTree($ctype['name']);
 
             if ($cats) {
                 foreach ($cats as $c) {
-                    $cats_list[$c['id']] = str_repeat('-- ', $c['ns_level'] - 1) . ' ' . $c['title'];
+                    $cats_list[$c['id']] = str_repeat('-- ', ($c['ns_level'] ?: 1) - 1) . ' ' . $c['title'];
                 }
             }
         }

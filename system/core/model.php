@@ -1051,7 +1051,7 @@ class cmsModel {
                     filterLtEqual('c.ns_right', $category['ns_right']);
         }
 
-        $cat_ids = (new self)->selectOnly('id')->
+        $cat_ids = (new self)->selectOnly('id')->limit(false)->
                 filterGtEqual('ns_left', $category['ns_left'])->
                 filterLtEqual('ns_right', $category['ns_right'])->
                 get($table_name, function ($item) {
