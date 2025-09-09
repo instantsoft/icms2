@@ -633,7 +633,10 @@ class cmsInstaller {
             return false;
         }
 
-        return $this->admin->model->db->importDump($file);
+        $success = $this->admin->model->db->importDump($file);
+
+        // Если файл пустой, будет NULL
+        return $success === false ? false : true;
     }
 
     /**

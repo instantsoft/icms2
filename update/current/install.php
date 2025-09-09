@@ -128,6 +128,17 @@ function update_billing() {
         }
     }
 
+    $core->db->query("DROP TABLE IF EXISTS `{#}billing_holds`;
+CREATE TABLE `{#}billing_holds` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `target` varchar(100) DEFAULT NULL COMMENT 'Идентификатор операции',
+  `user_id` int(11) UNSIGNED NOT NULL COMMENT 'ID пользователя',
+  `amount` decimal(10,2) UNSIGNED NOT NULL DEFAULT 0.00 COMMENT 'Сумма',
+  `payload` text DEFAULT NULL COMMENT 'JSON с параметрами операции',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`,`target`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Балансы в ожидании';");
+
     $core->db->query("ALTER TABLE `{#}billing_systems` CHANGE `rate` `rate` DECIMAL(8,4) UNSIGNED NULL DEFAULT '1';");
     $core->db->query("ALTER TABLE `{users}` CHANGE `balance` `balance` DECIMAL(12,2) NULL DEFAULT '0';");
 
@@ -136,6 +147,20 @@ function update_billing() {
     $core->db->addTableField('billing_payouts', 'is_topup_balance', 'TINYINT(1) UNSIGNED NULL DEFAULT NULL');
 
     $options = cmsController::loadOptions('billing');
+
+    $options['cur_real_symb'] = $options['cur_real_symb'] ?? '₽';
+    $options['min_pack'] = $options['min_pack'] ?? 0;
+    $options['pay_field_html'] = $options['pay_field_html'] ?? '<a class="btn btn-primary billing-buy-field" href="{url}">{solid%coins} {title}</a>';
+    $options['btn_titles'] = $options['btn_titles'] ?? [];
+    $options['btn_titles']['guest'] = $options['btn_titles']['guest'] ?? 'Покупка от {price}';
+    $options['btn_titles']['user'] = $options['btn_titles']['user'] ?? 'Купить за {price}';
+    $options['limit_log'] = $options['limit_log'] ?? 15;
+    $options['plan_remind_days'] = $options['plan_remind_days'] ?? 1;
+    $options['rtp_rate'] = $options['rtp_rate'] ?? 0.0001;
+    $options['ptr_rate'] = $options['ptr_rate'] ?? 0.0001;
+    $options['out_min'] = $options['out_min'] ?? 10;
+    $options['limit_out'] = $options['limit_out'] ?? 15;
+    $options['limit_refs'] = $options['limit_refs'] ?? 15;
 
     $formatted_prices = [];
     foreach ($options['prices']['amount']??[] as $key => $value) {
@@ -187,6 +212,7 @@ function update_billing() {
             continue;
         }
         foreach ($columns as $column) {
+            $core->db->addTableField($table_name, $column, 'DECIMAL(10,2) NULL DEFAULT NULL');
             $core->db->query("ALTER TABLE `{#}{$table_name}` CHANGE `{$column}` `{$column}` DECIMAL(10,2) NULL DEFAULT NULL;");
         }
     }
@@ -215,6 +241,30 @@ function update_billing() {
             'options'     => "---\nshop_id: \"\"\nsecret_key: \"\"\nsig_key: \"\"\ncurr: RUB\n"
         ]);
     }
+
+    if(!$model->db->getRowsCount('billing_systems', "name = 'yandex'", 1)){
+        $model->insert('billing_systems', [
+            'name'        => 'yandex',
+            'title'       => 'ЮMoney',
+            'payment_url' => 'https://yoomoney.ru/quickpay/confirm.xml',
+            'rate'        => '1.0000',
+            'options'     => "---\nreceiver: \"\"\nsecret_key: \"\"\n"
+        ]);
+    }
+
+    if(!$model->db->getRowsCount('billing_systems', "name = 'yakassa'", 1)){
+        $model->insert('billing_systems', [
+            'name'        => 'yakassa',
+            'title'       => 'ЮKassa',
+            'payment_url' => 'billing/prepare/yakassa',
+            'rate'        => '1.0000',
+            'options'     => "---\nshop_id: \"\"\nkey: \"\"\n"
+        ]);
+    }
+
+    $model->delete('billing_systems', 'wmr', 'name');
+    $model->delete('billing_systems', 'smscoin', 'name');
+    $model->delete('billing_systems', 'enpay', 'name');
 
     return true;
 }

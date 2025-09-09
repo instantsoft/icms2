@@ -1447,40 +1447,43 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
-    public function importDump($file, $delimiter = ';'){
+    public function importDump($file, $delimiter = ';') {
 
         clearstatcache();
 
-        if (!is_readable($file)){ return false; }
-
-        @set_time_limit(0);
+        if (!is_readable($file)) {
+            return false;
+        }
 
         $file = fopen($file, 'r');
 
-        $query = []; $success = false;
+        $query   = [];
+        $success = null;
 
-        while (feof($file) === false){
+        while (feof($file) === false) {
+
+            if ($success === null) {
+                $success = false;
+            }
 
             $query[] = fgets($file);
 
-            if (preg_match('~' . preg_quote($delimiter, '~').'\s*$~iS', end($query)) === 1){
+            if (preg_match('~' . preg_quote($delimiter, '~') . '\s*$~iS', end($query)) === 1) {
 
                 $success = true;
 
                 $query = trim(implode('', $query));
 
-                $result = $this->query(str_replace(['InnoDB','CHARSET=utf8'], [$this->options['db_engine'],'CHARSET='.$this->options['db_charset']], $query));
+                $result = $this->query(str_replace(['InnoDB', 'CHARSET=utf8'], [$this->options['db_engine'], 'CHARSET=' . $this->options['db_charset']], $query));
 
                 if ($result === false) {
                     return false;
                 }
-
             }
 
-            if (is_string($query) === true){
+            if (is_string($query) === true) {
                 $query = [];
             }
-
         }
 
         fclose($file);
