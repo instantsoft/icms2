@@ -128,16 +128,20 @@ function update_billing() {
         }
     }
 
-    $core->db->query("DROP TABLE IF EXISTS `{#}billing_holds`;
-CREATE TABLE `{#}billing_holds` (
+    $db_engine = cmsConfig::get('db_engine');
+    $db_charset = cmsConfig::get('db_charset');
+
+    $core->db->query("DROP TABLE IF EXISTS `{#}billing_holds`;");
+
+    $core->db->query("CREATE TABLE `{#}billing_holds` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `target` varchar(100) DEFAULT NULL COMMENT 'Идентификатор операции',
-  `user_id` int(11) UNSIGNED NOT NULL COMMENT 'ID пользователя',
-  `amount` decimal(10,2) UNSIGNED NOT NULL DEFAULT 0.00 COMMENT 'Сумма',
-  `payload` text DEFAULT NULL COMMENT 'JSON с параметрами операции',
+  `target` varchar(100) DEFAULT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `amount` decimal(10,2) UNSIGNED NOT NULL DEFAULT 0.00,
+  `payload` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`target`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Балансы в ожидании';");
+) ENGINE={$db_engine} DEFAULT CHARSET={$db_charset};");
 
     $core->db->query("ALTER TABLE `{#}billing_systems` CHANGE `rate` `rate` DECIMAL(8,4) UNSIGNED NULL DEFAULT '1';");
     $core->db->query("ALTER TABLE `{users}` CHANGE `balance` `balance` DECIMAL(12,2) NULL DEFAULT '0';");
