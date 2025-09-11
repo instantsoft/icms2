@@ -75,7 +75,7 @@ class cmsGrid {
         'editable' => [               // Может редактироваться из списка
             'rules'            => [],      // Массив правил валидации при сохранении
             'renderer'         => null,    // Компонент vue поля редактирования, по умолчанию form-input
-            'items'            => null,    // Массив списка для селекта, если renderer form-select
+            'items'            => null,    // Массив списка (или функция возвращающая массив) для селекта, если renderer form-select
             'language_context' => false,   // Если выключено, будет искать языковое поле для текущей локали
             'id_field'         => 'id',    // Имя поля записи, по которому искать уникальное значение
             'table'            => null,    // Таблица для сохранения
@@ -986,6 +986,10 @@ class cmsGrid {
 
         // Добавляем ID строки
         $save_action_query['id'] = $row[$id_field];
+
+        if (isset($column['editable']['items']) && is_callable($column['editable']['items'])) {
+            $column['editable']['items'] = $column['editable']['items']($field, $row);
+        }
 
         return [
             'component'   => $column['editable']['renderer'] ?? 'form-input',

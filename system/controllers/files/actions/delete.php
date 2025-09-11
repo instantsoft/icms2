@@ -4,23 +4,26 @@ class actionFilesDelete extends cmsAction {
 
     public function run() {
 
-        if (!$this->cms_user->is_logged) {
-            return $this->cms_template->renderJSON(['error' => false]);
-        }
-
         if (!$this->request->isAjax()) {
             return cmsCore::error404();
         }
 
+        if (!$this->cms_user->is_logged) {
+            return $this->cms_template->renderJSON(['error' => true]);
+        }
+
         if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
-            return cmsCore::error404();
+            return $this->cms_template->renderJSON([
+                'error'   => true,
+                'message' => 'Error CSRF Token'
+            ]);
         }
 
         $path = $this->request->get('path', '');
 
         if (!$path) {
             return $this->cms_template->renderJSON([
-                'error' => false
+                'error' => true
             ]);
         }
 
@@ -31,7 +34,7 @@ class actionFilesDelete extends cmsAction {
         $file = $this->model->getFileByPath($path);
         if (!$file) {
             return $this->cms_template->renderJSON([
-                'error' => false
+                'error' => false // Файла может не быть, но ошибку показывать не надо
             ]);
         }
 
