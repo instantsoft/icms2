@@ -206,7 +206,7 @@ class actionAdminInstall extends cmsAction {
      */
     private function uploadPackage() {
 
-        $this->cms_uploader->enableRemoteUpload();
+        $this->cms_uploader->enableRemoteUpload()->setAllowedRemoteHosts(['instantcms.ru', 'api.instantcms.ru', 'addons.instantcms.ru']);
 
         if (!$this->cms_uploader->isUploaded($this->upload_name) && !$this->cms_uploader->isUploadedFromLink($this->upload_name)) {
 

@@ -663,8 +663,8 @@
     define('LANG_CP_SETTINGS_CACHE_CLEAN',      'Очистить кеш');
 
     define('LANG_CP_ADDONS_DATA_ERROR',         'Ошибка получения данных, попробуйте повторить позже.');
-    define('LANG_CP_ADDONS_CURL_ERROR',         'Просмотр каталога невозможен, поскольку на сервере отсутствует CURL. Вы можете выбрать дополнения из <a target="_blank" href="https://addons.instantcms.ru/">официального каталога</a>.');
-    define('LANG_CP_INSTALL_PACKAGE_LINK_HINT', 'Например, скопировав ссылку на скачивание из <a target="_blank" href="https://addons.instantcms.ru/">официального каталога дополнений</a>');
+    define('LANG_CP_ADDONS_CURL_ERROR',         'Просмотр каталога невозможен, поскольку на сервере отсутствует CURL. Вы можете выбрать дополнения из <a target="_blank" href="https://instantcms.ru/addons">официального каталога</a>.');
+    define('LANG_CP_INSTALL_PACKAGE_LINK_HINT', 'Например, скопировав ссылку на скачивание из <a target="_blank" href="https://instantcms.ru/addons">официального каталога дополнений</a>');
     define('LANG_CP_INSTALL_BY_LINK',           'Установите с URL-адреса');
     define('LANG_CP_OFICIAL_ADDONS',            'Каталог дополнений');
     define('LANG_CP_INSTALL_PACKAGE',           'Установить пакет дополнения');

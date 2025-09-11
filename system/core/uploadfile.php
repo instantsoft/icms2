@@ -140,6 +140,7 @@ class cmsUploadfile {
             }
         }
 
+        $this->allowed_exts = array_unique($this->allowed_exts);
         $this->allowed_mime = array_unique($this->allowed_mime);
 
         // Если не нашли соответствий

@@ -12,6 +12,13 @@ class cmsUploader {
     private $allow_remote = false;
 
     /**
+     * Разрешённые хосты для удалённой загрузки
+     *
+     * @var array
+     */
+    private $allowed_remote_hosts = [];
+
+    /**
      * Имя файла для хранения
      *
      * @var string
@@ -307,6 +314,13 @@ class cmsUploader {
         return $this;
     }
 
+    public function setAllowedRemoteHosts($allowed_remote_hosts) {
+
+        $this->allowed_remote_hosts = $allowed_remote_hosts;
+
+        return $this;
+    }
+
     /**
      * Возвращает имя файла с расширением
      * проверяя наличии одноимённого
@@ -452,6 +466,18 @@ class cmsUploader {
                 'name'    => '',
                 'path'    => ''
             ];
+        }
+
+        // Разрешённые хосты
+        if ($this->allowed_remote_hosts) {
+            if (!in_array($url_data['host'], $this->allowed_remote_hosts, true)) {
+                return [
+                    'success' => false,
+                    'error'   => 'Error Remote Host',
+                    'name'    => '',
+                    'path'    => ''
+                ];
+            }
         }
 
         // Узнаём ipv4 адрес хоста, gethostbyname умеет только ipv4

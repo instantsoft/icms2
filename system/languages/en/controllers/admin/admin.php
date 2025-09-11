@@ -631,8 +631,8 @@
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Emulate network lag');
     define('LANG_CP_SETTINGS_CACHE_CLEAN',      'Clear cache');
     define('LANG_CP_ADDONS_DATA_ERROR',         'Error getting data, try again later.');
-    define('LANG_CP_ADDONS_CURL_ERROR',         'Browse the add-ons catalog failed, because CURL is not available on the server. You can select addons from a <a target="_blank" href="https://addons.instantcms.ru/">official add-ons catalog</a>.');
-    define('LANG_CP_INSTALL_PACKAGE_LINK_HINT', 'For example, by copying a download link from the <a target="_blank" href="https://addons.instantcms.ru/">official add-ons catalog</a>');
+    define('LANG_CP_ADDONS_CURL_ERROR',         'Browse the add-ons catalog failed, because CURL is not available on the server. You can select addons from a <a target="_blank" href="https://instantcms.ru/addons">official add-ons catalog</a>.');
+    define('LANG_CP_INSTALL_PACKAGE_LINK_HINT', 'For example, by copying a download link from the <a target="_blank" href="https://instantcms.ru/addons">official add-ons catalog</a>');
     define('LANG_CP_INSTALL_BY_LINK',           'Install from URL');
     define('LANG_CP_OFICIAL_ADDONS',            'Add-ons catalog');
     define('LANG_CP_INSTALL_PACKAGE',           'Install Extension Package');
