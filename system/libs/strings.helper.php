@@ -449,10 +449,11 @@ function string_replace_keys_values($string, $data) {
  * выражение {nickname:профиль пользователя %s самый лучший} после обработки станет "профиль пользователя Василий самый лучший"
  * при значении поля nickname в массиве $data "Василий"
  *
- * @param string $string
- * @param array $data
+ * @param string $string           Строка для поиска
+ * @param array $data              Массив данных для замены
+ * @param bool $keep_not_found_key Если в $data нет ключа key, оставлять выражение {key} неизменным
  */
-function string_replace_keys_values_extended($string, $data) {
+function string_replace_keys_values_extended($string, $data, $keep_not_found_key = false) {
 
     $escape = function($str, $is_flip = true) {
 
@@ -463,7 +464,7 @@ function string_replace_keys_values_extended($string, $data) {
         return $is_flip ? strtr($str, $to) : strtr($str, $from);
     };
 
-    return preg_replace_callback('/{([\w]{1}[^}\n]+)}/ui', function ($matches) use ($data, $escape) {
+    return preg_replace_callback('/{([\w]{1}[^}\n]+)}/ui', function ($matches) use ($data, $escape, $keep_not_found_key) {
 
         $expression = $escape($matches[1], false);
 
@@ -533,6 +534,11 @@ function string_replace_keys_values_extended($string, $data) {
         $value = array_value_recursive($key, $data, '.');
 
         if ($value === false || $value === null || !$func) {
+
+            if ($keep_not_found_key && $value === null) {
+                return $matches[0];
+            }
+
             return (string) $value;
         }
 

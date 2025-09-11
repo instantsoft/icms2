@@ -149,7 +149,7 @@ class fieldHtml extends cmsFormField {
         }
 
         if ($this->getOption('parse_patterns')){
-            $value = string_replace_keys_values_extended($value, $item);
+            $value = string_replace_keys_values_extended($value, $item, true);
         }
 
         return $value;
