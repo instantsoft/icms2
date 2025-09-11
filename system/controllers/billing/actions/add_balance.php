@@ -32,7 +32,7 @@ class actionBillingAddBalance extends cmsAction {
 
             if (!$errors) {
 
-                $this->model->changeBalance('user', $user_id, $options['amount'], $options['description']);
+                $this->model->changeBalance('user', $user_id, $options['amount'], ($options['description'] ?: null));
 
                 return $this->cms_template->renderJSON([
                     'errors'       => false,

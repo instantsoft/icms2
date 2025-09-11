@@ -191,8 +191,6 @@ function update_billing() {
         $options['prices'] = $formatted_prices;
     }
 
-    cmsController::saveOptions('billing', $options);
-
     $replace_floats = [
         'billing_log' => [
             'amount', 'summ'
@@ -269,6 +267,12 @@ function update_billing() {
     $model->delete('billing_systems', 'wmr', 'name');
     $model->delete('billing_systems', 'smscoin', 'name');
     $model->delete('billing_systems', 'enpay', 'name');
+
+    $model->filterEqual('name', 'billing')->
+            updateFiltered('controllers', [
+                'version' => '2.1.0',
+                'options' => $options
+            ]);
 
     return true;
 }

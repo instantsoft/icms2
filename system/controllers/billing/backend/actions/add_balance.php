@@ -44,7 +44,7 @@ class actionBillingAddBalance extends cmsAction {
                     $subject_id = $options['group_id'];
                 }
 
-                $this->model->changeBalance($options['mode'], $subject_id, $options['amount'], $options['description']);
+                $this->model->changeBalance($options['mode'], $subject_id, $options['amount'], ($options['description'] ?: null));
 
                 cmsUser::addSessionMessage(LANG_BILLING_CP_BAL_SUCCESS, 'success');
 
