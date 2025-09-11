@@ -30,6 +30,11 @@ class cmsTemplate {
      */
     protected $inherit_names = [];
     /**
+     * Кэш путей к файлам шаблона с учётом наследования
+     * @var array
+     */
+    protected $tpl_path_cache = [];
+    /**
      * Параметры шаблона
      * Задаются в файле manifest.php в директории шаблона
      * Пример файла templates/modern/manifest.php
@@ -2392,6 +2397,10 @@ class cmsTemplate {
 
         if (!is_array($relative_path)) {
 
+            if (isset($this->tpl_path_cache[$relative_path])) {
+                return $this->tpl_path_cache[$relative_path];
+            }
+
             $exists = false;
 
             foreach ($this->inherit_names as $name) {
@@ -2413,6 +2422,8 @@ class cmsTemplate {
             if (!$exists) {
                 $this->not_found_tpls[] = $file;
             }
+
+            $this->tpl_path_cache[$relative_path] = $exists;
 
             return $exists;
         }
