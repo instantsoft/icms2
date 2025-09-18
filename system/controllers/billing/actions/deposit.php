@@ -9,12 +9,21 @@ class actionBillingDeposit extends cmsAction {
 
     public function run() {
 
+        $is_new_top_up = $this->request->has('new_top_up');
+
         $amount = abs($this->request->get('amount', 0.0));
 
         $systems      = $this->model->getPaymentSystems();
         $systems_list = array_collection_to_list($systems, 'name', 'title');
 
-        $ticket = cmsUser::sessionGet('billing_ticket');
+        $ticket = cmsUser::sessionGet('billing_ticket') ?: [];
+
+        if ($is_new_top_up) {
+
+            $ticket = [];
+
+            cmsUser::sessionUnset('billing_ticket');
+        }
 
         $min_pack = $ticket['diff_amount'] ?? $this->options['min_pack'];
 

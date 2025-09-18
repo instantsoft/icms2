@@ -4,7 +4,7 @@ class onBillingEngineStart extends cmsAction {
 
     public function run() {
 
-        if ($this->options['is_refs'] && preg_match('/^r\/([0-9]+)$/i', $this->cms_core->uri, $matches)) {
+        if ($this->options['is_refs'] && preg_match('/^r\/([0-9]+)$/i', $this->cms_core->uri_before_remap, $matches)) {
 
             $ref_id = $matches[1];
 

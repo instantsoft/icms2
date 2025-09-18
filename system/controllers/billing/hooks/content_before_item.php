@@ -58,6 +58,10 @@ class onBillingContentBeforeItem extends cmsAction {
                         }
                     }
                     $price = $prices ? min($prices) : 0;
+
+                    if (!$price) {
+                        continue;
+                    }
                 }
 
                 $btn_title = !empty($paid_field['btn_titles']['guest']) ?

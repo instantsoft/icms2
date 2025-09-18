@@ -27,9 +27,13 @@ class actionGroupsInviteFriends extends cmsAction {
             }
 
             foreach ($friends_list as $friend_id) {
-                if (!$this->model->getInvite($group_id, $friend_id)) {
+                if (is_numeric($friend_id) && !$this->model->getInvite($group_id, $friend_id)) {
                     $invited_list[] = $friend_id;
                 }
+            }
+
+            if (!$invited_list) {
+                return $this->redirectBack();
             }
 
             return $this->sendInvite($invited_list, $group_id);

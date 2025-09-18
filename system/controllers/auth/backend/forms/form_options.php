@@ -129,12 +129,15 @@ class formAuthOptions extends cmsForm {
                         'generator' => function ($item){
                             $admin_model = cmsCore::getModel('admin');
                             $controllers = $admin_model->getInstalledControllers();
-                            $items = ['' => ''];
+                            $items = [];
                             foreach($controllers as $controller){
                                 $items[$controller['name']] = $controller['title'];
                             }
                             return $items;
                         },
+                        'rules' => [
+                            ['required']
+                        ],
                         'visible_depend' => ['is_site_only_auth_users' => ['show' => ['1']]]
                     ]),
                     new fieldCheckbox('disable_restore', [

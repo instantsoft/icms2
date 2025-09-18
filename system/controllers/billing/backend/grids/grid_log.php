@@ -10,7 +10,7 @@ function grid_log($controller) {
         'is_selectable' => false,
         'order_by'      => 'id',
         'order_to'      => 'desc',
-        'show_id'       => false
+        'show_id'       => true
     ];
 
     $columns = [

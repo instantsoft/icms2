@@ -34,7 +34,7 @@ class onBillingUserTabShow extends cmsAction {
         $dep_link_title = LANG_BILLING_OP_DEPOSIT;
         $deposit_url    = '';
         if ($this->options['in_mode'] === 'enabled') {
-            $deposit_url = href_to($this->name, 'deposit');
+            $deposit_url = href_to($this->name, 'deposit') . '?new_top_up';
         }
         if ($this->cms_user->is_admin) {
             $deposit_url    = href_to($this->name, 'add_balance', [$profile['id']]);
