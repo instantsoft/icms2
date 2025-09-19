@@ -13,7 +13,7 @@
 <?php if (!$plans) { ?>
 	<div class="billing-transfer">
 		<div class="error"><?php echo LANG_BILLING_PLANS_NONE; ?></div>
-		<p><a href="<?php echo href_to('users', $user->id, 'balance'); ?>"><?php echo LANG_BACK; ?></a></p>
+		<p><a href="<?php echo href_to_profile($user, ['balance']); ?>"><?php echo LANG_BACK; ?></a></p>
 	</div>
 <?php return; } ?>
 
@@ -22,6 +22,7 @@
 
 	<div class="billing-plan-form">
 		<form action="" method="post">
+            <?php echo html_csrf_token(); ?>
 			<table>
 				<tbody>
 					<tr>

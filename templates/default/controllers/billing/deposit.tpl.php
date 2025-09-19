@@ -1,6 +1,6 @@
 <?php
 
-	$this->addJS($this->getJavascriptFileName('billing'));
+	$this->addTplJSName('billing');
 
     $this->setPageTitle(LANG_BILLING_BALANCE_ADD);
 
@@ -47,6 +47,7 @@
 	<div class="billing-deposit-form">
 		<h3><?php printf(LANG_BILLING_DEPOSIT_SUMM, $b_spellcount_arr[2]); ?></h3>
 		<form action="<?php echo $this->href_to('order'); ?>" method="post">
+            <?php echo html_csrf_token(); ?>
 			<table>
 				<tbody>
 					<tr>
@@ -77,6 +78,7 @@
 		</form>
 	</div>
 
+    <?php if ($show_price_block) { ?>
 	<div class="billing-prices-info">
 
 		<h3><?php printf(LANG_BILLING_DEPOSIT_PRICES, $b_spellcount_arr[2]); ?></h3>
@@ -94,7 +96,7 @@
 							<?php html($price['amount']); ?>
 						</td>
 						<td>
-							<?php html($price['price']); ?>
+							<?php html($price['price']); ?> <?php echo $curr_symb; ?>
 						</td>
 					</tr>
 				<?php } ?>
@@ -102,6 +104,7 @@
 		</table>
 
 	</div>
+    <?php } ?>
 </div>
 <?php ob_start(); ?>
 <script>

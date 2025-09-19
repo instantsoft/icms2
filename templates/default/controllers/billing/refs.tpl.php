@@ -3,8 +3,8 @@
     $this->setPageTitle(LANG_BILLING_REFS);
 
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
-    $this->addBreadcrumb($user['nickname'], href_to('users', $user['id']));
-	$this->addBreadcrumb(LANG_BILLING_BALANCE, href_to('users', $user['id'], 'balance'));
+    $this->addBreadcrumb($user['nickname'], href_to_profile($user));
+	$this->addBreadcrumb(LANG_BILLING_BALANCE, href_to_profile($user, ['balance']));
     $this->addBreadcrumb(LANG_BILLING_REFS);
 
 ?>
@@ -52,15 +52,15 @@
 <?php if ($refs) { ?>
 	<div class="billing-history">
 		<?php
-			$this->renderChild('refs_history', array(
-				'refs' => $refs,
+			$this->renderChild('refs_history', [
+				'refs'           => $refs,
                 'is_own_profile' => $is_own_profile,
-				'total' => $total,
-				'page' => $page,
-				'perpage' => $perpage,
-				'type' => $type,
-				'scale' => $scale
-			));
+                'total'          => $total,
+                'page'           => $page,
+                'perpage'        => $perpage,
+                'type'           => $type,
+                'scale'          => $scale
+            ]);
 		?>
 	</div>
 <?php } ?>

@@ -1,26 +1,11 @@
 <?php
 
-	$user = cmsUser::getInstance();
+$this->setPageTitle(LANG_BILLING_EXCHANGE);
 
-    $this->setPageTitle(LANG_BILLING_EXCHANGE);
-
-    $this->addBreadcrumb(LANG_USERS, href_to('users'));
-    $this->addBreadcrumb($user->nickname, href_to('users', $user->id));
-    $this->addBreadcrumb(LANG_BILLING_BALANCE, href_to('users', $user->id, 'balance'));
-    $this->addBreadcrumb(LANG_BILLING_EXCHANGE);
-
-	$curr_title = $this->controller->options['currency_title'];
-	$b_spellcount = $this->controller->options['currency'];
-	$b_spellcount_arr = explode('|', $b_spellcount);
-
-	$modes = array();
-
-	if ($is_can_exchange){
-		if ($is_can_rtp) { $modes['rtp'] = sprintf(LANG_BILLING_EXCHANGE_RTP, $curr_title); }
-		if ($is_can_ptr) { $modes['ptr'] = sprintf(LANG_BILLING_EXCHANGE_PTR, $curr_title); }
-		$rtp_rate = floatval($this->controller->options['rtp_rate']);
-		$ptr_rate = floatval($this->controller->options['ptr_rate']);
-	}
+$this->addBreadcrumb(LANG_USERS, href_to('users'));
+$this->addBreadcrumb($user->nickname, href_to_profile($user));
+$this->addBreadcrumb(LANG_BILLING_BALANCE, href_to_profile($user, ['balance']));
+$this->addBreadcrumb(LANG_BILLING_EXCHANGE);
 
 ?>
 
@@ -29,7 +14,7 @@
 <?php if (!$is_can_exchange) { ?>
 	<div class="billing-transfer">
 		<div class="error"><?php echo LANG_BILLING_EXCHANGE_NONE; ?></div>
-		<p><a href="<?php echo href_to('users', $user->id, 'balance'); ?>"><?php echo LANG_BACK; ?></a></p>
+		<p><a href="<?php echo href_to_profile($user, ['balance']); ?>"><?php echo LANG_BACK; ?></a></p>
 	</div>
 <?php return; } ?>
 
@@ -37,12 +22,13 @@
 
 	<div class="billing-transfer-form">
 		<form action="" method="post">
+            <?php echo html_csrf_token(); ?>
 			<table>
 				<tbody>
 					<tr>
 						<td class="title"><?php echo LANG_BILLING_EXCHANGE_MODE; ?>:</td>
 						<td>
-							<?php echo html_select('mode', $modes, false, array('id'=>'mode')); ?>
+							<?php echo html_select('mode', $modes, false, ['id' => 'mode']); ?>
 						</td>
 					</tr>
 					<tr>
@@ -52,7 +38,7 @@
 						</td>
 						<td>
 							<span class="rtp"><?php echo $user->rating; ?></span>
-							<span class="ptr"><?php echo html_spellcount($user->balance, $b_spellcount); ?></span>
+							<span class="ptr"><?php echo html_spellcount($balance, $b_spellcount); ?></span>
 						</td>
 					</tr>
 					<tr>
@@ -93,7 +79,7 @@
 				</tbody>
 			</table>
 			<input type="submit" name="submit" class="button-submit" value="<?php echo LANG_BILLING_EXCHANGE_SUBMIT; ?>">
-			<a class="back-btn" href="<?php echo href_to('users', $user->id, 'balance'); ?>"><?php echo LANG_CANCEL; ?></a>
+			<a class="back-btn" href="<?php echo href_to_profile($user, ['balance']); ?>"><?php echo LANG_CANCEL; ?></a>
 		</form>
 	</div>
 
@@ -101,8 +87,8 @@
 
 <script>
 	$(document).ready(function(){
-		var rates = {'rtp': <?php echo str_replace(',', '.', $rtp_rate); ?>, 'ptr': <?php echo str_replace(',', '.', $ptr_rate); ?>};
-		var maxes = {'rtp': <?php echo $user->rating; ?>, 'ptr': <?php echo str_replace(',', '.', $user->balance); ?>};
+        var rates = {'rtp': <?php echo $rtp_rate; ?>, 'ptr': <?php echo $ptr_rate; ?>};
+        var maxes = {'rtp': <?php echo $user->rating; ?>, 'ptr': <?php echo $balance; ?>};
 		var mode = false;
 		$('input#amount').on('keyup', function(){
 			var amount = Number($(this).val().replace(',', '.'));
@@ -124,5 +110,5 @@
 			$('input#amount').val(maxes[mode]).trigger('keyup');
 		});
 		$('select#mode').trigger('change');
-	})
+	});
 </script>

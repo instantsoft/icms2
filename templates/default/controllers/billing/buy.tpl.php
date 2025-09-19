@@ -9,6 +9,7 @@
 
 	<div class="billing-order-form">
 		<form action="" method="post">
+            <?php echo html_csrf_token(); ?>
 			<table>
 				<tbody>
 					<tr>

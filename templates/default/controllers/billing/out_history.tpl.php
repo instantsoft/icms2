@@ -1,7 +1,3 @@
-<?php
-	$currency_real = $this->controller->options['currency_real'];
-?>
-
 <h3><?php echo LANG_BILLING_OUT_HISTORY; ?></h3>
 
 <?php if ($total) { ?>

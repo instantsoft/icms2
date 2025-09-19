@@ -26,6 +26,7 @@
 
 	<div class="billing-transfer-form">
 		<form action="" method="post">
+            <?php echo html_csrf_token(); ?>
 			<table>
 				<tbody>
 					<tr>

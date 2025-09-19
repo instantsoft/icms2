@@ -1,6 +1,6 @@
 <?php
 
-$this->addJS($this->getJavascriptFileName('billing'));
+$this->addTplJSName('billing');
 
 $this->setPageTitle(LANG_BILLING_OUT_PAGE);
 

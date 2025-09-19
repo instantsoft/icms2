@@ -1,29 +1,19 @@
 <?php
 
-	$user = cmsUser::getInstance();
-
-	$this->addJS($this->getJavascriptFileName('billing'));
+    $this->addTplJSName('billing');
 
     $this->setPageTitle(LANG_BILLING_OUT_PAGE);
 
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
-    $this->addBreadcrumb($user->nickname, href_to('users', $user->id));
-	$this->addBreadcrumb(LANG_BILLING_BALANCE, href_to('users', $user->id, 'balance'));
+    $this->addBreadcrumb($user->nickname, href_to_profile($user));
+    $this->addBreadcrumb(LANG_BILLING_BALANCE, href_to_profile($user, ['balance']));
     $this->addBreadcrumb(LANG_BILLING_OUT);
-
-	$b_spellcount = $this->controller->options['currency'];
-	$b_spellcount_arr = explode('|', $b_spellcount);
-
-	$out_rate = $this->controller->options['out_rate'];
-	$currency_real = $this->controller->options['currency_real'];
-
-	$is_can_out = true;
 
 ?>
 
 <h1><?php echo LANG_BILLING_OUT_PAGE; ?></h1>
 
-<?php if ($user->balance <= 0 || $user->balance < $min_amount) { ?>
+<?php if ($balance <= 0 || $balance < $min_amount) { ?>
 	<div class="billing-transfer">
 		<?php if ($min_amount) { ?>
 			<div class="error"><?php printf(LANG_BILLING_OUT_MIN, html_spellcount($min_amount, $b_spellcount)); ?></div>
@@ -37,30 +27,31 @@
 			<a class="cancel" href="<?php echo href_to('users', $receiver['id']); ?>"><?php echo LANG_CANCEL; ?></a>
 		</div>
 	</div>
-<?php $is_can_out = false; } ?>
+<?php } ?>
 
 <?php if ($is_pending) { ?>
 	<div class="billing-transfer">
 		<div class="error"><?php echo LANG_BILLING_OUT_PENDING; ?></div>
 	</div>
-<?php $is_can_out = false; } ?>
+<?php } ?>
 
-<?php if ($out_period_days && $is_wait_period) { ?>
+<?php if ($is_wait_period) { ?>
 	<div class="billing-transfer">
 		<div class="error"><?php printf(LANG_BILLING_OUT_WAIT_PERIOD, html_spellcount($out_period_days, LANG_DAY1, LANG_DAY2, LANG_DAY10)); ?></div>
 	</div>
-<?php $is_can_out = false; } ?>
+<?php } ?>
 
 <?php if ($is_can_out) { ?>
 	<div class="billing-transfer">
 		<div class="billing-transfer-form">
 			<form action="" method="post">
+                <?php echo html_csrf_token(); ?>
 				<table>
 					<tbody>
 						<tr>
 							<td class="title"><?php echo LANG_BILLING_DEPOSIT_TICKET_BALANCE; ?>:</td>
 							<td>
-								<span id="balance-all"><?php echo $user->balance; ?></span> <?php echo html_spellcount_only($user->balance, $b_spellcount); ?>
+								<span id="balance-all"><?php echo $balance; ?></span> <?php echo html_spellcount_only($balance, $b_spellcount); ?>
 								<a href="#all" class="ajaxlink" onclick="$('#trf-amount').val(Number($('#balance-all').html())).trigger('keyup'); return false"><?php echo LANG_BILLING_OUT_ALL; ?></a>
 							</td>
 						</tr>
@@ -74,7 +65,7 @@
                             <tr>
                                 <td class="title">Макс. сумма вывода:</td>
                                 <td>
-                                    <?php echo html_spellcount(min($user->balance, $plan['max_out']), $b_spellcount); ?>
+                                    <?php echo html_spellcount(min($balance, $plan['max_out']), $b_spellcount); ?>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -99,7 +90,16 @@
 						<tr>
 							<td class="title"><?php echo LANG_BILLING_OUT_SYSTEM; ?>:</td>
 							<td>
-								<?php echo html_select('system', $systems, $system); ?>
+                                <select class="form-control" name="system" id="system_out">
+                                    <?php foreach ($systems as $sys_id => $system_data) { ?>
+                                        <option
+                                            value="<?php html($sys_id); ?>"
+                                            data-placeholder="<?php html($system_data['placeholder']); ?>"
+                                            <?php if ($system == $sys_id) { ?>selected<?php } ?>>
+                                            <?php html($system_data['title']); ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
 							</td>
 						</tr>
 						<tr>
@@ -119,7 +119,7 @@
 	</div>
 	<script type="text/javascript">
 			var min_amount = <?php echo $min_amount ? $min_amount : 1; ?>;
-			var max_amount = <?php echo number_format(empty($plan) || empty($plan['max_out']) ? $user->balance : min($user->balance, $plan['max_out']), 2, '.', ''); ?>;
+			var max_amount = <?php echo number_format(empty($plan) || empty($plan['max_out']) ? $balance : min($balance, $plan['max_out']), 2, '.', ''); ?>;
 			var out_rate = <?php echo floatval(str_replace(',', '.', $out_rate)); ?>;
 			$(document).ready(function(){
 				icms.billing.checkOutAmount(min_amount, max_amount, out_rate);
@@ -131,12 +131,13 @@
 <?php if ($outs) { ?>
 	<div class="billing-history">
 		<?php
-			$this->renderChild('out_history', array(
-				'outs' => $outs,
-				'total' => $total,
-				'page' => $page,
-				'perpage' => $perpage
-			));
+			$this->renderChild('out_history', [
+                'currency_real' => $currency_real,
+                'outs'          => $outs,
+                'total'         => $total,
+                'page'          => $page,
+                'perpage'       => $perpage
+            ]);
 		?>
 	</div>
 <?php } ?>

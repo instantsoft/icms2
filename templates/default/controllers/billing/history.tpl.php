@@ -1,7 +1,3 @@
-<?php 
-	$currency_real = $this->controller->options['currency_real'];
-?>
-
 <h3><?php echo LANG_BILLING_LOG_HISTORY; ?></h3>
 
 <?php if (!$total) { ?>
@@ -22,14 +18,14 @@
 		<tbody>
 			<?php foreach ($operations as $op){ ?>
 			<tr>
-				<td class="col-id"><?php echo $op['id']; ?></td>				
-				<td class="col-date"><?php echo html_date_time($op['date_done']); ?></td>				
+				<td class="col-id"><?php echo $op['id']; ?></td>
+				<td class="col-date"><?php echo html_date_time($op['date_done']); ?></td>
 				<td class="col-desc">
-					<?php 
-						if ($op['url']) { 
-							html_link($op['description'], $op['url']); 
+					<?php
+						if ($op['url']) {
+							html_link($op['description'], $op['url']);
 						} else {
-							html($op['description']); 
+							html($op['description']);
 						}
 					?>
 				</td>
@@ -38,7 +34,7 @@
 						<?php echo html_signed_num(number_format($op['amount'], 2, '.', '')); ?>
 					</span>
 				</td>
-				<td class="col-summ"><?php echo $op['summ'] ? $op['summ'] . ' ' . $currency_real : '&mdash;'; ?></td>				
+				<td class="col-summ"><?php echo $op['summ'] ? $op['summ'] . ' ' . $currency_real : '&mdash;'; ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>
