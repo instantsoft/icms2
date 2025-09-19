@@ -16,7 +16,6 @@ class onAuthgaControllerAuthAfterSaveOptions extends cmsAction {
         }
 
         return $options;
-
     }
 
 }

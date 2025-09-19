@@ -20,14 +20,14 @@ class onBootstrap4AdminColSchemeOptions extends cmsAction {
         }
 
         return [
-            new fieldCheckbox('options:cut_before', array(
+            new fieldCheckbox('options:cut_before', [
                 'title' => LANG_CP_WIDGETS_COL_CUT_BEFORE,
-                'visible_depend' => array('type' => array('hide' => array('custom')))
-            )),
-            new fieldList('options:default_col_class', array(
+                'visible_depend' => ['type' => ['hide' => ['custom']]]
+            ]),
+            new fieldList('options:default_col_class', [
                 'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥576px').' ('.LANG_CP_WIDGETS_COL_WIDTH_D.')',
                 'default' => 'col-sm',
-                'items' => array(
+                'items' => [
                     ''          => LANG_NO,
                     'col-sm'    => LANG_AUTO,
                     'col-sm-1'  => 'col-sm-1 (8.33%)',
@@ -43,12 +43,12 @@ class onBootstrap4AdminColSchemeOptions extends cmsAction {
                     'col-sm-11' => 'col-sm-11 (91.67%)',
                     'col-sm-12' => 'col-sm-12 (100%)',
                     'col-sm-auto' => LANG_CP_WIDGETS_COL_AUTO
-                ),
-                'visible_depend' => array('type' => array('hide' => array('custom')))
-            )),
-            new fieldList('options:md_col_class', array(
+                ],
+                'visible_depend' => ['type' => ['hide' => ['custom']]]
+            ]),
+            new fieldList('options:md_col_class', [
                 'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥768px'),
-                'items' => array(
+                'items' => [
                     ''          => LANG_BY_DEFAULT,
                     'col-md'    => LANG_AUTO,
                     'col-md-1'  => 'col-md-1 (8.33%)',
@@ -64,12 +64,12 @@ class onBootstrap4AdminColSchemeOptions extends cmsAction {
                     'col-md-11' => 'col-md-11 (91.67%)',
                     'col-md-12' => 'col-md-12 (100%)',
                     'col-md-auto' => LANG_CP_WIDGETS_COL_AUTO
-                ),
-                'visible_depend' => array('type' => array('hide' => array('custom')))
-            )),
-            new fieldList('options:lg_col_class', array(
+                ],
+                'visible_depend' => ['type' => ['hide' => ['custom']]]
+            ]),
+            new fieldList('options:lg_col_class', [
                 'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥992px'),
-                'items' => array(
+                'items' => [
                     ''          => LANG_BY_DEFAULT,
                     'col-lg'    => LANG_AUTO,
                     'col-lg-1'  => 'col-lg-1 (8.33%)',
@@ -85,12 +85,12 @@ class onBootstrap4AdminColSchemeOptions extends cmsAction {
                     'col-lg-11' => 'col-lg-11 (91.67%)',
                     'col-lg-12' => 'col-lg-12 (100%)',
                     'col-lg-auto' => LANG_CP_WIDGETS_COL_AUTO
-                ),
-                'visible_depend' => array('type' => array('hide' => array('custom')))
-            )),
-            new fieldList('options:xl_col_class', array(
+                ],
+                'visible_depend' => ['type' => ['hide' => ['custom']]]
+            ]),
+            new fieldList('options:xl_col_class', [
                 'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥1200px'),
-                'items' => array(
+                'items' => [
                     ''          => LANG_BY_DEFAULT,
                     'col-xl'    => LANG_AUTO,
                     'col-xl-1'  => 'col-xl-1 (8.33%)',
@@ -106,12 +106,12 @@ class onBootstrap4AdminColSchemeOptions extends cmsAction {
                     'col-xl-11' => 'col-xl-11 (91.67%)',
                     'col-xl-12' => 'col-xl-12 (100%)',
                     'col-xl-auto' => LANG_CP_WIDGETS_COL_AUTO
-                ),
-                'visible_depend' => array('type' => array('hide' => array('custom')))
-            )),
-            new fieldList('options:col_class', array(
+                ],
+                'visible_depend' => ['type' => ['hide' => ['custom']]]
+            ]),
+            new fieldList('options:col_class', [
                 'title' => LANG_CP_WIDGETS_COL_WIDTH_ALL,
-                'items' => array(
+                'items' => [
                     ''       => LANG_NO,
                     'col'    => LANG_AUTO,
                     'col-1'  => 'col-1 (8.33%)',
@@ -127,66 +127,65 @@ class onBootstrap4AdminColSchemeOptions extends cmsAction {
                     'col-11' => 'col-11 (91.67%)',
                     'col-12' => 'col-12 (100%)',
                     'col-auto' => LANG_CP_WIDGETS_COL_AUTO
-                ),
-                'visible_depend' => array('type' => array('hide' => array('custom')))
-            )),
-            new fieldNumber('options:default_order', array(
+                ],
+                'visible_depend' => ['type' => ['hide' => ['custom']]]
+            ]),
+            new fieldNumber('options:default_order', [
                 'title' => LANG_CP_WIDGETS_COL_D_ORDER,
                 'options' => [
                     'is_abs' => true,
                     'is_ceil' => true
                 ],
                 'rules' => [
-                    array('max', 12),
+                    ['max', 12],
                 ],
-                'visible_depend' => array('type' => array('hide' => array('custom')))
-            )),
-            new fieldNumber('options:sm_order', array(
+                'visible_depend' => ['type' => ['hide' => ['custom']]]
+            ]),
+            new fieldNumber('options:sm_order', [
                 'title' => sprintf(LANG_CP_WIDGETS_COL_ORDER, '≥576px'),
                 'options' => [
                     'is_abs' => true,
                     'is_ceil' => true
                 ],
                 'rules' => [
-                    array('max', 12),
+                    ['max', 12],
                 ],
-                'visible_depend' => array('type' => array('hide' => array('custom')))
-            )),
-            new fieldNumber('options:md_order', array(
+                'visible_depend' => ['type' => ['hide' => ['custom']]]
+            ]),
+            new fieldNumber('options:md_order', [
                 'title' => sprintf(LANG_CP_WIDGETS_COL_ORDER, '≥768px'),
                 'options' => [
                     'is_abs' => true,
                     'is_ceil' => true
                 ],
                 'rules' => [
-                    array('max', 12),
+                    ['max', 12],
                 ],
-                'visible_depend' => array('type' => array('hide' => array('custom')))
-            )),
-            new fieldNumber('options:lg_order', array(
+                'visible_depend' => ['type' => ['hide' => ['custom']]]
+            ]),
+            new fieldNumber('options:lg_order', [
                 'title' => sprintf(LANG_CP_WIDGETS_COL_ORDER, '≥992px'),
                 'options' => [
                     'is_abs' => true,
                     'is_ceil' => true
                 ],
                 'rules' => [
-                    array('max', 12),
+                    ['max', 12],
                 ],
-                'visible_depend' => array('type' => array('hide' => array('custom')))
-            )),
-            new fieldNumber('options:xl_order', array(
+                'visible_depend' => ['type' => ['hide' => ['custom']]]
+            ]),
+            new fieldNumber('options:xl_order', [
                 'title' => sprintf(LANG_CP_WIDGETS_COL_ORDER, '≥1200px'),
                 'options' => [
                     'is_abs' => true,
                     'is_ceil' => true
                 ],
                 'rules' => [
-                    array('max', 12),
+                    ['max', 12],
                 ],
-                'visible_depend' => array('type' => array('hide' => array('custom')))
-            ))
+                'visible_depend' => ['type' => ['hide' => ['custom']]]
+            ])
         ];
-
     }
 
 }

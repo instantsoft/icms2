@@ -2,15 +2,14 @@
 
 class onAuthFrontpageTypes extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        return array(
+        return [
             'name'  => $this->name,
-            'types' => array(
+            'types' => [
                 'auth:login' => LANG_CP_SETTINGS_FP_SHOW_PROFILE
-            )
-        );
-
+            ]
+        ];
     }
 
 }

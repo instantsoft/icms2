@@ -2,15 +2,14 @@
 
 class onFrontpageSitemapSources extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        return array(
+        return [
             'name' => $this->name,
-            'sources' => array(
+            'sources' => [
                 'root' => LANG_HOME
-            )
-        );
-
+            ]
+        ];
     }
 
 }

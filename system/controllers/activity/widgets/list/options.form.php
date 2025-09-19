@@ -13,11 +13,11 @@ class formWidgetActivityListOptions extends cmsForm {
                 'childs' => [
                     new fieldList('options:dataset', [
                         'title' => LANG_WD_ACTIVITY_LIST_DATASET,
-                        'items' => array(
+                        'items' => [
                             'all'     => LANG_ACTIVITY_DS_ALL,
                             'friends' => LANG_ACTIVITY_DS_FRIENDS,
                             'my'      => LANG_ACTIVITY_DS_MY,
-                        )
+                        ]
                     ]),
                     new fieldCheckbox('options:show_avatars', [
                         'title' => LANG_WD_ACTIVITY_LIST_SHOW_AVATARS

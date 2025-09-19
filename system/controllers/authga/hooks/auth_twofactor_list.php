@@ -2,13 +2,13 @@
 
 class onAuthgaAuthTwofactorList extends cmsAction {
 
-    public function run(){
-        return array(
+    public function run() {
+        return [
             'name'  => $this->name,
-            'types' => array(
+            'types' => [
                 $this->name => 'Google Authenticator'
-            )
-        );
+            ]
+        ];
     }
 
 }

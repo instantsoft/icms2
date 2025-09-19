@@ -2,7 +2,7 @@
 
 class onActivityUserAddStatusAfter extends cmsAction {
 
-    public function run($data){
+    public function run($data) {
 
         list($status_id,
             $user_id,
@@ -10,10 +10,10 @@ class onActivityUserAddStatusAfter extends cmsAction {
             $status_content,
             $status_link) = $data;
 
-        $this->addEntry('users', 'status', array(
+        $this->addEntry('users', 'status', [
             'subject_title' => $status_content,
             'reply_url'     => $status_link
-        ));
+        ]);
 
         return [
             $status_id,
@@ -22,7 +22,6 @@ class onActivityUserAddStatusAfter extends cmsAction {
             $status_content,
             $status_link
         ];
-
     }
 
 }

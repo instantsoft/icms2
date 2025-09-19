@@ -69,9 +69,6 @@ class auth extends cmsFrontend {
         return $this->redirectToHome();
     }
 
-//============================================================================//
-//============================================================================//
-
     public function isEmailAllowed($value) {
 
         $list = $this->options['restricted_emails'];
@@ -92,9 +89,6 @@ class auth extends cmsFrontend {
 
         return !string_in_mask_list($value, $list);
     }
-
-//============================================================================//
-//============================================================================//
 
     public function sendGreetMsg($user) {
 
@@ -152,7 +146,7 @@ class auth extends cmsFrontend {
 
             $fieldset_id = $form->addFieldsetToBeginning(!$this->options['is_reg_invites'] ? '' : LANG_REG_INVITED_ONLY);
 
-            $form->addField($fieldset_id, new fieldString('inv', array(
+            $form->addField($fieldset_id, new fieldString('inv', [
                 'title'      => LANG_REG_INVITE_CODE,
                 'attributes' => [
                     'readonly' => !$this->options['is_reg_invites'] ? true : false
@@ -162,7 +156,7 @@ class auth extends cmsFrontend {
                     ['min_length', 10],
                     ['max_length', 10]
                 ]
-            )));
+            ]));
         }
 
         //
@@ -173,16 +167,16 @@ class auth extends cmsFrontend {
 
         if ($public_groups) {
 
-            $pb_items = array();
+            $pb_items = [];
             foreach ($public_groups as $pb) {
                 $pb_items[$pb['id']] = $pb['title'];
             }
 
             $form->addFieldToBeginning('basic',
-                new fieldList('group_id', array(
+                new fieldList('group_id', [
                     'title' => LANG_USER_GROUP,
                     'items' => $pb_items
-                ))
+                ])
             );
         }
 

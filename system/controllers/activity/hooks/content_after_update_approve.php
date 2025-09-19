@@ -12,16 +12,15 @@ class onActivityContentAfterUpdateApprove extends cmsAction {
         }
 
         // обновляем запись в ленте активности
-        $this->updateEntry('content', "add.{$ctype_name}", $item['id'], array(
+        $this->updateEntry('content', "add.{$ctype_name}", $item['id'], [
             'subject_title' => $item['title'],
             'subject_id'    => $item['id'],
             'subject_url'   => href_to_rel($ctype_name, $item['slug'] . '.html'),
-            'is_private'    => isset($item['is_private']) ? $item['is_private'] : 0,
-            'is_pub'        => (isset($item['is_pub']) ? ($item['is_pub'] <= 0 ? 0 : 1) : 1)
-        ));
+            'is_private'    => $item['is_private'] ?? 0,
+            'is_pub'        => isset($item['is_pub']) ? ($item['is_pub'] <= 0 ? 0 : 1) : 1
+        ]);
 
         return $data;
-
     }
 
 }

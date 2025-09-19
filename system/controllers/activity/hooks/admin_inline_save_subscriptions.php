@@ -10,12 +10,11 @@ class onActivityAdminInlineSaveSubscriptions extends cmsAction {
             return $input_data;
         }
 
-        $this->updateEntry('subscriptions', 'subscribe', $item['id'], array(
+        $this->updateEntry('subscriptions', 'subscribe', $item['id'], [
             'subject_title' => $data['title']
-        ));
+        ]);
 
         return $input_data;
-
     }
 
 }
