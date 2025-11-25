@@ -43,8 +43,6 @@ class google implements translatable {
         $result   = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        curl_close($ch);
-
         if (false === $result || 200 !== $httpcode) {
 
             return [];

@@ -191,8 +191,6 @@ class cmsImages {
                 imagealphablending($dest_image, true);
 
                 imagecopy($dest_image, $wm, (int)$x, (int)$y, 0, 0, $wm_width, $wm_height);
-
-                imagedestroy($wm);
             });
 
         }
@@ -321,8 +319,6 @@ class cmsImages {
         }
 
         $this->source_file_path = $filename;
-
-        finfo_close($finfo);
 
         return $this->resize($this->getSourceWidth(), $this->getSourceHeight());
     }
@@ -591,8 +587,6 @@ class cmsImages {
         if ($permissions) {
             chmod($filename, $permissions);
         }
-
-        imagedestroy($dest_image);
 
         return $this;
     }

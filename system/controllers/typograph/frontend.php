@@ -462,7 +462,7 @@ class typograph extends cmsFrontend {
         $tag_string = '<img';
 
         foreach ($params as $param => $value) {
-            if (in_array($param, ['height'])) {
+            if ($param === 'height') {
                 continue;
             }
             if ($value) {
@@ -511,6 +511,23 @@ class typograph extends cmsFrontend {
 
         if (empty($params['src'])) {
             return '';
+        }
+
+        if (!empty($params['data-as-is'])) {
+
+            unset($params['data-as-is']);
+
+            $tag_string = '<iframe';
+
+            foreach ($params as $param => $value) {
+                if ($value) {
+                    $tag_string .= ' ' . $param . '="' . $value . '"';
+                }
+            }
+
+            $tag_string .= '></iframe>';
+
+            return $tag_string;
         }
 
         return $this->getVideoCode($params['src']);

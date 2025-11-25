@@ -4,18 +4,25 @@ class actionContentWidgetCatsAjax extends cmsAction {
 
     public function run() {
 
-        if (!$this->request->isAjax() || !cmsUser::isAdmin()) {
+        if (!$this->request->isAjax() || !$this->cms_user->is_admin) {
             return cmsCore::error404();
         }
 
-        $list = [['title' => '', 'value' => '']];
+        $empty_title = $this->request->get('empty_title', '');
 
-        $ctype_id = $this->request->get('value', 0);
+        $list = [['title' => strip_tags($empty_title), 'value' => '']];
+
+        $ctype_id = $this->request->get('value', '');
         if (!$ctype_id) {
             return $this->cms_template->renderJSON($list);
         }
 
-        $ctype = $this->model->getContentType($ctype_id);
+        if (is_numeric($ctype_id)) {
+            $ctype = $this->model->getContentType($ctype_id);
+        } else {
+            $ctype = $this->model->getContentTypeByName($ctype_id);
+        }
+
         if (!$ctype) {
             return $this->cms_template->renderJSON($list);
         }

@@ -9,6 +9,7 @@ class widgetContentCategories extends cmsWidget {
         $ctype = cmsModel::getCachedResult('current_ctype');
 
         $ctype_name = $this->getOption('ctype_name');
+        $category_id = $this->getOption('category_id');
 
         $active_cat = false;
         $path       = [];
@@ -55,7 +56,23 @@ class widgetContentCategories extends cmsWidget {
 
         $model = isset($model) ? $model : cmsCore::getModel('content');
 
-        $cats = $model->filterIsNull('is_hidden')->getCategoriesTree($ctype_name, $this->getOption('is_root'));
+        if ($category_id) {
+            if ($category_id == 1) {
+                $model->filterLtEqual('parent_id', 1);
+            } else {
+
+                $parent = $model->getCategory($ctype_name, $category_id);
+
+                if (!$parent) {
+                    return false;
+                }
+
+                $model->filterGt('ns_left', $parent['ns_left'])->
+                    filterLt('ns_right', $parent['ns_right']);
+            }
+        }
+
+        $cats = $model->filterIsNull('is_hidden')->getCategoriesTree($ctype_name, $this->getOption('is_root'), $this->getOption('root_cat_title')?:null);
         if (!$cats) {
             return false;
         }
@@ -136,8 +153,9 @@ class widgetContentCategories extends cmsWidget {
             'ctype_name'   => (($ctype_default && in_array($ctype_name, $ctype_default)) ? '' : $ctype_name),
             'cats'         => $tree,
             'active_cat'   => $active_cat, // в шаблоне не используется, совместимость
+            'show_counts'  => $this->getOption('show_counts'),
             'cover_preset' => $cover_preset,
-            'path'         => (!empty($path) ? $path : array()) // в шаблоне не используется, совместимость
+            'path'         => (!empty($path) ? $path : []) // в шаблоне не используется, совместимость
         ];
     }
 

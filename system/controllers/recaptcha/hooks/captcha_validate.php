@@ -40,8 +40,6 @@ class onRecaptchaCaptchaValidate extends cmsAction {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
 
             $data = curl_exec($curl);
-
-            curl_close($curl);
         }
 
         if (!$data) {

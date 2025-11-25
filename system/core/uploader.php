@@ -515,7 +515,6 @@ class cmsUploader {
         curl_setopt($curl, CURLOPT_NOBODY, true);
         curl_setopt($curl, CURLOPT_TIMEOUT, 5);
         $headers = curl_exec($curl);
-        curl_close($curl);
 
         $matches = [];
         if (preg_match("/(?:Location:|URI:)([^\n]+)*/is", $headers, $matches)) {

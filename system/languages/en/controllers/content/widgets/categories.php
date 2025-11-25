@@ -1,4 +1,5 @@
 <?php
 
-    define('LANG_WD_CONTENT_CATS_SHOW_ROOT',  'Show root category');
-    define('LANG_WD_CONTENT_CATS_SHOW_FULL_TREE',  'Show full tree');
+define('LANG_WD_CONTENT_CATS_SHOW_ROOT',  'Show root category');
+define('LANG_WD_CONTENT_ROOT_CAT_TITLE',  'Root category title');
+define('LANG_WD_CONTENT_CATS_SHOW_FULL_TREE',  'Show full tree');

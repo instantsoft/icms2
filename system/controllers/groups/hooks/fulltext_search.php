@@ -62,12 +62,30 @@ class onGroupsFulltextSearch extends cmsAction {
                     'name' => 'groups'
                 ];
 
+                $url = href_to('groups', ($item['slug'] ?: $item['id']));
+
+                $image = '';
+
+                if ($image_field) {
+
+                    $item_image = $item;
+
+                    $item_image['title'] = strip_tags($item_image['title']);
+
+                    $image_field['handler']->setOption('show_to_item_link', false);
+
+                    $image = $image_field['handler']->
+                            setTeaserURL($url)->
+                            setItem($item_image)->
+                            parseTeaser($item[$image_field['name']]);
+                }
+
                 return array_merge($item, [
-                    'url'      => href_to('groups', ($item['slug'] ? $item['slug'] : $item['id'])),
+                    'url'      => $url,
                     'title'    => $item['title'],
                     'fields'   => $fields,
                     'date_pub' => $item['date_pub'],
-                    'image'    => $image_field ? $image_field['handler']->setItem($item)->parseTeaser($item[$image_field['name']]) : ''
+                    'image'    => $image
                 ]);
             }
         ];

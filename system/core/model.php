@@ -233,7 +233,7 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getCategoriesTree($ctype_name, $is_show_root = true) {
+    public function getCategoriesTree($ctype_name, $is_show_root = true, $root_title = null) {
 
         if (!$is_show_root) {
             $this->filterGt('parent_id', 0);
@@ -245,9 +245,9 @@ class cmsModel {
 
         $this->useCache('content.categories');
 
-        return $this->get($this->getContentCategoryTableName($ctype_name), function ($node, $model) {
+        return $this->get($this->getContentCategoryTableName($ctype_name), function ($node, $model) use($root_title) {
             if ($node['ns_level'] == 0) {
-                $node['title'] = LANG_ROOT_CATEGORY;
+                $node['title'] = $root_title ?? LANG_ROOT_CATEGORY;
             }
             if (!empty($node['allow_add'])) {
                 $node['allow_add'] = cmsModel::yamlToArray($node['allow_add']);

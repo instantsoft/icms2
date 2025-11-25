@@ -162,8 +162,6 @@ class cmsUploadfile {
 
         $this->file_mime = finfo_file($finfo, $file_path);
 
-        finfo_close($finfo);
-
         $this->loadExtFromMime();
     }
 
@@ -177,8 +175,6 @@ class cmsUploadfile {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
 
         $this->file_mime = finfo_buffer($finfo, $file_str);
-
-        finfo_close($finfo);
 
         $this->loadExtFromMime();
     }

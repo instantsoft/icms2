@@ -349,8 +349,6 @@ function get_api_method($name, $params = []) {
 
     $data = json_decode($_data, true);
 
-    curl_close($curl);
-
     if ($data === false) {
         return null;
     }

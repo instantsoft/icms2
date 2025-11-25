@@ -63,7 +63,7 @@ class widgetContentAuthor extends cmsWidget {
 
         // Микроразметка
         $jsonld = [];
-        if ($is_item_page && $this->getOption('generate_schemaorg')){
+        if ($is_item_page && $this->getOption('generate_schemaorg')) {
 
             $jsonld = [
                 '@context'       => 'https://schema.org',
@@ -91,8 +91,9 @@ class widgetContentAuthor extends cmsWidget {
 
                 if($schemaorg_addons){
                     $schemaorg_addons = $this->replaceSchemaorgValues([
+                        'ctype'   => $ctype,
                         'profile' => $profile,
-                        'item' => $item
+                        'item'    => $item
                     ], $schemaorg_addons);
                 }
 

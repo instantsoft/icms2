@@ -321,8 +321,6 @@ class lastRSS {
 
             $data = curl_exec($curl);
 
-            curl_close($curl);
-
         } else {
 
             $data = false;

@@ -220,8 +220,6 @@ class billingPaymentSystem {
             $response->body = json_decode($response->body, true) ?? $response->body;
         }
 
-        curl_close($ch);
-
         return $response;
     }
 

@@ -26,12 +26,12 @@ class formWidgetContentSliderOptions extends cmsForm {
             return $list;
         };
 
-        return array(
-            array(
+        return [
+            [
                 'type'   => 'fieldset',
                 'title'  => LANG_OPTIONS,
-                'childs' => array(
-                    new fieldList('options:ctype_id', array(
+                'childs' => [
+                    new fieldList('options:ctype_id', [
                         'title'     => LANG_CONTENT_TYPE,
                         'default'   => 1,
                         'generator' => function($ctype) {
@@ -45,13 +45,13 @@ class formWidgetContentSliderOptions extends cmsForm {
                             }
                             return $items;
                         },
-                    )),
-                    new fieldList('options:category_id', array(
+                    ]),
+                    new fieldList('options:category_id', [
                         'title'     => LANG_CATEGORY,
-                        'parent'    => array(
+                        'parent'    => [
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_cats_ajax')
-                        ),
+                        ],
                         'generator' => function($item, $request) use($content_model) {
                             $list     = ['' => ''];
                             $ctype_id = is_array($item) ? array_value_recursive('options:ctype_id', $item) : false;
@@ -78,13 +78,13 @@ class formWidgetContentSliderOptions extends cmsForm {
                             }
                             return $list;
                         }
-                    )),
-                    new fieldList('options:dataset', array(
+                    ]),
+                    new fieldList('options:dataset', [
                         'title'     => LANG_WD_CONTENT_SLIDER_DATASET,
-                        'parent'    => array(
+                        'parent'    => [
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_datasets_ajax')
-                        ),
+                        ],
                         'generator' => function($item, $request) use($content_model) {
                             $list     = ['0' => ''];
                             $ctype_id = is_array($item) ? array_value_recursive('options:ctype_id', $item) : false;
@@ -100,51 +100,51 @@ class formWidgetContentSliderOptions extends cmsForm {
                             }
                             return $list;
                         }
-                    )),
-                    new fieldList('options:image_field', array(
+                    ]),
+                    new fieldList('options:image_field', [
                         'title'     => LANG_WD_CONTENT_SLIDER_IMAGE,
-                        'rules'     => array(
-                            array('required')
-                        ),
-                        'parent'    => array(
+                        'rules'     => [
+                            ['required']
+                        ],
+                        'parent'    => [
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_fields_ajax')
-                        ),
+                        ],
                         'generator' => $field_generator
-                    )),
-                    new fieldList('options:big_image_field', array(
+                    ]),
+                    new fieldList('options:big_image_field', [
                         'title'     => LANG_WD_CONTENT_SLIDER_BIG_IMAGE,
                         'hint'      => LANG_WD_CONTENT_SLIDER_BIG_IMAGE_HINT,
-                        'parent'    => array(
+                        'parent'    => [
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_fields_ajax')
-                        ),
+                        ],
                         'generator' => $field_generator
-                    )),
-                    new fieldList('options:big_image_preset', array(
+                    ]),
+                    new fieldList('options:big_image_preset', [
                         'title'     => LANG_WD_CONTENT_SLIDER_BIG_IMAGE_PRESET,
                         'generator' => function($item) {
-                            return cmsCore::getModel('images')->getPresetsList(true) + array('original' => LANG_PARSER_IMAGE_SIZE_ORIGINAL);
+                            return cmsCore::getModel('images')->getPresetsList(true) + ['original' => LANG_PARSER_IMAGE_SIZE_ORIGINAL];
                         },
-                    )),
-                    new fieldList('options:teaser_field', array(
+                    ]),
+                    new fieldList('options:teaser_field', [
                         'title'     => LANG_WD_CONTENT_SLIDER_TEASER,
-                        'parent'    => array(
+                        'parent'    => [
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_fields_ajax')
-                        ),
+                        ],
                         'generator' => $field_generator
-                    )),
-                    new fieldNumber('options:teaser_len', array(
+                    ]),
+                    new fieldNumber('options:teaser_len', [
                         'title' => LANG_PARSER_HTML_TEASER_LEN,
                         'hint'  => LANG_PARSER_HTML_TEASER_LEN_HINT,
-                    )),
-                    new fieldNumber('options:delay', array(
+                    ]),
+                    new fieldNumber('options:delay', [
                         'title'   => LANG_WD_CONTENT_SLIDER_DELAY,
                         'hint'    => LANG_WD_CONTENT_SLIDER_DELAY_HINT,
                         'default' => 5,
                         'units'   => LANG_SECOND10
-                    )),
+                    ]),
                     new fieldNumber('options:offset', [
                         'title'   => LANG_LIST_OFFSET,
                         'hint'    => LANG_LIST_OFFSET_HINT,
@@ -158,10 +158,9 @@ class formWidgetContentSliderOptions extends cmsForm {
                             ['min', 1]
                         ]
                     ])
-                )
-            )
-        );
-
+                ]
+            ]
+        ];
     }
 
 }

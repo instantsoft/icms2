@@ -993,8 +993,6 @@ class admin extends cmsFrontend {
 
         $data = json_decode($_data, true);
 
-        curl_close($curl);
-
         if ($data === false) {
             return json_last_error_msg();
         }

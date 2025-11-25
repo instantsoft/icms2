@@ -35,12 +35,12 @@ class formWidgetContentFieldsOptions extends cmsForm {
             return $list;
         };
 
-        return array(
-            array(
+        return [
+            [
                 'type'   => 'fieldset',
                 'title'  => LANG_OPTIONS,
-                'childs' => array(
-                    new fieldList('options:ctype_id', array(
+                'childs' => [
+                    new fieldList('options:ctype_id', [
                         'title' => LANG_CONTENT_TYPE,
                         'hint' => LANG_WD_CONTENT_FIELDS_CT_HINT,
                         'generator' => function($ctype) {
@@ -58,23 +58,23 @@ class formWidgetContentFieldsOptions extends cmsForm {
 
                             return $items;
                         },
-                        'rules' => array(
-                            array('required')
-                        )
-                    )),
-                    new fieldImage('options:image_path', array(
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldImage('options:image_path', [
                         'title'  => LANG_WD_FIELDS_IMG,
                         'hint'    => LANG_WD_FIELDS_IMG_HINT,
-                        'options' => array(
-                            'sizes' => array(
+                        'options' => [
+                            'sizes' => [
                                 'original'
-                            )
-                        )
-                    )),
-                    new fieldList('options:image_field', array(
+                            ]
+                        ]
+                    ]),
+                    new fieldList('options:image_field', [
                         'title' => LANG_WD_CONTENT_FIELDS_IF,
                         'hint'  => LANG_WD_CONTENT_FIELDS_IF_HINT,
-                        'parent' => array(
+                        'parent' => [
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_fields_ajax').'?'.http_build_query(['excluding_filter' => [
                                 'is_system' => 1,
@@ -82,23 +82,23 @@ class formWidgetContentFieldsOptions extends cmsForm {
                                     'is_in_item_pos' => ['page']
                                 ]
                             ]])
-                        ),
+                        ],
                         'generator' => $field_generator
-                    )),
-                    new fieldList('options:image_preset', array(
+                    ]),
+                    new fieldList('options:image_preset', [
                         'title' => LANG_WD_CONTENT_FIELDS_IFP,
                         'generator' => function($item) {
-                            return cmsCore::getModel('images')->getPresetsList(true)+array('original' => LANG_PARSER_IMAGE_SIZE_ORIGINAL);
+                            return cmsCore::getModel('images')->getPresetsList(true)+['original' => LANG_PARSER_IMAGE_SIZE_ORIGINAL];
                         },
-                        'visible_depend' => array('options:image_field' => array('hide' => array('')))
-                    )),
-                    new fieldCheckbox('options:image_is_parallax', array(
+                        'visible_depend' => ['options:image_field' => ['hide' => ['']]]
+                    ]),
+                    new fieldCheckbox('options:image_is_parallax', [
                         'title' => LANG_WD_CONTENT_FIELDS_IFPA
-                    )),
-                    new fieldList('options:fields', array(
+                    ]),
+                    new fieldList('options:fields', [
                         'title' => LANG_CP_CTYPE_FIELDS,
                         'is_chosen_multiple' => true,
-                        'parent' => array(
+                        'parent' => [
                             'list' => 'options:ctype_id',
                             'url'  => href_to('content', 'widget_fields_ajax').'?'.http_build_query(['excluding_filter' => [
                                 'is_system' => 1,
@@ -106,19 +106,18 @@ class formWidgetContentFieldsOptions extends cmsForm {
                                     'is_in_item_pos' => ['page']
                                 ]
                             ]])
-                        ),
+                        ],
                         'generator' => $field_generator,
-                        'rules' => array(
-                            array('required')
-                        )
-                    )),
-                    new fieldCheckbox('options:show_info_block', array(
+                        'rules' => [
+                            ['required']
+                        ]
+                    ]),
+                    new fieldCheckbox('options:show_info_block', [
                         'title' => LANG_WD_CONTENT_FIELDS_SHOW_INFO_BLOCK
-                    ))
-                )
-            )
-        );
-
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

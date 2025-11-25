@@ -16,7 +16,7 @@
                             <a href="<?php echo href_to($ctype_name, $item['slug']); ?>">
                                 <?php echo $item['title']; ?>
                             </a>
-                            <?php if(isset($item['item_count_recursive'])){ ?>
+                            <?php if($show_counts && isset($item['item_count_recursive'])){ ?>
                                 <sup>
                                     <?php echo $item['item_count_recursive']; ?>
                                 </sup>
@@ -47,7 +47,7 @@
                 <a class="h5<?php if ($item['is_active']) { ?> text-dark<?php } ?>" href="<?php echo href_to($ctype_name, $item['slug']); ?>">
                     <span class="text-warning"><?php html_svg_icon('solid', 'folder'); ?></span>
                     <span><?php html($item['title']); ?></span>
-                    <?php if(isset($item['item_count_recursive'])){ ?>
+                    <?php if($show_counts && isset($item['item_count_recursive'])){ ?>
                         <sup>
                             <?php echo $item['item_count_recursive']; ?>
                         </sup>

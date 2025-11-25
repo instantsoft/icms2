@@ -24,10 +24,10 @@ class actionAdminWidgets extends cmsAction {
         $tpls = cmsCore::getTemplates();
 
         $scroll_to     = strip_tags($this->request->get('scroll_to', ''));
-        $template_name = $this->request->get('template_name', '');
+        $template_name = $this->request->get('template_name', cmsConfig::get('template'));
 
-        if (!$template_name || !in_array($template_name, $tpls)) {
-            $template_name = cmsConfig::get('template');
+        if (!$template_name || !in_array($template_name, $tpls, true)) {
+            return cmsCore::error404();
         }
 
         cmsCore::loadTemplateLanguage($template_name);

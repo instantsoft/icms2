@@ -188,7 +188,6 @@ class cmsResponse {
 
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $file_mime = finfo_buffer($finfo, $body) ?: 'text/plain';
-            finfo_close($finfo);
 
             $this->setHeader('Content-Type', $file_mime);
         }
