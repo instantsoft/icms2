@@ -622,10 +622,7 @@ class modelBilling extends cmsModel {
             $success = $success && $this->incrementPlanUsers($next_plan['id']);
         }
 
-        $success = $success && $this->update('{users}', $user_id, [
-            'groups'  => $plan['old_groups'],
-            'plan_id' => $next_plan['id'] ?? null
-        ]);
+        $success = $success && $this->saveUserPlanGroupsMembership($user_id, ($next_plan['id'] ?? null), $plan['old_groups']);
 
         cmsCache::getInstance()->clean('users.list');
         cmsCache::getInstance()->clean('users.user.' . $user_id);
@@ -708,10 +705,7 @@ class modelBilling extends cmsModel {
 
             $groups = array_unique(array_merge($user['groups'], $plan['groups']));
 
-            $success = $success && $this->update('{users}', $user['id'], [
-                'groups'  => $groups,
-                'plan_id' => $plan['id']
-            ]);
+            $success = $success && $this->saveUserPlanGroupsMembership($user['id'], $plan['id'], $groups);
 
             $success = $success && $this->incrementPlanUsers($plan['id']);
         }
@@ -727,7 +721,26 @@ class modelBilling extends cmsModel {
         return $success ? $date_until->format(cmsConfig::get('date_format') . ' H:i') : false;
     }
 
-/* ========================================================================== */
+    private function saveUserPlanGroupsMembership($user_id, $plan_id, $groups) {
+
+        $success = $this->update('{users}', $user_id, [
+            'groups'  => $groups,
+            'plan_id' => $plan_id
+        ]);
+
+        $success = $success && $this->delete('{users}_groups_members', $user_id, 'user_id');
+
+        foreach ($groups as $group_id) {
+            $this->insert('{users}_groups_members', [
+                'user_id'  => $user_id,
+                'group_id' => $group_id
+            ]);
+        }
+
+        return $success;
+    }
+
+    /* ========================================================================== */
 
     public function addTransfer($transfer) {
         return $this->insert('billing_transfers', $transfer, false, true);
