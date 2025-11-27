@@ -277,9 +277,9 @@ class cmsUser {
      *
      * @param string $email
      * @param string $password
-     * @param boolean $remember
-     * @param boolean $complete_login
-     * @return integer|array
+     * @param bool $remember
+     * @param bool $complete_login
+     * @return int|array
      */
     public static function login($email, $password, $remember = false, $complete_login = true, $model = null) {
 
@@ -301,9 +301,9 @@ class cmsUser {
             return 0;
         }
 
-        $user = cmsEventsManager::hook('user_login', $user);
-
         if ($complete_login) {
+
+            $user = cmsEventsManager::hook('user_login', $user);
 
             self::loginComplete($user, $remember);
 

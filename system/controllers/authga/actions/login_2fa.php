@@ -33,6 +33,8 @@ class actionAuthgaLogin2fa extends cmsAction {
             }
         }
 
+        cmsUser::sessionSet('2fa_confirm', true);
+
         $tpl_params = [
             'form_action' => $form_action,
             'data'        => $data,

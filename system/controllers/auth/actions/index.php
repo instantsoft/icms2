@@ -29,7 +29,7 @@ class actionAuthIndex extends cmsAction {
 
         $form = $this->getForm('login');
 
-        if ($this->options['auth_captcha']) {
+        if ($this->options['auth_captcha'] && !cmsUser::sessionGet('2fa_confirm', true)) {
 
             $form = $this->addCapchaField($form);
         }
