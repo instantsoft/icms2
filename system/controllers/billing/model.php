@@ -116,6 +116,14 @@ class modelBilling extends cmsModel {
         ]);
     }
 
+    public function getLastUserPlanOperation($user_id) {
+
+        $this->filterEqual('user_id', $user_id);
+        $this->filterNotNull('plan_id');
+
+        return $this->orderBy('i.id', 'desc')->getItem('billing_log');
+    }
+
     /**
      * Отменяет платёж
      *
@@ -161,6 +169,71 @@ class modelBilling extends cmsModel {
         }
 
         $this->endTransaction($success);
+
+        return $success;
+    }
+
+    /**
+     * Возвращает платёж
+     *
+     * @param array $operation Массив операции из billing_log
+     * @return bool
+     */
+    public function refundPayment($operation) {
+
+        $is_transaction_started = $this->isTransactionStarted();
+
+        if (!$is_transaction_started) {
+            $this->startTransaction();
+        }
+
+        $success = $this->setOperationStatus($operation['id'], self::STATUS_CANCELED);
+
+        $description = sprintf(LANG_BILLING_LOG_REFUND_DESC, $operation['description']);
+
+        // Возвращаем баланс
+        $success = $success && $this->changeBalance('user', $operation['user_id'], $operation['amount']*-1, $description);
+
+        // Если это перевод между пользователями
+        if ($operation['sender_id'] && $operation['sender_id'] != $operation['user_id']) {
+            $success = $success && $this->changeBalance('user', $operation['sender_id'], $operation['amount'], $description);
+        }
+
+        // Убираем реферальные вознаграждения
+        if (in_array($this->options['ref_mode'], ['all', 'dep', 'sub'])) {
+            $success = $success && $this->payRefBonus($operation['amount'], $operation['user_id'], null, true);
+        }
+
+        // Отменяем подписку
+        if (!empty($operation['plan_id'])) {
+
+
+            $plan = $this->join('billing_plans_log', 'p', 'p.plan_id = i.id')->
+                        select('p.id', 'log_id')->select('p.old_groups', 'old_groups')->
+                        getPlan($operation['plan_id']);
+
+            if ($plan && isset($plan['prices'][$operation['plan_period']])) {
+
+                $price = $plan['prices'][$operation['plan_period']];
+
+                // Убираем кэшбэк
+                if (!empty($price['cashback'])) {
+                    $success = $success && $this->changeBalance(
+                        'user',
+                        $operation['user_id'],
+                        $price['cashback']*-1,
+                        sprintf(LANG_BILLING_LOG_REFUND_DESC, sprintf(LANG_BILLING_PLAN_TICKET_CASHBACK, $plan['title']))
+                    );
+                }
+
+                // Выключаем подписку
+                $success = $success && $this->relegateUserPlan($operation['user_id'], $plan);
+            }
+        }
+
+        if (!$is_transaction_started) {
+            $this->endTransaction($success);
+        }
 
         return $success;
     }
@@ -275,15 +348,35 @@ class modelBilling extends cmsModel {
         return $this->decrement('{users}', 'balance', abs($amount));
     }
 
-    public function incrementUserBalance($user_id, $amount, $description = false, $action_id = false) {
-        return $this->changeUserBalance($user_id, abs($amount), $description, $action_id);
+    /**
+     * Увеличивает баланс пользователя
+     *
+     * @param int $user_id ID пользователя
+     * @param float $amount Сумма во внутренней валюте, зачисляемая на баланс (приводится к положительной)
+     * @param ?string|array $description Описание операции
+     * @param ?int $action_id ID действия в Биллинге (id нужной записи из таблицы billing_actions)
+     * @param ?array $plan_params Массив подписки в формате ['plan_id' => int $plan_id, 'plan_period' => int $period]
+     * @return bool
+     */
+    public function incrementUserBalance($user_id, $amount, $description = null, $action_id = null, $plan_params =  null) {
+        return $this->changeUserBalance($user_id, abs($amount), $description, $action_id, $plan_params);
     }
 
-    public function decrementUserBalance($user_id, $amount, $description = false, $action_id = false) {
+    /**
+     * Уменьшает баланс пользователя
+     *
+     * @param int $user_id ID пользователя
+     * @param float $amount Сумма во внутренней валюте, списываемая с баланса (приводится к отрицательной)
+     * @param ?string|array $description Описание операции
+     * @param ?int $action_id ID действия в Биллинге (id нужной записи из таблицы billing_actions)
+     * @param ?array $plan_params Массив подписки в формате ['plan_id' => int $plan_id, 'plan_period' => int $period]
+     * @return bool
+     */
+    public function decrementUserBalance($user_id, $amount, $description = null, $action_id = null, $plan_params =  null) {
 
         $amount = abs($amount) * -1;
 
-        return $this->changeUserBalance($user_id, $amount, $description, $action_id);
+        return $this->changeUserBalance($user_id, $amount, $description, $action_id, $plan_params);
     }
 
     /**
@@ -293,16 +386,17 @@ class modelBilling extends cmsModel {
      * @param mixed $amount Сумма во внутренней валюте, зачисляемая на баланс. Может быть отрицательной.
      * @param ?string|array $description Описание операции
      * @param ?int $action_id ID действия в Биллинге (id нужной записи из таблицы billing_actions)
+     * @param ?array $plan_params Массив подписки в формате ['plan_id' => int $plan_id, 'plan_period' => int $period]
      * @return bool
      */
-    public function changeUserBalance($user_id, $amount, $description = null, $action_id = null) {
+    public function changeUserBalance($user_id, $amount, $description = null, $action_id = null, $plan_params =  null) {
 
         // Вознаграждение за любой доход реферала
         if ($this->options['ref_mode'] === 'all') {
             $this->payRefBonus($amount, $user_id);
         }
 
-        return $this->changeBalance('user', $user_id, $amount, $description, $action_id);
+        return $this->changeBalance('user', $user_id, $amount, $description, $action_id, $plan_params);
     }
 
     /**
@@ -313,9 +407,10 @@ class modelBilling extends cmsModel {
      * @param float|string $amount Сумма во внутренней валюте, зачисляемая на баланс. Может быть отрицательной.
      * @param ?string|array $description Описание операции
      * @param ?int $action_id ID действия в Биллинге (id нужной записи из таблицы billing_actions)
+     * @param ?array $plan_params Массив подписки в формате ['plan_id' => int $plan_id, 'plan_period' => int $period]
      * @return bool
      */
-    public function changeBalance(string $mode, $subject_id, $amount, $description = null, $action_id = null) {
+    public function changeBalance(string $mode, $subject_id, $amount, $description = null, $action_id = null, $plan_params =  null) {
 
         if (!$amount) {
             return false;
@@ -371,6 +466,12 @@ class modelBilling extends cmsModel {
 
         foreach ($users_ids as $user_id) {
 
+            if (is_array($user_id)) {
+                [$sender_id, $user_id] = $user_id;
+            } else {
+                $sender_id = null;
+            }
+
             $update_amount = $amount;
 
             if ($is_percent) {
@@ -387,11 +488,14 @@ class modelBilling extends cmsModel {
                 'date_done'   => null,
                 'amount'      => $update_amount,
                 'user_id'     => $user_id,
+                'sender_id'   => $sender_id,
                 'status'      => self::STATUS_DONE,
                 'action_id'   => $action_id,
                 'description' => $description ?? $default_description,
                 'url'         => $url,
-                'ref_link_id' => $ref_link_id
+                'ref_link_id' => $ref_link_id,
+                'plan_id'     => $plan_params['plan_id'] ?? null,
+                'plan_period' => $plan_params['plan_period'] ?? null
             ]);
         }
 
@@ -677,7 +781,7 @@ class modelBilling extends cmsModel {
                 $date_until->add($plan_interval);
 
                 $success = $success && $this->update('billing_plans_log', $l['id'], [
-                    'date_until' => $date_until->format('Y-m-d')
+                    'date_until' => $date_until->format('Y-m-d H:i:s')
                 ]);
 
                 if (!$l['is_paused'] && (!$is_continue || $l['id'] != $last_log['id'])) {
@@ -859,12 +963,17 @@ class modelBilling extends cmsModel {
      * @param mixed $amount Сумма дохода реферала
      * @param int $user_id ID реферала
      * @param ?int $max_level Максимальный уровень пирамиды
+     * @param bool $is_cancel_rewards Отменить награждения
      * @return bool
      */
-    public function payRefBonus($amount, $user_id, $max_level = null) {
+    public function payRefBonus($amount, $user_id, $max_level = null, $is_cancel_rewards = false) {
 
         if (!$this->options['is_refs'] || !$this->options['ref_levels']) {
             return true;
+        }
+
+        if (is_array($user_id)) {
+            list($sender_id, $user_id) = $user_id;
         }
 
         $user_nickname = $this->getField('{users}', $user_id, 'nickname');
@@ -876,6 +985,8 @@ class modelBilling extends cmsModel {
         if (!$ancestors) {
             return true;
         }
+
+        $result_summ = 0.00;
 
         $success = true;
 
@@ -904,10 +1015,25 @@ class modelBilling extends cmsModel {
                 'ref_link_id' => $ancestor['id']
             ];
 
+            if ($is_cancel_rewards) {
+
+                $description['text'] = sprintf(LANG_BILLING_REFS_LOG_CANCEL, $user_nickname);
+
+                $income *= -1;
+            }
+
             $success = $success && $this->changeBalance('user', $ancestor['ref_id'], $income, $description);
+
+            if ($success) {
+                $result_summ += $income;
+            }
         }
 
-        return $success;
+        if (!$success) {
+            return false;
+        }
+
+        return $result_summ > 0.00 ? $result_summ : true;
     }
 
     /**

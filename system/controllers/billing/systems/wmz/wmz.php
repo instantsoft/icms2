@@ -21,7 +21,8 @@ class systemWmz extends billingPaymentSystem {
 
         $op_id = $request->get('LMI_PAYMENT_NO', 0);
         if (!$op_id) {
-            return $this->log(LANG_BILLING_ERR_ORDER_ID);
+            $this->log(LANG_BILLING_ERR_ORDER_ID);
+            return '';
         }
 
         $operation = $model->getOperation($op_id);

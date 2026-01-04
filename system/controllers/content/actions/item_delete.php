@@ -64,7 +64,10 @@ class actionContentItemDelete extends cmsAction {
         if ($ctype['is_cats'] && $item['category_id']) {
 
             $category    = $this->model->getCategory($ctype['name'], $item['category_id']);
-            $back_action = $category['slug'];
+
+            if ($category) {
+                $back_action = $category['slug'];
+            }
         }
 
         $this->model->deleteContentItem($ctype['name'], $item['id']);

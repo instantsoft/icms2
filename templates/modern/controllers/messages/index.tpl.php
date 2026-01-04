@@ -39,8 +39,11 @@
 
         <div class="right-panel col-lg-3 border-right d-none d-lg-block">
             <div class="sticky-top icms-messages__contacts-block">
-                <div id="user_search_panel" class="bg-gray p-2 border-bottom pannel-toolbar">
+                <div id="user_search_panel" class="bg-gray p-2 border-bottom pannel-toolbar d-flex">
                     <?php echo html_input('text', '', '', ['placeholder' => LANG_PM_USER_SEARCH]); ?>
+                    <button type="button" class="btn d-block d-sm-none pr-1" title="<?php echo LANG_CLOSE; ?>" data-dismiss="modal">
+                        <?php html_svg_icon('solid', 'times'); ?>
+                    </button>
                 </div>
                 <div class="contacts icms-messages__contacts-list list-group" id="contacts-list">
                     <?php foreach($contacts as $contact){ ?>

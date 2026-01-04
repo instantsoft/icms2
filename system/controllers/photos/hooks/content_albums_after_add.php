@@ -8,10 +8,9 @@ class onPhotosContentAlbumsAfterAdd extends cmsAction {
 
         if (!$album['is_approved']) { return $album; }
 
-        $this->redirectToAction('upload', array($album['id']));
+        $this->request->set('back', href_to($this->name, 'upload', [$album['id']]));
 
         return $album;
-
     }
 
 }

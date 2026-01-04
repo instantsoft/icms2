@@ -28,6 +28,10 @@ class actionBillingRefs extends cmsAction {
             return cmsCore::error404();
         }
 
+        if (!cmsUser::isUserInGroups($user['groups'], $this->options['refs_groups'])) {
+            return cmsCore::error404();
+        }
+
         $page    = $this->request->get('page', 1);
         $perpage = $this->options['limit_refs'];
 

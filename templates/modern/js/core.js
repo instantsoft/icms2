@@ -100,7 +100,10 @@ icms.template = (function ($) {
             }
         });
         $(link).on('click', function(t) {
-            $('html, body').scrollTop(0);
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
             t.preventDefault();
         });
     };

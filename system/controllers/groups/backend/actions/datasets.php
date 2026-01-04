@@ -38,16 +38,16 @@ class actionGroupsDatasets extends cmsAction {
 
     }
 
-    public function run($do = false, $id = 0){
+    public function run($do = false, $id = 0) {
 
         $admin = cmsCore::getController('admin', $this->request);
 
         // для добавления/редактирования вызываем экшены админки
-        if ($do){
+        if ($do) {
 
             $this->cms_template->setContext($admin);
 
-            $html = $admin->runExternalAction('ctypes_datasets_'.$do, ($do === 'add' ? [$this->name] : [$id]));
+            $html = $admin->runExternalActionIfExists('ctypes_datasets_'.$do, ($do === 'add' ? [$this->name] : [$id]), true);
 
             $this->cms_template->restoreContext();
 

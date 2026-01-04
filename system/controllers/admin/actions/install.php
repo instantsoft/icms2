@@ -15,8 +15,7 @@ class actionAdminInstall extends cmsAction {
 
         // если нужно, передаем управление другому экшену
         if ($do) {
-            $this->runExternalAction('install_' . $do, array_slice($this->params, 1));
-            return;
+            return $this->runExternalActionIfExists('install_' . $do, array_slice($this->params, 1));
         }
 
         $this->upload_path = $this->getInstallPackagesPath('root');

@@ -21,7 +21,7 @@
                     </thead>
                     <tbody>
                         <?php foreach ($operations as $op){ ?>
-                        <tr>
+                        <tr<?php if ($op['status'] == modelBilling::STATUS_CANCELED) { ?> class="bg-warning"<?php } ?>>
                             <td><?php echo html_date_time($op['date_done']); ?></td>
                             <td>
                                 <?php

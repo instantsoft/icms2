@@ -93,7 +93,7 @@ class cmsBackend extends cmsController {
      * @param boolean $zero_as_null Нулевое значение сохранять как null
      * @return void
      */
-    public function actionToggleItem($item_id = 0, $table = '', $field = 'is_pub', $zero_as_null = false) {
+    public function actionToggleItem($item_id = 0, $table = '', $field = 'is_pub', $zero_as_null = false, $flag_on = null) {
 
         if (!$item_id || !$table || !is_numeric($item_id) || $this->validate_regexp("/^([a-z0-9\_{}]*)$/", urldecode($table)) !== true) {
             return $this->cms_template->renderJSON([
@@ -124,9 +124,15 @@ class cmsBackend extends cmsController {
         // Уведомляем слушателей
         $this->dispatchEvent('actiontoggle_' . $table . '_' . $field, [$i]);
 
+        if ($flag_on !== null) {
+            $is_on = $i[$field] == $flag_on ? 1 : 0;
+        } else {
+            $is_on = (int) $i[$field];
+        }
+
         return $this->cms_template->renderJSON([
             'error' => false,
-            'is_on' => intval($i[$field])
+            'is_on' => $is_on
         ]);
     }
 

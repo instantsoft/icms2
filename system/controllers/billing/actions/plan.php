@@ -101,7 +101,13 @@ class actionBillingPlan extends cmsAction {
                 return $this->redirectToAction('deposit');
             }
 
-            $success = $this->model->decrementUserBalance($this->cms_user->id, $price['amount'], $description_text);
+            $success = $this->model->decrementUserBalance(
+                    $this->cms_user->id,
+                    $price['amount'],
+                    $description_text,
+                    null,
+                    ['plan_id' => $plan_id, 'plan_period' => $period]
+                );
 
             $date_until = $success ? $this->model->addUserPlanSubscribtion($this->cms_user->id, $plan, $price) : false;
 

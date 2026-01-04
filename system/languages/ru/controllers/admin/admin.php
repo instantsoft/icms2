@@ -165,6 +165,7 @@
     define('LANG_CP_SEOMETA_MANUAL_TITLE',      'Вручную указывать тайтл для записей');
     define('LANG_CP_SEOMETA_AUTO_KEYS',         'Автоматическая генерация ключевых слов');
     define('LANG_CP_SEOMETA_AUTO_DESC',         'Автоматическая генерация META-описаний');
+    define('LANG_CP_SEOMETA_HINT_RULES',        'Не забудьте включить правило доступа "Управление SEO параметрами записей"');
     define('LANG_CP_SEOMETA_ITEM_TITLE',        'Шаблон генерации тайтлов страниц');
     define('LANG_CP_SEOMETA_ITEM_KEYS',         'Шаблон генерации ключевых слов');
     define('LANG_CP_SEOMETA_ITEM_DESC',         'Шаблон генерации META-описаний');

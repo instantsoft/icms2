@@ -58,6 +58,9 @@ class cmsMailer {
 
             if (!empty($config->mail_smtp_enc)){
                 $this->mailer->SMTPSecure = $config->mail_smtp_enc;
+            } else {
+                $this->mailer->SMTPAutoTLS = false;
+                $this->mailer->SMTPSecure = false;
             }
 
         } else

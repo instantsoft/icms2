@@ -28,7 +28,7 @@
             <?php foreach($images as $idx => $paths){ ?>
                 <div class="preview multi-block" rel="<?php html($idx); ?>" data-paths="<?php html(json_encode($paths)); ?>">
 					<?php if (!empty($paths)) { ?>
-                        <div><img src="<?php html(cmsConfig::get('upload_host') . '/' . reset($paths)); ?>" /></div>
+                        <div><img src="<?php html(cmsConfig::get('upload_host') . '/' . (is_array($paths) ? reset($paths) : $paths)); ?>" /></div>
                     <?php } ?>
                         <a class="btn btn-danger btn-sm py-0 px-1 btn-remove-img" href="#" data-id="<?php html($idx); ?>" title="<?php echo LANG_DELETE; ?>">
                             <?php html_svg_icon('solid', 'minus-circle'); ?>

@@ -129,7 +129,7 @@ trait fieldable {
 
         $field_class = 'field' . \string_to_camel('_', $field['type']);
 
-        $handler = new $field_class($field['name']);
+        $handler = new $field_class($field['name'] ?? '');
 
         unset($field_property['type']);
 

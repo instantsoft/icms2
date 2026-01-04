@@ -160,7 +160,7 @@ class modelAdmin extends cmsModel {
 
         return $this->updateSchedulerTask($task['id'], [
             'is_new'        => 0,
-            'date_last_run' => ($task['is_strict_period'] ? date('Y-m-d H:i:s', (strtotime($task['date_last_run']) + ($task['period'] * 60))) : null)
+            'date_last_run' => ($task['is_strict_period'] ? date('Y-m-d H:i:s', (strtotime($task['date_last_run'] ?? date('Y-m-d H:i:s')) + ($task['period'] * 60))) : null)
         ]);
     }
 

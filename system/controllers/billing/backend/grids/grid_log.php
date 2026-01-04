@@ -1,6 +1,6 @@
 <?php
 
-function grid_log($controller) {
+function grid_log($controller, $model) {
 
     $options = [
         'is_sortable'   => true,
@@ -15,7 +15,12 @@ function grid_log($controller) {
 
     $columns = [
         'id' => [
-            'title'  => 'id'
+            'title'  => 'id',
+            'class_handler' => function($row) {
+                if ($row['status'] == modelBilling::STATUS_CANCELED) {
+                    return 'bg-danger';
+                }
+            }
         ],
         'date_created' => [
             'title'   => LANG_BILLING_LOG_DATE,
@@ -74,9 +79,40 @@ function grid_log($controller) {
         ]
     ];
 
+    $actions = [
+        [
+            'title'   => LANG_BILLING_LOG_REFUND,
+            'icon'    => 'undo',
+            'confirm' => LANG_BILLING_LOG_REFUND_CONFIRM,
+            'href'    => href_to($controller->root_url, 'log', ['refund', '{id}']),
+            'handler' => function ($log) use($model) {
+                if ($log['status'] != modelBilling::STATUS_DONE) {
+                    return false;
+                }
+                // Пополнение с платёжной системы
+                if ($log['system_id']) {
+                    return false;
+                }
+                // Подписки
+                if ($log['plan_id'] && $log['user_plan_id']) {
+
+                    $last_plan_log = $model->getLastUserPlanOperation($log['user_id']);
+
+                    if (!$last_plan_log) {
+                        return false;
+                    }
+
+                    return $last_plan_log['id'] == $log['id'];
+                }
+
+                return !empty($log['sender_id']);
+            }
+        ]
+    ];
+
     return [
         'options' => $options,
         'columns' => $columns,
-        'actions' => false
+        'actions' => $actions
     ];
 }

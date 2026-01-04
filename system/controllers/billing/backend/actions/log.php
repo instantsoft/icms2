@@ -12,13 +12,17 @@ class actionBillingLog extends cmsAction {
         $this->grid_name  = 'log';
         $this->title      = LANG_BILLING_LOG_HISTORY;
 
+        $this->grid_args  = [$this->getOnce($this->model)];
+
         $this->external_action_prefix = 'log_';
 
         $this->list_callback = function (cmsModel $model) {
 
             $model->joinLeft('billing_systems', 's', 's.id = i.system_id')->select('s.title', 'system_title');
 
-            $model->filterEqual('status', 1);
+            $model->filterIn('status', [modelBilling::STATUS_DONE, modelBilling::STATUS_CANCELED]);
+
+            $model->select('u.plan_id', 'user_plan_id');
 
             return $model->joinUserLeft();
         };

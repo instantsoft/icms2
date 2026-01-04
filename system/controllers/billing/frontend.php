@@ -195,24 +195,28 @@ class billing extends cmsFrontend {
 
         $success = $this->model->acceptTransfer($transfer['id']);
 
-        $from_id = $transfer['from_id'];
-        $to_id   = $transfer['to_id'];
-        $amount  = $transfer['amount'];
-        $desc    = $transfer['description'];
+        $desc = $transfer['description'];
 
-        $from = $this->model_users->getUser($from_id);
-        $to   = $this->model_users->getUser($to_id);
+        $from = $this->model_users->getUser($transfer['from_id']);
+        $to   = $this->model_users->getUser($transfer['to_id']);
 
-        $from_desc = ['text' => sprintf(LANG_BILLING_TRANSFER_LOG_FROM, $to['nickname']), 'url' => href_to('users', $to_id)];
-        $to_desc   = ['text' => sprintf(LANG_BILLING_TRANSFER_LOG_TO, $from['nickname']), 'url' => href_to('users', $from_id)];
+        $from_desc = ['text' => sprintf(LANG_BILLING_TRANSFER_LOG_FROM, $to['nickname']), 'url' => href_to('users', $transfer['to_id'])];
+        $to_desc   = ['text' => sprintf(LANG_BILLING_TRANSFER_LOG_TO, $from['nickname']), 'url' => href_to('users', $transfer['from_id'])];
 
         if ($desc) {
             $from_desc['text'] .= ": {$desc}";
             $to_desc['text']   .= ": {$desc}";
         }
 
-        $success = $success && $this->model->decrementUserBalance($from_id, $amount, $from_desc);
-        $success = $success && $this->model->incrementUserBalance($to_id, $amount, $to_desc);
+        [$decrement_amount, $transfer, $from_desc] =
+                cmsEventsManager::hook('billing_accept_transfer_before_decrement', [$transfer['amount'], $transfer, $from_desc]);
+
+        $success = $success && $this->model->decrementUserBalance($transfer['from_id'], $decrement_amount, $from_desc);
+
+        [$increment_amount, $transfer, $to_desc] =
+                cmsEventsManager::hook('billing_accept_transfer_before_increment', [$transfer['amount'], $transfer, $to_desc]);
+
+        $success = $success && $this->model->incrementUserBalance([$transfer['from_id'], $transfer['to_id']], $increment_amount, $to_desc);
 
         if ($success && $this->options['is_transfers_notify']) {
 
@@ -221,7 +225,7 @@ class billing extends cmsFrontend {
             $letter_data = [
                 'from_name'   => $from['nickname'],
                 'from_url'    => href_to_abs('users', $from['id']),
-                'amount'      => html_spellcount($amount, $this->options['currency']),
+                'amount'      => html_spellcount($increment_amount, $this->options['currency']),
                 'description' => $desc ? $desc : '---',
             ];
 

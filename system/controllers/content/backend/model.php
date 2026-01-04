@@ -771,33 +771,29 @@ class modelBackendContent extends modelContent {
 
         $props_table_name = $this->getContentTypeTableName($ctype_name, '_props');
 
-        $prop = $this->getItemById($props_table_name, $id, function ($item, $model) use($ctype_name) {
+        return $this->getItemById($props_table_name, $id, function ($item, $model) use($ctype_name) {
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
 
-            $item['cats'] = $model->
-                    filterEqual('prop_id', $item['id'])->
-                    get(
+            $item['cats'] = $model->filterEqual('prop_id', $item['id'])->get(
                         $model->getContentTypeTableName($ctype_name, '_props_bind'),
                         function ($item, $model) {
                             return (int) $item['cat_id'];
                         }
-                    );
+                    ) ?: [];
 
             return $item;
         });
-
-        if (!$prop) {
-            return false;
-        }
-
-        return $prop;
     }
 
     public function updateContentProp($ctype_name, $id, $prop) {
 
         $table_name = $this->getContentTypeTableName($ctype_name, '_props');
         $values_table_name = $this->getContentTypeTableName($ctype_name, '_props_values');
+
+        if (empty($prop['cats'])) {
+            $prop['cats'] = [];
+        }
 
         $old_prop = $this->getContentProp($ctype_name, $id);
 
@@ -869,7 +865,7 @@ class modelBackendContent extends modelContent {
 
         $table_name = $this->getContentTypeTableName($ctype_name, '_props');
 
-        $cats_list = $prop['cats'];
+        $cats_list = $prop['cats'] ? $prop['cats'] : [];
 
         unset($prop['cats']);
 

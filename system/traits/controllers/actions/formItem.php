@@ -196,11 +196,20 @@ trait formItem {
 
                 if ($this->request->isAjax()) {
 
-                    return $this->cms_template->renderJSON([
-                        'errors'   => false,
-                        'text'     => LANG_SUCCESS_MSG,
-                        'callback' => $this->json_callback
-                    ]);
+                    $result = [
+                        'errors' => false,
+                        'text'   => LANG_SUCCESS_MSG
+                    ];
+
+                    if ($this->json_callback) {
+                        $result['callback'] = $this->json_callback;
+                    } else {
+                        if ($this->success_url) {
+                            $result['redirect_uri'] = $this->success_url;
+                        }
+                    }
+
+                    return $this->cms_template->renderJSON($result);
                 }
 
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');

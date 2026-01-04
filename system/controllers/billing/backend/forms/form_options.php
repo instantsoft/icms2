@@ -315,6 +315,11 @@ class formBillingOptions extends cmsForm {
                         'title'   => LANG_BILLING_CP_REFS_ENABLED,
                         'default' => true
                     ]),
+                    new fieldListGroups('refs_groups', [
+                        'title'    => LANG_BILLING_CP_REFS_GROUPS,
+                        'show_all' => true,
+                        'default'  => []
+                    ]),
                     new fieldCheckbox('is_refs_as_invite', [
                         'title'   => LANG_BILLING_CP_REFS_AS_INVITE,
                         'hint'    => LANG_BILLING_CP_REFS_AS_INVITE_HINT,
@@ -329,6 +334,10 @@ class formBillingOptions extends cmsForm {
                             'is_abs'  => true,
                             'is_ceil' => true
                         ]
+                    ]),
+                    new fieldCheckbox('keep_cookie_after_reg', [
+                        'title'   => LANG_BILLING_CP_KEEP_COOKIE_AFTER_REG,
+                        'default' => false
                     ]),
                     new fieldString('ref_url', [
                         'title' => LANG_BILLING_CP_REF_REDIRECT_URL,

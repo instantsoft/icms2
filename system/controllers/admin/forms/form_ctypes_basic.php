@@ -384,13 +384,16 @@ class formAdminCtypesBasic extends cmsForm {
                 'childs' => [
                     new fieldCheckbox('options:is_manual_title', [
                         'title' => LANG_CP_SEOMETA_MANUAL_TITLE,
+                        'hint' => LANG_CP_SEOMETA_HINT_RULES
                     ]),
                     new fieldCheckbox('is_auto_keys', [
                         'title' => LANG_CP_SEOMETA_AUTO_KEYS,
+                        'hint'  => LANG_CP_SEOMETA_HINT_RULES,
                         'default' => true
                     ]),
                     new fieldCheckbox('is_auto_desc', [
                         'title' => LANG_CP_SEOMETA_AUTO_DESC,
+                        'hint'  => LANG_CP_SEOMETA_HINT_RULES,
                         'default' => true
                     ]),
                     new fieldCheckbox('is_auto_url', [

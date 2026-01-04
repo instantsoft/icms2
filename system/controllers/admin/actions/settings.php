@@ -6,8 +6,7 @@ class actionAdminSettings extends cmsAction {
 
         // если нужно, передаем управление другому экшену
         if ($do){
-            $this->runExternalAction('settings_'.$do, array_slice($this->params, 1));
-            return;
+            return $this->runExternalActionIfExists('settings_'.$do, array_slice($this->params, 1));
         }
 
         $values = $this->cms_config->getConfig();

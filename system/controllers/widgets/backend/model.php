@@ -229,7 +229,10 @@ class modelBackendWidgets extends modelWidgets {
             $this->filterIsNull('controller');
         }
 
-        $this->orderBy('name');
+        $this->orderByList([
+            ['by' => 'name', 'to' => 'asc'],
+            ['by' => 'title', 'to' => 'asc'],
+        ]);
 
         return $this->get('widgets_pages', function ($item, $model) {
 

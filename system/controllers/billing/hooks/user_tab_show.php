@@ -10,7 +10,7 @@ class onBillingUserTabShow extends cmsAction {
         $perpage = $this->options['limit_log'];
 
         $this->model->filterEqual('user_id', $profile['id'])->
-                filterEqual('status', modelBilling::STATUS_DONE)->
+                filterIn('status', [modelBilling::STATUS_DONE, modelBilling::STATUS_CANCELED])->
                 orderBy('id', 'desc')->
                 limitPage($page, $perpage);
 
@@ -55,6 +55,10 @@ class onBillingUserTabShow extends cmsAction {
 
         $is_out = $this->options['is_out'] && $is_own_profile && $this->cms_user->isInGroups($this->options['out_groups']);
 
+        $is_refs = $this->options['is_refs'] &&
+                cmsUser::isUserInGroups($profile['groups'], $this->options['refs_groups']) &&
+                ($is_own_profile || $this->cms_user->is_admin);
+
         $balance = $this->model->getUserBalance($profile['id'], true);
 
         return $this->cms_template->renderInternal($this, 'profile_tab', [
@@ -70,6 +74,7 @@ class onBillingUserTabShow extends cmsAction {
             'is_own_profile'  => $is_own_profile,
             'is_exchange'     => $is_exchange,
             'is_out'          => $is_out,
+            'is_refs'         => $is_refs,
             'is_admin'        => $this->cms_user->is_admin,
             'profile'         => $profile,
             'operations'      => $operations,

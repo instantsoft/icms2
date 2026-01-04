@@ -12,8 +12,7 @@ class actionUsersProfileEdit extends cmsAction {
 
         // если нужно, передаем управление другому экшену
         if ($do) {
-            $this->runExternalAction('profile_edit_' . $do, [$profile] + array_slice($this->params, 2, null, true));
-            return;
+            return $this->runExternalActionIfExists('profile_edit_' . $do, [$profile] + array_slice($this->params, 2, null, true));
         }
 
         $back_url = $this->getRequestBackUrl();

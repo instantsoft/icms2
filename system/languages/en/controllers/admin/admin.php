@@ -153,6 +153,7 @@
     define('LANG_CP_SEOMETA_MANUAL_TITLE',      'Custom entry title');
     define('LANG_CP_SEOMETA_AUTO_KEYS',         'Autogenerate keywords');
     define('LANG_CP_SEOMETA_AUTO_DESC',         'Autogenerate META-descriptions');
+    define('LANG_CP_SEOMETA_HINT_RULES',        'Don\'t forget to enable the access rule "Managing SEO parameters of items"');
     define('LANG_CP_SEOMETA_ITEM_TITLE',        'META-title pattern');
     define('LANG_CP_SEOMETA_ITEM_KEYS',         'META-keys pattern');
     define('LANG_CP_SEOMETA_ITEM_DESC',         'META-descriptions pattern');

@@ -396,11 +396,6 @@ class cmsController {
      * Вызывается до начала работы хука
      */
     public function beforeHook($event_name) {
-
-        if ($this->useOptions) {
-            $this->options = $this->getOptions();
-        }
-
         return true;
     }
 
@@ -558,6 +553,26 @@ class cmsController {
         $this->current_template_name = $action_name;
 
         return $this;
+    }
+
+    /**
+     * Выполняет экшен, находящийся в отдельном файле,
+     * проверяя его наличие
+     *
+     * @param string $action_name Название экшена
+     * @param array $params Параметры
+     * @param bool $return_result Возвращать результат выполнения или NULL
+     * @return mixed
+     */
+    public function runExternalActionIfExists($action_name, $params = [], $return_result = false) {
+
+        if (!$this->isActionExists($action_name)) {
+            return cmsCore::error404();
+        }
+
+        $result = $this->runExternalAction($action_name, $params);
+
+        return $return_result ? $result : null;
     }
 
     /**

@@ -11,8 +11,7 @@ class actionAdminSettingsTheme extends cmsAction {
 
         // если нужно, передаем управление другому экшену
         if ($do) {
-            $this->runExternalAction('settings_theme_' . $do, [$template_name] + array_slice($this->params, 2));
-            return;
+            return $this->runExternalActionIfExists('settings_theme_' . $do, [$template_name] + array_slice($this->params, 2));
         }
 
         $template = new cmsTemplate($template_name);

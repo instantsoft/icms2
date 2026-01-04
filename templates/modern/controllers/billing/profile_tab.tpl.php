@@ -45,7 +45,7 @@
                     <?php echo LANG_BILLING_EXCHANGE; ?>
                 </a>
             <?php } ?>
-            <?php if ($this->controller->options['is_refs'] && ($is_own_profile || $is_admin)) { ?>
+            <?php if ($is_refs) { ?>
                 <a class="btn btn-outline-primary refs" href="<?php echo $this->href_to('refs', $is_own_profile ? '' : $profile['id']) ?>">
                     <?php html_svg_icon('solid', 'link'); ?>
                     <?php echo LANG_BILLING_REFERALS; ?>

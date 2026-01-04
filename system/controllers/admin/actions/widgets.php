@@ -11,8 +11,7 @@ class actionAdminWidgets extends cmsAction {
 
         // если нужно, передаем управление другому экшену
         if ($do) {
-            $this->runExternalAction('widgets_' . $do, array_slice($this->params, 1));
-            return;
+            return $this->runExternalActionIfExists('widgets_' . $do, array_slice($this->params, 1));
         }
 
         cmsCore::loadAllControllersLanguages();
