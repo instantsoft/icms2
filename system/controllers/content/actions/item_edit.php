@@ -170,6 +170,8 @@ class actionContentItemEdit extends cmsAction {
                 $this->request
             );
 
+            $is_new_item = empty($item['date_approved']);
+
             if (!$errors) {
 
                 if ($is_draf_submitted) {
@@ -185,6 +187,7 @@ class actionContentItemEdit extends cmsAction {
                 }
 
                 if ($is_draf_submitted || !$item['is_approved']) {
+                    // Чтобы NULL не записалось как текущее время, см. db->prepareValue()
                     unset($item['date_approved']);
                 }
 
@@ -265,7 +268,7 @@ class actionContentItemEdit extends cmsAction {
 
                         $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
 
-                        $succes_text = cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, empty($item['date_approved']));
+                        $succes_text = cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, $is_new_item);
 
                         if ($succes_text) {
                             cmsUser::addSessionMessage($succes_text, 'info');
