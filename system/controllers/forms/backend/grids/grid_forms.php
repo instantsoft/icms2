@@ -43,27 +43,29 @@ function grid_forms($controller) {
     $actions = [
         [
             'title' => LANG_VIEW,
-            'class' => 'view ajax-modal',
+            'icon'  => 'eye',
+            'class' => 'ajax-modal',
             'href'  => href_to($controller->root_url, 'view', '{id}')
         ],
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->root_url, 'edit', '{id}'),
         ],
         [
             'title' => LANG_CP_CTYPE_FIELDS,
-            'class' => 'fields',
+            'icon'  => 'list',
             'href'  => href_to($controller->root_url, 'form_fields', '{id}')
         ],
         [
             'title' => LANG_FORMS_CP_FORMS_COPY,
-            'class' => 'copy',
+            'icon'  => 'copy',
             'href'  => href_to($controller->root_url, 'copy', '{id}'),
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->root_url, 'delete', '{id}'),
             'confirm' => LANG_FORMS_CP_FORM_DELETE_CONFIRM
         ]

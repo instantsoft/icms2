@@ -8,6 +8,10 @@ class actionMessagesDeleteMesage extends cmsAction {
             return cmsCore::error404();
         }
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
+
         $_message_ids = $this->request->get('message_ids', []);
         if (!$_message_ids) {
             return $this->cms_template->renderJSON(['error' => true]);

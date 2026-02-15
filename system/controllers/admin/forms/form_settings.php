@@ -268,11 +268,11 @@ class formAdminSettings extends cmsForm {
                     ]),
                     new fieldCheckbox('merge_css', [
                         'title' => LANG_CP_SETTINGS_MERGE_CSS,
-                        'hint'  => $is_css_cache ? sprintf(LANG_CP_SETTINGS_CACHE_CLEAN_MERGED, href_to('admin', 'clear_cache', 'css')) : false
+                        'hint'  => $is_css_cache ? sprintf(LANG_CP_SETTINGS_CACHE_CLEAN_MERGED, href_to('admin', 'clear_cache', 'css').'?csrf_token='.cmsForm::getCSRFToken()) : false
                     ]),
                     new fieldCheckbox('merge_js', [
                         'title' => LANG_CP_SETTINGS_MERGE_JS,
-                        'hint'  => $is_js_cache ? sprintf(LANG_CP_SETTINGS_CACHE_CLEAN_MERGED, href_to('admin', 'clear_cache', 'js')) : false
+                        'hint'  => $is_js_cache ? sprintf(LANG_CP_SETTINGS_CACHE_CLEAN_MERGED, href_to('admin', 'clear_cache', 'js').'?csrf_token='.cmsForm::getCSRFToken()) : false
                     ]),
                     new fieldNumber('production_time', [
                         'title'   => LANG_CP_SETTINGS_PRODUCTION_TIME,
@@ -395,7 +395,7 @@ class formAdminSettings extends cmsForm {
                     ]),
                     new fieldList('cache_method', [
                         'title' => LANG_CP_SETTINGS_CACHE_METHOD,
-                        'hint'  => !cmsConfig::get('cache_enabled') ? '' : sprintf(LANG_CP_SETTINGS_CACHE_CLEAN_MERGED, href_to('admin', 'cache_delete', cmsConfig::get('cache_method'))),
+                        'hint'  => !cmsConfig::get('cache_enabled') ? '' : sprintf(LANG_CP_SETTINGS_CACHE_CLEAN_MERGED, href_to('admin', 'cache_delete', cmsConfig::get('cache_method')).'?csrf_token='.cmsForm::getCSRFToken()),
                         'items' => $cache_modules,
                         'visible_depend' => ['cache_enabled' => ['show' => ['1']]]
                     ]),

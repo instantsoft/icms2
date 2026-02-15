@@ -51,12 +51,18 @@ class backendForms extends cmsBackend {
         $menu = [
             [
                 'title' => LANG_CP_CTYPE_SETTINGS,
-                'url'   => href_to($this->root_url, $do, [$id])
+                'url'   => href_to($this->root_url, $do, [$id]),
+                'options' => [
+                    'icon' => 'cogs'
+                ]
             ],
             [
                 'title'    => LANG_CP_CTYPE_FIELDS,
                 'url'      => href_to($this->root_url, 'form_fields', [$id]),
-                'disabled' => in_array($do, ['add', 'copy'])
+                'disabled' => in_array($do, ['add', 'copy']),
+                'options' => [
+                    'icon' => 'list'
+                ]
             ]
         ];
 

@@ -8,6 +8,7 @@ icms.messages = (function ($) {
     this.is_modal = true;
     this.contactId = null;
     this.msg_ids = [];
+    this.csrf_token = icms.forms.getCsrfToken();
 
     this.options = {
         isRefresh: false,
@@ -82,7 +83,7 @@ icms.messages = (function ($) {
 
             var url = $(pm_window).data('delete-mesage-url');
 
-            $.post(url, {message_ids: this.msg_ids}, function(result) {
+            $.post(url, {message_ids: this.msg_ids, csrf_token: self.csrf_token}, function(result) {
 
                 icms.messages.msg_ids = [];
 
@@ -124,7 +125,7 @@ icms.messages = (function ($) {
         var url = $(pm_window).data('restore-mesage-url');
         var _content = $(linkObj).closest('.content');
 
-        $.post(url, {message_id: $(_content).data('id')}, function(result) {
+        $.post(url, {message_id: $(_content).data('id'), csrf_token: self.csrf_token}, function(result) {
 
             if (result.error) { return; }
 
@@ -154,7 +155,7 @@ icms.messages = (function ($) {
         icms.messages.showLoader();
 
         var url = pm_window.data('contact-url');
-        var form_data = {contact_id: id};
+        var form_data = {contact_id: id, csrf_token: self.csrf_token};
 
         if(self.is_modal){
             icms.modal.setCallback('close', function(){
@@ -322,7 +323,7 @@ icms.messages = (function ($) {
 
         $('.buttons', form).addClass('sending');
 
-        $.post(url, {contact_id: this.contactId, last_date: this.getMsgLastDate()}, function(result){
+        $.post(url, {contact_id: this.contactId, last_date: this.getMsgLastDate(), csrf_token: self.csrf_token}, function(result){
 
             $('.buttons', form).removeClass('sending');
 
@@ -374,7 +375,7 @@ icms.messages = (function ($) {
             icms.messages.showLoader();
 
             var url = $(pm_window).data('delete-url');
-            var form_data = {contact_id: id};
+            var form_data = {contact_id: id, csrf_token: self.csrf_token};
 
             $.post(url, form_data, function(result) {
 
@@ -410,7 +411,7 @@ icms.messages = (function ($) {
             icms.messages.showLoader();
 
             var url = $(pm_window).data('ignore-url');
-            var form_data = {contact_id: id};
+            var form_data = {contact_id: id, csrf_token: self.csrf_token};
 
             $.post(url, form_data, function(result) {
 
@@ -440,7 +441,7 @@ icms.messages = (function ($) {
         var pm_window = $('#pm_window');
 
         var url = pm_window.data('forgive-url');
-        var form_data = {contact_id: id};
+        var form_data = {contact_id: id, csrf_token: self.csrf_token};
 
         $.post(url, form_data, function(result) {
 
@@ -467,7 +468,8 @@ icms.messages = (function ($) {
 
         var form_data = {
             contact_id: contact_id,
-            message_id: message_id
+            message_id: message_id,
+            csrf_token: self.csrf_token
         };
 
         $('.show-older', pm_chat).hide();
@@ -507,7 +509,8 @@ icms.messages = (function ($) {
 
         var form_data = {
             notice_id: id,
-            action_name: name
+            action_name: name,
+            csrf_token: self.csrf_token
         };
 
         $.post(url, form_data, function(result) {
@@ -544,7 +547,7 @@ icms.messages = (function ($) {
             var pm_notices_window = $('#pm_notices_window');
             var url = pm_notices_window.data('action-url');
 
-            $.post(url, {action_name: 'clear_notice'}, function(result) {
+            $.post(url, {action_name: 'clear_notice', csrf_token: self.csrf_token}, function(result) {
 
                 if (result.error) {
                     return false;

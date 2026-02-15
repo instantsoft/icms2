@@ -2,46 +2,48 @@
 
 class actionCommentsTrack extends cmsAction {
 
-    public $request_params = array(
-        'tc' => array(
+    public $request_params = [
+        'tc' => [
             'default' => '',
-            'rules'   => array(
-                array('required'),
-                array('sysname')
-            )
-        ),
-        'ts' => array(
+            'rules'   => [
+                ['required'],
+                ['sysname']
+            ]
+        ],
+        'ts' => [
             'default' => '',
-            'rules'   => array(
-                array('required'),
-                array('sysname')
-            )
-        ),
-        'ti' => array(
+            'rules'   => [
+                ['required'],
+                ['sysname']
+            ]
+        ],
+        'ti' => [
             'default' => 0,
-            'rules'   => array(
-                array('required'),
-                array('digits')
-            )
-        ),
-        'is_track' => array(
+            'rules'   => [
+                ['required'],
+                ['digits']
+            ]
+        ],
+        'is_track' => [
             'default' => 0,
-            'rules'   => array(
-                array('digits')
-            )
-        )
-    );
+            'rules'   => [
+                ['digits']
+            ]
+        ]
+    ];
 
     public function run(){
 
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
 
-        if(!$this->cms_user->is_logged){
-            return $this->cms_template->renderJSON(array('error' => true));
+        if (!$this->cms_user->is_logged) {
+            return $this->cms_template->renderJSON(['error' => true]);
         }
 
         if(cmsUser::isPermittedLimitHigher('comments', 'karma', $this->cms_user->karma)){
-            return $this->cms_template->renderJSON(array('error' => true));
+            return $this->cms_template->renderJSON(['error' => true]);
         }
 
         $target_controller = $this->request->get('tc');
@@ -55,8 +57,7 @@ class actionCommentsTrack extends cmsAction {
                             filterEqual('target_id', $target_id)->
                             toggleTracking($is_track, $this->cms_user->id, $target_controller, $target_subject, $target_id);
 
-        return $this->cms_template->renderJSON(array('error' => !$success));
-
+        return $this->cms_template->renderJSON(['error' => !$success]);
     }
 
 }

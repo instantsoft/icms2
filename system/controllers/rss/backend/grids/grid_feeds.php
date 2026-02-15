@@ -31,12 +31,12 @@ function grid_feeds($controller) {
         [
             'title'  => LANG_VIEW,
             'target' => '_blank',
-            'class'  => 'rss',
+            'icon'   => 'rss',
             'href'   => href_to('rss', 'feed', '{ctype_name}')
         ],
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->root_url, 'edit', ['{id}']),
         ]
     ];

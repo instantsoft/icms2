@@ -4,34 +4,31 @@ class formGeoRegion extends cmsForm {
 
     public function init(){
 
-        return array(
-            array(
+        return [
+            [
                 'type' => 'fieldset',
-                'childs' => array(
-
-                    new fieldList('country_id', array(
+                'childs' => [
+                    new fieldList('country_id', [
                         'title' => LANG_COUNTRY,
-                        'rules' => array(array('required')),
+                        'rules' => [['required']],
                         'generator' => function() {
                             return cmsCore::getModel('geo')->getCountries();
                         }
-                    )),
-
-                    new fieldString('name', array(
+                    ]),
+                    new fieldString('name', [
                         'title' => LANG_REGION,
-                        'options'=>array(
-                            'max_length'=> 128,
-                            'show_symbol_count'=>true
-                        ),
-                        'rules' => array(array('required'))
-                    )),
-
-                    new fieldString('ordering', array(
+                        'options'=> [
+                            'max_length' => 128,
+                            'show_symbol_count' =>true
+                        ],
+                        'rules' => [['required']]
+                    ]),
+                    new fieldString('ordering', [
                         'title' => LANG_GEO_POSITION,
-                        'rules' => array(array('number'),array('required'))
-                    ))
-                )
-            )
-        );
+                        'rules' => [['number'], ['required']]
+                    ])
+                ]
+            ]
+        ];
     }
 }

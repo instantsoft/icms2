@@ -9,6 +9,10 @@ class actionMessagesNoticeAction extends cmsAction {
         $notice_id   = $this->request->get('notice_id', 0);
         $action_name = $this->request->get('action_name', '');
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return $this->cms_template->renderJSON($result);
+        }
+
         //
         // Действие должно быть передано
         //
@@ -91,7 +95,7 @@ class actionMessagesNoticeAction extends cmsAction {
         //
         if (isset($action['controller'], $action['action'])) {
 
-            $params = isset($action['params']) ? $action['params'] : [];
+            $params = $action['params'] ?? [];
 
             $controller = cmsCore::getController($action['controller']);
 

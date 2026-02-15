@@ -609,7 +609,7 @@ class actionContentItemView extends cmsAction {
                 $tool_buttons['basket_put'] = [
                     'title'   => ($allow_delete ? LANG_BASKET_DELETE : sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create'])),
                     'options' => ['class' => 'basket_put', 'icon' => 'trash-alt', 'confirm' => sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])],
-                    'url'     => href_to($ctype['name'], 'trash_put', $item['id'])
+                    'url'     => href_to($ctype['name'], 'trash_put', $item['id']).'?csrf_token='.cmsForm::getCSRFToken()
                 ];
 
             }
@@ -624,7 +624,7 @@ class actionContentItemView extends cmsAction {
                 $tool_buttons['basket_remove'] = [
                     'title'   => LANG_RESTORE,
                     'options' => ['class' => 'basket_remove', 'icon' => 'trash-restore'],
-                    'url'     => href_to($ctype['name'], 'trash_remove', $item['id'])
+                    'url'     => href_to($ctype['name'], 'trash_remove', $item['id']).'?csrf_token='.cmsForm::getCSRFToken()
                 ];
 
             }

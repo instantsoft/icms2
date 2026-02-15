@@ -69,9 +69,10 @@ function grid_scheduler($controller) {
 
     $actions = [
         [
-            'title' => LANG_CP_SCHEDULER_TASK_RUN,
-            'icon'  => 'play',
-            'href'  => href_to($controller->name, 'settings', ['scheduler', 'run', '{id}'])
+            'title'   => LANG_CP_SCHEDULER_TASK_RUN,
+            'confirm' => LANG_CP_SCHEDULER_TASK_RUN_CONFIRM,
+            'icon'    => 'play',
+            'href'    => href_to($controller->name, 'settings', ['scheduler', 'run', '{id}'])
         ],
         [
             'title' => LANG_EDIT,

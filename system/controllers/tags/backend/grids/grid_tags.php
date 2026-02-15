@@ -30,18 +30,19 @@ function grid_tags($controller) {
     $actions = [
         [
             'title'  => LANG_VIEW,
-            'class'  => 'view',
+            'icon'   => 'eye',
             'target' => '_blank',
             'href'   => href_to('tags', '{tag|string_urlencode}')
         ],
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->root_url, 'edit', ['{id}']),
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->root_url, 'delete', ['{id}']),
             'confirm' => LANG_TAGS_TAG_DELETE_CONFIRM
         ]

@@ -580,7 +580,7 @@
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Minify HTML');
     define('LANG_CP_SETTINGS_MERGE_CSS',        'Merge CSS files');
     define('LANG_CP_SETTINGS_MERGE_JS',         'Merge JS files');
-    define('LANG_CP_SETTINGS_CACHE_CLEAN_MERGED',  '&mdash; <a href="%s">Clear cache</a>');
+    define('LANG_CP_SETTINGS_CACHE_CLEAN_MERGED',  '<a href="%s">Clear cache</a>');
     define('LANG_CP_SETTINGS_MERGED_CLEANED',   'Folder <b>%s</b> is succesfully cleared');
     define('LANG_CP_SETTINGS_MERGED_CLEAN_FAIL','Unable to clear the folder <b>%s</b>. Check permissions or clean it manually');
     define('LANG_CP_SETTINGS_CACHE_CLEAN_SUCCESS', 'The cache is successfully cleared');
@@ -774,6 +774,7 @@
     define('LANG_CP_SCHEDULER_TASK_CREATED',        'The task has been created');
     define('LANG_CP_SCHEDULER_TASK_IS_ACTIVE',      'Task is active');
     define('LANG_CP_SCHEDULER_TASK_RUN',            'Run now');
+    define('LANG_CP_SCHEDULER_TASK_RUN_CONFIRM',    'Run "{title}" task?');
     define('LANG_CP_SCHEDULER_TASK_RAN',            'Task &laquo;%s&raquo; was executed %s');
     define('LANG_CP_SCHEDULER_TASK_RUN_FAIL',       'Failed to execute task &laquo;%s&raquo;');
     define('LANG_CP_UPDATE_CHECK',                  'Check for InstantCMS updates');

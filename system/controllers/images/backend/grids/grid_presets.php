@@ -73,12 +73,13 @@ function grid_presets($controller) {
     $actions = [
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->root_url, 'presets_edit', ['{id}']),
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->root_url, 'presets_delete', ['{id}']),
             'confirm' => LANG_IMAGES_PRESET_DELETE_CONFIRM,
             'handler' => function ($row) {

@@ -4,6 +4,10 @@ class actionAdminWidgetsRowDelete extends cmsAction {
 
     public function run($id) {
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
+
         $row = $this->model_backend_widgets->getLayoutRow($id);
         if (!$row) {
             return cmsCore::error404();

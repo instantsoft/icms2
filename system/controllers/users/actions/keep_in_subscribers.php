@@ -2,29 +2,39 @@
 
 class actionUsersKeepInSubscribers extends cmsAction {
 
-    public function run($friend_id){
+    public function run($friend_id) {
 
-        if (!$this->cms_user->is_logged) { cmsCore::error404(); }
+        if (!$this->cms_user->is_logged) {
+            return $this->errorContext();
+        }
 
-        if (!$friend_id) { cmsCore::error404(); }
+        if (!$friend_id) {
+            return $this->errorContext();
+        }
 
-        if (!$this->model->isFriendshipExists($this->cms_user->id, $friend_id)){ return false; }
+        if (!$this->model->isFriendshipExists($this->cms_user->id, $friend_id)) {
+            return $this->errorContext();
+        }
 
         $friend = $this->model->getUser($friend_id);
-        if (!$friend || $friend['is_locked']){ cmsCore::error404(); }
+        if (!$friend || $friend['is_locked']) {
+            return $this->errorContext();
+        }
 
         //
         // Запрос по ссылке из профиля
         //
-        if ($this->request->isStandard() || $this->request->isAjax()){
+        if ($this->request->isStandard() || $this->request->isAjax()) {
 
-            if ($this->request->has('submit')){
+            if ($this->request->has('submit')) {
 
                 // подтвержение получено
 
                 $csrf_token = $this->request->get('csrf_token', '');
 
-                if (!cmsForm::validateCSRFToken($csrf_token)){ cmsCore::error404(); }
+                if (!cmsForm::validateCSRFToken($csrf_token)) {
+                    return cmsCore::error404();
+                }
 
                 $this->model->keepInSubscribers($this->cms_user->id, $friend_id);
 
@@ -34,54 +44,50 @@ class actionUsersKeepInSubscribers extends cmsAction {
 
                 $back_url = $this->getRequestBackUrl();
 
-                if ($back_url){
-                    $this->redirect($back_url);
+                if ($back_url) {
+                    return $this->redirect($back_url);
                 }
 
-                $this->redirectToAction($friend_id);
+                return $this->redirectToAction($friend_id);
 
             } else {
 
-                return $this->cms_template->renderAsset('ui/confirm', array(
+                return $this->cms_template->renderAsset('ui/confirm', [
                     'confirm_title'  => sprintf(LANG_USERS_FRIENDS_SUBSCRIBE_CONFIRM, $friend['nickname']),
                     'confirm_action' => $this->cms_template->href_to('keep_in_subscribers', $friend['id'])
-                ), $this->request);
-
+                ], $this->request);
             }
-
         }
 
         //
         // Запрос из уведомления (внутренний)
         //
-        if ($this->request->isInternal()){
+        if ($this->request->isInternal()) {
 
             $this->model->keepInSubscribers($this->cms_user->id, $friend_id);
 
             $this->sendNoticeDeleted($friend);
 
             return true;
-
         }
 
     }
 
-    private function sendNoticeDeleted($friend){
+    private function sendNoticeDeleted($friend) {
 
         $messenger = cmsCore::getController('messages');
 
         $messenger->addRecipient($friend['id']);
 
-        $sender_link = '<a href="'.href_to_profile($this->cms_user).'">'.$this->cms_user->nickname.'</a>';
+        $sender_link = '<a href="' . href_to_profile($this->cms_user) . '">' . $this->cms_user->nickname . '</a>';
 
-        $notice = array(
+        $notice = [
             'content' => sprintf(LANG_USERS_KEEP_IN_SUBSCRIBERS_NOTICE, $sender_link)
-        );
+        ];
 
         $messenger->sendNoticePM($notice, 'users_friend_delete');
 
         return true;
-
     }
 
 }

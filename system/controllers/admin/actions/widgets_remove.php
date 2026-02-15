@@ -6,12 +6,14 @@ class actionAdminWidgetsRemove extends cmsAction {
 
     public function run($id = false) {
 
-        if (!$this->request->isAjax()) {
+        if (!$this->request->isAjax() || !$id) {
             return cmsCore::error404();
         }
 
-        if (!$id) {
-            return cmsCore::error404();
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return $this->cms_template->renderJSON([
+                'errors' => true
+            ]);
         }
 
         $widget = $this->model_backend_widgets->getWidget($id);

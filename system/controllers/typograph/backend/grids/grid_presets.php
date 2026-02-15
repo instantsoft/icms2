@@ -25,18 +25,19 @@ function grid_presets($controller){
     $actions = [
         [
             'title' => LANG_COPY,
-            'class' => 'copy',
+            'icon'  => 'copy',
             'href'  => href_to($controller->root_url, 'presets_add', ['{id}', 1]),
         ],
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
-            'href' => href_to($controller->root_url, 'presets_edit', ['{id}']),
+            'icon'  => 'pen',
+            'href'  => href_to($controller->root_url, 'presets_edit', ['{id}']),
         ],
         [
-            'title' => LANG_DELETE,
-            'class' => 'delete',
-            'href' => href_to($controller->root_url, 'presets_delete', ['{id}']),
+            'title'   => LANG_DELETE,
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
+            'href'    => href_to($controller->root_url, 'presets_delete', ['{id}']),
             'confirm' => LANG_TYP_PRESET_DELETE_CONFIRM,
             'handler' => function ($row) {
                 return $row['id'] != 1;

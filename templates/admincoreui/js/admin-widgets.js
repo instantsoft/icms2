@@ -154,7 +154,7 @@ function widgetsSelectPage(key){
 
         var delete_page_url = $('#cp-widgets-layout').data('delete-page-url');
         $('.cp_toolbar .delete').show();
-        $('.cp_toolbar .delete a').attr('href', delete_page_url + '/' + page_id);
+        $('.cp_toolbar .delete a').attr('href', delete_page_url + '/' + page_id + '?csrf_token='+icms.forms.getCsrfToken());
 
     }
 
@@ -453,7 +453,7 @@ function widgetDelete(link) {
 
         let delete_url = $('#cp-widgets-layout').data('delete-url') + '/' + id;
 
-        $.post(delete_url, {}, function (data) {
+        $.post(delete_url, {csrf_token: icms.forms.getCsrfToken()}, function (data) {
             if (data.errors === false && data.del_id) {
                 $('li[bind-id="' + data.del_id + '"]').remove();
             }
@@ -475,8 +475,10 @@ function widgetRemove(id){
 
         icms.modal.openAjax($('#cp-widgets-layout').data('files-url')+'/'+id+'/0', undefined, function (){
 
-            $.post($('#cp-widgets-layout').data('remove-url')+'/'+id, {}, function(result){
-                toastr.success(result.success_text);
+            $.post($('#cp-widgets-layout').data('remove-url')+'/'+id, {csrf_token: icms.forms.getCsrfToken()}, function(result){
+                if (result.errors === false) {
+                    toastr.success(result.success_text);
+                }
             }, 'json');
 
         }, LANG_CP_PACKAGE_CONTENTS);

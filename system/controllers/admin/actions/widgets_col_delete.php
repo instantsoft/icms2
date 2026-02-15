@@ -4,6 +4,10 @@ class actionAdminWidgetsColDelete extends cmsAction {
 
     public function run($id){
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
+
         $col = $this->model_backend_widgets->getLayoutCol($id);
         if (!$col) { return cmsCore::error404(); }
 

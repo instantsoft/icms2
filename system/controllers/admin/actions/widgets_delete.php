@@ -10,6 +10,12 @@ class actionAdminWidgetsDelete extends cmsAction {
             return cmsCore::error404();
         }
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return $this->cms_template->renderJSON([
+                'errors' => true
+            ]);
+        }
+
         $del_all = false;
 
         $bp = $this->model_backend_widgets->getWidgetBindPage($bp_id);

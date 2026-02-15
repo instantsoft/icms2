@@ -45,7 +45,7 @@ icms.users = (function ($) {
         var url = input.data('url');
         var user_id = input.data('user-id');
 
-        $.post(url, {user_id: user_id, content: content}, function(result){
+        $.post(url, {user_id: user_id, content: content, csrf_token: icms.forms.getCsrfToken()}, function(result){
 
             if (result == null || typeof(result) == 'undefined' || result.error){
                 icms.users.error(result.message);
@@ -57,8 +57,6 @@ icms.users = (function ($) {
             icms.users.enableStatusInput();
 
         }, 'json');
-
-
     };
 
     this.updateStatus = function (result){
@@ -78,7 +76,7 @@ icms.users = (function ($) {
 
         if (!confirm(LANG_USERS_DELETE_STATUS_CONFIRM)){ return false; }
 
-        $.post(url, {}, function(result){
+        $.post(url, {csrf_token: icms.forms.getCsrfToken()}, function(result){
 
             if (result == null || typeof(result) == 'undefined' || result.error){
                 icms.users.error(result.message);
@@ -94,7 +92,6 @@ icms.users = (function ($) {
         }, 'json');
 
         return false;
-
     };
 
     this.karmaUp = function(){
@@ -124,7 +121,7 @@ icms.users = (function ($) {
         $('.karma .value', block).addClass('loading-icon').html('');
         $('.karma .thumb', block).hide();
 
-        $.post(url, {direction: direction, comment: comment}, function(result){
+        $.post(url, {direction: direction, comment: comment, csrf_token: icms.forms.getCsrfToken()}, function(result){
 
             if (result == null || typeof(result) == 'undefined' || result.error){
                 icms.users.error(result.message);

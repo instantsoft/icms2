@@ -61,7 +61,7 @@ icms.users = (function ($) {
         let url = input.data('url');
         let user_id = input.data('user-id');
 
-        $.post(url, {user_id: user_id, content: content}, function(result){
+        $.post(url, {user_id: user_id, content: content, csrf_token: icms.forms.getCsrfToken()}, function(result){
 
             if (result.error){
                 self.error(result.message);
@@ -88,7 +88,7 @@ icms.users = (function ($) {
 
         if (!confirm(LANG_USERS_DELETE_STATUS_CONFIRM)){ return false; }
 
-        $.post(url, {}, function(result){
+        $.post(url, {csrf_token: icms.forms.getCsrfToken()}, function(result){
 
             if (result.error){
                 self.error(result.message);
@@ -126,7 +126,7 @@ icms.users = (function ($) {
 
         $('.thumb_'+direction, this.user_profile_rates).addClass('loading');
 
-        $.post(url, {direction: direction, comment: comment}, function(result){
+        $.post(url, {direction: direction, comment: comment, csrf_token: icms.forms.getCsrfToken()}, function(result){
 
             $('.thumb_'+direction, self.user_profile_rates).removeClass('loading');
 

@@ -478,4 +478,13 @@ class users extends cmsFrontend {
         return !string_in_mask_list($value, $this->options['restricted_slugs']);
     }
 
+    public function errorContext() {
+
+        if ($this->request->isInternal()) {
+            return false;
+        }
+
+        return cmsCore::error404();
+    }
+
 }

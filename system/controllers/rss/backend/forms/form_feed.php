@@ -4,72 +4,59 @@ class formRssFeed extends cmsForm {
 
     public function init() {
 
-        return array(
-
-            'basic' => array(
+        return [
+            'basic' => [
                 'type' => 'fieldset',
                 'title' => LANG_RSS_FEED_BASIC,
-                'childs' => array(
-
-                    new fieldCheckbox('is_enabled', array(
+                'childs' => [
+                    new fieldCheckbox('is_enabled', [
                         'title' => LANG_RSS_FEED_ENABLED
-                    )),
-
-                    new fieldString('description', array(
+                    ]),
+                    new fieldString('description', [
                         'title' => LANG_RSS_FEED_DESC,
-                    )),
-
-                    new fieldNumber('limit', array(
+                    ]),
+                    new fieldNumber('limit', [
                         'title' => LANG_RSS_FEED_LIMIT,
-                        'rules' => array(
-                            array('required'),
-                            array('digits'),
-                            array('min', 1),
-                            array('max', 50),
-                        )
-                    )),
-
-                    new fieldList('template', array(
+                        'rules' => [
+                            ['required'],
+                            ['digits'],
+                            ['min', 1],
+                            ['max', 50],
+                        ]
+                    ]),
+                    new fieldList('template', [
                         'title' => LANG_RSS_FEED_TEMPLATE,
                         'hint'  => LANG_RSS_FEED_TEMPLATE_HINT,
                         'generator' => function($item) {
                             return cmsTemplate::getInstance()->getAvailableTemplatesFiles('controllers/rss', '*.tpl.php');
                         }
-                    ))
-
-                )
-            ),
-
-            'image' => array(
+                    ])
+                ]
+            ],
+            'image' => [
                 'type' => 'fieldset',
                 'title' => LANG_RSS_FEED_IMAGE,
-                'childs' => array(
-                    new fieldImage('image', array())
-                )
-            ),
-
-            'cache' => array(
+                'childs' => [
+                    new fieldImage('image', [])
+                ]
+            ],
+            'cache' => [
                 'type' => 'fieldset',
                 'title' => LANG_RSS_FEED_CACHING,
-                'childs' => array(
-
-                    new fieldCheckbox('is_cache', array(
+                'childs' => [
+                    new fieldCheckbox('is_cache', [
                         'title' => LANG_RSS_FEED_CACHE
-                    )),
-
-                    new fieldNumber('cache_interval', array(
+                    ]),
+                    new fieldNumber('cache_interval', [
                         'title' => LANG_RSS_FEED_CACHE_INT,
-                        'rules' => array(
-                            array('digits'),
-                            array('min', 1)
-                        )
-                    ))
-
-                )
-            )
-
-        );
-
+                        'rules' => [
+                            ['digits'],
+                            ['min', 1]
+                        ]
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

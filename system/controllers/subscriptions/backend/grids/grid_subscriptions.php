@@ -66,13 +66,14 @@ function grid_subscriptions($controller) {
     $actions = [
         [
             'title'  => LANG_VIEW,
-            'class'  => 'view',
+            'icon'   => 'eye',
             'target' => '_blank',
             'href'   => rel_to_href('{subject_url}')
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->root_url, 'delete', ['{id}']),
             'confirm' => LANG_SBSCR_DELETE_CONFIRM
         ]

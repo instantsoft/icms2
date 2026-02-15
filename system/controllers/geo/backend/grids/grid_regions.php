@@ -39,12 +39,13 @@ function grid_regions($controller) {
     $actions = [
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->root_url, 'region', ['{country_id}', '{id}'])
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->root_url, 'delete', ['region', '{id}']),
             'confirm' => LANG_GEO_DELETE_REGION
         ]

@@ -58,7 +58,7 @@
         'class'   => 'cancel',
         'icon'    => 'trash',
         'title'   => LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS,
-        'href'    => $this->href_to('widgets', ['unbind_all_widgets', $template_name])
+        'href'    => $this->href_to('widgets', ['unbind_all_widgets', $template_name], ['csrf_token' => cmsForm::getCSRFToken()])
     ]);
     $this->addToolButton([
         'class' => 'gridicon',

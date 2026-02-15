@@ -8,7 +8,15 @@ class actionAdminSettingsSchedulerRun extends cmsAction {
             return cmsCore::error404();
         }
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
+
         $task = $this->model->getSchedulerTask($id);
+
+        if (!$task) {
+            return cmsCore::error404();
+        }
 
         // Проверяем существование контроллера
         if (!cmsCore::isControllerExists($task['controller'])) {

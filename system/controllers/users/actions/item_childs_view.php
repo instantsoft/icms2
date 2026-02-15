@@ -4,16 +4,16 @@ class actionUsersItemChildsView extends cmsAction {
 
     public $lock_explicit_call = true;
 
-    public function run($ctype, $item, $childs, $content_controller, $fields, $child_target){
+    public function run($ctype, $item, $childs, $content_controller, $fields, $child_target) {
 
         if(!empty($childs['tabs'][$this->name]['relation_id'])){
             $relation = $childs['relations'][$childs['tabs'][$this->name]['relation_id']];
         } else {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
-        if (!in_array($relation['layout'], array('tab', 'hidden'))) {
-            cmsCore::error404();
+        if (!in_array($relation['layout'], ['tab', 'hidden'])) {
+            return cmsCore::error404();
         }
 
         $filter =   "r.parent_ctype_id = '{$ctype['id']}' AND ".
@@ -23,11 +23,11 @@ class actionUsersItemChildsView extends cmsAction {
 
         $this->model->joinInner('content_relations_bind', 'r', $filter);
 
-        if (!empty($relation['options']['limit'])){
+        if (!empty($relation['options']['limit'])) {
             $this->setOption('limit', $relation['options']['limit']);
         }
 
-        if (!empty($relation['options']['is_hide_filter'])){
+        if (!empty($relation['options']['is_hide_filter'])) {
             $this->setOption('is_filter', false);
         }
 
@@ -41,9 +41,9 @@ class actionUsersItemChildsView extends cmsAction {
 
         $this->cms_template->setContext($content_controller);
 
-        return $this->cms_template->render('item_childs_view', array(
+        return $this->cms_template->render('item_childs_view', [
             'ctype'       => $ctype,
-            'child_ctype' => array('name' => $this->name, 'title' => LANG_USERS),
+            'child_ctype' => ['name' => $this->name, 'title' => LANG_USERS],
             'item'        => $item,
             'childs'      => $childs,
             'html'        => $html,
@@ -51,8 +51,7 @@ class actionUsersItemChildsView extends cmsAction {
             'seo_title'   => $seo_title,
             'seo_keys'    => $seo_keys,
             'seo_desc'    => $seo_desc
-        ));
-
+        ]);
     }
 
 }

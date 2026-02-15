@@ -8,6 +8,10 @@ class actionAdminCacheDelete extends cmsAction {
             return cmsCore::error404();
         }
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
+
         if ($this->cms_cache->clean()) {
 
             cmsUser::addSessionMessage(LANG_CP_SETTINGS_CACHE_CLEAN_SUCCESS, 'success');

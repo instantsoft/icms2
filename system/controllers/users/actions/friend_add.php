@@ -162,13 +162,4 @@ class actionUsersFriendAdd extends cmsAction {
         return $messenger->sendNoticePM($notice, 'users_friend_accept');
     }
 
-    private function errorContext() {
-
-        if ($this->request->isInternal()) {
-            return false;
-        }
-
-        return cmsCore::error404();
-    }
-
 }

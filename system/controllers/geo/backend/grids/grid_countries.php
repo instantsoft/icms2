@@ -51,12 +51,13 @@ function grid_countries($controller) {
     $actions = [
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->root_url, 'country', ['{id}'])
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->root_url, 'delete', ['country', '{id}']),
             'confirm' => LANG_GEO_DELETE_COUNTRY
         ]

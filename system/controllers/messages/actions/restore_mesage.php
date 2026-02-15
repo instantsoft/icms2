@@ -8,6 +8,10 @@ class actionMessagesRestoreMesage extends cmsAction {
             return cmsCore::error404();
         }
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
+
         $message_id = $this->request->get('message_id', 0);
         if (!$message_id) {
             return $this->cms_template->renderJSON(['error' => true]);

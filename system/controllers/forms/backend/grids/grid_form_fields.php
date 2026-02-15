@@ -73,17 +73,18 @@ function grid_form_fields($controller, $form_data) {
     $actions = [
         [
             'title' => LANG_COPY,
-            'class' => 'copy',
+            'icon'  => 'copy',
             'href'  => href_to($controller->root_url, 'fields_add', ['{form_id}', '{id}'])
         ],
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->root_url, 'fields_edit', ['{id}'])
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->root_url, 'fields_delete', ['{id}']),
             'confirm' => LANG_CP_FIELD_DELETE_CONFIRM
         ]

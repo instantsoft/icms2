@@ -4,6 +4,10 @@ class actionContentItemTrashRemove extends cmsAction {
 
     public function run() {
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
+
         // Получаем название типа контента и сам тип
         $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name', ''));
         if (!$ctype) {

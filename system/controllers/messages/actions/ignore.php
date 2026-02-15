@@ -8,6 +8,10 @@ class actionMessagesIgnore extends cmsAction {
             return cmsCore::error404();
         }
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
+
         $contact_id = $this->request->get('contact_id', 0);
         if (!$contact_id) {
             return $this->cms_template->renderJSON(['error' => true]);

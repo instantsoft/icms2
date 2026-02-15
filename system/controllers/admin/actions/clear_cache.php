@@ -8,6 +8,10 @@ class actionAdminClearCache extends cmsAction {
             return cmsCore::error404();
         }
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
+
         $cache_folder      = "cache/static/{$type}";
         $cache_folder_path = cmsConfig::get('root_path') . $cache_folder;
 
