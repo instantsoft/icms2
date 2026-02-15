@@ -633,6 +633,10 @@ class modelBilling extends cmsModel {
 
         $item['groups'] = cmsModel::yamlToArray($item['groups']);
         $item['prices'] = cmsModel::yamlToArray($item['prices']);
+        $item['features'] = cmsModel::yamlToArray($item['features']);
+        $item['features_list'] = [];
+
+        $features = array_column($item['features'], 'value', 'type');
 
         foreach ($item['prices'] as &$price) {
 
@@ -641,6 +645,26 @@ class modelBilling extends cmsModel {
             $price['spellcount'] = html_spellcount($price['length'], $consts);
 
             $price['price'] = $model->getDepositSumm($price['amount']);
+        }
+
+        foreach ($this->options['plan_features'] as $f) {
+
+            if (!array_key_exists($f['name'], $features)) {
+                continue;
+            }
+
+            $feature = $f;
+
+            $feature['value'] = $features[$f['name']];
+
+            if ($feature['type'] === 'value' && mb_strpos($feature['title'], '{') !== false) {
+
+                $feature['title'] = string_replace_keys_values_extended($feature['title'], $feature);
+
+                $feature['value'] = null;
+            }
+
+            $item['features_list'][] = $feature;
         }
 
         return $item;
@@ -659,6 +683,10 @@ class modelBilling extends cmsModel {
 
     public function getPlan($id) {
         return $this->getItemById('billing_plans', $id, [$this, 'planCallback']);
+    }
+
+    public function getAutoSubscribtionPlan() {
+        return $this->getItemByField('billing_plans', 'is_subscribe_after_reg', 1, [$this, 'planCallback']);
     }
 
     public function cancelPlan($id) {
@@ -709,7 +737,7 @@ class modelBilling extends cmsModel {
                 orderBy('i.id', 'desc')->
                 getItem('billing_plans_log', function ($item, $model) {
 
-                    $item['is_remind_date_until'] = strtotime($item['date_until']) <= (time()+86400*$this->options['plan_remind_days']);
+                    $item['is_remind_date_until'] = $item['date_until'] && strtotime($item['date_until']) <= (time()+86400*$this->options['plan_remind_days']);
                     $item['old_groups'] = cmsModel::yamlToArray($item['old_groups']);
                     return $item;
                 });
@@ -734,6 +762,21 @@ class modelBilling extends cmsModel {
         return $success;
     }
 
+    protected function getPlanInterval($price) {
+
+        if (!$price) {
+            return new DateInterval('PT0S');
+        }
+
+        $interval_len       = $price['length'];
+        $interval_type      = $price['int'];
+        $interval_type_code = $price['int'][0];
+        $interval_prefix    = in_array($interval_type, ['HOUR', 'MINUTE']) ? 'PT' : 'P';
+        $interval_string    = "{$interval_prefix}{$interval_len}{$interval_type_code}";
+
+        return new DateInterval($interval_string);
+    }
+
     public function addUserPlanSubscribtion($user_id, $plan, $price) {
 
         $user = $this->selectOnly('id')->
@@ -747,14 +790,8 @@ class modelBilling extends cmsModel {
             return false;
         }
 
-        $interval_len       = $price['length'];
-        $interval_type      = $price['int'];
-        $interval_type_code = $price['int'][0];
-        $interval_prefix    = in_array($interval_type, ['HOUR', 'MINUTE']) ? 'PT' : 'P';
-        $interval_string    = "{$interval_prefix}{$interval_len}{$interval_type_code}";
-
-        $plan_interval   = new DateInterval($interval_string);
-        $plan_start_date = date('Y-m-d H:i:s');
+        $plan_interval   = $this->getPlanInterval($price);
+        $plan_start_date = $price ? date('Y-m-d H:i:s') : false;
         $is_continue     = false;
 
         $old_logs = $this->filterEqual('user_id', $user['id'])->
@@ -777,12 +814,16 @@ class modelBilling extends cmsModel {
 
             foreach ($old_logs as $l) {
 
-                $date_until = new DateTime($l['date_until']);
-                $date_until->add($plan_interval);
+                // Если план без прайса, то date_until null
+                if ($l['date_until']) {
 
-                $success = $success && $this->update('billing_plans_log', $l['id'], [
-                    'date_until' => $date_until->format('Y-m-d H:i:s')
-                ]);
+                    $date_until = new DateTime($l['date_until']);
+                    $date_until->add($plan_interval);
+
+                    $success = $success && $this->update('billing_plans_log', $l['id'], [
+                        'date_until' => $date_until->format('Y-m-d H:i:s')
+                    ]);
+                }
 
                 if (!$l['is_paused'] && (!$is_continue || $l['id'] != $last_log['id'])) {
 
@@ -795,15 +836,25 @@ class modelBilling extends cmsModel {
             }
         }
 
-        $date_until = new DateTime($plan_start_date);
-        $date_until->add($plan_interval);
+        $db_date_until = false;
+        $return_date_until = '2100-01-01 00:00';
+
+        if ($plan_start_date) {
+
+            $date_until = new DateTime($plan_start_date);
+            $date_until->add($plan_interval);
+
+            $db_date_until = $date_until->format('Y-m-d H:i:s');
+            $return_date_until = $date_until->format(cmsConfig::get('date_format') . ' H:i');
+        }
+
 
         if (!$is_continue) {
 
             $success = $success && $this->insert('billing_plans_log', [
                 'user_id'    => $user['id'],
                 'plan_id'    => $plan['id'],
-                'date_until' => $date_until->format('Y-m-d H:i:s'),
+                'date_until' => $db_date_until,
                 'old_groups' => $user['groups']
             ]);
 
@@ -815,14 +866,14 @@ class modelBilling extends cmsModel {
         }
 
         // Вознаграждение за расход реферала на покупку подписки
-        if ($success && $this->options['ref_mode'] === 'sub') {
+        if ($success && $price && $this->options['ref_mode'] === 'sub') {
             $success = $success && $this->payRefBonus($price['amount'], $user_id);
         }
 
         cmsCache::getInstance()->clean('users.list');
         cmsCache::getInstance()->clean('users.user.' . $user_id);
 
-        return $success ? $date_until->format(cmsConfig::get('date_format') . ' H:i') : false;
+        return $success ? $return_date_until : false;
     }
 
     private function saveUserPlanGroupsMembership($user_id, $plan_id, $groups) {

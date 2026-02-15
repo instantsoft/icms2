@@ -218,6 +218,18 @@ class fieldHtml extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value = null) {
 
+        $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->getOption('editor'),
+            'options' => $this->getOption('editor_options', []),
+            'presets' => $this->getOption('editor_presets', [])
+        ]);
+
+        $editor = cmsWysiwyg::getEditor($editor_params['editor'], $editor_params['options']);
+
+        if (method_exists($editor, 'prepareValue')) {
+            $value = $editor->prepareValue($value);
+        }
+
         // Сохраняем через типограф если поле в типе контента или передана опция
         if($this->getProperty('store_via_html_filter') || ($this->getOption('is_html_filter') && $this->field_id)){
 

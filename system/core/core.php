@@ -1132,6 +1132,19 @@ class cmsCore {
             self::loadControllerLanguage('admin');
         }
 
+        cmsDebugging::pointSetDescription('widgets', function() use($matched_pages) {
+
+            if ($matched_pages === [0, 1]) {
+                return LANG_WP_HOME_PAGE . ', ' . LANG_WP_ALL_PAGES;
+            }
+
+            $items = [];
+            foreach ($matched_pages as $p) {
+                $items[] = ($p['controller'] ? $p['controller'] . '.' : '') . ($p['name'] ?: $p['title']);
+            }
+            return implode(', ', $items);
+        });
+
         foreach ($widgets_list as $widget) {
 
             // Проверяем отрицательные маски виджета

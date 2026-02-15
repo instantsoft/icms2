@@ -42,12 +42,13 @@ function grid_ctype_relations($controller) {
     $actions = [
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->name, 'ctypes', ['relations_edit', '{ctype_id}', '{id}'])
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->name, 'ctypes', ['relations_delete', '{id}']),
             'confirm' => LANG_CP_RELATION_DELETE_CONFIRM
         ]

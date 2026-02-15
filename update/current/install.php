@@ -7,6 +7,13 @@ function install_package() {
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    $core->db->addTableField('billing_plans', 'features', 'TEXT NULL DEFAULT NULL COMMENT AFTER `prices`');
+    $core->db->addTableField('billing_plans', 'is_subscribe_after_reg', 'TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `is_real_price`');
+
+    if(!$core->db->getRowsCount('widgets', "`controller` = 'billing' AND `name` = 'plans'")){
+        $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`) VALUES ('billing', 'plans', 'Subscriptions', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

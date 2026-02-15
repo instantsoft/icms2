@@ -143,13 +143,14 @@ function grid_comments_list($controller) {
     $actions = [
         [
             'title'  => LANG_COMMENTS_VIEW,
-            'class'  => 'view',
+            'icon'   => 'eye',
             'target' => '_blank',
             'href'   => rel_to_href('{target_url}') . '#comment_{id}'
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->root_url, 'comments_delete', ['{id}']),
             'confirm' => LANG_COMMENTS_DELETE_CONFIRM
         ]

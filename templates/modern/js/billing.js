@@ -181,8 +181,8 @@ icms.billing = (function ($) {
 
 		let plan_id = $('#plan_id').val();
 
-		$('.plan-desc').hide();
-        $('#plan-desc-'+plan_id).show();
+		$('.plan-desc,.plan-features').hide();
+        $('#plan-desc-'+plan_id+',#plan-features-'+plan_id).show();
 		$('.plan-len').hide();
         $('#plan-len-'+plan_id).show();
 

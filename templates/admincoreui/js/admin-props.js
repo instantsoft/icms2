@@ -121,7 +121,7 @@ icms.adminProps = (function ($) {
 
         $('#icms-grid tbody tr .actions').each(function(){
 
-           let prop_id = $('a.edit', $(this)).attr('href').split('/').pop();
+           let prop_id = $('a.props-edit', $(this)).attr('href').split('/').pop();
            $('option[value='+prop_id+']', current_list).remove();
 
         });

@@ -12,19 +12,31 @@ class backendGroups extends cmsBackend {
         return [
             [
                 'title' => LANG_GROUPS_FIELDS,
-                'url'   => href_to($this->root_url)
+                'url'   => href_to($this->root_url),
+                'options' => [
+                    'icon' => 'list'
+                ]
             ],
             [
                 'title' => LANG_CP_CTYPE_DATASETS,
-                'url'   => href_to($this->root_url, 'datasets')
+                'url'   => href_to($this->root_url, 'datasets'),
+                'options' => [
+                    'icon' => 'map-signs'
+                ]
             ],
             [
                 'title' => LANG_OPTIONS,
-                'url'   => href_to($this->root_url, 'options')
+                'url'   => href_to($this->root_url, 'options'),
+                'options' => [
+                    'icon' => 'cog'
+                ]
             ],
             [
                 'title' => LANG_PERMISSIONS,
-                'url'   => href_to($this->root_url, 'perms', 'groups')
+                'url'   => href_to($this->root_url, 'perms', 'groups'),
+                'options' => [
+                    'icon' => 'key'
+                ]
             ]
         ];
     }

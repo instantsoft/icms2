@@ -1,5 +1,9 @@
 <?php
-    $this->addTplJSNameFromContext('fields/fieldsgroup');
+	$this->addTplJSNameFromContext([
+        'jquery-ui',
+        'fields/fieldsgroup'
+    ]);
+    $this->addTplCSSNameFromContext('jquery-ui');
  ?>
 <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 <div id="fieldsgroup_<?php echo $field->id; ?>">
@@ -30,11 +34,18 @@
                         <?php } ?>
                     <?php } ?>
                 </div>
-                <?php if ($field->data['is_dynamic']) { ?>
-                    <div class="d-flex align-items-start">
+                <?php if ($field->data['is_dynamic'] || $field->data['is_sortable']) { ?>
+                    <div class="d-flex align-items-start flex-column">
+                    <?php if ($field->data['is_dynamic']) { ?>
                         <a href="#" class="ml-3 text-danger delete">
                             <?php echo html_svg_icon('solid', 'times'); ?>
                         </a>
+                    <?php } ?>
+                    <?php if ($field->data['is_sortable']) { ?>
+                        <a href="#" class="sortable-block text-black-50 ml-3 mt-auto">
+                            <?php echo html_svg_icon('solid', 'arrows-alt'); ?>
+                        </a>
+                    <?php } ?>
                     </div>
                 <?php } ?>
             </div>
@@ -45,7 +56,7 @@
 <?php ob_start(); ?>
 <script>
     $(function(){
-        new icms.fieldsgroup('<?php echo $field->id; ?>', '<?php echo $field->element_name; ?>', <?php echo json_encode($value); ?>, <?php echo json_encode($field->getError() ?? []); ?>, <?php echo $field->data['is_dynamic'] ? 'true' : 'false'; ?>);
+        new icms.fieldsgroup('<?php echo $field->id; ?>', '<?php echo $field->element_name; ?>', <?php echo json_encode($value); ?>, <?php echo json_encode($field->getError() ?? []); ?>, <?php echo $field->data['is_dynamic'] ? 'true' : 'false'; ?>, <?php echo $field->data['is_sortable'] ? 'true' : 'false'; ?>);
     });
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

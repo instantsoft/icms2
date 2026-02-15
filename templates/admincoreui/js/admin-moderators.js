@@ -6,6 +6,7 @@ icms.adminModerators = (function ($) {
     this.url_delete = '';
     this.url_autocomplete = '';
     this.ctype_moderators_list = {};
+    this.csrf_token = '';
 
     let self = this;
 
@@ -31,10 +32,11 @@ icms.adminModerators = (function ($) {
         this.url_submit = ctype_moderators_add.data('url_submit');
         this.url_delete = ctype_moderators_add.data('url_delete');;
         this.url_autocomplete = ctype_moderators_add.data('url_autocomplete');
+        this.csrf_token = icms.forms.getCsrfToken();
         $('#submit', ctype_moderators_add).on('click', function(){
             return self.add(this);
         });
-        this.ctype_moderators_list.on('click', '.actions > .delete', function(){
+        this.ctype_moderators_list.on('click', '.actions .moderator-cancel', function(){
             return self.cancel(this);
         });
     };
@@ -47,14 +49,14 @@ icms.adminModerators = (function ($) {
 
         $(btn).addClass('is-busy');
 
-        $.post(this.url_submit, {name: name}, function(result){
+        $.post(this.url_submit, {name: name, csrf_token: this.csrf_token}, function(result){
 
             $('#user_email').val('');
 
             $(btn).removeClass('is-busy');
 
             if (result.error){
-                alert(result.message);
+                icms.modal.alert(result.message, 'error');
                 return false;
             }
             self.ctype_moderators_list.show();
@@ -78,11 +80,12 @@ icms.adminModerators = (function ($) {
         $('a.delete, a.view', list_item).hide();
         $('.loading-icon', list_item).show();
 
-        $.post(this.url_delete, {id: id}, function(result){
+        $.post(this.url_delete, {id: id, csrf_token: this.csrf_token}, function(result){
 
             if (result.error){
                 $('.ajaxlink', list_item).show();
                 $('.loading-icon', list_item).hide();
+                icms.modal.alert(result.message, 'error');
                 return false;
             }
 

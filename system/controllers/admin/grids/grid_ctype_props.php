@@ -66,18 +66,20 @@ function grid_ctype_props($controller, $drag_save_url, $ctype_name){
     $actions = [
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'class' => 'props-edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->name, 'ctypes', ['props_edit', '{ctype_id}', '{prop_id}'])
         ],
         [
             'title'   => LANG_CP_PROPS_UNBIND,
-            'class'   => 'unbind',
+            'icon'    => 'reply',
             'href'    => href_to($controller->name, 'ctypes', ['props_unbind', '{ctype_id}', '{prop_id}', '{cat_id}']),
             'confirm' => LANG_CP_PROPS_UNBIND_CONFIRM
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->name, 'ctypes', ['props_delete', '{ctype_id}', '{prop_id}']),
             'confirm' => LANG_CP_PROPS_DELETE_CONFIRM
         ]

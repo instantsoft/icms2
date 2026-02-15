@@ -1,9 +1,10 @@
 <?php
-class cmsWysiwygMarkitup {
+
+class cmsWysiwygMarkitup extends cmsWysiwyg {
 
     private static $redactor_loaded = false;
 
-    private $options = [
+    protected $options = [
         'skin' => 'simple',
         'set' => []
     ];
@@ -75,14 +76,14 @@ class cmsWysiwygMarkitup {
             [
                 'name'        => LANG_MARKITUP_L,
                 'key'         => 'L',
-                'openWith'    => '<a target="_blank" href="[!['.LANG_MARKITUP_L1.':!:http://]!]">',
+                'openWith'    => '<a target="_blank" href="[!['.LANG_MARKITUP_L1.':!:https://]!]">',
                 'closeWith'   => '</a>',
                 'placeHolder' => LANG_MARKITUP_L2,
                 'className'   => 'btnLink',
             ],
             [
                 'name'        => LANG_MARKITUP_IMGL,
-                'replaceWith' => '<img src="[!['.LANG_MARKITUP_IMGL1.':!:http://]!]" alt="[!['.LANG_DESCRIPTION.']!]">',
+                'replaceWith' => '<img src="[!['.LANG_MARKITUP_IMGL1.':!:https://]!]" alt="[!['.LANG_DESCRIPTION.']!]">',
                 'className'   => 'btnImg',
             ],
             [
@@ -134,37 +135,36 @@ class cmsWysiwygMarkitup {
             'upload_url'   => href_to('images', 'upload_with_preset', ['inline_upload_file', 'wysiwyg_markitup'])
         ];
 
-        if(isset($config['id'])){
+        if (isset($config['id'])) {
             $this->options['id'] = $config['id'];
         }
 
-        if(!empty($config['set'])){
+        if (!empty($config['set'])) {
             $this->options['set'] = array_replace_recursive($this->options['set'], $config['set']);
         }
 
-        if(!empty($config['buttons'])){
+        if (!empty($config['buttons'])) {
             foreach ($this->options['set']['markupSet'] as $btn_id => $btn) {
-                if(!in_array($btn_id, $config['buttons'])){
+                if (!in_array($btn_id, $config['buttons'])) {
                     unset($this->options['set']['markupSet'][$btn_id]);
                 }
             }
         }
 
+        $this->setDomId();
     }
 
     public function displayEditor($field_name, $content = '', $config = []) {
 
         $this->loadRedactor();
 
-        $dom_id = isset($this->options['id']) ? $this->options['id'] : 'wysiwyg-' . uniqid();
-
-        if($dom_id){
-            if(!empty($this->options['wysiwyg_toolbar'])){
-                echo '<div data-field_id="'.$dom_id.'" id="wysiwyg_toolbar_'.$dom_id.'" class="wysiwyg_toolbar_wrap">'.$this->options['wysiwyg_toolbar'].'</div>';
+        if($this->dom_id) {
+            if(!empty($this->options['wysiwyg_toolbar'])) {
+                echo '<div data-field_id="'.$this->dom_id.'" id="wysiwyg_toolbar_'.$this->dom_id.'" class="wysiwyg_toolbar_wrap">'.$this->options['wysiwyg_toolbar'].'</div>';
                 unset($this->options['wysiwyg_toolbar']);
             }
             echo html_textarea($field_name, $content, [
-                'id' => $dom_id,
+                'id'    => $this->dom_id,
                 'class' => 'markitup_redactor'
             ]);
         }
@@ -172,10 +172,10 @@ class cmsWysiwygMarkitup {
         ob_start(); ?>
 
         <script>
-            <?php if($dom_id){ ?>
-                markitup_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options['set']); ?>;
+            <?php if($this->dom_id) { ?>
+                markitup_global_options['field_<?php echo $this->dom_id; ?>'] = <?php echo json_encode($this->options['set']); ?>;
                 $(function(){
-                    init_markitup('<?php echo $dom_id; ?>');
+                    init_markitup('<?php echo $this->dom_id; ?>');
                 });
             <?php } else { ?>
                 markitup_global_options['default'] = <?php echo json_encode($this->options['set']); ?>;

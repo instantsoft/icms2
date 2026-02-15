@@ -69,37 +69,38 @@ function grid_ctypes($controller) {
         ],
         [
             'title' => LANG_OPTIONS,
-            'class' => 'config',
+            'icon'  => 'cogs',
             'href'  => href_to($controller->name, 'ctypes', ['edit', '{id}'])
         ],
         [
             'title' => LANG_CP_CTYPE_LABELS,
-            'class' => 'labels',
+            'icon'  => 'book',
             'href'  => href_to($controller->name, 'ctypes', ['labels', '{id}'])
         ],
         [
             'title' => LANG_CP_CTYPE_FIELDS,
-            'class' => 'fields',
+            'icon'  => 'list',
             'href'  => href_to($controller->name, 'ctypes', ['fields', '{id}'])
         ],
         [
             'title' => LANG_CP_CTYPE_PERMISSIONS,
-            'class' => 'permissions',
+            'icon'  => 'key',
             'href'  => href_to($controller->name, 'ctypes', ['perms', '{id}'])
         ],
         [
             'title' => LANG_CP_CTYPE_DATASETS,
-            'class' => 'filter',
+            'icon'  => 'map-signs',
             'href'  => href_to($controller->name, 'ctypes', ['datasets', '{id}'])
         ],
         [
             'title' => LANG_MODERATORS,
-            'class' => 'user',
+            'icon'  => 'user-graduate',
             'href'  => href_to($controller->name, 'ctypes', ['moderators', '{id}'])
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->name, 'ctypes', ['delete', '{id}']),
             'confirm' => LANG_CP_CTYPE_DELETE_CONFIRM,
             'handler' => function ($row) {

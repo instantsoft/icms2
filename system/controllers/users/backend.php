@@ -17,23 +17,38 @@ class backendUsers extends cmsBackend {
         return [
             [
                 'title' => LANG_USERS_CFG_FIELDS,
-                'url'   => href_to($this->root_url, 'fields')
+                'url'   => href_to($this->root_url, 'fields'),
+                'options' => [
+                    'icon' => 'list'
+                ]
             ],
             [
                 'title' => LANG_USERS_CFG_TABS,
-                'url'   => href_to($this->root_url, 'tabs')
+                'url'   => href_to($this->root_url, 'tabs'),
+                'options' => [
+                    'icon' => 'folder'
+                ]
             ],
             [
                 'title' => LANG_OPTIONS,
-                'url'   => href_to($this->root_url, 'options')
+                'url'   => href_to($this->root_url, 'options'),
+                'options' => [
+                    'icon' => 'cog'
+                ]
             ],
             [
                 'title' => LANG_PERMISSIONS,
-                'url'   => href_to($this->root_url, 'perms', 'users')
+                'url'   => href_to($this->root_url, 'perms', 'users'),
+                'options' => [
+                    'icon' => 'key'
+                ]
             ],
             [
                 'title' => LANG_USERS_CFG_MIGRATION,
-                'url'   => href_to($this->root_url, 'migrations')
+                'url'   => href_to($this->root_url, 'migrations'),
+                'options' => [
+                    'icon' => 'people-arrows'
+                ]
             ]
         ];
     }

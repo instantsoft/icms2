@@ -39,7 +39,7 @@ function grid_tabs($controller) {
     $actions = [
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->root_url, 'tabs_edit', ['{id}'])
         ]
     ];

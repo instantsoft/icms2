@@ -28,6 +28,12 @@ class fieldFieldsgroup extends cmsFormField {
      * @var bool
      */
     public $is_counter_list = false;
+    /**
+     * Сортировка полей
+     *
+     * @var bool
+     */
+    public $is_sortable = true;
 
     public function getRules() {
 
@@ -70,6 +76,7 @@ class fieldFieldsgroup extends cmsFormField {
         $this->data['form']            = $this->getChildForm(true);
         $this->data['is_counter_list'] = $this->is_counter_list;
         $this->data['is_dynamic']      = $this->is_dynamic;
+        $this->data['is_sortable']     = $this->is_sortable;
 
         return parent::getInput(cmsModel::yamlToArray($value));
     }

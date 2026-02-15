@@ -63,6 +63,10 @@ class cmsCache {
             $this->cache_ttl = $config->cache_ttl;
 
             $this->is_enabled = true;
+
+            cmsDebugging::pointSetDescription('cache', function() {
+                return $this->cacher_name;
+            });
         }
     }
 

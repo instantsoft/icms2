@@ -173,6 +173,43 @@ class formBillingOptions extends cmsForm {
                             ['required'],
                             ['min', 1]
                         ]
+                    ]),
+                    new fieldFieldsgroup('plan_features', [
+                        'title'     => LANG_BILLING_PLAN_FEATURES_FULL,
+                        'add_title' => LANG_BILLING_PLAN_FEATURES_ADD,
+                        'default'   => [],
+                        'childs'    => [
+                            new fieldString('name', [
+                                'title' => LANG_BILLING_PLAN_FEATURES_NAME,
+                                'options' => [
+                                    'placeholder' => LANG_BILLING_PLAN_FEATURES_NAME_HINT
+                                ],
+                                'rules' => [
+                                    ['required'],
+                                    ['sysname'],
+                                    ['max_length', 30]
+                                ]
+                            ]),
+                            new fieldString('title', [
+                                'title' => LANG_TITLE,
+                                'hint'  => LANG_BILLING_PLAN_FEATURES_HINT,
+                                'rules' => [
+                                    ['required'],
+                                    ['max_length', 512]
+                                ]
+                            ]),
+                            new fieldList('type', [
+                                'title'   => LANG_BILLING_PLAN_FEATURES_TYPE,
+                                'default' => 'bool',
+                                'items'   => [
+                                    'bool'  => LANG_BILLING_PLAN_FEATURES_TYPE_BOOL,
+                                    'value' => LANG_BILLING_PLAN_FEATURES_TYPE_VALUE
+                                ]
+                            ])
+                        ],
+                        'rules' => [
+                            ['required']
+                        ]
                     ])
                 ]
             ],

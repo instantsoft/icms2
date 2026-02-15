@@ -3284,6 +3284,13 @@ class cmsTemplate {
             return cmsCore::error(ERR_TEMPLATE_NOT_FOUND . ': ' . $this->name . ':' . $layout);
         }
 
+        cmsDebugging::pointSetDescription('template', function() {
+
+            $m = $this->getManifest();
+
+            return $m['title'] ?? $this->name;
+        });
+
         $device_type = cmsRequest::getDeviceType();
 
         if ($this->layout_params) {

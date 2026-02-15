@@ -45,8 +45,15 @@ trait processctypeitem {
 
         // Хук может выполняться не автором записи
         $user = $this->model_users->getUser($item['user_id']);
-        if (!$user || $user['is_admin']) {
+        if (!$user) {
             return false;
+        }
+
+        if ($user['is_admin']) {
+
+            $this->model->endTransaction(true);
+
+            return true;
         }
 
         $is_transaction_started = $this->model->isTransactionStarted();

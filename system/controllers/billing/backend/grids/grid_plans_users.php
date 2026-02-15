@@ -28,7 +28,7 @@ function grid_plans_users($controller) {
             'title'   => LANG_BILLING_PLAN_DATE_UNTIL,
             'filter'  => 'date',
             'handler' => function ($value) {
-                return html_date($value);
+                return $value ? html_date($value) : LANG_BILLING_PLAN_INDEFINITE;
             }
         ],
         'is_paused' => [

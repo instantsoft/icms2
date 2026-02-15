@@ -38,12 +38,13 @@ function grid_payouts($controller) {
     $actions = [
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->root_url, 'payouts', ['edit', '{id}'])
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'confirm' => LANG_BILLING_CP_PO_DELETE_CONFIRM,
             'href'    => href_to($controller->root_url, 'payouts', ['delete', '{id}'])
         ]

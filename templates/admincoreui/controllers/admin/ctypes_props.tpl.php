@@ -53,6 +53,7 @@
 
         <?php if ($props){ ?>
             <form action="" method="post" id="props-bind" style="display:none">
+                <?php echo html_csrf_token(); ?>
                 <div class="form-row align-items-center" id="ctypes-props-toolbar">
                     <div class="col-auto">
                         <?php echo html_select('prop_id', []); ?>

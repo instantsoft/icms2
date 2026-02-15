@@ -20,10 +20,20 @@ class actionBillingPlan extends cmsAction {
 
         $current_plan = $this->model->getUserCurrentPlan($this->cms_user->id) ?: [];
 
+        $plans_list = $this->getPlansList($plans, $current_plan);
+
+        if ($plan_id && !isset($plans_list[$plan_id])) {
+            return cmsCore::error404();
+        }
+
         // Продление?
         $is_renew_plan = $plan_id && $current_plan && $current_plan['id'] == $plan_id;
 
         if ($this->request->has('submit')) {
+
+            if (!$plan_id) {
+                return $this->redirectToAction('plan');
+            }
 
             if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
 
@@ -42,10 +52,6 @@ class actionBillingPlan extends cmsAction {
             }
 
             $period  = $this->request->get("len{$plan_id}", 0);
-
-            if (!isset($plans[$plan_id])) {
-                return cmsCore::error404();
-            }
 
             $plan = $plans[$plan_id];
 
@@ -144,7 +150,7 @@ class actionBillingPlan extends cmsAction {
             'real_price_plans' => $real_price_plans,
             'current_plan'     => $current_plan,
             'systems_list'     => array_collection_to_list($systems, 'name', 'title'),
-            'plans_list'       => $this->getPlansList($plans, $current_plan),
+            'plans_list'       => $plans_list,
             'b_spellcount'     => $this->options['currency'],
             'curr'             => $this->options['currency_real'],
             'is_renew_plan'    => $is_renew_plan,
@@ -159,6 +165,9 @@ class actionBillingPlan extends cmsAction {
         $list = [];
 
         foreach ($plans as $p) {
+            if (!$p['prices']) {
+                continue;
+            }
             $list[$p['id']] = $p['title'] . (($current_plan && $current_plan['id'] == $p['id']) ? ' (' . LANG_BILLING_PLAN_CURRENT . ')' : '');
         }
 

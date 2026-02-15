@@ -36,18 +36,19 @@ function grid_ctype_filters($controller, $ctype = []) {
     $actions = [
         [
             'title'  => LANG_VIEW,
-            'class'  => 'view',
+            'icon'   => 'eye',
             'target' => '_blank',
             'href'   => href_to(((cmsConfig::get('ctype_default') && in_array($ctype['name'], cmsConfig::get('ctype_default'))) ? '' : $ctype['name']), '{slug}')
         ],
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->name, 'ctypes', ['filters_add', $ctype['id'], '{id}', 'edit'])
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->name, 'ctypes', ['filters_delete', $ctype['id'], '{id}']),
             'confirm' => LANG_CP_FILTER_DELETE_CONFIRM
         ]

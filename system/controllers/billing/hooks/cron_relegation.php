@@ -23,6 +23,10 @@ class onBillingCronRelegation extends cmsAction {
 
             $plan = $this->model->getUserCurrentPlan($user['id']);
 
+            if (empty($plan['date_until'])) {
+                continue;
+            }
+
             $date_until  = strtotime($plan['date_until']);
             $date_now    = time();
             $time_to_end = $date_until - $date_now;

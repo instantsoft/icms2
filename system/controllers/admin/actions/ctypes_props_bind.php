@@ -10,6 +10,10 @@ class actionAdminCtypesPropsBind extends cmsAction {
             return cmsCore::error404();
         }
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
+
         $ctype = $this->model_backend_content->getContentType($ctype_id);
         if (!$ctype) {
             return cmsCore::error404();

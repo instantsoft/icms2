@@ -132,17 +132,18 @@ function grid_users($controller) {
         [
             'title'  => LANG_PROFILE,
             'target' => '_blank',
-            'class'  => 'view',
+            'icon'   => 'eye',
             'href'   => href_to('users', '{id}')
         ],
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to('users', '{id}', ['edit']) . '?back=' . href_to($controller->name, 'users')
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->name, 'users', ['delete', '{id}']),
             'confirm' => LANG_CP_USER_DELETE_CONFIRM
         ]

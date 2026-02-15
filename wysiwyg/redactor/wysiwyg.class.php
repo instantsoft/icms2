@@ -1,9 +1,9 @@
 <?php
-class cmsWysiwygRedactor {
+class cmsWysiwygRedactor extends cmsWysiwyg {
 
     private static $redactor_loaded = false;
 
-    private $options = [
+    protected $options = [
         'minHeight' => 200,
         'toolbarFixedBox' => false,
         'plugins' => []
@@ -68,31 +68,28 @@ class cmsWysiwygRedactor {
 
         }
 
-        $this->options = array_replace_recursive($this->options, $config);
-
+        parent::__construct($config);
     }
 
     public function displayEditor($field_name, $content = '', $config = []){
 
         $this->loadRedactor();
 
-        $dom_id = isset($this->options['id']) ? $this->options['id'] : 'wysiwyg-' . uniqid(); unset($this->options['id']);
-
-        if($field_name && $dom_id){
+        if($field_name && $this->dom_id) {
             if(!empty($this->options['wysiwyg_toolbar'])){
-                echo '<div data-field_id="'.$dom_id.'" id="wysiwyg_toolbar_'.$dom_id.'" class="wysiwyg_toolbar_wrap">'.$this->options['wysiwyg_toolbar'].'</div>';
+                echo '<div data-field_id="'.$this->dom_id.'" id="wysiwyg_toolbar_'.$this->dom_id.'" class="wysiwyg_toolbar_wrap">'.$this->options['wysiwyg_toolbar'].'</div>';
                 unset($this->options['wysiwyg_toolbar']);
             }
-            echo html_textarea($field_name, $content, ['id' => $dom_id, 'class' => 'imperavi_redactor']);
+            echo html_textarea($field_name, $content, ['id' => $this->dom_id, 'class' => 'imperavi_redactor']);
         }
 
         ob_start(); ?>
 
         <script>
-            <?php if($dom_id){ ?>
-                redactor_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options); ?>;
+            <?php if($this->dom_id) { ?>
+                redactor_global_options['field_<?php echo $this->dom_id; ?>'] = <?php echo json_encode($this->options); ?>;
                 $(function(){
-                    init_redactor('<?php echo $dom_id; ?>');
+                    init_redactor('<?php echo $this->dom_id; ?>');
                 });
             <?php } else { ?>
                 redactor_global_options['default'] = <?php echo json_encode($this->options); ?>;
@@ -100,7 +97,6 @@ class cmsWysiwygRedactor {
         </script>
 
         <?php cmsTemplate::getInstance()->addBottom(ob_get_clean());
-
     }
 
     private function loadRedactor() {

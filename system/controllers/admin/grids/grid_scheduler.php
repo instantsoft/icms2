@@ -70,17 +70,18 @@ function grid_scheduler($controller) {
     $actions = [
         [
             'title' => LANG_CP_SCHEDULER_TASK_RUN,
-            'class' => 'play',
+            'icon'  => 'play',
             'href'  => href_to($controller->name, 'settings', ['scheduler', 'run', '{id}'])
         ],
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->name, 'settings', ['scheduler', 'edit', '{id}'])
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->name, 'settings', ['scheduler', 'delete', '{id}']),
             'confirm' => LANG_CP_SCHEDULER_TASK_DELETE_CONFIRM
         ]

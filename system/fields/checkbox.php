@@ -14,6 +14,7 @@ class fieldCheckbox extends cmsFormField {
                 'hint'             => LANG_PARSER_CHECKBOX_LINKS_HINT,
                 'add_title'        => LANG_PARSER_CHECKBOX_LINKS_ADD,
                 'is_counter_list'  => true,
+                'is_sortable'      => false,
                 'childs' => [
                     new fieldString('title', [
                         'title' => LANG_TITLE,

@@ -1,5 +1,5 @@
 var icms = icms || {};
-icms.fieldsgroup = function(field_id, element_name, current_values, errors, is_dynamic){
+icms.fieldsgroup = function(field_id, element_name, current_values, errors, is_dynamic, is_sortable){
 
     var wrap = $('#fieldsgroup_'+field_id);
 
@@ -45,6 +45,22 @@ icms.fieldsgroup = function(field_id, element_name, current_values, errors, is_d
     $('.add_link', wrap).on('click', function (){
         return submitValue();
     });
+
+    if (is_sortable) {
+        $('.fieldsgroup_wrap', wrap).sortable({
+            items: '.fieldsgroup-item',
+            cursor: 'move',
+            handle: '.sortable-block',
+            opacity: 0.9,
+            delay: 150,
+            placeholder: 'mb-3 fieldsgroup-item bg-secondary rounded',
+            start: function(event, ui) {
+                $(ui.placeholder).addClass($(ui.item).attr('class'));
+                $(ui.placeholder).height($(ui.item).height());
+                $(ui.placeholder).width($(ui.item).width());
+            }
+        });
+    }
 
     if (is_dynamic) {
         if(current_values){

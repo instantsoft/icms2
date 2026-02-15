@@ -825,7 +825,7 @@ icms.datagrid = (function () {
 
         app.directive('tooltip', function (el, binding) {
             if(typeof binding.value === 'undefined' || binding.value){
-                new bootstrap.Tooltip(el, {placement: 'top', trigger : 'hover'});
+                new bootstrap.Tooltip(el, {placement: 'auto', trigger : 'hover'});
             }
         });
 

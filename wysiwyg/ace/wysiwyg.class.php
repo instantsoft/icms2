@@ -1,9 +1,10 @@
 <?php
-class cmsWysiwygAce {
+
+class cmsWysiwygAce extends cmsWysiwyg {
 
     private static $redactor_loaded = false;
 
-    private $options = [
+    protected $options = [
         'theme'                     => 'ace/theme/github_light_default',
         'mode'                      => 'ace/mode/html',
         'wrap'                      => true,
@@ -19,31 +20,25 @@ class cmsWysiwygAce {
         'maxLines'                  => 40
     ];
 
-    public function __construct($config = []) {
-        $this->options = array_replace_recursive($this->options, $config);
-    }
-
     public function displayEditor($field_name, $content = '', $config = []) {
 
         $this->loadRedactor();
 
-        $dom_id = isset($this->options['id']) ? $this->options['id'] : 'wysiwyg-' . uniqid(); unset($this->options['id']);
-
-        if($dom_id){
+        if($this->dom_id){
             if(!empty($this->options['wysiwyg_toolbar'])){
-                echo '<div data-field_id="'.$dom_id.'" id="wysiwyg_toolbar_'.$dom_id.'" class="wysiwyg_toolbar_wrap">'.$this->options['wysiwyg_toolbar'].'</div>';
+                echo '<div data-field_id="'.$this->dom_id.'" id="wysiwyg_toolbar_'.$this->dom_id.'" class="wysiwyg_toolbar_wrap">'.$this->options['wysiwyg_toolbar'].'</div>';
                 unset($this->options['wysiwyg_toolbar']);
             }
-            echo html_textarea($field_name, $content, ['id' => $dom_id]);
+            echo html_textarea($field_name, $content, ['id' => $this->dom_id]);
         }
 
         ob_start(); ?>
 
         <script>
-            <?php if($dom_id){ ?>
-                ace_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options); ?>;
+            <?php if($this->dom_id){ ?>
+                ace_global_options['field_<?php echo $this->dom_id; ?>'] = <?php echo json_encode($this->options); ?>;
                 $(function(){
-                    init_ace('<?php echo $dom_id; ?>');
+                    init_ace('<?php echo $this->dom_id; ?>');
                 });
             <?php } else { ?>
                 ace_global_options['default'] = <?php echo json_encode($this->options); ?>;

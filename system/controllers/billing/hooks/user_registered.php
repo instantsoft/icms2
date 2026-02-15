@@ -7,9 +7,30 @@ class onBillingUserRegistered extends cmsAction {
 
     public function run($user) {
 
+        // Приветственный бонус
         if ($this->options['reg_bonus']) {
             $this->model->incrementUserBalance($user['id'], $this->options['reg_bonus'], LANG_BILLING_REG_BONUS_LOG);
         }
+
+        // Подписываем на тарифный план, если требуется
+        $auto_plan = $this->model->getAutoSubscribtionPlan();
+
+        if ($auto_plan) {
+
+            $price = [];
+            if ($auto_plan['prices']) {
+                // Если платный, то минимальный период ставим
+                $price = reset($auto_plan['prices']);
+            }
+
+            $this->model->addUserPlanSubscribtion($user['id'], $auto_plan, $price);
+        }
+
+        // Работа с рефералами
+        return $this->applyReferal($user);
+    }
+
+    private function applyReferal($user) {
 
         if (!$this->options['is_refs']) {
             return $user;

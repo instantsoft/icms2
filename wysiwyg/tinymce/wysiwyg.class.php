@@ -1,5 +1,6 @@
 <?php
-class cmsWysiwygTinymce {
+
+class cmsWysiwygTinymce extends cmsWysiwyg {
 
     private static $redactor_loaded = false;
 
@@ -46,7 +47,7 @@ class cmsWysiwygTinymce {
         ]
     ];
 
-    private $options = [
+    protected $options = [
         'plugins' => [
             'autoresize'
         ],
@@ -99,9 +100,9 @@ class cmsWysiwygTinymce {
 
     public function __construct($config = []) {
 
-        $this->options = array_replace_recursive($this->options, $config);
+        parent::__construct($config);
 
-        if(!$this->options['plugins']){
+        if(!$this->options['plugins']) {
             $this->options['plugins'] = [];
         }
 
@@ -109,7 +110,7 @@ class cmsWysiwygTinymce {
         $core = cmsCore::getInstance();
         $lang = cmsCore::getLanguageName();
 
-        if($lang !== 'en'){
+        if($lang !== 'en') {
             $this->options['language'] = $lang;
         }
 
@@ -119,21 +120,21 @@ class cmsWysiwygTinymce {
         $quickbars_insert_toolbar = !empty($this->options['quickbars_insert_toolbar']) ? explode(' ', preg_replace('#\s+#', ' ', $this->options['quickbars_insert_toolbar'])) : [];
 
         foreach ($this->buttons_mapping as $pname => $buttons) {
-            if(is_numeric($pname)){
-                $pname = $buttons;
+            if (is_numeric($pname)) {
+                $pname   = $buttons;
                 $buttons = [$pname];
             }
-            if(in_array($pname, $this->options['plugins'])){
+            if (in_array($pname, $this->options['plugins'])) {
                 continue;
             }
             foreach ($buttons as $button) {
-                if(in_array($button, $toolbar)){
+                if (in_array($button, $toolbar)) {
                     $this->options['plugins'][] = $pname;
                 }
-                if(in_array($button, $quickbars_selection_toolbar)){
+                if (in_array($button, $quickbars_selection_toolbar)) {
                     $this->options['plugins'][] = $pname;
                 }
-                if(in_array($button, $quickbars_insert_toolbar)){
+                if (in_array($button, $quickbars_insert_toolbar)) {
                     $this->options['plugins'][] = $pname;
                 }
             }
@@ -147,15 +148,15 @@ class cmsWysiwygTinymce {
 
             $upload_params = ['csrf_token' => cmsForm::getCSRFToken()];
 
-            if($context['controller']){
+            if($context['controller']) {
                 $upload_params['target_controller'] = $context['controller'];
             }
 
-            if($context['action']){
+            if($context['action']) {
                 $upload_params['target_subject'] = mb_substr($context['action'], 0, 32);
             }
 
-            if(strpos($core->uri, '/add/') === false && !empty($context['params'][1]) && is_numeric($context['params'][1])){
+            if(strpos($core->uri, '/add/') === false && !empty($context['params'][1]) && is_numeric($context['params'][1])) {
                 $upload_params['target_id'] = $context['params'][1];
             }
 
@@ -197,7 +198,7 @@ class cmsWysiwygTinymce {
 
         $this->options['plugins'] = implode(' ', $this->options['plugins']);
 
-        if(!empty($this->options['block_formats'])){
+        if(!empty($this->options['block_formats'])) {
 
             $block_formats = [];
 
@@ -212,15 +213,15 @@ class cmsWysiwygTinymce {
         }
 
         foreach ($this->options as $key => $value) {
-            if(!$value && !is_string($value)){
+            if (!$value && !is_string($value)) {
                 $this->options[$key] = false;
                 continue;
             }
-            if($value === 1){
+            if ($value === 1) {
                 $this->options[$key] = true;
                 continue;
             }
-            if(is_numeric($value)){
+            if (is_numeric($value)) {
                 $this->options[$key] = intval($value);
                 continue;
             }
@@ -228,27 +229,25 @@ class cmsWysiwygTinymce {
 
     }
 
-    public function displayEditor($field_name, $content = '', $config = []){
+    public function displayEditor($field_name, $content = '', $config = []) {
 
         $this->loadRedactor();
 
-        $dom_id = isset($this->options['id']) ? $this->options['id'] : 'wysiwyg-' . uniqid(); unset($this->options['id']);
-
-        if($dom_id){
+        if($this->dom_id) {
             if(!empty($this->options['wysiwyg_toolbar'])){
-                echo '<div data-field_id="'.$dom_id.'" id="wysiwyg_toolbar_'.$dom_id.'" class="wysiwyg_toolbar_wrap">'.$this->options['wysiwyg_toolbar'].'</div>';
+                echo '<div data-field_id="'.$this->dom_id.'" id="wysiwyg_toolbar_'.$this->dom_id.'" class="wysiwyg_toolbar_wrap">'.$this->options['wysiwyg_toolbar'].'</div>';
                 unset($this->options['wysiwyg_toolbar']);
             }
-            echo html_textarea($field_name, $content, ['id' => $dom_id, 'class' => 'tinymce_redactor']);
+            echo html_textarea($field_name, $content, ['id' => $this->dom_id, 'class' => 'tinymce_redactor']);
         }
 
         ob_start(); ?>
 
         <script>
-            <?php if($dom_id){ ?>
-                tiny_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options, JSON_UNESCAPED_UNICODE); ?>;
+            <?php if($this->dom_id) { ?>
+                tiny_global_options['field_<?php echo $this->dom_id; ?>'] = <?php echo json_encode($this->options, JSON_UNESCAPED_UNICODE); ?>;
                 $(function(){
-                    init_tinymce('<?php echo $dom_id; ?>');
+                    init_tinymce('<?php echo $this->dom_id; ?>');
                 });
             <?php } else { ?>
                 tiny_global_options['default'] = <?php echo json_encode($this->options, JSON_UNESCAPED_UNICODE); ?>;
@@ -342,12 +341,12 @@ class cmsWysiwygTinymce {
 
         // убираем плагины, которые подключатся автоматически при назначении кнопок
         foreach ($buttons_mapping as $plugin_name => $pbtns) {
-            if(is_numeric($plugin_name)){
+            if (is_numeric($plugin_name)) {
                 $plugin_name = $pbtns;
-                $pbtns = [$plugin_name];
+                $pbtns       = [$plugin_name];
             }
             $key = array_search($plugin_name, $plugins);
-            if($key !== false){
+            if ($key !== false) {
                 unset($plugins[$key]);
             }
             foreach ($pbtns as $pbtn) {
@@ -358,7 +357,7 @@ class cmsWysiwygTinymce {
         // убираем скрытые плагины, которые включаются в самом классе редактора
         foreach ($hidden_plugins as $hidden_plugin) {
             $key = array_search($hidden_plugin, $plugins);
-            if($key !== false){
+            if ($key !== false) {
                 unset($plugins[$key]);
             }
         }

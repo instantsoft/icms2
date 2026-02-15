@@ -51,12 +51,13 @@ function grid_ctype_datasets($controller, $edit_url) {
     $actions = [
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => $edit_url
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->name, 'ctypes', ['datasets_delete', '{id}']),
             'confirm' => LANG_CP_DATASET_DELETE_CONFIRM
         ]

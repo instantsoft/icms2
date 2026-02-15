@@ -567,7 +567,7 @@
     define('LANG_PREVIEW',                   'Preview');
     define('LANG_SEND',                         'Send');
     define('LANG_SEND_AGAIN',                 'Send again');
-    define('LANG_SEND_AGAIN_VIA',             'Send again via ');
+    define('LANG_SEND_AGAIN_VIA',             'Request a new code in ');
     define('LANG_INSTALL',                     'Install');
     define('LANG_INSERT',                     'Insert');
     define('LANG_CANCEL',                     'Cancel');

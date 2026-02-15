@@ -15,7 +15,7 @@ class actionAdminWidgetsPageAutocomplete extends cmsAction {
 
         $ctype = $this->model_content->getContentTypeByName($ctype_name);
         if (!$ctype) {
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
         $this->model_content->filterStart()->
@@ -25,8 +25,6 @@ class actionAdminWidgetsPageAutocomplete extends cmsAction {
         $items = $this->model_content->get($this->model_content->table_prefix . $ctype['name']) ?: [];
 
         $result = [];
-
-        $ctype_default = cmsConfig::get('ctype_default') ?? [];
 
         foreach ($items as $item) {
 

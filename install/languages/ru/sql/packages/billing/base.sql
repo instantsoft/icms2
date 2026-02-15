@@ -128,9 +128,11 @@ CREATE TABLE `{#}billing_plans` (
   `description` text DEFAULT NULL COMMENT 'Описание плана',
   `is_enabled` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Включено?',
   `is_real_price` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Покупка только за реальную валюту',
+  `is_subscribe_after_reg` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Подписывать на план после регистрации пользователя',
   `max_out` decimal(11,2) UNSIGNED DEFAULT NULL COMMENT 'Максимальная сумма вывода денег',
   `groups` text DEFAULT NULL COMMENT 'YAML с группами для перевода',
   `prices` text DEFAULT NULL COMMENT 'YAML с ценами по группам',
+  `features` text DEFAULT NULL COMMENT 'Характеристики',
   `users` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Кол-во пользователей, подписанных на план',
   `ordering` int(11) UNSIGNED DEFAULT NULL COMMENT 'Порядковый номер в списке',
   PRIMARY KEY (`id`),
@@ -251,7 +253,7 @@ INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `date
 ('Выплаты по расписанию', 'billing', 'payouts', 720, NULL, 1, 1);
 
 INSERT INTO `{#}controllers` (`title`, `name`, `slug`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`, `is_external`, `files`, `addon_id`) VALUES
-('Биллинг', 'billing', NULL, 1, '---\ncurrency_title: баллы\ncurrency: балл|балла|баллов\ncurrency_real: руб.\nmin_pack: 0\nreg_bonus: 0\nin_mode: enabled\nprices:\n  - \n    amount: 1\n    price: 1\nis_plans: 1\nplan_remind_days: 3\nis_transfers: 1\nis_transfers_mail: null\nis_transfers_notify: null\nrtp_groups: [ ]\nis_rtp: null\nrtp_rate: 0.5\nis_ptr: 1\nptr_rate: 1\nis_out: null\nout_groups: [ ]\nis_out_mail: 1\nout_period_days: 0\nout_min: 1\nout_rate: 0.5\nout_systems: |\n  Webmoney WMZ\r\n  ЮMoney\r\n  QIWI\r\n  PayPal\nout_email: \"\"\nis_refs: 1\nref_days: 100\nref_url: \"\"\nref_terms: \"\"\nref_bonus: 0\nref_mode: all\nref_type: linear\nref_scale: 2\nref_levels:\n  - \n    percent: 1\ncur_real_symb: ₽\nis_refs_as_invite: 1\npay_field_html: \'<a class=\"btn btn-primary billing-buy-field\" href=\"{url}\">{solid%coins} {title}</a>\'\nlimit_log: 15\nlimit_out: 15\nlimit_refs: 15\nbtn_titles:\n  guest: \'Покупка от {price}\'\n  user: \'Купить за {price}\'\nrefs_groups: [ ]\n', 'InstantCMS Team', 'https://instantcms.ru', '2.1.0', 1, NULL, NULL, NULL);
+('Биллинг', 'billing', NULL, 1, '---\ncurrency_title: баллы\ncurrency: балл|балла|баллов\ncurrency_real: руб.\nmin_pack: 0\nreg_bonus: 0\nin_mode: enabled\nprices:\n  - \n    amount: 1\n    price: 1\nis_plans: 1\nplan_remind_days: 3\nis_transfers: 1\nis_transfers_mail: null\nis_transfers_notify: null\nrtp_groups: [ ]\nis_rtp: null\nrtp_rate: 0.5\nis_ptr: 1\nptr_rate: 1\nis_out: null\nout_groups: [ ]\nis_out_mail: 1\nout_period_days: 0\nout_min: 1\nout_rate: 0.5\nout_systems: |\n  Webmoney WMZ\r\n  ЮMoney\r\n  QIWI\r\n  PayPal\nout_email: \"\"\nis_refs: 1\nref_days: 100\nref_url: \"\"\nref_terms: \"\"\nref_bonus: 0\nref_mode: all\nref_type: linear\nref_scale: 2\nref_levels:\n  - \n    percent: 1\ncur_real_symb: ₽\nis_refs_as_invite: 1\npay_field_html: \'<a class=\"btn btn-primary billing-buy-field\" href=\"{url}\">{solid%coins} {title}</a>\'\nlimit_log: 15\nlimit_out: 15\nlimit_refs: 15\nbtn_titles:\n  guest: \'Покупка от {price}\'\n  user: \'Купить за {price}\'\nplan_features:\n  - \n    name: comments_add\n    title: >\n      Добавление\n      комментариев\n    type: bool\n  - \n    name: news_count\n    title: >\n      Максимальное\n      количество новостей\n    type: value\n  - \n    name: support\n    title: Поддержка 24/7\n    type: bool\nrefs_groups: [ ]\n', 'InstantCMS Team', 'https://instantcms.ru', '2.1.0', 1, NULL, NULL, NULL);
 
 INSERT INTO `{#}events` (`event`, `listener`, `ordering`, `is_enabled`) VALUES
 ('admin_users_filter', 'billing', 244, 1),
@@ -278,3 +280,6 @@ INSERT INTO `{#}events` (`event`, `listener`, `ordering`, `is_enabled`) VALUES
 ('content_after_delete', 'billing', 267, 1),
 ('moderation_cancel', 'billing', 268, 1),
 ('moderation_rework', 'billing', 269, 1);
+
+INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`) VALUES
+('billing', 'plans', 'Подписки', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);

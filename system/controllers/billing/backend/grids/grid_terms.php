@@ -67,12 +67,13 @@ function grid_terms($controller) {
     $actions = [
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->root_url, 'prices', ['terms_edit', '{id}'])
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'confirm' => LANG_BILLING_CP_FIELDS_DELETE,
             'href'    => href_to($controller->root_url, 'prices', ['terms_delete', '{id}'])
         ]

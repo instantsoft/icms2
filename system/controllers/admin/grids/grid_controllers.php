@@ -72,7 +72,8 @@ function grid_controllers($controller) {
     $actions = [
         [
             'title'   => LANG_CP_PACKAGE_CONTENTS,
-            'class'   => 'view ajax-modal',
+            'class'   => 'ajax-modal',
+            'icon'    => 'eye',
             'href'    => href_to($controller->name, 'package_files_list', ['controllers', '{id}']),
             'handler' => function ($row) {
                 return $row['files'];
@@ -80,7 +81,7 @@ function grid_controllers($controller) {
         ],
         [
             'title'   => LANG_CONFIG,
-            'class'   => 'config',
+            'icon'    => 'cogs',
             'href'    => href_to($controller->name, 'controllers', ['edit', '{name}']),
             'handler' => function ($row) {
                 return $row['is_backend'];
@@ -88,7 +89,8 @@ function grid_controllers($controller) {
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'confirm' => LANG_CP_DELETE_COMPONENT_CONFIRM,
             'href'    => href_to($controller->name, 'controllers_delete', ['{name}']),
             'handler' => function ($row) {

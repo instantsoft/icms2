@@ -11,6 +11,7 @@ class formAdminSettingsMime extends cmsForm {
                 'childs' => [
                     new fieldFieldsgroup('mimetypes', [
                         'title'  => LANG_CP_MIMETYPES,
+                        'is_sortable' => false,
                         'childs' => [
                             new fieldString('extension', [
                                 'attributes' => ['placeholder' => LANG_CP_EXTENSION],

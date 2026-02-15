@@ -171,7 +171,20 @@ class formContentCategory extends cmsForm {
                     new fieldString('slug_key', [
                         'rules' => [
                             ['required'],
-                            ['max_length', 255]
+                            ['max_length', 255],
+                            [function ($controller, $data, $value) use ($ctype) {
+
+                                $ctype_default = cmsConfig::get('ctype_default') ?? [];
+
+                                if ($ctype_default && in_array($ctype['name'], $ctype_default)) {
+                                    // УРЛ наборов
+                                    if (mb_strpos($value, $ctype['name'] . '-') === 0) {
+                                        return ERR_VALIDATE_INVALID;
+                                    }
+                                }
+
+                                return true;
+                            }]
                         ]
                     ])
                 ]

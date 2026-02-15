@@ -36,6 +36,7 @@ class backendTypograph extends cmsBackend {
 
             $form->addField($fieldset_id, new fieldFieldsgroup('options:tags:'.$tag, [
                 'add_title' => LANG_TYP_ADD_ATTR,
+                'is_sortable' => false,
                 'childs' => [
                     new fieldList('type', [
                         'title' => LANG_TYP_ATTR_TYPE,

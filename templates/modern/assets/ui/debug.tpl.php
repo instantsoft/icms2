@@ -61,6 +61,11 @@ $this->addMainTplJSName(['vendors/list.min']);
                     </div>
                 </div>
             </div>
+            <?php if ($desc = cmsDebugging::pointGetDescription($tab_name)) { ?>
+                <div class="alert alert-info mt-3 mb-1">
+                    <?php echo nl2br($desc); ?>
+                </div>
+            <?php } ?>
             <div class="list">
                 <?php foreach($data as $key => $query) { ?>
                     <?php $query_data = isset($query['data_callback']) ? $query['data_callback']($query['data']) : nl2br(htmlspecialchars($query['data'])); ?>

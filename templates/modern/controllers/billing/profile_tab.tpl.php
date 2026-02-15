@@ -69,14 +69,18 @@
         </h4>
         <h5>
             <?php echo $plan['title']; ?>
-            <span class="badge badge-<?php if ($plan['is_remind_date_until']) { ?>danger<?php } else { ?>success<?php } ?> ml-3"><?php printf(LANG_BILLING_PLAN_UNTIL, html_date_time($plan['date_until'])); ?></span>
+            <?php if ($plan['date_until']) { ?>
+                <span class="badge badge-<?php if ($plan['is_remind_date_until']) { ?>danger<?php } else { ?>success<?php } ?> ml-3">
+                    <?php printf(LANG_BILLING_PLAN_UNTIL, html_date_time($plan['date_until'])); ?>
+                </span>
+            <?php } ?>
         </h5>
         <?php if ($plan['description']) { ?>
             <p class="card-text text-muted">
                 <?php echo $plan['description']; ?>
             </p>
         <?php } ?>
-        <?php if ($plan_url) { ?>
+        <?php if ($plan_url && $plan['date_until']) { ?>
             <a class="btn btn-outline-success" href="<?php echo $plan_url . "?plan_id={$plan['id']}" ?>">
                 <?php html_svg_icon('solid', 'clock'); ?>
                 <?php echo LANG_BILLING_EXTEND_PLAN; ?>

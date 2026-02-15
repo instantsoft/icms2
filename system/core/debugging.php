@@ -7,6 +7,7 @@ class cmsDebugging {
     private static $is_enable   = false;
     private static $start_time  = [];
     private static $points_data = [];
+    private static $points_data_hint = [];
 
     public static function enable() {
 
@@ -15,11 +16,22 @@ class cmsDebugging {
         self::startTimer('cms');
     }
 
-    public static function pointStart($target) {
+    public static function pointStart(string $target) {
         self::startTimer($target);
     }
 
-    public static function pointProcess($target, $params, $offset = 2) {
+    public static function pointSetDescription(string $target, $desc) {
+        self::$points_data_hint[$target] = $desc;
+    }
+
+    public static function pointGetDescription(string $target) {
+
+        $desc = self::$points_data_hint[$target] ?? '';
+
+        return is_callable($desc) ? $desc() : $desc;
+    }
+
+    public static function pointProcess(string $target, $params, $offset = 2) {
 
         if (!self::$is_enable) { return false; }
 
@@ -68,7 +80,6 @@ class cmsDebugging {
         ], (is_callable($params) ? $params() : $params));
 
         return true;
-
     }
 
     public static function getPointsTargets() {
@@ -101,7 +112,7 @@ class cmsDebugging {
 
     }
 
-    public static function getPointsData($target = '') {
+    public static function getPointsData(string $target = '') {
 
         self::loadIncludedFiles();
 
@@ -112,12 +123,12 @@ class cmsDebugging {
         return self::$points_data;
     }
 
-    public static function startTimer($target) {
+    public static function startTimer(string $target) {
         // Для общего времени выполнения старт берём по константе из index.php
         self::$start_time[$target][] = ($target === 'cms' && defined('VALID_RUN')) ? VALID_RUN : microtime(true);
     }
 
-    public static function getTime($target, $decimals = self::DECIMALS) {
+    public static function getTime(string $target, $decimals = self::DECIMALS) {
         if (!isset(self::$start_time[$target])) {
             return 0;
         }

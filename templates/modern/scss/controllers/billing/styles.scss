@@ -57,3 +57,54 @@
 .b_field_price svg {
     margin-right:$spacer*0.75;
 }
+
+.pricing {
+    &-desc {
+        margin-bottom: $spacer*3;
+    }
+    &-wraper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $spacer*1.75;
+        margin: $spacer 0;
+    }
+    &-card {
+        flex-grow: 1;
+        max-width: 100%;
+        background-color: $gray-100;
+        &.popular {
+            transform: scale(1.05);
+            background-color: rgba($primary, 0.1);
+        }
+    }
+    &-popular-badge {
+        position: absolute;
+        top: ($font-size-sm+$spacer)*-0.5;
+        left: 50%;
+        transform: translateX(-50%);
+        background: $primary;
+        color: $white;
+        font-size: $font-size-sm;
+        line-height: 1;
+        font-weight: 600;
+        padding: $spacer*0.5 $spacer;
+        border-radius: $border-radius*2;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+}
+.plan {
+    &-features {
+        display: flex;
+        flex-direction: column;
+        gap: $spacer*0.5;
+        &__item {
+            display: flex;
+            gap: $spacer*0.5;
+            > * {
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+}

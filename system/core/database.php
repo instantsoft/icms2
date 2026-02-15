@@ -164,6 +164,13 @@ class cmsDatabase {
 
         $this->init_start_time = time();
 
+        cmsDebugging::pointSetDescription('db', function() {
+
+            $sql_server_info = $this->getServerInfo();
+
+            return $sql_server_info['type'].' '.$sql_server_info['version'];
+        });
+
         return true;
     }
 

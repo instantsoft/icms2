@@ -70,7 +70,8 @@ function grid_outs($controller) {
     $actions = [
         [
             'title'   => LANG_CLOSE,
-            'class'   => 'accept',
+            'class'   => 'text-success',
+            'icon'    => 'check-circle',
             'confirm' => LANG_BILLING_OUT_CLOSE_CONFIRM,
             'href'    => href_to($controller->root_url, 'outs', ['done', '{id}']),
             'handler' => function ($out) {
@@ -79,7 +80,8 @@ function grid_outs($controller) {
         ],
         [
             'title'   => LANG_CANCEL,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times',
             'confirm' => LANG_BILLING_OUT_CANCEL_CONFIRM,
             'href'    => href_to($controller->root_url, 'outs', ['cancel', '{id}']),
             'handler' => function ($out) {

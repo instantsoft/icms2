@@ -47,6 +47,29 @@
                                         <?php echo $p['description']; ?>
                                     </div>
                                 <?php } ?>
+                                <?php foreach ($plans as $p) { ?>
+                                    <ul class="plan-features list-unstyled mb-0 mt-1 mt-lg-2" id="plan-features-<?php echo $p['id']; ?>">
+                                    <?php foreach ($p['features_list'] as $feature) { ?>
+                                        <li class="plan-features__<?php echo $feature['name']; ?><?php if ($feature['type'] === 'bool' && !$feature['value']) { ?> text-muted<?php } ?>">
+                                            <?php
+                                            $icon = 'check';
+                                            $icon_class = 'text-success';
+                                            if ($feature['type'] === 'bool' && !$feature['value']) {
+                                                $icon = 'times';
+                                                $icon_class = 'text-danger';
+                                            }
+                                            ?>
+                                            <span class="<?php echo $icon_class; ?>">
+                                                <?php html_svg_icon('solid', $icon); ?>
+                                            </span>
+                                            <?php echo $feature['title']; ?>
+                                            <?php if ($feature['type'] === 'value' && !is_null($feature['value'])) { ?>
+                                                <?php echo $feature['value']; ?>
+                                            <?php } ?>
+                                        </li>
+                                    <?php } ?>
+                                    </ul>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>

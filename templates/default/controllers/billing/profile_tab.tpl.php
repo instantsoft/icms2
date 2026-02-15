@@ -23,7 +23,11 @@
 <div class="balance-info plan">
 	<h3>
 		<?php echo LANG_BILLING_PLAN; ?>:
-		<span><?php echo $plan['title'] ?> <small><?php printf(LANG_BILLING_PLAN_UNTIL, html_date_time($plan['date_until'])); ?></small></span>
+		<span><?php echo $plan['title'] ?>
+        <?php if ($plan['date_until']) { ?>
+            <small><?php printf(LANG_BILLING_PLAN_UNTIL, html_date_time($plan['date_until'])); ?></small>
+        <?php } ?>
+        </span>
 	</h3>
 </div>
 <?php } ?>

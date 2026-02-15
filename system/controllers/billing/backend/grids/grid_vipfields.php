@@ -77,12 +77,13 @@ function grid_vipfields($controller) {
     $actions = [
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->root_url, 'prices', ['vipfields_edit', '{id}'])
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'confirm' => LANG_BILLING_CP_FIELDS_DELETE,
             'href'    => href_to($controller->root_url, 'prices', ['vipfields_delete', '{id}'])
         ]

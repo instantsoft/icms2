@@ -305,50 +305,79 @@ class admin extends cmsFrontend {
 
     public function getCtypeMenu($do = 'add', $id = null) {
 
+        $is_add = $do === 'add';
+
         $ctype_menu = [
             [
                 'title' => LANG_CP_CTYPE_SETTINGS,
-                'url'   => href_to($this->name, 'ctypes', ($do == 'add' ? ['add'] : ['edit', $id]))
+                'url'   => href_to($this->name, 'ctypes', ($do == 'add' ? ['add'] : ['edit', $id])),
+                'options' => [
+                    'icon'  => 'cogs'
+                ]
             ],
             [
                 'title'    => LANG_CP_CTYPE_LABELS,
                 'url'      => href_to($this->name, 'ctypes', ['labels', $id]),
-                'disabled' => ($do === 'add')
+                'disabled' => $is_add,
+                'options' => [
+                    'icon'  => 'book'
+                ]
             ],
             [
                 'title'    => LANG_CP_CTYPE_FIELDS,
                 'url'      => href_to($this->name, 'ctypes', ['fields', $id]),
-                'disabled' => ($do === 'add')
+                'disabled' => $is_add,
+                'options' => [
+                    'icon'  => 'list'
+                ]
             ],
             [
                 'title'    => LANG_CP_CTYPE_PROPS,
                 'url'      => href_to($this->name, 'ctypes', ['props', $id]),
-                'disabled' => ($do === 'add')
+                'disabled' => $is_add,
+                'options' => [
+                    'icon'  => 'list-alt'
+                ]
             ],
             [
                 'title'    => LANG_CP_CTYPE_PERMISSIONS,
                 'url'      => href_to($this->name, 'ctypes', ['perms', $id]),
-                'disabled' => ($do === 'add')
+                'disabled' => $is_add,
+                'options' => [
+                    'icon'  => 'key'
+                ]
             ],
             [
                 'title'    => LANG_CP_CTYPE_DATASETS,
                 'url'      => href_to($this->name, 'ctypes', ['datasets', $id]),
-                'disabled' => ($do === 'add')
+                'disabled' => $is_add,
+                'options' => [
+                    'icon'  => 'map-signs'
+                ]
             ],
             [
                 'title'    => LANG_CP_CTYPE_FILTERS,
                 'url'      => href_to($this->name, 'ctypes', ['filters', $id]),
-                'disabled' => ($do === 'add')
+                'disabled' => $is_add,
+                'options' => [
+                    'icon'  => 'filter'
+                ]
             ],
             [
                 'title'    => LANG_MODERATORS,
                 'url'      => href_to($this->name, 'ctypes', ['moderators', $id]),
-                'disabled' => ($do === 'add')
+                'disabled' => $is_add,
+                'options' => [
+                    'icon'  => 'user-graduate'
+                ]
             ],
             [
                 'title'    => LANG_CP_CTYPE_RELATIONS,
                 'url'      => href_to($this->name, 'ctypes', ['relations', $id]),
-                'disabled' => ($do === 'add')
+                'disabled' => $is_add,
+                'options' => [
+                    'icon'  => 'retweet'
+                ]
             ]
         ];
 

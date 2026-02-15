@@ -39,12 +39,13 @@ function grid_menu_items($controller) {
     $actions = [
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->name, 'menu', ['item_edit', '{id}'])
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->name, 'menu', ['item_delete', '{id}']),
             'confirm' => LANG_CP_MENU_ITEM_DELETE_CONFIRM
         ]

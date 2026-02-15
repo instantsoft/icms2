@@ -3,21 +3,17 @@ class formWysiwygMarkitupOptions extends cmsForm {
 
     public function init($do) {
 
-        return array(
-
-            array(
+        return [
+            [
                 'type' => 'fieldset',
                 'title' => LANG_WW_OPTIONS,
-                'childs' => array(
-
-                    new fieldList('options:buttons', array(
+                'childs' => [
+                    new fieldList('options:buttons', [
                         'title' => LANG_MARKITUP_BTN,
                         'is_chosen_multiple' => true,
-                        'generator' => function($item){
+                        'generator' => function($item) {
 
-                            cmsCore::includeFile('wysiwyg/markitup/wysiwyg.class.php');
-
-                            $editor = new cmsWysiwygMarkitup();
+                            $editor = cmsWysiwyg::getEditor('markitup');
 
                             $items = [];
 
@@ -28,9 +24,8 @@ class formWysiwygMarkitupOptions extends cmsForm {
                             return $items;
                         },
                         'default' => [0,1,2,3,9,14]
-                    )),
-
-                    new fieldList('options:skin', array(
+                    ]),
+                    new fieldList('options:skin', [
                         'title' => LANG_MARKITUP_THEME_SKIN,
                         'generator' => function($item){
                             $items = [];
@@ -39,13 +34,10 @@ class formWysiwygMarkitupOptions extends cmsForm {
                             return $items;
                         },
                         'default' => 'simple'
-                    ))
-
-                )
-            )
-
-        );
-
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

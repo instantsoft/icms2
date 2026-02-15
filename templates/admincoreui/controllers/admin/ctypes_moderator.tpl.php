@@ -30,8 +30,16 @@
     <td><?php echo $moderator['count_idle'];?></td>
     <td>
         <div class="actions">
-            <a class="view" href="<?php echo href_to('admin', 'controllers', ['edit', 'moderation', 'logs', ($ctype['controller'] ?? 'content'), $ctype['name'], 0, $moderator['user_id']]); ?>" title="<?php echo LANG_VIEW; ?>"></a>
-            <a class="delete" href="#" data-user_id="<?php echo $moderator['user_id']; ?>" title="<?php echo LANG_CANCEL; ?>"></a>
+            <a href="<?php echo href_to('admin', 'controllers', ['edit', 'moderation', 'logs', ($ctype['controller'] ?? 'content'), $ctype['name'], 0, $moderator['user_id']]); ?>" title="<?php echo LANG_VIEW; ?>" data-toggle="tooltip" data-placement="top">
+                <span>
+                    <?php html_svg_icon('solid', 'eye'); ?>
+                </span>
+            </a>
+            <a class="text-danger moderator-cancel" href="#" data-user_id="<?php echo $moderator['user_id']; ?>" title="<?php echo LANG_CANCEL; ?>" data-toggle="tooltip" data-placement="top">
+                <span>
+                    <?php html_svg_icon('solid', 'times'); ?>
+                </span>
+            </a>
             <div class="loading-icon" style="display:none"><div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div></div>
         </div>
     </td>

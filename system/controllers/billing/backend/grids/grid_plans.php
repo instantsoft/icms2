@@ -37,13 +37,31 @@ function grid_plans($controller) {
 
     $actions = [
         [
+            'title'   => LANG_BILLING_PLAN_RUN_FREE,
+            'confirm' => LANG_BILLING_PLAN_RUN_FREE_CONFIRM,
+            'icon'    => 'user-check',
+            'href'    => href_to($controller->root_url, 'plans_free_all', ['{id}']),
+            'handler' => function ($item) {
+
+                $prices = cmsModel::yamlToArray($item['prices']);
+
+                return empty($prices);
+            }
+        ],
+        [
+            'title' => LANG_COPY,
+            'icon'  => 'copy',
+            'href'  => href_to($controller->root_url, 'plans_add', ['{id}', 1]),
+        ],
+        [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->root_url, 'plans', ['edit', '{id}'])
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'confirm' => LANG_BILLING_PLAN_DELETE_CONFIRM,
             'href'    => href_to($controller->root_url, 'plans', ['delete', '{id}'])
         ]

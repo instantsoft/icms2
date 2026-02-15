@@ -74,7 +74,7 @@ function grid_queue($controller, $contex_controller) {
     $actions = [
         [
             'title'   => LANG_CP_QUEUE_QUEUE_RESTART,
-            'class'   => 'play',
+            'icon'    => 'play',
             'href'    => href_to($contex_controller->root_url, 'queue_restart', ['{id}']),
             'handler' => function ($row) {
                 return $row['is_locked'] && $row['last_error'];
@@ -82,7 +82,8 @@ function grid_queue($controller, $contex_controller) {
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($contex_controller->root_url, 'queue_delete', ['{id}']),
             'confirm' => LANG_CP_SCHEDULER_TASK_DELETE_CONFIRM,
             'handler' => function ($row) {

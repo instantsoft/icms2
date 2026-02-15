@@ -91,7 +91,7 @@ function grid_fields($controller){
     $actions = [
         [
             'title' => LANG_COPY,
-            'class' => 'copy',
+            'icon'  => 'copy',
             'href'  => href_to($controller->root_url, 'fields_add', ['groups', '{id}', 1]),
             'handler' => function ($row) {
                 return !$row['is_system'] && !$row['is_fixed'];
@@ -99,12 +99,13 @@ function grid_fields($controller){
         ],
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->root_url, 'fields_edit', ['groups', '{id}'])
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($controller->root_url, 'fields_delete', ['{id}']),
             'confirm' => LANG_CP_FIELD_DELETE_CONFIRM,
             'handler' => function ($row) {

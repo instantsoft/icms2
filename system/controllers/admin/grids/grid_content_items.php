@@ -223,18 +223,18 @@ function grid_content_items($controller, $ctype) {
     $actions = [
         [
             'title'  => LANG_VIEW,
-            'class'  => 'view',
+            'icon'   => 'eye',
             'target' => '_blank',
             'href'   => href_to($ctype['name'], '{slug}.html')
         ],
         [
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'icon'  => 'pen',
             'href'  => href_to($controller->name, 'content', ['item_edit', $ctype['name'], '{id}']) . '?back=' . href_to($controller->name, 'content')
         ],
         [
             'title'   => LANG_RESTORE,
-            'class'   => 'basket_remove',
+            'icon'  => 'trash-restore',
             'href'    => href_to($ctype['name'], 'trash_remove', '{id}') . '?back=' . href_to($controller->name, 'content'),
             'confirm' => LANG_CP_CONTENT_ITEM_RESTORE_CONFIRM,
             'handler' => function ($row) {
@@ -243,7 +243,8 @@ function grid_content_items($controller, $ctype) {
         ],
         [
             'title'   => LANG_BASKET_DELETE,
-            'class'   => 'basket_put',
+            'class'   => 'text-danger',
+            'icon'    => 'trash',
             'href'    => href_to($ctype['name'], 'trash_put', '{id}') . '?back=' . href_to($controller->name, 'content'),
             'confirm' => LANG_CP_CONTENT_ITEM_BASKET_DELETE_CONFIRM,
             'handler' => function ($row) {
@@ -252,7 +253,8 @@ function grid_content_items($controller, $ctype) {
         ],
         [
             'title'   => LANG_DELETE,
-            'class'   => 'delete',
+            'class'   => 'text-danger',
+            'icon'    => 'times-circle',
             'href'    => href_to($ctype['name'], 'delete', '{id}') . '?back=' . href_to($controller->name, 'content'),
             'confirm' => LANG_CP_CONTENT_ITEM_DELETE_CONFIRM
         ]

@@ -35,6 +35,7 @@ class formTypographPreset extends cmsForm {
                     ]),
                     new fieldFieldsgroup('options:autoreplace', [
                         'title' => LANG_TYP_AUTOREPLACE,
+                        'is_sortable' => false,
                         'childs' => [
                             new fieldString('search', [
                                 'attributes' => ['placeholder' => LANG_TYP_AUTOREPLACE_FROM],

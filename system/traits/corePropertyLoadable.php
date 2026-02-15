@@ -37,7 +37,7 @@ trait corePropertyLoadable {
                 break;
             case 'controller':
 
-                $obj = \cmsCore::getController($controller, ($this->request ?? null), false);
+                $obj = \cmsCore::getController($controller, (property_exists($this, 'request') ? $this->request : null), false);
 
                 break;
             default:
@@ -73,7 +73,7 @@ trait corePropertyLoadable {
 
         } else if (strpos($name, 'controller_') === 0) {
 
-            $this->{$name} = \cmsCore::getController(str_replace('controller_', '', $name), ($this->request ?? null));
+            $this->{$name} = \cmsCore::getController(str_replace('controller_', '', $name), (property_exists($this, 'request') ? $this->request : null));
 
         } else if (strpos($name, 'model_') === 0) {
 

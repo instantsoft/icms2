@@ -50,6 +50,15 @@ class actionAdminCtypesModerators extends cmsAction {
             return cmsCore::error404();
         }
 
+        $csrf_token = $this->request->get('csrf_token', '');
+        if (!cmsForm::validateCSRFToken($csrf_token)) {
+
+            return $this->cms_template->renderJSON([
+                'error'   => true,
+                'message' => 'Error CSRF Token'
+            ]);
+        }
+
         $name = $this->request->get('name', '');
         if (!$name) {
             return cmsCore::error404();
@@ -100,6 +109,15 @@ class actionAdminCtypesModerators extends cmsAction {
 
         if (!$this->request->isAjax()) {
             return cmsCore::error404();
+        }
+
+        $csrf_token = $this->request->get('csrf_token', '');
+        if (!cmsForm::validateCSRFToken($csrf_token)) {
+
+            return $this->cms_template->renderJSON([
+                'error'   => true,
+                'message' => 'Error CSRF Token'
+            ]);
         }
 
         $id = $this->request->get('id', 0);

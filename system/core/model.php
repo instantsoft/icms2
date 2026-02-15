@@ -2315,7 +2315,7 @@ class cmsModel {
 
         $this->db->freeResult($result);
 
-        return $max[$field] ?: 0;
+        return $max[$field] ?: $default;
     }
 
     public function getMin($table, $field, $default = 0) {
