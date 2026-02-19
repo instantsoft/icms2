@@ -55,7 +55,7 @@ class actionAdminUsers extends cmsAction {
                 'href'  => null
             ],
             [
-                'class' => 'delete_user icms-action-confirm',
+                'class' => 'delete_user',
                 'icon'  => 'times',
                 'level' => 2,
                 'title' => LANG_CP_USER_GROUP_DELETE,

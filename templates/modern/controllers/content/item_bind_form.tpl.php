@@ -1,7 +1,7 @@
 <div id="content_bind_form" data-filter-url="<?php html($filter_url); ?>" data-mode="<?php html($mode); ?>">
     <div class="input-group find">
-        <?php echo html_select('item-find-field', $filter_fields, '', array('id'=>'item-find-field')); ?>
-        <?php echo html_input('text', 'item-find-input', '', array('id'=>'item-find-input', 'placeholder' => LANG_CONTENT_BIND_ITEM_FIND_HINT)); ?>
+        <?php echo html_select('item-find-field', $filter_fields, '', ['id'=>'item-find-field']); ?>
+        <?php echo html_input('text', 'item-find-input', '', ['id'=>'item-find-input', 'placeholder' => LANG_CONTENT_BIND_ITEM_FIND_HINT]); ?>
     </div>
     <ul class="nav nav-pills pills-menu my-3">
         <?php if($show_all_tab){ ?>
@@ -25,6 +25,7 @@
 		<input type="submit" name="submit" class="button-submit btn btn-primary" value="<?php echo $button_title; ?>" data-title="<?php echo $button_title; ?>">
 	</div>
     <form action="<?php echo href_to($ctype['name'], $mode == 'unbind' ? 'unbind' : 'bind', $child_ctype['name']); ?>" method="post" style="display:none">
+        <?php echo html_csrf_token(); ?>
         <input type="hidden" class="item_id" name="id" value="<?php echo $item['id']; ?>">
         <input type="hidden" class="selected_ids" name="selected_ids" value="<?php echo $item['id']; ?>">
     </form>

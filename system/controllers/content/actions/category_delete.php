@@ -6,6 +6,10 @@ class actionContentCategoryDelete extends cmsAction {
 
     public function run() {
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
+
         // Получаем название типа контента и сам тип
         $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name', ''));
         if (!$ctype) {
@@ -43,24 +47,24 @@ class actionContentCategoryDelete extends cmsAction {
             $this->request
         );
 
+        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
+
         $back_url = $this->getRequestBackUrl();
 
         if ($back_url) {
-
-            $this->redirect($back_url);
-
-        } else {
-
-            if ($ctype['options']['list_on']) {
-                if (isset($parent)) {
-                    $this->redirectTo($ctype['name'], $parent['slug']);
-                } else {
-                    $this->redirectTo($ctype['name']);
-                }
-            } else {
-                $this->redirectToHome();
-            }
+            return $this->redirect($back_url);
         }
+
+        if ($ctype['options']['list_on']) {
+
+            if (isset($parent)) {
+                return $this->redirectTo($ctype['name'], $parent['slug']);
+            }
+
+            return $this->redirectTo($ctype['name']);
+        }
+
+        return $this->redirectToHome();
     }
 
 }

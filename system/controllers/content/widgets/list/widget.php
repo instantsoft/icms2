@@ -272,29 +272,30 @@ class widgetContentList extends cmsWidget {
                 break;
             case 'tags':
 
+                $tags_exists = false;
+
                 if (!empty($this->current_item['tags'])) {
 
-                    if (!is_array($this->current_item['tags'])) {
-                        $this->current_item['tags'] = explode(',', $this->current_item['tags']);
-                    }
+                    $tag_model = cmsCore::getModel('tags', '_', false);
 
-                    $tags = [];
+                    if ($tag_model) {
 
-                    foreach ($this->current_item['tags'] as $tag) {
+                        $tags_exists = true;
 
-                        $tag = trim(preg_replace('#[' . preg_quote(implode('', cmsModel::SPECIAL_CHARS)) . ']+#u', ' ', $tag));
-                        if (!$tag) {
-                            continue;
+                        $tags = $tag_model->getTagsIDsForTarget('content', $this->ctype['name'], $this->current_item['id']);
+
+                        if (!$tags) {
+                            $tags_exists = false;
+                        } else {
+
+                            $model->join('tags_bind', 't', "t.target_id = i.id AND t.target_subject = '{$this->ctype['name']}' AND t.target_controller = 'content'")->filterIn('t.tag_id', $tags);
+
+                            $model->orderByRaw(false);
                         }
-
-                        $tags[] = '"' . $model->db->escape($tag) . '"';
                     }
+                }
 
-                    $model->filter("MATCH(i.tags) AGAINST ('". implode(' ', $tags)."' IN BOOLEAN MODE)");
-
-                    $model->orderByRaw(false);
-
-                } else {
+                if ($tags_exists) {
                     $model->filterCategory($this->ctype['name'], $this->current_item['category'], true, !empty($this->ctype['options']['is_cats_multi']));
                 }
 

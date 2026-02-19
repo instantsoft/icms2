@@ -700,6 +700,17 @@ class cmsTemplate {
                 $item['url'] = href_to($item['controller'], $item['action'], $item['params']);
             }
 
+            // все действия с подтверждением снабжаем csrf_token
+            if (!empty($item['data']['confirm'])) {
+                if ($item['url']) {
+                    $item['url'] .= (strpos($item['url'], '?') !== false ? '&' : '?') . 'csrf_token=' . cmsForm::getCSRFToken();
+                }
+                if (!isset($item['options'])) {
+                    $item['options'] = [];
+                }
+                $item['options']['class'] = ($item['options']['class'] ?? '') . ' icms-action-confirm';
+            }
+
             // Если нужно, считаем количество пунктов первого уровня
             if ($max_items) {
 

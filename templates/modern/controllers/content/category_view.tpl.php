@@ -35,7 +35,6 @@ if (!$is_frontpage){
             if (cmsUser::isAllowed($ctype['name'], 'delete_cat')) {
                 $this->addToolButton([
                     'icon'  => 'folder-minus',
-                    'class' => 'icms-action-confirm',
                     'title' => LANG_DELETE_CATEGORY,
                     'href'  => href_to($ctype['name'], 'delcat', $category['id']),
                     'data'  => ['confirm' => LANG_DELETE_CATEGORY_CONFIRM]

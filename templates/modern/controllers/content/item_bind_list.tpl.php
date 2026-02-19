@@ -23,13 +23,13 @@
                 </div>
             </div>
             <div class="add">
-                <input type="button" class="button btn btn-primary" value="<?php if ($mode == 'unbind') { ?>X<?php } else { ?>+<?php } ?>">
+                <input type="button" class="button btn btn-<?php if ($mode === 'unbind') { ?>danger<?php } else { ?>primary<?php } ?>" value="<?php if ($mode === 'unbind') { ?>X<?php } else { ?>+<?php } ?>">
             </div>
         </li>
     <?php } ?>
 </ul>
 <?php } else { ?>
-    <p class="alert alert-info mt-3 mb-0 list-bind-item" role="alert">
+    <p class="alert alert-info mt-3 mb-0 list-bind-item">
         <?php echo LANG_LIST_EMPTY; ?>
     </p>
 <?php } ?>

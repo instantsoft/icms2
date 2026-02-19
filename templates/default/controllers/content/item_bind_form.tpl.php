@@ -31,6 +31,7 @@
 	</div>
 
     <form action="<?php echo href_to($ctype['name'], $mode == 'unbind' ? 'unbind' : 'bind', $child_ctype['name']); ?>" method="post" style="display:none">
+        <?php echo html_csrf_token(); ?>
         <input type="hidden" class="item_id" name="id" value="<?php echo $item['id']; ?>">
         <input type="hidden" class="selected_ids" name="selected_ids" value="<?php echo $item['id']; ?>">
     </form>

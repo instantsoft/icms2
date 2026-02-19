@@ -486,7 +486,8 @@ class actionContentItemView extends cmsAction {
             $tool_buttons['accept'] = [
                 'title'   => LANG_MODERATION_APPROVE,
                 'options' => ['class' => 'accept', 'icon' => 'check-double'],
-                'url'     => href_to($ctype['name'], 'approve', $item['id'])
+                'url'     => href_to($ctype['name'], 'approve', $item['id']),
+                'data'    => ['confirm' => LANG_MODERATION_APPROVE . '?']
             ];
             $tool_buttons['return_for_revision'] = [
                 'title'   => LANG_MODERATION_RETURN_FOR_REVISION,

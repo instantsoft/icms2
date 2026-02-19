@@ -6,6 +6,10 @@ class actionContentFolderDelete extends cmsAction {
 
     public function run() {
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
+
         $id = $this->request->get('id', 0);
         if (!$id) {
             return cmsCore::error404();

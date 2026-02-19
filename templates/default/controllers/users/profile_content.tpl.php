@@ -42,7 +42,7 @@
             'class' => 'folder_delete',
             'title' => LANG_DELETE_FOLDER,
             'href'  => href_to($ctype['name'], 'delfolder', $folder_id),
-            'onclick' => "if(!confirm('".LANG_DELETE_FOLDER_CONFIRM."')){ return false; }"
+            'data'  => ['confirm' => LANG_DELETE_FOLDER_CONFIRM]
         ));
 
     }

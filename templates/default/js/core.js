@@ -112,6 +112,16 @@ icms.menu = (function ($) {
             }
         };
 
+        this.initActionConfirm();
+    };
+
+    this.initActionConfirm = function(){
+        $('a.icms-action-confirm, .icms-action-confirm > a').on('click', function(){
+            let confirm_text = $(this).data('confirm');
+            if (confirm_text) {
+                if(!confirm(confirm_text)){ return false; }
+            }
+        });
     };
 
     return this;

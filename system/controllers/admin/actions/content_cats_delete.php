@@ -31,8 +31,6 @@ class actionAdminContentCatsDelete extends cmsAction {
 
         cmsUser::setCookiePublic('content_tree_path', $tree_path);
 
-        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
-
         $this->redirectTo($ctype['name'], 'delcat', $category_id, ['back' => $back_url, 'csrf_token' => $csrf_token]);
     }
 

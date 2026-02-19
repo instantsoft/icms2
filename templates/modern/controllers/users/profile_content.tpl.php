@@ -31,7 +31,7 @@
         ]);
 
         $this->addToolButton([
-            'class' => 'folder_delete icms-action-confirm',
+            'class' => 'folder_delete',
             'icon'  => 'folder-minus',
             'title' => LANG_DELETE_FOLDER,
             'href'  => href_to($ctype['name'], 'delfolder', $folder_id),

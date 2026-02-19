@@ -39,7 +39,7 @@
                     'class' => 'folder_delete',
                     'title' => LANG_DELETE_CATEGORY,
                     'href'  => href_to($ctype['name'], 'delcat', $category['id']),
-                    'onclick' => "if(!confirm('".LANG_DELETE_CATEGORY_CONFIRM."')){ return false; }"
+                    'data'  => ['confirm' => LANG_DELETE_CATEGORY_CONFIRM]
                 ));
             }
 
