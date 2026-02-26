@@ -68,7 +68,9 @@ class formYakassaSystemOptions extends cmsForm {
                             7  => sprintf(LANG_BILLING_FISCAL_TAX_VAT_RATE, '5%'),
                             8  => sprintf(LANG_BILLING_FISCAL_TAX_VAT_RATE, '7%'),
                             9  => sprintf(LANG_BILLING_FISCAL_TAX_VAT_RECEIPT_EST_RATE, '5/105'),
-                            10 => sprintf(LANG_BILLING_FISCAL_TAX_VAT_RECEIPT_EST_RATE, '7/107')
+                            10 => sprintf(LANG_BILLING_FISCAL_TAX_VAT_RECEIPT_EST_RATE, '7/107'),
+                            11 => sprintf(LANG_BILLING_FISCAL_TAX_VAT_RATE, '22%'),
+                            12 => sprintf(LANG_BILLING_FISCAL_TAX_VAT_RECEIPT_EST_RATE, '22/122')
                         ],
                         'default' => 1,
                         'visible_depend' => ['options:fiscal_on' => ['show' => ['1']]]
