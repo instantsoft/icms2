@@ -13,8 +13,7 @@ class actionBillingDeposit extends cmsAction {
 
         $amount = abs($this->request->get('amount', 0.0));
 
-        $systems      = $this->model->getPaymentSystems();
-        $systems_list = array_collection_to_list($systems, 'name', 'title');
+        $systems = $this->model->getPaymentSystems($this->cms_user->is_admin ? 2 : 1);
 
         $ticket = cmsUser::sessionGet('billing_ticket') ?: [];
 
@@ -47,7 +46,7 @@ class actionBillingDeposit extends cmsAction {
             'user'             => $this->cms_user,
             'balance'          => $balance,
             'amount'           => $amount,
-            'systems_list'     => $systems_list,
+            'systems_list'     => array_column($systems, 'title', 'name'),
             'min_pack'         => $min_pack,
             'ticket'           => $ticket,
             'min_amount'       => $min_amount,

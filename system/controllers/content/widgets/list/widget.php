@@ -295,7 +295,7 @@ class widgetContentList extends cmsWidget {
                     }
                 }
 
-                if ($tags_exists) {
+                if (!$tags_exists) {
                     $model->filterCategory($this->ctype['name'], $this->current_item['category'], true, !empty($this->ctype['options']['is_cats_multi']));
                 }
 

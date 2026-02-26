@@ -364,6 +364,7 @@
     define('LANG_CP_MENU',                      'Menu');
     define('LANG_CP_MENU_ADD',                  'Add Menu');
     define('LANG_CP_MENU_EDIT',                 'Menu Settings');
+    define('LANG_CP_MENU_MOVE',                 'Move items to menu');
     define('LANG_CP_MENU_CREATED',              'Menu &laquo;%s&raquo; has been created');
     define('LANG_CP_MENU_DELETE',               'Delete Menu');
     define('LANG_CP_MENU_DELETE_CONFIRM',       'Delete current menu?');

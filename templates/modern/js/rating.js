@@ -2,6 +2,8 @@ var icms = icms || {};
 
 icms.rating = (function ($) {
 
+    let self = this;
+
     this.options = {};
 
     this.setOptions = function(options){
@@ -10,45 +12,48 @@ icms.rating = (function ($) {
 
     this.onDocumentReady = function(){
         $('.rating_widget').each(function(){
-            icms.rating.bindWidget($(this));
+            self.bindWidget($(this));
         });
     };
 
     this.bindWidget = function(widget){
 
-        var controller = widget.data('target-controller');
-        var subject = widget.data('target-subject');
-        var id = widget.data('target-id');
+        let controller = widget.data('target-controller');
+        let subject = widget.data('target-subject');
+        let id = widget.data('target-id');
 
-        $('a.vote-up', widget).click(function(){
-            return icms.rating.vote('up', controller, subject, id);
+        $('.arrow-btn', widget).off('click');
+
+        $('a.vote-up', widget).on('click', function(){
+            return self.vote('up', controller, subject, id);
         });
 
-        $('a.vote-down', widget).click(function(){
-            return icms.rating.vote('down', controller, subject, id);
+        $('a.vote-down', widget).on('click', function(){
+            return self.vote('down', controller, subject, id);
+        });
+
+        $('.vote-clear', widget).on('click', function(){
+            return self.vote('clear', controller, subject, id);
         });
 
         $('.score span.clickable', widget).off('click').on('click', function(){
-            var url = widget.data('info-url');
+            let url = widget.data('info-url');
             icms.modal.openAjax(url, {
                controller: controller,
                subject: subject,
                id: id
             }, function(){
-                icms.rating.bingInfoPages();
+                self.bingInfoPages();
             });
         });
-
     };
 
     this.vote = function(direction, controller, subject, id){
 
-        var widget_id = 'rating-' + subject + '-' + id;
-        var widget = $('#'+widget_id);
+        let widget_id = 'rating-' + subject + '-' + id;
+        let widget = $('#'+widget_id);
 
-        $('.arrow svg', widget).unwrap();
-        $('.arrow svg', widget).wrap('<span class="disabled"></span>');
-        $('.score', widget).addClass('is-busy');
+        $('.arrow-btn', widget).addClass('btn-click__busy');
 
         $.post(this.options.url, {
 
@@ -59,7 +64,7 @@ icms.rating = (function ($) {
 
         }, function(result){
 
-            $('.score', widget).removeClass('is-busy');
+            $('.arrow-btn', widget).removeClass('btn-click__busy');
 
             if (!result.success){
                 if (result.message){
@@ -73,9 +78,23 @@ icms.rating = (function ($) {
             }
 
             $('.score', widget).html('<span class="'+result.css_class+'">'+result.rating+'</span>');
+            $('.arrow-btn', widget).toggleClass('d-none');
             $('.disabled', widget).attr('title', result.message);
+            $('.disabled', widget).removeClass('text-success text-danger text-secondary vote-clear clickable');
 
-            icms.rating.bindWidget(widget);
+            if (direction === 'up') {
+                $('.disabled-up', widget).addClass('text-success');
+                $('.disabled-down', widget).addClass('text-secondary');
+            }
+            if (direction === 'down') {
+                $('.disabled-up', widget).addClass('text-secondary');
+                $('.disabled-down', widget).addClass('text-danger');
+            }
+            if (result.is_allow_change){
+                $('.disabled-'+direction, widget).addClass('vote-clear clickable');
+            }
+
+            self.bindWidget(widget);
 
         }, 'json');
 
@@ -84,18 +103,18 @@ icms.rating = (function ($) {
 
     this.bingInfoPages = function(){
 
-        var widget = $('.rating_info_pagination');
+        let widget = $('.rating_info_pagination');
 
-        var controller = widget.data('target-controller');
-        var subject = widget.data('target-subject');
-        var id = widget.data('target-id');
-        var url = widget.data('url');
+        let controller = widget.data('target-controller');
+        let subject = widget.data('target-subject');
+        let id = widget.data('target-id');
+        let url = widget.data('url');
 
         $('a', widget).click(function(){
 
-            var link = $(this);
-            var page = link.data('page');
-            var list = $('#rating_info_window:visible .rating_info_list');
+            let link = $(this);
+            let page = link.data('page');
+            let list = $('#rating_info_window:visible .rating_info_list');
 
             $('a', widget).removeClass('active');
             link.addClass('active');

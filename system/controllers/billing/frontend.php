@@ -534,11 +534,12 @@ class billing extends cmsFrontend {
      * Возвращает объект класса метода оплаты
      *
      * @param string $system_name Имя системы
+     * @param bool $ignore_disable Игнорировать выключенную
      * @return \billingPaymentSystem|null
      */
-    public function getPaymentSystem(string $system_name) {
+    public function getPaymentSystem(string $system_name, bool $ignore_disable = false) {
 
-        $system = $this->model->getPaymentSystemByName($system_name);
+        $system = $this->model->getPaymentSystemByName($system_name, ($ignore_disable ? 0 : ($this->cms_user->is_admin ? 2 : 1)));
         if (!$system) {
             return null;
         }

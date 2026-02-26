@@ -41,6 +41,13 @@ class actionSearchIndex extends cmsAction {
                 return $this->redirectToAction('');
             }
 
+            if ($this->model->isLongQuery()) {
+
+                cmsUser::addSessionMessage(LANG_SEARCH_TOO_LONG, 'error');
+
+                return $this->redirectToAction('');
+            }
+
             $this->model->setSearchType($type);
 
             $search_controllers = cmsEventsManager::hookAll('fulltext_search', $this, []);

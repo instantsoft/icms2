@@ -8,6 +8,20 @@ function grid_menu_items($controller) {
         'is_pagination' => false,
         'is_draggable'  => true,
         'drag_save_url' => href_to('admin', 'reorder', ['menu_items']),
+        'is_selectable'   => true,
+        'select_actions'  => [
+            [
+                'title'  => LANG_MOVE,
+                'action' => 'open',
+                'url'    => href_to($controller->name, 'menu', ['item_move'])
+            ],
+            [
+                'title'   => LANG_DELETE,
+                'action'  => 'submit',
+                'confirm' => LANG_DELETE_SELECTED_CONFIRM,
+                'url'     => href_to($controller->name, 'menu', ['item_delete'])
+            ]
+        ],
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => false

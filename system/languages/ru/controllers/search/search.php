@@ -15,6 +15,7 @@
     define('LANG_SEARCH_TYPE_WORDS',         'все слова');
     define('LANG_SEARCH_TYPE_EXACT',         'точное совпадение');
     define('LANG_SEARCH_TOO_SHORT',          'Слишком короткие слова в запросе');
+    define('LANG_SEARCH_TOO_LONG',           'Слишком большой запрос');
     define('LANG_SEARCH_NO_RESULTS',         'Ничего не найдено');
     define('LANG_SEARCH_H1',                 'Результаты поиска по запросу «%s»');
     define('LANG_SEARCH_QUERY',              'Поисковый запрос');

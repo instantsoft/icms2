@@ -19,8 +19,10 @@ class widgetBillingPlans extends cmsWidget {
         }
 
         if ($this->cms_user->is_logged) {
-            $current_plan = $this->controller_billing->model->getUserCurrentPlan($this->cms_user->id) ?: [];
-        } else {
+            $current_plan = $this->controller_billing->model->getUserCurrentPlan($this->cms_user->id);
+        }
+
+        if (empty($current_plan)) {
             $current_plan = ['id' => 0];
         }
 

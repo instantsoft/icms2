@@ -80,7 +80,14 @@
                     <div class="form-group row">
                         <label class="font-weight-bolder col-sm-4 col-form-label"><?php echo LANG_BILLING_DEPOSIT_SYSTEM; ?></label>
                         <div class="col-sm-8">
-                            <?php echo html_select('system', $systems_list); ?>
+                            <?php if (count($systems_list) === 1) { ?>
+                                <?php echo html_input('hidden', 'system', key($systems_list)); ?>
+                                <div class="form-control-plaintext">
+                                    <?php echo current($systems_list); ?>
+                                </div>
+                            <?php } else { ?>
+                                <?php echo html_select('system', $systems_list); ?>
+                            <?php } ?>
                         </div>
                     </div>
 

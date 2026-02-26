@@ -177,6 +177,7 @@ CREATE TABLE `{#}billing_systems` (
   `rate` decimal(8,4) UNSIGNED DEFAULT 1.0000 COMMENT 'Exchange rate of the payment system currency',
   `options` text DEFAULT NULL COMMENT 'YAML with configuration options',
   `is_enabled` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Enabled?',
+  `is_enabled_admin` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Enabled only for administrators',
   `ordering` int(11) UNSIGNED DEFAULT NULL COMMENT 'Sort order in the list',
   PRIMARY KEY (`id`),
   KEY `name` (`name`)

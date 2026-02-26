@@ -149,6 +149,8 @@ define('LANG_BILLING_CP_SYSTEM_RATE_SUFFIX', 'ед.');
 define('LANG_BILLING_CP_SYSTEM_IS_ENABLED', 'Система включена');
 define('LANG_BILLING_CP_SYSTEM_IS_ENABLED_HINT', 'Отключенные системы не отображаются на сайте');
 define('LANG_BILLING_CP_SYSTEM_LOG', 'Логи платёжной системы «%s»');
+define('LANG_BILLING_CP_SYSTEM_ENABLE_ADMIN', 'Включено для администраторов');
+define('LANG_BILLING_CP_SYSTEM_ENABLE_ADMIN_HINT', 'Если включено, для администраторов система будет отображаться, даже если выключена. Используйте для отладки.');
 define('LANG_BILLING_CP_SYSTEM_NO_LOG', 'Нет логов');
 define('LANG_BILLING_CP_SYSTEM_LOG_HINT', 'Показаны последние %s строк');
 define('LANG_BILLING_CP_SYSTEM_LOG_PATH', 'Полный файл находится по пути <b>%s</b>');

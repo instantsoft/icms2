@@ -29,7 +29,7 @@ class modelRating extends cmsModel {
 
         $this->useCache('rating.votes');
 
-        $this->selectOnly('target_id');
+        $this->selectOnly('target_id')->select('score');
 
         if ($user->is_logged) {
             $this->filterEqual('user_id', $user->id);
@@ -41,14 +41,12 @@ class modelRating extends cmsModel {
         $this->filterEqual('target_subject', $target_subject);
         $this->filterIn('target_id', $target_ids);
 
-        $user_voted = $this->get('rating_log', function ($item, $model) {
-            return $item['target_id'];
-        }, false);
-
-        return $user_voted ? $user_voted : [];
+        return $this->get('rating_log', function ($item, $model) {
+            return $item['score'];
+        }, 'target_id') ?: [];
     }
 
-    public function isUserVoted($vote, $is_logged = true) {
+    public function isUserVoted(array $vote, $is_logged = true) {
 
         if (!$is_logged) {
             $this->filterEqual('ip', string_iptobin($vote['ip']));
@@ -60,14 +58,10 @@ class modelRating extends cmsModel {
 
         $this->useCache('rating.votes');
 
-        $votes_count = $this->getCount('rating_log');
-
-        $this->resetFilters();
-
-        return $votes_count > 0 ? true : false;
+        return $this->getFieldFiltered('rating_log', 'score');
     }
 
-    public function filterVotes($controller, $subject, $id) {
+    public function filterVotes(string $controller, string $subject, $id) {
 
         $this->filterEqual('target_controller', $controller);
         $this->filterEqual('target_subject', $subject);
@@ -131,7 +125,7 @@ class modelRating extends cmsModel {
         });
     }
 
-    public function addVote($vote) {
+    public function addVote(array $vote) {
 
         cmsCache::getInstance()->clean('rating.votes');
 
@@ -142,13 +136,28 @@ class modelRating extends cmsModel {
         return $this->insert('rating_log', $vote);
     }
 
-    public function deleteVotes($controller, $subject, $id) {
+    public function cancelVote(array $vote) {
+
+        cmsCache::getInstance()->clean('rating.votes');
+
+        if (empty($vote['user_id'])) {
+            $this->filterEqual('ip', string_iptobin($vote['ip']));
+        } else {
+            $this->filterEqual('user_id', $vote['user_id']);
+        }
+
+        $this->filterVotes($vote['target_controller'], $vote['target_subject'], $vote['target_id']);
+
+        return $this->deleteFiltered('rating_log');
+    }
+
+    public function deleteVotes(string $controller, string $subject, $id) {
+
+        cmsCache::getInstance()->clean('rating.votes');
 
         $this->filterVotes($controller, $subject, $id);
 
-        $this->deleteFiltered('rating_log');
-
-        cmsCache::getInstance()->clean('rating.votes');
+        return $this->deleteFiltered('rating_log');
     }
 
     public function deleteUserVotes($user_id) {

@@ -13,6 +13,10 @@ class formBillingSystem extends cmsForm {
                         'title' => LANG_BILLING_CP_SYSTEM_IS_ENABLED,
                         'hint'  => LANG_BILLING_CP_SYSTEM_IS_ENABLED_HINT
                     ]),
+                    new fieldCheckbox('is_enabled_admin', [
+                        'title' => LANG_BILLING_CP_SYSTEM_ENABLE_ADMIN,
+                        'hint'  => LANG_BILLING_CP_SYSTEM_ENABLE_ADMIN_HINT
+                    ]),
                     new fieldString('title', [
                         'title' => LANG_BILLING_CP_SYSTEM_TITLE,
                         'hint'  => LANG_BILLING_CP_SYSTEM_TITLE_HINT,

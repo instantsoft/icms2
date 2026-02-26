@@ -2,16 +2,15 @@
 
 class onRatingUserNotifyTypes extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        return array(
-            'rating_user_vote' => array(
+        return [
+            'rating_user_vote' => [
                 'title'   => LANG_RATING_NOTIFY_VOTE,
-                'options' => array('', 'pm'),
+                'options' => ['', 'pm'],
                 'default' => ''
-            )
-        );
-
+            ]
+        ];
     }
 
 }

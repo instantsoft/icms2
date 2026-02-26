@@ -5,26 +5,20 @@
         data-target-controller="<?php echo $target_controller; ?>"
         data-target-subject="<?php echo $target_subject; ?>"
         data-target-id="<?php echo $target_id; ?>"
-        <?php if ($options['is_show']){ ?>
-            data-info-url="<?php echo $this->href_to('info'); ?>"
-        <?php } ?>
+        data-info-url="<?php echo $this->href_to('info'); ?>"
     <?php } ?>
 >
     <?php if($label){ ?>
         <div class="rating_label"><?php echo $label; ?></div>
     <?php } ?>
     <div class="arrow up">
-        <?php if ($is_enabled && !$is_voted){ ?>
-            <a href="#vote-up" class="vote-up text-success" title="<?php echo LANG_RATING_VOTE_UP; ?>">
-                <?php html_svg_icon('solid', 'thumbs-up'); ?>
-            </a>
-        <?php } else { ?>
-            <span class="disabled text-secondary" title="<?php html($is_voted ? LANG_RATING_VOTED : LANG_RATING_DISABLED); ?>">
-                <?php html_svg_icon('solid', 'thumbs-up'); ?>
-            </span>
-        <?php } ?>
+        <a href="#vote-up" class="arrow-btn btn-click vote-up text-success<?php if (!$is_allow_vote) { ?> d-none<?php } ?>" title="<?php echo LANG_RATING_VOTE_UP; ?>">
+            <?php html_svg_icon('solid', 'thumbs-up'); ?>
+        </a>
+        <span class="arrow-btn btn-click disabled disabled-up text-<?php echo ($voted_score > 0 ? 'success' . ($is_allow_change ? ' vote-clear clickable' : '') : 'secondary'); ?><?php if ($is_allow_vote) { ?> d-none<?php } ?>" title="<?php html($voted_score ? LANG_RATING_VOTED : LANG_RATING_DISABLED); ?>">
+            <?php html_svg_icon('solid', 'thumbs-up'); ?>
+        </span>
     </div>
-
     <div class="score mx-2" title="<?php echo LANG_RATING; ?>">
         <?php if (!$show_rating){ ?>
             <span>&mdash;</span>
@@ -34,19 +28,16 @@
             </span>
         <?php } ?>
     </div>
-
-    <div class="arrow down">
-        <?php if ($is_enabled && !$is_voted){ ?>
-            <a href="#vote-down" class="vote-down text-danger" title="<?php echo LANG_RATING_VOTE_DOWN; ?>">
+    <?php if (!$disable_negative_votes) { ?>
+        <div class="arrow down">
+            <a href="#vote-down" class="arrow-btn btn-click vote-down text-danger<?php if (!$is_allow_vote) { ?> d-none<?php } ?>" title="<?php echo LANG_RATING_VOTE_DOWN; ?>">
                 <?php html_svg_icon('solid', 'thumbs-down'); ?>
             </a>
-        <?php } else { ?>
-            <span class="disabled text-secondary" title="<?php html($is_voted ? LANG_RATING_VOTED : LANG_RATING_DISABLED); ?>">
+            <span class="arrow-btn btn-click disabled disabled-down text-<?php echo ($voted_score < 0 ? 'danger' . ($is_allow_change ? ' vote-clear clickable' : '') : 'secondary'); ?><?php if ($is_allow_vote) { ?> d-none<?php } ?>" title="<?php html($voted_score ? LANG_RATING_VOTED : LANG_RATING_DISABLED); ?>">
                 <?php html_svg_icon('solid', 'thumbs-down'); ?>
             </span>
-        <?php } ?>
-    </div>
-
+        </div>
+    <?php } ?>
 </div>
 
 <?php if ($is_first_widget) { ?>

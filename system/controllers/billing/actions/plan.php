@@ -138,7 +138,7 @@ class actionBillingPlan extends cmsAction {
             'id'
         );
 
-        $systems = $this->model->getPaymentSystems();
+        $systems = $this->model->getPaymentSystems($this->cms_user->is_admin ? 2 : 1);
 
         $title = LANG_BILLING_BUY_PLAN;
         if ($current_plan) {
@@ -149,7 +149,7 @@ class actionBillingPlan extends cmsAction {
             'user'             => $this->cms_user,
             'real_price_plans' => $real_price_plans,
             'current_plan'     => $current_plan,
-            'systems_list'     => array_collection_to_list($systems, 'name', 'title'),
+            'systems_list'     => array_column($systems, 'title', 'name'),
             'plans_list'       => $plans_list,
             'b_spellcount'     => $this->options['currency'],
             'curr'             => $this->options['currency_real'],

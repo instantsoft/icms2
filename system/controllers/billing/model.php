@@ -54,11 +54,31 @@ class modelBilling extends cmsModel {
         return $item;
     }
 
-    public function getPaymentSystems($is_only_enabled = true) {
+    protected function filterPaymentSystemsEnabled($is_only_enabled) {
 
-        if ($is_only_enabled) {
-            $this->filterEqual('is_enabled', 1);
+        if (!$is_only_enabled) {
+            return $this;
         }
+
+        if ($is_only_enabled == 1) {
+
+            $this->filterEqual('is_enabled', 1);
+
+        } else {
+
+            $this->filterStart()->
+                    filterEqual('is_enabled', 1)->
+                    filterOr()->
+                    filterEqual('is_enabled_admin', 1)->
+                    filterEnd();
+        }
+
+        return $this;
+    }
+
+    public function getPaymentSystems($is_only_enabled = 1) {
+
+        $this->filterPaymentSystemsEnabled($is_only_enabled);
 
         $this->orderBy('ordering');
 
@@ -69,11 +89,9 @@ class modelBilling extends cmsModel {
         return $this->getItemByField('billing_systems', $by_field, $id, [$this, 'paymentSystemsCallback']);
     }
 
-    public function getPaymentSystemByName($name, $is_only_enabled = true) {
+    public function getPaymentSystemByName($name, $is_only_enabled = 1) {
 
-        if ($is_only_enabled) {
-            $this->filterEqual('is_enabled', 1);
-        }
+        $this->filterPaymentSystemsEnabled($is_only_enabled);
 
         return $this->getPaymentSystem($name, 'name');
     }

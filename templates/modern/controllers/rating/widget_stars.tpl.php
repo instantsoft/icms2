@@ -14,8 +14,8 @@
     <?php if($label){ ?>
         <div class="rating_label mr-2"><?php echo $label; ?></div>
     <?php } ?>
-    <div class="icms-stars d-flex<?php if ($options['is_show'] && $show_rating) { ?> clickable<?php } ?><?php if (!$is_voted && $is_enabled){ ?> is_enabled<?php } ?>"
-         title="<?php if ($is_enabled){ ?><?php echo $is_voted ? LANG_RATING_VOTED : LANG_RATING; ?><?php } else { ?><?php html(($show_rating && $current_rating > 0) ? $current_rating : LANG_RATING_DISABLED); ?><?php } ?>"
+    <div class="icms-stars d-flex<?php if ($options['is_show'] && $show_rating) { ?> clickable<?php } ?><?php if (!$voted_score && $is_enabled){ ?> is_enabled<?php } ?>"
+         title="<?php if ($is_enabled){ ?><?php echo $voted_score ? LANG_RATING_VOTED : LANG_RATING; ?><?php } else { ?><?php html(($show_rating && $current_rating > 0) ? $current_rating : LANG_RATING_DISABLED); ?><?php } ?>"
         <?php if ($show_rating && $current_rating > 0){ ?>
         data-stars="<?php echo round($current_rating); ?>"
         <?php } ?>

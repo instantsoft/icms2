@@ -177,6 +177,7 @@ CREATE TABLE `{#}billing_systems` (
   `rate` decimal(8,4) UNSIGNED DEFAULT 1.0000 COMMENT 'Курс валюты платёжной системы',
   `options` text DEFAULT NULL COMMENT 'YAML опций',
   `is_enabled` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Включена?',
+  `is_enabled_admin` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Включена только администраторам',
   `ordering` int(11) UNSIGNED DEFAULT NULL COMMENT 'Порядоковый номер при сортировке в списке',
   PRIMARY KEY (`id`),
   KEY `name` (`name`)

@@ -1,6 +1,6 @@
 <?php
 
-class backendRating extends cmsBackend{
+class backendRating extends cmsBackend {
 
     public $useDefaultOptionsAction = true;
 

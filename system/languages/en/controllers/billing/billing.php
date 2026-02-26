@@ -149,6 +149,8 @@ define('LANG_BILLING_CP_SYSTEM_RATE_SUFFIX', 'units');
 define('LANG_BILLING_CP_SYSTEM_IS_ENABLED', 'System enabled');
 define('LANG_BILLING_CP_SYSTEM_IS_ENABLED_HINT', 'Disabled systems are not displayed on the site');
 define('LANG_BILLING_CP_SYSTEM_LOG', '«%s» payment system logs');
+define('LANG_BILLING_CP_SYSTEM_ENABLE_ADMIN', 'Enabled for administrators');
+define('LANG_BILLING_CP_SYSTEM_ENABLE_ADMIN_HINT', 'If enabled, the system will be displayed to administrators even if it is disabled. Use for debugging.');
 define('LANG_BILLING_CP_SYSTEM_NO_LOG', 'There are no logs');
 define('LANG_BILLING_CP_SYSTEM_LOG_HINT', 'The last %s lines are shown');
 define('LANG_BILLING_CP_SYSTEM_LOG_PATH', 'The full file is on the path <b>%s</b>');

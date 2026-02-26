@@ -14,7 +14,7 @@ class actionBillingProcess extends cmsAction {
             return cmsCore::error404();
         }
 
-        $system = $this->getPaymentSystem($system_name);
+        $system = $this->getPaymentSystem($system_name, true);
         if (!$system) {
             return cmsCore::error404();
         }
@@ -22,6 +22,7 @@ class actionBillingProcess extends cmsAction {
         $response = $system->processPayment($this->request, $this->model);
 
         $result = [
+            'status_code' => 200,
             'headers' => [],
             'body'    => ''
         ];
@@ -42,6 +43,8 @@ class actionBillingProcess extends cmsAction {
         }
 
         $this->cms_core->response->addHeaders($result['headers']);
+
+        $this->cms_core->response->setStatusCode($result['status_code']);
 
         return $this->cms_core->response->setContent($result['body'])->sendAndExit();
     }

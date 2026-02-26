@@ -167,6 +167,26 @@ class modelSearch extends cmsModel {
     }
 
     /**
+     * Проверяет, что запрос не большой
+     * Чтобы не нарваться на ошибку
+     * Too many words in a FTS phrase or proximity search
+     *
+     * @return bool
+     */
+    public function isLongQuery() {
+        // Вообще 128 фраз разрешено, но это перебор
+        if (count($this->query) > 50) {
+            return true;
+        }
+
+        if (mb_strlen($this->original_query) > 200) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Небольшой стемминг
      *
      * @param string $word

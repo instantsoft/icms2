@@ -15,20 +15,20 @@ class actionBillingSystemsLog extends cmsAction {
             return cmsCore::error404();
         }
 
-        $log_text = '';
+        $logs = [];
         $line_count = 100;
 
         $log_file = $this->cms_config->cache_path . 'billing/' . $system['name'] . '_pay_api.log';
 
         if (is_readable($log_file)) {
-            $log_text = $this->tail($log_file, $line_count);
+            $logs = $this->tail($log_file, $line_count);
         }
 
         return $this->cms_template->render([
             'log_path'   => str_replace($this->cms_config->root_path, $this->cms_config->root, $log_file),
             'line_count' => $line_count,
             'system'     => $system,
-            'log_text'   => $log_text
+            'logs'       => $logs
         ]);
     }
 
@@ -61,8 +61,9 @@ class actionBillingSystemsLog extends cmsAction {
         fclose($f);
 
         $lines_array = explode("\n", trim($buffer));
+        $lines_array = array_slice($lines_array, -$lines);
 
-        return implode("\n", array_slice($lines_array, -$lines));
+        return array_reverse($lines_array);
     }
 
 }

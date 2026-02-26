@@ -1,0 +1,18 @@
+.log-line {
+    padding: 0.15rem 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition:all .35s ease;
+}
+.log-line:hover {
+    background-color: rgba(0, 0 , 0, 0.2);
+}
+
+.log-date {
+    color: #4dbd74;
+}
+
+.log-message {
+    color: #f0f3f5;
+}

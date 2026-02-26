@@ -327,3 +327,17 @@
         }
     }
 }
+.score {
+    min-width: $spacer;
+    text-align: center;
+}
+.btn-click {
+    display: inline-block;
+    transform: scale(1);
+    transform-origin: center;
+    transition: transform 0.4s cubic-bezier(.4, 0, .2, 1), opacity 0.3s ease;
+    &__busy {
+        transform: scale(0);
+        pointer-events: none;
+    }
+}

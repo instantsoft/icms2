@@ -67,7 +67,7 @@ function grid_log($controller, $model) {
 
                     $items = [];
 
-                    $systems = $controller->model->getPaymentSystems(false);
+                    $systems = $controller->model->getPaymentSystems(0);
 
                     foreach ($systems as $system) {
                         $items[$system['id']] = $system['title'];

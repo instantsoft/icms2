@@ -30,6 +30,12 @@ function grid_systems($controller) {
             'flag'        => true,
             'flag_toggle' => href_to($controller->root_url, 'toggle_item', ['{id}', 'billing_systems', 'is_enabled']),
             'width'       => 60
+        ],
+        'is_enabled_admin' => [
+            'title'       => LANG_BILLING_CP_SYSTEM_ENABLE_ADMIN,
+            'flag'        => true,
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', ['{id}', 'billing_systems', 'is_enabled_admin']),
+            'width'       => 60
         ]
     ];
 

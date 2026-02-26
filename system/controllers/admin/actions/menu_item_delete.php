@@ -4,7 +4,13 @@ class actionAdminMenuItemDelete extends cmsAction {
 
     public function run($id = false) {
 
-        if (!$id) {
+        if ($id) {
+            $items = [$id];
+        } else {
+            $items = $this->request->get('selected', []);
+        }
+
+        if (!$items) {
             return cmsCore::error404();
         }
 
@@ -12,7 +18,11 @@ class actionAdminMenuItemDelete extends cmsAction {
             return cmsCore::error404();
         }
 
-        $this->model_menu->deleteMenuItem($id);
+        foreach ($items as $item_id) {
+            if (is_numeric($item_id)) {
+                $this->model_menu->deleteMenuItem($item_id);
+            }
+        }
 
         cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 

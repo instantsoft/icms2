@@ -253,6 +253,19 @@ class modelMenu extends cmsModel {
         return $this->update('menu_items', $id, $item);
     }
 
+    public function moveMenuItem($menu_id, $items) {
+
+        cmsCache::getInstance()->clean('menu.items');
+
+        foreach ($items as $item_id) {
+            if ($item_id && is_numeric($item_id)) {
+                $this->update('menu_items', $item_id, ['menu_id' => $menu_id]);
+            }
+        }
+
+        return true;
+    }
+
     public function deleteMenuItem($id) {
 
         $item = $this->getMenuItem($id);

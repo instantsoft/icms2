@@ -184,8 +184,9 @@ class billingPaymentSystem {
      * @param array $headers Массив HTTP хедеров
      * @return array
      */
-    public function processPaymentResult(string $text, $headers = []) {
+    public function processPaymentResult(string $text, $headers = [], $status_code = 200) {
         return [
+            'status_code' => $status_code,
             'headers' => $headers,
             'body'    => $text
         ];
