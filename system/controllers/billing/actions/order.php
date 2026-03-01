@@ -12,12 +12,34 @@ class actionBillingOrder extends cmsAction {
 
         $ticket         = cmsUser::sessionGet('billing_ticket');
         $is_plan_ticket = !empty($ticket['is_plan_ticket']);
+        $description    = LANG_BILLING_OP_DEPOSIT;
 
         if ($is_plan_ticket) {
+
             $amount      = (float) $ticket['amount'];
             $system_name = $ticket['system'];
             $min_pack    = 0.0;
+
+            $plan = $this->model->getPlan($ticket['plan_id']);
+            if (!$plan || empty($plan['prices'][$ticket['plan_period']])) {
+                return $this->redirectToAction('plan');
+            }
+
+            $price = $plan['prices'][$ticket['plan_period']];
+            if ((float) $price['amount'] !== $amount) {
+                return $this->redirectToAction('plan');
+            }
+
+            if (!empty($price['price_to_balance'])) {
+                $description = sprintf(LANG_BILLING_PLAN_TICKET, $plan['title']);
+            }
+
         } else {
+
+            if ($this->options['in_mode'] !== 'enabled' && !$this->cms_user->is_admin) {
+                return cmsCore::error404();
+            }
+
             $amount      = round($this->request->get('amount', 0.0), 2);
             $system_name = $this->request->get('system', '');
             $min_pack    = (float) ($ticket['diff_amount'] ?? $this->options['min_pack']);
@@ -35,7 +57,7 @@ class actionBillingOrder extends cmsAction {
                 html_spellcount($min_pack, $this->options['currency'], null, null, '0')
             ), 'error');
 
-            return $this->redirectToAction('deposit');
+            return $this->redirectToAction($is_plan_ticket ? 'plan' : 'deposit');
         }
 
         // Объект класса оплаты
@@ -55,7 +77,7 @@ class actionBillingOrder extends cmsAction {
             'summ'        => $summ,
             'user_id'     => $this->cms_user->id,
             'sender_id'   => $this->cms_user->id,
-            'description' => LANG_BILLING_OP_DEPOSIT,
+            'description' => $description,
             'status'      => modelBilling::STATUS_CREATED,
             'plan_id'     => $is_plan_ticket ? $ticket['plan_id'] : null,
             'plan_period' => $is_plan_ticket ? $ticket['plan_period'] : null
@@ -84,7 +106,7 @@ class actionBillingOrder extends cmsAction {
 
             cmsUser::addSessionMessage($system->getLastError(), 'error');
 
-            return $this->redirectToAction('deposit');
+            return $this->redirectToAction($is_plan_ticket ? 'plan' : 'deposit');
         }
 
         // URL оплаты

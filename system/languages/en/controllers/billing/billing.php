@@ -306,10 +306,14 @@ define('LANG_BILLING_PLAN_RUN_FREE_SUCCESS', 'The "%s" tariff plan is applied to
 define('LANG_BILLING_PLAN_IS_SUBSCRIBE_AFTER_REG', 'Subscribe users to a pricing plan immediately after registration');
 define('LANG_BILLING_PLAN_GROUPS', 'Add subscriber to groups upon activation');
 define('LANG_BILLING_PLAN_GROUPS_HINT', 'User will be added to the specified groups upon purchasing this subscription plan. Do not select groups if the plan is free.');
+define('LANG_BILLING_PLAN_REPLACE_GROUPS', 'Replace user groups');
+define('LANG_BILLING_PLAN_REPLACE_GROUPS_HINT', 'If enabled, the user\'s groups will be replaced with those specified above. If disabled, the groups will be added to the existing ones.');
 define('LANG_BILLING_PLAN_PRICES', 'Subscription cost (%s)');
 define('LANG_BILLING_PLAN_PRICES_VAL', 'Value');
 define('LANG_BILLING_PLAN_PRICES_INT', 'Period');
 define('LANG_BILLING_PLAN_PRICES_PRICE', 'Price');
+define('LANG_BILLING_PLAN_PRICE_TO_BALANCE', 'Price To Balance');
+define('LANG_BILLING_PLAN_PRICE_TO_BALANCE_HINT', 'Only when purchased with real currency');
 define('LANG_BILLING_PLAN_PRICES_CASHBACK', 'Cashback');
 define('LANG_BILLING_PLAN_PRICES_PRICE_ADD', 'Add price');
 define('LANG_BILLING_PLAN_DATE_UNTIL', 'End date');

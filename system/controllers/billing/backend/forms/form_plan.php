@@ -74,6 +74,10 @@ class formBillingPlan extends cmsForm {
                         'hint'        => LANG_BILLING_PLAN_GROUPS_HINT,
                         'show_all'    => false,
                         'show_guests' => false
+                    ]),
+                    new fieldCheckbox('is_replace_groups', [
+                        'title' => LANG_BILLING_PLAN_REPLACE_GROUPS,
+                        'hint'  => LANG_BILLING_PLAN_REPLACE_GROUPS_HINT
                     ])
                 ]
             ],
@@ -166,6 +170,14 @@ class formBillingPlan extends cmsForm {
                                 ],
                                 'rules' => [
                                     ['required']
+                                ]
+                            ]),
+                            new fieldList('price_to_balance', [
+                                'title' => LANG_BILLING_PLAN_PRICE_TO_BALANCE,
+                                'hint'  => LANG_BILLING_PLAN_PRICE_TO_BALANCE_HINT,
+                                'items' => [
+                                    0 => LANG_NO,
+                                    1 => LANG_YES
                                 ]
                             ]),
                             new fieldNumber('cashback', [

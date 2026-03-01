@@ -306,10 +306,14 @@ define('LANG_BILLING_PLAN_RUN_FREE_SUCCESS', 'Тарифный план "%s" п�
 define('LANG_BILLING_PLAN_IS_SUBSCRIBE_AFTER_REG', 'Подписывать пользователей на тарифный план сразу после регистрации');
 define('LANG_BILLING_PLAN_GROUPS', 'При активации добавлять подписчика в группы');
 define('LANG_BILLING_PLAN_GROUPS_HINT', 'Пользователь будет добавлен в указанные группы при покупке данного тарифного плана. Не указывайте группы, если план будет бесплатный.');
+define('LANG_BILLING_PLAN_REPLACE_GROUPS', 'Заменить группы пользователя');
+define('LANG_BILLING_PLAN_REPLACE_GROUPS_HINT', 'Если включено, то группы пользователя будут заменены указанными выше. Если выключено, то группы будут добавлены к существующим.');
 define('LANG_BILLING_PLAN_PRICES', 'Стоимость подписки (%s)');
 define('LANG_BILLING_PLAN_PRICES_VAL', 'Размер');
 define('LANG_BILLING_PLAN_PRICES_INT', 'Период');
 define('LANG_BILLING_PLAN_PRICES_PRICE', 'Цена');
+define('LANG_BILLING_PLAN_PRICE_TO_BALANCE', 'Зачислить на баланс');
+define('LANG_BILLING_PLAN_PRICE_TO_BALANCE_HINT', 'Только при покупке за реальную валюту');
 define('LANG_BILLING_PLAN_PRICES_CASHBACK', 'Кэшбэк');
 define('LANG_BILLING_PLAN_PRICES_PRICE_ADD', 'Добавить цену');
 define('LANG_BILLING_PLAN_DATE_UNTIL', 'Дата окончания');

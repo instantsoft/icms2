@@ -6,12 +6,12 @@ trait validatepay {
 
     public function before() {
 
-        if ($this->options['in_mode'] === 'disabled') {
-            return \cmsCore::error404();
-        }
-
         if (!$this->cms_user->is_logged) {
             return $this->redirectToLogin();
+        }
+
+        if ($this->options['in_mode'] === 'disabled' && !$this->cms_user->is_admin) {
+            return \cmsCore::error404();
         }
 
         if (!empty($this->use_csrf_token)) {

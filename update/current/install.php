@@ -9,6 +9,7 @@ function install_package() {
 
     $core->db->addTableField('billing_plans', 'features', 'TEXT NULL DEFAULT NULL AFTER `prices`');
     $core->db->addTableField('billing_plans', 'is_subscribe_after_reg', 'TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `is_real_price`');
+    $core->db->addTableField('billing_plans', 'is_replace_groups', 'TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `groups`');
     $core->db->addTableField('billing_systems', 'is_enabled_admin', 'TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `is_enabled`');
 
     if(!$core->db->getRowsCount('widgets', "`controller` = 'billing' AND `name` = 'plans'")){

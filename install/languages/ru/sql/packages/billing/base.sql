@@ -131,6 +131,7 @@ CREATE TABLE `{#}billing_plans` (
   `is_subscribe_after_reg` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Подписывать на план после регистрации пользователя',
   `max_out` decimal(11,2) UNSIGNED DEFAULT NULL COMMENT 'Максимальная сумма вывода денег',
   `groups` text DEFAULT NULL COMMENT 'YAML с группами для перевода',
+  `is_replace_groups` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Заменять группы пользователя',
   `prices` text DEFAULT NULL COMMENT 'YAML с ценами по группам',
   `features` text DEFAULT NULL COMMENT 'Характеристики',
   `users` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Кол-во пользователей, подписанных на план',

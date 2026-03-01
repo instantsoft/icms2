@@ -272,9 +272,13 @@ class modelBilling extends cmsModel {
             return false;
         }
 
+        $success = true;
+
         $price = $plan['prices'][$period];
 
-        $success = $this->decrementUserBalance($user_id, $price['amount'], sprintf(LANG_BILLING_PLAN_TICKET, $plan['title']));
+        if (empty($price['price_to_balance'])) {
+            $success = $this->decrementUserBalance($user_id, $price['amount'], sprintf(LANG_BILLING_PLAN_TICKET, $plan['title']));
+        }
 
         if (!empty($price['cashback'])) {
             $success = $success && $this->incrementUserBalance($user_id, $price['cashback'], sprintf(LANG_BILLING_PLAN_TICKET_CASHBACK, $plan['title']));
@@ -876,7 +880,12 @@ class modelBilling extends cmsModel {
                 'old_groups' => $user['groups']
             ]);
 
-            $groups = array_unique(array_merge($user['groups'], $plan['groups']));
+            if (empty($plan['is_replace_groups'])) {
+                $groups = array_unique(array_merge($user['groups'], $plan['groups']));
+            } else {
+                // Если группы не заданы, оставляем старые
+                $groups = $plan['groups'] ?: $user['groups'];
+            }
 
             $success = $success && $this->saveUserPlanGroupsMembership($user['id'], $plan['id'], $groups);
 

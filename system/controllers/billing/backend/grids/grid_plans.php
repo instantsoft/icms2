@@ -22,6 +22,34 @@ function grid_plans($controller) {
             'title' => LANG_BILLING_PLAN,
             'href'  => href_to($controller->root_url, 'plans', ['edit', '{id}'])
         ],
+        'prices' => [
+            'title' => LANG_BILLING_PLAN_PRICE,
+            'handler' => function ($value, $row) use($controller) {
+
+                $from = '';
+
+                $prices = cmsModel::yamlToArray($value);
+
+                $price = [
+                    'amount'  => 0,
+                    'int_str' => LANG_MONTH1
+                ];
+
+                if ($prices) {
+
+                    $price = reset($prices);
+
+                    $price['amount'] = $controller->model->getDepositSumm($price['amount']);
+                    $price['int_str'] = string_lang($price['int'] . '1');
+
+                    if (count($prices) > 1) {
+                        $from = LANG_FROM . ' ';
+                    }
+                }
+
+                return $from . '' . $price['amount'] . ' ' . $controller->options['cur_real_symb'] . ' / ' . $price['int_str'];;
+            }
+        ],
         'users' => [
             'title' => LANG_BILLING_PLAN_USERS,
             'width' => 100,

@@ -131,6 +131,7 @@ CREATE TABLE `{#}billing_plans` (
   `is_subscribe_after_reg` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Subscribe to plan after user registration',
   `max_out` decimal(11,2) UNSIGNED DEFAULT NULL COMMENT 'Maximum withdrawal amount',
   `groups` text DEFAULT NULL COMMENT 'YAML with target user groups',
+  `is_replace_groups` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Replace user groups',
   `prices` text DEFAULT NULL COMMENT 'YAML with prices by group',
   `features` text DEFAULT NULL COMMENT 'Plan Features',
   `users` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Number of users subscribed to the plan',

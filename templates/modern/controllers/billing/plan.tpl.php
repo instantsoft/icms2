@@ -50,7 +50,7 @@
                                 <?php foreach ($plans as $p) { ?>
                                     <ul class="plan-features list-unstyled mb-0 mt-1 mt-lg-2" id="plan-features-<?php echo $p['id']; ?>">
                                     <?php foreach ($p['features_list'] as $feature) { ?>
-                                        <li class="plan-features__<?php echo $feature['name']; ?><?php if ($feature['type'] === 'bool' && !$feature['value']) { ?> text-muted<?php } ?>">
+                                        <li class="plan-features__item plan-features__<?php echo $feature['name']; ?><?php if ($feature['type'] === 'bool' && !$feature['value']) { ?> text-muted<?php } ?>">
                                             <?php
                                             $icon = 'check';
                                             $icon_class = 'text-success';

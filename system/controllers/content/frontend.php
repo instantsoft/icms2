@@ -49,7 +49,7 @@ class content extends cmsFrontend {
 
         $ctypes = $this->model->getContentTypes();
         if (!$ctypes) {
-            return $result;
+            return false;
         }
 
         foreach ($ctypes as $ctype) {
@@ -68,7 +68,7 @@ class content extends cmsFrontend {
             ];
         }
 
-        return $result;
+        return $result['items'] ? $result : false;
     }
 
     public function getMenuPrivateItems($menu_item_id) {

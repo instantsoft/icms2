@@ -9,6 +9,10 @@ class actionBillingDeposit extends cmsAction {
 
     public function run() {
 
+        if ($this->options['in_mode'] !== 'enabled' && !$this->cms_user->is_admin) {
+            return cmsCore::error404();
+        }
+
         $is_new_top_up = $this->request->has('new_top_up');
 
         $amount = abs($this->request->get('amount', 0.0));
