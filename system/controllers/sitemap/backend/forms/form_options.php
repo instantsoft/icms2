@@ -8,99 +8,95 @@ class formSitemapOptions extends cmsForm {
 
         $source_controllers = cmsEventsManager::hookAll('sitemap_sources');
 
-        $childs = array();
+        $childs = [];
 
-        $changefreq = array(
+        $changefreq = [
             'always'  => LANG_SITEMAP_CHANGEFREQ1,
             'hourly'  => LANG_SITEMAP_CHANGEFREQ2,
             'daily'   => LANG_SITEMAP_CHANGEFREQ3,
             'weekly'  => LANG_SITEMAP_CHANGEFREQ4,
             'monthly' => LANG_SITEMAP_CHANGEFREQ5,
             'yearly'  => LANG_SITEMAP_CHANGEFREQ6,
-            'never'   => LANG_SITEMAP_CHANGEFREQ7,
-        );
+            'never'   => LANG_SITEMAP_CHANGEFREQ7
+        ];
 
-        if (is_array($source_controllers)){
-            foreach($source_controllers as $controller){
-                foreach($controller['sources'] as $id => $title){
+        if (is_array($source_controllers)) {
+            foreach ($source_controllers as $controller) {
+                foreach ($controller['sources'] as $id => $title) {
 
-                    $childs[] = new fieldCheckbox("sources:{$controller['name']}|{$id}", array(
+                    $childs[] = new fieldCheckbox("sources:{$controller['name']}|{$id}", [
                         'title' => $title
-                    ));
+                    ]);
 
-                    $childs[] = new fieldList("changefreq:{$controller['name']}:{$id}", array(
-                        'default' => '',
-                        'title'   => LANG_SITEMAP_CHANGEFREQ,
-                        'items'   => (array('' => LANG_BY_DEFAULT) + $changefreq),
-                        'visible_depend' => array("sources:{$controller['name']}|{$id}" => array('show' => array('1')))
-                    ));
+                    $childs[] = new fieldList("changefreq:{$controller['name']}:{$id}", [
+                        'default'        => '',
+                        'title'          => LANG_SITEMAP_CHANGEFREQ,
+                        'items'          => (['' => LANG_BY_DEFAULT] + $changefreq),
+                        'visible_depend' => ["sources:{$controller['name']}|{$id}" => ['show' => ['1']]]
+                    ]);
 
-                    $childs[] = new fieldNumber("priority:{$controller['name']}:{$id}", array(
-                        'title' => LANG_SITEMAP_PRIORITY,
-                        'visible_depend' => array("sources:{$controller['name']}|{$id}" => array('show' => array('1'))),
-                        'rules' => array(
-                            array('min', 0),
-                            array('max', 1)
-                        )
-                    ));
-
+                    $childs[] = new fieldNumber("priority:{$controller['name']}:{$id}", [
+                        'title'          => LANG_SITEMAP_PRIORITY,
+                        'visible_depend' => ["sources:{$controller['name']}|{$id}" => ['show' => ['1']]],
+                        'rules'          => [
+                            ['min', 0],
+                            ['max', 1]
+                        ]
+                    ]);
                 }
             }
         }
 
-        return array(
-
-            'params' => array(
+        return [
+            'params' => [
                 'type' => 'fieldset',
                 'title' => LANG_OPTIONS,
-                'childs' => array(
-                    new fieldCheckbox('show_lastmod', array(
+                'childs' => [
+                    new fieldCheckbox('show_lastmod', [
                         'default' => 1,
                         'title' => LANG_SITEMAP_SHOW_LASTMOD
-                    )),
-                    new fieldCheckbox('show_changefreq', array(
+                    ]),
+                    new fieldCheckbox('show_changefreq', [
                         'default' => 1,
                         'title' => LANG_SITEMAP_SHOW_CHANGEFREQ
-                    )),
-                    new fieldList('default_changefreq', array(
+                    ]),
+                    new fieldList('default_changefreq', [
                         'default' => 'daily',
                         'title' => LANG_SITEMAP_CHANGEFREQ.' '.mb_strtolower(LANG_BY_DEFAULT),
                         'items' => $changefreq,
-                        'visible_depend' => array('show_changefreq' => array('show' => array('1')))
-                    )),
-                    new fieldCheckbox('show_priority', array(
+                        'visible_depend' => ['show_changefreq' => ['show' => ['1']]]
+                    ]),
+                    new fieldCheckbox('show_priority', [
                         'default' => 1,
                         'title' => LANG_SITEMAP_SHOW_PRIORITY
-                    )),
-                    new fieldCheckbox('generate_html_sitemap', array(
+                    ]),
+                    new fieldCheckbox('generate_html_sitemap', [
                         'default' => 0,
                         'title' => LANG_SITEMAP_GENERATE_HTML_SITEMAP
-                    )),
-                    new fieldNumber('sitemap_items_count', array(
+                    ]),
+                    new fieldNumber('sitemap_items_count', [
                         'default' => 50000,
                         'title' => LANG_SITEMAP_ITEMS_COUNT,
                         'hint' => LANG_SITEMAP_ITEMS_COUNT_HINT
-                    ))
-                )
-            ),
-            'sources' => array(
+                    ])
+                ]
+            ],
+            'sources' => [
                 'type' => 'fieldset',
                 'title' => LANG_SITEMAP_SOURCES,
                 'childs' => $childs
-            ),
-            'robots_txt' => array(
+            ],
+            'robots_txt' => [
                 'type' => 'fieldset',
                 'title' => LANG_SITEMAP_ROBOTS_TXT,
-                'childs' => array(
-                    new fieldText('robots', array(
+                'childs' => [
+                    new fieldText('robots', [
                         'default' => "User-agent: *\nDisallow:",
                         'hint' => LANG_SITEMAP_ROBOTS_TXT_HINT
-                    ))
-                )
-            )
-
-        );
-
+                    ])
+                ]
+            ]
+        ];
     }
 
 }

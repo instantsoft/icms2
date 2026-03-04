@@ -505,7 +505,23 @@ class formAdminSettings extends cmsForm {
                     new fieldText('allow_ips', [
                         'title'         => LANG_CP_SETTINGS_ALLOW_IPS,
                         'hint'          => sprintf(LANG_CP_SETTINGS_ALLOW_IPS_HINT, cmsUser::getIp()),
-                        'is_strip_tags' => true
+                        'is_strip_tags' => true,
+                        'rules'   => [
+                            [function ($controller, $data, $value) {
+
+                                if (!$value) {
+                                    return true;
+                                }
+
+                                $ip = new cmsIp($value);
+
+                                if (!$ip->isIPTrusted(cmsUser::getIp())) {
+                                    return sprintf(LANG_CP_SETTINGS_ALLOW_IPS_ERROR, cmsUser::getIp());
+                                }
+
+                                return true;
+                            }]
+                        ]
                     ]),
                     new fieldList('check_spoofing_type', [
                         'title' => LANG_CP_CHECK_SPOOFING_TYPE,

@@ -17,10 +17,17 @@ class cmsIp {
     private $trusted_list = [];
 
     /**
-     * @param array $trusted Список IP
+     * @param array|string $trusted Массив списка IP или строка, где ip разделены через перенос строки
      */
-    public function __construct(array $trusted = []) {
-        $this->trusted_list = $trusted;
+    public function __construct($trusted) {
+
+        if (is_array($trusted)) {
+
+            $this->trusted_list = $trusted;
+        } else if ($trusted) {
+
+            $this->trusted_list = array_filter(array_map('trim', explode("\n", $trusted)));
+        }
     }
 
     /**

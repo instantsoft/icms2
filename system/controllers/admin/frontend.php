@@ -105,7 +105,7 @@ class admin extends cmsFrontend {
             return true;
         }
 
-        $ip = new cmsIp(explode("\n", $allow_ips));
+        $ip = new cmsIp($allow_ips);
 
         return $ip->isIPTrusted(cmsUser::getIp());
     }
