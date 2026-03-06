@@ -125,14 +125,20 @@ class modelActivity extends cmsModel {
         return $this->getCount('activity');
     }
 
-    public function getEntries() {
+    /**
+     * Возвращает записи ленты активности
+     *
+     * @param array $options Опции контроллера
+     * @param ?cmsUser $user
+     * @return array
+     */
+    public function getEntries(array $options = [], $user = null) {
 
-        $this->joinUserNotDeleted();
-
-        $this->selectTranslatedField('t.description', 'activity_types');
-        $this->joinLeft('activity_types', 't', 't.id = i.type_id');
-
-        $this->joinSessionsOnline();
+        $this->joinUserNotDeleted()->
+                selectTranslatedField('t.description', 'activity_types')->
+                joinLeft('activity_types', 't', 't.id = i.type_id')->
+                joinSessionsOnline()->
+                useCache('activity.entries');
 
         if (!$this->order_by) {
             $this->orderBy('date_pub', 'desc');
@@ -142,12 +148,10 @@ class modelActivity extends cmsModel {
             $this->filterHiddenParents();
         }
 
-        $this->useCache('activity.entries');
-
         $config = cmsConfig::getInstance();
-        $user   = cmsUser::getInstance();
+        $max_title_len = $options['subject_max_title_len'] ?? 50;
 
-        return $this->get('activity', function ($item, $model) use ($config, $user) {
+        return $this->get('activity', function ($item, $model) use ($config, $user, $max_title_len) {
 
             $item['user'] = [
                 'id'        => $item['user_id'],
@@ -157,15 +161,21 @@ class modelActivity extends cmsModel {
                 'avatar'    => $item['user_avatar']
             ];
 
+            $link = $item['subject_title'];
+
             if (!empty($item['subject_url'])) {
 
                 $item['subject_url'] = rel_to_href($item['subject_url']);
-                $max_title_len = 50;
-                $item['subject_title'] = mb_strlen($item['subject_title']) > $max_title_len ? mb_substr($item['subject_title'], 0, $max_title_len) . '...' : $item['subject_title'];
 
-                $link = '<a href="' . $item['subject_url'] . '">' . $item['subject_title'] . '</a>';
-            } else {
-                $link = $item['subject_title'];
+                if ($max_title_len && mb_strlen($item['subject_title']) > $max_title_len) {
+                    $item['subject_title'] = mb_substr($item['subject_title'], 0, $max_title_len) . '...';
+                }
+
+                $link = sprintf(
+                    '<a href="%s">%s</a>',
+                    $item['subject_url'],
+                    $item['subject_title']
+                );
             }
 
             if (!empty($item['reply_url'])) {
@@ -178,14 +188,15 @@ class modelActivity extends cmsModel {
 
                 $images_exist = [];
 
-                foreach ($item['images'] as $key => $image) {
+                foreach ($item['images'] as $image) {
                     if (strpos($image['src'], 'http') !== 0) {
                         if (!file_exists($config->upload_path . $image['src'])) {
                             continue;
                         }
                         $image['src'] = $config->upload_host . '/' . $image['src'];
                     }
-                    $image['url']   = rel_to_href($image['url']);
+                    $image['url'] = rel_to_href($image['url']);
+
                     $images_exist[] = $image;
                 }
 
@@ -202,10 +213,12 @@ class modelActivity extends cmsModel {
 
             $item['date_diff'] = string_date_age_max($item['date_pub'], true);
 
-            $item['is_new'] = (strtotime($item['date_pub']) > strtotime($user->date_log));
+            $item['is_new'] = $user
+                ? strtotime($item['date_pub']) > strtotime($user->date_log)
+                : false;
 
             return $item;
-        });
+        }) ?: [];
     }
 
 }

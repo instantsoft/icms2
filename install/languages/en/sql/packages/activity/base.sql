@@ -46,7 +46,7 @@ INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `titl
 (19, 1, 'users', 'avatar', 'Avatar changing', 'changed avatar');
 
 INSERT INTO `{#}controllers` (`title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES
-('Activity Feed', 'activity', 1, '---\ntypes:\n  - 10\n  - 11\n  - 17\n  - 16\n  - 14\n  - 13\n  - 18\n  - 7\n  - 19\n  - 12\n  - 8\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
+('Activity Feed', 'activity', 1, '---\ntypes:\n  - \"25\"\n  - \"26\"\n  - \"27\"\n  - \"23\"\n  - \"22\"\n  - \"21\"\n  - \"20\"\n  - \"1\"\n  - \"28\"\n  - \"7\"\n  - \"19\"\n  - \"12\"\n  - \"24\"\n  - \"29\"\n  - \"8\"\nsubject_max_title_len: 50\nlimit: 15\nseo_h1: \"\"\nseo_title: \"\"\nseo_keys: \"\"\nseo_desc: \"\"\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
 
 INSERT INTO `{#}events` (`event`, `listener`, `ordering`, `is_enabled`) VALUES
 ('content_after_add_approve', 'activity', 1, 1),

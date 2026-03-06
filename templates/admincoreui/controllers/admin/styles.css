@@ -333,6 +333,9 @@ thead.list_thead {
 .quickview-wrapper .quickview-toggle {
     display: none;
 }
+.quickview-wrapper > .bg-white.h-100 {
+    border-radius: .25rem !important;
+}
 @media (max-width: 1199.98px) {
     .quickview-wrapper {
         will-change: transform;

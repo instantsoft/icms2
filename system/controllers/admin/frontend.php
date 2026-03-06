@@ -745,6 +745,8 @@ class admin extends cmsFrontend {
             $template_name = $this->cms_config->template;
         }
 
+        cmsCore::loadWidgetLanguage($widget_name, $controller_name);
+
         $template = new cmsTemplate($template_name);
 
         $widget_path = cmsCore::getWidgetPath($widget_name, $controller_name);

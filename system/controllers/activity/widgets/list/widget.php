@@ -9,6 +9,7 @@ class widgetActivityList extends cmsWidget {
         $offset           = $this->getOption('offset', 0);
         $limit            = $this->getOption('limit', 10);
         $dataset          = $this->getOption('dataset', 'all');
+        $max_title_len    = $this->getOption('subject_max_title_len', 50);
 
         $activity = cmsCore::getController('activity');
 
@@ -28,7 +29,9 @@ class widgetActivityList extends cmsWidget {
 
         cmsEventsManager::hook('activity_list_filter', $activity->model);
 
-        $items = $activity->model->limit($offset, $limit)->getEntries();
+        $items = $activity->model->
+                limit($offset, $limit)->
+                getEntries(['subject_max_title_len' => $max_title_len], cmsUser::getInstance());
 
         if (!$items) {
             return false;

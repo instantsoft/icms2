@@ -130,7 +130,7 @@ class activity extends cmsFrontend {
 
         // Получаем количество и список записей
         $total = $this->model->getEntriesCount();
-        $items = $this->model->getEntries();
+        $items = $this->model->getEntries($this->options, $this->cms_user);
 
         // если запрос через URL
         if ($this->request->isStandard()) {

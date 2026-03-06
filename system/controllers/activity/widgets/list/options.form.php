@@ -4,8 +4,6 @@ class formWidgetActivityListOptions extends cmsForm {
 
     public function init() {
 
-        cmsCore::loadControllerLanguage('activity');
-
         return [
             [
                 'type'   => 'fieldset',
@@ -24,6 +22,13 @@ class formWidgetActivityListOptions extends cmsForm {
                     ]),
                     new fieldCheckbox('options:date_group', [
                         'title' => LANG_WD_ACTIVITY_LIST_DATE_GROUP
+                    ]),
+                    new fieldNumber('options:subject_max_title_len', [
+                        'title'   => LANG_ACTIVITY_TITLE_LEN,
+                        'default' => 50,
+                        'rules'   => [
+                            ['max', 140] // subject_title	varchar(140)
+                        ]
                     ]),
                     new fieldNumber('options:offset', [
                         'title'   => LANG_LIST_OFFSET,

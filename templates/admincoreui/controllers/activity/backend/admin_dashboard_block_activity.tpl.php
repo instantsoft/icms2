@@ -24,6 +24,16 @@
         <?php if (!empty($item['images'][0]['src'])) { ?>
             <img width="64" class="mr-3" src="<?php echo $item['images'][0]['src']; ?>" alt="">
         <?php } ?>
+        <div class="dropdown ml-2 mr-1">
+            <button class="btn btn-dylan" type="button" data-toggle="dropdown">
+                <?php html_svg_icon('solid', 'ellipsis-v'); ?>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item text-danger" href="<?php echo href_to('activity', 'delete', $item['id'], ['csrf_token' => cmsForm::getCSRFToken()]); ?>">
+                    <?php html(LANG_DELETE); ?>
+                </a>
+            </div>
+        </div>
     </li>
     <?php } ?>
 </ul>

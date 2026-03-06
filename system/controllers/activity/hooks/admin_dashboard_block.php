@@ -16,7 +16,7 @@ class onActivityAdminDashboardBlock extends cmsAction {
 
             $this->model->limit(50);
 
-            $items = $this->model->getEntries();
+            $items = $this->model->getEntries($this->options, $this->cms_user);
 
             // запрещаем автоматически подключать файл css стилей контроллера
             $this->template_disable_auto_insert_css = true;

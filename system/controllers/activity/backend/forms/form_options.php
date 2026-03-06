@@ -21,6 +21,13 @@ class formActivityOptions extends cmsForm {
                             return array_collection_to_list($types, 'id', 'title');
                         }
                     ]),
+                    new fieldNumber('subject_max_title_len', [
+                        'title'   => LANG_ACTIVITY_TITLE_LEN,
+                        'default' => 50,
+                        'rules'   => [
+                            ['max', 140] // subject_title	varchar(140)
+                        ]
+                    ]),
                     new fieldNumber('limit', [
                         'title'   => LANG_LIST_LIMIT,
                         'default' => 15,

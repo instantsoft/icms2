@@ -23,7 +23,20 @@ icms.fieldsgroup = function(field_id, element_name, current_values, errors, is_d
             let field_wrap = field.closest('.form-field__child');
 
             if (field.attr('type') === 'checkbox') {
-                field.prop('checked', data[name] ? true : false);
+                if (field.length > 1) {
+                    let is_array = data[name] instanceof Array;
+                    field.each(function() {
+                        if (is_array) {
+                            if (data[name].includes($(this).val())) {
+                                $(this).prop('checked', true);
+                            }
+                        } else {
+                            $(this).prop('checked', data[name] ? true : false);
+                        }
+                    });
+                } else {
+                    field.prop('checked', data[name] ? true : false);
+                }
             } else {
                 field.val(data[name]);
             }
