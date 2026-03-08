@@ -433,13 +433,13 @@ class cmsBackend extends cmsController {
         ];
 
         $this->cms_template->addToolButton([
-            'class' => 'settings',
             'title' => LANG_MODERATORATION_OPTIONS,
-            'href'  => href_to('admin', 'controllers', ['edit', 'moderation', 'options'])
+            'href'  => href_to('admin', 'controllers', ['edit', 'moderation']),
+            'icon'  => 'cog'
         ]);
 
         $this->cms_template->addToolButton([
-            'class'  => 'help',
+            'icon'   => 'question-circle',
             'title'  => LANG_HELP,
             'target' => '_blank',
             'href'   => LANG_HELP_URL_CTYPES_MODERATORS

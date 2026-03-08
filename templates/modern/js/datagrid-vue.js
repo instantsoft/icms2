@@ -125,6 +125,7 @@ icms.datagrid = (function () {
                         }
                     }
                     this.edit_mode_enable = true;
+                    this.deSelectRows();
                 },
                 disableEditMode() {
                     for (let key in this.rows) {
@@ -255,7 +256,7 @@ icms.datagrid = (function () {
                     }
                 },
                 selectRow (row){
-                    if (!this.options.is_selectable){
+                    if (!this.options.is_selectable || this.edit_mode_enable){
                         return;
                     }
                     row.selected = !row.selected;

@@ -352,3 +352,6 @@ form {
         color: $navbar-dark-active-color;
     }
 }
+@each $color, $value in $grays {
+  @include bg-variant(".bg-gray-#{$color}", $value);
+}

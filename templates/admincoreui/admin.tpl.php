@@ -28,9 +28,6 @@
         'modal',
         'admin-core'
     ]); ?>
-    <?php if ($config->debug){ ?>
-        <?php $this->addMainTplJSName(['vendors/list.min']); ?>
-    <?php } ?>
     <?php $this->onDemandTplJSName([
         'vendors/photoswipe/photoswipe.min',
         'vendors/introjs/intro.min',

@@ -2,7 +2,8 @@
 $points_data = cmsDebugging::getPointsData();
 $points_tab = cmsDebugging::getPointsTargets();
 $active_tab = false;
-$this->addMainTplJSName(['vendors/list.min']);
+$this->insertJS($this->getJavascriptFileName(['vendors/list.min', 'vendors/highlight/highlight', 'vendors/highlight/languages/sql.min']));
+$this->insertCSS($this->getTplFilePath('js/vendors/highlight/styles/vs.min.css', false));
 ?>
 <div id="debug_block" class="d-none">
     <?php if(empty($hide_short_info)){ ?>
@@ -68,7 +69,7 @@ $this->addMainTplJSName(['vendors/list.min']);
             <?php } ?>
             <div class="list">
                 <?php foreach($data as $key => $query) { ?>
-                    <?php $query_data = isset($query['data_callback']) ? $query['data_callback']($query['data']) : nl2br(htmlspecialchars($query['data'])); ?>
+                    <?php $query_data = isset($query['data_callback']) ? $query['data_callback']($query['data']) : $query['data']; ?>
                     <div class="py-3 border-bottom">
                         <div class="d-none order"><?php echo $key; ?></div>
                         <div class="text-muted small src-path">
@@ -76,7 +77,11 @@ $this->addMainTplJSName(['vendors/list.min']);
                         </div>
                         <?php if($query_data){ ?>
                             <div class="mt-2 p-2 bg-light text-break qdata">
-                                <?php echo $query_data; ?>
+                                <?php if ($tab_name === 'db') { ?>
+                                    <pre class="m-0"><code class="language-sql"><?php echo $query_data; ?></code></pre>
+                                <?php } else { ?>
+                                    <?php echo nl2br(htmlspecialchars($query_data)); ?>
+                                <?php } ?>
                             </div>
                         <?php } ?>
                         <?php if($query['time']){ ?>
@@ -98,6 +103,7 @@ $this->addMainTplJSName(['vendors/list.min']);
 <?php ob_start(); ?>
 <script>
     icms.modal.setCallback('open', function (){
+        hljs.highlightAll();
         setTimeout(function (){
         <?php foreach($points_tab as $tab_name => $tab) { ?>
             new List('tab-<?php echo $tab_name; ?>', {valueNames: ['query_time', 'order', 'src-path', 'qdata']});

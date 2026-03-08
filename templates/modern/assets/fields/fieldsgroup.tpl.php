@@ -18,7 +18,7 @@
     <?php } ?>
     <template class="fieldsgroup-template">
         <div class="fieldsgroup-item">
-            <div class="d-flex mb-3 bg-light p-2 p-md-3 rounded">
+            <div class="d-flex mb-3 bg-gray-200 animated fadeIn p-2 p-md-3 rounded">
                 <div class="form-row flex-grow-1">
                     <?php foreach($field->data['form']->getFormStructure($data) as $fieldset_id => $fieldset) { ?>
                         <?php foreach($fieldset['childs'] as $child_field) { ?>

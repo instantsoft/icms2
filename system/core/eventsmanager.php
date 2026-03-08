@@ -147,7 +147,7 @@ class cmsEventsManager {
                 'target' => $listener,
                 'subject' => $event_name
             ]
-        ], 1);
+        ], 2);
 
         return $data;
     }

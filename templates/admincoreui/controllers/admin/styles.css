@@ -315,6 +315,8 @@ thead.list_thead {
         box-shadow: 0px 2px 3px #c8ced3;
         border-top: none;
         margin: 0 0 0 1.5rem !important;
+        backdrop-filter: blur(2px);
+        background-color: rgba(246, 250, 253, 0.9) !important;
     }
     .sidebar-lg-show .fixed_toolbar {
         left: 210px;
