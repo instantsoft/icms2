@@ -29,9 +29,11 @@ class widgetTemplate extends cmsWidget {
                 $template->addTplCSSName(['toastr']);
                 $template->addTplJSName(['vendors/toastr/toastr.min']);
 
+                $position_class = 'toast-' . ($this->options['session_pos'] ?? 'top-right');
+
                 ob_start(); ?>
                 <script>
-                    toastr.options = {progressBar: true, preventDuplicates: true, timeOut: 20000, newestOnTop: true, closeButton: true, hideDuration: 400};
+                    toastr.options = {progressBar: true, preventDuplicates: true, timeOut: 20000, newestOnTop: true, closeButton: true, hideDuration: 400, positionClass: "<?php echo $position_class; ?>"};
                     <?php if ($messages){ ?>
                         $(function(){
                         <?php foreach($messages as $message){ ?>

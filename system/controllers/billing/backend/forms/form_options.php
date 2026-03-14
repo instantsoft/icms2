@@ -206,9 +206,6 @@ class formBillingOptions extends cmsForm {
                                     'value' => LANG_BILLING_PLAN_FEATURES_TYPE_VALUE
                                 ]
                             ])
-                        ],
-                        'rules' => [
-                            ['required']
                         ]
                     ])
                 ]

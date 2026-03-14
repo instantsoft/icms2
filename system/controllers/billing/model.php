@@ -669,7 +669,7 @@ class modelBilling extends cmsModel {
             $price['price'] = $model->getDepositSumm($price['amount']);
         }
 
-        foreach ($this->options['plan_features'] as $f) {
+        foreach ($this->options['plan_features'] ?? [] as $f) {
 
             if (!array_key_exists($f['name'], $features)) {
                 continue;

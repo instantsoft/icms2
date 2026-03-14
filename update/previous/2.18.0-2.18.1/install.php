@@ -1,11 +1,20 @@
 <?php
 /**
- * 2.18.1 => 2.18.2
+ * 2.18.0 => 2.18.1
  */
 function install_package() {
 
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
+
+    $core->db->addTableField('billing_plans', 'features', 'TEXT NULL DEFAULT NULL AFTER `prices`');
+    $core->db->addTableField('billing_plans', 'is_subscribe_after_reg', 'TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `is_real_price`');
+    $core->db->addTableField('billing_plans', 'is_replace_groups', 'TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `groups`');
+    $core->db->addTableField('billing_systems', 'is_enabled_admin', 'TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `is_enabled`');
+
+    if(!$core->db->getRowsCount('widgets', "`controller` = 'billing' AND `name` = 'plans'")){
+        $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`) VALUES ('billing', 'plans', 'Subscriptions', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);");
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
@@ -54,7 +63,7 @@ function install_package() {
         }
     }
 
-    //save_controller_options(['billing']);
+    save_controller_options(['billing']);
 
     //compile_scss_if_necessary();
 
