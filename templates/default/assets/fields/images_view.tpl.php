@@ -15,7 +15,7 @@
 </div>
 
 <?php if($images->getReturn()) { ?>
-    <?php $this->addBottom('<script>$(function() { icms.modal.bindGallery(".img-' . $field->getName() . '"); });</script>'); ?>
+    <?php $this->addBottom('<script>$(function() { icms.modal.bindGallery("#' . $block_id . ' .img-' . $field->getName() . '"); });</script>'); ?>
     <?php if($field->getOption('view_as_slider')) { ?>
         <?php
         $this->addTplJSNameFromContext('vendors/slick/slick.min');
