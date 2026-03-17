@@ -192,32 +192,33 @@ icms.notices = (function ($) {
 
     };
 
-    this.noticeAction = function(id, name){
+    this.noticeAction = function (id, name) {
 
-        var pm_notices_window = $('#pm_notices_list');
+        let pm_notices_window = $('#pm_notices_list');
 
-        var url = $('#pm_notices_window').data('action-url');
+        let url = $('#pm_notices_window').data('action-url');
 
-        var form_data = {
+        let form_data = {
+            csrf_token: icms.forms.getCsrfToken(),
             notice_id: id,
             action_name: name
         };
 
-        $.post(url, form_data, function(result) {
+        $.post(url, form_data, function (result) {
 
             if (result.error) {
                 return false;
             }
 
-            if (result.href){
+            if (result.href) {
                 window.location.href = result.href;
             }
 
-            $('#notice-'+id, pm_notices_window).fadeOut(300, function(){
+            $('#notice-' + id, pm_notices_window).fadeOut(300, function () {
                 $(this).remove();
-                var count = $('.item', pm_notices_window).length;
+                let count = $('.item', pm_notices_window).length;
                 icms.notices.setNoticesCounter(count);
-                if (count==0){
+                if (count == 0) {
                     $('body').trigger('click');
                 }
             });
@@ -225,27 +226,26 @@ icms.notices = (function ($) {
         }, "json");
 
         return false;
-
     };
 
-    this.noticeClear = function(){
+    this.noticeClear = function () {
 
-        if(confirm(LANG_PM_CLEAR_NOTICE_CONFIRM)){
+        if (confirm(LANG_PM_CLEAR_NOTICE_CONFIRM)) {
 
-            var pm_notices_window = $('#pm_notices_list');
-            var url = $('#pm_notices_window').data('action-url');
+            let pm_notices_window = $('#pm_notices_list');
+            let url = $('#pm_notices_window').data('action-url');
 
-            $.post(url, {action_name: 'clear_notice'}, function(result) {
+            $.post(url, {action_name: 'clear_notice', csrf_token: icms.forms.getCsrfToken()}, function (result) {
 
                 if (result.error) {
                     return false;
                 }
 
-                $('.item', pm_notices_window).fadeOut('fast', function(){
+                $('.item', pm_notices_window).fadeOut('fast', function () {
                     $(this).remove();
-                    var count = $('.item', pm_notices_window).length;
+                    let count = $('.item', pm_notices_window).length;
                     icms.notices.setNoticesCounter(count);
-                    if (count==0){
+                    if (count == 0) {
                         $('body').trigger('click');
                     }
                 });
@@ -253,11 +253,9 @@ icms.notices = (function ($) {
             }, 'json');
 
             return true;
-
         }
 
         return false;
-
     };
 
     this.setNoticesCounter = function(value){
