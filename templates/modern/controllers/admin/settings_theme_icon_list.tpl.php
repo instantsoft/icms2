@@ -24,7 +24,8 @@ $this->addTplJSNameFromContext(['vendors/list.min']);
     <?php foreach($icon_list as $tab_name => $list) { ?>
         <li class="nav-item">
             <a class="nav-link<?php if(!$active_tab){ $active_tab = $tab_name; ?> active<?php } ?>" href="#tab-<?php echo $tab_name; ?>" data-toggle="tab">
-                <?php echo $tab_name; ?>
+                <?php echo $tab_name; ?> 
+                <span class="badge badge-primary badge-pill"><?php echo count($list); ?></span>
             </a>
         </li>
     <?php } ?>
