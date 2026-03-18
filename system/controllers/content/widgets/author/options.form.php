@@ -41,6 +41,11 @@ class formWidgetContentAuthorOptions extends cmsForm {
                         'multilanguage' => true,
                         'visible_depend' => ['options:show_user_items_link' => ['show' => ['1']]]
                     ]),
+                    new fieldString('options:user_items_link_class', [
+                        'title' => LANG_WD_CON_AUTHOR_USER_ITEMS_LINK_CLASS,
+                        'hint'  => LANG_WD_CON_AUTHOR_USER_ITEMS_LINK_CLASS_HINT,
+                        'visible_depend' => ['options:show_user_items_link' => ['show' => ['1']]]
+                    ]),
                     new fieldCheckbox('options:show_user_groups', [
                         'title' => LANG_WD_CON_AUTHOR_SHOW_USER_GROUPS
                     ]),

@@ -52,7 +52,7 @@
         <?php } ?>
         <div class="value">
             <?php if (!empty($field['href'])){ ?>
-                <a href="<?php echo $field['href']; ?>" class="btn btn-primary">
+                <a href="<?php echo $field['href']; ?>" class="<?php echo !empty($field['class']) ? $field['class'] : 'btn btn-primary'; ?>">
                     <?php if (!empty($field['icon'])){ ?>
                         <?php html_svg_icon('solid', $field['icon']); ?>
                     <?php } ?>
