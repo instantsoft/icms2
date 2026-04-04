@@ -134,7 +134,7 @@ function check_db() {
 
     $success = true;
 
-    // Основные дампы
+    // Основные дампы (base.sql и виджеты)
     foreach ($dumps as $dump_name) {
         if ($success === true) {
             $success = import_dump(
@@ -149,49 +149,43 @@ function check_db() {
         }
     }
 
-    // Импортируем дампы отдельных компонентов
-    $packages_list = get_packages_sql_list();
+    // Импортируем демо контент если нужно
+    $install_type = $_SESSION['install']['site']['install_type'] ?? 'standard';
+    $is_install_demo = !empty($_SESSION['install']['site']['is_install_demo']);
+    
+    if ($is_install_demo && $install_type !== 'minimal') {
+        $demo_file = ($install_type === 'full') ? 'core/full_demo.sql' : 'core/standard_demo.sql';
+        import_dump($mysqli, $demo_file, $db['prefix'], $db['engine'], ';', $db['db_charset'], $db['innodb_full_text']);
+        
+        // Виджеты демо
+        $template = $_SESSION['install']['site']['template'];
+        import_dump($mysqli, "core/widgets_demo_{$template}.sql", $db['prefix'], $db['engine'], ';', $db['db_charset'], $db['innodb_full_text']);
+    }
 
-    foreach ($packages_list as $controller_name) {
-        foreach ($dumps as $dump_name) {
-            if ($success === true) {
-                $success = import_dump(
-                    $mysqli,
-                    'packages' . DS . $controller_name . DS . $dump_name,
-                    $db['prefix'],
-                    $db['engine'],
-                    ';',
-                    $db['db_charset'],
-                    $db['innodb_full_text']
-                );
-            }
+    // Импортируем базовые виджеты для шаблона
+    $template = $_SESSION['install']['site']['template'];
+    import_dump($mysqli, "core/widgets_{$template}.sql", $db['prefix'], $db['engine'], ';', $db['db_charset'], $db['innodb_full_text']);
+
+    // Получаем выбранные компоненты
+    $selected_components = $_SESSION['install']['components'] ?? [];
+    $data = include PATH . 'data/components.php';
+
+    // Импортируем SQL компонентов (только не mandatory)
+    $components_to_import = array_diff($selected_components, $data['mandatory']);
+    foreach ($components_to_import as $component) {
+        $sql_file = find_component_sql_file($component, 'base');
+        if ($sql_file) {
+            $success = import_dump($mysqli, $sql_file, $db['prefix'], $db['engine'], ';', $db['db_charset'], $db['innodb_full_text']);
+            if ($success !== true) { break; }
         }
     }
 
-    // Теперь импортируем дампы по зависимостям контроллеров
-    $result = $mysqli->query("SELECT `name` FROM `{$db['prefix']}controllers`");
-    $controllers = [];
-    if (!$mysqli->errno) {
-        while ($item = $result->fetch_assoc()) {
-            $controllers[] = $item['name'];
-        }
-        $result->close();
-    }
-
-    foreach ($packages_list as $controller_name) {
-        foreach ($controllers as $rel_controller_name) {
-            foreach ($dumps as $dump_name) {
-                if ($success === true) {
-                    $success = import_dump(
-                        $mysqli,
-                        'packages' . DS . $controller_name . DS . $rel_controller_name . DS. $dump_name,
-                        $db['prefix'],
-                        $db['engine'],
-                        ';',
-                        $db['db_charset'],
-                        $db['innodb_full_text']
-                    );
-                }
+    // Импортируем демо выбранных компонентов
+    if ($is_install_demo && $install_type !== 'minimal') {
+        foreach ($components_to_import as $component) {
+            $demo_file = find_component_sql_file($component, 'demo');
+            if ($demo_file) {
+                import_dump($mysqli, $demo_file, $db['prefix'], $db['engine'], ';', $db['db_charset'], $db['innodb_full_text']);
             }
         }
     }
@@ -260,16 +254,7 @@ function get_sql_file_names($is_install_demo_content = false) {
     $dumps = [
         // Основной дамп
         'base.sql',
-        // Базовые виджеты для шаблона
-        'widgets_bind_' . $_SESSION['install']['site']['template'] . '.sql',
     ];
-
-    if ($is_install_demo_content) {
-        // Демо данные
-        $dumps[] = 'base_demo_' . $_SESSION['install']['site']['template'] . '.sql';
-        // Демо виджеты для шаблона
-        $dumps[] = 'widgets_bind_demo_' . $_SESSION['install']['site']['template'] . '.sql';
-    }
 
     return $dumps;
 }

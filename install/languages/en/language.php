@@ -3,6 +3,7 @@
     define('LANG_PAGE_TITLE',               'InstantCMS Installation');
     define('LANG_INSTALLATION_WIZARD',      'Installation wizard');
     define('LANG_NEXT',                     'Next &rarr;');
+    define('LANG_BACK',                     '&larr; Back');
     define('LANG_ERROR',                    'Error');
     define('LANG_FROM',                     'from');
     define('LANG_DEPRECATED',               'Deprecated');
@@ -161,3 +162,70 @@
     define('LANG_RB_SUCCES_ARCH',           'Archiving is complete. The file is located at %s');
     define('LANG_RB_DONE',                  'Customization successfully completed.');
     define('LANG_RB_DONE_HINT',             'You can start InstantCMS installation.');
+
+// =============================================================================
+// Install Types and Components
+// =============================================================================
+
+    define('LANG_INSTALL_TYPE',               'Installation type');
+    define('LANG_INSTALL_MINIMAL',           'Minimal');
+    define('LANG_INSTALL_MINIMAL_DESC',      'Only basic functions. Suitable for development or if you only need pages.');
+    define('LANG_INSTALL_STANDARD',          'Standard');
+    define('LANG_INSTALL_STANDARD_DESC',      'Social features, search, tags. Recommended for most sites.');
+    define('LANG_INSTALL_FULL',              'Full');
+    define('LANG_INSTALL_FULL_DESC',          'All available system components.');
+    define('LANG_INSTALL_CUSTOM',             'Custom');
+    define('LANG_INSTALL_CUSTOM_DESC',        'Select components manually.');
+    define('LANG_INSTALL_DEMO_CONTENT',      'Install demo content');
+
+    define('LANG_CAT_SOCIAL',               'Social');
+    define('LANG_CAT_CONTENT',              'Content');
+    define('LANG_CAT_MEDIA',                'Media');
+    define('LANG_CAT_TOOLS',                'Tools');
+    define('LANG_CAT_SECURITY',             'Security');
+    define('LANG_CAT_MONETIZATION',          'Monetization');
+    define('LANG_CAT_SEO',                  'SEO');
+    define('LANG_CAT_NOTIFICATIONS',         'Notifications');
+
+    define('LANG_COMMENTS',                 'Comments');
+    define('LANG_COMMENTS_DESC',            'Comments system for content entries');
+    define('LANG_RATING',                   'Rating');
+    define('LANG_RATING_DESC',             'Content voting system');
+    define('LANG_ACTIVITY',                'Activity stream');
+    define('LANG_ACTIVITY_DESC',           'User and friends activity feed');
+    define('LANG_WALL',                     'Wall');
+    define('LANG_WALL_DESC',               'Wall in user profiles');
+    define('LANG_GROUPS',                   'Groups');
+    define('LANG_GROUPS_DESC',             'User groups');
+    define('LANG_TAGS',                    'Tags');
+    define('LANG_TAGS_DESC',              'Content tags');
+    define('LANG_SEARCH',                   'Search');
+    define('LANG_SEARCH_DESC',            'Full-text site search');
+    define('LANG_SITEMAP',                  'Sitemap');
+    define('LANG_SITEMAP_DESC',           'XML sitemap generation');
+    define('LANG_RSS',                     'RSS');
+    define('LANG_RSS_DESC',               'RSS feeds for content');
+    define('LANG_PHOTOS',                  'Photo gallery');
+    define('LANG_PHOTOS_DESC',            'Image gallery');
+    define('LANG_FORMS',                   'Form builder');
+    define('LANG_FORMS_DESC',             'Create custom forms');
+    define('LANG_GEO',                    'Geolocation');
+    define('LANG_GEO_DESC',               'User location detection');
+    define('LANG_RECAPTCHA',              'reCAPTCHA');
+    define('LANG_RECAPTCHA_DESC',         'Google reCAPTCHA spam protection');
+    define('LANG_CSP',                     'CSP');
+    define('LANG_CSP_DESC',               'Content Security Policy protection');
+    define('LANG_BILLING',                'Billing');
+    define('LANG_BILLING_DESC',           'Payment system for the site');
+    define('LANG_REDIRECT',               'Redirects');
+    define('LANG_REDIRECT_DESC',          'URL redirect management');
+    define('LANG_SUBSCRIPTIONS',          'Subscriptions');
+    define('LANG_SUBSCRIPTIONS_DESC',    'Content update subscriptions');
+
+    define('LANG_STEP_COMPONENTS',         'Component selection');
+    define('LANG_STEP_COMPONENTS_HINT',     'Select installation type or choose components manually');
+    define('LANG_MANDATORY',               'mandatory');
+    define('LANG_REQUIRES',                 'Requires');
+    define('LANG_COMPONENT_REQUIRES',       'Component "%s" requires component "%s"');
+    define('LANG_CUSTOM_COMPONENTS',       'Component selection');
+    define('LANG_CUSTOM_COMPONENTS_HINT', 'Check components to install. Mandatory components are already checked and cannot be disabled.');
