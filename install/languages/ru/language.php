@@ -229,3 +229,15 @@
     define('LANG_COMPONENT_REQUIRES',       'Компонент "%s" требует наличия компонента "%s"');
     define('LANG_CUSTOM_COMPONENTS',       'Выбор компонентов');
     define('LANG_CUSTOM_COMPONENTS_HINT', 'Отметьте компоненты для установки. Обязательные компоненты уже отмечены и не могут быть отключены.');
+
+    define('LANG_STEP_CLEANUP',            'Очистка');
+    define('LANG_CLEANUP_INFO',            'Выберите файлы для удаления. Это освободит место на диске.');
+    define('LANG_CLEANUP_NOTHING',         'Нечего удалять. Все установленные компоненты присутствуют.');
+    define('LANG_CLEANUP_TOTAL',           'Всего к удалению');
+    define('LANG_CLEANUP_SELECT',          'Выберите что удалить');
+    define('LANG_CLEANUP_TYPE_COMPONENT',  'компонент');
+    define('LANG_CLEANUP_REMOVED',         'Удалено');
+    define('LANG_CLEANUP_ERRORS',          'Ошибки при удалении');
+    define('LANG_CLEANUP_COMPLETE',        'Очистка завершена');
+    define('LANG_SELECT_ALL',              'Выбрать все');
+    define('LANG_DESELECT_ALL',            'Снять выбор');

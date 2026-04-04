@@ -10,6 +10,15 @@ function is_ajax_request() {
     return $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
 }
 
+function format_size($bytes) {
+    if ($bytes >= 1048576) {
+        return number_format($bytes / 1048576, 1) . ' MB';
+    } elseif ($bytes >= 1024) {
+        return number_format($bytes / 1024, 1) . ' KB';
+    }
+    return $bytes . ' B';
+}
+
 function render($template_name, $data = []) {
     extract($data);
     ob_start();

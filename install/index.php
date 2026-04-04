@@ -50,6 +50,7 @@ $steps = [
     ['id' => 'admin', 'title' => LANG_STEP_ADMIN],
     ['id' => 'config', 'title' => LANG_STEP_CONFIG],
     ['id' => 'cron', 'title' => LANG_STEP_CRON],
+    ['id' => 'cleanup', 'title' => LANG_STEP_CLEANUP],
     ['id' => 'finish', 'title' => LANG_STEP_FINISH]
 ];
 
