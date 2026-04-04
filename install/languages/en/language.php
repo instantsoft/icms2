@@ -229,3 +229,15 @@
     define('LANG_COMPONENT_REQUIRES',       'Component "%s" requires component "%s"');
     define('LANG_CUSTOM_COMPONENTS',       'Component selection');
     define('LANG_CUSTOM_COMPONENTS_HINT', 'Check components to install. Mandatory components are already checked and cannot be disabled.');
+
+    define('LANG_STEP_CLEANUP',            'Cleanup');
+    define('LANG_CLEANUP_INFO',            'Select files to delete. This will free up disk space.');
+    define('LANG_CLEANUP_NOTHING',         'Nothing to delete. All installed components are present.');
+    define('LANG_CLEANUP_TOTAL',           'Total to delete');
+    define('LANG_CLEANUP_SELECT',          'Select what to delete');
+    define('LANG_CLEANUP_TYPE_COMPONENT',  'component');
+    define('LANG_CLEANUP_REMOVED',         'Removed');
+    define('LANG_CLEANUP_ERRORS',          'Errors while removing');
+    define('LANG_CLEANUP_COMPLETE',        'Cleanup complete');
+    define('LANG_SELECT_ALL',              'Select all');
+    define('LANG_DESELECT_ALL',            'Deselect all');
