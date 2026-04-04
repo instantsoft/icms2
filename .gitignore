@@ -1,5 +1,11 @@
 /.gitignore
 /.idea
+/.opencode/
+/.cursorrules
+/.github/copilot-instructions.md
+*.md
+*.MD
+!/AGENTS.md
 /system/config/config.php
 /system/config/theme_default.yml
 /upload/u1/

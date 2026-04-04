@@ -45,6 +45,7 @@ $steps = [
     ['id' => 'php', 'title' => LANG_STEP_PHP_CHECK],
     ['id' => 'paths', 'title' => LANG_STEP_PATHS],
     ['id' => 'site', 'title' => LANG_STEP_SITE],
+    ['id' => 'components', 'title' => LANG_STEP_COMPONENTS],
     ['id' => 'database', 'title' => LANG_STEP_DATABASE],
     ['id' => 'admin', 'title' => LANG_STEP_ADMIN],
     ['id' => 'config', 'title' => LANG_STEP_CONFIG],
