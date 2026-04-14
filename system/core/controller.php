@@ -208,11 +208,11 @@ class cmsController {
      * @param string $key
      * @return mixed
      */
-    public function getOption($key) {
+    public function getOption($key, $default = null) {
         if (!$this->useOptions) {
             return null;
         }
-        return array_key_exists($key, $this->options) ? $this->options[$key] : null;
+        return array_key_exists($key, $this->options) ? $this->options[$key] : $default;
     }
 
     /**
