@@ -153,7 +153,8 @@ class widgetContentAuthor extends cmsWidget {
             $fields['user_items_link'] = [
                 'href'  => href_to_profile($profile, ['content', $ctype['name']]),
                 'icon'  => 'book-reader',
-                'text'  => $this->getOption('user_items_link_title') ?: sprintf(LANG_WD_CON_AUTHOR_READ, mb_strtolower($ctype['labels']['profile']))
+                'text'  => $this->getOption('user_items_link_title') ?: sprintf(LANG_WD_CON_AUTHOR_READ, mb_strtolower($ctype['labels']['profile'])),
+                'class' => $this->getOption('user_items_link_class')
             ];
         }
 
