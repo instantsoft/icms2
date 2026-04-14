@@ -343,18 +343,31 @@ class Spyc {
         if ($value === "\n") {
             return '\n';
         }
-        if (strpos($value, "\n") === false && strpos($value, "'") === false) {
-            return sprintf("'%s'", $value);
+    
+        if (strlen($value) < 3 && strpos($value, "\n") === false) {
+            if (strpos($value, "'") === false) {
+                return sprintf("'%s'", $value);
+            }
+            if (strpos($value, '"') === false) {
+                return sprintf('"%s"', $value);
+            }
         }
-        if (strpos($value, "\n") === false && strpos($value, '"') === false) {
-            return sprintf('"%s"', $value);
-        }
+    
         $exploded = explode("\n", $value);
+        while (isset($exploded[0]) && $exploded[0] === '') {
+            array_shift($exploded);
+        }
+        while (isset($exploded[count($exploded)-1]) && $exploded[count($exploded)-1] === '') {
+            array_pop($exploded);
+        }
+        if (count($exploded) === 1) {
+            return sprintf('"%s"', addslashes($exploded[0]));
+        }
         $newValue = '|';
         $indent += $this->_dumpIndent;
         $spaces = str_repeat(' ', $indent);
         foreach ($exploded as $line) {
-            $newValue .= "\n" . $spaces . ($line);
+            $newValue .= "\n" . $spaces . rtrim($line);
         }
         return $newValue;
     }
