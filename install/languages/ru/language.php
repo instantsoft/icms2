@@ -3,6 +3,7 @@
     define('LANG_PAGE_TITLE',               'Установка InstantCMS');
     define('LANG_INSTALLATION_WIZARD',      'Мастер установки');
     define('LANG_NEXT',                     'Далее &rarr;');
+    define('LANG_BACK',                     '&larr; Назад');
     define('LANG_ERROR',                    'Ошибка');
     define('LANG_FROM',                     'от');
     define('LANG_DEPRECATED',               'Устаревшее');
@@ -161,3 +162,82 @@
     define('LANG_RB_SUCCES_ARCH',           'Архивирование завершено. Файл находится по пути %s');
     define('LANG_RB_DONE',                  'Кастомизация успешно завершена.');
     define('LANG_RB_DONE_HINT',             'Можете приступать к установке InstantCMS.');
+
+// =============================================================================
+// Типы установки и компоненты
+// =============================================================================
+
+    define('LANG_INSTALL_TYPE',               'Тип установки');
+    define('LANG_INSTALL_MINIMAL',           'Минимальная');
+    define('LANG_INSTALL_MINIMAL_DESC',      'Только базовые функции. Подходит для разработки или если нужны только страницы.');
+    define('LANG_INSTALL_STANDARD',          'Стандартная');
+    define('LANG_INSTALL_STANDARD_DESC',      'Социальные функции, поиск, теги. Рекомендуется для большинства сайтов.');
+    define('LANG_INSTALL_FULL',              'Полная');
+    define('LANG_INSTALL_FULL_DESC',          'Все доступные компоненты системы.');
+    define('LANG_INSTALL_CUSTOM',             'Своя');
+    define('LANG_INSTALL_CUSTOM_DESC',        'Выберите компоненты самостоятельно.');
+    define('LANG_INSTALL_DEMO_CONTENT',      'Установить демо-контент');
+
+    define('LANG_CAT_SOCIAL',               'Социальные');
+    define('LANG_CAT_CONTENT',              'Контент');
+    define('LANG_CAT_MEDIA',                'Медиа');
+    define('LANG_CAT_TOOLS',                'Инструменты');
+    define('LANG_CAT_SECURITY',             'Безопасность');
+    define('LANG_CAT_MONETIZATION',          'Монетизация');
+    define('LANG_CAT_SEO',                  'SEO');
+    define('LANG_CAT_NOTIFICATIONS',         'Уведомления');
+
+    define('LANG_COMMENTS',                 'Комментарии');
+    define('LANG_COMMENTS_DESC',            'Система комментариев для записей контента');
+    define('LANG_RATING',                   'Рейтинг');
+    define('LANG_RATING_DESC',             'Система голосования за контент');
+    define('LANG_ACTIVITY',                'Лента активности');
+    define('LANG_ACTIVITY_DESC',           'Лента событий пользователя и друзей');
+    define('LANG_WALL',                     'Стена');
+    define('LANG_WALL_DESC',               'Стена в профилях пользователей');
+    define('LANG_GROUPS',                   'Группы');
+    define('LANG_GROUPS_DESC',             'Группы пользователей');
+    define('LANG_TAGS',                    'Теги');
+    define('LANG_TAGS_DESC',              'Теги для контента');
+    define('LANG_SEARCH',                   'Поиск');
+    define('LANG_SEARCH_DESC',            'Полнотекстовый поиск по сайту');
+    define('LANG_SITEMAP',                  'Карта сайта');
+    define('LANG_SITEMAP_DESC',           'Генерация XML-карты сайта');
+    define('LANG_RSS',                     'RSS');
+    define('LANG_RSS_DESC',               'RSS-ленты для контента');
+    define('LANG_PHOTOS',                  'Фотогалерея');
+    define('LANG_PHOTOS_DESC',            'Галерея изображений');
+    define('LANG_FORMS',                   'Конструктор форм');
+    define('LANG_FORMS_DESC',             'Создание собственных форм');
+    define('LANG_GEO',                    'Геолокация');
+    define('LANG_GEO_DESC',               'Определение местоположения пользователей');
+    define('LANG_RECAPTCHA',              'reCAPTCHA');
+    define('LANG_RECAPTCHA_DESC',         'Google reCAPTCHA защита от спама');
+    define('LANG_CSP',                     'CSP');
+    define('LANG_CSP_DESC',               'Content Security Policy защита');
+    define('LANG_BILLING',                'Биллинг');
+    define('LANG_BILLING_DESC',           'Платёжная система для сайта');
+    define('LANG_REDIRECT',               'Редиректы');
+    define('LANG_REDIRECT_DESC',          'Управление перенаправлениями URL');
+    define('LANG_SUBSCRIPTIONS',          'Подписки');
+    define('LANG_SUBSCRIPTIONS_DESC',    'Подписки на обновления контента');
+
+    define('LANG_STEP_COMPONENTS',         'Выбор компонентов');
+    define('LANG_STEP_COMPONENTS_HINT',     'Выберите тип установки или укажите компоненты вручную');
+    define('LANG_MANDATORY',               'обязательный');
+    define('LANG_REQUIRES',                 'Требует');
+    define('LANG_COMPONENT_REQUIRES',       'Компонент "%s" требует наличия компонента "%s"');
+    define('LANG_CUSTOM_COMPONENTS',       'Выбор компонентов');
+    define('LANG_CUSTOM_COMPONENTS_HINT', 'Отметьте компоненты для установки. Обязательные компоненты уже отмечены и не могут быть отключены.');
+
+    define('LANG_STEP_CLEANUP',            'Очистка');
+    define('LANG_CLEANUP_INFO',            'Выберите файлы для удаления. Это освободит место на диске.');
+    define('LANG_CLEANUP_NOTHING',         'Нечего удалять. Все установленные компоненты присутствуют.');
+    define('LANG_CLEANUP_TOTAL',           'Всего к удалению');
+    define('LANG_CLEANUP_SELECT',          'Выберите что удалить');
+    define('LANG_CLEANUP_TYPE_COMPONENT',  'компонент');
+    define('LANG_CLEANUP_REMOVED',         'Удалено');
+    define('LANG_CLEANUP_ERRORS',          'Ошибки при удалении');
+    define('LANG_CLEANUP_COMPLETE',        'Очистка завершена');
+    define('LANG_SELECT_ALL',              'Выбрать все');
+    define('LANG_DESELECT_ALL',            'Снять выбор');

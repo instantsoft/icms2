@@ -50,3 +50,4 @@
 <div class="buttons">
     <input type="button" name="next" id="btn-next" value="<?php echo LANG_NEXT; ?>" onclick="submitStep()" />
 </div>
+
