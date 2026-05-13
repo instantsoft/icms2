@@ -47,6 +47,18 @@ trait deleteItem {
      */
     protected $ids_key = 'selected';
 
+    /**
+     * Имя связанной с записью формы
+     * @var string
+     */
+    protected $form_name = '';
+
+    /**
+     * Параметры, передающиеся в форму
+     * @var array
+     */
+    protected $form_opts = [];
+
     public function run($id = null) {
 
         if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
@@ -69,6 +81,14 @@ trait deleteItem {
             return cmsCore::error404();
         }
 
+        if ($this->form_name) {
+
+            $form_opts = $this->form_opts;
+            array_unshift($form_opts, 'delete');
+
+            $form = $this->getForm($this->form_name, $form_opts);
+        }
+
         $success = true;
 
         foreach ($items as $item) {
@@ -82,6 +102,15 @@ trait deleteItem {
             }
 
             if ($success) {
+
+                if (isset($form)) {
+                    foreach ($form->getFormStructure($item) as $fieldset) {
+                        foreach ($fieldset['childs'] ?? [] as $field) {
+                            $field->delete($item[$field->getName()] ?? null);
+                        }
+                    }
+                }
+
                 $this->model->delete($this->table_name, $item['id']);
             }
         }

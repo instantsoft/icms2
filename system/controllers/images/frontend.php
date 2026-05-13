@@ -166,7 +166,7 @@ class images extends cmsFrontend {
         $file_context = [
             'target_controller' => $this->request->get('target_controller', ''),
             'target_subject'    => $this->request->get('target_subject', ''),
-            'target_id'         => $this->request->get('target_id', 0)
+            'target_id'         => $this->request->get('target_id', 0) ?: null
         ];
 
         if ($file_context['target_controller']) {
@@ -221,7 +221,7 @@ class images extends cmsFrontend {
         $internal_context = [
             'target_controller' => $this->request->get('target_controller', ''),
             'target_subject'    => $this->request->get('target_subject', ''),
-            'target_id'         => $this->request->get('target_id', 0)
+            'target_id'         => $this->request->get('target_id', 0) ?: null
         ];
 
         if ($internal_context['target_controller']) {

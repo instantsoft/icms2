@@ -181,12 +181,20 @@ trait formItem {
                         call_user_func_array($this->add_callback, [$id, $data]);
                     }
 
+                    $data['id'] = $id;
+
                 } else {
 
                     call_user_func_array([$this->model, $this->form_edit_method], [$this->table_name, $id, $data]);
 
                     if ($this->update_callback) {
                         call_user_func_array($this->update_callback, [$data]);
+                    }
+                }
+
+                foreach ($form->getStructure() as $fieldset) {
+                    foreach ($fieldset['childs'] ?? [] as $field) {
+                        $field->afterStore($data, $this->model, $do);
                     }
                 }
 

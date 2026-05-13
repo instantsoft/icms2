@@ -253,7 +253,7 @@ class fieldHtml extends cmsFormField {
             if ($paths) {
                 foreach ($paths as $path) {
 
-                    $model->filterEqual('path', $path)->filterIsNull('target_id');
+                    $model->filterEqual('path', $path)->filter('COALESCE(i.target_id, 0) = 0');
                     $model->updateFiltered('uploaded_files', ['target_id' => $item['id']], true);
                 }
             }

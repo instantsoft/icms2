@@ -10,6 +10,7 @@ class actionUsersMigrationsDelete extends cmsAction {
 
         $this->table_name  = '{users}_groups_migration';
         $this->success_url = $this->cms_template->href_to('migrations');
+        $this->form_name   = 'migration';
 
     }
 

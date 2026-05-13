@@ -63,6 +63,7 @@ function create_config($path, $file) {
         'language'                    => LANG,
         'metakeys'                    => $_SESSION['install']['site']['metakeys'],
         'metadesc'                    => $_SESSION['install']['site']['metadesc'],
+        'is_sitename_in_title'        => 1,
         'ct_autoload'                 => 'frontpage',
         'ct_default'                  => 'content',
         'frontpage'                   => 'none',

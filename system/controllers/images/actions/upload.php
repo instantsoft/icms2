@@ -77,7 +77,7 @@ class actionImagesUpload extends cmsAction {
         $file_context = [
             'target_controller' => $this->request->get('target_controller', ''),
             'target_subject'    => $this->request->get('target_subject', ''),
-            'target_id'         => $this->request->get('target_id', 0)
+            'target_id'         => $this->request->get('target_id', 0) ?: null
         ];
 
         // Создаём изображения по пресетам
