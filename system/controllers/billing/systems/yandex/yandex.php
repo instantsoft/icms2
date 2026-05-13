@@ -22,16 +22,10 @@ class systemYandex extends billingPaymentSystem {
 
     public function processPayment(cmsRequest $request, modelBilling $model) {
 
-        $op_id      = $request->get('label', '');
-        $op_tid     = $request->get('operation_id', '');
-        $op_cur     = $request->get('currency', '');
-        $op_time    = $request->get('datetime', '');
-        $op_sender  = $request->get('sender', '');
-        $op_type    = $request->get('notification_type', '');
-        $op_amount  = $request->get('amount', '');
-        $op_sum     = $request->get('withdraw_amount', 0.0);
-        $op_codepro = $request->get('codepro', '');
-        $op_sig     = $request->get('sha1_hash', '');
+        $op_id   = $request->get('label', '');
+        $op_type = $request->get('notification_type', '');
+        $op_sum  = $request->get('withdraw_amount', 0.0);
+        $op_sig  = $request->get('sign', '');
 
         if ($request->has('test_notification')) {
             return LANG_BILLING_ERR;
@@ -61,10 +55,19 @@ class systemYandex extends billingPaymentSystem {
             return $this->log(LANG_BILLING_ERR_SUMM . 'withdraw_amount: '.$op_sum);
         }
 
-        $sig = hash('sha1', implode('&', [
-            $op_type, $op_tid, $op_amount, $op_cur, $op_time, $op_sender, $op_codepro,
-            $this->options['secret_key'], $op_id
-        ]));
+        $dataSet = [];
+
+        foreach ($request->getAll() as $key => $val) {
+            $dataSet[$key] = is_empty_value($val) ? '' : $val;
+        }
+
+        unset($dataSet['sign']);
+
+        ksort($dataSet, SORT_STRING);
+
+        $data_set_str = http_build_query($dataSet, '', '&', PHP_QUERY_RFC3986);
+
+        $sig = hash_hmac('sha256', $data_set_str, $this->options['secret_key']);
 
         if ($sig !== $op_sig) {
             return $this->log(LANG_BILLING_ERR_SIG);

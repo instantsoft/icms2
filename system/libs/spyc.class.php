@@ -2,7 +2,7 @@
 
 /**
  * Spyc -- A Simple PHP YAML Class
- * @version 0.5.2
+ * @version 0.5.3
  * @author Vlad Andersen <vlad.andersen@gmail.com>
  * @author Chris Wanstrath <chris@ozmm.org>
  * @link https://github.com/mustangostang/spyc/
@@ -82,7 +82,7 @@ class Spyc {
      * @return array
      */
     public function load($input) {
-        return $this->__loadString($input);
+        return $this->_loadString($input);
     }
 
     /**
@@ -91,7 +91,7 @@ class Spyc {
      * @return array
      */
     public function loadFile($file) {
-        return $this->__load($file);
+        return $this->_load($file);
     }
 
     /**
@@ -111,7 +111,7 @@ class Spyc {
      */
     public static function YAMLLoad($input) {
         $Spyc = new Spyc;
-        return $Spyc->__load($input);
+        return $Spyc->_load($input);
     }
 
     /**
@@ -135,7 +135,7 @@ class Spyc {
      */
     public static function YAMLLoadString($input) {
         $Spyc = new Spyc;
-        return $Spyc->__loadString($input);
+        return $Spyc->_loadString($input);
     }
 
     /**
@@ -340,22 +340,59 @@ class Spyc {
      * @param $indent int The value of the indent
      */
     private function _doLiteralBlock($value, $indent) {
+
         if ($value === "\n") {
             return '\n';
         }
-        if (strpos($value, "\n") === false && strpos($value, "'") === false) {
-            return sprintf("'%s'", $value);
+
+        $has_new_line = strpos($value, "\n") !== false;
+
+        if (!$has_new_line) {
+
+            if (strpos($value, "'") === false) {
+                return "'" . $value . "'";
+            }
+
+            if (strpos($value, '"') === false) {
+                return '"' . $value . '"';
+            }
         }
-        if (strpos($value, "\n") === false && strpos($value, '"') === false) {
-            return sprintf('"%s"', $value);
-        }
+
         $exploded = explode("\n", $value);
-        $newValue = '|';
-        $indent += $this->_dumpIndent;
-        $spaces = str_repeat(' ', $indent);
-        foreach ($exploded as $line) {
-            $newValue .= "\n" . $spaces . ($line);
+
+        $first = $exploded[0] ?? null;
+
+        if ($first === '|' || $first === '|-' || $first === '>') {
+            $newValue = $first;
+            unset($exploded[0]);
+        } else {
+            $newValue = '|';
         }
+
+        $spaces = "\n" . str_repeat(' ', $indent + $this->_dumpIndent);
+
+        foreach ($exploded as $line) {
+
+            $line = rtrim($line, "\r");
+
+            $len = strlen($line);
+
+            if ($len > 1) {
+
+                $firstChar = $line[0];
+                $lastChar  = $line[$len - 1];
+
+                if (
+                    ($firstChar === '"' && $lastChar === '"') ||
+                    ($firstChar === "'" && $lastChar === "'")
+                ) {
+                    $line = substr($line, 1, -1);
+                }
+            }
+
+            $newValue .= $spaces . $line;
+        }
+
         return $newValue;
     }
 
@@ -385,12 +422,12 @@ class Spyc {
         return $value;
     }
 
-    private function __load($input) {
+    private function _load($input) {
         $Source = $this->loadFromSource($input);
         return $this->loadWithSource($Source);
     }
 
-    private function __loadString($input) {
+    private function _loadString($input) {
         $Source = $this->loadFromString($input);
         return $this->loadWithSource($Source);
     }

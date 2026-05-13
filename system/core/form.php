@@ -677,10 +677,14 @@ class cmsForm {
      * Добавляет поле в конец набора полей
      *
      * @param string $fieldset_id ID набора полей
-     * @param object $field Объект поля
+     * @param cmsFormField $field Объект поля
      * @return cmsForm
      */
     public function addField($fieldset_id, $field) {
+
+        if (!$this->isFieldsetExists($fieldset_id)) {
+            $this->addFieldset('', $fieldset_id);
+        }
 
         $this->structure[$fieldset_id]['childs'][$field->name] = $field;
 
@@ -691,10 +695,14 @@ class cmsForm {
      * Добавляет поле в начало набора полей
      *
      * @param string $fieldset_id ID набора полей
-     * @param object $field Объект поля
+     * @param cmsFormField $field Объект поля
      * @return cmsForm
      */
     public function addFieldToBeginning($fieldset_id, $field) {
+
+        if (!$this->isFieldsetExists($fieldset_id)) {
+            $this->addFieldset('', $fieldset_id);
+        }
 
         $this->structure[$fieldset_id]['childs'] = [$field->name => $field] + $this->structure[$fieldset_id]['childs'];
 
@@ -706,7 +714,7 @@ class cmsForm {
      *
      * @param string $after_id ID поля, после которого нужно добавить
      * @param string $fieldset_id ID набора полей
-     * @param object $field Объект поля
+     * @param cmsFormField $field Объект поля
      * @return cmsForm
      */
     public function addFieldAfter($after_id, $fieldset_id, $field) {

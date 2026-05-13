@@ -206,6 +206,7 @@ class cmsController {
      * Возвращает значение опции контроллера
      *
      * @param string $key
+     * @param mixed $default
      * @return mixed
      */
     public function getOption($key, $default = null) {
