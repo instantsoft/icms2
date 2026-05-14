@@ -80,7 +80,8 @@ if (!$is_frontpage){
 <?php $this->addToBlock('before_body', ob_get_clean(), true); ?>
 
 <?php if ($datasets && !$is_hide_items){
-    $this->renderAsset('ui/datasets-panel', [
+    $tpl_file = $this->getTemplateFileName('assets/ui/datasets-panel_' . $ctype['name'], true) ? 'ui/datasets-panel_' . $ctype['name'] : 'ui/datasets-panel';
+    $this->renderAsset($tpl_file, [
         'datasets'        => $datasets,
         'dataset_name'    => $dataset,
         'current_dataset' => $current_dataset,
