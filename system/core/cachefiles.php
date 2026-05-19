@@ -12,81 +12,104 @@ class cmsCacheFiles {
         $this->cache_path = $config->cache_path . 'data/';
     }
 
-    public function set($key, $value, $ttl) {
+    public function set(string $key, $value, $ttl) {
 
-        $data = [
-            'ttl'   => $ttl,
-            'time'  => time(),
-            'value' => serialize($value)
-        ];
+        [$path, $file] = $this->getPathAndFile($key);
 
-        list($path, $file_path) = $this->getPathAndFile($key);
-
-        @mkdir($path, 0777, true);
-        @chmod($path, 0777);
-        @chmod(pathinfo($path, PATHINFO_DIRNAME), 0777);
-
-        $file_path_tmp = $file_path . '.tmp';
-
-        $success = file_put_contents($file_path_tmp, '<?php return ' . var_export($data, true) . ';');
-
-        if ($success) {
-            rename($file_path_tmp, $file_path);
-        }
-
-        return $success;
-    }
-
-    public function has($key) {
-
-        list($path, $file) = $this->getPathAndFile($key);
-
-        return is_readable($file);
-    }
-
-    public function get($key) {
-
-        list($path, $file) = $this->getPathAndFile($key);
-
-        $data = include $file;
-        if (!$data) {
+        if (!is_dir($path) && !mkdir($path, 0777, true) && !is_dir($path)) {
             return false;
         }
 
-        if (!isset($data['value']) ||
-                !isset($data['time']) ||
-                !isset($data['ttl']) ||
-                time() > ($data['time'] + $data['ttl'])) {
+        $data = [
+            'e' => time() + (int) $ttl,
+            'v' => $value
+        ];
 
+        $json = json_encode(
+            $data,
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+        );
+
+        if ($json === false) {
+            return false;
+        }
+
+        $tmp = $file . '.tmp';
+
+        $result = file_put_contents($tmp, $json, LOCK_EX);
+
+        if ($result === false) {
+            @unlink($tmp);
+            return false;
+        }
+
+        if (!rename($tmp, $file)) {
+            @unlink($tmp);
+            return false;
+        }
+
+        return true;
+    }
+
+    public function has(string $key) {
+
+        [$path, $file] = $this->getPathAndFile($key);
+
+        return is_file($file);
+    }
+
+    public function get(string $key) {
+
+        [$path, $file] = $this->getPathAndFile($key);
+
+        if (!is_file($file)) {
+            return false;
+        }
+
+        $json = file_get_contents($file);
+
+        if ($json === false) {
+            return false;
+        }
+
+        $data = json_decode($json, true);
+
+        if (!is_array($data) || !isset($data['e']) || time() >= $data['e']) {
             $this->clean($key);
             return false;
         }
 
-        return unserialize($data['value']);
+        return array_key_exists('v', $data) ? $data['v'] : false;
     }
 
     public function clean($key = false) {
 
         if ($key) {
 
-            $path = $this->cache_path . str_replace('.', '/', $key);
+            [$path, $file] = $this->getPathAndFile($key);
 
-            if (is_file($path . '.dat')) {
-                @unlink($path . '.dat');
+            if (is_file($file)) {
+                @unlink($file);
             }
 
-            return files_remove_directory($path);
-        } else {
-            return files_clear_directory($this->cache_path);
+            if (is_dir($path)) {
+                @rmdir($path);
+            }
+
+            return true;
         }
 
+        return files_clear_directory($this->cache_path);
     }
 
     public function getPathAndFile($key) {
 
         $path = $this->cache_path . str_replace('.', '/', $key);
 
-        return [dirname($path), $path . '.dat'];
+        return [
+            dirname($path),
+            $path . '.json'
+        ];
     }
 
     public function start() {

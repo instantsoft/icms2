@@ -44,6 +44,10 @@ icms.events.on('datagrid_mounted', function(app) {
 
 icms.events.on('datagrid-inline-save-row', function(data) {
 
+    if (data.params.name !== 'title') {
+        return;
+    }
+
     let tree = $("#datatree").dynatree("getTree");
 
     let activeNode = tree.getActiveNode();

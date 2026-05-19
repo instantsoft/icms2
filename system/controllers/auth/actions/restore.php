@@ -43,15 +43,8 @@ class actionAuthRestore extends cmsAction {
 
             if (!$errors) {
 
-                $user = $this->model_users->getUserByEmail($data['email']);
-
                 // проверки на существование юзера находятся в классе формы
-                if ($user['pass_token']) {
-
-                    if ((strtotime($user['date_token']) + (24 * 3600)) < time()) {
-                        $this->model_users->clearUserPassToken($user['id']);
-                    }
-                }
+                $user = $this->model_users->getUserByEmail($data['email']);
 
                 $pass_token = hash('sha256', string_random(32, $user['email']));
 

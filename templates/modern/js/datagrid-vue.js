@@ -78,6 +78,11 @@ icms.datagrid = (function () {
                     }
                 }
             },
+            provide() {
+                return {
+                    saveEditMode: this.saveEditMode
+                };
+            },
             computed: {
                 selectActionsItems: function() {
                     let items = {};
@@ -631,6 +636,7 @@ icms.datagrid = (function () {
                     is_busy: false
                 };
             },
+            inject: ['saveEditMode'],
             mounted() {
                 this.current_value = this.col.editable.value;
             },
@@ -685,7 +691,7 @@ icms.datagrid = (function () {
             template: `
             <a class="ml-2 d-inline-block datagrid-editable__link" href="#" v-html="col.editable.edit_icon" :title="col.editable.lang_edit" @click.prevent.stop="showFrom"></a>
             <div class="datagrid-column__editmode-form" v-if="col.editable.edit_mode">
-                <component :is="col.editable.component" v-model="current_value" :params="col.editable"></component>
+                <component :is="col.editable.component" v-model="current_value" :params="col.editable" @keyup.enter="saveEditMode"></component>
             </div>
             <div class="grid_field_edit edit_by_click d-block" v-if="show_form" v-clickaway="hideFrom">
                 <component :is="col.editable.component" v-focus @keyup.esc="hideFrom" @keyup.enter="save" v-model="current_value" :params="col.editable"></component>

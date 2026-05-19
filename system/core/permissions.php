@@ -110,30 +110,32 @@ class cmsPermissions {
 
     /**
      * Добавляет правило доступа в каталог правил
+     *
      * @param string $controller Название контроллера
      * @param array $rule Массив данных правила
-     * @return integer|false
+     * @return int|false
      */
     public static function addRule(string $controller, array $rule) {
 
-        $core = cmsCore::getInstance();
+        $model = new cmsModel();
 
-        if ($core->db->getRowsCount('perms_rules', "controller = '{$controller}' AND name = '{$rule['name']}'", 1)) {
+        if (empty($rule['name']) ||
+                $model->filterEqual('controller', $controller)->
+                    filterEqual('name', $rule['name'])->
+                    getFieldFiltered('perms_rules', 'id')) {
             return false;
         }
 
-        if (!in_array($rule['type'], ['flag', 'list', 'number'])) {
+        if (empty($rule['type']) || !in_array($rule['type'], ['flag', 'list', 'number'])) {
             $rule['type'] = 'flag';
         }
 
-        $sql = "INSERT INTO {#}perms_rules (controller, name, type, options)
-                VALUES ('{$controller}', '{$rule['name']}', '{$rule['type']}', '{$rule['options']}')";
-
-        $core->db->query($sql, false, true);
-
-        $rule_id = ($core->db->error()) ? false : $core->db->lastId('perms_rules');
-
-        return $rule_id;
+        return $model->insert('perms_rules', [
+            'controller' => $controller,
+            'name'       => $rule['name'],
+            'type'       => $rule['type'],
+            'options'    => $rule['options'] ?? null
+        ]);
     }
 
     /**

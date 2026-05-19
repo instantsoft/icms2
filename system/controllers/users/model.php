@@ -320,17 +320,15 @@ class modelUsers extends cmsModel {
         return $this->updateUserPassToken($id, null);
     }
 
-    public function updateUserPassToken($id, $pass_token = null){
+    public function updateUserPassToken($id, $pass_token = null) {
 
-        cmsCache::getInstance()->clean('users.user.'.$id);
+        cmsCache::getInstance()->clean('users.user.' . $id);
 
-        return $this->
-                    filterEqual('id', $id)->
-                    updateFiltered('{users}', array(
-                        'pass_token' => $pass_token,
-                        'date_token' => ''
-                    ));
-
+        return $this->filterEqual('id', $id)->
+                updateFiltered('{users}', [
+                    'pass_token' => $pass_token,
+                    'date_token' => ''
+        ]);
     }
 
 //============================================================================//
