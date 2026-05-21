@@ -221,6 +221,7 @@
     define('LANG_PARSER_IMAGES',             'Multiple images');
     define('LANG_PARSER_IMAGE_DEFAULT',      'Default image');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Allow import from link');
+    define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK_HINT', 'Can reveal the real IP address of the server');
     define('LANG_PARSER_IMAGE_ALLOW_IMAGE_CROPPER', 'Enable image editor before upload');
     define('LANG_PARSER_IMAGE_IMAGE_CROPPER_ROUNDED', 'Round cut');
     define('LANG_PARSER_IMAGE_IMAGE_CROPPER_RATIO', 'Aspect Ratio');

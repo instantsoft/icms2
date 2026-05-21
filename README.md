@@ -8,7 +8,7 @@
 
 [![LICENSE](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](./LICENSE)
 [![GitHub release](https://img.shields.io/github/release/instantsoft/icms2.svg)](https://github.com/instantsoft/icms2/releases)
-![PHP version](https://img.shields.io/badge/PHP->=v7.2-red.svg?php=7.2)
+![PHP version](https://img.shields.io/badge/PHP->=v7.3-red.svg?php=7.3)
 [![Issues](https://img.shields.io/github/issues-closed-raw/instantsoft/icms2.svg?maxAge=2592000)](https://github.com/instantsoft/icms2/issues)
 
 ## Key features
@@ -30,7 +30,7 @@
 Try it out for yourself in our [online demo](https://demo.instantcms.io/)
 
 ## Requirements ##
-* PHP 7.2+
+* PHP 7.3+
 * GD, iconv, mbstring, simplexml, json and filter PHP extension
 * Mysql 5.0 or above, MariaDB and its support in PHP
 * Apache + mod_rewrite (or FallbackResource) or Nginx + converted .htaccess rules

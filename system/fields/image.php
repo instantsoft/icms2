@@ -53,7 +53,8 @@ class fieldImage extends cmsFormField {
                 'rules' => [['required']]
             ]),
             new fieldCheckbox('allow_import_link', [
-                'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK
+                'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK,
+                'hint' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK_HINT
             ]),
             new fieldCheckbox('allow_image_cropper', [
                 'title' => LANG_PARSER_IMAGE_ALLOW_IMAGE_CROPPER

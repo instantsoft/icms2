@@ -183,15 +183,15 @@ function files_normalize_path($path) {
     $parts = explode('/', $path);
     $safe  = [];
 
-    foreach ($parts as $idx => $part) {
-        if (empty($part) || ('.' == $part)) {
+    foreach ($parts as $part) {
+        if (empty($part) || $part === '.') {
             continue;
-        } elseif ('..' == $part) {
+        }
+        if ($part === '..') {
             array_pop($safe);
             continue;
-        } else {
-            $safe[] = $part;
         }
+        $safe[] = $part;
     }
 
     return implode('/', $safe);
@@ -331,22 +331,16 @@ function files_get_upload_dir($user_id = 0) {
 
 /**
  * Получает данные по заданному url
+ * Не используйте эту функцию с URL, полученных от пользователя,
+ * В таких случаях используйте cmsUploadremote()
+ *
  * @param string $url URL, откуда нужно получить данные
- * @param integer $timeout Таймаут соединения
- * @param boolean $json_decode Преобразовывать JSON
+ * @param int $timeout Таймаут соединения
+ * @param bool $json_decode Преобразовывать JSON
  * @param array $params Дополнительные параметры
- * @return string
+ * @return ?string
  */
 function file_get_contents_from_url($url, $timeout = 5, $json_decode = false, $params = []) {
-
-    if (!function_exists('curl_init')) {
-        return null;
-    }
-
-    // По IP адресу не разрешаем
-    if (preg_match('#^(?:(?:https?):\/\/)([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}).*#ui', $url)) {
-        return null;
-    }
 
     $curl = curl_init();
 
@@ -354,7 +348,7 @@ function file_get_contents_from_url($url, $timeout = 5, $json_decode = false, $p
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
     }
-    $headers = ['User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 OPR/68.0.3618.173'];
+    $headers = ['User-Agent: InstantCMS/2.0'];
     if (!empty($params['cookie'])) {
 
         $cookie = [];

@@ -450,106 +450,26 @@ class cmsUploader {
      */
     public function uploadFromLink(string $post_filename, $allowed_size = 0, $destination = false) {
 
-        $link = $file_name = trim($_POST[$post_filename]);
+        $url = trim((string)($_POST[$post_filename] ?? ''));
 
-        $url_data = parse_url($link);
-
-        // Валидный URL с PATH
-        if (
-            filter_var($link, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED) !== $link ||
-            empty($url_data['host'])
-            ) {
-
+        if (!$url) {
             return [
                 'success' => false,
-                'error'   => 'Not allowed',
+                'error'   => 'Empty Url',
                 'name'    => '',
                 'path'    => ''
             ];
         }
 
-        // Разрешённые хосты
-        if ($this->allowed_remote_hosts) {
-            if (!in_array($url_data['host'], $this->allowed_remote_hosts, true)) {
-                return [
-                    'success' => false,
-                    'error'   => 'Error Remote Host',
-                    'name'    => '',
-                    'path'    => ''
-                ];
-            }
+        $file = new cmsUploadremote($url, $allowed_size, $this->allowed_remote_hosts);
+
+        $result = $file->download();
+
+        if (!$result['success']) {
+            return $result;
         }
 
-        // Узнаём ipv4 адрес хоста, gethostbyname умеет только ipv4
-        $host_ip = gethostbyname($url_data['host']);
-        // Не зарезольвили
-        if ($host_ip === $url_data['host']) {
-            return [
-                'success' => false,
-                'error'   => 'Not allowed',
-                'name'    => '',
-                'path'    => ''
-            ];
-        }
-
-        // Проверяем вхождение в зарезервированные сети
-        if(filter_var(
-            $host_ip,
-            FILTER_VALIDATE_IP,
-            FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE |  FILTER_FLAG_NO_RES_RANGE
-        ) !== $host_ip){
-            return [
-                'success' => false,
-                'error'   => 'Not allowed',
-                'name'    => '',
-                'path'    => ''
-            ];
-        }
-
-        // проверяем редирект и имя файла
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS | CURLPROTO_HTTP);
-        curl_setopt($curl, CURLOPT_URL, $link);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HEADER, true);
-        curl_setopt($curl, CURLOPT_NOBODY, true);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
-        $headers = curl_exec($curl);
-
-        $matches = [];
-        if (preg_match("/(?:Location:|URI:)([^\n]+)*/is", $headers, $matches)) {
-
-            $url = trim($matches[1]);
-
-            if (strpos($url, 'http') !== 0) {
-                $link = $url_data['scheme'] . '://' . $url_data['host'] . $url;
-            } else {
-                $link = $url;
-            }
-
-            $_POST[$post_filename] = $link;
-
-            return $this->uploadFromLink($post_filename, $allowed_size, $destination);
-        }
-
-        if (preg_match('#filename="([^"]+)#uis', $headers, $matches)) {
-            $file_name = trim($matches[1]);
-        }
-
-        $dest_name = files_sanitize_name($file_name);
-
-        $file_bin = file_get_contents_from_url($link);
-
-        if (!$file_bin) {
-            return [
-                'success' => false,
-                'error'   => LANG_UPLOAD_ERR_NO_FILE,
-                'name'    => $dest_name,
-                'path'    => ''
-            ];
-        }
-
-        return $this->saveFileFromString($file_bin, $allowed_size, $destination, $dest_name);
+        return $this->saveFileFromString($result['file_bin'], $allowed_size, $destination, $result['name']);
     }
 
     /**

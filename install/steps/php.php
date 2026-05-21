@@ -15,7 +15,7 @@ function step($is_submit) {
 
 function check_requirements() {
 
-    $min_php_version  = '7.2.0';
+    $min_php_version  = '7.3.0';
     $extensions       = ['date', 'gd', 'json', 'mbstring', 'mysqli', 'session', 'filter', 'fileinfo'];
     $extensions_extra = ['ftp', 'memcache', 'memcached', 'redis', 'zip', 'curl'];
 
