@@ -639,6 +639,7 @@
     define('LANG_CP_INSTALL_BY_LINK',           'Install from URL');
     define('LANG_CP_OFICIAL_ADDONS',            'Add-ons catalog');
     define('LANG_CP_INSTALL_PACKAGE',           'Install Extension Package');
+    define('LANG_CP_INSTALL_PACKAGE_OPT',       'Extension Package Settings');
     define('LANG_CP_DO_INSTALL',                'Install');
     define('LANG_CP_DO_UPDATE',                 'Update');
     define('LANG_CP_LAST_UPDATE',               'Last update');
@@ -671,10 +672,8 @@
     define('LANG_CP_INSTALL_ERR_FIX',           'Solution');
     define('LANG_CP_INSTALL_ERR_WA',            'Workaround');
     define('LANG_CP_INSTALL_NOT_WRITABLE',      'Folder <b>%s</b> is not writable');
-    define('LANG_CP_INSTALL_NOT_WRITABLE_CUSTOM', 'Click "Continue" if you unzipped the package manually into a directory <b>%s</b>');
     define('LANG_CP_INSTALL_NOT_WRITABLE_HINT', 'Automatic upload is impossible');
     define('LANG_CP_INSTALL_NOT_WRITABLE_FIX',  'Make this folder writable and reload this page');
-    define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Unpack Package and upload its contents to the <b>%s</b> folder');
     define('LANG_CP_INSTALL_NOT_ZIP',           'Server does not support automatic ZIP-archive extraction');
     define('LANG_CP_INSTALL_NOT_ZIP_HINT',      'Automatic extraction is impossible');
     define('LANG_CP_INSTALL_NOT_ZIP_FIX',       'Request your hoster to install the <b>ZipArchive</b> class for PHP on your server');
@@ -787,8 +786,9 @@
     define('LANG_CP_UPDATE_AVAILABLE',              '%s is available for update');
     define('LANG_CP_UPDATE_NOT_AVAILABLE',          'No updates. You are using the latest version %s of %s.');
     define('LANG_CP_UPDATE_CHECK_FAIL',             'Unable to check for updates');
+    define('LANG_CP_UPDATE_RELEASE_DESC',           'Before installation, please read the <a href="https://instantcms.ru/novosti/release%s.html" target="_blank">release notes/a> and back up your database and files.');
     define('LANG_CP_UPDATE_MANUAL_1',               'Automatic download failed because CURL is not available on the server.');
-    define('LANG_CP_UPDATE_MANUAL_2',               'Download the update archive manually and <a href="'.href_to('admin', 'install').'">Install</a> it');
+    define('LANG_CP_UPDATE_MANUAL_2',               'You can download the update package manually and install it via <a href="'.href_to('admin', 'install').'">the Add-ons installer</a>.');
     define('LANG_HELP_URL_CONTENT',                 'https://docs.instantcms.ru/en/manual/content');
     define('LANG_HELP_URL_CONTENT_CATS',            'https://docs.instantcms.ru/en/manual/content/cats');
     define('LANG_HELP_URL_CTYPES',                  'https://docs.instantcms.ru/en/manual/ctypes');
@@ -851,6 +851,7 @@
     define('LANG_ZIP_ERROR_11', 'Unable to open the file');
     define('LANG_ZIP_ERROR_5', 'Read error');
     define('LANG_ZIP_ERROR_4', 'Seek error');
+    define('LANG_ZIP_ERROR_TOO_MANY', 'Too many files in archive');
     define('LANG_INSTALL_NOTICE_SYSTEM_FILE', 'Attention! Package replaces some CMS system files. It is not recommended to continue the installation package if you are unsure of the developer.');
     define('LANG_ADMIN_NOTICES', 'Notifications');
     define('LANG_ADMIN_ACCESS_DENIED_BY_IP', 'Access from your ip address is restricted');

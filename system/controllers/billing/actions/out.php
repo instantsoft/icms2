@@ -107,8 +107,8 @@ class actionBillingOut extends cmsAction {
                 'summ'      => $summ,
                 'system'    => $system_title,
                 'purse'     => $purse,
-                'code'      => string_random(32, $this->cms_user->email),
-                'done_code' => string_random(32, $this->cms_user->email . $this->options['out_email'])
+                'code'      => string_random(),
+                'done_code' => string_random()
             ];
 
             $out['id'] = $this->model->addOut($out);

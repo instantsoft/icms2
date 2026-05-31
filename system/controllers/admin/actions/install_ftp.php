@@ -4,6 +4,8 @@
  */
 class actionAdminInstallFtp extends cmsAction {
 
+    use \icms\controllers\admin\traits\packageInstallerTrait;
+
     public function run() {
 
         if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
@@ -13,10 +15,25 @@ class actionAdminInstallFtp extends cmsAction {
             return $this->redirectToAction('install');
         }
 
-        $installer = new cmsInstaller($this->getInstallPackagesPath('root'), $this->controller);
+        $package_data = $this->getPackageFileData();
+        if (!$package_data) {
+
+            cmsUser::addSessionMessage(LANG_CP_INSTALL_ERROR, 'error');
+
+            return $this->redirectToAction('install');
+        }
+
+        $source_install_package_path = $this->extractPackage($package_data['path']);
+        if (!is_dir($source_install_package_path)) {
+
+            cmsUser::addSessionMessage(LANG_CP_INSTALL_ZIP_ERROR . (': ' . $source_install_package_path), 'error');
+
+            return $this->redirectToAction('install');
+        }
+
+        $installer = new cmsInstaller($source_install_package_path, $this->controller);
 
         $manifest = $installer->getManifest();
-
         if (!$manifest) {
             return $this->redirectToAction('install');
         }
@@ -276,7 +293,7 @@ class actionAdminInstallFtp extends cmsAction {
             $start_path = $this->cms_config->root_path;
         }
 
-        clearstatcache($start_path);
+        clearstatcache(true, $start_path);
 
         foreach ($package_contents_list as $file => $files) {
 
@@ -320,6 +337,10 @@ class actionAdminInstallFtp extends cmsAction {
 
         // Проверяем возможность записи в родительскую директорию
         $parent_dir = dirname($path);
+
+        if ($parent_dir === $path) {
+            return false;
+        }
 
         return is_writable($parent_dir) || $this->isCreateOrOverwriteFile($parent_dir);
     }

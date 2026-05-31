@@ -1,7 +1,7 @@
 <?php
     $this->setPageTitle(LANG_CP_INSTALL_PACKAGE.' «'.$manifest['info']['title'].'»');
     $this->addBreadcrumb(LANG_CP_INSTALL_PACKAGE, $this->href_to('install'));
-    $this->addBreadcrumb($manifest['info']['title']);
+    $this->addBreadcrumb(LANG_CP_FTP_ACCOUNT);
 
     $this->addTplCSSName('datatree');
 
@@ -19,6 +19,17 @@
     }
 
 ?>
+<h1>
+    <?php html($manifest['info']['title']); ?>
+    <sup>
+        <small>
+        <?php html($manifest['version_str']); ?>
+        <?php echo LANG_FROM; ?>
+        <?php echo html_date($manifest['version']['date']); ?>
+        </small>
+    </sup>
+</h1>
+
 <div class="alert alert-info" role="alert" id="cp_package_ftp_notices">
     <?php echo LANG_CP_INSTALL_FTP_PERM; ?><br>
     <?php echo LANG_CP_INSTALL_FTP_NOTICE; ?><br>

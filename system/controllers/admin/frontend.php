@@ -624,14 +624,6 @@ class admin extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function getInstallPackagesPath($type = 'root') {
-        return [
-            'root'     => $this->cms_config->upload_path . 'installer',
-            'rel_root' => $this->cms_config->upload_root . 'installer',
-            'url'      => $this->cms_config->upload_host . '/installer'
-        ][$type];
-    }
-
     /**
      * Возвращает массив хуков контроллеров
      * Читаются файлы директории hooks контроллера

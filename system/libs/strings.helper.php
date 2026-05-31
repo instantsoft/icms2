@@ -181,19 +181,21 @@ function string_matches_mask_list(array $masks, string $string) {
 }
 
 /**
- * Генерирует случайную последовательность символов заданной длины
+ * Генерирует криптографически стойкую случайную строку
  *
- * @param integer $length Длина последовательности
- * @param string $seed Соль
+ * @param int $length  Длина строки
+ * @param string $seed Устаревший параметр, игнорируется
  * @return string
  */
-function string_random($length = 32, $seed = '') {
+function string_random(int $length = 32, string $seed = '') {
 
-    $salt = bin2hex(random_bytes(32));
+    $length = max(1, $length);
 
-    $string = md5($salt . $seed . random_bytes(16));
-
-    return ($length < 32) ? substr($string, 0, $length) : $string;
+    return substr(
+        bin2hex(random_bytes((int) ceil($length / 2))),
+        0,
+        $length
+    );
 }
 
 /**

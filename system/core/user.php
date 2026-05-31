@@ -329,7 +329,7 @@ class cmsUser {
 
         if ($remember) {
 
-            $auth_token = hash('sha512', string_random(32, $user['email']));
+            $auth_token = hash('sha512', string_random());
 
             self::setCookie('auth', $auth_token, self::AUTH_TOKEN_EXPIRATION_INT);
 

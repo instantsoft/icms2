@@ -5,6 +5,11 @@
 class cmsInstaller {
 
     /**
+     * Имя директории внутри пакета с файлами дополнения
+     */
+    const PACKAGE_DIR_NAME = 'package';
+
+    /**
      * Полный путь к директории с распакованным пакетом
      *
      * @var string
@@ -82,6 +87,10 @@ class cmsInstaller {
         $this->loadManifestDepends();
     }
 
+    public function __destruct() {
+        $this->clear();
+    }
+
     /**
      * Включаем пространство имён
      * В файле install.php пакета
@@ -105,12 +114,12 @@ class cmsInstaller {
     }
 
     /**
-     * Очищает директорию с распакованным пакетом
+     * Удаляет директорию с распакованным пакетом
      *
      * @return bool
      */
     public function clear() {
-        return files_clear_directory($this->package_path);
+        return files_remove_directory($this->package_path);
     }
 
     /**
@@ -119,7 +128,7 @@ class cmsInstaller {
      * @return string
      */
     public function getPackageContentsDir() {
-        return $this->package_path . '/package';
+        return $this->package_path . DIRECTORY_SEPARATOR . self::PACKAGE_DIR_NAME;
     }
 
     /**
@@ -147,9 +156,10 @@ class cmsInstaller {
      * Выполняет установку
      * Импортирует SQL и вызывает функцию установки из пакета
      *
+     * @param array $install_options
      * @return null|string
      */
-    public function install() {
+    public function install(array $install_options = []) {
 
         $this->loadInstalledCounts();
 
@@ -158,7 +168,7 @@ class cmsInstaller {
         $is_imported = $this->importPackageDump();
 
         if ($is_imported) {
-            $is_installed = $this->runPackageInstaller();
+            $is_installed = $this->runPackageInstaller($install_options);
         } else {
             $is_installed = false;
         }
@@ -173,9 +183,34 @@ class cmsInstaller {
 
         // если в файле install.php есть функция after_install_package, вызываем ее
         // этот файл, если он есть, уже должен был загружен ранее
-        $this->callInstallFunc('after_install_package');
+        $this->callInstallFunc('after_install_package', [$install_options]);
 
         return $redirect_action;
+    }
+
+    /**
+     * Возвращает опции установщика пакета
+     * Которые передаются в install.php
+     *
+     * @return ?cmsForm
+     */
+    public function getPackageOptionsForm() {
+
+        // Проверим наличие файла install.php, без него опции не имеют смысла
+        if (!file_exists($this->package_path . DIRECTORY_SEPARATOR . 'install.php')) {
+            return null;
+        }
+
+        $form_file = $this->package_path . DIRECTORY_SEPARATOR . 'options.form.php';
+
+        $form_name = 'install_package_options';
+
+        $form = cmsForm::getForm($form_file, $form_name, false, $this->admin);
+        if (!$form || is_string($form)) {
+            return null;
+        }
+
+        return $form;
     }
 
     /**
@@ -194,18 +229,36 @@ class cmsInstaller {
             return false;
         }
 
-        $root = cmsConfig::get('root_path');
+        $root_real = realpath(cmsConfig::get('root_path'));
+        if ($root_real === false) {
+            return false;
+        }
+
+        $root_real = rtrim($root_real, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
         $files = file($deleted_files_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
 
         foreach ($files as $path) {
+
             if (strpos($path, '#') === 0) {
                 continue;
             }
-            if (file_exists($root . $path)) {
-                if (!@unlink($root . $path)) {
-                    $this->undeleted_files[] = $path;
-                }
+
+            $full = realpath($root_real . ltrim($path, '/\\'));
+            if ($full === false) {
+                continue;
+            }
+
+            if (strpos($full, $root_real) !== 0) {
+                continue;
+            }
+
+            if (!is_file($full)) {
+                continue;
+            }
+
+            if (!@unlink($full)) {
+                $this->undeleted_files[] = $path;
             }
         }
 
@@ -522,18 +575,17 @@ class cmsInstaller {
     /**
      * Вызывает функцию install_package дополнения, если есть файл install.php
      *
+     * @param array $install_options
      * @return bool
      */
-    private function runPackageInstaller() {
+    private function runPackageInstaller(array $install_options) {
 
-        $file = $this->package_path . '/' . 'install.php';
+        $file = $this->package_path . DIRECTORY_SEPARATOR . 'install.php';
 
         // нет файла, считаем, что так задумано и ошибку не отдаем
         if (!file_exists($file)) {
             return true;
         }
-
-        @chmod($file, 0666);
 
         if (!is_readable($file)) {
 
@@ -548,7 +600,7 @@ class cmsInstaller {
 
         include_once $file;
 
-        return $this->callInstallFunc('install_package');
+        return $this->callInstallFunc('install_package', [$install_options]);
     }
 
     /**
@@ -589,9 +641,10 @@ class cmsInstaller {
      * Запускает функцию внутри install.php пакета
      *
      * @param string $name Имя функции
+     * @param array $args Массив параметров функции
      * @return bool
      */
-    private function callInstallFunc(string $name) {
+    private function callInstallFunc(string $name, array $args = []) {
 
         $func = $this->installer_namespace.'\\'.$name;
 
@@ -599,7 +652,7 @@ class cmsInstaller {
             return false;
         }
 
-        $result = call_user_func($func);
+        $result = call_user_func_array($func, $args);
 
         if (is_string($result)) {
 
@@ -618,7 +671,7 @@ class cmsInstaller {
      */
     private function importPackageDump() {
 
-        $file = $this->package_path . '/' . 'install.sql';
+        $file = $this->package_path . DIRECTORY_SEPARATOR . 'install.sql';
 
         if (!file_exists($file)) {
             return true;
@@ -658,21 +711,32 @@ class cmsInstaller {
 
         $manifest = parse_ini_file($ini_file, true);
 
+        $version = $manifest['version'] ?? [];
+
+        $manifest['version_str'] =
+            ($version['major'] ?? 0) . '.' .
+            ($version['minor'] ?? 0) . '.' .
+            ($version['build'] ?? 0);
+
         $manifest['contents'] = [];
         $manifest['package']  = [];
         $manifest['package_controllers'] = [];
         $manifest['info']['addon_id'] = $manifest['info']['addon_id'] ?? null;
-        $manifest['version_str'] = $manifest['version']['major'] . '.' . $manifest['version']['minor'] . '.' . $manifest['version']['build'];
 
-        if (is_dir($this->package_path . '/' . 'package')) {
+        if (is_dir($this->getPackageContentsDir())) {
 
             $manifest['contents'] = $this->getPackageContentsList();
 
             $this->checkSystemFiles($manifest);
         }
 
+        // Картинка виджета
         if (isset($manifest['info']['image_hint'])) {
-            $manifest['info']['image_hint'] = $this->package_path . '/' . $manifest['info']['image_hint'];
+            $manifest['info']['image_hint'] = $this->getImageParams($manifest['info']['image_hint']);
+        }
+        // Картинка пакета установки
+        if (!empty($manifest['info']['image'])) {
+            $manifest['info']['image_data'] = $this->getImageParams($manifest['info']['image'], false);
         }
 
         if (isset($manifest['install']) || isset($manifest['update'])) {
@@ -704,15 +768,66 @@ class cmsInstaller {
 
         } else {
 
-            $dir = $this->package_path . '/package/system/controllers';
+            $dir = $this->getPackageContentsDir() . '/system/controllers';
 
             if (is_dir($dir)) {
-
                 $manifest['package_controllers'] = files_get_dirs_list($dir, true);
             }
         }
 
         return $manifest;
+    }
+
+    /**
+     * Проверяет изображение и возвращает путь к нему или строку data:
+     *
+     * @param string $image_file_name Имя файла
+     * @param bool $return_path       Возвращать полный путь или строку data:
+     * @return null|string
+     */
+    private function getImageParams(string $image_file_name, bool $return_path = true) {
+
+        $image_file_name = basename($image_file_name);
+
+        if (!preg_match('/^[a-z0-9._-]+$/i', $image_file_name)) {
+            return null;
+        }
+
+        $image_path = $this->package_path . DIRECTORY_SEPARATOR . $image_file_name;
+
+        if (!is_file($image_path)) {
+            return null;
+        }
+
+        $file_size = filesize($image_path);
+        if (!$file_size || $file_size > 1048576) { // 1мб
+            return null;
+        }
+
+        $info = getimagesize($image_path);
+
+        if (!$info || $info[0] > 400 || $info[1] > 400) {
+            return null;
+        }
+
+        $allowed = [
+            'image/png',
+            'image/jpeg',
+            'image/gif',
+            'image/webp'
+        ];
+
+        if (!in_array($info['mime'], $allowed, true)) {
+            return null;
+        }
+
+        if ($return_path) {
+            return $image_path;
+        }
+
+        return 'data:' . $info['mime']
+            . ';base64,'
+            . base64_encode(file_get_contents($image_path));
     }
 
     /**
@@ -843,7 +958,7 @@ class cmsInstaller {
      */
     public function getPackageContentsList() {
 
-        $path = $this->package_path . '/' . 'package';
+        $path = $this->getPackageContentsDir();
 
         if (!is_dir($path)) {
             return [];

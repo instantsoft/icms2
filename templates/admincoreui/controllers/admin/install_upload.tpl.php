@@ -38,7 +38,7 @@
         <?php } ?>
         </ul>
     </div>
-<?php } ?>
+<?php } else { ?>
 <div class=" card mb-0 form-tabs">
     <div class="card-body">
         <form action="" method="post" enctype="multipart/form-data">
@@ -46,43 +46,34 @@
             <?php echo html_csrf_token(); ?>
             <?php echo html_input('hidden', 'addon_id', $addon_id); ?>
 
-            <?php if ($errors){ ?>
-                <?php echo html_input('hidden', 'is_no_extract', 1); ?>
-                <p><?php echo sprintf(LANG_CP_INSTALL_NOT_WRITABLE_CUSTOM, $install_rel_root); ?></p>
-            <?php } ?>
-
-            <?php if (!$errors){ ?>
-
-                <fieldset>
-                    <div class="field form-group">
-                        <label><?php echo LANG_CP_INSTALL_PACKAGE_FILE; ?></label>
-                        <div class="input-group mb-3">
-                            <div class="custom-file">
-                                <input type="file" name="package" class="custom-file-input" id="package" accept="application/zip">
-                                <label class="custom-file-label" for="package" data-browse="<?php echo LANG_SELECT; ?>"><?php echo LANG_PARSER_FILE; ?></label>
-                            </div>
-                        </div>
-                        <div class="form-text hint text-muted small mt-1">
-                            <?php echo LANG_CP_INSTALL_PACKAGE_FILE_HINT; ?>
+            <fieldset>
+                <div class="field form-group">
+                    <label><?php echo LANG_CP_INSTALL_PACKAGE_FILE; ?></label>
+                    <div class="input-group mb-3">
+                        <div class="custom-file">
+                            <input type="file" name="package" class="custom-file-input" id="package" accept="application/zip">
+                            <label class="custom-file-label" for="package" data-browse="<?php echo LANG_SELECT; ?>"><?php echo LANG_PARSER_FILE; ?></label>
                         </div>
                     </div>
-                    <?php if (!$this->site_config->disable_copyright) { ?>
-                        <p><?php echo mb_strtoupper(LANG_OR); ?></p>
-                        <div class="field form-group">
-                            <label><?php echo LANG_CP_INSTALL_BY_LINK; ?></label>
-                            <?php echo html_input('text', 'package', ''); ?>
-                            <div class="form-text hint text-muted small mt-1">
-                                <?php echo LANG_CP_INSTALL_PACKAGE_LINK_HINT; ?>
-                            </div>
+                    <div class="form-text hint text-muted small mt-1">
+                        <?php echo LANG_CP_INSTALL_PACKAGE_FILE_HINT; ?>
+                    </div>
+                </div>
+                <?php if (!$this->site_config->disable_copyright) { ?>
+                    <p><?php echo mb_strtoupper(LANG_OR); ?></p>
+                    <div class="field form-group">
+                        <label><?php echo LANG_CP_INSTALL_BY_LINK; ?></label>
+                        <?php echo html_input('text', 'package', ''); ?>
+                        <div class="form-text hint text-muted small mt-1">
+                            <?php echo LANG_CP_INSTALL_PACKAGE_LINK_HINT; ?>
                         </div>
-                    <?php } ?>
-                </fieldset>
-
-            <?php } ?>
-
+                    </div>
+                <?php } ?>
+            </fieldset>
             <div class="buttons mt-3">
                 <?php echo html_submit(LANG_CONTINUE); ?>
             </div>
         </form>
     </div>
 </div>
+<?php } ?>

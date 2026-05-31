@@ -28,74 +28,118 @@ function files_get_dirs_list($dir, $asc_sort = false) {
  * @param string $directory_to Полный путь к директории, куда копируем
  * @return bool
  */
-function files_copy_directory($directory_from, $directory_to) {
+function files_copy_directory(string $directory_from, string $directory_to) {
+
+    $directory_from = rtrim($directory_from, DIRECTORY_SEPARATOR);
+    $directory_to   = rtrim($directory_to, DIRECTORY_SEPARATOR);
 
     if (!is_dir($directory_from)) {
         return false;
     }
 
+    // Защита от recursive self copy
+    if (
+        $directory_from === $directory_to ||
+        strpos($directory_to, $directory_from . DIRECTORY_SEPARATOR) === 0
+    ) {
+        return false;
+    }
+
     if (!is_dir($directory_to)) {
-        mkdir($directory_to, 0755, true);
+        if (!mkdir($directory_to, 0755, true) && !is_dir($directory_to)) {
+            return false;
+        }
     }
 
     $items = new FilesystemIterator($directory_from);
 
     foreach ($items as $item) {
 
-        $target = $directory_to.'/'.$item->getBasename();
+        // Запрещаем symlink
+        if ($item->isLink()) {
+            return false;
+        }
+
+        $target = $directory_to . DIRECTORY_SEPARATOR . $item->getBasename();
 
         if ($item->isDir()) {
 
             if (!files_copy_directory($item->getPathname(), $target)) {
                 return false;
             }
+
+            continue;
         }
-        elseif (!copy($item->getPathname(), $target)) {
+
+        if (!copy($item->getPathname(), $target)) {
             return false;
         }
+
+        @chmod($target, 0644);
     }
 
     return true;
 }
+
 /**
  * Рекурсивно удаляет директорию
  * @param string $directory
  * @param bool $is_clear Если TRUE, то директория будет очищена, но не удалена
  * @return bool
  */
-function files_remove_directory($directory, $is_clear = false) {
+function files_remove_directory(string $directory, $is_clear = false) {
 
-    if (substr($directory, -1) == '/') {
-        $directory = substr($directory, 0, -1);
-    }
+    $directory = rtrim($directory, '/\\');
 
-    if (!file_exists($directory) || !is_dir($directory) || !is_readable($directory)) {
+    if (
+        !file_exists($directory) ||
+        !is_dir($directory) ||
+        !is_readable($directory)
+    ) {
         return false;
     }
 
     $handle = opendir($directory);
+    if ($handle === false) {
+        return false;
+    }
 
-    while (false !== ($node = readdir($handle))) {
+    while (($node = readdir($handle)) !== false) {
 
-        if ($node != '.' && $node != '..') {
+        if ($node === '.' || $node === '..') {
+            continue;
+        }
 
-            $path = $directory . '/' . $node;
+        $path = $directory . DIRECTORY_SEPARATOR . $node;
 
-            if (is_dir($path)) {
-                if (!files_remove_directory($path)) {
-                    return false;
-                }
-            } else {
-                if (!@unlink($path)) {
-                    return false;
-                }
+        // symlink удаляем как файл
+        if (is_link($path)) {
+            if (!@unlink($path)) {
+                closedir($handle);
+                return false;
+            }
+            continue;
+        }
+
+        if (is_dir($path)) {
+
+            if (!files_remove_directory($path)) {
+                closedir($handle);
+                return false;
+            }
+
+        } else {
+
+            if (!@unlink($path)) {
+                closedir($handle);
+                return false;
             }
         }
     }
 
     closedir($handle);
 
-    if ($is_clear == false) {
+    if (!$is_clear) {
         if (!@rmdir($directory)) {
             return false;
         }
@@ -109,7 +153,7 @@ function files_remove_directory($directory, $is_clear = false) {
  * @param string $directory
  * @return bool
  */
-function files_clear_directory($directory){
+function files_clear_directory(string $directory){
     return files_remove_directory($directory, true);
 }
 

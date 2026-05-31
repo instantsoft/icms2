@@ -44,9 +44,9 @@
     <form action="<?php echo $this->href_to('install', 'ftp'); ?>" method="post">
         <?php echo html_csrf_token(); ?>
         <?php echo html_input('hidden', 'addon_id', $addon_id); ?>
-        <?php if (!empty($manifest['info']['image'])) { ?>
+        <?php if (!empty($manifest['info']['image_data'])) { ?>
             <div class="image float-right ml-4">
-                <img class="rounded" style="max-width: 200px;" src="<?php echo $install_url_root.'/'.$manifest['info']['image']; ?>?<?php echo mt_rand(); ?>" />
+                <img class="rounded" style="max-width: 200px;" src="<?php html($manifest['info']['image_data']) ?>" />
             </div>
         <?php } ?>
         <div class="info">

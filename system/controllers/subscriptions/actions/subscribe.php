@@ -57,7 +57,7 @@ class actionSubscriptionsSubscribe extends cmsAction {
         if ($this->cms_user->is_logged) {
 
             $this->subscribe['user_id']       = $this->cms_user->id;
-            $this->subscribe['confirm_token'] = string_random(32, $this->cms_user->email);
+            $this->subscribe['confirm_token'] = string_random();
 
         } else {
 
@@ -139,7 +139,7 @@ class actionSubscriptionsSubscribe extends cmsAction {
 
             $this->subscribe['guest_email']   = $subscriber_email;
             $this->subscribe['guest_name']    = $subscriber_name;
-            $this->subscribe['confirm_token'] = string_random(32, $this->subscribe['guest_email']);
+            $this->subscribe['confirm_token'] = string_random();
         }
 
         // проверяем, не подписаны ли

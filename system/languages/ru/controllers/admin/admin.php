@@ -671,6 +671,7 @@
     define('LANG_CP_INSTALL_BY_LINK',           'Установите с URL-адреса');
     define('LANG_CP_OFICIAL_ADDONS',            'Каталог дополнений');
     define('LANG_CP_INSTALL_PACKAGE',           'Установить пакет дополнения');
+    define('LANG_CP_INSTALL_PACKAGE_OPT',       'Настройки пакета дополнения');
     define('LANG_CP_DO_INSTALL',                'Установить');
     define('LANG_CP_DO_UPDATE',                 'Обновить');
     define('LANG_CP_LAST_UPDATE',               'Последнее обновление');
@@ -705,8 +706,6 @@
     define('LANG_CP_INSTALL_NOT_WRITABLE',      'Директория <b>%s</b> недоступна для записи');
     define('LANG_CP_INSTALL_NOT_WRITABLE_HINT', 'Автоматическая загрузка пакета невозможна');
     define('LANG_CP_INSTALL_NOT_WRITABLE_FIX',  'Выставьте права 777 на указанную директорию и обновите страницу');
-    define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Распакуйте пакет и загрузите содержимое в директорию <b>%s</b>');
-    define('LANG_CP_INSTALL_NOT_WRITABLE_CUSTOM', 'Нажмите "Продолжить", если вы распаковали пакет вручную в директорию <b>%s</b>');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE', 'Сервер не поддерживает функцию parse_ini_file');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE_HINT', 'Установка пакетов расширения невозможна');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE_FIX', 'Обратитесь к хостеру с просьбой включить функцию <b>parse_ini_file</b> для PHP на вашем сервере');
@@ -826,8 +825,9 @@
     define('LANG_CP_UPDATE_AVAILABLE',              'Доступно обновление %s');
     define('LANG_CP_UPDATE_NOT_AVAILABLE',          'Нет обновлений. Вы используете актуальную версию %s от %s.');
     define('LANG_CP_UPDATE_CHECK_FAIL',             'Не удалось проверить наличие обновлений');
+    define('LANG_CP_UPDATE_RELEASE_DESC',           'Перед установкой ознакомьтесь с <a href="https://instantcms.ru/novosti/release%s.html" target="_blank">описанием релиза</a> и сделайте бэкап базы данных и файлов.');
     define('LANG_CP_UPDATE_MANUAL_1',               'Автоматическая загрузка не возможна, поскольку на сервере отсутствует CURL.');
-    define('LANG_CP_UPDATE_MANUAL_2',               'Скачайте архив с обновлением вручную и установите через <a href="'.href_to('admin', 'install').'">установку дополнений</a>');
+    define('LANG_CP_UPDATE_MANUAL_2',               'Вы можете скачать архив с обновлением вручную и установить его через <a href="'.href_to('admin', 'install').'">установку дополнений</a>');
 
     define('LANG_HELP_URL_CONTENT',                 'https://docs.instantcms.ru/manual/content');
     define('LANG_HELP_URL_CONTENT_CATS',            'https://docs.instantcms.ru/manual/content/cats');
@@ -891,6 +891,7 @@
     define('LANG_ZIP_ERROR_11', 'Невозможно открыть файл');
     define('LANG_ZIP_ERROR_5', 'Ошибка чтения');
     define('LANG_ZIP_ERROR_4', 'Ошибка поиска');
+    define('LANG_ZIP_ERROR_TOO_MANY', 'Слишком много файлов в архиве');
     define('LANG_INSTALL_NOTICE_SYSTEM_FILE', 'Внимание! Пакет заменяет некоторые системные файлы CMS. Не рекомендуется продолжать установку, если разработчик пакета Вам неизвестен.');
     define('LANG_ADMIN_NOTICES', 'Уведомления');
     define('LANG_ADMIN_ACCESS_DENIED_BY_IP', 'Доступ с вашего ip адреса ограничен');

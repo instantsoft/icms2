@@ -15,7 +15,7 @@
     </div>
 <?php } ?>
 
-<?php if (!empty($update['version'])){ ?>
+<?php if (!empty($update['version'])) { ?>
 
 <div class="card card-accent-success">
     <div class="card-header">
@@ -25,28 +25,29 @@
 
         <h4><?php echo LANG_CP_UPDATE_DATE; ?>: <?php echo html_date($update['date']); ?></h4>
 
-        <?php if (!function_exists('curl_init')){ ?>
+        <p class="mb-2 mt-3"><?php echo sprintf(LANG_CP_UPDATE_RELEASE_DESC, str_replace('.', '', $current_version['version'])); ?></p>
 
-            <div class="alert alert-danger" role="alert">
-                <?php echo LANG_CP_UPDATE_MANUAL_1; ?><br>
-                <?php echo LANG_CP_UPDATE_MANUAL_2; ?><br>
-                <a href="<?php echo $update['url'];?>"><?php echo LANG_CP_UPDATE_DOWNLOAD; ?></a>
+        <p class="mb-4"><?php echo LANG_CP_UPDATE_MANUAL_2; ?>.</p>
+
+        <form action="<?php echo $this->href_to('install'); ?>" method="post" enctype="multipart/form-data">
+            <?php echo html_csrf_token(); ?>
+            <input type="hidden" name="package" value="<?php html($update['url']); ?>">
+            <div class="d-flex align-items-center">
+                <button class="button btn button-submit btn-success loading-icon update-install" type="submit" value="1" name="submit">
+                    <span><?php echo LANG_CP_UPDATE_INSTALL; ?></span>
+                </button>
+                <div class="mx-2 text-muted"><?php echo LANG_OR; ?></div>
+                <a href="<?php echo $update['url'];?>" class="btn btn-secondary">
+                    <?php echo LANG_CP_UPDATE_DOWNLOAD; ?>
+                </a>
             </div>
-
-        <?php } else { ?>
-
-            <a class="btn btn-success mt-3 loading-icon update-install" href="<?php echo $this->href_to('update', 'install');?>">
-                <?php echo LANG_CP_UPDATE_INSTALL; ?>
-            </a>
-
-        <?php } ?>
-
+        </form>
     </div>
 </div>
 <?php ob_start(); ?>
 <script>
-    $('.update-install').on('click', function(){
-        icms.admin.animateClickLink(this);
+    $('.update-install').on('click', function() {
+        $(this).addClass('disabled is-busy');
     });
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

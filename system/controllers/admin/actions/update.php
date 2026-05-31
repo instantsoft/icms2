@@ -2,12 +2,7 @@
 
 class actionAdminUpdate extends cmsAction {
 
-    public function run($do = false) {
-
-        // если нужно, передаем управление другому экшену
-        if ($do) {
-            return $this->runExternalActionIfExists('update_' . $do, array_slice($this->params, 1));
-        }
+    public function run() {
 
         $updater = new cmsUpdater();
 

@@ -7,6 +7,8 @@
  */
 class actionAdminInstall extends cmsAction {
 
+    use \icms\controllers\admin\traits\packageInstallerTrait;
+
     private $upload_name = 'package';
     private $upload_exts = 'zip';
     private $upload_path = '';
@@ -18,37 +20,38 @@ class actionAdminInstall extends cmsAction {
             return $this->runExternalActionIfExists('install_' . $do, array_slice($this->params, 1));
         }
 
+        // Удаляем архив, если остался
+        $this->cleanupPackageFile();
+
         $this->upload_path = $this->getInstallPackagesPath('root');
 
-        $package_name  = $this->request->get('package_name', $this->uploadPackage());
-        $is_no_extract = $this->request->get('is_no_extract', false);
+        $package_name = $this->uploadPackage();
 
-        if (!$is_no_extract && !$package_name) {
+        if (!$package_name) {
             return $this->showUploadForm();
         }
 
-        return $this->showPackageInfo($package_name, $is_no_extract);
+        return $this->showPackageInfo($package_name);
     }
 
     /**
      * Распаковывает и показывает страницу информации о дополнении
      *
      * @param string $package_name Имя файла загруженного архива
-     * @param bool $is_no_extract Не распаковывать архив (если уже распакован)
      * @return redirect|html
      */
-    private function showPackageInfo($package_name, $is_no_extract = false) {
+    private function showPackageInfo(string $package_name) {
 
-        if (!$is_no_extract) {
-            if (true !== ($zip_result = $this->extractPackage($package_name))) {
+        $source_install_package_path = $this->extractPackage($this->upload_path . '/' . $package_name);
 
-                cmsUser::addSessionMessage(LANG_CP_INSTALL_ZIP_ERROR . ($zip_result ? ': ' . $zip_result : ''), 'error');
+        if (!is_dir($source_install_package_path)) {
 
-                return $this->redirectToAction('install');
-            }
+            cmsUser::addSessionMessage(LANG_CP_INSTALL_ZIP_ERROR . (': ' . $source_install_package_path), 'error');
+
+            return $this->redirectToAction('install');
         }
 
-        $installer = new cmsInstaller($this->upload_path, $this->controller);
+        $installer = new cmsInstaller($source_install_package_path, $this->controller);
 
         $manifest = $installer->getManifest();
 
@@ -59,8 +62,6 @@ class actionAdminInstall extends cmsAction {
         // если пакет уже установлен, а мы пытаемся его еще раз установить, показываем сообщение
         if (!empty($manifest['package']['installed_version']) && $manifest['package']['action'] === 'install') {
 
-            $installer->clear();
-
             cmsUser::addSessionMessage(sprintf(LANG_CP_PACKAGE_DUBLE_INSTALL, $manifest['package']['installed_version']), 'error');
 
             return $this->redirectToAction('install');
@@ -68,8 +69,6 @@ class actionAdminInstall extends cmsAction {
 
         // если это пакет обновления, а полная версия не установлена
         if ($manifest['package'] && empty($manifest['package']['installed_version']) && $manifest['package']['action'] === 'update') {
-
-            $installer->clear();
 
             cmsUser::addSessionMessage(LANG_CP_PACKAGE_UPDATE_NOINSTALL, 'error');
 
@@ -80,8 +79,6 @@ class actionAdminInstall extends cmsAction {
         if (!empty($manifest['package']['installed_version']) && $manifest['package']['action'] === 'update') {
 
             if (version_compare($manifest['version_str'], $manifest['package']['installed_version']) == -1) {
-
-                $installer->clear();
 
                 cmsUser::addSessionMessage(sprintf(
                     LANG_CP_PACKAGE_UPDATE_ERROR,
@@ -96,8 +93,6 @@ class actionAdminInstall extends cmsAction {
 
             if (version_compare($manifest['version_str'], $manifest['package']['installed_version']) == 0) {
 
-                $installer->clear();
-
                 cmsUser::addSessionMessage(LANG_CP_PACKAGE_UPDATE_IS_UPDATED, 'error');
 
                 return $this->redirectToAction('install');
@@ -105,9 +100,8 @@ class actionAdminInstall extends cmsAction {
         }
 
         return $this->cms_template->render('install_package_info', [
-            'manifest'         => $manifest,
-            'addon_id'         => $this->request->get('addon_id', 0),
-            'install_url_root' => $this->getInstallPackagesPath('url')
+            'manifest' => $manifest,
+            'addon_id' => $this->request->get('addon_id', 0)
         ]);
     }
 
@@ -140,8 +134,7 @@ class actionAdminInstall extends cmsAction {
             $errors[] = [
                 'text'       => sprintf(LANG_CP_INSTALL_NOT_WRITABLE, $installer_upload_rel),
                 'hint'       => LANG_CP_INSTALL_NOT_WRITABLE_HINT,
-                'fix'        => LANG_CP_INSTALL_NOT_WRITABLE_FIX,
-                'workaround' => sprintf(LANG_CP_INSTALL_NOT_WRITABLE_WA, $installer_upload_rel)
+                'fix'        => LANG_CP_INSTALL_NOT_WRITABLE_FIX
             ];
         }
 
@@ -166,46 +159,15 @@ class actionAdminInstall extends cmsAction {
     }
 
     /**
-     * Распаковывает архив с дополнением
-     *
-     * @param string $package_name Имя архива
-     * @return string|bool
-     */
-    private function extractPackage($package_name){
-
-        $zip_file = $this->upload_path . '/' . $package_name;
-
-        $zip = new ZipArchive();
-
-        $res = $zip->open($zip_file);
-
-        if ($res !== true) {
-
-            if (defined('LANG_ZIP_ERROR_' . $res)) {
-                $zip_error = constant('LANG_ZIP_ERROR_' . $res);
-            } else {
-                $zip_error = '';
-            }
-
-            return $zip_error;
-        }
-
-        $zip->extractTo($this->upload_path);
-        $zip->close();
-
-        unlink($zip_file);
-
-        return true;
-    }
-
-    /**
      * Загружает архив дополнения из формы
      *
-     * @return string|bool false или имя загруженного файла
+     * @return string Имя загруженного файла
      */
     private function uploadPackage() {
 
-        $this->cms_uploader->enableRemoteUpload()->setAllowedRemoteHosts(['instantcms.ru', 'api.instantcms.ru', 'addons.instantcms.ru']);
+        // Разрешаем загрузку по ссылке только со своих доменов
+        $this->cms_uploader->enableRemoteUpload()->
+                setAllowedRemoteHosts(['instantcms.ru', 'api.instantcms.ru', 'addons.instantcms.ru', 'upd.instantcms.ru']);
 
         if (!$this->cms_uploader->isUploaded($this->upload_name) && !$this->cms_uploader->isUploadedFromLink($this->upload_name)) {
 
@@ -214,28 +176,39 @@ class actionAdminInstall extends cmsAction {
                 cmsUser::addSessionMessage($last_error, 'error');
             }
 
-            return false;
+            return '';
         }
 
         if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
 
             cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
 
-            return false;
+            return '';
         }
 
         files_clear_directory($this->upload_path);
 
+        // zip файлы, не более 50Мб
         $result = $this->cms_uploader->setAllowedMime([
-            'application/zip'
-        ])->upload($this->upload_name, $this->upload_exts, 0, basename($this->upload_path));
+                    'application/zip'
+                ])->setFileName(string_random())->
+                upload($this->upload_name, $this->upload_exts, 52428800, basename($this->upload_path));
 
         if (!$result['success']) {
             cmsUser::addSessionMessage($result['error'], 'error');
-            return false;
+            return '';
         }
 
-        return $result['name'];
+        $new_result = $this->registerPackageFile($result['path']);
+
+        if (!$new_result) {
+
+            @unlink($result['path']);
+
+            return '';
+        }
+
+        return $new_result['name'];
     }
 
 }

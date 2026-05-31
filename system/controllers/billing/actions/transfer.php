@@ -51,7 +51,7 @@ class actionBillingTransfer extends cmsAction {
                 'to_id'       => $receiver['id'],
                 'amount'      => $amount,
                 'description' => $description,
-                'code'        => string_random(32, $this->cms_user->email)
+                'code'        => string_random()
             ];
 
             $transfer['id'] = $this->model->addTransfer($transfer);
