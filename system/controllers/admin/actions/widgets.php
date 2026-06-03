@@ -16,7 +16,7 @@ class actionAdminWidgets extends cmsAction {
 
         cmsCore::loadAllControllersLanguages();
 
-        $controllers = $this->model_backend_widgets->getPagesControllers();
+        $pages = $this->model_backend_widgets->getWidgetsPages();
 
         $widgets_list = $this->model_backend_widgets->getAvailableWidgets();
 
@@ -67,7 +67,7 @@ class actionAdminWidgets extends cmsAction {
             'is_dynamic_scheme'        => $this->is_dynamic_scheme,
             'rows_titles_pos'          => $this->rows_titles_pos,
             'intro_lang'               => $intro_lang,
-            'controllers'              => $controllers,
+            'pages'                    => $pages,
             'template_name'            => $template_name,
             'templates'                => $templates,
             'templates_dynamic_scheme' => $templates_dynamic_scheme,

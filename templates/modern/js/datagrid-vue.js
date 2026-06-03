@@ -261,6 +261,10 @@ icms.datagrid = (function () {
                     }
                 },
                 selectRow (row){
+                    const selection = window.getSelection();
+                    if (selection && selection.toString().trim().length > 0) {
+                        return;
+                    }
                     if (!this.options.is_selectable || this.edit_mode_enable){
                         return;
                     }

@@ -112,48 +112,52 @@
                 </ul>
                 <div class="tab-content border-right-0 border-bottom-0 border-left-0">
                     <div class="tab-pane p-0 pt-2 show active" id="datatree" role="tabpanel">
-                        <ul id="treeData" class="skeleton-tree">
-                            <li id="core" class="folder">
-                                <?php echo LANG_WP_SYSTEM; ?>
-                                <ul>
-                                    <li id="core.0"><?php echo LANG_WP_ALL_PAGES; ?></li>
-                                    <li id="core.1"><?php echo LANG_WP_HOME_PAGE; ?></li>
-                                </ul>
-                            </li>
-                            <?php foreach($controllers as $controller_name => $controller_title){ ?>
-                                <li id="<?php echo $controller_name ? $controller_name : 'custom'; ?>" class="lazy folder"><?php echo $controller_title; ?></li>
+                        <input id="search_pages" placeholder="Поиск страниц" autocomplete="off" type="search" name="search_pages" value="" class="input form-control my-2">
+                        <ul id="treeData" class="d-none">
+                            <?php foreach($pages as $page){ ?>
+                                <li id="<?php echo $page['name']; ?>" class="folder">
+                                    <?php echo $page['title']; ?>
+                                    <?php if ($page['pages']) { ?>
+                                    <ul class="d-none">
+                                        <?php foreach($page['pages'] as $p){ ?>
+                                        <li id="<?php echo $p['key']; ?>">
+                                            <?php echo $p['title']; ?>
+                                        </li>
+                                        <?php } ?>
+                                    </ul>
+                                    <?php } ?>
+                                </li>
                             <?php } ?>
                         </ul>
                     </div>
                     <div class="tab-pane p-0 pt-2" id="all-widgets" role="tabpanel">
                         <div id="cp-widgets-list" class="mt-3">
                             <?php if ($widgets_list){ ?>
-                                <div id="accordion">
+                                <div id="accordion" class="cp-widgets-list__installed">
                                     <?php foreach($widgets_list as $controller_name => $widgets){ ?>
                                         <div class="section">
-                                            <?php $controller_title = $controller_name ? string_lang($controller_name . '_CONTROLLER', $controllers[$controller_name] ?? $controller_name) : LANG_CP_WIDGETS_MISC; ?>
-                                            <a class="btn btn-primary btn-block mb-1 text-left rounded-0" href="#" rel="<?php echo $controller_name; ?>" data-toggle="collapse" data-target="#w-<?php echo $controller_name; ?>">
-                                                <?php echo $controller_title; ?>
+                                            <a class="btn btn-primary btn-block text-left rounded-0" href="#" rel="<?php echo $controller_name; ?>" data-toggle="collapse" data-target="#w-<?php echo $controller_name; ?>">
+                                                <?php echo $widgets[0]['controller_title'] ?? $controller_name; ?>
                                             </a>
-                                            <ul class="mt-3 px-2 list-unstyled collapse <?php echo !$controller_name ? 'show' : ''; ?>" id="w-<?php echo $controller_name; ?>" data-parent="#accordion">
+                                            <ul class="m-0 px-2 list-unstyled collapse <?php echo !$controller_name ? 'show' : ''; ?>" id="w-<?php echo $controller_name; ?>" data-parent="#accordion">
                                                 <?php foreach($widgets as $widget){ ?>
                                                 <li rel="new" data-id="<?php echo $widget['id']; ?>">
-                                                        <span class="title">
-                                                            <?php echo $widget['title']; ?>
-                                                            <?php if($widget['is_external']){ ?>
-                                                                <sup><?php echo $widget['version']; ?></sup>
-                                                            <?php } ?>
-                                                        </span>
+                                                    <span class="title">
+                                                        <?php echo $widget['title']; ?>
                                                         <?php if($widget['is_external']){ ?>
-                                                            <span class="actions float-md-right d-flex">
-                                                                <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>">
-                                                                    <i class="icon-close icons font-xl d-block"></i>
-                                                                </a>
-                                                            </span>
+                                                            <sup><?php echo $widget['version']; ?></sup>
                                                         <?php } ?>
-                                                        <?php if($widget['image_hint_path']){ ?>
-                                                            <img src="<?php echo $widget['image_hint_path']; ?>">
-                                                        <?php } ?>
+                                                    </span>
+                                                    <?php if($widget['is_external']){ ?>
+                                                        <span class="actions float-md-right d-flex">
+                                                            <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>">
+                                                                <i class="icon-close icons font-xl d-block"></i>
+                                                            </a>
+                                                        </span>
+                                                    <?php } ?>
+                                                    <?php if($widget['image_hint_path']){ ?>
+                                                        <img src="<?php echo $widget['image_hint_path']; ?>">
+                                                    <?php } ?>
                                                     </li>
                                                 <?php } ?>
                                             </ul>
@@ -177,7 +181,6 @@
              data-scheme-row-add-url="<?php echo $this->href_to('widgets', ['row_add', $template_name]); ?>"
              data-template="<?php echo $template_name; ?>"
              data-toggle-url="<?php echo $this->href_to('widgets', 'toggle'); ?>"
-             data-tree-url="<?php echo $this->href_to('widgets', 'tree_ajax'); ?>"
              data-load-url="<?php echo $this->href_to('widgets', 'load'); ?>"
              data-add-url="<?php echo $this->href_to('widgets', 'add'); ?>"
              data-edit-url="<?php echo $this->href_to('widgets', 'edit'); ?>"

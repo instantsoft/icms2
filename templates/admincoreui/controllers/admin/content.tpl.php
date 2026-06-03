@@ -27,8 +27,11 @@
         <div id="datatree" class="card-body bg-white h-100 pt-3" data-content_url="<?php echo $this->href_to('content'); ?>" data-ctype_id="<?php echo $ctype['id']; ?>" data-key_path="<?php html($key_path); ?>" data-ctype_edit="<?php echo $this->href_to('ctypes', ['edit']); ?>" data-moderation_url="<?php echo $this->href_to('controllers', ['edit', 'moderation', 'logs', 'content']); ?>">
             <ul id="treeData" class="skeleton-tree">
                 <?php foreach ($ctypes as $id => $_ctype) { ?>
-                    <li id="<?php echo $_ctype['id']; ?>.1" class="lazy folder">
+                <li id="<?php echo $_ctype['id']; ?>.1" class="lazy folder"<?php if (!empty($relations[$_ctype['id']])) { ?> title="<?php html(LANG_CP_CTYPE_RELATIONS . ': ' . implode(', ', $relations[$_ctype['id']])); ?>"<?php } ?>>
                         <?php echo $_ctype['title']; ?>
+                        <?php if (!empty($relations[$_ctype['id']])) { ?>
+                            &#128279;
+                        <?php } ?>
                     </li>
                 <?php } ?>
             </ul>

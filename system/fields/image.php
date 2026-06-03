@@ -185,7 +185,7 @@ class fieldImage extends cmsFormField {
             return $value;
         }
 
-        $upload_path = realpath(cmsConfig::get('upload_path')).DIRECTORY_SEPARATOR;
+        $upload_path = cmsConfig::get('upload_path');
 
         $image_urls = [];
 
@@ -195,11 +195,15 @@ class fieldImage extends cmsFormField {
                 continue;
             }
 
-            $image_rel_path = str_replace(['"', "'", ' ', '#'], '', html_entity_decode($image_rel_path));
+            $image_rel_path = trim(html_entity_decode($image_rel_path));
 
             $image_path = realpath($upload_path . $image_rel_path);
 
-            if (strpos($image_path, $upload_path) !== 0 || !is_file($image_path)) {
+            if (!$image_path || !is_file($image_path)) {
+                continue;
+            }
+
+            if (strncmp($image_path, $upload_path, strlen($upload_path)) !== 0) {
                 continue;
             }
 

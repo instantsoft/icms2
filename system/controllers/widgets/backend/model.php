@@ -200,41 +200,21 @@ class modelBackendWidgets extends modelWidgets {
         return $this->deleteWidgetPageBind($page_id, 'page_id');
     }
 
-    public function getPagesControllers() {
+    public function getWidgetsPages() {
 
-        $this->filterNotNull('controller');
-        $this->joinLeft('controllers', 'ct', 'ct.name = i.controller')->filterEqual('ct.is_enabled', 1);
-        $this->groupBy('controller');
+        $this->joinLeft('controllers', 'c', 'c.name = i.controller')->
+                select('c.title', 'controller_title');
 
-        $controllers = $this->get('widgets_pages', function ($item, $model) {
-            return constant('LANG_' . mb_strtoupper($item['controller']) . '_CONTROLLER');
-        }, 'controller');
-
-        return ['custom' => LANG_WP_CUSTOM] + $controllers;
-    }
-
-    public function getControllerPages($controller_name) {
-
-        if ($controller_name !== 'custom') {
-
-            $this->filterEqual('controller', $controller_name);
-
-            if ($controller_name === 'content') {
-
-                $this->joinLeft('content_types', 'ct', "i.name LIKE concat(ct.name, '.%')")->
-                        selectTranslatedField('ct.title', 'content_types', 'title_subject')->
-                        filterEqual('ct.is_enabled', 1);
-            }
-        } else {
-            $this->filterIsNull('controller');
-        }
+        $this->joinLeft('content_types', 'ct', "i.name LIKE concat(ct.name, '.%')")->
+                selectTranslatedField('ct.title', 'content_types', 'title_subject');
 
         $this->orderByList([
+            ['by' => 'controller', 'to' => 'asc'],
             ['by' => 'name', 'to' => 'asc'],
             ['by' => 'title', 'to' => 'asc'],
         ]);
 
-        return $this->get('widgets_pages', function ($item, $model) {
+        $items = $this->limit(false)->get('widgets_pages', function ($item, $model) {
 
             if (!$item['id']) {
                 return false;
@@ -248,10 +228,56 @@ class modelBackendWidgets extends modelWidgets {
                     sprintf(constant($item['title_const']), $item['title_subject']);
 
             return $item;
-        });
+        }) ?: [];
+
+        $result = [
+            'core' => [
+                'name' => 'core',
+                'title' => LANG_WP_SYSTEM,
+                'pages' => [
+                    [
+                        'title'  => LANG_WP_ALL_PAGES,
+                        'key'    => 'core.0'
+                    ],
+                    [
+                        'title'  => LANG_WP_HOME_PAGE,
+                        'key'    => 'core.1'
+                    ]
+                ]
+            ],
+            'custom' => [
+                'name' => 'custom',
+                'title' => LANG_WP_CUSTOM,
+                'pages' => []
+            ]
+        ];
+
+        $last_controller = false;
+
+        foreach ($items as $item) {
+            if ($last_controller !== $item['controller']) {
+                $result[$item['controller']] = $result[$item['controller']] ?? [
+                    'name' => $item['controller'],
+                    'title' => string_lang($item['controller'] . '_CONTROLLER', $item['controller_title'] ?? $item['controller']),
+                    'pages' => []
+                ];
+            }
+
+            $result[$item['controller']]['pages'][] = [
+                'title'  => $item['title'],
+                'key'    => "{$item['controller']}.{$item['id']}"
+            ];
+
+            $last_controller = $item['controller'];
+        }
+
+        return $result;
     }
 
     public function getAvailableWidgets() {
+
+        $this->joinLeft('controllers', 'c', 'c.name = i.controller')->
+                select('c.title', 'controller_title');
 
         $widgets = $this->orderByList([
                 ['by' => 'controller', 'to' => 'asc'],
@@ -260,12 +286,11 @@ class modelBackendWidgets extends modelWidgets {
                 if ($item['image_hint_path']) {
                     $item['image_hint_path'] = cmsConfig::get('upload_host') . '/' . $item['image_hint_path'];
                 }
+                $item['controller_title'] = $item['controller'] ?
+                        string_lang($item['controller'] . '_CONTROLLER', $item['controller_title']) :
+                        LANG_CP_WIDGETS_MISC;
                 return $item;
-        });
-
-        if (!$widgets) {
-            return false;
-        }
+        }) ?: [];
 
         $sorted = [];
 

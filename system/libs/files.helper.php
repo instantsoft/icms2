@@ -150,6 +150,7 @@ function files_remove_directory(string $directory, $is_clear = false) {
 
 /**
  * Очищает директорию
+ *
  * @param string $directory
  * @return bool
  */
@@ -159,29 +160,50 @@ function files_clear_directory(string $directory){
 
 /**
  * Удаляет файл и его родительские директории
- * @param string $file_path Отностительный или полный путь к файлу
- * @param integer $delete_parent_dir Количество родительских директорий, которые нужно также удалить, если они пустые
+ * Работает до директории upload_path
+ *
+ * @param string $file_path Относительный (от upload_path без начального слеша) или полный путь к файлу
+ * @param int $delete_parent_dir Количество родительских директорий, которые нужно также удалить, если они пустые
  * @return boolean
  */
-function files_delete_file($file_path, $delete_parent_dir = 0) {
+function files_delete_file(string $file_path, $delete_parent_dir = 0) {
+
+    $upload_root = cmsConfig::get('upload_path');
 
     if (!is_file($file_path)) {
-        $file_path = cmsConfig::get('upload_path') . $file_path;
+        $file_path = $upload_root . $file_path;
+    }
+
+    $file_path = realpath($file_path);
+
+    if (!$file_path || !is_file($file_path)) {
+        return false;
+    }
+
+    if (strncmp($file_path, $upload_root, strlen($upload_root)) !== 0) {
+        return false;
     }
 
     $success = @unlink($file_path);
 
     if ($delete_parent_dir && $success) {
 
-        $parent_dir = pathinfo($file_path, PATHINFO_DIRNAME);
+        $parent_dir = dirname($file_path);
 
         for ($i = 1; $i <= $delete_parent_dir; $i++) {
+
+            if (
+                strncmp($parent_dir, $upload_root, strlen($upload_root)) !== 0 ||
+                $parent_dir === $upload_root
+            ) {
+                break;
+            }
 
             if (!@rmdir($parent_dir)) {
                 break;
             }
 
-            $parent_dir = pathinfo($parent_dir, PATHINFO_DIRNAME);
+            $parent_dir = dirname($parent_dir);
         }
     }
 
@@ -310,37 +332,52 @@ function files_user_file_hash($file_path = ''){
 }
 
 /**
- * Очищает имя файла от специальных символов
+ * Нормализует имя файла:
+ * - приводит к нижнему регистру
+ * - удаляет недопустимые символы
+ * - нормализует разделители
+ * - очищает расширение
+ * - ограничивает длину имени
  *
  * @param string $filename Имя файла
- * @param boolean $convert_slug Транслитировать?
+ * @param bool $convert_slug Транслитировать?
  * @return string
  */
-function files_sanitize_name($filename, $convert_slug = true) {
+function files_sanitize_name(string $filename, $convert_slug = true) {
 
-    $path_parts = pathinfo($filename);
-    $name       = $path_parts['filename'] ?? '';
-    $extension  = $path_parts['extension'] ?? '';
+    $filename = mb_strtolower($filename);
 
-    if ($convert_slug) {
-        $name = lang_slug($name);
-    } else {
-        $name = trim(strip_tags($name));
+    $parts = pathinfo($filename);
+
+    $name = $parts['filename'] ?? '';
+    $ext  = $parts['extension'] ?? '';
+
+    $name = $convert_slug ? lang_slug($name) : trim($name);
+
+    $name = str_replace(
+        ['&', '@', '#', ' ', '\''],
+        ['-and-', '-at-', '-number-', '-', ''],
+        $name
+    );
+
+    $name = preg_replace('/[^\w\-\.]+/u', '', $name);
+    $name = preg_replace('/[-_]+/', '-', $name);
+    $name = preg_replace('/\.+/', '.', $name);
+    $name = trim($name, '.-');
+    $name = mb_substr($name, 0, 200);
+
+    if (!$name) {
+        $name = 'file';
     }
 
-    $name = mb_strtolower($name.($extension ? '.' . $extension : ''));
+    if ($ext) {
 
-    $replacements = [
-        '&'  => '-and-',
-        '@'  => '-at-',
-        '#'  => '-number-',
-        ' '  => '-',
-        '\'' => ''
-    ];
+        $ext = preg_replace('/[^a-z0-9]+/i', '', $ext);
 
-    $name = str_replace(array_keys($replacements), array_values($replacements), $name);
-    $name = preg_replace('/[^\w\-\.]+/u', '', $name);
-    $name = preg_replace('/[\-]+/', '-', $name);
+        if ($ext) {
+            $name .= ".{$ext}";
+        }
+    }
 
     return $name;
 }
@@ -348,26 +385,33 @@ function files_sanitize_name($filename, $convert_slug = true) {
 /**
  * Возвращает/создаёт путь к директории хранения
  *
- * @param integer $user_id
- * @return string
+ * @param int $user_id
+ * @return ?string
  */
 function files_get_upload_dir($user_id = 0) {
 
-    $dir_num_user = sprintf('%03d', intval($user_id / 100));
-
-    $file_name   = md5(microtime(true));
-    $first_dir   = substr($file_name, 0, 1);
-    $second_dir  = substr($file_name, 1, 1);
     $upload_path = cmsConfig::get('upload_path');
 
-    $dest_dir = $upload_path . "{$dir_num_user}/u{$user_id}/{$first_dir}/{$second_dir}/";
+    $user_group = sprintf('%03d', intdiv($user_id, 100));
 
-    if (!is_dir($dest_dir)) {
-        @mkdir($dest_dir, 0777, true);
-        @chmod($dest_dir, 0777);
-        @chmod(pathinfo($dest_dir, PATHINFO_DIRNAME), 0777);
-        @chmod($upload_path . "{$dir_num_user}/u{$user_id}", 0777);
-        @chmod($upload_path . "{$dir_num_user}", 0777);
+    $hash = bin2hex(random_bytes(1));
+
+    $dir1 = $hash[0];
+    $dir2 = $hash[1];
+
+    $dest_dir = sprintf(
+        '%s%s/u%d/%s/%s/',
+        $upload_path,
+        $user_group,
+        $user_id,
+        $dir1,
+        $dir2
+    );
+
+    if (!is_dir($dest_dir)
+        && !mkdir($dest_dir, 0775, true)
+        && !is_dir($dest_dir)) {
+        return null;
     }
 
     return $dest_dir;
@@ -652,7 +696,7 @@ function console_exec_command($command, $postfix = ' 2>&1') {
             $buffer[0] = $result;
         }
         $b = strtolower($buffer[0]);
-        if (strstr($b, 'error') || strstr($b, ' no ') || strstr($b, 'not found') || strstr($b, 'No such file or directory')) {
+        if (strstr($b, 'error') || strstr($b, ' no ') || strstr($b, 'not found') || strstr($b, 'no such file or directory')) {
             return [];
         }
     } else {

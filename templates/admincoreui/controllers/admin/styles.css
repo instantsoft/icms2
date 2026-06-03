@@ -604,7 +604,6 @@ ul.field_tabbed > li > a {
 }
 .tab-pane:last-child > fieldset, #cp-widgets-layout .position:last-child,
 #cp-widgets-layout table td .block:last-child, .widgets-layout-scheme .block:last-child,
-#cp-widgets-list li:last-child,
 #cp-widgets-layout .position li:last-child,
 .without-tabs .form-group:last-child,
 fieldset > .form-group:last-child,
@@ -832,6 +831,20 @@ form .child_field{margin-left: 20px}
     transition:border-color .2s ease, background 0.1s linear;
     overflow: hidden;
     position: relative;
+}
+#cp-widgets-list li {
+    margin-top: 0.5rem;
+}
+#cp-widgets-list li:last-child {
+    margin-bottom: 0.25rem;
+}
+.cp-widgets-list__installed {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+#cp-widgets-list .section:last-child li:last-child {
+    margin-bottom: 0;
 }
 #cp-widgets-layout .position li.is_set_access::before {
     content: '';

@@ -4,6 +4,7 @@ $form_id = isset($form_id) ? $form_id : md5(microtime(true));
 if (!isset($is_expanded)){ $is_expanded = false; } unset($filters['user_id']);
 $form_url = is_array($page_url) ? $page_url['base'] : $page_url;
 $form_url_sep = strpos($form_url, '?') === false ? '?' : '&';
+$visible_depend = [];
 ?>
 
 <div class="icms-filter-panel gui-panel my-3 <?php echo $css_prefix;?>-filter">
@@ -32,8 +33,13 @@ $form_url_sep = strpos($form_url, '?') === false ? '?' : '&';
                     <?php $value = isset($filters[$name]) ? $filters[$name] : null; ?>
                     <?php $output = $field['handler']->getFilterInput($value); ?>
                     <?php if (!$output){ continue; } ?>
-                    <?php $fields_count++; ?>
-                    <div class="form-group col-md-6 field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
+                    <?php
+                    $fields_count++;
+                    if($field['handler']->visible_depend){
+                        $visible_depend[] = $field['handler'];
+                    }
+                    ?>
+                    <div id="<?php echo 'f_'.$field['name']; ?>" class="form-group col-md-6 field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
                         <label class="font-weight-bold"><?php echo $field['title']; ?></label>
                         <?php echo $output; ?>
                     </div>
@@ -90,6 +96,11 @@ $form_url_sep = strpos($form_url, '?') === false ? '?' : '&';
     $(function (){
         <?php if (!$fields_count) { ?>
             $('.icms-filter-panel.groups-filter').hide();
+        <?php } ?>
+        <?php if($visible_depend) { foreach($visible_depend as $field) { ?>
+            icms.forms.addVisibleDepend('<?php html($form_id); ?>', '<?php echo $field->name; ?>', <?php echo json_encode($field->visible_depend); ?>);
+        <?php } ?>
+            icms.forms.VDReInit();
         <?php } ?>
         icms.forms.initFilterForm('#<?php echo $form_id; ?>');
     });

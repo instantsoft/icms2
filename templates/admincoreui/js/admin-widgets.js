@@ -9,20 +9,18 @@ $(function() {
     current_pallette = false;
     page_id = 0;
 
-    var tree_url = $('#cp-widgets-layout').data('tree-url');
-
     $('.cp_toolbar .cancel').on('click', function(){
         return confirm(LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM);
     });
 
-    $("#datatree").dynatree({
+    var tree = $("#datatree").dynatree({
         onPostInit: function(isReloading, isError){
             var path = $.cookie('icms[widgets_tree_path]');
             if (!path) {path = '/core/core.0';}
             $("#datatree").dynatree("getTree").loadKeyPath(path, function(node, status){
-                if(status == "loaded") {
+                if(status === "loaded") {
                     node.expand();
-                }else if(status == "ok") {
+                }else if(status === "ok") {
                     node.activate();
                     node.expand();
                 }
@@ -33,15 +31,60 @@ $(function() {
             $('.breadcrumb-item.active').html(node.data.title);
             $.cookie('icms[widgets_tree_path]', node.getKeyPath(), {expires: 7, path: '/'});
             widgetsSelectPage(node.data.key);
-        },
-        onLazyRead: function(node){
-            node.appendAjax({
-                url: tree_url,
-                data: {
-                    controller_name: node.data.key
+        }
+    }).dynatree("getTree");
+
+    let searchTimer;
+
+    $('#search_pages').on('input', function() {
+
+        const searchText = $(this).val().trim().toLowerCase();
+
+        clearTimeout(searchTimer);
+
+        searchTimer = setTimeout(function() {
+
+            if (searchText.length < 2) {
+
+                tree.getRoot().visit(function(node) {
+                    $(node.span).removeClass('search-match');
+                });
+
+                let path = $.cookie('icms[widgets_tree_path]');
+
+                if (path) {
+                    tree.loadKeyPath(path, function(node, status) {
+                        if (status === "loaded") {
+                            node.expand(true);
+                        }
+                        else if (status === "ok") {
+                            node.activateSilently();
+                            node.expand(true);
+                        }
+                    });
+                }
+
+                return;
+            }
+
+            tree.getRoot().visit(function(node) {
+
+                if (node.parent) {
+                    node.expand(false);
+                }
+                $(node.span).removeClass('search-match');
+
+                let match = node.data.title && node.data.title.toLowerCase().includes(searchText);
+
+                if (match) {
+                    node.makeVisible();
+                    if (node.hasChildren()) {
+                        node.expand(true);
+                    }
+                    $(node.span).addClass('search-match');
                 }
             });
-        }
+        }, 250);
     });
 
     var last_pos;

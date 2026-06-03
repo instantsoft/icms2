@@ -128,6 +128,7 @@ class actionAdminContent extends cmsAction {
     public function getListItemsGridHtml() {
 
         $ctypes = $this->getOnce($this->model_backend_content)->getContentTypesFiltered();
+        $relations = $this->getOnce($this->model_backend_content)->getContentRelationsPairs();
 
         $grid_html = $this->traitGetListItemsGridHtml();
 
@@ -135,6 +136,7 @@ class actionAdminContent extends cmsAction {
             'key_path'  => $this->tree_path_key,
             'ctype'     => $this->ctype,
             'ctypes'    => $ctypes,
+            'relations' => $relations,
             'grid_html' => $grid_html
         ]);
     }

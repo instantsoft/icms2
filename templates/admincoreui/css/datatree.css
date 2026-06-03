@@ -233,3 +233,7 @@ span.dynatree-drop-target.dynatree-drop-accept a{
     color: #FFF !important;
     text-decoration: none;
 }
+.search-match .dynatree-title {
+    background: #f8cb00;
+    border-radius: 2px;
+}

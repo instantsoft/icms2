@@ -148,7 +148,7 @@ class fieldUrl extends cmsFormField {
     }
 
     public function store($value, $is_submitted, $old_value = null) {
-        return strip_tags($value);
+        return is_string($value) ? strip_tags($value) : null;
     }
 
     public function storeFilter($value) {

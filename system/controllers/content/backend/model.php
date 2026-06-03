@@ -641,6 +641,26 @@ class modelBackendContent extends modelContent {
         });
     }
 
+    public function getContentRelationsPairs() {
+
+        $result = [];
+
+        $this->useCache('content.relations');
+
+        $items = $this->selectOnly('ctype_id')->select('child_ctype_id')->
+                select('p.title', 'parent_title')->select('c.title', 'child_title')->
+                joinLeft('content_types', 'p', 'p.id = i.ctype_id')->
+                joinLeft('content_types', 'c', 'c.id = i.child_ctype_id')->
+                limit(false)->get('content_relations', null, null) ?: [];
+
+        foreach ($items as $item) {
+            $result[$item['ctype_id']][] = $item['child_title'];
+            $result[$item['child_ctype_id']][] = $item['parent_title'];
+        }
+
+        return $result;
+    }
+
     public function getContentRelation($id, $by_field = 'id'){
 
         return $this->getItemByField('content_relations', $by_field, $id, function($item){

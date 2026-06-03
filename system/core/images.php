@@ -66,8 +66,8 @@ class cmsImages {
      *
      * @param array $preset
      * @param string $file_name
-     * @param integer $user_id
-     * @return string Полный путь к полученному изображению
+     * @param int $user_id
+     * @return ?string Полный путь к полученному изображению
      */
     public function resizeByPreset($preset, $file_name = null, $user_id = null) {
 
@@ -78,6 +78,9 @@ class cmsImages {
             $dest_dir = $this->dest_dir;
         } else {
             $dest_dir = files_get_upload_dir($user_id === null ? cmsUser::get('id') : $user_id);
+            if (!$dest_dir) {
+                return null;
+            }
         }
 
         if(!empty($preset['convert_format'])){

@@ -426,7 +426,17 @@ class cmsUploader {
         $dest_ext = $file->getExt();
 
         if (!$destination) {
+
             $destination = $this->getUploadDestinationDirectory();
+
+            if (!$destination) {
+                return [
+                    'error'   => LANG_UPLOAD_ERR_CANT_WRITE,
+                    'success' => false,
+                    'name'    => $dest_name
+                ];
+            }
+
         } else {
             $destination = $this->site_cfg->upload_path . $destination . '/';
         }
@@ -534,7 +544,17 @@ class cmsUploader {
         }
 
         if (!$destination) {
+
             $destination = $this->getUploadDestinationDirectory();
+
+            if (!$destination) {
+                return [
+                    'error'   => LANG_UPLOAD_ERR_CANT_WRITE,
+                    'success' => false,
+                    'name'    => $dest_name
+                ];
+            }
+
         } else {
             $destination = $this->site_cfg->upload_path . $destination . '/';
         }
