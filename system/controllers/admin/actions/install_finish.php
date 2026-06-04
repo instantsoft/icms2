@@ -21,6 +21,22 @@ class actionAdminInstallFinish extends cmsAction {
             @opcache_reset();
         }
 
+        // Совместимость 2.18.1-2.18.2 чтобы пакет обновления cms в ошибку не ушёл
+        // т.к. в пакете обновления до 2.18.2 нет ни дампов, ни install.php
+        // просто считаем установку успешной
+        $ini_file_default = $this->getInstallPackagesPath('root') . '/manifest.ru.ini';
+        if (file_exists($ini_file_default)) {
+
+            $is_cleared = files_clear_directory($this->getInstallPackagesPath('root'));
+
+            return $this->cms_template->render([
+                'is_cleared'      => $is_cleared,
+                'undeleted_files' => [],
+                'redirect_action' => '',
+                'path_relative'   => $this->getInstallPackagesPath('rel_root')
+            ]);
+        }
+
         $package_data = $this->getPackageFileData();
         if (!$package_data) {
 

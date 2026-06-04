@@ -115,6 +115,11 @@ class actionAdminInstallFtp extends cmsAction {
      * @return redirect
      */
     private function redirectToFinish() {
+
+        if (function_exists('opcache_reset')) {
+            @opcache_reset();
+        }
+
         return $this->redirectToAction('install', ['finish'], [
             'csrf_token' => cmsForm::getCSRFToken(),
             'addon_id'   => $this->request->get('addon_id', 0)
