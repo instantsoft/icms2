@@ -208,11 +208,33 @@ function check_db() {
         $_SESSION['install']['db'] = $db;
     }
 
+    if (!empty($_SESSION['install']['site']['is_rand_admin_url'])) {
+
+        $slug = generate_admin_slug();
+
+        $mysqli->query("UPDATE {$db['prefix']}controllers SET slug='{$slug}' WHERE name = 'admin'");
+    }
+
     return [
         'time'    => number_format((microtime(true) - $start_time), 3),
         'error'   => $success !== true,
         'message' => is_string($success) ? $success : LANG_DATABASE_BASE_ERROR
     ];
+}
+
+function generate_admin_slug($length = 10) {
+
+    $vowels = ['a', 'e', 'i', 'o', 'u'];
+    $consonants = str_split('bcdfghjklmnpqrstvwxyz');
+
+    $result = '';
+
+    while (strlen($result) < $length) {
+        $result .= $consonants[random_int(0, count($consonants) - 1)];
+        $result .= $vowels[random_int(0, count($vowels) - 1)];
+    }
+
+    return substr($result, 0, $length) . random_int(10, 99);
 }
 
 function check_db_engine($mysqli, $engine) {

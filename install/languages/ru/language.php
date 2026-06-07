@@ -100,6 +100,7 @@
     define('LANG_SITE_METAKEYS',            "Ключевые слова");
     define('LANG_SITE_METADESC',            "Описание сайта");
     define('LANG_SITE_CHECK_UPDATE',        "Автоматически проверять обновления InstantCMS");
+    define('LANG_SITE_IS_RAND_ADMIN_URL',   "Генерировать рандомный URL админки");
     define('LANG_SITE_TEMPLATE',            'Шаблон сайта');
     define('LANG_SITE_TEMPLATE_ADMIN',      'Шаблон админпанели');
 

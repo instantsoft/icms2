@@ -21,6 +21,12 @@
             <textarea name="metadesc" rows="4"><?php echo LANG_CFG_METADESC; ?></textarea>
         </div>
         <div class="field">
+            <label>
+                <input type="checkbox" value="1" name="is_rand_admin_url">
+                <?php echo LANG_SITE_IS_RAND_ADMIN_URL; ?>
+            </label>
+        </div>
+        <div class="field">
             <label><?php echo LANG_SITE_TEMPLATE; ?></label>
             <select class="input" name="template">
                 <?php foreach ($site_tpls as $tpl) { ?>

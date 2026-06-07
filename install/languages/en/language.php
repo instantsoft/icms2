@@ -100,6 +100,7 @@
     define('LANG_SITE_METAKEYS',            "Keywords");
     define('LANG_SITE_METADESC',            "Description");
     define('LANG_SITE_CHECK_UPDATE',        "Automatically check for InstantCMS updates");
+    define('LANG_SITE_IS_RAND_ADMIN_URL',   "Generate random admin panel URL");
     define('LANG_SITE_TEMPLATE',            'Site template');
     define('LANG_SITE_TEMPLATE_ADMIN',      'Admin panel template');
 

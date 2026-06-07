@@ -32,13 +32,14 @@ function step($is_submit) {
 
 function check_data() {
 
-    $sitename         = strip_tags(get_post('sitename'));
-    $hometitle        = strip_tags(get_post('hometitle'));
-    $metakeys         = strip_tags(get_post('metakeys'));
-    $metadesc         = strip_tags(get_post('metadesc'));
-    $template         = strip_tags(get_post('template'));
-    $template_admin   = strip_tags(get_post('template_admin'));
-    $is_check_updates = (int) get_post('is_check_updates');
+    $sitename          = strip_tags(get_post('sitename'));
+    $hometitle         = strip_tags(get_post('hometitle'));
+    $metakeys          = strip_tags(get_post('metakeys'));
+    $metadesc          = strip_tags(get_post('metadesc'));
+    $template          = strip_tags(get_post('template'));
+    $template_admin    = strip_tags(get_post('template_admin'));
+    $is_check_updates  = (int) get_post('is_check_updates');
+    $is_rand_admin_url = (int) get_post('is_rand_admin_url');
 
     if (!$sitename) {
         return [
@@ -55,13 +56,14 @@ function check_data() {
     }
 
     $_SESSION['install']['site'] = [
-        'sitename'         => $sitename,
-        'hometitle'        => $hometitle,
-        'metakeys'         => $metakeys,
-        'metadesc'         => $metadesc,
-        'template'         => $template,
-        'template_admin'   => $template_admin,
-        'is_check_updates' => $is_check_updates
+        'sitename'          => $sitename,
+        'hometitle'         => $hometitle,
+        'metakeys'          => $metakeys,
+        'metadesc'          => $metadesc,
+        'template'          => $template,
+        'template_admin'    => $template_admin,
+        'is_check_updates'  => $is_check_updates,
+        'is_rand_admin_url' => $is_rand_admin_url
     ];
 
     return [
