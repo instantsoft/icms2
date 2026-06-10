@@ -14,7 +14,7 @@ function step($is_submit) {
         $sp = sys_get_temp_dir();
     }
 
-    $sp = rtrim($sp, '/');
+    $sp = realpath(rtrim($sp, '/'));
 
     $uniq = uniqid();
 

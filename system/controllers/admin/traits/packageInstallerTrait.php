@@ -147,9 +147,22 @@ trait packageInstallerTrait {
             return \LANG_ZIP_ERROR_TOO_MANY;
         }
 
-        $tmp_dir = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR)
-            . DIRECTORY_SEPARATOR
-            . 'cms_install_' . \string_random();
+        $tmp_root = ini_get('upload_tmp_dir');
+        if (!$tmp_root) {
+            $tmp_root = sys_get_temp_dir();
+        }
+
+        $tmp_root = realpath($tmp_root);
+
+        if (!$tmp_root) {
+            return \LANG_UPLOAD_ERR_NO_TMP_DIR;
+        }
+
+        if (!is_writable($tmp_root)) {
+            return sprintf(\LANG_CP_INSTALL_NOT_WRITABLE, $tmp_root);
+        }
+
+        $tmp_dir = $tmp_root . DIRECTORY_SEPARATOR . 'cms_install_' . \string_random();
 
         if (!mkdir($tmp_dir, 0755, true) && !is_dir($tmp_dir)) {
             $zip->close();

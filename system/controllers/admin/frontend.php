@@ -1005,6 +1005,7 @@ class admin extends cmsFrontend {
 
         curl_setopt($curl, CURLOPT_URL, str_replace('{lang}', $lang, self::addons_api_point) . $name . '?api_key=' . self::addons_api_key . '&' . http_build_query($params, '', '&'));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_HEADER, false);
         curl_setopt($curl, CURLOPT_TIMEOUT, 5);
         curl_setopt($curl, CURLOPT_HTTPGET, true);

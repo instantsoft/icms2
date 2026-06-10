@@ -72,7 +72,7 @@ class cmsDebugging {
             }
         }
 
-        $src = str_replace(cmsConfig::get('root_path'), '/', $call['file']) . ' => ' . $call['line'] . ($call['function'] ? ' => ' . $call['function'] : '');
+        $src = str_replace(cmsConfig::get('root_path'), DIRECTORY_SEPARATOR, $call['file']) . ' => ' . $call['line'] . ($call['function'] ? ' => ' . $call['function'] : '');
 
         self::$points_data[$target][] = array_merge([
             'src'  => $src,
@@ -104,7 +104,7 @@ class cmsDebugging {
 
         foreach ($_files as $path) {
             self::$points_data['includes'][] = [
-                'src'  => str_replace(cmsConfig::get('root_path'), '/', $path),
+                'src'  => str_replace(cmsConfig::get('root_path'), DIRECTORY_SEPARATOR, $path),
                 'time' => 0,
                 'data' => ''
             ];
