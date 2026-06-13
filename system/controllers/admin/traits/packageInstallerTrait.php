@@ -115,6 +115,34 @@ trait packageInstallerTrait {
     }
 
     /**
+     * Возвращает директорию временных файлов
+     *
+     * @return ?string
+     */
+    private function getTemporaryDirectory() {
+
+        $candidates = [
+            ini_get('upload_tmp_dir'),
+            sys_get_temp_dir()
+        ];
+
+        foreach ($candidates as $dir) {
+
+            if (!$dir) {
+                continue;
+            }
+
+            $dir = realpath($dir);
+
+            if ($dir && is_writable($dir)) {
+                return rtrim($dir, '/\\');
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Распаковывает ZIP архив во временную директорию
      * И проверяет валидность
      *
@@ -147,19 +175,10 @@ trait packageInstallerTrait {
             return \LANG_ZIP_ERROR_TOO_MANY;
         }
 
-        $tmp_root = ini_get('upload_tmp_dir');
-        if (!$tmp_root) {
-            $tmp_root = sys_get_temp_dir();
-        }
-
-        $tmp_root = realpath($tmp_root);
+        $tmp_root = $this->getTemporaryDirectory();
 
         if (!$tmp_root) {
             return \LANG_UPLOAD_ERR_NO_TMP_DIR;
-        }
-
-        if (!is_writable($tmp_root)) {
-            return sprintf(\LANG_CP_INSTALL_NOT_WRITABLE, $tmp_root);
         }
 
         $tmp_dir = $tmp_root . DIRECTORY_SEPARATOR . 'cms_install_' . \string_random();

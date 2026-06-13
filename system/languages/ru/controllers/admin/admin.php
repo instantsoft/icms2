@@ -28,6 +28,7 @@
     define('LANG_CP_DASHBOARD_SI_ROOT',         'Директория сайта');
     define('LANG_CP_DASHBOARD_SI_SESSION_TYPE', 'Обработчик сессий');
     define('LANG_CP_DASHBOARD_SI_SESSION',      'Директория сессий');
+    define('LANG_CP_DASHBOARD_SI_TMP',          'Директория временных файлов');
     define('LANG_CP_DASHBOARD_SI_MAX',          'Макс. размер загрузки');
     define('LANG_CP_DASHBOARD_SI_ION',          'Установлен IonCube Loader');
     define('LANG_CP_DASHBOARD_SI_ZEND',         'Установлен Zend OPcache');

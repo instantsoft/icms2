@@ -57,6 +57,10 @@ class actionAdminSettingsSysInfo extends cmsAction {
             LANG_CP_DASHBOARD_SI_ROOT         => PATH,
             LANG_CP_DASHBOARD_SI_SESSION_TYPE => @ini_get('session.save_handler'),
             LANG_CP_DASHBOARD_SI_SESSION      => session_save_path(),
+            LANG_CP_DASHBOARD_SI_TMP          => implode(', ', array_filter([
+                ini_get('upload_tmp_dir') ? realpath(ini_get('upload_tmp_dir')) : null,
+                realpath(sys_get_temp_dir())
+            ])) ?: false,
             LANG_CP_DASHBOARD_SI_ZEND         => in_array('Zend OPcache', $extensions),
             LANG_CP_DASHBOARD_SI_ION          => in_array('ionCube Loader', $extensions),
             LANG_CP_DASHBOARD_SI_ZENDG        => in_array('Zend Guard Loader', $extensions)
