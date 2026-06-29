@@ -760,7 +760,7 @@ CREATE TABLE `{#}users` (
   `password` varchar(32) DEFAULT NULL COMMENT 'Хэш пароля (устаревшее поле)',
   `password_salt` varchar(16) DEFAULT NULL COMMENT 'Соль пароля (устаревшее поле)',
   `is_admin` tinyint(1) unsigned DEFAULT NULL COMMENT 'Администратор?',
-  `nickname` varchar(100) NOT NULL COMMENT 'Имя',
+  `nickname` varchar(100) DEFAULT NULL COMMENT 'Имя',
   `slug` varchar(100) DEFAULT NULL,
   `date_reg` timestamp NULL DEFAULT NULL COMMENT 'Дата регистрации',
   `date_log` timestamp NULL DEFAULT NULL COMMENT 'Дата последней авторизации',

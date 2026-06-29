@@ -60,7 +60,8 @@ class formWysiwygRedactorOptions extends cmsForm {
                         'default' => 200
                     ]),
                     new fieldString('options:placeholder', [
-                        'title' => LANG_REDACTOR_PLACEHOLDER
+                        'title' => LANG_REDACTOR_PLACEHOLDER,
+                        'multilanguage' => true
                     ])
                 ]
             ]

@@ -100,7 +100,7 @@ class modelActivity extends cmsModel {
             return $this;
         }
 
-        $this->select('u.nickname', 'user_nickname');
+        $this->selectTranslatedField('u.nickname', '{users}', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
         $this->select('u.slug', 'user_slug');
         $this->joinLeft('{users}', 'u', 'u.id = i.user_id');

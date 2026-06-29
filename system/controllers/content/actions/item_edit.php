@@ -152,7 +152,7 @@ class actionContentItemEdit extends cmsAction {
             $item['pub_days'] = 0;
         }
 
-        $show_save_button = ($is_owner || (!$is_premoderation && $item['is_approved']));
+        $show_save_button = ($is_owner || $is_moderator || (!$is_premoderation && $item['is_approved']));
 
         if ($is_submitted) {
 

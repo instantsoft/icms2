@@ -133,7 +133,8 @@ class formWysiwygTinymceOptions extends cmsForm {
                 'default' => 700
             ]),
             new fieldString('options:placeholder', [
-                'title' => LANG_TINYMCE_PLACEHOLDER
+                'title' => LANG_TINYMCE_PLACEHOLDER,
+                'multilanguage' => true
             ]),
             new fieldList('options:images_preset', [
                 'title'     => LANG_TINYMCE_IMG_PRESET,

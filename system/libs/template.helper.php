@@ -307,11 +307,15 @@ function html_avatar_image($avatars, $size_preset = 'small', $alt = '', $is_html
     return $img;
 }
 
-function html_avatar_image_empty($title, $class = ''){
+function html_avatar_image_empty($title, $class = '') {
+
+    if (!$title) {
+        return '<span class="icms-profile-avatar__default '.$class.'"></span>';
+    }
 
     $iparams = get_image_block_param_by_title($title);
 
-    return '<span class="icms-profile-avatar__default '.$class.'" style="'.$iparams['style'].'"><svg fill="currentColor" viewBox="0 0 28 21"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle">'.mb_strtoupper(htmlspecialchars(mb_substr($title, 0, 1))).'</text></svg></span>';
+    return '<span class="icms-profile-avatar__default ' . $class . '" style="' . $iparams['style'] . '"><svg fill="currentColor" viewBox="0 0 28 21"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle">' . mb_strtoupper(htmlspecialchars(mb_substr($title, 0, 1))) . '</text></svg></span>';
 }
 
 /**

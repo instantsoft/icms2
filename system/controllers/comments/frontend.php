@@ -388,11 +388,12 @@ class comments extends cmsFrontend {
                 (!$this->cms_user->is_logged && !empty($this->options['is_guests']));
 
         $perms = [
-            'actions_times' => cmsUser::getPermissionValue('comments', 'times'),
-            'is_edit_all'   => cmsUser::isAllowed('comments', 'edit', 'all'),
-            'is_edit_own'   => cmsUser::isAllowed('comments', 'edit', 'own'),
-            'is_delete_all' => cmsUser::isAllowed('comments', 'delete', 'all'),
-            'is_delete_own' => cmsUser::isAllowed('comments', 'delete', 'own')
+            'actions_times'  => cmsUser::getPermissionValue('comments', 'times'),
+            'is_edit_all'    => cmsUser::isAllowed('comments', 'edit', 'all'),
+            'is_edit_own'    => cmsUser::isAllowed('comments', 'edit', 'own'),
+            'is_delete_all'  => cmsUser::isAllowed('comments', 'delete', 'all'),
+            'is_delete_full' => cmsUser::isAllowed('comments', 'delete', 'full_delete'),
+            'is_delete_own'  => cmsUser::isAllowed('comments', 'delete', 'own')
         ];
 
         // Все onclick оставлены для старых шаблонов на основе default
@@ -452,7 +453,9 @@ class comments extends cmsFrontend {
                         $perms['is_delete_own'] = false;
                     }
 
-                    $is_can_delete = $perms['is_delete_all'] || ($perms['is_delete_own'] && $comment['user']['id'] == $this->cms_user->id);
+                    $is_can_delete = $perms['is_delete_full'] ||
+                            $perms['is_delete_all'] ||
+                            ($perms['is_delete_own'] && $comment['user']['id'] == $this->cms_user->id);
 
                     return $is_can_delete && $comment['is_approved'];
                 }
@@ -469,7 +472,9 @@ class comments extends cmsFrontend {
                         $perms['is_delete_own'] = false;
                     }
 
-                    $is_can_delete = $perms['is_delete_all'] || ($perms['is_delete_own'] && $comment['user']['id'] == $this->cms_user->id);
+                    $is_can_delete = $perms['is_delete_full'] ||
+                            $perms['is_delete_all'] ||
+                            ($perms['is_delete_own'] && $comment['user']['id'] == $this->cms_user->id);
 
                     return $is_can_delete && !$comment['is_approved'];
                 }

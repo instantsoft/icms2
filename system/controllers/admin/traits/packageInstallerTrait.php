@@ -166,9 +166,9 @@ trait packageInstallerTrait {
         }
 
         // Лимиты
-        $max_files      = 5000;             // Всего файлов в архиве
-        $max_total_size = 50 * 1024 * 1024; // 50 MB макс размер всех файлов
-        $max_file_size  = 5 * 1024 * 1024;  // 5 MB на один файл
+        $max_files      = 5000;             //  Всего файлов в архиве
+        $max_total_size = 60 * 1024 * 1024; //  60 MB макс размер всех файлов
+        $max_file_size  = 10 * 1024 * 1024; //  10 MB на один файл
 
         if ($zip->numFiles > $max_files) {
             $zip->close();

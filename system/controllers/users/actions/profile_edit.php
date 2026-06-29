@@ -22,6 +22,11 @@ class actionUsersProfileEdit extends cmsAction {
             return cmsCore::error404();
         }
 
+        // Переполучаем данные по профилю с учётом мультиязычности
+        $profile = $this->model->localizedOff()->getUser($profile['id'], 'join_inviter');
+
+        $this->model->localizedRestore();
+
         // Получаем поля
         $fields = $this->model_content->setTablePrefix('')->
                 getContentFields('{users}', $profile['id']);

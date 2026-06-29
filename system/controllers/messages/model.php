@@ -37,7 +37,7 @@ class modelMessages extends cmsModel {
     public function getContacts($user_id) {
 
         $this->select('u.id', 'id');
-        $this->select('u.nickname', 'nickname');
+        $this->selectTranslatedField('u.nickname', '{users}', 'nickname');
         $this->select('u.avatar', 'avatar');
         $this->select('u.is_admin', 'is_admin');
         $this->select('u.date_log', 'date_log');
@@ -62,7 +62,7 @@ class modelMessages extends cmsModel {
     public function getContact($user_id, $contact_id) {
 
         $this->select('u.id', 'id');
-        $this->select('u.nickname', 'nickname');
+        $this->selectTranslatedField('u.nickname', '{users}', 'nickname');
         $this->select('u.slug', 'slug');
         $this->select('u.date_log', 'date_log');
         $this->select('u.avatar', 'avatar');
@@ -190,7 +190,7 @@ class modelMessages extends cmsModel {
 
     public function getMessage($id) {
 
-        $this->select('u.nickname', 'user_nickname');
+        $this->selectTranslatedField('u.nickname', '{users}', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
         $this->join('{users}', 'u', 'u.id = i.from_id');
 
@@ -208,7 +208,7 @@ class modelMessages extends cmsModel {
 
     public function getMessages($user_id, $contact_id) {
 
-        $this->select('u.nickname', 'user_nickname');
+        $this->selectTranslatedField('u.nickname', '{users}', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
         $this->join('{users}', 'u', 'u.id = i.from_id');
 
@@ -238,7 +238,7 @@ class modelMessages extends cmsModel {
 
     public function getMessagesFromContact($user_id, $contact_id) {
 
-        $this->select('u.nickname', 'user_nickname');
+        $this->selectTranslatedField('u.nickname', '{users}', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
         $this->join('{users}', 'u', 'u.id = i.from_id');
 

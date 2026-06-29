@@ -1646,8 +1646,10 @@ class cmsModel {
     public function joinUser($on_field = 'user_id', $user_fields = [], $join_direction = false, $as = 'u') {
 
         if (!$user_fields) {
+
+            $this->selectTranslatedField($as . '.nickname', '{users}', 'user_nickname');
+
             $user_fields = [
-                $as . '.nickname'        => 'user_nickname',
                 $as . '.slug'            => 'user_slug',
                 $as . '.date_log'        => 'user_date_log',
                 $as . '.is_deleted'      => 'user_is_deleted',

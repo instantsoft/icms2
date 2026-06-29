@@ -774,7 +774,7 @@ CREATE TABLE `{#}users` (
   `password` varchar(32) DEFAULT NULL COMMENT 'Password hash (deprecated)',
   `password_salt` varchar(16) DEFAULT NULL COMMENT 'Password salt (deprecated)',
   `is_admin` tinyint(1) unsigned DEFAULT NULL COMMENT 'Administrator?',
-  `nickname` varchar(100) NOT NULL COMMENT 'Name',
+  `nickname` varchar(100) DEFAULT NULL COMMENT 'Name',
   `slug` varchar(100) DEFAULT NULL,
   `date_reg` timestamp NULL DEFAULT NULL COMMENT 'Sign up date',
   `date_log` timestamp NULL DEFAULT NULL COMMENT 'Last log in',

@@ -47,7 +47,6 @@
                 </div>
                 <div class="contacts icms-messages__contacts-list list-group" id="contacts-list">
                     <?php foreach($contacts as $contact){ ?>
-                        <?php $nickname = mb_strlen($contact['nickname']) > 15 ? mb_substr($contact['nickname'], 0, 15).'...' : $contact['nickname']; ?>
                         <a id="contact-<?php echo $contact['id']; ?>" href="#<?php echo $contact['id']; ?>" class="text-decoration-none d-flex align-items-center contact list-group-item border-0 rounded-0 p-2" title="<?php echo $contact['nickname']; ?>" rel="<?php echo $contact['id']; ?>">
 
                             <span class="icms-user-avatar mr-2 small <?php if (!empty($contact['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" rel="<?php echo $contact['id']; ?>">
@@ -58,8 +57,8 @@
                                 <?php } ?>
                             </span>
 
-                            <span class="contact_nickname">
-                                <span><?php echo $nickname; ?></span>
+                            <span class="contact_nickname text-truncate">
+                                <span><?php echo $contact['nickname']; ?></span>
                                 <small class="d-block text-muted">
                                     <?php echo html_date_time($contact['date_last_msg']); ?>
                                 </small>
