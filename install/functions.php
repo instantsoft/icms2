@@ -10,6 +10,15 @@ function is_ajax_request() {
     return $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
 }
 
+function format_size($bytes) {
+    if ($bytes >= 1048576) {
+        return number_format($bytes / 1048576, 1) . ' MB';
+    } elseif ($bytes >= 1024) {
+        return number_format($bytes / 1024, 1) . ' KB';
+    }
+    return $bytes . ' B';
+}
+
 function render($template_name, $data = []) {
     extract($data);
     ob_start();
@@ -413,4 +422,52 @@ function preinstall_addon ($addon) {
     }
 
     return true;
+}
+
+function find_component_sql_file($component, $type = 'base') {
+
+    $data = include PATH . 'data/components.php';
+
+    $sql_dir = PATH . 'languages' . DS . LANG . DS . 'sql';
+    $template = $_SESSION['install']['site']['template'] ?? 'default';
+
+    foreach ($data['categories'] as $cat_id => $cat) {
+        if (!isset($cat['components'][$component])) {
+            continue;
+        }
+        
+        if ($type === 'base') {
+            $file = $cat_id . DS . $component . '_base.sql';
+            $path = $sql_dir . DS . $file;
+            if (file_exists($path)) {
+                return $file;
+            }
+        }
+        
+        if ($type === 'demo') {
+            $demo_file = $cat_id . DS . $component . '_demo_' . $template . '.sql';
+            $demo_path = $sql_dir . DS . $demo_file;
+            if (file_exists($demo_path)) {
+                return $demo_file;
+            }
+            
+            $default_demo = $cat_id . DS . $component . '_demo_default.sql';
+            $default_path = $sql_dir . DS . $default_demo;
+            if (file_exists($default_path)) {
+                return $default_demo;
+            }
+        }
+    }
+
+    return null;
+}
+
+function get_mandatory_components() {
+    $data = include PATH . 'data/components.php';
+    return $data['mandatory'];
+}
+
+function get_component_dependencies($component) {
+    $data = include PATH . 'data/components.php';
+    return $data['dependencies'][$component] ?? [];
 }
