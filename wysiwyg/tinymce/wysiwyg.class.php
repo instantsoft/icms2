@@ -75,6 +75,7 @@ class cmsWysiwygTinymce extends cmsWysiwyg {
         'convert_urls'          => false,
         'paste_data_images'     => true,
         'highlight_on_focus'    => true,
+        'link_assume_external_targets' => false,
         'link_quicklink'        => true,
         'link_context_toolbar'  => true,
         'image_caption'         => false,

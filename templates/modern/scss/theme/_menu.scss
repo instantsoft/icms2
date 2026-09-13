@@ -109,3 +109,10 @@
     }
   }
 }
+.nav-item-hint {
+    display: inline-block;
+    margin-top: $spacer*0.15;
+    color: $gray-600;
+    font-size: $font-size-sm;
+    font-weight: normal;
+}

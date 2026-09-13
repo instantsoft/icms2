@@ -1119,7 +1119,7 @@ class Jevix {
                         $sProtocols = implode('|', $this->linkProtocolAllow ? $this->linkProtocolAllow : $this->linkProtocolAllowDefault);
                         if(!preg_match('/^(('.$sProtocols.'):)?\/\//ui', $value) &&
                                 !preg_match('/^(\/|\#|%)/ui', $value) &&
-                                !preg_match('/^(mailto):/ui', $value) ) {
+                                !preg_match('/^(mailto|tel):/ui', $value) ) {
                             $value = $this->linkProtocol.$value;
                         }
                         break;

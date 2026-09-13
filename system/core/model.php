@@ -2511,15 +2511,16 @@ class cmsModel {
 //============================================================================//
 
     /**
-     * Сортирует элементы массива $items в виде плоского дерева
+     * Сортирует элементы массива $items в виде дерева
      * на основании связей через parent_id
      *
      * @param array $items
      * @param array $result_tree
-     * @param int $parent_id
-     * @param int $level
+     * @param int   $parent_id
+     * @param int   $level
+     * @param bool  $build_childs
      */
-    public static function buildTreeRecursive($items, &$result_tree, $parent_id = 0, $level = 1) {
+    public static function buildTreeRecursive($items, &$result_tree, $parent_id = 0, $level = 1, $build_childs = false) {
         // Предварительная группировка элементов по parent_id
         $grouped = [];
 
@@ -2527,11 +2528,15 @@ class cmsModel {
             $grouped[$item['parent_id']][] = $item;
         }
 
-        self::buildTreeFlat($grouped, $result_tree, $parent_id, $level);
+        if ($build_childs) {
+            self::buildTreeChilds($grouped, $result_tree, $parent_id, $level);
+        } else {
+            self::buildTreeFlat($grouped, $result_tree, $parent_id, $level);
+        }
     }
 
     /**
-     * Вспомогательный метод к buildTreeRecursive
+     * Формирует плоское дерево
      *
      * @param array $grouped
      * @param array $result_tree
@@ -2546,9 +2551,43 @@ class cmsModel {
         }
 
         foreach ($grouped[$parent_id] as $item) {
-            $item['level']            = $level;
+
+            $item['level']  = $level;
+            $item['childs'] = [];
+
             $result_tree[$item['id']] = $item;
             self::buildTreeFlat($grouped, $result_tree, $item['id'], $level + 1);
+        }
+    }
+
+    /**
+     * Формирует вложенное дерево через childs.
+     *
+     * @param array $grouped
+     * @param array $result_tree
+     * @param int $parent_id
+     * @param int $level
+     * @return void
+     */
+    private static function buildTreeChilds(&$grouped, &$result_tree, $parent_id, $level) {
+
+        if (empty($grouped[$parent_id])) {
+            return;
+        }
+
+        foreach ($grouped[$parent_id] as $item) {
+
+            $item['level'] = $level;
+            $item['childs'] = [];
+
+            self::buildTreeChilds(
+                $grouped,
+                $item['childs'],
+                $item['id'],
+                $level + 1
+            );
+
+            $result_tree[$item['id']] = $item;
         }
     }
 

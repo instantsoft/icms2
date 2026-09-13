@@ -130,6 +130,7 @@
             text-transform: uppercase;
             padding-top: $nav-link-padding-y*3;
             padding-bottom: $nav-link-padding-y*3;
+            height: 100%;
         }
         .dropdown-menu {
             border-bottom: none;
@@ -188,6 +189,54 @@
         > .counter.badge {
             background-color: $white;
             color: $primary;
+        }
+    }
+}
+
+.dropdown-toggle::after {
+    opacity: 0.7;
+    display: inline-block;
+    margin-left: .255em;
+    vertical-align: 0.255em;
+    content: "";
+    width: .35em;
+    height: .35em;
+    border: solid currentColor;
+    border-width: 0 1px 1px 0;
+    transform: rotate(45.01deg);
+    transition: opacity .25s ease, transform .25s ease;
+}
+.dropright .dropdown-toggle::after {
+    vertical-align: 0.170em;
+    border: solid currentColor;
+    border-width: 1px 1px 0px 0px;
+}
+.dropleft .dropdown-toggle::before {
+    width: .35em;
+    height: .35em;
+    margin-right: 0.255em;
+    border: solid currentColor;
+    border-width: 0px 0px 1px 1px;
+    vertical-align: 0.170em;
+    transform: rotate(45.01deg);
+    transition: opacity .25s ease, transform .25s ease;
+}
+.nav-item, .icms-user-menu {
+    &:hover {
+        > .dropdown-toggle, > div > .dropdown-toggle {
+            &::after {
+                transform: translateY(0.17em) rotate(225deg);
+            }
+        }
+        &.dropright .dropdown-toggle::after {
+            transform: translateX(0.17em) rotate(225deg);
+        }
+    }
+}
+.dropleft {
+    .nav-item.dropdown:hover {
+        > .dropdown-toggle::before {
+            transform: translateX(-0.17em) rotate(225deg);
         }
     }
 }

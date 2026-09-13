@@ -8,3 +8,5 @@ define('LANG_WD_MENU_MAX_ITEMS_HINT', 'The rest items will be placed into the &l
 define('LANG_WD_MENU_TEMPLATE', 'Menu list template');
 define('LANG_WD_MENU_TEMPLATE_HINT', 'Template file in assets/ui/. File name should start with "menu"');
 define('LANG_WD_MENU_CSS_CLASS', 'CSS class of main menu &lt;ul/&gt;');
+define('LANG_WD_MENU_BUILD_AS_CHILDS', 'Use nested data structure');
+define('LANG_WD_MENU_BUILD_AS_CHILDS_HINT', 'Menu items are passed using a new nested data structure. Do not enable this if the template you are using does not support it.');

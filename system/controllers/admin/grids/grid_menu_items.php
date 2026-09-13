@@ -37,6 +37,10 @@ function grid_menu_items($controller) {
             'href'     => href_to($controller->name, 'menu', ['item_edit', '{id}']),
             'editable' => []
         ],
+        'hint' => [
+            'title'    => LANG_CP_MENU_HINT,
+            'editable' => []
+        ],
         'url' => [
             'title'    => LANG_CP_MENU_ITEM_URL,
             'class'    => 'd-none d-lg-table-cell',

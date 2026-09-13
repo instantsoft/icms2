@@ -209,6 +209,8 @@ class users extends cmsFrontend {
             }
         }
 
+        [$menu, $profile] = cmsEventsManager::hook('profile_view_menu', [$menu, $profile]);
+
         return $menu;
     }
 
@@ -258,7 +260,7 @@ class users extends cmsFrontend {
             ];
         }
 
-        list($menu, $profile) = cmsEventsManager::hook('profile_edit_menu', [$menu, $profile]);
+        [$menu, $profile] = cmsEventsManager::hook('profile_edit_menu', [$menu, $profile]);
 
         return $menu;
     }

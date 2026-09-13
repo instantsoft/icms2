@@ -16,7 +16,7 @@ class widgetUsersAvatar extends cmsWidget {
 
         if (!$template->hasMenu($menu_name)) {
 
-            $menu_items = modelMenu::getMenuItemsByName($menu_name);
+            $menu_items = modelMenu::getMenuItemsByName($menu_name, $this->getOption('build_menu_as_childs'));
             if(!$menu_items){ return false; }
 
             $template->setMenuItems($menu_name, $menu_items);

@@ -96,11 +96,28 @@ class content extends cmsFrontend {
         return $result;
     }
 
-    public function getMenuCategoriesItems($menu_item_id, $ctype){
+    public function getMenuCategoriesItems($menu_item_id, $ctype, $options = []){
 
         $result = ['url' => href_to($ctype['name']), 'items' => []];
 
         if (!$ctype['is_cats']) { return $result; }
+
+        $parent = [];
+
+        if (!empty($options['category_id'])) {
+            if ($options['category_id'] == 1) {
+                $this->model->filterLtEqual('parent_id', 1);
+            } else {
+
+                $parent = $this->model->getCategory($ctype['name'], $options['category_id']);
+                if (!$parent) {
+                    return $result;
+                }
+
+                $this->model->filterGt('ns_left', $parent['ns_left'])->
+                    filterLt('ns_right', $parent['ns_right']);
+            }
+        }
 
         $this->model->filterIsNull('is_hidden');
 
@@ -114,12 +131,14 @@ class content extends cmsFrontend {
         // не используем ($cat['ns_right'] - $cat['ns_left']) - 1
         $childs_count = []; $result['items'] = [];
 
+        $root_id = $parent['id'] ?? 1;
+
         foreach($tree as $cat){
 
             $item_id   = 'content.'.$ctype['name'].'.'.$cat['id'].'.'.$menu_item_id;
             $parent_id = 'content.'.$ctype['name'].'.'.$cat['parent_id'].'.'.$menu_item_id;
 
-            if($cat['parent_id'] > 1){
+            if($root_id != $cat['parent_id'] && $cat['parent_id'] > 1){
                 if(!isset($childs_count[$cat['parent_id']])){
                     $childs_count[$cat['parent_id']] = 1;
                 } else {
@@ -129,7 +148,7 @@ class content extends cmsFrontend {
 
             $result['items'][$cat['id']] = [
                 'id'           => $item_id,
-                'parent_id'    => ($cat['parent_id'] == 1 ? $menu_item_id : $parent_id),
+                'parent_id'    => ($cat['parent_id'] == $root_id ? $menu_item_id : $parent_id),
                 'title'        => $cat['title'],
                 'childs_count' => 0,
                 'url'          => href_to($base_url, $cat['slug'])

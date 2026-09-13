@@ -917,17 +917,17 @@ CREATE TABLE `{#}con_posts_props_values` (
 INSERT INTO `{#}menu` (`id`, `name`, `title`, `is_fixed`) VALUES
 (3, 'footer', 'Нижнее меню', NULL);
 
-INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `ordering`, `options`, `groups_view`, `groups_hide`) VALUES
-(7, 1, 0, 'Сайты', NULL, 10, NULL, NULL, NULL),
-(8, 1, 7, 'Яндекс', 'https://www.yandex.ru', 10, NULL, NULL, NULL),
-(9, 1, 7, 'InstantSoft', NULL, 11, NULL, NULL, NULL),
-(10, 1, 9, 'InstantVideo', 'https://instantvideo.ru/software/instantvideo2.html', 14, NULL, NULL, NULL),
-(18, 3, 0, 'О проекте', 'pages/about.html', 1, '---\nclass: \n', '---\n- 0\n', NULL),
-(19, 3, 0, 'Правила сайта', 'pages/rules.html', 2, '---\nclass: \n', '---\n- 0\n', NULL),
-(27, 1, 0, 'Блоги', 'posts', 3, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
-(39, 1, 0, 'Объявления', 'board', 5, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
-(40, 1, 0, 'Новости', '{content:news}', 1, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
-(42, 1, 0, 'Статьи', '{content:articles}', 2, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL);
+INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `hint`, `url`, `ordering`, `options`, `groups_view`, `groups_hide`) VALUES
+(7, 1, 0, 'Сайты', NULL, NULL, 10, NULL, NULL, NULL),
+(8, 1, 7, 'Яндекс', 'Поисковая система', 'https://ya.ru', 10, '---\ntarget: _self\nclass: \"\"\nicon: brands:yandex\nhide_title: null\ntemplate_child: \"\"\n', '---\n', NULL),
+(9, 1, 7, 'InstantSoft', NULL, NULL, 11, NULL, NULL, NULL),
+(10, 1, 9, 'InstantVideo', NULL, 'https://instantvideo.ru/software/instantvideo2.html', 14, NULL, NULL, NULL),
+(18, 3, 0, 'О проекте', NULL, 'pages/about.html', 1, '---\nclass: \n', '---\n- 0\n', NULL),
+(19, 3, 0, 'Правила сайта', NULL, 'pages/rules.html', 2, '---\nclass: \n', '---\n- 0\n', NULL),
+(27, 1, 0, 'Блоги', NULL, 'posts', 3, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
+(39, 1, 0, 'Объявления', NULL, 'board', 5, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
+(40, 1, 0, 'Новости', NULL, '{content:news}', 1, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
+(42, 1, 0, 'Статьи', NULL, '{content:articles}', 2, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL);
 
 INSERT INTO `{#}moderators` (`id`, `user_id`, `date_assigned`, `ctype_name`, `count_approved`, `count_deleted`, `count_idle`) VALUES
 (1, 1, CURRENT_TIMESTAMP, 'articles', 0, 0, 0);

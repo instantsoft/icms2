@@ -12,7 +12,7 @@ class onBillingMenuBilling extends cmsAction {
 
             return [
                 'url'     => href_to_profile($this->cms_user, ['balance']),
-                'counter' => $this->cms_user->balance ?: 0
+                'counter' => (float)($this->cms_user->balance ?: 0)
             ];
         }
 

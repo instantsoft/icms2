@@ -50,7 +50,12 @@
                         html_svg_icon($icon_params[0], $icon_params[1]);
                     } ?>
                     <?php if (!empty($item['title']) && empty($item['options']['hide_title'])) { ?>
-                        <span class="nav-item-text"><?php echo $item['title']; ?></span>
+                        <span class="nav-item-text">
+                            <?php echo $item['title']; ?>
+                            <?php if (!empty($item['hint'])) { ?>
+                                <br><span class="nav-item-hint"><?php echo $item['hint']; ?></span>
+                            <?php } ?>
+                        </span>
                     <?php } ?>
                     <?php if (isset($item['counter']) && $item['counter']){ ?>
                         <span class="counter badge badge-primary"><?php html($item['counter']); ?></span>

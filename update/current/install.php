@@ -7,6 +7,10 @@ function install_package() {
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    if(!$core->db->isFieldExists('menu_items', 'hint', false)){
+        $core->db->query("ALTER TABLE `{#}menu_items` ADD `hint` VARCHAR(64) NULL DEFAULT NULL COMMENT 'Краткое описание пункта меню' AFTER `title`;");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

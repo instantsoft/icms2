@@ -8,3 +8,5 @@ define('LANG_WD_MENU_MAX_ITEMS_HINT', 'Остальные пункты буду�
 define('LANG_WD_MENU_TEMPLATE', 'Шаблон списка меню');
 define('LANG_WD_MENU_TEMPLATE_HINT', 'Файл шаблона в assets/ui/. Файл должен начинаться на "menu"');
 define('LANG_WD_MENU_CSS_CLASS', 'CSS класс контейнера пунктов меню');
+define('LANG_WD_MENU_BUILD_AS_CHILDS', 'Использовать вложенную структуру данных');
+define('LANG_WD_MENU_BUILD_AS_CHILDS_HINT', 'Пункты меню передаются в новой вложенной структуре данных. Не включайте, если используемый шаблон её не поддерживает.');

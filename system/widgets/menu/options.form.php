@@ -51,6 +51,10 @@ class formWidgetMenuOptions extends cmsForm {
                         'title'   => LANG_WD_MENU_MAX_ITEMS,
                         'hint'    => LANG_WD_MENU_MAX_ITEMS_HINT,
                         'default' => 0
+                    ]),
+                    new fieldCheckbox('options:build_menu_as_childs', [
+                        'title' => LANG_WD_MENU_BUILD_AS_CHILDS,
+                        'hint'  => LANG_WD_MENU_BUILD_AS_CHILDS_HINT
                     ])
                 ]
             ]

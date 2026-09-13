@@ -152,7 +152,10 @@ icms.datagrid = (function () {
                                 if(!modified[this.rows[key].id]){
                                     modified[this.rows[key].id] = {};
                                 }
-                                modified[this.rows[key].id][this.rows[key].columns[k].name] = this.rows[key].columns[k].editable.new_value;
+                                /**Конвертируем true в пустую строку если значение стёрли**/
+                                modified[this.rows[key].id][this.rows[key].columns[k].name] =
+                                    this.rows[key].columns[k].editable.new_value === true ? '' :
+                                    this.rows[key].columns[k].editable.new_value;
                             }
                         }
                     }
@@ -648,7 +651,8 @@ icms.datagrid = (function () {
                 current_value: {
                     handler: function (new_value, old_value) {
                         if(new_value !== this.col.editable.value){
-                            this.$root.rows[this.row_key].columns[this.col_key].editable.new_value = new_value;
+                            /**Присваиваем true для пустой строки чтобы был виден флаг редактирования**/
+                            this.$root.rows[this.row_key].columns[this.col_key].editable.new_value = new_value === '' ? true : new_value;
                         } else {
                             this.$root.rows[this.row_key].columns[this.col_key].editable.new_value = null;
                         }

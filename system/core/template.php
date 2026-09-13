@@ -623,13 +623,15 @@ class cmsTemplate {
     /**
      * Выводит меню
      *
-     * @param string $menu_name Название меню
-     * @param boolean $detect_active_id Определять активные пункты меню
-     * @param string $css_class CSS класс контейнера пунктов меню
-     * @param integer $max_items Максимальное количество видимых пунктов
-     * @param boolean $is_allow_multiple_active Определять все активные пункты меню
-     * @param string $template Название файла шаблона меню в assets/ui/
-     * @param string $menu_title Название(подпись) меню
+     * @param string  $menu_name                  Название меню
+     * @param boolean $detect_active_id           Определять активные пункты меню
+     * @param string  $css_class                  CSS-класс контейнера пунктов меню
+     * @param integer $max_items                  Максимальное количество видимых пунктов
+     * @param boolean $is_allow_multiple_active   Определять все активные пункты меню
+     * @param string  $template                   Название файла шаблона меню в assets/ui/
+     * @param string  $menu_title                 Название (подпись) меню
+     *
+     * @return void
      */
     public function menu(
         $menu_name,
@@ -666,87 +668,21 @@ class cmsTemplate {
         $root_len = strlen($this->site_config->root);
         $lang_len = $href_lang ? strlen($href_lang) : 0;
 
-        foreach ($menu as $id => &$item) {
-
-            // Строим атрибуты ссылок
-            $item['attributes'] = $item['attributes'] ?? [];
-
-            $onclick = isset($item['options']['confirm']) ? "return confirm('{$item['options']['confirm']}');" : ($item['options']['onclick'] ?? false);
-            if($onclick){
-                $item['onclick'] = $onclick;
-            }
-
-            if (!empty($item['options']['target'])) {
-                $item['attributes']['target'] = $item['options']['target'];
-            }
-
-            if (!empty($item['data'])) {
-                foreach ($item['data'] as $key => $val) {
-                    $item['attributes']['data-' . $key] = html($val, false);
-                }
-            }
-
-            $item['attributes']['id'] = $item['attributes']['id'] ?? 'menu-item-id-'.$menu_name.'-'.($item['id']??$id);
-
-            $item['disabled']     = !empty($item['disabled']);
-            $item['level']        = $item['level'] ?? 1;
-            $item['childs_count'] = $item['childs_count'] ?? 0;
-
-            if (!isset($item['url']) && !empty($item['controller'])) {
-
-                $item['action'] = $item['action'] ?? '';
-                $item['params'] = $item['params'] ?? [];
-
-                $item['url'] = href_to($item['controller'], $item['action'], $item['params']);
-            }
-
-            // все действия с подтверждением снабжаем csrf_token
-            if (!empty($item['data']['confirm'])) {
-                if ($item['url']) {
-                    $item['url'] .= (strpos($item['url'], '?') !== false ? '&' : '?') . 'csrf_token=' . cmsForm::getCSRFToken();
-                }
-                if (!isset($item['options'])) {
-                    $item['options'] = [];
-                }
-                $item['options']['class'] = ($item['options']['class'] ?? '') . ' icms-action-confirm';
-            }
-
-            // Если нужно, считаем количество пунктов первого уровня
-            if ($max_items) {
-
-                if ($item['level'] == 1) {
-                    $first_level_count++;
-                }
-
-                if ($first_level_count > $max_items && !$first_level_limit) {
-                    $first_level_limit = $index;
-                }
-
-                $index++;
-            }
-
-            // ищем активные пункты меню
-            if ($detect_active_id && !empty($item['url'])) {
-
-                $url = $item['url_mask'] ?? urldecode($item['url']);
-                $url = trim(mb_substr($url, $root_len + $lang_len), '/');
-
-                //полное совпадение ссылки и адреса?
-                if ($current_url === $url) {
-
-                    $active_ids[] = $id;
-
-                } else if (
-                    $is_allow_multiple_active &&
-                    (strpos($current_ourl, $url . '/') === 0 ||
-                     strpos($current_url, $url . '/') === 0)
-                ) {
-                    $active_ids[] = $id;
-                }
-            }
-        }
-
-        unset($item);
+        $this->prepareMenuItems(
+            $menu,
+            $menu_name,
+            $active_ids,
+            $first_level_count,
+            $first_level_limit,
+            $index,
+            $root_len,
+            $lang_len,
+            $current_url,
+            $current_ourl,
+            $detect_active_id,
+            $is_allow_multiple_active,
+            $max_items
+        );
 
         if ($max_items && $first_level_limit) {
 
@@ -792,6 +728,171 @@ class cmsTemplate {
         }
 
         $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template, $menu_title);
+    }
+
+    /**
+     * Определяет, является ли пункт меню активным
+     *
+     * При обнаружении активного пункта его ID добавляется в переданный массив.
+     * При разрешении множественной активности также определяет пункты,
+     * являющиеся родительскими для текущего URL.
+     *
+     * @param array   &$active_ids              Массив ID активных пунктов меню
+     * @param array   $item                     Пункт меню
+     * @param int     $root_len                 Длина префикса корневого URL
+     * @param int     $lang_len                 Длина языкового префикса URL
+     * @param string  $current_url              Оригинальный текущий URL
+     * @param string  $current_ourl             Подготовленный текущий URL
+     * @param bool    $is_allow_multiple_active Определять все активные пункты меню
+     *
+     * @return void
+     */
+    protected function detectActiveMenuItem(
+        array &$active_ids,
+        array $item,
+        int $root_len,
+        int $lang_len,
+        string $current_url,
+        string $current_ourl,
+        $is_allow_multiple_active
+    ) {
+
+        if (empty($item['url'])) {
+            return;
+        }
+
+        $url = trim(mb_substr(($item['url_mask'] ?? urldecode($item['url'])), $root_len + $lang_len), '/');
+
+        //полное совпадение ссылки и адреса?
+        if ($current_url === $url) {
+
+            $active_ids[] = $item['id'];
+
+        } else if (
+            $is_allow_multiple_active &&
+            (strpos($current_ourl, $url . '/') === 0 ||
+             strpos($current_url, $url . '/') === 0)
+        ) {
+            $active_ids[] = $item['id'];
+        }
+    }
+
+    protected function prepareMenuItems(
+        array &$menu,
+        string $menu_name,
+        array &$active_ids,
+        int &$first_level_count,
+        int &$first_level_limit,
+        int &$index,
+        int $root_len,
+        int $lang_len,
+        string $current_url,
+        string $current_ourl,
+        $detect_active_id,
+        $is_allow_multiple_active,
+        $max_items = 0
+    ) {
+
+        foreach ($menu as $id => &$item) {
+
+            if (!isset($item['id'])) {
+                $item['id'] = $id;
+            }
+
+            $this->prepareMenuItem($item, $menu_name);
+
+            // Если нужно, считаем количество пунктов первого уровня
+            if ($max_items) {
+
+                if ($item['level'] == 1) {
+                    $first_level_count++;
+                }
+
+                if ($first_level_count > $max_items && !$first_level_limit) {
+                    $first_level_limit = $index;
+                }
+
+                $index++;
+            }
+
+            // ищем активные пункты меню
+            if ($detect_active_id) {
+
+                $this->detectActiveMenuItem(
+                    $active_ids,
+                    $item,
+                    $root_len,
+                    $lang_len,
+                    $current_url,
+                    $current_ourl,
+                    $is_allow_multiple_active
+                );
+            }
+
+            // Если схема меню - вложенные пункты, перебираем их
+            if (!empty($item['childs'])) {
+                $this->prepareMenuItems(
+                    $item['childs'],
+                    $menu_name,
+                    $active_ids,
+                    $first_level_count,
+                    $first_level_limit,
+                    $index,
+                    $root_len,
+                    $lang_len,
+                    $current_url,
+                    $current_ourl,
+                    $detect_active_id,
+                    $is_allow_multiple_active
+                );
+            }
+        }
+    }
+
+    /**
+     * Подготавливает пункт меню
+     *
+     * @param array  &$item      Пункт меню
+     * @param string $menu_name  Название меню
+     *
+     * @return void
+     */
+    protected function prepareMenuItem(array &$item, string $menu_name) {
+
+        // Строим атрибуты ссылок
+        $item['attributes'] = $item['attributes'] ?? [];
+
+        $onclick = isset($item['options']['confirm'])
+            ? "return confirm('{$item['options']['confirm']}');"
+            : ($item['options']['onclick'] ?? false);
+
+        if($onclick){
+            $item['onclick'] = $onclick;
+        }
+
+        if (!empty($item['options']['target'])) {
+            $item['attributes']['target'] = $item['options']['target'];
+        }
+
+        if (!empty($item['data'])) {
+            foreach ($item['data'] as $key => $val) {
+                $item['attributes']['data-' . $key] = html($val, false);
+            }
+        }
+
+        $item['attributes']['id'] = $item['attributes']['id'] ?? 'menu-item-id-'.$menu_name.'-' . $item['id'];
+
+        $item['disabled']     = !empty($item['disabled']);
+        $item['level']        = $item['level'] ?? 1;
+        $item['childs_count'] = $item['childs_count'] ?? 0;
+
+        if (!isset($item['url']) && !empty($item['controller'])) {
+
+            $item['action'] = $item['action'] ?? '';
+            $item['params'] = $item['params'] ?? [];
+
+            $item['url'] = href_to($item['controller'], $item['action'], $item['params']);
+        }
     }
 
     /**
@@ -3012,7 +3113,7 @@ class cmsTemplate {
     public function getAvailableTemplatesFiles($path, $pattern = '*.*', $template_name = false, $excluded = []) {
 
         if (!$template_name) {
-            $template_instance = new cmsTemplate($this->site_config->template);
+            $template_instance = new cmsTemplate($this->site_config->http_template);
         } else {
             $template_instance = new cmsTemplate($template_name);
         }
@@ -3020,10 +3121,6 @@ class cmsTemplate {
         $inherit_names = array_reverse($template_instance->getInheritNames());
 
         $files = $__files = [];
-
-        if (!$template_name) {
-            $template_name = $this->site_config->template;
-        }
 
         foreach ($inherit_names as $name) {
             $_files = cmsCore::getFilesList(self::TEMPLATE_BASE_PATH . $name . '/' . $path, $pattern, true);

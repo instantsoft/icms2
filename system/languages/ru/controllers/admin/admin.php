@@ -391,6 +391,9 @@
     define('LANG_CP_MENU_DELETE',               'Удалить меню');
     define('LANG_CP_MENU_DELETE_CONFIRM',       'Удалить активное меню?');
     define('LANG_CP_MENU_ITEM',                 'Пункт меню');
+    define('LANG_CP_MENU_HINT',                 'Краткое описание пункта меню');
+    define('LANG_CP_MENU_ITEM_CHILD_TPL',       'Шаблон для дочерних пунктов');
+    define('LANG_CP_MENU_ITEM_CHILD_TPL_HINT',  'В этом шаблоне будут выведены дочерние пункты меню. Файл шаблона в assets/ui/, должен начинаться на "menu"');
     define('LANG_CP_MENU_ITEM_PARENT',          'Родительский пункт');
     define('LANG_CP_MENU_ITEM_CREATED',         'Пункт меню &laquo;%s&raquo; создан');
     define('LANG_CP_MENU_ITEM_TITLE',           'Название пункта');

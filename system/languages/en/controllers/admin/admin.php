@@ -371,6 +371,9 @@
     define('LANG_CP_MENU_DELETE_CONFIRM',       'Delete current menu?');
     define('LANG_CP_MENU_ITEM',                 'Menu Item');
     define('LANG_CP_MENU_ITEM_PARENT',          'Parent item');
+    define('LANG_CP_MENU_HINT',                 'Short description of the menu item');
+    define('LANG_CP_MENU_ITEM_CHILD_TPL',       'Template for child menu items');
+    define('LANG_CP_MENU_ITEM_CHILD_TPL_HINT',  'Child menu items will be displayed in this template. The template file in assets/ui/ should begin with "menu"');
     define('LANG_CP_MENU_ITEM_CREATED',         'Menu item &laquo;%s&raquo; has been created');
     define('LANG_CP_MENU_ITEM_TITLE',           'Menu item title');
     define('LANG_CP_MENU_ITEM_URL',             'URL');

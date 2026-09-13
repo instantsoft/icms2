@@ -60,7 +60,7 @@ class onContentMenuContent extends cmsAction {
             return false;
         }
 
-        return $this->getMenuCategoriesItems($item['menu_item_id'], $ctype);
+        return $this->getMenuCategoriesItems($item['menu_item_id'], $ctype, $item['options']);
     }
 
 }

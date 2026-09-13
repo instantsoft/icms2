@@ -26,6 +26,18 @@ class formAdminMenuItem extends cmsForm {
                             ['max_length', 64]
                         ]
                     ]),
+                    new fieldString('hint', [
+                        'title' => LANG_CP_MENU_HINT,
+                        'is_clean_disable' => true,
+                        'can_multilanguage' => true,
+                        'multilanguage_params' => [
+                            'is_table_field' => true,
+                            'table' => 'menu_items'
+                        ],
+                        'rules' => [
+                            ['max_length', 64]
+                        ]
+                    ]),
                     new fieldHidden('menu_id', []),
                     new fieldList('parent_id', [
                         'title' => LANG_CP_MENU_ITEM_PARENT,
@@ -88,6 +100,14 @@ class formAdminMenuItem extends cmsForm {
                     new fieldCheckbox('options:hide_title', [
                         'title' => LANG_CP_MENU_ITEM_HIDE_TITLE,
                         'visible_depend' => ['options:icon' => ['hide' => ['']]]
+                    ]),
+                    new fieldList('options:template_child', [
+                        'title'     => LANG_CP_MENU_ITEM_CHILD_TPL,
+                        'hint'      => LANG_CP_MENU_ITEM_CHILD_TPL_HINT,
+                        'default'   => '',
+                        'generator' => function ($item) {
+                            return ['' => ''] + cmsTemplate::getInstance()->getAvailableTemplatesFiles('assets/ui', 'menu*.tpl.php');
+                        }
                     ])
                 ]
             ],

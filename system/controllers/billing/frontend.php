@@ -63,7 +63,7 @@ class billing extends cmsFrontend {
     }
 
     /**
-     * Проверяет баланс перед действием
+     * Проверяет баланс перед выполнением действия
      *
      * @param string $controller Имя контроллера
      * @param string $name       Имя действия
@@ -72,39 +72,81 @@ class billing extends cmsFrontend {
      */
     public function checkBalanceForAction(string $controller, string $name, $back_url = null) {
 
-        if ($this->cms_user->is_admin) {
+        $result = $this->canPerformAction($controller, $name);
+
+        if ($result->message) {
+            cmsUser::addSessionMessage(
+                $result->message,
+                $result->allowed ? 'info' : 'error'
+            );
+        }
+
+        if ($result->allowed) {
             return true;
+        }
+
+        cmsUser::sessionSet('billing_ticket', [
+            'title'       => $result->action['title'],
+            'amount'      => $result->price,
+            'diff_amount' => round($result->price - $result->balance['total'], 2),
+            'back_url'    => $back_url ?? $this->cms_core->uri_absolute
+        ]);
+
+        return $this->redirectTo('billing', 'deposit');
+    }
+
+    /**
+     * Проверяет возможность выполнения действия
+     *
+     * @param string $controller Имя контроллера
+     * @param string $name       Имя действия
+     * @return stdClass Результат проверки
+     */
+    public function canPerformAction(string $controller, string $name) {
+
+        $result = (object) [
+            'allowed' => true,
+            'message' => '',
+            'price'   => null,
+            'action'  => null,
+            'balance' => null
+        ];
+
+        if ($this->cms_user->is_admin) {
+            return $result;
         }
 
         [$price, $action] = $this->getPriceAndAction($controller, $name, $this->cms_user->id);
 
         if (!$price || !$action) {
-            return true;
+            return $result;
         }
 
         $balance = $this->model->getUserBalance($this->cms_user->id, true);
 
+        $result->price   = $price;
+        $result->action  = $action;
+        $result->balance = $balance;
+
         if ($price <= $balance['total'] || $price < 0) {
 
-            $message = $price > 0 ? LANG_BILLING_ACTION_PRICE_NOTICE : LANG_BILLING_ACTION_BONUS_NOTICE;
+            $result->message = sprintf(
+                $price > 0
+                    ? LANG_BILLING_ACTION_PRICE_NOTICE
+                    : LANG_BILLING_ACTION_BONUS_NOTICE,
+                html_spellcount(abs($price), $this->options['currency'])
+            );
 
-            cmsUser::addSessionMessage(sprintf($message, html_spellcount(abs($price), $this->options['currency'])));
-
-            return true;
+            return $result;
         }
 
         if ($balance['hold_amount'] != 0) {
-            cmsUser::addSessionMessage(LANG_BILLING_ACTION_PRICE_DEBT, 'error');
+            $result->message = LANG_BILLING_ACTION_PRICE_DEBT;
         }
 
-        cmsUser::sessionSet('billing_ticket', [
-            'title'       => $action['title'],
-            'amount'      => $price,
-            'diff_amount' => round($price - $balance['total'], 2),
-            'back_url'    => $back_url ?? $this->cms_core->uri_absolute
-        ]);
+        $result->allowed = false;
 
-        return $this->redirectTo('billing', 'deposit');
+        return $result;
     }
 
     /**

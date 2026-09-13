@@ -14,7 +14,7 @@ class modelMenu extends cmsModel {
         }
     }
 
-    public static function getMenuItemsByName($menu_name) {
+    public static function getMenuItemsByName($menu_name, $build_as_childs = false) {
 
         self::loadAllMenus();
 
@@ -24,7 +24,7 @@ class modelMenu extends cmsModel {
 
                 self::$rendered_menus[] = $menu_name;
 
-                self::$all_menus[$menu_name] = self::buildMenu(self::$all_menus[$menu_name]);
+                self::$all_menus[$menu_name] = self::buildMenu(self::$all_menus[$menu_name], true, $build_as_childs);
             }
 
             return self::$all_menus[$menu_name];
@@ -110,7 +110,7 @@ class modelMenu extends cmsModel {
         return $result;
     }
 
-    public static function buildMenu($menus, $parse_hooks = true) {
+    public static function buildMenu($menus, $parse_hooks = true, $build_as_childs = false) {
 
         $user     = cmsUser::getInstance();
         $replaced = ['csrf_token' => cmsForm::getCSRFToken()];
@@ -151,15 +151,21 @@ class modelMenu extends cmsModel {
 
                     $item['url'] = string_replace_user_properties($item['url']);
 
-                // если URL пункта меню содержит шаблон {controller:action}
-                } elseif (preg_match('/^{([a-z0-9]+):*([a-z0-9_]*)}$/i', $item['url'], $matches)) {
+                // если URL пункта меню содержит шаблон {controller:action} или с параметрами {controller:action?id=123&foo=bar}
+                } elseif (preg_match('/^{([a-z0-9]+):([a-z0-9_]+)(?:\?([^}]+))?}$/i', $item['url'], $matches)) {
 
                     // то вызываем хук menu указанного контроллера
                     $controller = $matches[1];
                     $action     = $matches[2];
+                    $options    = [];
+
+                    if (!empty($matches[3])) {
+                        parse_str($matches[3], $options);
+                    }
 
                     $hook_result = cmsEventsManager::hook('menu_' . $controller, [
                         'action'        => $action,
+                        'options'       => $options,
                         'menu_item_id'  => $item['id'],
                         'menu_item_url' => $item['url'],
                         'menu_item'     => $item
@@ -209,7 +215,7 @@ class modelMenu extends cmsModel {
 
         $tree = [];
 
-        cmsModel::buildTreeRecursive($items, $tree);
+        cmsModel::buildTreeRecursive($items, $tree, 0, 1, $build_as_childs);
 
         return $tree;
     }
