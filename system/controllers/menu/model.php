@@ -259,6 +259,33 @@ class modelMenu extends cmsModel {
         return $this->update('menu_items', $id, $item);
     }
 
+    public function copyMenuItem($menu_id, $items) {
+
+        $id_map = [];
+
+        $rows = $this->filterIn('id', $items)->
+                orderByRaw('i.parent_id ASC, i.ordering ASC')->
+                get('menu_items') ?: [];
+
+        foreach ($rows as $item) {
+
+            $old_id = $item['id'];
+
+            unset($item['id']);
+
+            $item['menu_id'] = $menu_id;
+            $item['parent_id'] = $id_map[$item['parent_id']] ?? ($item['parent_id'] ?: 0);
+
+            $id = $this->insert('menu_items', $item);
+
+            $id_map[$old_id] = $id;
+        }
+
+        cmsCache::getInstance()->clean('menu.items');
+
+        return true;
+    }
+
     public function moveMenuItem($menu_id, $items) {
 
         cmsCache::getInstance()->clean('menu.items');

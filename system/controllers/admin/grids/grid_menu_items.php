@@ -11,6 +11,11 @@ function grid_menu_items($controller) {
         'is_selectable'   => true,
         'select_actions'  => [
             [
+                'title'  => LANG_COPY,
+                'action' => 'open',
+                'url'    => href_to($controller->name, 'menu', ['item_move', 1])
+            ],
+            [
                 'title'  => LANG_MOVE,
                 'action' => 'open',
                 'url'    => href_to($controller->name, 'menu', ['item_move'])

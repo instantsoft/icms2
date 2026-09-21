@@ -4,7 +4,7 @@
  */
 class actionAdminMenuItemMove extends cmsAction {
 
-    public function run() {
+    public function run($is_copy = 0) {
 
         if (!$this->request->isAjax()) {
             return cmsCore::error404();
@@ -14,7 +14,7 @@ class actionAdminMenuItemMove extends cmsAction {
 
         $is_submitted = $this->request->has('items');
 
-        $form = $this->getForm('menu_item_move');
+        $form = $this->getForm('menu_item_move', [$is_copy]);
 
         $data = $form->parse($this->request, $is_submitted);
 
@@ -26,7 +26,11 @@ class actionAdminMenuItemMove extends cmsAction {
 
                 $data['items'] = explode(',', $data['items']);
 
-                $this->model_menu->moveMenuItem($data['menu_id'], $data['items']);
+                if ($is_copy) {
+                    $this->model_menu->copyMenuItem($data['menu_id'], $data['items']);
+                } else {
+                    $this->model_menu->moveMenuItem($data['menu_id'], $data['items']);
+                }
 
                 return $this->cms_template->renderJSON([
                     'errors' => false,
@@ -51,6 +55,7 @@ class actionAdminMenuItemMove extends cmsAction {
         }
 
         return $this->cms_template->render('menu_item_move', [
+            'is_copy'   => $is_copy,
             'items'     => $items,
             'menu_id'   => $item['menu_id'],
             'form'      => $form,

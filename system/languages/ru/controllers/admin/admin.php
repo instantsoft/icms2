@@ -387,6 +387,7 @@
     define('LANG_CP_MENU_ADD',                  'Создать меню');
     define('LANG_CP_MENU_EDIT',                 'Изменить меню');
     define('LANG_CP_MENU_MOVE',                 'Перенести пункты в меню');
+    define('LANG_CP_MENU_COPY',                 'Копировать пункты в меню');
     define('LANG_CP_MENU_CREATED',              'Меню &laquo;%s&raquo; создано');
     define('LANG_CP_MENU_DELETE',               'Удалить меню');
     define('LANG_CP_MENU_DELETE_CONFIRM',       'Удалить активное меню?');

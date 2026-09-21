@@ -47,7 +47,7 @@
                 </div>
                 <div class="contacts icms-messages__contacts-list list-group" id="contacts-list">
                     <?php foreach($contacts as $contact){ ?>
-                        <a id="contact-<?php echo $contact['id']; ?>" href="#<?php echo $contact['id']; ?>" class="text-decoration-none d-flex align-items-center contact list-group-item border-0 rounded-0 p-2" title="<?php echo $contact['nickname']; ?>" rel="<?php echo $contact['id']; ?>">
+                        <a id="contact-<?php echo $contact['id']; ?>" href="#<?php echo $contact['id']; ?>" class="text-decoration-none d-flex align-items-center contact list-group-item border-0 rounded-0 p-2" title="<?php html($contact['nickname']); ?>" rel="<?php echo $contact['id']; ?>">
 
                             <span class="icms-user-avatar mr-2 small <?php if (!empty($contact['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" rel="<?php echo $contact['id']; ?>">
                                 <?php if($contact['avatar']){ ?>

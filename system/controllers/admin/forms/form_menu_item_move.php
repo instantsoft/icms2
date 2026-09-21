@@ -2,7 +2,7 @@
 
 class formAdminMenuItemMOve extends cmsForm {
 
-    public function init() {
+    public function init($is_copy) {
 
         return [
             [
@@ -15,7 +15,7 @@ class formAdminMenuItemMOve extends cmsForm {
                         ]
                     ]),
                     new fieldList('menu_id', [
-                        'title' => LANG_CP_MENU_MOVE,
+                        'title' => $is_copy ? LANG_CP_MENU_COPY : LANG_CP_MENU_MOVE,
                         'generator' => function ($item) {
 
                             $items = cmsCore::getModel('menu')->getMenus();
