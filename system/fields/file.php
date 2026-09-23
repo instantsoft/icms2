@@ -21,7 +21,10 @@ class fieldFile extends cmsFormField {
             ]),
             new fieldString('extensions', [
                 'title' => LANG_PARSER_FILE_EXTS,
-                'hint'  => LANG_PARSER_FILE_EXTS_HINT
+                'hint'  => LANG_PARSER_FILE_EXTS_HINT,
+                'rules' => [
+                    ['required']
+                ]
             ]),
             new fieldNumber('max_size_mb', [
                 'title' => LANG_PARSER_FILE_MAX_SIZE,

@@ -234,12 +234,7 @@ class cmsUploadfile {
      */
     public function isAllowed() {
 
-        // Пускаем любые, если не указано
-        if ($this->allowed_mime === null) {
-            return true;
-        }
-
-        if ($this->file_mime === false) {
+        if (!$this->file_mime || !$this->allowed_mime) {
             return false;
         }
 

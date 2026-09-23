@@ -407,7 +407,7 @@ class cmsUploader {
 
         if (!$file->isAllowed()) {
             return [
-                'error'   => LANG_UPLOAD_ERR_MIME . '. ' . sprintf(LANG_PARSER_FILE_EXTS_FIELD_HINT, implode(', ', $file->getAllowedExtensions())),
+                'error'   => LANG_UPLOAD_ERR_MIME . '. ' . sprintf(LANG_PARSER_FILE_EXTS_FIELD_HINT, implode(', ', $file->getAllowedExtensions() ?: LANG_NO)),
                 'success' => false,
                 'name'    => $dest_name
             ];
@@ -523,7 +523,7 @@ class cmsUploader {
 
         if (!$file->isAllowed()) {
             return [
-                'error'   => LANG_UPLOAD_ERR_MIME . '. ' . sprintf(LANG_PARSER_FILE_EXTS_FIELD_HINT, implode(', ', $file->getAllowedExtensions())),
+                'error'   => LANG_UPLOAD_ERR_MIME . '. ' . sprintf(LANG_PARSER_FILE_EXTS_FIELD_HINT, implode(', ', $file->getAllowedExtensions() ?: LANG_NO)),
                 'success' => false,
                 'name'    => $dest_name
             ];
