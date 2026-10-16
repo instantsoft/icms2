@@ -836,6 +836,26 @@ class admin extends cmsFrontend {
             'visible_depend' => ['tpl_wrap' => ['hide' => ['', 'wrapper_plain', '-1']]]
         ]));
 
+        $form->addField($design_fieldset_id, new fieldFieldsgroup('options:wrapper_vars', [
+            'title' => LANG_WIDGET_WRAPPER_VARS,
+            'hint'  => LANG_WIDGET_WRAPPER_VARS_HINT,
+            'is_sortable' => false,
+            'add_title' => LANG_VARS_ADD,
+            'childs' => [
+                new fieldString('name', [
+                    'title' => LANG_VARS_NAME,
+                    'rules' => [
+                        ['required'],
+                        ['min_length', 2]
+                    ]
+                ]),
+                new fieldString('value', [
+                    'title' => LANG_VARS_VALUE
+                ])
+            ],
+            'visible_depend' => ['tpl_wrap' => ['hide' => ['', 'wrapper_plain', '-1']]]
+        ]));
+
         //
         // Опции доступа
         //

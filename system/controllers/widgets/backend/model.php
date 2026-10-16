@@ -263,9 +263,27 @@ class modelBackendWidgets extends modelWidgets {
                 ];
             }
 
+            $menu = [
+                [
+                    'title' => LANG_CP_WIDGETS_EDIT_PAGE,
+                    'href'  => href_to('admin', 'widgets', ['page_edit', $item['id']])
+                ],
+                [
+                    'title' => LANG_CP_WIDGETS_COPY_PAGE,
+                    'href'  => href_to('admin', 'widgets', ['page_add', $item['id']])
+                ],
+                [
+                    'title'   => LANG_CP_WIDGETS_DELETE_PAGE,
+                    'class'   => 'icms-action-confirm',
+                    'confirm' => LANG_CP_WIDGETS_DELETE_PAGE_CONFIRM,
+                    'href'    => href_to('admin', 'widgets', ['page_delete', $item['id']], ['csrf_token' => cmsForm::getCSRFToken()])
+                ]
+            ];
+
             $result[$item['controller']]['pages'][] = [
-                'title'  => $item['title'],
-                'key'    => "{$item['controller']}.{$item['id']}"
+                'title'   => $item['title'],
+                'actions' => $menu,
+                'key'     => "{$item['controller']}.{$item['id']}"
             ];
 
             $last_controller = $item['controller'];

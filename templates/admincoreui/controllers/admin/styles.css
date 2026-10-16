@@ -1482,3 +1482,29 @@ td .spinner > div {
     overflow-y: auto;
     max-height: 90vh;
 }
+.blurFadeOut {
+    animation-name: blur;
+    animation-duration: 0.3s;
+    animation-fill-mode: both;
+}
+
+@keyframes blur {
+    0% {
+        opacity: 0;
+        filter: blur(7px);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(0px);
+    }
+}
+.dropdown-context-menu {
+    display: none;
+    box-shadow: 1px 1px 5px 0px #CCC;
+    min-width: 7rem;
+    margin: 0;
+    transition: none !important;
+}
+.dropdown-context-menu .dropdown-item {
+    padding: 5px 10px;
+}

@@ -80,16 +80,23 @@
     define('LANG_WIDGET_TAB_PREV_HINT',      'If enabled, you can select container templates starting with <b>wrapper_tabbed</b>. The output container template of a widget group is determined by the last widget in the group.');
     define('LANG_WIDGET_TITLE_LINKS',        'Links in the widget header');
     define('LANG_WIDGET_TITLE_LINKS_HINT',   'In the <b><em>Title | URL</em></b> format, for example, <b><em>Google | http://www.google.com</em></b><br>If a link is wrapped in curly brackets <b>{ }</b>, it will be shown to authorized users only<br>One link in a line');
-    define('LANG_WIDGET_WRAPPER_TPL',         'Container template');
+    define('LANG_WIDGET_WRAPPER_TPL',        'Container template');
     define('LANG_WIDGET_WRAPPER_TPL_NO',     'Without container template');
-    define('LANG_WIDGET_BODY',                 'Widget body');
-    define('LANG_WIDGET_WRAPPER_TPL_CUST',     'Custom HTML container ');
-    define('LANG_WIDGET_WRAPPER_TPL_HINT',     'File from the <b>widgets</b> directory of your template');
-    define('LANG_WIDGET_BODY_TPL',             'Widget template');
-    define('LANG_WIDGET_BODY_TPL_HINT',         'File from the <b>%s</b> directory of your template');
+    define('LANG_WIDGET_BODY',               'Widget body');
+    define('LANG_WIDGET_WRAPPER_TPL_CUST',   'Custom HTML container ');
+    define('LANG_WIDGET_WRAPPER_TPL_HINT',   'File from the <b>widgets</b> directory of your template');
+    define('LANG_WIDGET_BODY_TPL',           'Widget template');
+    define('LANG_WIDGET_BODY_TPL_HINT',      'File from the <b>%s</b> directory of your template');
     define('LANG_WIDGET_DEVICE',             'Which devices show the widget');
-    define('LANG_WIDGET_LANG_SELECT',         'For which languages will the widget be displayed?');
-    define('LANG_WIDGET_TEMPLATE_LAYOUT',     'Display on layouts');
+    define('LANG_WIDGET_LANG_SELECT',        'For which languages will the widget be displayed?');
+    define('LANG_WIDGET_TEMPLATE_LAYOUT',    'Display on layouts');
+    define('LANG_WIDGET_WRAPPER_VARS',       'Additional variables in the container template');
+    define('LANG_WIDGET_WRAPPER_VARS_HINT',  'For advanced users! The values will be available in your container template via <b>echo $widget[\'wrap_vars\'][VARIABLE NAME]</b>');
+
+    define('LANG_VARS_ADD',   'Add variable');
+    define('LANG_VARS_NAME',  'Variable name');
+    define('LANG_VARS_VALUE', 'Variable value');
+
     define('LANG_DESKTOP_DEVICES',  'Desktop PCs');
     define('LANG_TABLET_DEVICES',  'Tablets');
     define('LANG_MOBILE_DEVICES',  'Phones');

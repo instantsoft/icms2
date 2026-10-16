@@ -98,7 +98,65 @@ icms.admin = (function ($) {
         }
 
         this.startTime();
+        this.initContextMenu();
+    };
 
+    this.initContextMenu = function () {
+        $('body').append('<div class="dropdown-menu dropdown-context-menu" id="dynamic_context_menu"></div>');
+        let cm = $('#dynamic_context_menu');
+        let target = null;
+        let offsetX = 0;
+        let offsetY = 0;
+        $(document).on('contextmenu', '.context-menu-target', function(e) {
+            e.preventDefault();
+            target = this;
+            let menu_items = JSON.parse(this.getAttribute('data-context-items'));
+            cm.empty().removeClass('show');
+            $.each(menu_items, function(index, item) {
+                if (item.divider) {
+                    cm.append('<div class="dropdown-divider"></div>');
+                }
+                let classes = 'dropdown-item';
+                if (item.class) {
+                    classes += ' ' + item.class;
+                }
+                let link = $('<a class="' + classes + '" href="' + item.href + '" data-confirm="'+(item.confirm ? item.confirm : '')+'">');
+                link.text(item.title);
+                cm.append(link);
+            });
+            let rect = this.getBoundingClientRect();
+
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+            cm.css({
+                top: e.pageY + 'px',
+                left: e.pageX + 'px'
+            });
+            cm.addClass('show');
+        }).on('click', function(e) {
+            if (!$(e.target).closest('.dropdown-context-menu').length && !$(e.target).closest('.context-menu-target').length) {
+                cm.removeClass('show');
+                target = null;
+            }
+        });
+        let scrollFrame = null;
+        $(window).off('scroll.contextMenu').on('scroll.contextMenu', function() {
+            if (!target || !cm.hasClass('show') || scrollFrame !== null) {
+                return;
+            }
+            const updatePosition = function() {
+                scrollFrame = null;
+                if (!target || !cm.hasClass('show')) {
+                    return;
+                }
+                const rect = target.getBoundingClientRect();
+                cm.css({
+                    top: (rect.top + window.scrollY + offsetY) + 'px',
+                    left: (rect.left + window.scrollX + offsetX) + 'px'
+                });
+            };
+            scrollFrame = requestAnimationFrame(updatePosition);
+        });
     };
 
     this.startTime = function (){

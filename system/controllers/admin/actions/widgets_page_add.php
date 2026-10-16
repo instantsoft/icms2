@@ -1,17 +1,31 @@
 <?php
-
+/**
+ * @property \modelBackendWidgets $model_backend_widgets
+ */
 class actionAdminWidgetsPageAdd extends cmsAction {
 
-    public function run() {
+    public function run($copy_id = null) {
 
         $form = $this->getForm('widgets_page');
 
         $is_submitted = $this->request->has('submit');
 
-        $page = $form->parse($this->request, $is_submitted);
+        if ($copy_id) {
+
+            cmsCore::loadAllControllersLanguages();
+
+            $page = $this->model_backend_widgets->getPage($copy_id);
+            if (!$page) {
+                return cmsCore::error404();
+            }
+
+        } elseif(!$is_submitted) {
+            $page = $form->parse($this->request, $is_submitted);
+        }
 
         if ($is_submitted) {
 
+            $page   = $form->parse($this->request, $is_submitted);
             $errors = $form->validate($this, $page);
 
             if (!$errors) {

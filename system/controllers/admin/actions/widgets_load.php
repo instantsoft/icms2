@@ -31,13 +31,13 @@ class actionAdminWidgetsLoad extends cmsAction {
                 // имитируем uri
                 if ($page['url_mask']) {
 
-                    $page['url_mask'] = explode("\n", $page['url_mask']);
+                    $url_mask = explode("\n", $page['url_mask']);
 
                     $uri = str_replace([
                         '%', '*', '{slug}'
                     ], [
                         '000', 'ab/c_', 'abc-0'
-                    ], trim($page['url_mask'][0]));
+                    ], trim($url_mask[0]));
 
                     $matched_pages = $this->cms_core->detectMatchedWidgetPages($this->cms_core->getWidgetsPages(), $uri);
 
@@ -55,7 +55,8 @@ class actionAdminWidgetsLoad extends cmsAction {
 
         return $this->cms_template->renderJSON([
             'is_exists' => ($scheme !== false),
-            'scheme'    => $scheme
+            'scheme'    => $scheme,
+            'page'      => $page ?? false
         ]);
     }
 

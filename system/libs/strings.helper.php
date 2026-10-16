@@ -1075,6 +1075,45 @@ function string_urlencode($str) {
 }
 
 /**
+ * Разбивает строку на две части по количеству слов.
+ *
+ * В зависимости от параметра $from указанное количество слов
+ * выделяется либо в начале, либо в конце строки.
+ *
+ * Функция всегда оставляет хотя бы одно слово в невыделенной части.
+ * Если строка содержит только одно слово, оно полностью остаётся
+ * в первой части и не выделяется.
+ *
+ * @param string $text  Исходная строка.
+ * @param int    $count Количество слов, выделяемых из начала или конца строки.
+ *                      Максимальное значение - количество слов минус один.
+ * @param string $from  Направление выделения: 'start' - с начала строки,
+ *                      'end' - с конца строки. По умолчанию 'end'.
+ *
+ * @return array
+ *         Массив из двух строк:
+ *         - при $from = 'start': [выделенная часть, оставшаяся часть];
+ *         - при $from = 'end':   [оставшаяся часть, выделенная часть].
+ */
+function string_split_words(string $text, int $count, string $from = 'end') {
+
+    $words = preg_split('/\s+/u', trim($text), -1, PREG_SPLIT_NO_EMPTY);
+    $word_count = count($words);
+
+    if ($word_count <= 1) {
+        return [$text, ''];
+    }
+
+    $count = max(0, min($count, $word_count - 1));
+    $split_index = $from === 'start' ? $count : $word_count - $count;
+
+    return [
+        implode(' ', array_slice($words, 0, $split_index)),
+        implode(' ', array_slice($words, $split_index))
+    ];
+}
+
+/**
  * Проверяет, что значение пустое
  * @param mixed $value
  * @return boolean

@@ -79,16 +79,23 @@
     define('LANG_WIDGET_TAB_PREV_HINT',      'Если включено, то вы можете выбирать шаблоны контейнера, начинающиеся на <b>wrapper_tabbed</b>. Шаблон контейнера вывода группы виджетов определяется по последнему виджету группы.');
     define('LANG_WIDGET_TITLE_LINKS',        'Ссылки в заголовке виджета');
     define('LANG_WIDGET_TITLE_LINKS_HINT',   'В формате <b><em>Заголовок | URL</em></b>, например <b><em>Яндекс | https://www.yandex.ru</em></b><br>Если ссылка обернута в фигурные скобки <b>{ }</b> она будет показана только авторизованным пользователям<br>Одна ссылка в каждой строке');
-    define('LANG_WIDGET_WRAPPER_TPL',         'Шаблон контейнера');
+    define('LANG_WIDGET_WRAPPER_TPL',        'Шаблон контейнера');
     define('LANG_WIDGET_WRAPPER_TPL_NO',     'Без шаблона контейнера');
-    define('LANG_WIDGET_BODY',                 'Тело виджета');
-    define('LANG_WIDGET_WRAPPER_TPL_CUST',     'Свой HTML контейнера');
-    define('LANG_WIDGET_WRAPPER_TPL_HINT',     'Файл из директории <b>widgets</b> вашего шаблона');
-    define('LANG_WIDGET_BODY_TPL',             'Шаблон виджета');
-    define('LANG_WIDGET_BODY_TPL_HINT',         'Файл из директории <b>%s</b> вашего шаблона');
+    define('LANG_WIDGET_BODY',               'Тело виджета');
+    define('LANG_WIDGET_WRAPPER_TPL_CUST',   'Свой HTML контейнера');
+    define('LANG_WIDGET_WRAPPER_TPL_HINT',   'Файл из директории <b>widgets</b> вашего шаблона');
+    define('LANG_WIDGET_BODY_TPL',           'Шаблон виджета');
+    define('LANG_WIDGET_BODY_TPL_HINT',      'Файл из директории <b>%s</b> вашего шаблона');
     define('LANG_WIDGET_DEVICE',             'На каких устройствах показывать виджет');
-    define('LANG_WIDGET_LANG_SELECT',         'Для каких языков сайта показывать виджет');
-    define('LANG_WIDGET_TEMPLATE_LAYOUT',     'Выводить на макетах');
+    define('LANG_WIDGET_LANG_SELECT',        'Для каких языков сайта показывать виджет');
+    define('LANG_WIDGET_TEMPLATE_LAYOUT',    'Выводить на макетах');
+    define('LANG_WIDGET_WRAPPER_VARS',       'Дополнительные переменные в шаблон контейнера');
+    define('LANG_WIDGET_WRAPPER_VARS_HINT',  'Для опытных пользователей! Значения будут доступны в вашем шаблоне контейнера через <b>echo $widget[\'wrap_vars\'][ИМЯ ПЕРЕМЕННОЙ]</b>');
+
+    define('LANG_VARS_ADD',   'Добавить переменную');
+    define('LANG_VARS_NAME',  'Имя переменной');
+    define('LANG_VARS_VALUE', 'Значение переменной');
+
     define('LANG_DESKTOP_DEVICES',  'Настольные ПК');
     define('LANG_TABLET_DEVICES',  'Планшеты');
     define('LANG_MOBILE_DEVICES',  'Телефоны');

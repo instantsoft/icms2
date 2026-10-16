@@ -166,18 +166,20 @@ icms.billing = (function ($) {
         }, 'json');
     };
 
-    this.initPlanSelect = function (real_price_plans) {
+    this.initPlanSelect = function (real_price_plans, selected_period) {
+
+        selected_period = selected_period || 0;
 
 		$('#plan-len input:radio').on('click', function(){
 			$('#plan-price').html($(this).data('price'));
 		});
 
 		$('#plan_id').on('change', function(){
-			self.updatePlanInfo(real_price_plans);
+			self.updatePlanInfo(real_price_plans, selected_period);
 		}).trigger('change');
     };
 
-    this.updatePlanInfo = function (real_price_plans) {
+    this.updatePlanInfo = function (real_price_plans, selected_period) {
 
 		let plan_id = $('#plan_id').val();
 
@@ -186,7 +188,7 @@ icms.billing = (function ($) {
 		$('.plan-len').hide();
         $('#plan-len-'+plan_id).show();
 
-		$('#plan-len-'+plan_id+' input:radio').eq(0).trigger('click');
+		$('#plan-len-'+plan_id+' input:radio').eq(selected_period).trigger('click');
 
         if (real_price_plans.indexOf(plan_id) >= 0) {
             $('.plan-system-select').addClass('d-flex').removeClass('d-none');

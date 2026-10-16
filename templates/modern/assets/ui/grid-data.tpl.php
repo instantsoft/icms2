@@ -33,7 +33,7 @@ if(!empty($page_title)) {
             <form-select v-model="select_action_key" :params="{items: selectActionsItems}" :disabled="selectedRows.length === 0"></form-select>
         </div>
         <div class="ml-auto d-flex">
-            <div class="text-right" v-if="options.is_selectable">
+            <div class="text-right" v-if="options.is_selectable && !edit_mode_enable">
                 <div class="datagrid_navigation datagrid_select_actions">
                     <button type="button" class="ml-2 btn btn-primary btn-sm" v-if="selectedRows.length !== rows.length" @click="selectRows">
                         <?php echo LANG_SELECT_ALL; ?>
@@ -114,7 +114,7 @@ if(!empty($page_title)) {
                 </label>
             </div>
         </div>
-        <div class="ml-auto col-sm text-right mb-2 mr-2 m-sm-0 order-0 order-sm-1" v-if="options.is_selectable">
+        <div class="ml-auto col-sm text-right mb-2 mr-2 m-sm-0 order-0 order-sm-1" v-if="options.is_selectable && !edit_mode_enable">
             <div class="datagrid_navigation datagrid_select_actions">
                 <small class="shint text-muted d-none d-lg-inline-block"><?php echo LANG_GRID_SELECT_HINT; ?></small>
                 <button type="button" class="ml-2 btn btn-primary btn-sm" v-if="selectedRows.length !== rows.length" @click="selectRows">

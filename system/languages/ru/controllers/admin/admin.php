@@ -477,8 +477,10 @@
     define('LANG_CP_WIDGETS_ALL',               'Все виджеты');
     define('LANG_CP_WIDGETS_ADD',               'Создать виджет');
     define('LANG_CP_WIDGETS_ADD_PAGE',          'Создать страницу');
+    define('LANG_CP_WIDGETS_COPY_PAGE',         'Копировать страницу');
     define('LANG_CP_WIDGETS_EDIT_PAGE',         'Редактировать');
     define('LANG_CP_WIDGETS_DELETE_PAGE',       'Удалить');
+    define('LANG_CP_WIDGETS_DELETE_PAGE_CONFIRM', 'Удалить эту страницу?');
     define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS', 'Отвязать все виджеты');
     define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Отвязать все виджеты с позиций для данного шаблона? Виджеты переместятся в неиспользуемые');
     define('LANG_CP_WIDGETS_MISC',              'Общие');
@@ -497,7 +499,7 @@
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Поместите сюда виджеты которые нужно временно скрыть или переместить на другую страницу без потери настроек');
     define('LANG_CP_WIDGETS_BINDED',            'Привязываемые виджеты');
     define('LANG_CP_WIDGETS_BINDED_HINT',       'Перенесите сюда виджет, чтобы привязать его с общими настройками неограниченное кол-во раз');
-    define('LANG_CP_WIDGETS_TEMPLATE',          'Виджеты для шаблона');
+    define('LANG_CP_WIDGETS_TEMPLATE',          'Для шаблона');
     define('LANG_CP_WIDGETS_FA',                'Быстрый подбор масок');
     define('LANG_CP_WIDGETS_FA_TYPE',           'Тип');
     define('LANG_CP_WIDGETS_FA_ITEMS',          'Записи');

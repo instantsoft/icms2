@@ -48,6 +48,10 @@ icms.fieldsgroup = function(field_id, element_name, current_values, errors, is_d
 
         $('.fieldsgroup_wrap', wrap).append(list_template);
 
+        list_template.on('animationend', '> div', function() {
+            $(this).removeClass('blurFadeOut');
+        });
+
         return false;
     };
 

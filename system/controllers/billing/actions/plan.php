@@ -26,6 +26,8 @@ class actionBillingPlan extends cmsAction {
             return cmsCore::error404();
         }
 
+        $period = $this->request->get("len{$plan_id}", 0);
+
         // Продление?
         $is_renew_plan = $plan_id && $current_plan && $current_plan['id'] == $plan_id;
 
@@ -50,8 +52,6 @@ class actionBillingPlan extends cmsAction {
 
                 return $this->redirectToAction('plan') . "?plan_id={$plan_id}";
             }
-
-            $period  = $this->request->get("len{$plan_id}", 0);
 
             $plan = $plans[$plan_id];
 
@@ -156,7 +156,8 @@ class actionBillingPlan extends cmsAction {
             'is_renew_plan'    => $is_renew_plan,
             'title'            => $title,
             'plans'            => $plans,
-            'selected_plan'    => $plan_id
+            'selected_plan'    => $plan_id,
+            'selected_period'  => $period
         ]);
     }
 

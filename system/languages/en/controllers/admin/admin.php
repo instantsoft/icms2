@@ -456,8 +456,10 @@
     define('LANG_CP_WIDGETS_ALL',               'All widgets');
     define('LANG_CP_WIDGETS_ADD',               'Add Widget');
     define('LANG_CP_WIDGETS_ADD_PAGE',          'Add Page');
+    define('LANG_CP_WIDGETS_COPY_PAGE',         'Copy page');
     define('LANG_CP_WIDGETS_EDIT_PAGE',         'Edit');
     define('LANG_CP_WIDGETS_DELETE_PAGE',       'Delete');
+    define('LANG_CP_WIDGETS_DELETE_PAGE_CONFIRM', 'Delete this page?');
     define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS', 'Unbind All Widgets');
     define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Unbind all widgets from their positions? The widgets will be moved to the Unused Widgets section');
     define('LANG_CP_WIDGETS_MISC',              'Miscellaneous');
@@ -476,7 +478,7 @@
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Here you can place the widgets that have to be temporarily hidden or moved to another page without losing their settings');
     define('LANG_CP_WIDGETS_BINDED',            'Binded widgets');
     define('LANG_CP_WIDGETS_BINDED_HINT',       'Drag the widget here to bind it with common settings unlimited number of times');
-    define('LANG_CP_WIDGETS_TEMPLATE',          'Widgets for template');
+    define('LANG_CP_WIDGETS_TEMPLATE',          'For template');
     define('LANG_CP_WIDGETS_FA',                'Quick selection of URLs for masks');
     define('LANG_CP_WIDGETS_FA_TYPE',           'Type');
     define('LANG_CP_WIDGETS_FA_ITEMS',          'Items');

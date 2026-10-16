@@ -107,6 +107,7 @@ class cmsWidget {
             $wd_data['title'] = '';
         }
 
+        $wd_data['wrap_vars'] = isset($wd_data['options']['wrapper_vars']) ? array_column($wd_data['options']['wrapper_vars'], 'value', 'name') : [];
         $wd_data['class'] = $this->css_class;
         $wd_data['class_title'] = $this->css_class_title;
         $wd_data['class_wrap'] = ($this->tpl_wrap_style ?? '') . (!empty($this->css_class_wrap) ? ' ' . $this->css_class_wrap : '');

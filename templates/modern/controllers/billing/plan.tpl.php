@@ -133,7 +133,7 @@
 <?php ob_start(); ?>
 <script>
 	$(function() {
-        icms.billing.initPlanSelect(<?php echo json_encode($real_price_plans); ?>);
+        icms.billing.initPlanSelect(<?php echo json_encode($real_price_plans); ?>, <?php echo $selected_period; ?>);
 	});
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

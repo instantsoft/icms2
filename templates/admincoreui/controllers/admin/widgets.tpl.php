@@ -37,21 +37,31 @@
         'href'  => ''
     ]);
     $this->addToolButton([
-        'class' => 'add',
+        'icon'  => 'plus-circle',
         'level' => 2,
         'title' => LANG_CP_WIDGETS_ADD_PAGE,
         'href'  => $this->href_to('widgets', 'page_add')
     ]);
     $this->addToolButton([
-        'class' => 'edit',
+        'class' => 'add_copy',
+        'icon'  => 'copy',
+        'level' => 2,
+        'title' => LANG_CP_WIDGETS_COPY_PAGE,
+        'href'  => $this->href_to('widgets', 'page_add')
+    ]);
+    $this->addToolButton([
+        'class' => 'edit_page',
+        'icon'  => 'pen',
         'level' => 2,
         'title' => LANG_CP_WIDGETS_EDIT_PAGE,
         'href'  => $this->href_to('widgets', 'page_edit')
     ]);
     $this->addToolButton([
-        'class' => 'delete',
+        'class' => 'delete_page icms-action-confirm',
+        'icon'  => 'minus-circle',
         'level' => 2,
         'title' => LANG_CP_WIDGETS_DELETE_PAGE,
+        'confirm' => LANG_CP_WIDGETS_DELETE_PAGE_CONFIRM,
         'href'  => $this->href_to('widgets', 'page_delete')
     ]);
     $this->addToolButton([
@@ -61,7 +71,7 @@
         'href'    => $this->href_to('widgets', ['unbind_all_widgets', $template_name], ['csrf_token' => cmsForm::getCSRFToken()])
     ]);
     $this->addToolButton([
-        'class' => 'gridicon',
+        'icon'  => 'th',
         'childs_count' => count($templates),
         'title' => LANG_CP_WIDGETS_TEMPLATE.': '.$templates[$template_name],
         'href'  => ''
@@ -77,17 +87,20 @@
 
     if($is_dynamic_scheme){
         $this->addToolButton([
-            'class' => 'add add_row ajax-modal',
+            'class' => 'add_row ajax-modal',
+            'icon'  => 'plus-circle',
             'title' => LANG_CP_WIDGETS_ADD_ROW,
             'href'  => $this->href_to('widgets', ['row_add', $template_name])
         ]);
         $this->addToolButton([
-            'class' => 'install add_row ajax-modal',
+            'class' => 'add_row ajax-modal',
+            'icon'  => 'cloud-upload-alt',
             'title' => LANG_CP_WIDGETS_IMPORT_SCHEME,
             'href'  => $this->href_to('widgets', ['import_scheme', $template_name])
         ]);
         $this->addToolButton([
-            'class' => 'export ajax-modal',
+            'class' => 'ajax-modal',
+            'icon'  => 'cloud-download-alt',
             'title' => LANG_CP_WIDGETS_EXPORT_SCHEME,
             'href'  => $this->href_to('widgets', ['export_scheme', $template_name])
         ]);
@@ -120,7 +133,7 @@
                                     <?php if ($page['pages']) { ?>
                                     <ul class="d-none">
                                         <?php foreach($page['pages'] as $p){ ?>
-                                        <li id="<?php echo $p['key']; ?>">
+                                        <li id="<?php echo $p['key']; ?>"<?php if(!empty($p['actions'])) { ?> data="addClass: 'context-menu-target', menu_items: '<?php html(json_encode($p['actions'])); ?>'"<?php } ?>>
                                             <?php echo $p['title']; ?>
                                         </li>
                                         <?php } ?>
@@ -175,6 +188,15 @@
         <?php if ($this->isToolbar()){ ?>
             <?php $this->toolbar('menu-toolbar'); ?>
         <?php } ?>
+        <div class="alert alert-info d-none" id="cp-widgets-page-info">
+            <div class="cp-widgets-page-info__title d-none"><b><a href="#" data-toggle="collapse" data-target="#collapse-page-info" class="alert-link text-decoration-none"></a></b></div>
+            <div class="collapse" id="collapse-page-info">
+                <div class="cp-widgets-page-info__url_mask mt-3 d-none"><b class="mr-2"><?php echo LANG_CP_WIDGET_PAGE_URL_MASK; ?>:</b><pre></pre></div>
+                <div class="cp-widgets-page-info__url_mask_not d-none"><b class="mr-2"><?php echo LANG_CP_WIDGET_PAGE_URL_MASK_NOT; ?>:</b><pre></pre></div>
+                <div class="cp-widgets-page-info__layout d-none"><b class="mr-2"><?php echo LANG_CP_WIDGET_PAGE_LAYOUT; ?>:</b><span></span></div>
+            </div>
+        </div>
+        <div id="cp-widgets-page-info-body" class="d-none" title="<?php echo LANG_CP_WIDGET_PAGE_BODY_CSS; ?>"><div class="badge badge-dark">&lt;body class="<span></span>"&gt;</div></div>
         <div id="cp-widgets-layout"
              data-scheme-row-reorder-url="<?php echo href_to('admin', 'reorder', ['layout_rows']); ?>"
              data-scheme-col-reorder-url="<?php echo href_to('admin', 'reorder', ['layout_cols']); ?>"
@@ -188,6 +210,7 @@
              data-remove-url="<?php echo $this->href_to('widgets', 'remove'); ?>"
              data-copy-url="<?php echo $this->href_to('widgets', 'copy'); ?>"
              data-files-url="<?php echo $this->href_to('package_files_list', 'widgets'); ?>"
+             data-add-page-url="<?php echo $this->href_to('widgets', 'page_add'); ?>"
              data-edit-page-url="<?php echo $this->href_to('widgets', 'page_edit'); ?>"
              data-delete-page-url="<?php echo $this->href_to('widgets', 'page_delete'); ?>"
              data-reorder-url="<?php echo $this->href_to('widgets', 'reorder'); ?>"

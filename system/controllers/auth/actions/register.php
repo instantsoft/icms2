@@ -19,7 +19,9 @@ class actionAuthRegister extends cmsAction {
             $reg_email = false;
         }
 
-        $user = [];
+        $user = [
+            'email' => $this->request->get('email', '')
+        ];
 
         // Есть ли кука инвайта
         $cookie_inv = cmsUser::getCookie('inv');
