@@ -29,7 +29,7 @@ class formAdminSchedulerTask extends cmsForm {
                         'title' => LANG_CP_SCHEDULER_TASK_PERIOD,
                         'rules' => [
                             ['required'],
-                            ['min', 1]
+                            ['min', 0.1]
                         ]
                     ]),
                     new fieldCheckbox('is_strict_period', [

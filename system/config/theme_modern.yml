@@ -11,9 +11,9 @@ cookiealert_text: >
   файлы cookie.
 scss:
   enable-rounded: 1
-  border-radius: .25rem
-  border-radius-lg: .3rem
-  border-radius-sm: .2rem
+  border-radius: .375rem
+  border-radius-lg: .5rem
+  border-radius-sm: .25rem
   enable-shadows: null
   enable-gradients: null
   enable-responsive-font-sizes: 1
@@ -22,10 +22,10 @@ scss:
   font-size-base: 0.9375rem
   spacer: 1rem
   avatar-inlist-size: 64px
-  body-bg: $white
+  body-bg: ""
   body-color: $gray-800
   link-color: $blue
-  header-bg: $purple
+  header-bg: $gray-700
   header-color: $white
   footer-bg: $gray-900
   footer-color: $gray-600
@@ -38,26 +38,26 @@ scss:
   light: $gray-100
   dark: $gray-900
   white: '#ffffff'
-  gray-100: '#f8f9fa'
-  gray-200: '#eeeeee'
-  gray-300: '#dee2e6'
-  gray-400: '#cccccc'
-  gray-500: '#adb5bd'
-  gray-600: '#888888'
-  gray-700: '#495057'
-  gray-800: '#2d3436'
-  gray-900: '#1e2224'
-  black: '#1a1a1a'
-  blue: '#3867d6'
-  indigo: '#786fa6'
-  purple: '#596275'
-  pink: '#f78fb3'
-  red: '#e66767'
-  orange: '#f19066'
-  yellow: '#f5cd79'
-  green: '#33bd66'
-  teal: '#3bd4c2'
-  cyan: '#0abde3'
+  gray-100: '#f2f5fa'
+  gray-200: '#e2e8f0'
+  gray-300: '#c0c9d6'
+  gray-400: '#9dafc9'
+  gray-500: '#94a3b8'
+  gray-600: '#7c8da6'
+  gray-700: '#475569'
+  gray-800: '#0f1e33'
+  gray-900: '#0f172a'
+  black: '#0b1120'
+  blue: '#1d4ed8'
+  indigo: '#5b5bd6'
+  purple: '#7c5ce7'
+  pink: '#e85d9e'
+  red: '#e5484d'
+  orange: '#ea580c'
+  yellow: '#f59e0b'
+  green: '#16a34a'
+  teal: '#0d9488'
+  cyan: '#0284c7'
 body_classes: ""
 font_type: ""
 font_string: >
@@ -78,7 +78,7 @@ favicon: null
 head_html_top: ""
 favicon_head_html: ""
 custom_scss:
-  body-bg: ""
+  body-bg: '#f9fafb'
   body-color: ""
   link-color: ""
   header-bg: ""

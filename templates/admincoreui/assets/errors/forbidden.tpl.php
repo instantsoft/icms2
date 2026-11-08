@@ -8,7 +8,7 @@
         <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>">
         <?php $this->addMainTplCSSName([
             'vendors/simple-line-icons/css/simple-line-icons',
-            'style'
+            'theme'
         ]); ?>
         <?php $this->addCSS($this->getStylesFileName('admin')); ?>
         <?php $this->head(false); ?>

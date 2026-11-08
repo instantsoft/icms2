@@ -1454,7 +1454,19 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
-    public function importDump($file, $delimiter = ';') {
+    /**
+     * Быстрый импорт SQL-дампа через mysqli->multi_query
+     * Оптимально для файлов до 10-15 МБ
+     *
+     * @param string $file Путь к SQL-файлу
+     * @param string $delimiter @deprecated Не используется
+     * @return ?bool NULL если файл пустой
+     */
+    public function importDump(string $file, string $delimiter = ';') {
+
+        if (!$this->ready()) {
+            return false;
+        }
 
         clearstatcache();
 
@@ -1462,40 +1474,56 @@ class cmsDatabase {
             return false;
         }
 
-        $file = fopen($file, 'r');
-
-        $query   = [];
-        $success = null;
-
-        while (feof($file) === false) {
-
-            if ($success === null) {
-                $success = false;
-            }
-
-            $query[] = fgets($file);
-
-            if (preg_match('~' . preg_quote($delimiter, '~') . '\s*$~iS', end($query)) === 1) {
-
-                $success = true;
-
-                $query = trim(implode('', $query));
-
-                $result = $this->query(str_replace(['InnoDB', 'CHARSET=utf8'], [$this->options['db_engine'], 'CHARSET=' . $this->options['db_charset']], $query));
-
-                if ($result === false) {
-                    return false;
-                }
-            }
-
-            if (is_string($query) === true) {
-                $query = [];
-            }
+        $sql = file_get_contents($file);
+        if ($sql === false) {
+            return false;
         }
 
-        fclose($file);
+        if (trim($sql) === '') {
+            return null;
+        }
 
-        return $success;
+        $engine  = $this->options['db_engine'];
+        $charset = $this->options['db_charset'];
+
+        // Регулярное выражение для поиска ENGINE=... или CHARSET=...
+        $pattern = '/(ENGINE\s*=\s*\w+|CHARSET\s*=\s*\w+)/i';
+
+        $sql = preg_replace_callback($pattern, function ($matches) use ($engine, $charset) {
+            if (strpos($matches[0], 'ENGINE') === 0) {
+                return 'ENGINE=' . $engine;
+            }
+            if (strpos($matches[0], 'CHARSET') === 0) {
+                return 'CHARSET=' . $charset;
+            }
+            return $matches[0];
+        }, $sql);
+
+        if ($sql === null) {
+            return false;
+        }
+
+        $sql = $this->replacePrefix($sql);
+
+        // Отправка всех запросов через multi_query
+        if (!$this->mysqli->multi_query($sql)) {
+            error_log('Multi-query execution failed: ' . $this->mysqli->error);
+            return false;
+        }
+
+        // Без этого следующий запрос может упасть с ошибкой "Commands out of sync".
+        do {
+            if ($result = $this->mysqli->store_result()) {
+                $result->free();
+            }
+        } while ($this->mysqli->more_results() && $this->mysqli->next_result());
+
+        if ($this->mysqli->error) {
+            error_log('SQL Error in multi_query: ' . $this->mysqli->error);
+            return false;
+        }
+
+        return true;
     }
 
 }

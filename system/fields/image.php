@@ -128,7 +128,11 @@ class fieldImage extends cmsFormField {
 
         $img_html = html_image($paths, $size_teaser, ($this->item['title'] ?? $this->name), $img_attr);
 
-        return (!empty($this->item['is_private_item']) || !$this->getOption('show_to_item_link')) ?
+        $is_unwrapped_link = !empty($this->item['is_private_item']) ||
+                             !$this->getOption('show_to_item_link') ||
+                             empty($this->item['ctype']['options']['item_on']);
+
+        return $is_unwrapped_link ?
                 $img_html :
                 '<a href="'.$url.'">'.$img_html.'</a>';
     }

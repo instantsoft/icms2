@@ -185,6 +185,7 @@
     define('LANG_PARSER_HTML_TEASER_TYPE_S', 'По последнему предложению');
     define('LANG_PARSER_HTML_TEASER_TYPE_W', 'По последнему слову');
     define('LANG_PARSER_BBCODE',             'Текст: BB-code');
+    define('LANG_PARSER_BILLING_PLAN',       'Текущий тарифный план');
     define('LANG_PARSER_LIST',               'Список');
     define('LANG_PARSER_LIST_FILTER_HINT',   'Номер варианта');
     define('LANG_PARSER_LIST_FILTER_MULTI',  'Множественный выбор в фильтре');
@@ -602,6 +603,8 @@
     define('LANG_CHANGE',                    'Изменить');
     define('LANG_COLLAPSE',                  'Свернуть');
     define('LANG_EXPAND',                    'Развернуть');
+    define('LANG_SEARCH_OPTS',               'Поиск по настройкам...');
+    define('LANG_SEARCH_PAGES',              'Поиск страниц');
 
     //NAVIGATION
     define('LANG_HOME',                      'Главная');

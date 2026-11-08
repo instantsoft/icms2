@@ -11,7 +11,7 @@
         'vendors/simple-line-icons/css/simple-line-icons',
         'vendors/toastr/toastr.min',
         'jquery-ui',
-        'style'
+        'theme'
     ]); ?>
     <?php $this->addMainTplJSName('jquery', true); ?>
     <?php $this->addMainTplJSName([

@@ -11,7 +11,7 @@ if (PHP_SAPI !== 'cli') {
 
     http_response_code(404);
 
-    die('404');
+    exit('404');
 }
 
 // Инициализация
@@ -28,7 +28,7 @@ $core->initLanguage();
 // Подключаем шаблонизатор, чтобы был подключен хелпер с функциями
 cmsTemplate::getInstance();
 
-// Подключение модели
+/** @var modelAdmin $model */
 $model = cmsCore::getModel('admin');
 
 // id задачи
@@ -52,7 +52,7 @@ if ($task_id) {
 
 // Если задач нет, выходим
 if (empty($tasks)) {
-    exit;
+    exit(0);
 }
 
 // Коллекция контроллеров
@@ -68,24 +68,28 @@ foreach ($tasks as $task) {
         continue;
     }
 
+    // Блокировка для последовательного выполнения
+    $lockfp = null;
+    $lock_file = null;
+
     // если включено последовательное выполнение,
     // параллельные запуски запретить
     if (!empty($task['consistent_run'])) {
 
         $lock_file = $config->cache_path . 'cron_lock_' . $task['id'];
-        $lockfp    = fopen($lock_file, 'w');
+        $lockfp    = fopen($lock_file, 'c');
 
-        // Если блокировку получить не удалось, значит скрипт еще работает
-        // и запуск нужно запретить
-        if (!flock($lockfp, LOCK_EX | LOCK_NB)) {
+        if ($lockfp === false) {
+            error_log("CRON Error: Could not open lock file: {$lock_file}");
             continue;
         }
 
-        // По окончании работы необходимо снять блокировку и удалить файл
-        register_shutdown_function(function ($lockfp, $lock_file) {
-            flock($lockfp, LOCK_UN);
-            @unlink($lock_file);
-        }, $lockfp, $lock_file);
+        // Пытаемся получить блокировку
+        if (!flock($lockfp, LOCK_EX | LOCK_NB)) {
+            // Блокировка уже кем-то получена, пропускаем задачу
+            fclose($lockfp);
+            continue;
+        }
     }
 
     // Получаем контроллер из коллекции либо загружаем
@@ -96,9 +100,9 @@ foreach ($tasks as $task) {
 
     } else {
 
-        $controller = cmsCore::getController($task['controller']);
+        $controller = cmsCore::getController($task['controller'], null, false);
 
-        if (!$controller->isEnabled()) {
+        if (!$controller || !$controller->isEnabled()) {
             unset($controller);
             continue;
         }
@@ -114,11 +118,21 @@ foreach ($tasks as $task) {
         // Обновляем время последнего запуска задачи
         $model->updateSchedulerTaskDate($task);
 
-    } catch (Exception $e) {
+    } catch (Throwable $e) {
+
+        error_log("Cron error in task #{$task['id']}: " . $e->getMessage());
 
         // выключаем ошибочное задание
         $model->toggleSchedulerPublication($task['id'], 0);
 
+    } finally {
+        if ($lockfp !== null) {
+            flock($lockfp, LOCK_UN);
+            fclose($lockfp);
+            // Файл не удаляем, это опасно при параллельных запусках. Он будет переиспользован.
+        }
     }
 
 }
+
+exit(0);

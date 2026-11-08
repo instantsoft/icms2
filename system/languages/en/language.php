@@ -186,6 +186,7 @@
     define('LANG_PARSER_HTML_TEASER_TYPE_W', 'The latest word');
     define('LANG_PARSER_SHOW_SHOW_MORE',     'Show "More" button');
     define('LANG_PARSER_BBCODE',             'Textarea with BB-code');
+    define('LANG_PARSER_BILLING_PLAN',       'Current subscription plan');
     define('LANG_PARSER_LIST',               'List');
     define('LANG_PARSER_LIST_FILTER_HINT',   'Item index');
     define('LANG_PARSER_LIST_FILTER_MULTI',  'Allow multiple selection in filter');
@@ -603,6 +604,8 @@
     define('LANG_CHANGE',                    'Change');
     define('LANG_COLLAPSE',                  'Collapse');
     define('LANG_EXPAND',                    'Expand');
+    define('LANG_SEARCH_OPTS',               'Search by settings...');
+    define('LANG_SEARCH_PAGES',              'Search pages');
 
     //NAVIGATION
     define('LANG_HOME',                      'Home');

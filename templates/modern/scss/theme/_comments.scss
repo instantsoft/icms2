@@ -86,12 +86,12 @@ $comment-rating-size: 30px;
     .bad2{opacity:.65;}
     .bad1{opacity:.8;}
 }
-.icms-comment {
+.icms-comment, .icms-wall {
     &-html {
         position: relative;
         border-radius: $border-radius;
         padding: $spacer;
-        background-color: $gray-100;
+        background-color: $white;
         border: $border-width solid $border-color;
         &:after, &:before {
             display: block;
@@ -109,7 +109,7 @@ $comment-rating-size: 30px;
             background-color: $border-color;
         }
         &:after {
-            background-color: $gray-100;
+            background-color: $white;
             margin-top: 1px;
         }
         > *:last-child {

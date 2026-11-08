@@ -247,7 +247,16 @@ class formAdminCtypesBasic extends cmsForm {
                         'default' => true
                     ]),
                     new fieldCheckbox('options:list_show_filter', [
-                        'title' => LANG_CP_LISTVIEW_FILTER
+                        'title' => LANG_CP_LISTVIEW_FILTER,
+                        'hint' => LANG_CP_HIDE_WIDGET_HINT
+                    ]),
+                    new fieldCheckbox('options:hide_datasets', [
+                        'title' => LANG_CP_HIDE_DATASETS,
+                        'hint' => LANG_CP_HIDE_WIDGET_HINT
+                    ]),
+                    new fieldCheckbox('options:hide_cat_info', [
+                        'title' => LANG_CP_HIDE_CAT_INFO,
+                        'hint' => LANG_CP_HIDE_WIDGET_HINT
                     ]),
                     new fieldCheckbox('options:list_expand_filter', [
                         'title' => LANG_CP_LISTVIEW_FILTER_EXPAND,

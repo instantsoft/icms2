@@ -860,6 +860,88 @@ icms.forms = (function ($) {
             }
         }}
     };
+    this.initSearchFields = function(form_id) {
+        let form = $('#' + form_id);
+        let search_input = $('.form-search-wrapper__input', form);
+        let target_fieldsets = $('fieldset', form);
+        let target_fields = $('> .field', target_fieldsets);
+        let tabs = $('.tabs-menu > .nav-tabs', form);
+        let tabs_active_id = $('.nav-link.active', tabs).attr('id');
+        let tab_id = false;
+        let has_tabs = tabs.length > 0;
+
+        form.on('click', '.is-found', function() {
+            $(this).addClass('clicked');
+        });
+        search_input.on('input', function() {
+
+            let filter = $(this).val().trim();
+
+            target_fields.removeClass('is-found clicked');
+            target_fieldsets.removeClass('has-match highlight-match');
+            tabs.find('.tab-has-match').removeClass('tab-has-match');
+
+            if (filter.length <= 2) {
+                target_fieldsets.show();
+                return;
+            }
+
+            let lower_filter = filter.toLowerCase();
+
+            target_fieldsets.each(function() {
+
+                let fieldset = $(this);
+
+                let legends = fieldset.find('> legend');
+                let legend_found = false;
+
+                legends.each(function() {
+                    let text = $(this).text().toLowerCase();
+                    if (text.indexOf(lower_filter) !== -1) {
+                        legend_found = true;
+                    }
+                });
+
+                let labels = fieldset.find('label');
+                let label_found = false;
+                let label_found_in_active_tab = false;
+
+                labels.each(function() {
+                    let text = $(this).text().toLowerCase();
+                    if (text.indexOf(lower_filter) !== -1) {
+                        label_found = true;
+                        let wrapper = $(this).closest('.field');
+                        if (wrapper.length > 0) {
+                            wrapper.addClass('is-found');
+                        }
+                        if (!has_tabs) {
+                            $(this).closest('fieldset').addClass('do_expand').removeClass('is_collapse');
+                        } else {
+                            tab_id = $(this).closest('.tab-pane').attr('id');
+                            if (tab_id === tabs_active_id) {
+                                label_found_in_active_tab = true;
+                            }
+                            $('a[href="#'+tab_id+'"]', tabs).addClass('tab-has-match');
+                        }
+                    }
+                });
+
+                if (!has_tabs) {
+                    if (legend_found || label_found) {
+                        fieldset.addClass('has-match');
+                        fieldset.show();
+                    } else {
+                        fieldset.hide();
+                    }
+                } else {
+                    fieldset.addClass('highlight-match');
+                    if (!label_found_in_active_tab) {
+                        $('.tab-has-match', tabs).eq(0).trigger('click');
+                    }
+                }
+            });
+        });
+    };
 
     return this;
 

@@ -11,6 +11,22 @@ function install_package() {
         $core->db->query("ALTER TABLE `{#}menu_items` ADD `hint` VARCHAR(64) NULL DEFAULT NULL COMMENT 'Краткое описание пункта меню' AFTER `title`;");
     }
 
+    if(!$core->db->isFieldExists('{users}', 'cover', false)){
+        $core->db->query("ALTER TABLE `{users}` ADD `cover` TEXT NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->getRowsCount('{users}_fields', "`name` = 'cover'")){
+        $core->db->query("INSERT INTO `{users}_fields` (`name`, `title`, `hint`, `ordering`, `is_enabled`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_add`, `groups_edit`, `filter_view`) VALUES ('cover', 'Обложка профиля', NULL, 3, 1, 'Анкета', 'image', NULL, 1, NULL, NULL, 1, 1, 1, NULL, '---\nsize_teaser: small\nsize_full: user_cover\nsize_modal: \"\"\nsizes:\n  - small\n  - user_cover\nallow_import_link: null\nallow_image_cropper: 1\nimage_cropper_rounded: null\nimage_cropper_ratio: 6\ndefault_image: null\nshow_to_item_link: null\nimg_attr: \"\"\nimg_attr_item: \"\"\nvisible_depend: null\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_url: null\nis_regexp: null\nrules_regexp_str: \"\"\nrules_regexp_error: \"\"\nis_unique: null\nauthor_access: null\n', '---\n', '---\n', '---\n', '---\n')");
+    }
+
+    if(!$core->db->getRowsCount('widgets', "`controller` = 'content' AND `name` = 'datasets'")){
+        $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`, `files`, `addon_id`, `image_hint_path`) VALUES ('content', 'datasets', 'Наборы', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL, NULL, NULL, NULL);");
+    }
+
+    if(!$core->db->getRowsCount('widgets', "`controller` = 'content' AND `name` = 'category_info'")){
+        $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`, `files`, `addon_id`, `image_hint_path`) VALUES ('content', 'category_info', 'Информация о категории', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL, NULL, NULL, NULL);");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

@@ -55,7 +55,7 @@ if (!$is_frontpage){
 
 ?>
 <?php ob_start(); ?>
-    <?php if ($show_h1){  ?>
+    <?php if ($show_h1 && empty($ctype['options']['hide_cat_info'])) {  ?>
         <h1>
             <?php $this->pageH1(); ?>
             <?php if (!empty($ctype['rss_link'])){ ?>
@@ -79,7 +79,7 @@ if (!$is_frontpage){
     <?php } ?>
 <?php $this->addToBlock('before_body', ob_get_clean(), true); ?>
 
-<?php if ($datasets && !$is_hide_items){
+<?php if ($datasets && !$is_hide_items && empty($ctype['options']['hide_datasets'])){
     $tpl_file = $this->getTemplateFileName('assets/ui/datasets-panel_' . $ctype['name'], true) ? 'ui/datasets-panel_' . $ctype['name'] : 'ui/datasets-panel';
     $this->renderAsset($tpl_file, [
         'datasets'        => $datasets,
@@ -91,7 +91,7 @@ if (!$is_frontpage){
     ]);
 } ?>
 
-<?php if (!empty($category['description'])){?>
+<?php if (!empty($category['description']) && empty($ctype['options']['hide_cat_info'])){?>
     <div class="category_description"><?php echo $category['description']; ?></div>
 <?php } ?>
 

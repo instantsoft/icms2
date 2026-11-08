@@ -111,7 +111,7 @@
             }
         }
         .ft_image {
-            a {
+            a, .value {
                 display: block;
                 overflow: hidden;
                 > img {
@@ -303,6 +303,7 @@
                 color: $gray-800;
             }
             &-nickname {
+                background-color: $white;
                 writing-mode: vertical-lr;
                 padding: $spacer*0.5;
                 text-align: center;
@@ -311,6 +312,30 @@
                 text-overflow: ellipsis;
                 max-height: 240px;
                 overflow: hidden;
+            }
+        }
+    }
+    &-item {
+        margin-right: -($grid-gutter-width / 2);
+        margin-left: -($grid-gutter-width / 2);
+        margin-bottom: $spacer*1.25;
+        padding: $spacer*1.25 $spacer*1.25 0 $spacer*1.25;
+        background-color: $white;
+        .info_bar, .ft_image {
+            margin-left: -$spacer*1.25;
+            margin-right: -$spacer*1.25;
+        }
+        .info_bar {
+            border-radius: 0;
+        }
+        @include media-breakpoint-up(lg) {
+            margin-right: 0;
+            margin-left: 0;
+            box-shadow: $box-shadow-sm;
+            padding: $spacer*1.25;
+            border-radius: $border-radius;
+            .info_bar {
+                margin-bottom: -$spacer*1.25;
             }
         }
     }

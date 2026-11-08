@@ -34,6 +34,20 @@ class cmsForm {
     private $structure = [];
 
     /**
+     * Количество полей в форме
+     *
+     * @var int
+     */
+    private $field_count = 0;
+
+    /**
+     * Включить возможность поиска по названиям полей в форме
+     *
+     * @var bool
+     */
+    public $field_search_enabled = true;
+
+    /**
      * Подготовленная структура формы
      *
      * @var ?array
@@ -149,6 +163,28 @@ class cmsForm {
 //========================= Работа со структурой =============================//
 
     /**
+     * Возвращает количество полей в форме
+     *
+     * @return int
+     */
+    public function getFieldCount() {
+
+        $this->loadPreparedFormStructure();
+
+        return $this->field_count;
+    }
+
+    /**
+     * Доступен ли поиск по именам полей в форме
+     *
+     * @return bool
+     */
+    public function isFieldSearchEnabled() {
+
+        return $this->field_search_enabled && $this->getFieldCount() > 15;
+    }
+
+    /**
      * Объединяет форму с переданной
      * заменяя наборы полей при совпадении ключей
      *
@@ -205,6 +241,8 @@ class cmsForm {
             $childs = [];
 
             foreach ($fieldset['childs'] as $field) {
+
+                $this->field_count++;
 
                 $name = $field->getName();
 

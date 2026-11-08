@@ -35,7 +35,7 @@
     pointer-events: none;
     position: absolute;
     right: 0;
-    top: 0;
+    top: $spacer*0.25;
     width: $spacer*3;
 }
 .media-body >*:last-child, .media:last-child {
@@ -192,7 +192,14 @@
         }
     }
 }
-
+.dropdown > .dropdown-menu, .icms-user-menu > .dropdown-menu {
+    background-color: rgba($dropdown-bg, 0.85);
+    backdrop-filter: blur(16px);
+}
+.dropdown-menu .dropdown-menu {
+    backdrop-filter: none;
+    background-color: $dropdown-bg;
+}
 .dropdown-toggle::after {
     opacity: 0.7;
     display: inline-block;
@@ -403,4 +410,22 @@ form {
 }
 @each $color, $value in $grays {
   @include bg-variant(".bg-gray-#{$color}", $value);
+}
+.grid-row {
+    grid-auto-flow: column;
+}
+.gap-1 {
+    gap: $spacer*0.25 !important;
+}
+.gap-2 {
+    gap: $spacer*0.5 !important;
+}
+.gap-3 {
+    gap: $spacer !important;
+}
+.gap-4 {
+    gap: $spacer*1.5 !important;
+}
+.gap-5 {
+    gap: $spacer*3 !important;
 }

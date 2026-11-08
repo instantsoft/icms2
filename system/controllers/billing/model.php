@@ -20,6 +20,7 @@ class modelBilling extends cmsModel {
 
     public function setControllerOptions($options) {
         $this->options = $options;
+        return $this;
     }
 
     /**

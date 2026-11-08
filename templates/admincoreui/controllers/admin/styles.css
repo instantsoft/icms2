@@ -699,14 +699,16 @@ form .child_field{margin-left: 20px}
 .grid_field_edit {
     display: none;
     position: absolute;
-    background-color: #FFF;
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 1rem;
-    box-shadow: 0px 0px 5px #c8ced3;
+    box-shadow: 0px 0px 8px 2px #c8ced3;
     width: 270px;
     top: 2rem;
     left: 0.75rem;
     z-index: 2;
     cursor: default;
+    backdrop-filter: blur(4px);
+    border-radius: 4px;
 }
 .grid_field_value {
     display: flex;
@@ -721,9 +723,9 @@ form .child_field{margin-left: 20px}
 .is_collapse {
     position: relative;
     background: #f0f3f5;
-    height: 36px;
+    height: 38px;
     box-sizing: border-box;
-    line-height: 36px;
+    line-height: 38px;
     cursor: pointer;
 }
 .is_collapse > legend {
@@ -738,10 +740,18 @@ form .child_field{margin-left: 20px}
     white-space: nowrap;
 }
 .is_collapsed > legend:before {
-    content: '+';
+    content: "";
     display: inline-block;
-    margin: 0 10px 0 10px;
-    font-size: 16px;
+    width: 7px;
+    height: 7px;
+    margin-left: 3px;
+    margin-bottom: 6px;
+    border-right: 1px solid #536779;
+    border-bottom: 1px solid #536779;
+    transform: rotate(45deg);
+    transition: transform .2s ease;
+    vertical-align: middle;
+    margin-right: 10px;
 }
 .is_collapsed.do_expand > legend:before {
     content: '';
@@ -1140,6 +1150,10 @@ td .spinner > div {
     height: 12px;
     background-color: #dadada;
 }
+.dropdown-menu {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+}
 .dropdown-menu > .spinner {
     margin: 1rem auto;
 }
@@ -1507,4 +1521,36 @@ td .spinner > div {
 }
 .dropdown-context-menu .dropdown-item {
     padding: 5px 10px;
+}
+.highlight-match .field.is-found {
+    position: relative;
+}
+.highlight-match .field.is-found::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    box-shadow: 0 0px 16px -4px #f8cb00;
+    border-radius: 6px;
+    pointer-events: none;
+    z-index: 0;
+    transition: box-shadow 0.3s ease;
+}
+.field.is-found.clicked::after {
+    box-shadow: none;
+    background-color: transparent;
+}
+.has-match > .field:not(.is-found) {
+    display: none;
+}
+.tab-has-match {
+    text-shadow: 0px 0px 10px #20a8d8;
+    color: #2f353a !important;
+}
+.modal-body .form-search-wrapper {
+    margin: -1rem -1rem 0.75rem !important;
+    padding: 1rem;
+    background-color: #f6fafd;
 }

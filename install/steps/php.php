@@ -15,9 +15,8 @@ function step($is_submit) {
 
 function check_requirements() {
 
-    $min_php_version  = '7.3.0';
     $extensions       = ['date', 'gd', 'json', 'mbstring', 'mysqli', 'session', 'filter', 'fileinfo'];
-    $extensions_extra = ['ftp', 'memcache', 'memcached', 'redis', 'zip', 'curl'];
+    $extensions_extra = ['ftp', 'memcache', 'memcached', 'redis', 'zip', 'curl', 'imagick'];
 
     sort($extensions);
     sort($extensions_extra);
@@ -28,7 +27,7 @@ function check_requirements() {
 
     $info['php'] = [
         'version' => implode('.', [PHP_MAJOR_VERSION, PHP_MINOR_VERSION, PHP_RELEASE_VERSION]),
-        'valid'   => (version_compare(PHP_VERSION, $min_php_version) >= 0)
+        'valid'   => (version_compare(PHP_VERSION, PHP_MIN_VERSION) >= 0)
     ];
 
     $info['valid'] = $info['valid'] && $info['php']['valid'];

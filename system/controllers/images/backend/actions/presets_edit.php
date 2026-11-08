@@ -11,6 +11,9 @@ class actionImagesPresetsEdit extends cmsAction {
         $form = $this->getForm('preset', ['edit']);
 
         $preset = $original_preset = $this->model->getPreset($id);
+        if (!$preset) {
+            return cmsCore::error404();
+        }
 
         if ($preset['is_internal']) {
             $form->removeFieldset('basic');
@@ -18,7 +21,7 @@ class actionImagesPresetsEdit extends cmsAction {
 
         if ($this->request->has('submit')) {
 
-            $preset = $form->parse($this->request, true);
+            $preset = array_merge($preset, $form->parse($this->request, true, $preset));
             $errors = $form->validate($this, $preset);
 
             if (!$errors) {
@@ -49,7 +52,6 @@ class actionImagesPresetsEdit extends cmsAction {
             }
 
             if ($errors) {
-
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
         }

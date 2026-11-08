@@ -1,22 +1,80 @@
-.icms-users-profile__view {
-    .fieldset_title {
-        border-top: dotted $border-width $border-color;
-        margin-bottom: $spacer*0.75;
-        margin-top: $spacer*1.5;
-        @include clearfix;
-        h3 {
-            margin: -($h5-font-size*$headings-line-height/2) 0 0;
-            background: $white;
-            padding-right: $spacer;
-            float: left;
-            font-size: $h5-font-size;
+.icms-users-profile {
+    background-color: $white;
+    border-radius: 0 0 $border-radius $border-radius;
+    padding: $spacer*0.25;
+    border: $card-border-width solid $card-border-color;
+    margin-top: -1px;
+    .content_item {
+        padding: $spacer*0.5;
+    }
+    @include media-breakpoint-up(lg) {
+        padding: $spacer*1.25;
+        .content_item {
+            padding: 0;
         }
-        a {
-            margin: -($font-size-base*$headings-line-height/2) 0 0;
-            background: $white;
-            padding-left: $spacer;
-            float: right;
-            line-height: $headings-line-height;
+    }
+    &__view {
+        .fieldset_title {
+            display: flex;
+            align-items: center;
+            margin: $spacer*0.75 0;
+            h3 {
+                margin: 0;
+                padding-right: $spacer;
+                font-size: $h5-font-size;
+                flex-shrink: 0;
+            }
+            a {
+                padding-left: $spacer;
+                order: 3;
+                flex-shrink: 0;
+            }
+            &:after {
+                content: '';
+                border-top: dotted $border-width $border-color;
+                width: 100%;
+                height: 1px;
+            }
+        }
+    }
+    &-header {
+        border: $card-border-width solid $card-border-color;
+        background-color: $white;
+        border-radius: $border-radius;
+        overflow: hidden;
+        &__cover {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0MCIgaGVpZ2h0PSI0NTQiIHZpZXdCb3g9IjAgMCAxNDQwIDQ1NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPG1hc2sgaWQ9Im1hc2swIiBzdHlsZT0ibWFzay10eXBlOmFscGhhIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTQ2NCIgaGVpZ2h0PSI0NTQiPgo8cmVjdCB5PSIwLjY4ODcyMSIgd2lkdGg9IjE0NjMuMDUiIGhlaWdodD0iNDUzLjI1NSIgcng9IjE2IiBmaWxsPSIjQzRDNEM0Ii8+CjwvbWFzaz4KPGcgbWFzaz0idXJsKCNtYXNrMCkiPgo8cGF0aCBvcGFjaXR5PSIwLjE1IiBkPSJNOTYyLjU2MiAzMjYuMDE2QzgwNy4yNzMgMTkyLjgxMyA1OTMuMjY3IDM0OC40NjkgNDIzLjY2MyAyNDMuMDU0QzMzNS40MTggMTg4LjIwNyAzMTcuNTIzIDEzOC43MTQgMjU0LjE5OCA1Ni44OTU5QzIxMy41ODIgNC40MTcyNyAyMDkuNzExIC00LjcxODY5IDE3MS4xNjEgLTQyLjI1MzdDMTMyLjYxMSAtNzkuNzg4NyA2Mi43MDMxIC0xMjMuMTkyIDYyLjcwMzEgLTEyMy4xOTJWLTI2MC43ODhIMTg4Ny44NFY2NTUuODQxSDE0NTIuMzJDMTQ1Mi4zMiA2NTUuODQxIDEyMTkuNyA2NjAuMTY4IDExMDguMyA1NDYuNTc0QzEwNDAuNTUgNDc3LjQ4NSAxMDQyLjA1IDM5NC4yMDQgOTYyLjU2MiAzMjYuMDE2WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggb3BhY2l0eT0iMC4xNSIgZD0iTTEwMjUuMjYgMjgxLjk1Qzg2OS45NzMgMTQ4Ljc0NyA2NTUuOTY3IDMzOC44MDIgNDg2LjM2NCAyMzMuMzg3QzM5OC4xMTkgMTc4LjUzOSAzNTEuOTIyIC0xNS44MzYyIDMyNi4yMiAtNzMuMjgwMUMzMTIuMTM2IC0xMDQuNzU2IDI5MC42MzIgLTEzMy4wODUgMjU1LjcwMyAtMTU1LjExOEMyMjAuNzc1IC0xNzcuMTUxIDEyNS40MDMgLTE2Ny4yNTkgMTI1LjQwMyAtMTY3LjI1OVYtMzA0Ljg1NEgxOTUwLjU0VjU1NC4yMThIMTU0Mi4xM0MxNTQyLjEzIDU1NC4yMTggMTI1NS43MyA1NjUuMjM1IDExNjIuNTMgNDg2LjMyQzEwODEuMTkgNDE3LjQ0OCAxMTA0Ljc2IDM1MC4xMzggMTAyNS4yNiAyODEuOTVaIiBmaWxsPSJ3aGl0ZSIvPgo8L2c+Cjwvc3ZnPgo=");
+            background-color: $gray-400;
+            &:before {
+                padding-top: 33.34%;
+                display: block;
+                content: "";
+                @include media-breakpoint-up(lg) {
+                    padding-top: 16.67%;
+                }
+            }
+        }
+        &__info {
+            padding: 0 $spacer*1.25 $spacer*1.25;
+        }
+        &__avatar {
+            margin-top: -($avatar-inlist-size*0.546875);
+            background-color: $white;
+            width: $avatar-inlist-size*1.09375;
+            height: $avatar-inlist-size*1.09375;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        &__content {
+            > .name {
+                &:not(.name_with_status) {
+                    display: flex;
+                    align-items: center;
+                }
+            }
         }
     }
 }

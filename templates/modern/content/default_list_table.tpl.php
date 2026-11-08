@@ -32,7 +32,7 @@ if( $ctype['options']['list_show_filter'] ) {
 
     <table class="table table-hover">
         <thead>
-            <tr>
+            <tr class="bg-white">
                 <?php foreach($first_item['fields_names'] as $field){ ?>
                     <th <?php if ($field['label_pos'] === 'none') { ?>class="d-none d-lg-table-cell"<?php } ?>>
                         <?php echo $field['label_pos'] !== 'none' ? string_replace_svg_icons($field['title']) : ''; ?>
@@ -45,14 +45,14 @@ if( $ctype['options']['list_show_filter'] ) {
         </thead>
         <tbody>
         <?php foreach($items as $item){ ?>
-            <tr>
+            <tr class="bg-white">
             <?php foreach($item['fields_names'] as $_field){ ?>
                 <td class="align-middle field ft_<?php echo $_field['type']; ?> f_<?php echo $_field['name']; ?><?php if ($_field['label_pos'] === 'none') { ?> d-none d-lg-table-cell<?php } ?>">
 
                     <?php if (!isset($item['fields'][$_field['name']])) { continue; } ?>
                     <?php $field = $item['fields'][$_field['name']]; ?>
 
-                    <?php if ($field['name'] === 'title' && $ctype['options']['item_on']){ ?>
+                    <?php if ($field['name'] === 'title') { ?>
                         <h3 class="h5 m-0">
                         <?php if ($item['parent_id']){ ?>
                             <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>">
@@ -60,9 +60,13 @@ if( $ctype['options']['list_show_filter'] ) {
                             </a>
                             &rarr;
                         <?php } ?>
-                        <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">
+                        <?php if ($ctype['options']['item_on']){ ?>
+                            <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">
+                                <?php html($item[$field['name']]); ?>
+                            </a>
+                        <?php } else { ?>
                             <?php html($item[$field['name']]); ?>
-                        </a>
+                        <?php } ?>
                         </h3>
                     <?php } else { ?>
                         <?php echo $field['html']; ?>

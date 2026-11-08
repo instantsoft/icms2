@@ -125,7 +125,7 @@
                 </ul>
                 <div class="tab-content border-right-0 border-bottom-0 border-left-0">
                     <div class="tab-pane p-0 pt-2 show active" id="datatree" role="tabpanel">
-                        <input id="search_pages" placeholder="Поиск страниц" autocomplete="off" type="search" name="search_pages" value="" class="input form-control my-2">
+                        <input id="search_pages" placeholder="<?php echo LANG_SEARCH_PAGES; ?>" autocomplete="off" type="search" name="search_pages" value="" class="input form-control my-2">
                         <ul id="treeData" class="d-none">
                             <?php foreach($pages as $page){ ?>
                                 <li id="<?php echo $page['name']; ?>" class="folder">

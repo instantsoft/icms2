@@ -578,7 +578,7 @@ class cmsImages {
 
                 $quality = (9 - ceil((9*$quality)/100));
 
-                if ($quality === null || $quality > 9) {
+                if ($quality > 9) {
                     $quality = $this->quality_png;
                 }
 

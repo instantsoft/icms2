@@ -755,6 +755,7 @@ class admin extends cmsFrontend {
         }
 
         $form->is_tabbed = true;
+        $form->field_search_enabled = false;
 
         //
         // Опции внешнего вида

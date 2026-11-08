@@ -142,7 +142,6 @@ function check_db() {
                 $dump_name,
                 $db['prefix'],
                 $db['engine'],
-                ';',
                 $db['db_charset'],
                 $db['innodb_full_text']
             );
@@ -160,7 +159,6 @@ function check_db() {
                     'packages' . DS . $controller_name . DS . $dump_name,
                     $db['prefix'],
                     $db['engine'],
-                    ';',
                     $db['db_charset'],
                     $db['innodb_full_text']
                 );
@@ -187,7 +185,6 @@ function check_db() {
                         'packages' . DS . $controller_name . DS . $rel_controller_name . DS. $dump_name,
                         $db['prefix'],
                         $db['engine'],
-                        ';',
                         $db['db_charset'],
                         $db['innodb_full_text']
                     );
@@ -296,11 +293,9 @@ function get_sql_file_names($is_install_demo_content = false) {
     return $dumps;
 }
 
-function import_dump(&$mysqli, $file, $prefix, $engine = 'MyISAM', $delimiter = ';', $charset = 'utf8', $innodb_full_text = 0) {
+function import_dump(&$mysqli, $file, $prefix, $engine = 'MyISAM', $charset = 'utf8', $innodb_full_text = 0) {
 
     clearstatcache();
-
-    @set_time_limit(0);
 
     $file = PATH . 'languages' . DS . LANG . DS . 'sql' . DS . $file;
 
@@ -313,47 +308,51 @@ function import_dump(&$mysqli, $file, $prefix, $engine = 'MyISAM', $delimiter = 
         return false;
     }
 
-    $read_file_dump_query = function ($filename) use($prefix, $engine, $delimiter, $charset, $innodb_full_text) {
-
-        $file = fopen($filename, 'r');
-
-        $buffer = '';
-
-        while (($line = fgets($file)) !== false) {
-
-            $buffer .= $line;
-
-            if (substr(rtrim($line), -1) === $delimiter) {
-
-                $query = rtrim($buffer);
-
-                $buffer = '';
-
-                $query = str_replace(['{#}', 'InnoDB', 'CHARSET=utf8'], [$prefix, $engine, 'CHARSET=' . $charset], $query);
-
-                if ($innodb_full_text && $engine === 'InnoDB') {
-                    $query = str_replace('MyISAM', 'InnoDB', $query);
-                }
-
-                yield $query;
-            }
-        }
-
-        fclose($file);
-    };
-
-    $success = false;
-
-    foreach ($read_file_dump_query($file) as $query) {
-
-        $mysqli->query($query);
-
-        if ($mysqli->errno) {
-            return $mysqli->error . "\n\n" . $query;
-        }
-
-        $success = true;
+    $sql = file_get_contents($file);
+    if ($sql === false) {
+        return false;
     }
 
-    return $success;
+    // Пустой дамп
+    if (trim($sql) === '') {
+        return true;
+    }
+
+    $pattern = '/(ENGINE\s*=\s*\w+|CHARSET\s*=\s*\w+)/i';
+
+    $sql = preg_replace_callback($pattern, function ($matches) use ($engine, $charset) {
+        if (strpos($matches[0], 'ENGINE') === 0) {
+            return 'ENGINE=' . $engine;
+        }
+        if (strpos($matches[0], 'CHARSET') === 0) {
+            return 'CHARSET=' . $charset;
+        }
+        return $matches[0];
+    }, $sql);
+
+    if ($sql === null) {
+        return false;
+    }
+
+    $sql = str_replace('{#}', $prefix, $sql);
+
+    if ($innodb_full_text && $engine === 'InnoDB') {
+        $sql = str_replace('MyISAM', 'InnoDB', $sql);
+    }
+
+    if (!$mysqli->multi_query($sql)) {
+        return $mysqli->error;
+    }
+
+    do {
+        if ($result = $mysqli->store_result()) {
+            $result->free();
+        }
+    } while ($mysqli->more_results() && $mysqli->next_result());
+
+    if ($mysqli->error) {
+        return $mysqli->error;
+    }
+
+    return true;
 }

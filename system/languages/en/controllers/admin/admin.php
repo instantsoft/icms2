@@ -188,6 +188,9 @@
     define('LANG_CP_LIST_OFF_BREADCRUMB',       'Do not show breadcrumbs');
     define('LANG_CP_LIST_OFF_BREADCRUMB_CTYPE', 'Do not show ctype name in breadcrumbs');
     define('LANG_CP_LISTVIEW_FILTER',           'Show filter');
+    define('LANG_CP_HIDE_DATASETS',             'Don\'t show datasets');
+    define('LANG_CP_HIDE_CAT_INFO',             'Don\'t show category information');
+    define('LANG_CP_HIDE_WIDGET_HINT',          'Can be displayed in a separate widget');
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Expand filter panel');
     define('LANG_CP_LISTVIEW_STYLE',            'Default list style');
     define('LANG_CP_LIST_STYLE_NAMES',          'Names for list styles');

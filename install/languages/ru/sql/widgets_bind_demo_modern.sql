@@ -12,7 +12,8 @@ INSERT INTO `{#}widgets_bind` (`id`, `template_layouts`, `languages`, `widget_id
 (125, NULL, NULL, 3, 'Пункты меню', NULL, NULL, NULL, NULL, 1, NULL, '---\n', NULL, '---\nmenu: footer\ntemplate: menu\nclass:\nis_detect: 1\nis_detect_strict: null\nmax_items: 0\nnavbar_color_scheme: navbar-dark\nmenu_nav_style: flex-column\nmenu_nav_style_add:\nmenu_type: navbar\nnavbar_expand:\nshow_search_form: 0\ntoggler_icon: null\ntoggler_show_sitename: null\nmenu_is_pills: null\nmenu_is_fill:\n', 'menu', 'wrapper', 'icms-widget__compact', NULL, 1),
 (126, NULL, NULL, 14, 'Социальные кнопки', NULL, NULL, NULL, NULL, NULL, NULL, '---\n', NULL, '---\ncontent: |\n  <div class=\"py-2\">\r\n      <a class=\"text-light\" href=\"#\">{brands%facebook}</a>\r\n      <a class=\"text-light ml-2\" href=\"#\">{brands%github}</a>\r\n      <a class=\"text-light ml-2\" href=\"#\">{brands%instagram}</a>\r\n      <a class=\"text-light ml-2\" href=\"#\">{brands%odnoklassniki}</a>\r\n      <a class=\"text-light ml-2\" href=\"#\">{brands%vk}</a>\r\n      <a class=\"text-light ml-2\" href=\"#\">{brands%telegram}</a>\r\n  </div>\n', 'html', NULL, NULL, NULL, 1),
 (130, NULL, NULL, 23, 'Автор записи', NULL, NULL, NULL, NULL, 1, NULL, '---\n', NULL, '---\nshow_fields:\n  - nickname\n  - avatar\n  - birth_date\nshow_user_items_link: 1\nuser_items_link_title: Все новости автора\nshow_user_groups: null\nshow_date_log: 1\nshow_date_reg: null\n', 'author', 'wrapper', 'icms-widget__transparent', NULL, 1),
-(127, NULL, NULL, 5, 'Категории новостей', NULL, NULL, NULL, NULL, 1, NULL, '---\n', NULL, '---\nctype_name: news\ncover_preset:\nis_root: null\nshow_full_tree: 1\n', 'categories', 'wrapper', 'icms-widget__transparent', NULL, 1);
+(127, NULL, NULL, 5, 'Категории новостей', NULL, NULL, NULL, NULL, 1, NULL, '---\n', NULL, '---\nctype_name: news\ncover_preset:\nis_root: null\nshow_full_tree: 1\n', 'categories', 'wrapper', 'icms-widget__transparent', NULL, 1),
+(128, NULL, NULL, 7, 'Информация о категории', NULL, NULL, NULL, NULL, NULL, NULL, '---\n', NULL, '---\nwrapper_vars: [ ]\n', 'category_info', 'wrapper_plain', NULL, NULL, 1);
 
 INSERT INTO `{#}widgets_bind_pages` (`id`, `bind_id`, `template`, `is_enabled`, `page_id`, `position`, `ordering`) VALUES
 (75, 69, 'modern', 1, 153, 'con_header', 0),
@@ -28,6 +29,7 @@ INSERT INTO `{#}widgets_bind_pages` (`id`, `bind_id`, `template`, `is_enabled`, 
 (131, 125, 'modern', 1, 0, 'pos_39', 0),
 (132, 126, 'modern', 1, 0, 'pos_26', 0),
 (136, 130, 'modern', 1, 165, 'pos_9', 0),
-(133, 127, 'modern', 1, 164, 'pos_9', 1);
+(133, 127, 'modern', 1, 164, 'pos_9', 1),
+(134, 128, 'modern', 1, 164, 'con_header', 1);
 
 UPDATE `{#}con_posts_fields` SET `options` = '---\r\nmin_length: 3\r\nmax_length: 100\r\nshow_symbol_count: null\r\nin_fulltext_search: 1\r\nis_in_item_pos:\n  - widget\ncontext_list:\r\n  - 0\r\nrelation_id:\r\nlabel_in_list: none\r\nlabel_in_item: none\r\nwrap_type: auto\r\nwrap_width:\r\nis_required: 1\r\nis_digits: null\r\nis_alphanumeric: null\r\nis_email: null\r\nis_url: null\r\nis_unique: null\r\nprofile_value:\r\nauthor_access: null\r\n' WHERE `id` = 1;

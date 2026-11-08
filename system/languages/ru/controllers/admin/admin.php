@@ -200,6 +200,9 @@
     define('LANG_CP_LIST_OFF_BREADCRUMB',       'Не показывать хлебные крошки');
     define('LANG_CP_LIST_OFF_BREADCRUMB_CTYPE', 'Не показывать в хлебных крошках тип контента');
     define('LANG_CP_LISTVIEW_FILTER',           'Показывать фильтр');
+    define('LANG_CP_HIDE_DATASETS',             'Не показывать наборы');
+    define('LANG_CP_HIDE_CAT_INFO',             'Не показывать информацию о категории');
+    define('LANG_CP_HIDE_WIDGET_HINT',          'Можно вывести в отдельном виджете');
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Разворачивать панель фильтра');
     define('LANG_CP_LISTVIEW_STYLE',            'Стиль списка по умолчанию');
     define('LANG_CP_LIST_STYLE_NAMES',          'Названия для стилей списка');

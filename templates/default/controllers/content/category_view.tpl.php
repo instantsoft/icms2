@@ -55,7 +55,7 @@
     }
 
 ?>
-<?php if ($this->hasPageH1() && !$request->isInternal() && !$is_frontpage){  ?>
+<?php if ($show_h1 && empty($ctype['options']['hide_cat_info'])) {  ?>
     <?php if (!empty($list_styles)){ ?>
         <div class="content_list_styles">
             <?php foreach ($list_styles as $list_style) { ?>
@@ -73,7 +73,7 @@
     </h1>
 <?php } ?>
 
-<?php if ($datasets && !$is_hide_items){
+<?php if ($datasets && !$is_hide_items && empty($ctype['options']['hide_datasets'])) {
     $this->renderAsset('ui/datasets-panel', array(
         'datasets'        => $datasets,
         'dataset_name'    => $dataset,
@@ -83,7 +83,7 @@
     ));
 } ?>
 
-<?php if (!empty($category['description'])){?>
+<?php if (!empty($category['description']) && empty($ctype['options']['hide_cat_info'])) {?>
     <div class="category_description"><?php echo $category['description']; ?></div>
 <?php } ?>
 

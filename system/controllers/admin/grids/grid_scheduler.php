@@ -55,7 +55,10 @@ function grid_scheduler($controller) {
         'period' => [
             'title' => LANG_CP_SCHEDULER_TASK_PERIOD,
             'class' => 'd-none d-lg-table-cell',
-            'width' => 150
+            'width' => 150,
+            'handler' => function ($value) {
+                return nf($value);
+            }
         ],
         'date_last_run' => [
             'title'   => LANG_CP_SCHEDULER_TASK_LAST_RUN,

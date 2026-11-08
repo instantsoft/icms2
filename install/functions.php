@@ -2,6 +2,7 @@
 
 define('ADDONS_API_KEY', '8e13cb202f8bdc27dc765e0448e50d11');
 define('ADDONS_API_POINT', 'https://api.instantcms.ru/{lang}api/method/');
+define('PHP_MIN_VERSION', '7.4.0');
 
 function is_ajax_request() {
     if (!isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {

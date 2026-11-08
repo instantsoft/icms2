@@ -4,7 +4,7 @@ function grid_presets($controller) {
 
     $options = [
         'is_sortable'   => false,
-        'is_filter'     => false,
+        'is_filter'     => true,
         'is_pagination' => false,
         'is_draggable'  => false,
         'show_id'       => false
@@ -16,11 +16,13 @@ function grid_presets($controller) {
         ],
         'title' => [
             'title'    => LANG_IMAGES_PRESET,
+            'filter'   => 'like',
             'href'     => href_to($controller->root_url, 'presets_edit', ['{id}']),
             'editable' => []
         ],
         'name' => [
             'title'      => LANG_SYSTEM_NAME,
+            'filter'     => 'like',
             'switchable' => true
         ],
         'width' => [
@@ -71,6 +73,11 @@ function grid_presets($controller) {
     ];
 
     $actions = [
+        [
+            'title' => LANG_COPY,
+            'icon'  => 'copy',
+            'href'  => href_to($controller->root_url, 'presets_add', ['{id}']),
+        ],
         [
             'title' => LANG_EDIT,
             'icon'  => 'pen',

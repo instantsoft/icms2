@@ -130,7 +130,7 @@ class modelAdmin extends cmsModel {
             $time_last_run = strtotime($task['date_last_run']);
             $time_now      = time();
 
-            $minutes_ago = floor(($time_now - $time_last_run) / 60);
+            $minutes_ago = round(($time_now - $time_last_run) / 60, 2);
 
             if ($minutes_ago >= $task['period']) {
                 $pending[] = $task;

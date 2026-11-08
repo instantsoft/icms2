@@ -1,7 +1,7 @@
 <h1><?php echo LANG_STEP_PHP_CHECK; ?></h1>
 
 <h2><?php echo LANG_PHP_VERSION; ?></h2>
-<p><?php echo LANG_PHP_VERSION_REQ ?></p>
+<p><?php echo sprintf(LANG_PHP_VERSION_REQ, PHP_MIN_VERSION) ?></p>
 <table class="grid">
     <tr>
         <td><?php echo LANG_PHP_VERSION_DESC; ?></td>

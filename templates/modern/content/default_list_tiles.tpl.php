@@ -43,7 +43,7 @@ if($ctype['options']['list_show_filter']) {
                         </div>
                     <?php } ?>
 
-                    <?php if ($field['name'] === 'title' && $ctype['options']['item_on']){ ?>
+                    <?php if ($field['name'] === 'title') { ?>
                         <h3 class="h4 m-0">
                         <?php if (!empty($this->menus['list_actions_menu'])){ ?>
                             <div class="dropdown ml-2 float-right">
@@ -63,16 +63,19 @@ if($ctype['options']['list_show_filter']) {
                             <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
                             &rarr;
                         <?php } ?>
-
                         <?php if (!empty($item['is_private_item'])) { ?>
                             <?php html($item[$field['name']]); ?>
                             <span class="is_private text-secondary" title="<?php html($item['private_item_hint']); ?>">
                                 <?php html_svg_icon('solid', 'lock'); ?>
                             </span>
                         <?php } else { ?>
-                            <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">
+                            <?php if ($ctype['options']['item_on']){ ?>
+                                <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">
+                                    <?php html($item[$field['name']]); ?>
+                                </a>
+                            <?php } else { ?>
                                 <?php html($item[$field['name']]); ?>
-                            </a>
+                            <?php } ?>
                             <?php if ($item['is_private']) { ?>
                                 <span class="is_private text-secondary" title="<?php echo LANG_PRIVACY_HINT; ?>">
                                     <?php html_svg_icon('solid', 'lock'); ?>

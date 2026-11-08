@@ -1,5 +1,6 @@
 <?php $this->addTplJSNameFromContext('jquery-cookie'); ?>
 <?php $this->addTplJSNameFromContext('form-translate'); ?>
+<?php $show_search_input = $form->isFieldSearchEnabled(); ?>
 <?php if ((!isset($attributes['toolbar']) || $attributes['toolbar']) && $this->isToolbar() && empty($attributes['hide_toolbar'])){ ?>
     <?php $this->toolbar('menu-toolbar'); ?>
 <?php } ?>
@@ -9,7 +10,11 @@
       class="<?php html($attributes['form_class']); ?><?php if ($this->controller->request->isAjax()){ ?> ajax-form<?php } ?>"
       enctype="multipart/form-data"
       accept-charset="utf-8">
-
+    <?php if ($show_search_input) { ?>
+        <div class="form-search-wrapper mb-2">
+            <input type="search" class="form-control form-search-wrapper__input" placeholder="<?php echo LANG_SEARCH_OPTS; ?>">
+        </div>
+    <?php } ?>
     <?php echo html_csrf_token(); ?>
 
     <?php echo $attributes['prepend_html']; ?>
@@ -98,6 +103,9 @@
         $('#<?php echo $attributes['form_id']; ?> a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
             $.cookie('icms[<?php echo $cookie_tab_key; ?>]', $(this).data('fieldset_id'));
         });
+    <?php } ?>
+    <?php if ($show_search_input) { ?>
+        icms.forms.initSearchFields('<?php echo $attributes['form_id']; ?>');
     <?php } ?>
     });
 </script>
