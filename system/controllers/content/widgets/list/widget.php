@@ -380,9 +380,9 @@ class widgetContentList extends cmsWidget {
         $model->joinInner('content_relations_bind', 'r', $condition);
 
         $this->disableCache();
-
-        $this->links = str_replace('{list_link}', href_to($this->current_ctype['name'], $this->current_item['slug'], "view-{$this->ctype['name']}"), $this->links);
-
+        if (!empty($this->links)) {
+            $this->links = str_replace('{list_link}', href_to($this->current_ctype['name'], $this->current_item['slug'], "view-{$this->ctype['name']}"), $this->links);
+        }
     }
 
     private function applyContentFilter($model) {
