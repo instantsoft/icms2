@@ -15,7 +15,6 @@ class formWidgetContentCategoriesOptions extends cmsForm {
             }
 
             $presets = cmsCore::getModel('images')->getPresetsList();
-            $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
 
             if ($ctype_name) {
 

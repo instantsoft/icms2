@@ -33,7 +33,7 @@ class onContentRssContentControllerForm extends cmsAction {
                 new fieldList('mapping:image_size', [
                     'title'     => LANG_RSS_FEED_MAP_IMAGE_SIZE,
                     'generator' => function ($item) {
-                        return ['original' => LANG_PARSER_IMAGE_SIZE_ORIGINAL] + cmsCore::getModel('images')->getPresetsList(true);
+                        return cmsCore::getModel('images')->getPresetsList(true);
                     }
                 ])
             ]

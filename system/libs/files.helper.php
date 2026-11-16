@@ -331,6 +331,7 @@ function files_user_file_hash($file_path = ''){
     return md5(cmsUser::getIp().md5($file_path.cmsConfig::get('root_path')));
 }
 
+
 /**
  * Нормализует имя файла:
  * - приводит к нижнему регистру
@@ -340,7 +341,7 @@ function files_user_file_hash($file_path = ''){
  * - ограничивает длину имени
  *
  * @param string $filename Имя файла
- * @param bool $convert_slug Транслитировать?
+ * @param bool $convert_slug Транслитерировать?
  * @return string
  */
 function files_sanitize_name(string $filename, $convert_slug = true) {
@@ -360,10 +361,11 @@ function files_sanitize_name(string $filename, $convert_slug = true) {
         $name
     );
 
-    $name = preg_replace('/[^\w\-\.]+/u', '', $name);
-    $name = preg_replace('/[-_]+/', '-', $name);
+    $name = preg_replace('/[^\w\-.]+/u', '', $name);
+    $name = preg_replace('/-+/', '-', $name);
+    $name = preg_replace('/_+/', '_', $name);
     $name = preg_replace('/\.+/', '.', $name);
-    $name = trim($name, '.-');
+    $name = trim($name, '.-_');
     $name = mb_substr($name, 0, 200);
 
     if (!$name) {
@@ -512,74 +514,16 @@ function file_save_from_url($url, $destination) {
 }
 
 /**
- * Накладывает ваттермарк на изображение
- *
  * @deprecated Используйте класс cmsImages
- *
- * @return boolean
  */
 function img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality = 90) {
-    return true;
+    return false;
 }
-
 /**
- * Изменяет размер изображения $src, сохраняя измененное в $dest
- *
  * @deprecated Используйте класс cmsImages
- *
- * @param string $src Полный путь к исходному изображению
- * @param string $dest Полный путь куда сохранять измененное изображение
- * @param int $maxwidth Максимальная ширина в px
- * @param int $maxheight Максимальная высота в px
- * @param bool $is_square Создавать квадратное изображение
- * @param int $quality Качество результирующего изображения от 1 до 100
- * @return boolean
  */
 function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false, $quality = 95) {
-
-    if (!file_exists($src)) {
-        return false;
-    }
-
-    $upload_dir = dirname($dest);
-
-    if (!is_writable($upload_dir)) {
-
-        @chmod($upload_dir, 0777);
-
-        if (!is_writable($upload_dir)) {
-            return false;
-        }
-    }
-
-    try {
-        $image = new cmsImages($src);
-    } catch (Exception $exc) {
-        return false;
-    }
-
-    if ($is_square) {
-
-        $image->crop($maxwidth, $maxheight, false, cmsImages::CROPCENTER);
-
-    } else {
-
-        if (!$maxwidth || !$maxheight) {
-
-            if (!$maxwidth) {
-                $image->resizeToHeight($maxheight);
-            } else {
-                $image->resizeToWidth($maxwidth);
-            }
-
-        } else {
-            $image->resizeToBestFit($maxwidth, $maxheight);
-        }
-    }
-
-    $image->save($dest, null, $quality);
-
-    return true;
+    return false;
 }
 
 /**

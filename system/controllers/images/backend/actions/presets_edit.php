@@ -15,7 +15,7 @@ class actionImagesPresetsEdit extends cmsAction {
             return cmsCore::error404();
         }
 
-        if ($preset['is_internal']) {
+        if ($preset['is_internal'] || $preset['is_system']) {
             $form->removeFieldset('basic');
         }
 

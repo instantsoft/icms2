@@ -496,34 +496,37 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 DROP TABLE IF EXISTS `{#}images_presets`;
 CREATE TABLE `{#}images_presets` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) DEFAULT NULL,
-  `title` varchar(128) DEFAULT NULL,
-  `width` int(11) unsigned DEFAULT NULL,
-  `height` int(11) unsigned DEFAULT NULL,
-  `is_square` tinyint(1) unsigned DEFAULT NULL,
-  `is_watermark` tinyint(1) unsigned DEFAULT NULL,
-  `wm_image` text,
-  `wm_origin` varchar(16) DEFAULT NULL,
-  `wm_margin` int(11) unsigned DEFAULT NULL,
-  `is_internal` tinyint(1) unsigned DEFAULT NULL,
-  `quality` tinyint(1) unsigned DEFAULT '90',
-  `gamma_correct` tinyint(1) unsigned DEFAULT NULL,
-  `crop_position` tinyint(1) unsigned DEFAULT '2',
-  `allow_enlarge` tinyint(1) unsigned DEFAULT NULL,
-  `gif_to_gif` tinyint(1) unsigned DEFAULT '1',
-  `convert_format` char(4) DEFAULT NULL,
+  `name` varchar(32) DEFAULT NULL COMMENT 'Preset system name',
+  `title` varchar(128) DEFAULT NULL COMMENT 'Preset title',
+  `width` int(11) unsigned DEFAULT NULL COMMENT 'Converted image width',
+  `height` int(11) unsigned DEFAULT NULL COMMENT 'Converted image height',
+  `is_square` tinyint(1) unsigned DEFAULT NULL COMMENT 'Cut exactly to size',
+  `is_watermark` tinyint(1) unsigned DEFAULT NULL COMMENT 'Apply a watermark',
+  `wm_image` text COMMENT 'Path to watermark image',
+  `wm_origin` varchar(16) DEFAULT NULL COMMENT 'Position watermark',
+  `wm_margin` int(11) unsigned DEFAULT NULL COMMENT 'Edge margins for watermarks',
+  `is_internal` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Not available for general selection?',
+  `is_system` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'System preset?',
+  `quality` tinyint(1) unsigned DEFAULT '90' COMMENT 'Image quality',
+  `gamma_correct` tinyint(1) unsigned DEFAULT NULL COMMENT 'Gamma correction',
+  `crop_position` tinyint(1) unsigned DEFAULT '2' COMMENT 'Position when cutting strictly to size',
+  `allow_enlarge` tinyint(1) unsigned DEFAULT NULL COMMENT 'Enlarge to preset size',
+  `gif_to_gif` tinyint(1) unsigned DEFAULT '1' COMMENT 'Convert GIF/WEBP while preserving animation',
+  `convert_format` char(4) DEFAULT NULL COMMENT 'Final image format after conversion',
+  `engine` varchar(15) NOT NULL DEFAULT 'auto' COMMENT 'Conversion driver name',
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Presets for image conversion';
 
-INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`, `quality`, `gamma_correct`, `crop_position`, `allow_enlarge`, `gif_to_gif`, `convert_format`) VALUES
-(1, 'micro', 'Micro', 32, 32, 1, NULL, NULL, NULL, NULL, NULL, 75, NULL, 2, NULL, 1, NULL),
-(2, 'small', 'Small', 64, 64, 1, NULL, NULL, NULL, NULL, NULL, 80, NULL, 2, NULL, 1, NULL),
-(3, 'normal', 'Medium', NULL, 256, NULL, NULL, NULL, NULL, NULL, NULL, 85, NULL, 2, NULL, 1, NULL),
-(4, 'big', 'Big', 690, 690, NULL, NULL, NULL, 'bottom-right', NULL, NULL, 90, NULL, 2, NULL, 1, NULL),
-(5, 'wysiwyg_markitup', 'Editor: markItUp!', 400, 400, NULL, NULL, NULL, 'top-left', NULL, 1, 85, NULL, 2, NULL, 1, NULL),
-(6, 'wysiwyg_redactor', 'Editor: Redactor', 800, 800, NULL, NULL, NULL, 'top-left', NULL, 1, 90, NULL, 2, NULL, 1, NULL),
-(15, 'user_cover', 'Profile cover', 1200, 200, 1, NULL, NULL, 'top-left', 0, NULL, 87, NULL, 2, NULL, NULL, 'webp');
+INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`, `is_system`, `quality`, `gamma_correct`, `crop_position`, `allow_enlarge`, `gif_to_gif`, `convert_format`) VALUES
+(1, 'micro', 'Micro', 32, 32, 1, NULL, NULL, NULL, NULL, NULL, NULL, 75, NULL, 2, NULL, 1, NULL),
+(2, 'small', 'Small', 64, 64, 1, NULL, NULL, NULL, NULL, NULL, NULL, 80, NULL, 2, NULL, 1, NULL),
+(3, 'normal', 'Medium', NULL, 256, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 85, NULL, 2, NULL, 1, NULL),
+(4, 'big', 'Big', 690, 690, NULL, NULL, NULL, 'bottom-right', NULL, NULL, NULL, 90, NULL, 2, NULL, 1, NULL),
+(5, 'wysiwyg_markitup', 'Editor: markItUp!', 400, 400, NULL, NULL, NULL, 'top-left', NULL, 1, NULL, 85, NULL, 2, NULL, 1, NULL),
+(6, 'wysiwyg_redactor', 'Editor: Redactor', 800, 800, NULL, NULL, NULL, 'top-left', NULL, 1, NULL, 90, NULL, 2, NULL, 1, NULL),
+(15, 'user_cover', 'Profile cover', 1200, 200, 1, NULL, NULL, 'top-left', 0, NULL, NULL, 90, NULL, 2, NULL, NULL, 'webp'),
+(16, 'original', 'Original', 5120, 0, NULL, NULL, NULL, 'top-left', 0, NULL, 1, 95, NULL, 2, NULL, 1, NULL);
 
 DROP TABLE IF EXISTS `{#}menu`;
 CREATE TABLE `{#}menu` (

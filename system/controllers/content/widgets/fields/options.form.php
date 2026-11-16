@@ -88,7 +88,7 @@ class formWidgetContentFieldsOptions extends cmsForm {
                     new fieldList('options:image_preset', [
                         'title' => LANG_WD_CONTENT_FIELDS_IFP,
                         'generator' => function($item) {
-                            return cmsCore::getModel('images')->getPresetsList(true)+['original' => LANG_PARSER_IMAGE_SIZE_ORIGINAL];
+                            return cmsCore::getModel('images')->getPresetsList(true);
                         },
                         'visible_depend' => ['options:image_field' => ['hide' => ['']]]
                     ]),

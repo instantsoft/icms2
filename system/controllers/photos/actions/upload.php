@@ -39,18 +39,16 @@ class actionPhotosUpload extends cmsAction {
 
             $this->album = $this->model_content->getContentItem('albums', $album_id);
 
-            if ($this->album) {
-
-                if (!$this->isAllowedUpload($this->album)) {
-                    return cmsCore::error404();
-                }
-
-                if ($this->cms_user->id == $this->album['id']) {
-                    $this->model_content->disablePrivacyFilter();
-                }
-
-            } else {
+            if (!$this->album) {
                 return cmsCore::error404();
+            }
+
+            if (!$this->isAllowedUpload($this->album)) {
+                return cmsCore::error404();
+            }
+
+            if ($this->cms_user->id == $this->album['id']) {
+                $this->model_content->disablePrivacyFilter();
             }
         }
 
@@ -231,13 +229,23 @@ class actionPhotosUpload extends cmsAction {
             ]);
         }
 
+        if (empty($this->options['sizes'])) {
+
+            return $this->cms_template->renderJSON([
+                'success' => false,
+                'error'   => 'no presets'
+            ]);
+        }
+
         // получаем пресеты, которые нужно создать
         $presets = cmsCore::getModel('images')->orderByList([
                     ['by' => 'is_square', 'to' => 'asc'],
                     ['by' => 'width', 'to' => 'desc']
-                ])->filterIsNull('is_internal')->getPresets();
+                ])->filterIsNull('is_internal')->
+                filterIn('name', $this->options['sizes'])->
+                getPresets();
 
-        if (!$presets || empty($this->options['sizes'])) {
+        if (!$presets) {
 
             return $this->cms_template->renderJSON([
                 'success' => false,
@@ -258,7 +266,7 @@ class actionPhotosUpload extends cmsAction {
                 $image = new cmsImages($result['path']);
             } catch (Exception $exc) {
                 $result['success'] = false;
-                $result['error']   = LANG_UPLOAD_ERR_MIME;
+                $result['error']   = $exc->getMessage();
             }
         }
 
@@ -269,43 +277,40 @@ class actionPhotosUpload extends cmsAction {
             return $this->cms_template->renderJSON($result);
         }
 
-        $result['paths']['original'] = $result['url'];
+        $last_error = null;
+        $result['paths'] = [];
 
         foreach ($presets as $p) {
 
-            if (!in_array($p['name'], $this->options['sizes'], true)) {
-                continue;
-            }
-
             $resized_path = $image->resizeByPreset($p);
-
             if (!$resized_path) {
+
+                $last_error = $image->getLastError();
+
                 continue;
             }
 
             $result['paths'][$p['name']] = $resized_path;
         }
 
-        $result['filename'] = basename($result['path']);
+        // Какой-то пресет не отработал, удаляем все, показываем ошибку
+        if (count($result['paths']) !== count($presets)) {
 
-        // основную exif информацию берём из оригинала
-        $image_data = img_get_params($result['path']);
+            files_delete_file($result['path'], 2);
 
-        // если оригинал удаляется, то размеры берём из пресета просмотра на странице
-        $big_image_data = img_get_params($this->cms_config->upload_path . $result['paths'][$this->options['preset']]);
-        // ориентацию берем из большого фото, т.к. оригиналы автоматически не поворачиваются
-        $image_data['orientation'] = $big_image_data['orientation'];
+            foreach ($result['paths'] as $file_path) {
+                $this->model_files->deleteFile($file_path);
+            }
 
-        if (empty($this->options['is_origs'])) {
+            error_log($last_error ?? 'Conversion to one or more presets failed');
 
-            @unlink($result['path']);
-            unset($result['paths']['original']);
-
-            $image_data['width']  = $big_image_data['width'];
-            $image_data['height'] = $big_image_data['height'];
+            return $this->cms_template->renderJSON([
+                'success' => false,
+                'error'   => 'Conversion to one or more presets failed'
+            ]);
         }
 
-        unset($result['path']);
+        $result['filename'] = basename($result['path']);
 
         // маленкая картинка
         $last_image        = end($result['paths']);
@@ -313,6 +318,20 @@ class actionPhotosUpload extends cmsAction {
         // большая картинка
         $first_image       = reset($result['paths']);
         $result['big_url'] = $this->cms_config->upload_host . '/' . $first_image;
+
+        // основную exif информацию берём из оригинала
+        $image_data = img_get_params($result['path']);
+
+        // Размеры берём из самого большого пресета
+        $big_image_data = img_get_params($this->cms_config->upload_path . $first_image);
+        $image_data['width']  = $big_image_data['width'];
+        $image_data['height'] = $big_image_data['height'];
+        // ориентацию берем из большого фото, т.к. оригиналы автоматически не поворачиваются
+        $image_data['orientation'] = $big_image_data['orientation'];
+
+        // Оригинал удаляем (для оригиналов есть свой пресет)
+        files_delete_file($result['path'], 2);
+        unset($result['path']);
 
         $sizes = [];
         foreach ($result['paths'] as $name => $relpath) {
@@ -328,8 +347,8 @@ class actionPhotosUpload extends cmsAction {
             ];
         }
 
-        $date_photo = (isset($image_data['exif']['date']) ? $image_data['exif']['date'] : false);
-        $camera     = (isset($image_data['exif']['camera']) ? $image_data['exif']['camera'] : null);
+        $date_photo = $image_data['exif']['date'] ?? false;
+        $camera     = $image_data['exif']['camera'] ?? null;
         unset($image_data['exif']['date'], $image_data['exif']['camera'], $image_data['exif']['orientation']);
 
         $result['id'] = $this->model->addPhoto([

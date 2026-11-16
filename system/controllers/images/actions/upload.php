@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @property \modelImages $model
+ * @property \modelFiles $model_files
+ */
 class actionImagesUpload extends cmsAction {
 
     public function run($name) {
@@ -9,6 +12,51 @@ class actionImagesUpload extends cmsAction {
             return $this->cms_template->renderJSON([
                 'success' => false,
                 'error'   => 'auth error'
+            ]);
+        }
+
+        // Переданные пресеты
+        $sizes = $this->request->get('sizes', '');
+        // Желаемое имя файла
+        $file_name = str_replace('.', '', $this->request->get('file_name', ''));
+
+        // Проверяем размеры
+        if ($sizes !== '') {
+
+            if (!preg_match('/([a-z0-9_,]+)$/i', $sizes) || mb_strlen($sizes) < 3) {
+                return $this->cms_template->renderJSON([
+                    'success' => false,
+                    'error'   => 'Sizes error'
+                ]);
+            }
+
+            $sizes = explode(',', $sizes);
+
+        } else {
+            $sizes = [];
+        }
+
+        // Получаем пресеты по переданным размерам
+        if ($sizes) {
+            $this->model->filterIn('name', $sizes);
+        }
+
+        $presets = $this->model->orderByList([
+            ['by' => 'is_square', 'to' => 'asc'],
+            ['by' => 'width', 'to' => 'desc']
+        ])->filterIsNull('is_internal')->getPresets();
+
+        if (!$presets) {
+            return $this->cms_template->renderJSON([
+                'success' => false,
+                'error'   => 'No presets'
+            ]);
+        }
+        // Должно совпадать кол-во
+        if ($sizes && count($sizes) !== count($presets)) {
+            return $this->cms_template->renderJSON([
+                'success' => false,
+                'error'   => 'Error Sizes Presets'
             ]);
         }
 
@@ -28,7 +76,7 @@ class actionImagesUpload extends cmsAction {
                 $image = new cmsImages($result['path']);
             } catch (Exception $exc) {
                 $result['success'] = false;
-                $result['error']   = LANG_UPLOAD_ERR_MIME;
+                $result['error']   = $exc->getMessage();
             }
         }
 
@@ -42,35 +90,8 @@ class actionImagesUpload extends cmsAction {
             return $this->cms_template->renderJSON($result);
         }
 
-        // Переданные пресеты
-        $sizes = $this->request->get('sizes', '');
-        // Желаемое имя файла
-        $file_name = str_replace('.', '', $this->request->get('file_name', ''));
-
-        if (!empty($sizes) && preg_match('/([a-z0-9_,]+)$/i', $sizes)) {
-            $sizes = explode(',', $sizes);
-        } else {
-            $sizes   = array_keys((array) $this->model->getPresetsList());
-            $sizes[] = 'original';
-        }
-
         // Результирующий массив изображений после конвертации
         $result['paths'] = [];
-
-        // Дополняем оригиналом, если нужно
-        if (in_array('original', $sizes, true)) {
-
-            $result['paths']['original'] = [
-                'path' => $result['url'],
-                'url'  => $this->cms_config->upload_host . '/' . $result['url']
-            ];
-        }
-
-        // Получаем пресеты
-        $presets = $this->model->orderByList([
-            ['by' => 'is_square', 'to' => 'asc'],
-            ['by' => 'width', 'to' => 'desc']
-        ])->getPresets();
 
         list($result, $presets, $sizes) = cmsEventsManager::hook('images_after_upload', [$result, $presets, $sizes], null, $this->request);
 
@@ -80,16 +101,17 @@ class actionImagesUpload extends cmsAction {
             'target_id'         => $this->request->get('target_id', 0) ?: null
         ];
 
+        $last_error = null;
+
         // Создаём изображения по пресетам
+        // Все пресеты должны отработать
         foreach ($presets as $p) {
 
-            if (!in_array($p['name'], $sizes, true)) {
-                continue;
-            }
-
             $resized_path = $image->resizeByPreset($p, $file_name);
-
             if (!$resized_path) {
+
+                $last_error = $image->getLastError();
+
                 continue;
             }
 
@@ -105,27 +127,32 @@ class actionImagesUpload extends cmsAction {
             $this->registerFile(['path' => $resized_path]);
         }
 
-        list($result, $presets, $sizes) = cmsEventsManager::hook('images_after_resize', [$result, $presets, $sizes], null, $this->request);
-
-        // Удаляем или регистрируем оригинал
-        if (!in_array('original', $sizes, true)) {
+        // Какой-то пресет не отработал, удаляем все, показываем ошибку
+        if (count($result['paths']) !== count($presets)) {
 
             files_delete_file($result['path'], 2);
 
-        } else {
-
-            if ($file_context['target_controller']) {
-                $this->registerUploadFile($file_context);
+            foreach ($result['paths'] as $paths) {
+                $this->model_files->deleteFile($paths['path']);
             }
 
-            $this->registerFile(['path' => $result['url']]);
+            error_log($last_error ?? 'Conversion to one or more presets failed');
+
+            return $this->cms_template->renderJSON([
+                'success' => false,
+                'error'   => 'Conversion to one or more presets failed'
+            ]);
         }
+
+        list($result, $presets, $sizes) = cmsEventsManager::hook('images_after_resize', [$result, $presets, $sizes], null, $this->request);
+
+        // Удаляем исходник, для оригинального файла есть отдельный пресет
+        files_delete_file($result['path'], 2);
+        unset($result['path']);
 
         if ($this->request->isInternal()) {
             return $result;
         }
-
-        unset($result['path']);
 
         return $this->cms_template->renderJSON($result);
     }

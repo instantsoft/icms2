@@ -35,5 +35,6 @@ define('LANG_IMAGES_PRESET_CRIGHT', 'Справа');
 define('LANG_IMAGES_PRESET_ALLOW_ENLARGE', 'Увеличивать до размеров пресета');
 define('LANG_IMAGES_PRESET_OUT_FORMAT', 'Формат конвертированного изображения');
 define('LANG_IMAGES_PRESET_OUT_ASIS', 'Как исходный');
-define('LANG_IMAGES_PRESET_GIF_TO_GIF', 'Конвертировать GIF как GIF, сохраняя анимацию');
+define('LANG_IMAGES_PRESET_GIF_TO_GIF', 'Конвертировать анимированный файл, сохраняя анимацию и исходный формат');
 define('LANG_IMAGES_CROP_IMG', 'Обрезать изображение');
+define('LANG_IMAGES_ENGINE', 'Драйвер обработки');

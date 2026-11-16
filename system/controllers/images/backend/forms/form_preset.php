@@ -31,6 +31,30 @@ class formImagesPreset extends cmsForm {
                 'type'   => 'fieldset',
                 'title'  => LANG_OPTIONS,
                 'childs' => [
+                    new fieldList('engine', [
+                        'title'     => LANG_IMAGES_ENGINE,
+                        'default'   => 'auto',
+                        'generator' => function ($item) {
+
+                            $items = ['auto' => LANG_AUTO];
+                            $files = cmsCore::getFilesList('system/core/imageDrivers', '*.php', true, true);
+
+                            foreach ($files as $name) {
+
+                                if ($name === 'imagesDriverInterface') {
+                                    continue;
+                                }
+
+                                $driver_class = 'icms\core\imageDrivers\\' . $name;
+
+                                $is_available = $driver_class::isAvailable();
+
+                                $items[$name] = (new $driver_class())->title() . ($is_available ? '' : ' (' . LANG_CP_SETTINGS_CACHE_METHOD_NO . ')');
+                            }
+
+                            return $items;
+                        }
+                    ]),
                     new fieldNumber('width', [
                         'title' => LANG_IMAGES_PRESET_SIZE_W,
                         'hint'  => LANG_IMAGES_PRESET_SIZE_W_HINT,

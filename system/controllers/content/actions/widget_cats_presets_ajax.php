@@ -9,7 +9,6 @@ class actionContentWidgetCatsPresetsAjax extends cmsAction {
         }
 
         $presets = cmsCore::getModel('images')->getPresetsList();
-        $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
 
         $ctype_name = $this->request->get('value', '');
 

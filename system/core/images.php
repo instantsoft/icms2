@@ -1,30 +1,48 @@
 <?php
-/**
- * This library is maintained by Gumlet
- * https://github.com/gumlet/php-image-resize
- * modifed for InstantCMS
- */
+
 class cmsImages {
 
-    const CROPTOP             = 1;
-    const CROPCENTRE          = 2;
-    const CROPCENTER          = 2;
-    const CROPBOTTOM          = 3;
-    const CROPLEFT            = 4;
-    const CROPRIGHT           = 5;
-    const CROPTOPCENTER       = 6;
+    const CROPTOP       = 1;
+    const CROPCENTRE    = 2;
+    const CROPCENTER    = 2;
+    const CROPBOTTOM    = 3;
+    const CROPLEFT      = 4;
+    const CROPRIGHT     = 5;
+    const CROPTOPCENTER = 6;
 
-    public $quality_jpg       = 90;
-    public $quality_webp      = 90;
-    public $quality_png       = 6;
-    public $quality_truecolor = true;
-    public $gamma_correct     = false;
-    public $interlace         = 1;
-    public $gif_to_gif        = false;
-    public $source_type;
+    public $gamma_correct = false;
+    public $interlace     = true;
+
+    public $source_type = IMAGETYPE_UNKNOWN;
+
+    public $max_source_pixels = 28000000;
+
+    /**
+     * Конвертер
+     * auto = сначала Imagick, затем GD в качестве резервного варианта
+     * Можно явно указать gd или imagick.
+     *
+     * @var string
+     */
+    protected $engine = 'auto';
+
+    /**
+     * Драйвер обработки изображений
+     *
+     * @var imagesDriverInterface
+     */
+    protected $driver;
+
+    /**
+     * Массив данных для ватермарка
+     *
+     * @var ?array
+     */
+    protected $watermark = null;
 
     protected $source_file_path;
-    protected $source_image;
+    protected $dest_dir = '';
+
     protected $original_w = 0;
     protected $original_h = 0;
     protected $dest_x     = 0;
@@ -35,14 +53,14 @@ class cmsImages {
     protected $dest_h     = 0;
     protected $source_w   = 0;
     protected $source_h   = 0;
-    protected $source_info;
-    protected $filters    = [];
-    protected $dest_dir = '';
+
+    protected $last_error;
 
     /**
      * Устанавливает директорию назначения
+     *
      * @param string $dest_dir
-     * @return $this
+     * @return \cmsImages
      */
     public function setDestinationDir($dest_dir) {
 
@@ -52,61 +70,80 @@ class cmsImages {
     }
 
     /**
-     * Экземпляр класса из base64 строки изображения
-     *
-     * @param string $image_data
-     * @return \cmsImages
-     */
-    public static function createFromString($image_data) {
-        return new self('data://application/octet-stream;base64,' . base64_encode($image_data));
-    }
-
-    /**
-     * Выполняет ресайз изображения согласно параметров пресета
+     * Подготавливает данные для конвертации
+     * И возвращает [$image_type, $dest_file]
+     * Где $image_type это IMAGETYPE_GIF || IMAGETYPE_JPEG || IMAGETYPE_PNG || IMAGETYPE_WEBP
+     *     $dest_file путь к файлу результата
      *
      * @param array $preset
-     * @param string $file_name
-     * @param int $user_id
-     * @return ?string Полный путь к полученному изображению
+     * @param ?string $file_name
+     * @param ?string $user_id
+     * @return array
      */
-    public function resizeByPreset($preset, $file_name = null, $user_id = null) {
+    protected function prepareResizeByPreset(array $preset, $file_name, $user_id) {
 
         $image_type = $this->source_type;
         $dest_ext   = $this->getSourceExt();
 
-        if($this->dest_dir){
+        if($this->dest_dir) {
             $dest_dir = $this->dest_dir;
         } else {
-            $dest_dir = files_get_upload_dir($user_id === null ? cmsUser::get('id') : $user_id);
+            $dest_dir = files_get_upload_dir($user_id ?? cmsUser::get('id'));
             if (!$dest_dir) {
-                return null;
+                return [$image_type, null];
             }
         }
 
-        if(!empty($preset['convert_format'])){
+        if(!empty($preset['convert_format'])) {
 
             $image_type = $this->getImageType($preset['convert_format']);
             $dest_ext = $preset['convert_format'];
 
-            if(!empty($preset['gif_to_gif']) && $this->source_type == IMAGETYPE_GIF){
-                $this->gif_to_gif = true;
+            if(!empty($preset['gif_to_gif']) && $this->driver->isSourceAnimate()) {
                 $image_type = $this->source_type;
                 $dest_ext   = $this->getSourceExt();
             }
-        } else {
-            $this->gif_to_gif = true;
         }
 
-        if($file_name){
-            $dest_name = files_sanitize_name($file_name.($this->dest_dir ? '' : ' '.$preset['name']));
+        if($file_name) {
+            // Если только ASCII-символы, не транслитерировать
+            $convert_slug = !preg_match('/^[\x00-\x7F]+$/', $file_name);
+
+            $dest_name = files_sanitize_name($file_name.($this->dest_dir ? '' : ' '.$preset['name']), $convert_slug);
         } else {
-            $dest_name = substr(md5(microtime(true)), 0, 8);
+            $dest_name = string_random(8);
         }
 
         $dest_file = $dest_dir . $dest_name . '.' .$dest_ext;
 
         while (file_exists($dest_file)) {
             $dest_file = $dest_dir . $dest_name . '_' . substr(md5(microtime(true)), 0, 2) . '.' .$dest_ext;
+        }
+
+        return [$image_type, $dest_file];
+    }
+
+    /**
+     * Выполняет ресайз изображения согласно параметров пресета
+     *
+     * @param array $preset
+     * @param ?string $file_name
+     * @param ?string|int $user_id
+     * @return ?string Полный путь к полученному изображению
+     */
+    public function resizeByPreset(array $preset, $file_name = null, $user_id = null) {
+
+        try {
+            $this->setEngine($preset['engine']);
+        } catch (Exception $exc) {
+            $this->last_error = $exc->getMessage();
+            return null;
+        }
+
+        [$image_type, $dest_file] = $this->prepareResizeByPreset($preset, $file_name, $user_id);
+
+        if (!$dest_file || $image_type === IMAGETYPE_UNKNOWN) {
+            return null;
         }
 
         if(!empty($preset['is_square'])){
@@ -126,89 +163,84 @@ class cmsImages {
             } else {
                 $this->resizeToBestFit($preset['width'], $preset['height'], !empty($preset['allow_enlarge']));
             }
-
         }
 
-        if (!empty($preset['is_watermark']) && $preset['wm_image']){
-
-            $this->addFilter(function ($dest_image, $cmsImages) use ($preset) {
-
-                $wm_file = cmsConfig::get('upload_path').$preset['wm_image']['original'];
-
-                $wm_size = getimagesize($wm_file);
-                if ($wm_size === false) { return false; }
-
-                $wm_width  = $wm_size[0];
-                $wm_height = $wm_size[1];
-
-                $wm_format = strtolower(substr($wm_size['mime'], strpos($wm_size['mime'], '/' ) + 1));
-                $wm_func   = 'imagecreatefrom'.$wm_format;
-                if (!function_exists($wm_func)) { return false; }
-
-                $wm = $wm_func($wm_file);
-
-                $img_width  = imagesx($dest_image);
-                $img_height = imagesy($dest_image);
-
-                $wm_margin = intval($preset['wm_margin']);
-
-                switch($preset['wm_origin']){
-                    case 'top-left':
-                        $x = $wm_margin;
-                        $y = $wm_margin;
-                        break;
-                    case 'top-center':
-                        $x = ($img_width/2) - ($wm_width/2);
-                        $y = $wm_margin;
-                        break;
-                    case 'top-right':
-                        $x = ($img_width - $wm_width - $wm_margin);
-                        $y = $wm_margin;
-                        break;
-                    case 'left':
-                        $x = $wm_margin;
-                        $y = ($img_height/2) - ($wm_height/2);
-                        break;
-                    case 'center':
-                        $x = ($img_width/2) - ($wm_width/2);
-                        $y = ($img_height/2) - ($wm_height/2);
-                        break;
-                    case 'right':
-                        $x = ($img_width - $wm_width - $wm_margin);
-                        $y = ($img_height/2) - ($wm_height/2);
-                        break;
-                    case 'bottom-left':
-                        $x = $wm_margin;
-                        $y = ($img_height - $wm_height - $wm_margin);
-                        break;
-                    case 'bottom':
-                        $x = ($img_width/2) - ($wm_width/2);
-                        $y = ($img_height - $wm_height - $wm_margin);
-                        break;
-                    case 'bottom-right':
-                        $x = ($img_width - $wm_width - $wm_margin);
-                        $y = ($img_height - $wm_height - $wm_margin);
-                        break;
-                }
-
-                imagealphablending($dest_image, true);
-
-                imagecopy($dest_image, $wm, (int)$x, (int)$y, 0, 0, $wm_width, $wm_height);
-            });
-
-        }
+        $this->preparePresetWatermark($preset);
 
         $this->gamma(!empty($preset['gamma_correct']));
 
-        $this->save($dest_file, $image_type, $preset['quality']);
+        $success = $this->save($dest_file, $image_type, $preset['quality']);
 
-        $this->filters = [];
+        if (!$success) {
+            return null;
+        }
 
         return str_replace(cmsConfig::get('upload_path'), '', $dest_file);
     }
 
     /**
+     * Подготавливает данные для нанесения ватермарка, если требуется
+     *
+     * @param array $preset
+     * @return void
+     */
+    protected function preparePresetWatermark(array $preset) {
+
+        if (empty($preset['is_watermark']) || empty($preset['wm_image']['original'])) {
+            return;
+        }
+
+        $wm_file = cmsConfig::get('upload_path') . $preset['wm_image']['original'];
+
+        $wm_size = getimagesize($wm_file);
+        if ($wm_size === false) {
+            return;
+        }
+
+        $wmW = (int) $wm_size[0];
+        $wmH = (int) $wm_size[1];
+
+        $imgW   = $this->getDestWidth();
+        $imgH   = $this->getDestHeight();
+        $margin = (int) ($preset['wm_margin'] ?? 0);
+
+        switch($preset['wm_origin'] ?? 'bottom-right') {
+            case 'top-left':    $x = $margin;
+                                $y = $margin;
+                break;
+            case 'top-center':  $x = ($imgW/2) - ($wmW/2);
+                                $y = $margin;
+                break;
+            case 'top-right':   $x = ($imgW - $wmW - $margin);
+                                $y = $margin;
+                break;
+            case 'left':        $x = $margin;
+                                $y = ($imgH/2) - ($wmH/2);
+                break;
+            case 'center':      $x = ($imgW/2) - ($wmW/2);
+                                $y = ($imgH/2) - ($wmH/2);
+                break;
+            case 'right':       $x = ($imgW - $wmW - $margin);
+                                $y = ($imgH/2) - ($wmH/2);
+                break;
+            case 'bottom-left': $x = $margin;
+                                $y = ($imgH - $wmH - $margin);
+                break;
+            case 'bottom':      $x = ($imgW/2) - ($wmW/2);
+                                $y = ($imgH - $wmH - $margin);
+                break;
+            default: // bottom-right
+                                $x = ($imgW - $wmW - $margin);
+                                $y = ($imgH - $wmH - $margin);
+                break;
+        };
+
+        $this->watermark = ['file' => $wm_file, 'x' => (int) $x, 'y' => (int) $y];
+    }
+
+    /**
      * Возвращает расширение исходного файла
+     *
      * @return string
      */
     public function getSourceExt() {
@@ -226,7 +258,13 @@ class cmsImages {
         }
     }
 
-    public function getImageType($ext) {
+    /**
+     * Возвращает тип файла по расширению
+     *
+     * @param string $ext Расширение файла
+     * @return int
+     */
+    protected function getImageType(string $ext) {
         switch ($ext) {
             case 'gif':
                 return IMAGETYPE_GIF;
@@ -237,163 +275,125 @@ class cmsImages {
             case 'webp':
                 return IMAGETYPE_WEBP;
             default:
-                return 'jpg';
+                return IMAGETYPE_UNKNOWN;
         }
     }
 
     /**
-     * Добавляет функцию фильтра для использования перед сохранением в файл
+     * Возвращает объект класса драйвера
      *
-     * @param callable $filter
-     * @return $this
+     * @return icms\core\imageDrivers\imagesDriverInterface
+     * @throws Exception
      */
-    public function addFilter(callable $filter) {
-        $this->filters[] = $filter;
-        return $this;
+    protected function loadDriver() {
+
+        if ($this->engine === 'auto') {
+            $this->engine = extension_loaded('imagick') ? 'imagick' : 'gd';
+        }
+
+        $driver_class = 'icms\core\imageDrivers\\' . $this->engine;
+
+        if (!class_exists($driver_class)) {
+            throw new Exception($this->engine . ' extension is not available');
+        }
+
+        return new $driver_class();
     }
 
     /**
-     * Применяет фильтры
+     * Возвращает информацию об изображении через getimagesize
+     * Проверяя перед этим через finfo
      *
-     * @param resource $image Идентификатор ресурса изображения
+     * @param string $filename Полный путь к файлу
+     * @return bool|array
      */
-    protected function applyFilter($image) {
-        foreach ($this->filters as $function) {
-            if(is_callable($function)){
-                call_user_func_array($function, [$image, $this]);
-            }
+    protected function getImageInfo(string $filename) {
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = $finfo ? finfo_file($finfo, $filename) : false;
+        if ($finfo) { finfo_close($finfo); }
+
+        if (!$mime || strpos($mime, 'image/') !== 0) {
+            return false;
         }
+
+        return getimagesize($filename);
+    }
+
+    /**
+     * Загружает драйвер обработки
+     * И устанавливает параметры текущего исходного изображения
+     *
+     * @param string $engine Имя драйвера
+     * @return \cmsImages
+     * @throws Exception
+     */
+    protected function setEngine(string $engine) {
+
+        if ($this->driver) {
+            $this->driver->destroy();
+        }
+
+        $this->engine = strtolower($engine);
+
+        $this->driver = $this->loadDriver();
+
+        $this->driver->load($this->source_file_path, $this->source_type);
+
+        $this->original_w = $this->driver->getWidth();
+        $this->original_h = $this->driver->getHeight();
+
+        return $this->resize($this->getSourceWidth(), $this->getSourceHeight());
     }
 
     /**
      * Загружает источник изображения и его свойства в экземпляр объекта
      *
      * @param string $filename
+     * @param string $engine
+     * @throws Exception
      */
-    public function __construct($filename) {
+    public function __construct(string $filename, ?string $engine = null) {
 
-        if (!defined('IMAGETYPE_WEBP')) {
-            define('IMAGETYPE_WEBP', 18);
-        }
-
-        if ($filename === null || empty($filename) || (substr($filename, 0, 5) !== 'data:' && !is_file($filename))) {
-            throw new Exception('File does not exist');
+        if (empty($filename) || !is_file($filename)) {
+            throw new Exception(ERR_FILE_NOT_FOUND);
         }
 
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        if (strstr(finfo_file($finfo, $filename), 'image') === false) {
-            throw new Exception('Unsupported file type');
-        }
-        if (!$image_info = getimagesize($filename, $this->source_info)) {
-            $image_info = getimagesize($filename);
-        }
+        $image_info = $this->getImageInfo($filename);
         if (!$image_info) {
-            throw new Exception('Could not read file');
+            throw new Exception(LANG_UPLOAD_ERR_MIME);
         }
 
-        $this->original_w  = $image_info[0];
-        $this->original_h  = $image_info[1];
-        $this->source_type = $image_info[2];
-
-        switch ($this->source_type) {
-            case IMAGETYPE_GIF:
-                $this->source_image = imagecreatefromgif($filename);
-                break;
-            case IMAGETYPE_JPEG:
-                $this->source_image = $this->imageCreateJpegfromExif($filename);
-                // возможно изменили размеры, переустанавливаем
-                $this->original_w = imagesx($this->source_image);
-                $this->original_h = imagesy($this->source_image);
-                break;
-            case IMAGETYPE_PNG:
-                $this->source_image = imagecreatefrompng($filename);
-                break;
-            case IMAGETYPE_WEBP:
-                $this->source_image = imagecreatefromwebp($filename);
-                $this->original_w = imagesx($this->source_image);
-                $this->original_h = imagesy($this->source_image);
-                break;
-            default:
-                throw new Exception('Unsupported image type');
-        }
-
-        if (!$this->source_image) {
-            throw new Exception('Could not load image');
+        // Защита от атак типа image-bomb
+        if ($this->max_source_pixels > 0 && ($image_info[0] * $image_info[1]) > $this->max_source_pixels) {
+            throw new Exception(
+                sprintf(
+                    LANG_ERROR_IMAGE_PIXELS,
+                    $image_info[0],
+                    $image_info[1],
+                    $image_info[0] * $image_info[1],
+                    $this->max_source_pixels
+                )
+            );
         }
 
         $this->source_file_path = $filename;
 
-        return $this->resize($this->getSourceWidth(), $this->getSourceHeight());
+        $this->source_type = (int) $image_info[2];
+
+        if (!in_array($this->source_type, [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true)) {
+            throw new Exception(LANG_UPLOAD_ERR_MIME);
+        }
+
+        if ($engine !== null) {
+            $this->setEngine($engine);
+        }
     }
 
-    public function imageCreateJpegfromExif($filename) {
+    public function reset() {
 
-        $img = imagecreatefromjpeg($filename);
-
-        if (!function_exists('exif_read_data') || !isset($this->source_info['APP1']) || strpos($this->source_info['APP1'], 'Exif') !== 0) {
-            return $img;
-        }
-
-        try {
-            $exif = @exif_read_data($filename);
-        } catch (Exception $e) {
-            $exif = null;
-        }
-
-        if (!$exif || empty($exif['Orientation'])) {
-            return $img;
-        }
-
-        $orientation = $exif['Orientation'];
-
-        if ($orientation === 6 || $orientation === 5) {
-            $img = imagerotate($img, 270, null);
-        } elseif ($orientation === 3 || $orientation === 4) {
-            $img = imagerotate($img, 180, null);
-        } elseif ($orientation === 8 || $orientation === 7) {
-            $img = imagerotate($img, 90, null);
-        }
-        if ($orientation === 5 || $orientation === 4 || $orientation === 7) {
-            imageflip($img, IMG_FLIP_HORIZONTAL);
-        }
-
-        return $img;
-    }
-
-    public function saveGif($filename, $quality = null, $permissions = null, $exact_size = false) {
-
-        $im = new Imagick($this->source_file_path);
-
-        if (!empty($exact_size) && is_array($exact_size)) {
-
-            $width = $exact_size[0];
-            $height = $exact_size[1];
-
-        } else {
-
-            $width = $this->getDestWidth();
-            $height = $this->getDestHeight();
-        }
-
-        $im = $im->coalesceImages();
-
-        foreach ($im as $frame) {
-
-            $frame->cropImage($width, $height, $this->source_x, $this->source_y);
-
-            $frame->thumbnailImage($width, $height);
-
-            $frame->setImagePage($width, $height, 0, 0);
-        }
-
-        $im = $im->deconstructImages();
-
-        if ($im->writeImages($filename, true) && $permissions) {
-            chmod($filename, $permissions);
-        }
-
-        $im->clear();
-        $im->destroy();
+        $this->gamma_correct = false;
+        $this->watermark     = null;
 
         return $this;
     }
@@ -401,289 +401,59 @@ class cmsImages {
     /**
      * Сохраняет новое изображение
      *
-     * @param string $filename     Имя файла для сохранения
-     * @param integer $image_type  Тип изображения
-     * @param integer $quality     Качество
-     * @param integer $permissions Права доступа
-     * @param array $exact_size    Массив размеров
-     * @return \cmsImages
+     * @param string $filename  Имя файла для сохранения
+     * @param ?int $image_type  Тип изображения
+     * @param ?int $quality     Качество
+     * @param ?int $permissions Права доступа
+     * @return bool
      */
-    public function save($filename, $image_type = null, $quality = null, $permissions = null, $exact_size = false) {
+    public function save(string $filename, $image_type = null, $quality = null, $permissions = null) {
 
-        if(!$image_type){
+        if (!$image_type) {
             $image_type = $this->source_type;
         }
 
         $quality = is_numeric($quality) ? abs((int)$quality) : null;
 
-        switch ($image_type) {
-            case IMAGETYPE_GIF:
+        $this->dest_x = 0;
+        $this->dest_y = 0;
 
-                if ($this->gif_to_gif && extension_loaded('imagick')) {
-                    return $this->saveGif($filename, $quality, $permissions, $exact_size);
-                }
+        $geometry = [
+            'source_x' => $this->source_x,
+            'source_y' => $this->source_y,
+            'source_w' => $this->source_w,
+            'source_h' => $this->source_h,
+            'dest_x'   => $this->dest_x,
+            'dest_y'   => $this->dest_y,
+            'dest_w'   => $this->getDestWidth(),
+            'dest_h'   => $this->getDestHeight()
+        ];
 
-                if (!empty($exact_size) && is_array($exact_size)) {
-                    $dest_image = imagecreatetruecolor($exact_size[0], $exact_size[1]);
-                } else {
-                    $dest_image = imagecreatetruecolor($this->getDestWidth(), $this->getDestHeight());
-                }
+        $options = [
+            'gamma_correct' => $this->gamma_correct,
+            'interlace'     => $this->interlace && $image_type === IMAGETYPE_JPEG,
+            'watermark'     => $this->watermark
+        ];
 
-                $background = imagecolorallocatealpha($dest_image, 255, 255, 255, 1);
+        $success = $this->driver->save($filename, $image_type, $quality, $geometry, $options);
 
-                imagecolortransparent($dest_image, $background);
-                imagefill($dest_image, 0, 0, $background);
-                imagesavealpha($dest_image, true);
-
-                break;
-
-            case IMAGETYPE_JPEG:
-
-                if (!empty($exact_size) && is_array($exact_size)) {
-
-                    $dest_image = imagecreatetruecolor($exact_size[0], $exact_size[1]);
-                    $background = imagecolorallocate($dest_image, 255, 255, 255);
-
-                    imagefilledrectangle($dest_image, 0, 0, $exact_size[0], $exact_size[1], $background);
-
-                } else {
-
-                    $dest_image = imagecreatetruecolor($this->getDestWidth(), $this->getDestHeight());
-                    $background = imagecolorallocate($dest_image, 255, 255, 255);
-
-                    imagefilledrectangle($dest_image, 0, 0, $this->getDestWidth(), $this->getDestHeight(), $background);
-
-                }
-
-                break;
-
-            case IMAGETYPE_WEBP:
-
-                if (!empty($exact_size) && is_array($exact_size)) {
-
-                    $dest_image = imagecreatetruecolor($exact_size[0], $exact_size[1]);
-                    $background = imagecolorallocate($dest_image, 255, 255, 255);
-
-                    imagefilledrectangle($dest_image, 0, 0, $exact_size[0], $exact_size[1], $background);
-
-                } else {
-
-                    $dest_image = imagecreatetruecolor($this->getDestWidth(), $this->getDestHeight());
-                    $background = imagecolorallocate($dest_image, 255, 255, 255);
-
-                    imagefilledrectangle($dest_image, 0, 0, $this->getDestWidth(), $this->getDestHeight(), $background);
-
-                }
-
-                imagealphablending($dest_image, false);
-                imagesavealpha($dest_image, true);
-
-                break;
-
-            case IMAGETYPE_PNG:
-
-                if (!$this->quality_truecolor || !imageistruecolor($this->source_image)) {
-
-                    if (!empty($exact_size) && is_array($exact_size)) {
-                        $dest_image = imagecreate($exact_size[0], $exact_size[1]);
-                    } else {
-                        $dest_image = imagecreate($this->getDestWidth(), $this->getDestHeight());
-                    }
-
-                } else {
-
-                    if (!empty($exact_size) && is_array($exact_size)) {
-                        $dest_image = imagecreatetruecolor($exact_size[0], $exact_size[1]);
-                    } else {
-                        $dest_image = imagecreatetruecolor($this->getDestWidth(), $this->getDestHeight());
-                    }
-
-                }
-
-                imagealphablending($dest_image, false);
-                imagesavealpha($dest_image, true);
-
-                $background = imagecolorallocatealpha($dest_image, 255, 255, 255, 127);
-
-                imagecolortransparent($dest_image, $background);
-                imagefill($dest_image, 0, 0, $background);
-
-                break;
-        }
-
-        imageinterlace($dest_image, $this->interlace);
-
-        if ($this->gamma_correct) {
-            imagegammacorrect($this->source_image, 2.2, 1.0);
-        }
-
-        if (!empty($exact_size) && is_array($exact_size)) {
-
-            if ($this->getSourceHeight() < $this->getSourceWidth()) {
-
-                $this->dest_x = 0;
-                $this->dest_y = ($exact_size[1] - $this->getDestHeight()) / 2;
-            }
-            if ($this->getSourceHeight() > $this->getSourceWidth()) {
-
-                $this->dest_x = ($exact_size[0] - $this->getDestWidth()) / 2;
-                $this->dest_y = 0;
-            }
-        }
-
-        imagecopyresampled(
-            $dest_image,
-            $this->source_image,
-            (int)$this->dest_x,
-            (int)$this->dest_y,
-            (int)$this->source_x,
-            (int)$this->source_y,
-            $this->getDestWidth(),
-            $this->getDestHeight(),
-            (int)$this->source_w,
-            (int)$this->source_h
-        );
-
-        if ($this->gamma_correct) {
-            imagegammacorrect($dest_image, 1.0, 2.2);
-        }
-
-        $this->applyFilter($dest_image);
-
-        switch ($image_type) {
-            case IMAGETYPE_GIF:
-
-                imagegif($dest_image, $filename);
-
-                break;
-            case IMAGETYPE_JPEG:
-
-                if ($quality === null || $quality > 100) {
-                    $quality = $this->quality_jpg;
-                }
-
-                imagejpeg($dest_image, $filename, $quality);
-
-                break;
-            case IMAGETYPE_WEBP:
-
-                if ($quality === null) {
-                    $quality = $this->quality_webp;
-                }
-
-                imagewebp($dest_image, $filename, $quality);
-
-                break;
-            case IMAGETYPE_PNG:
-
-                $quality = (9 - ceil((9*$quality)/100));
-
-                if ($quality > 9) {
-                    $quality = $this->quality_png;
-                }
-
-                imagepng($dest_image, $filename, $quality);
-
-                break;
-        }
+        $this->reset();
 
         if ($permissions) {
             chmod($filename, $permissions);
         }
 
-        return $this;
-    }
-
-    /**
-     * Преобразовывает изображение в строку
-     *
-     * @param integer $image_type
-     * @param integer $quality
-     * @return string
-     */
-    public function getImageAsString($image_type = null, $quality = null) {
-
-        $string_temp = tempnam(sys_get_temp_dir(), '');
-
-        $this->save($string_temp, $image_type, $quality);
-
-        $string = file_get_contents($string_temp);
-
-        unlink($string_temp);
-
-        return $string;
-    }
-
-    /**
-     * Преобразовывает изображение в строку с текущими настройками
-     *
-     * @return string
-     */
-    public function __toString() {
-        return $this->getImageAsString();
-    }
-
-    /**
-     * Изменяет размер изображения в соответствии с заданной короткой стороной (пропорциональная длинная сторона)
-     *
-     * @param integer $max_short
-     * @param boolean $allow_enlarge
-     * @return \cmsImages
-     */
-    public function resizeToShortSide($max_short, $allow_enlarge = false) {
-
-        if ($this->getSourceHeight() < $this->getSourceWidth()) {
-
-            $ratio = $max_short / $this->getSourceHeight();
-            $long = (int) ($this->getSourceWidth() * $ratio);
-
-            return $this->resize($long, $max_short, $allow_enlarge);
-
-        } else {
-
-            $ratio = $max_short / $this->getSourceWidth();
-            $long = (int) ($this->getSourceHeight() * $ratio);
-
-            return $this->resize($max_short, $long, $allow_enlarge);
-        }
-
-    }
-
-    /**
-     * Изменяет размер изображения в соответствии
-     * с заданной длинной стороной (пропорциональная короткая сторона)
-     *
-     * @param integer $max_long
-     * @param boolean $allow_enlarge
-     * @return \cmsImages
-     */
-    public function resizeToLongSide($max_long, $allow_enlarge = false) {
-
-        if ($this->getSourceHeight() > $this->getSourceWidth()) {
-
-            $ratio = $max_long / $this->getSourceHeight();
-            $short = (int) ($this->getSourceWidth() * $ratio);
-
-            return $this->resize($short, $max_long, $allow_enlarge);
-
-        } else {
-
-            $ratio = $max_long / $this->getSourceWidth();
-            $short = (int) ($this->getSourceHeight() * $ratio);
-
-            return $this->resize($max_long, $short, $allow_enlarge);
-        }
-
+        return $success;
     }
 
     /**
      * Изменяет размер изображения в соответствии с заданной высотой (ширина пропорциональна)
      *
-     * @param integer $height
-     * @param boolean $allow_enlarge
+     * @param int $height
+     * @param bool $allow_enlarge
      * @return \cmsImages
      */
-    public function resizeToHeight($height, $allow_enlarge = false) {
+    public function resizeToHeight(int $height, $allow_enlarge = false) {
 
         $ratio = $height / $this->getSourceHeight();
         $width = (int) ($this->getSourceWidth() * $ratio);
@@ -694,11 +464,11 @@ class cmsImages {
     /**
      * Изменяет размер изображения в соответствии с заданной шириной (высота пропорциональна)
      *
-     * @param integer $width
-     * @param boolean $allow_enlarge
+     * @param int $width
+     * @param bool $allow_enlarge
      * @return \cmsImages
      */
-    public function resizeToWidth($width, $allow_enlarge = false) {
+    public function resizeToWidth(int $width, $allow_enlarge = false) {
 
         $ratio  = $width / $this->getSourceWidth();
         $height = (int) ($this->getSourceHeight() * $ratio);
@@ -709,12 +479,12 @@ class cmsImages {
     /**
      * Изменяет размер изображения, чтобы оно лучше подходило к заданным размерам
      *
-     * @param integer $max_width
-     * @param integer $max_height
-     * @param boolean $allow_enlarge
+     * @param int $max_width
+     * @param int $max_height
+     * @param bool $allow_enlarge
      * @return \cmsImages
      */
-    public function resizeToBestFit($max_width, $max_height, $allow_enlarge = false) {
+    public function resizeToBestFit(int $max_width, int $max_height, $allow_enlarge = false) {
 
         if ($this->getSourceWidth() <= $max_width && $this->getSourceHeight() <= $max_height && !$allow_enlarge) {
             return $this;
@@ -733,28 +503,14 @@ class cmsImages {
     }
 
     /**
-     * Изменяет размер изображения в соответствии с заданным масштабом (пропорционально)
-     *
-     * @param integer|float $scale
-     * @return \cmsImages
-     */
-    public function scale($scale) {
-
-        $width  = (int) ($this->getSourceWidth() * $scale / 100);
-        $height = (int) ($this->getSourceHeight() * $scale / 100);
-
-        return $this->resize($width, $height, true);
-    }
-
-    /**
      * Изменяет размер изображения в соответствии с заданной шириной и высотой
      *
-     * @param integer $width
-     * @param integer $height
-     * @param boolean $allow_enlarge
+     * @param int $width
+     * @param int $height
+     * @param bool $allow_enlarge
      * @return \cmsImages
      */
-    public function resize($width, $height, $allow_enlarge = false) {
+    public function resize(int $width, int $height, $allow_enlarge = false) {
 
         if (!$allow_enlarge) {
             // сброс размеров к оригиналу
@@ -767,8 +523,8 @@ class cmsImages {
 
         $this->source_x = 0;
         $this->source_y = 0;
-        $this->dest_w   = round($width);
-        $this->dest_h   = round($height);
+        $this->dest_w   = $width;
+        $this->dest_h   = $height;
         $this->source_w = $this->getSourceWidth();
         $this->source_h = $this->getSourceHeight();
 
@@ -778,13 +534,13 @@ class cmsImages {
     /**
      * Обрезает изображение в соответствии с заданной шириной, высотой и положением обрезки
      *
-     * @param integer $width
-     * @param integer $height
-     * @param boolean $allow_enlarge
-     * @param integer $position
+     * @param int $width
+     * @param int $height
+     * @param bool $allow_enlarge
+     * @param int $position
      * @return \cmsImages
      */
-    public function crop($width, $height, $allow_enlarge = false, $position = self::CROPCENTER) {
+    public function crop(int $width, int $height, bool $allow_enlarge = false, int $position = self::CROPCENTER) {
 
         if (!$allow_enlarge) {
             // эта логика немного отличается от resize()
@@ -826,52 +582,16 @@ class cmsImages {
     }
 
     /**
-     * Обрезать изображение в соответствии с заданной шириной, высотой, координатами х и у
+     * Возвращает ширину источника
      *
-     * @param integer $width
-     * @param integer $height
-     * @param integer $x
-     * @param integer $y
-     * @return \cmsImages
-     */
-    public function freecrop($width, $height, $x = false, $y = false) {
-
-        if ($x === false || $y === false) {
-            return $this->crop($width, $height);
-        }
-
-        $this->source_x = $x;
-        $this->source_y = $y;
-
-        if ($width > $this->getSourceWidth() - $x) {
-            $this->source_w = $this->getSourceWidth() - $x;
-        } else {
-            $this->source_w = $width;
-        }
-
-        if ($height > $this->getSourceHeight() - $y) {
-            $this->source_h = $this->getSourceHeight() - $y;
-        } else {
-            $this->source_h = $height;
-        }
-
-        $this->dest_w = $width;
-        $this->dest_h = $height;
-
-        return $this;
-    }
-
-    /**
-     * Получает ширину источника
-     *
-     * @return integer
+     * @return int
      */
     public function getSourceWidth() {
         return $this->original_w;
     }
 
     /**
-     * Получает высоту источника
+     * Возвращает высоту источника
      *
      * @return integer
      */
@@ -880,30 +600,31 @@ class cmsImages {
     }
 
     /**
-     * Получает ширину целевого изображения
+     * Возвращает ширину целевого изображения
      *
-     * @return integer
+     * @return int
      */
     public function getDestWidth() {
         return $this->dest_w;
     }
 
     /**
-     * Получает высоту целевого изображения
-     * @return integer
+     * Возвращает высоту целевого изображения
+     *
+     * @return int
      */
     public function getDestHeight() {
         return $this->dest_h;
     }
 
     /**
-     * Получает позицию обрезки (X или Y) в соответствии с заданной позицией
+     * Возвращает позицию обрезки (X или Y) в соответствии с заданной позицией
      *
-     * @param integer $expected_size
-     * @param integer $position
-     * @return float|integer
+     * @param int $expected_size
+     * @param int $position
+     * @return int
      */
-    protected function getCropPosition($expected_size, $position = self::CROPCENTER) {
+    protected function getCropPosition(int $expected_size, int $position = self::CROPCENTER) {
         $size = 0;
         switch ($position) {
             case self::CROPBOTTOM:
@@ -917,7 +638,7 @@ class cmsImages {
                 $size = $expected_size / 4;
                 break;
         }
-        return $size;
+        return (int) $size;
     }
 
     /**
@@ -929,6 +650,21 @@ class cmsImages {
     public function gamma($enable = false) {
         $this->gamma_correct = $enable;
         return $this;
+    }
+
+    /**
+     * Возвращает последнюю ошибку
+     *
+     * @return string
+     */
+    public function getLastError() {
+        return $this->last_error;
+    }
+
+    public function __destruct() {
+        if ($this->driver) {
+            $this->driver->destroy();
+        }
     }
 
 }

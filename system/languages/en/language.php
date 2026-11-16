@@ -439,6 +439,7 @@
     define('ERR_USER_NOT_FOUND',             'User does not exist');
     define('LANG_ERROR_503',                 'Service Unavailable');
     define('LANG_ERROR_503_HINT',            'Please, enable debug mode in the site settings');
+    define('LANG_ERROR_IMAGE_PIXELS',        'Source image is too large (%dx%d = %d pixels). Maximum allowed: %d pixels.');
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'File was successfully uploaded');

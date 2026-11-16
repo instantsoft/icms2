@@ -124,7 +124,7 @@ class formWidgetContentSliderOptions extends cmsForm {
                     new fieldList('options:big_image_preset', [
                         'title'     => LANG_WD_CONTENT_SLIDER_BIG_IMAGE_PRESET,
                         'generator' => function($item) {
-                            return cmsCore::getModel('images')->getPresetsList(true) + ['original' => LANG_PARSER_IMAGE_SIZE_ORIGINAL];
+                            return cmsCore::getModel('images')->getPresetsList(true);
                         },
                     ]),
                     new fieldList('options:teaser_field', [

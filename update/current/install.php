@@ -7,12 +7,13 @@ function install_package() {
     $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
-    if(!$core->db->isFieldExists('menu_items', 'hint', false)){
-        $core->db->query("ALTER TABLE `{#}menu_items` ADD `hint` VARCHAR(64) NULL DEFAULT NULL COMMENT 'Краткое описание пункта меню' AFTER `title`;");
-    }
+    $core->db->addTableField('images_presets', 'engine', "VARCHAR(15) NOT NULL DEFAULT 'auto'");
+    $core->db->addTableField('images_presets', 'is_system', "TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `is_internal`");
+    $core->db->addTableField('menu_items', 'hint', "VARCHAR(64) NULL DEFAULT NULL COMMENT 'Краткое описание пункта меню' AFTER `title`");
+    $core->db->addTableField('{users}', 'cover', "TEXT NULL DEFAULT NULL");
 
-    if(!$core->db->isFieldExists('{users}', 'cover', false)){
-        $core->db->query("ALTER TABLE `{users}` ADD `cover` TEXT NULL DEFAULT NULL");
+    if(!$core->db->getRowsCount('images_presets', "`name` = 'original'")){
+        $core->db->query("INSERT INTO `{#}images_presets` (`name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`, `is_system`, `quality`, `gamma_correct`, `crop_position`, `allow_enlarge`, `gif_to_gif`, `convert_format`, `engine`) VALUES ('original', 'Оригинал', 5120, 0, NULL, NULL, NULL, 'top-left', 0, NULL, 1, 95, NULL, 2, NULL, 1, NULL, 'auto');");
     }
 
     if(!$core->db->getRowsCount('{users}_fields', "`name` = 'cover'")){

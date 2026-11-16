@@ -13,9 +13,7 @@ define('LANG_PHOTOS_IS_PUBLIC_HINT', 'Other users will also be able to add photo
 define('LANG_PHOTOS_PUBLIC_ALBUM', 'Public');
 define('LANG_PHOTOS_PUBLIC_ALBUMS', 'Public albums');
 define('LANG_PHOTOS_USER_ALBUMS', 'Private albums');
-define('LANG_PHOTOS_SAVE_ORIG', 'Save original photos');
 define('LANG_PHOTOS_HIDE_PHOTO_ITEM_INFO',  'Do not show a block with information about a photo on its page');
-define('LANG_PHOTOS_SAVE_ORIG_HINT', 'Original-size photo files will be saved on the server');
 define('LANG_PHOTOS_PRESET', 'Large photo preset');
 define('LANG_PHOTOS_PRESET_SMALL', 'Preset for photos in the list');
 define('LANG_PHOTOS_PRESET_RELATED', 'Preset for related photos in the photo page');

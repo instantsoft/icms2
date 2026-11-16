@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @property \modelImages $model
+ * @property \modelFiles $model_files
+ */
 class images extends cmsFrontend {
 
     public $request_params = [
@@ -103,9 +106,6 @@ class images extends cmsFrontend {
         ]);
     }
 
-//============================================================================//
-//============================================================================//
-
     public function uploadWithPreset($name, $preset_name) {
 
         $preset = $this->model->getPresetByName($preset_name);
@@ -145,6 +145,11 @@ class images extends cmsFrontend {
         $resized_path = $image->resizeByPreset($preset);
 
         if (!$resized_path) {
+
+            error_log($image->getLastError() ?? 'Conversion to one or more presets failed');
+
+            files_delete_file($result['path'], 2);
+
             return [
                 'success' => false,
                 'error'   => ''
@@ -244,13 +249,6 @@ class images extends cmsFrontend {
         }
 
         return $upload_params;
-    }
-
-    /**
-     * @deprecated используйте класс cmsImages
-     */
-    public function addWatermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality = 90) {
-        return img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality);
     }
 
 }

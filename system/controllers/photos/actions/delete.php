@@ -4,14 +4,16 @@ class actionPhotosDelete extends cmsAction {
 
     public function run($photo_id = null) {
 
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return cmsCore::error404();
+        }
+
         if (!$this->request->isAjax()) {
             return cmsCore::error404();
         }
 
         if (!$photo_id) {
-
             $photo_id = $this->request->get('id', 0);
-
             if (!$photo_id) {
                 return cmsCore::error404();
             }
@@ -39,12 +41,15 @@ class actionPhotosDelete extends cmsAction {
         }
 
         $album = cmsCore::getModel('content')->getContentItem('albums', $photo['album_id']);
+        if (!$album) {
+            return cmsCore::error404();
+        }
 
-        list($album, $photo) = cmsEventsManager::hook('photos_before_delete', [$album, $photo]);
+        [$album, $photo] = cmsEventsManager::hook('photos_before_delete', [$album, $photo]);
 
         $this->model->deletePhoto($photo);
 
-        list($album, $photo) = cmsEventsManager::hook('photos_after_delete', [$album, $photo]);
+        [$album, $photo] = cmsEventsManager::hook('photos_after_delete', [$album, $photo]);
 
         return $this->cms_template->renderJSON([
             'success'   => true,

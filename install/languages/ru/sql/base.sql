@@ -505,25 +505,28 @@ CREATE TABLE `{#}images_presets` (
   `wm_image` text COMMENT 'Путь к изображению ватермарка',
   `wm_origin` varchar(16) DEFAULT NULL COMMENT 'Позиция ватермарка',
   `wm_margin` int(11) unsigned DEFAULT NULL COMMENT 'Отступы от краёв для ватермарка',
-  `is_internal` tinyint(1) unsigned DEFAULT NULL COMMENT 'Системный пресет?',
+  `is_internal` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Недоступен для общего выбора?',
+  `is_system` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Системный пресет?',
   `quality` tinyint(1) unsigned DEFAULT '90' COMMENT 'Качество изображения',
   `gamma_correct` tinyint(1) unsigned DEFAULT NULL COMMENT 'Гамма-коррекция',
   `crop_position` tinyint(1) unsigned DEFAULT '2' COMMENT 'Позиция при обрезке строго по размеру',
   `allow_enlarge` tinyint(1) unsigned DEFAULT NULL COMMENT 'Увеличивать до размера пресета',
-  `gif_to_gif` tinyint(1) unsigned DEFAULT '1' COMMENT 'Конвертировать GIF сохраняя анимацию',
+  `gif_to_gif` tinyint(1) unsigned DEFAULT '1' COMMENT 'Конвертировать GIF/WEBP сохраняя анимацию',
   `convert_format` char(4) DEFAULT NULL COMMENT 'Итоговый формат изображения после конвертации',
+  `engine` varchar(15) NOT NULL DEFAULT 'auto' COMMENT 'Имя драйвера конвертации',
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Пресеты для конвертации изображений';
 
-INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`, `quality`, `gamma_correct`, `crop_position`, `allow_enlarge`, `gif_to_gif`, `convert_format`) VALUES
-(1, 'micro', 'Микро', 32, 32, 1, NULL, NULL, NULL, NULL, NULL, 75, NULL, 2, NULL, 1, NULL),
-(2, 'small', 'Маленький', 64, 64, 1, NULL, NULL, NULL, NULL, NULL, 80, NULL, 2, NULL, 1, NULL),
-(3, 'normal', 'Средний', NULL, 256, NULL, NULL, NULL, NULL, NULL, NULL, 85, NULL, 2, NULL, 1, NULL),
-(4, 'big', 'Большой', 690, 690, NULL, NULL, NULL, 'bottom-right', NULL, NULL, 90, NULL, 2, NULL, 1, NULL),
-(5, 'wysiwyg_markitup', 'Редактор: markItUp!', 400, 400, NULL, NULL, NULL, 'top-left', NULL, 1, 85, NULL, 2, NULL, 1, NULL),
-(6, 'wysiwyg_redactor', 'Редактор: Redactor', 800, 800, NULL, NULL, NULL, 'top-left', NULL, 1, 90, NULL, 2, NULL, 1, NULL),
-(15, 'user_cover', 'Обложка профиля', 1200, 200, 1, NULL, NULL, 'top-left', 0, NULL, 87, NULL, 2, NULL, NULL, 'webp');
+INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`, `is_system`, `quality`, `gamma_correct`, `crop_position`, `allow_enlarge`, `gif_to_gif`, `convert_format`) VALUES
+(1, 'micro', 'Микро', 32, 32, 1, NULL, NULL, NULL, NULL, NULL, NULL, 75, NULL, 2, NULL, 1, NULL),
+(2, 'small', 'Маленький', 64, 64, 1, NULL, NULL, NULL, NULL, NULL, NULL, 80, NULL, 2, NULL, 1, NULL),
+(3, 'normal', 'Средний', NULL, 256, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 85, NULL, 2, NULL, 1, NULL),
+(4, 'big', 'Большой', 690, 690, NULL, NULL, NULL, 'bottom-right', NULL, NULL, NULL, 90, NULL, 2, NULL, 1, NULL),
+(5, 'wysiwyg_markitup', 'Редактор: markItUp!', 400, 400, NULL, NULL, NULL, 'top-left', NULL, 1, NULL, 90, NULL, 2, NULL, 1, NULL),
+(6, 'wysiwyg_redactor', 'Редактор: Redactor', 800, 800, NULL, NULL, NULL, 'top-left', NULL, 1, NULL, 90, NULL, 2, NULL, 1, NULL),
+(15, 'user_cover', 'Обложка профиля', 1200, 200, 1, NULL, NULL, 'top-left', 0, NULL, NULL, 90, NULL, 2, NULL, NULL, 'webp'),
+(16, 'original', 'Оригинал', 5120, 0, NULL, NULL, NULL, 'top-left', 0, NULL, 1, 95, NULL, 2, NULL, 1, NULL);
 
 DROP TABLE IF EXISTS `{#}menu`;
 CREATE TABLE `{#}menu` (

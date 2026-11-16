@@ -13,6 +13,10 @@ class actionImagesPresetsDelete extends cmsAction {
             return cmsCore::error404();
         }
 
+        if ($preset['is_internal'] || $preset['is_system']) {
+            return cmsCore::error404();
+        }
+
         $this->model->deletePreset($preset['id']);
 
         $this->deleteDefaultImages($preset);

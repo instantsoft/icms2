@@ -2,6 +2,22 @@
 
 function grid_presets($controller) {
 
+    $drivers = ['auto' => LANG_AUTO];
+    $files = cmsCore::getFilesList('system/core/imageDrivers', '*.php', true, true);
+
+    foreach ($files as $name) {
+
+        if ($name === 'imagesDriverInterface') {
+            continue;
+        }
+
+        $driver_class = 'icms\core\imageDrivers\\' . $name;
+
+        $is_available = $driver_class::isAvailable();
+
+        $drivers[$name] = (new $driver_class())->title() . ($is_available ? '' : ' (' . LANG_CP_SETTINGS_CACHE_METHOD_NO . ')');
+    }
+
     $options = [
         'is_sortable'   => false,
         'is_filter'     => true,
@@ -49,6 +65,17 @@ function grid_presets($controller) {
                 ]
             ]
         ],
+        'engine' => [
+            'title'      => LANG_IMAGES_ENGINE,
+            'switchable' => true,
+            'handler'    => function ($val, $row) {
+                return $val === 'auto' ? LANG_AUTO : ucfirst($val);
+            },
+            'editable' => [
+                'renderer' => 'form-select',
+                'items' => $drivers
+            ]
+        ],
         'quality' => [
             'title'      => LANG_IMAGES_PRESET_QUALITY,
             'switchable' => true,
@@ -90,7 +117,7 @@ function grid_presets($controller) {
             'href'    => href_to($controller->root_url, 'presets_delete', ['{id}']),
             'confirm' => LANG_IMAGES_PRESET_DELETE_CONFIRM,
             'handler' => function ($row) {
-                if ($row['is_internal']) {
+                if ($row['is_internal'] || $row['is_system']) {
                     return false;
                 }
                 return true;

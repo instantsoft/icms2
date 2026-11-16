@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \modelFiles $model_files
+ */
 class actionImagesDelete extends cmsAction {
 
     public function run() {

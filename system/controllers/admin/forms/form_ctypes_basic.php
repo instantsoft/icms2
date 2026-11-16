@@ -186,9 +186,7 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_CAT_COVER_SIZES,
                         'default' => [],
                         'generator' => function () {
-                            $presets = cmsCore::getModel('images')->getPresetsList();
-                            $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
-                            return $presets;
+                            return cmsCore::getModel('images')->getPresetsList();
                         },
                         'visible_depend' => ['is_cats' => ['show' => ['1']]]
                     ]),
@@ -201,9 +199,7 @@ class formAdminCtypesBasic extends cmsForm {
                             return $template->getAvailableContentListStyles();
                         },
                         'values_generator' => function () {
-                            $presets = cmsCore::getModel('images')->getPresetsList();
-                            $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
-                            return $presets;
+                            return cmsCore::getModel('images')->getPresetsList();
                         },
                         'visible_depend' => ['is_cats' => ['show' => ['1']]]
                     ])

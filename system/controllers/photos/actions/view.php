@@ -255,16 +255,6 @@ class actionPhotosView extends cmsAction {
 
         $presets = cmsCore::getModel('images')->getPresetsList();
 
-        if (isset($photo['image']['original'])) {
-
-            $photo['sizes']['original'] = [
-                'width'  => $photo['width'],
-                'height' => $photo['height']
-            ];
-
-            $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
-        }
-
         $selected = $isset = false;
 
         foreach ($photo['image'] as $preset => $path) {

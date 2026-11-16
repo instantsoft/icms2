@@ -188,7 +188,7 @@ icms.photos = (function ($) {
 
         let url = widget.data('delete-url') + '/' + id;
 
-        $.post(url, {}, function(result){
+        $.post(url, {csrf_token: icms.forms.getCsrfToken()}, function(result){
 
             if (!result.success) { return; }
 
@@ -208,7 +208,7 @@ icms.photos = (function ($) {
         var block = $(link).closest('.icms-photo-album__photo');
         var photo_wrap = $(link).closest('.album-photos-wrap');
 
-        $.post($(photo_wrap).data('delete-url') + '/' + id, {}, function(result){
+        $.post($(photo_wrap).data('delete-url') + '/' + id, {csrf_token: icms.forms.getCsrfToken()}, function(result){
             block.fadeOut('fast', function (){
                 $(this).remove();
                 icms.photos.flexImagesInit('#'+$(photo_wrap).attr('id'));
@@ -223,7 +223,7 @@ icms.photos = (function ($) {
 
         if(!confirm(LANG_PHOTOS_DELETE_PHOTO_CONFIRM)){ return false; }
 
-        $.post($('#album-photo-item').data('item-delete-url'), {id: $('#album-photo-item').data('id')}, function(result){
+        $.post($('#album-photo-item').data('item-delete-url'), {id: $('#album-photo-item').data('id'), csrf_token: icms.forms.getCsrfToken()}, function(result){
             if (result.success){
                 window.location.href=result.album_url;
             }
