@@ -316,7 +316,7 @@ class moderation extends cmsFrontend {
      * Проверяет, что пользователь модератор
      *
      * @param string $ctype_name
-     * @param integer $user_id
+     * @param int $user_id
      * @param array $item
      * @return boolean
      */
@@ -330,12 +330,12 @@ class moderation extends cmsFrontend {
             return true;
         }
 
-        list($ctype_name, $user_id, $item, $is_moderator) = cmsEventsManager::hook([
+        [$ctype_name, $user_id, $item, $is_moderator] = cmsEventsManager::hook([
             'moderation_user_is_moderator',
             'moderation_' . $ctype_name . '_user_is_moderator'
         ], [$ctype_name, $user_id, $item, false]);
 
-        return $is_moderator;
+        return (bool) $is_moderator;
     }
 
     /**

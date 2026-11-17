@@ -46,10 +46,6 @@ class actionPhotosUpload extends cmsAction {
             if (!$this->isAllowedUpload($this->album)) {
                 return cmsCore::error404();
             }
-
-            if ($this->cms_user->id == $this->album['id']) {
-                $this->model_content->disablePrivacyFilter();
-            }
         }
 
         if ($this->request->isAjax()) {
@@ -69,20 +65,33 @@ class actionPhotosUpload extends cmsAction {
 
     public function showUploadForm() {
 
-        if ($this->cms_user->is_admin) {
-            $this->model_content->disablePrivacyFilter();
-        }
+        $public_albums = [];
 
-        $this->model_content->filterEqual('user_id', $this->cms_user->id);
+        // Получаем личные альбомы
+        $this->model_content->
+                filterEqual('user_id', $this->cms_user->id)->
+                disablePrivacyFilter()->disableApprovedFilter();
 
-        if ($this->allow_add_public_albums) {
-            $this->model_content->filterOr()->filterEqual('is_public', 1);
-        }
-
-        $albums = $this->model_content->orderByList([
+        $owner_albums = $this->model_content->orderByList([
                     ['by' => 'is_public', 'to' => 'asc'],
                     ['by' => 'date_pub', 'to' => 'desc']
-                ])->getContentItems('albums');
+                ])->getContentItems('albums') ?: [];
+
+        if ($this->allow_add_public_albums) {
+
+            if ($this->cms_user->is_admin) {
+                $this->model_content->disablePrivacyFilter()->disableApprovedFilter();
+            }
+
+            $this->model_content->filterEqual('is_public', 1);
+
+            $public_albums = $this->model_content->orderByList([
+                        ['by' => 'is_public', 'to' => 'asc'],
+                        ['by' => 'date_pub', 'to' => 'desc']
+                    ])->getContentItems('albums') ?: [];
+        }
+
+        $albums = array_merge($owner_albums, $public_albums);
 
         if (!$albums) {
 
@@ -171,7 +180,9 @@ class actionPhotosUpload extends cmsAction {
 
             $photos = $this->model->assignPhotoList($photo_list);
 
-            list($photos, $this->album, $this->ctype) = cmsEventsManager::hook('content_photos_after_add', [$photos, $this->album, $this->ctype]);
+            if ($this->album['is_approved']) {
+                [$photos, $this->album, $this->ctype] = cmsEventsManager::hook('content_photos_after_add', [$photos, $this->album, $this->ctype]);
+            }
 
             return $this->redirect(href_to('albums', $this->album['slug'] . '.html'));
         }
@@ -196,7 +207,7 @@ class actionPhotosUpload extends cmsAction {
 
         $albums_select = ['' => ''];
         foreach ($_albums_select as $album_type => $_albums) {
-            $albums_select['opt' . $num] = array($album_type);
+            $albums_select['opt' . $num] = [$album_type];
             foreach ($_albums as $album) {
                 $albums_select[$album['id']] = $album['title'];
             }

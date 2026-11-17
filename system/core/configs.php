@@ -295,6 +295,15 @@ class cmsConfigs {
     }
 
     /**
+     * Доступен ли файл для записи?
+     * 
+     * @return bool
+     */
+    public function isWritable() {
+        return is_writable(PATH . $this->getFilePath());
+    }
+
+    /**
      * Сохраняет в файл одно значение по ключу
      *
      * @param string $key

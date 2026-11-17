@@ -889,6 +889,9 @@ class cmsInstaller {
             }
         }
 
+        // Проверка что пакет требует запись в файл конфигурации сайта
+        $results['is_config_writable'] = cmsConfig::getInstance()->isWritable();
+
         // Проверка зависимости от версии PHP
         $results['php'] = isset($this->manifest['depends']['php']) &&
                 version_compare(PHP_VERSION, $this->manifest['depends']['php']) >= 0;

@@ -1081,12 +1081,7 @@ class cmsController {
      * @return void
      */
     public function redirectToLogin(string $back_url = '') {
-
-        if (!$back_url) {
-            $back_url = rel_to_href($this->cms_core->uri_before_remap) . ($this->cms_core->uri_query ? '?' . http_build_query($this->cms_core->uri_query) : '');
-        }
-
-        return $this->redirectTo('auth', 'login', [], ['back' => $back_url]);
+        return $this->redirect($this->getLoginUrl($back_url));
     }
 
     /**
@@ -1126,6 +1121,22 @@ class cmsController {
      */
     public function redirectToAction($action = '', $params = [], $query = []) {
         $this->redirectTo($this->root_url, $action, $params, $query);
+    }
+
+    /**
+     * Возвращает URL для редиректа на страницу авторизации
+     * С возвратом на текущую после авторизации
+     *
+     * @param string $back_url
+     * @return string
+     */
+    public function getLoginUrl(string $back_url = '') {
+
+        if (!$back_url) {
+            $back_url = rel_to_href($this->cms_core->uri_before_remap) . ($this->cms_core->uri_query ? '?' . http_build_query($this->cms_core->uri_query) : '');
+        }
+
+        return href_to('auth', 'login', [], ['back' => $back_url]);
     }
 
     /**

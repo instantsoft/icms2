@@ -6,12 +6,18 @@ class actionWallDelete extends cmsAction {
 
     public function run() {
 
-        if (!$this->request->isAjax()) {
+        if (!$this->request->isAjax() || !$this->cms_user->is_logged) {
             return cmsCore::error404();
         }
 
-        $entry_id = $this->request->get('id', 0);
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
+            return $this->cms_template->renderJSON([
+                'error'   => true,
+                'message' => LANG_ERROR
+            ]);
+        }
 
+        $entry_id = $this->request->get('id', 0);
         if (!$entry_id) {
             return $this->cms_template->renderJSON([
                 'error'   => true,

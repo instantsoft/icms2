@@ -5,12 +5,11 @@
 class actionContentItemView extends cmsAction {
 
     use icms\traits\services\fieldsParseable;
-
-    private $viewed_moderators = false;
+    use icms\controllers\content\traits\contentAccessTrait;
 
     public function run() {
 
-        list($ctype, $item) = $this->getItemAndCtype();
+        [$ctype, $item] = $this->getItemAndCtype();
 
         $props = $props_values = false;
         $props_fieldsets = $props_fields = false;
@@ -18,111 +17,24 @@ class actionContentItemView extends cmsAction {
         // Проверяем прохождение модерации
         $is_moderator = $this->controller_moderation->userIsContentModerator($ctype['name'], $this->cms_user->id, $item);
 
-        // на модерации или в черновиках
-        if (!$item['is_approved']){
+        // Проверяем доступ к контенту
+        [$access_status, $access_value, $access_param] = $this->checkContentItemAccess($ctype, $item, $is_moderator);
 
-            $item_view_notice = $item['is_draft'] ? LANG_CONTENT_DRAFT_NOTICE : LANG_MODERATION_NOTICE;
-
-            if (!$is_moderator && $this->cms_user->id != $item['user_id']){
-
-                return cmsCore::errorForbidden($item_view_notice, true);
-
-            }
-
-            // если запись на модерации и смотрим автором, проверяем кем просмотрена запись уже
-            if (!$item['is_draft'] && ($this->cms_user->id == $item['user_id'] || $is_moderator)){
-
-                // ставим флаг, что модератор уже смотрит, после этого изъять из модерации нельзя
-                if ($is_moderator){
-
-                    cmsUser::setUPS($this->getUniqueKey([$ctype['name'], 'moderation', $item['id']]), time());
-
-                    $item_view_notice = LANG_MODERATION_NOTICE_MODER;
-
-                }
-
-                $this->viewed_moderators = cmsUser::getSetUPS($this->getUniqueKey([$ctype['name'], 'moderation', $item['id']]));
-
-                if(isset($this->viewed_moderators[$this->cms_user->id])){ unset($this->viewed_moderators[$this->cms_user->id]); }
-
-                if($this->viewed_moderators){
-
-                    $viewed_moderators = $this->model_users->filterIn('id', array_keys($this->viewed_moderators))->getUsers();
-
-                    $moderator_links = array();
-
-                    foreach ($viewed_moderators as $viewed_moderator) {
-                        $moderator_links[] = '<a href="'.href_to_profile($viewed_moderator).'">'.$viewed_moderator['nickname'].'</a>';
-                    }
-
-                    $item_view_notice .= sprintf(
-                        LANG_MODERATION_NOTICE_VIEW,
-                        (count($moderator_links) > 1 ? LANG_MODERATORS : LANG_MODERATOR),
-                        implode(', ', $moderator_links),
-                        (count($moderator_links) > 1 ? LANG_MODERATION_VIEWS : LANG_MODERATION_VIEW),
-                        (count($moderator_links) == 1 ? ' '.mb_strtolower(string_date_format($this->viewed_moderators[$viewed_moderator['id']], true)) : '')
-                    );
-
-                }
-
-            }
-
-            cmsUser::addSessionMessage($item_view_notice, 'info');
-
-        }
-
-        // общие права доступа на просмотр
-        if(!$is_moderator && $this->cms_user->id != $item['user_id']){
-
-            if(!$this->checkListPerm($ctype['name'])){
-                return cmsCore::errorForbidden();
-            }
-
-        }
-
-        // Проверяем публикацию
-        if ($item['is_pub'] < 1) {
-            if (!$is_moderator && $this->cms_user->id != $item['user_id']) {
+        switch ($access_status) {
+            case 'forbidden':
+                return cmsCore::errorForbidden($access_value);
+            case 'not_found':
                 return cmsCore::error404();
-            }
-        }
-
-        // Проверяем, что не удалено
-        if ($item['is_deleted']){
-
-            $allow_restore = (cmsUser::isAllowed($ctype['name'], 'restore', 'all') ||
-                (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $item['user_id'] == $this->cms_user->id));
-
-            if (!$is_moderator && !$allow_restore){ return cmsCore::error404(); }
-
-            cmsUser::addSessionMessage(LANG_CONTENT_ITEM_IN_TRASH, 'info');
-        }
-
-        // Проверяем ограничения доступа из других контроллеров
-        if ($item['is_parent_hidden'] || $item['is_private']){
-
-            $is_parent_viewable_result = cmsEventsManager::hook('content_view_hidden', [
-                'viewable'     => true,
-                'item'         => $item,
-                'is_moderator' => $is_moderator,
-                'ctype'        => $ctype
-            ]);
-
-            if (!$is_parent_viewable_result['viewable']){
-
-                if(isset($is_parent_viewable_result['access_text'])){
-
-                    cmsUser::addSessionMessage($is_parent_viewable_result['access_text'], 'error');
-
-                    if(isset($is_parent_viewable_result['access_redirect_url'])){
-                        $this->redirect($is_parent_viewable_result['access_redirect_url']);
-                    } else {
-                        $this->redirect(href_to($ctype['name']));
-                    }
-
+            case 'redirect':
+                if ($access_param) {
+                    cmsUser::addSessionMessage($access_param, 'error');
                 }
+                return $this->redirect($access_value);
+        }
 
-                return $this->redirectToLogin();
+        if ($access_value) {
+            foreach ($access_value as $notice) {
+                cmsUser::addSessionMessage($notice, 'info');
             }
         }
 

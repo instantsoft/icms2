@@ -95,6 +95,16 @@
             <fieldset>
                 <legend><?php echo LANG_CP_PACKAGE_DEPENDS; ?></legend>
                 <div class="list-group list-group-accent">
+                    <?php if (!empty($manifest['depends']['config_write_required'])) { ?>
+                        <?php $hl_class = !$manifest['depends_results']['is_config_writable'] ? 'danger' : 'success'; ?>
+                        <div class="list-group-item p-2 list-group-item-accent-<?php echo $hl_class; ?>">
+                            <?php echo LANG_CP_PACKAGE_DEPENDS_CFG_WRITE; ?>
+                            <span class="ml-3 badge badge-<?php echo $hl_class; ?> badge-pill">
+                                <?php echo $manifest['depends_results']['is_config_writable'] ? LANG_YES : LANG_NO; ?>
+                            </span>
+                        </div>
+                        <?php if (!$manifest['depends_results']['is_config_writable']){ $depends_pass = false; } ?>
+                    <?php } ?>
                     <?php if (!empty($manifest['depends']['php'])) { ?>
                         <?php $hl_class = !$manifest['depends_results']['php'] ? 'danger' : 'success'; ?>
                         <div class="list-group-item p-2 list-group-item-accent-<?php echo $hl_class; ?>">

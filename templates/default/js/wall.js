@@ -249,7 +249,7 @@ icms.wall = (function ($) {
 
         var url = $('#wall_urls').data('delete-url');
 
-        $.post(url, {id: id}, function(result){
+        $.post(url, {id: id, csrf_token: icms.forms.getCsrfToken()}, function(result){
 
             if (result == null || typeof(result) == 'undefined' || result.error){
                 icms.wall.error(result.message);

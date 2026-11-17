@@ -30,7 +30,7 @@
 Try it out for yourself in our [online demo](https://demo.instantcms.io/)
 
 ## Requirements ##
-* PHP 7.3+
+* PHP 7.4+
 * GD, iconv, mbstring, simplexml, json and filter PHP extension
 * Mysql 5.0 or above, MariaDB and its support in PHP
 * Apache + mod_rewrite (or FallbackResource) or Nginx + converted .htaccess rules

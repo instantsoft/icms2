@@ -105,8 +105,44 @@ class photos extends cmsFrontend {
         return $this->halt($this->cms_template->renderInternal($this, 'photos', $tpl_data));
     }
 
-    public function getDownloadHash() {
-        return md5(cmsUser::getIp().$this->cms_config->host);
+    public function getDownloadHash($photo_id, $expires = 900) {
+
+        $expires = time() + $expires;
+
+        $data = $this->prepareHashString($photo_id, $expires);
+
+        $signature = hash_hmac('sha256', $data, $this->cms_config->server_secret);
+
+        return $expires . '.' . $signature;
+    }
+
+    public function validateDownloadHash($token, $photo_id) {
+
+        $parts = explode('.', $token, 2);
+
+        if (count($parts) !== 2) {
+            return false;
+        }
+
+        [$expires, $signature] = $parts;
+
+        if (!ctype_digit($expires)) {
+            return false;
+        }
+
+        if ((int) $expires < time()) {
+            return false;
+        }
+
+        $data = $this->prepareHashString($photo_id, $expires);
+
+        $expected = hash_hmac('sha256', $data, $this->cms_config->server_secret);
+
+        return hash_equals($expected, $signature);
+    }
+
+    private function prepareHashString($photo_id, $expires) {
+        return cmsUser::getIp() . '|' . $photo_id . '|' . $expires . '|' . $this->cms_config->host;
     }
 
     public function validate_rating_score($score) {

@@ -67,6 +67,12 @@ class actionAdminSettings extends cmsAction {
 
                 $values = cmsEventsManager::hook('site_settings_before_update', $values);
 
+                // Если при обновлении до 2.18.3 прав на запись не было
+                // убрать потом
+                if (empty($values['server_secret'])) {
+                    $values['server_secret'] = bin2hex(random_bytes(32));
+                }
+
                 $result = $this->cms_config->save($values);
 
                 if (!$result){

@@ -75,6 +75,15 @@ function install_package() {
         }
     }
 
+    $values = cmsConfig::getInstance()->getConfig();
+    $values['server_secret'] = bin2hex(random_bytes(32));
+
+    $result = cmsConfig::getInstance()->save($values);
+
+    if (!$result){
+        cmsUser::addSessionMessage('Установите права на запись для файла конфигурации сайта и пересохраните настройки.', 'warning');
+    }
+
     //save_controller_options(['billing']);
 
     //compile_scss_if_necessary();

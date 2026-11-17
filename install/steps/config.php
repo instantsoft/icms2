@@ -99,7 +99,8 @@ function create_config($path, $file) {
         'session_maxlifetime'         => ini_get('session.gc_maxlifetime') / 60,
         'controllers_without_widgets' => ['admin'],
         'ctype_default'               => [],
-        'is_404_layout'               => 0
+        'is_404_layout'               => 0,
+        'server_secret'               => bin2hex(random_bytes(32))
     ];
 
     write_config($file, $config);

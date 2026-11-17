@@ -708,6 +708,7 @@
     define('LANG_CP_PACKAGE_DEPENDS',           'Package dependencies');
     define('LANG_CP_PACKAGE_DEPENDS_PHP_EXT',   'Requires %s PHP module');
     define('LANG_CP_PACKAGE_DEPENDS_VERSION',   'Version %s, %s required');
+    define('LANG_CP_PACKAGE_DEPENDS_CFG_WRITE', 'Write access to the site configuration file');
     define('LANG_CP_PACKAGE_DEPENDS_PHP',       'Required PHP version');
     define('LANG_CP_PACKAGE_DEPENDS_CORE',      'Required core version');
     define('LANG_CP_PACKAGE_DEPENDS_PACKAGE',   'Required installed package version');

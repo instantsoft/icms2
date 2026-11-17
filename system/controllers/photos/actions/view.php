@@ -1,8 +1,11 @@
 <?php
 /**
  * @property \modelPhotos $model
+ * @property \moderation $controller_moderation
  */
 class actionPhotosView extends cmsAction {
+
+    use icms\controllers\content\traits\contentAccessTrait;
 
     private $related_title = '';
 
@@ -40,93 +43,42 @@ class actionPhotosView extends cmsAction {
         $ctype = $album['ctype'];
         unset($album['ctype']);
 
-        list($photo, $album, $ctype) = cmsEventsManager::hook('photos_before_item', [$photo, $album, $ctype]);
+        [$photo, $album, $ctype] = cmsEventsManager::hook('photos_before_item', [$photo, $album, $ctype]);
 
         // Проверяем прохождение модерации
         $is_moderator = $this->controller_moderation->userIsContentModerator($ctype['name'], $this->cms_user->id, $album);
 
-        // на модерации
-        if (!$album['is_approved']) {
+        // Проверяем доступ к контенту
+        [$access_status, $access_value, $access_param] = $this->checkContentItemAccess($ctype, $album, $is_moderator);
 
-            $item_view_notice = $album['is_draft'] ? LANG_CONTENT_DRAFT_NOTICE : LANG_MODERATION_NOTICE;
-
-            if (!$is_moderator && $this->cms_user->id != $album['user_id']) {
-                return cmsCore::errorForbidden($item_view_notice, true);
-            }
-
-            cmsUser::addSessionMessage($item_view_notice, 'info');
+        switch ($access_status) {
+            case 'forbidden':
+                return cmsCore::errorForbidden($access_value);
+            case 'not_found':
+                return cmsCore::error404();
+            case 'redirect':
+                if ($access_param) {
+                    cmsUser::addSessionMessage($access_param, 'error');
+                }
+                return $this->redirect($access_value);
         }
 
-        // Проверяем приватность альбома
-        if ($album['is_private'] == 1) { // доступ только друзьям
-
-            $is_friend           = $this->cms_user->isFriend($album['user_id']);
-            $is_can_view_private = cmsUser::isAllowed($ctype['name'], 'view_all');
-
-            if (!$is_friend && !$is_can_view_private && !$is_moderator) {
-
-                // если в настройках указано скрывать, 404
-                if (empty($ctype['options']['privacy_type']) || $ctype['options']['privacy_type'] == 'hide') {
-                    return cmsCore::error404();
-                }
-
-                // иначе пишем, к кому в друзья нужно проситься
-                cmsUser::addSessionMessage(sprintf(
-                        LANG_CONTENT_PRIVATE_FRIEND_INFO,
-                        (!empty($ctype['labels']['one']) ? $ctype['labels']['one'] : LANG_PAGE),
-                        href_to_profile($album['user']),
-                        htmlspecialchars($album['user']['nickname'])
-                ), 'info');
-
-                return $this->redirect(href_to($ctype['name']));
+        if ($access_value) {
+            foreach ($access_value as $notice) {
+                cmsUser::addSessionMessage($notice, 'info');
             }
         }
 
         // Проверяем приватность фото
-        if ($photo['is_private'] == 1) { // доступ только друзьям
+        [$redirect_url, $item_view_notice] = $this->checkParentAccess($ctype, $photo, $is_moderator);
 
-            $is_friend           = $this->cms_user->isFriend($photo['user_id']);
-            $is_can_view_private = cmsUser::isAllowed($ctype['name'], 'view_all');
-
-            if (!$is_friend && !$is_can_view_private && !$is_moderator) {
-
-                // иначе пишем, к кому в друзья нужно проситься
-                cmsUser::addSessionMessage(sprintf(
-                        LANG_CONTENT_PRIVATE_FRIEND_INFO,
-                        LANG_PHOTOS_WP_ITEM,
-                        href_to_profile($photo['user']),
-                        htmlspecialchars($photo['user']['nickname'])
-                ), 'info');
-
-                return $this->redirect(href_to($ctype['name'], $album['slug'] . '.html'));
-            }
+        if ($item_view_notice) {
+            cmsUser::addSessionMessage($item_view_notice, 'error');
         }
 
-        // Проверяем ограничения доступа из других контроллеров
-        if ($album['is_parent_hidden'] || $album['is_private']) {
-
-            $is_parent_viewable_result = cmsEventsManager::hook('content_view_hidden', [
-                'viewable'     => true,
-                'item'         => $album,
-                'is_moderator' => $is_moderator,
-                'ctype'        => $ctype
-            ]);
-
-            if (!$is_parent_viewable_result['viewable']) {
-
-                if (isset($is_parent_viewable_result['access_text'])) {
-
-                    cmsUser::addSessionMessage($is_parent_viewable_result['access_text'], 'error');
-
-                    if (isset($is_parent_viewable_result['access_redirect_url'])) {
-                        return $this->redirect($is_parent_viewable_result['access_redirect_url']);
-                    } else {
-                        return $this->redirect(href_to($ctype['name']));
-                    }
-                }
-
-                return $this->redirectToLogin();
-            }
+        if (is_string($redirect_url)) {
+            // Игнорируем урл редиректа, перенаправляем на альбом
+            return $this->redirect(href_to($ctype['name'], $album['slug'] . '.html'));
         }
 
         if ($this->cms_user->id != $photo['user_id']) {
@@ -277,7 +229,7 @@ class actionPhotosView extends cmsAction {
             }
 
             $downloads[$preset] = [
-                'link'   => ($show ? href_to('photos', 'download', [$photo['id'], $preset]) . '?hash=' . $this->getDownloadHash() : ''),
+                'link'   => ($show ? href_to('photos', 'download', [$photo['id'], $preset]) . '?hash=' . $this->getDownloadHash($photo['id']) : ''),
                 'size'   => $photo['sizes'][$preset]['width'] . '×' . $photo['sizes'][$preset]['height'],
                 'name'   => $presets[$preset],
                 'preset' => $preset,

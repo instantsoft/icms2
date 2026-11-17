@@ -22,7 +22,7 @@ class onUsersContentViewHidden extends cmsAction {
                 return $data;
             }
 
-            $is_friend           = $this->cms_user->isFriend($item['user_id']);
+            $is_friend = $this->cms_user->isFriend($item['user_id']);
             $is_can_view_private = cmsUser::isAllowed($ctype['name'], 'view_all');
 
             if (!$is_friend && !$is_can_view_private && !$is_moderator) {
@@ -31,7 +31,7 @@ class onUsersContentViewHidden extends cmsAction {
                         LANG_CONTENT_PRIVATE_FRIEND_INFO,
                         (!empty($ctype['labels']['one']) ? string_ucfirst($ctype['labels']['one']) : LANG_PAGE),
                         href_to_profile($item['user']),
-                        htmlspecialchars($item['user']['nickname'])
+                        html($item['user']['nickname'], false)
                 );
 
                 $data['viewable'] = false;
