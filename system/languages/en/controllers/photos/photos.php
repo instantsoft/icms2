@@ -20,6 +20,7 @@ define('LANG_PHOTOS_PRESET_RELATED', 'Preset for related photos in the photo pag
 define('LANG_PHOTOS_PRESET_DEF', 'Default');
 define('LANG_PHOTOS_EDIT_PHOTO', 'Edit Photo');
 define('LANG_PHOTOS_SET_COVER',  'Set as album cover');
+define('LANG_PHOTOS_SET_COVER_CONFIRM', 'Set the current photo as the album cover?');
 define('LANG_PHOTOS_DELETE_PHOTO', 'Delete Photo');
 define('LANG_PHOTOS_DELETE_PHOTO_CONFIRM', 'Delete this photo?');
 define('LANG_PHOTOS_TYPES', 'Photos types');

@@ -26,6 +26,7 @@
             'class' => 'images',
             'icon'  => 'images',
             'title' => LANG_PHOTOS_SET_COVER,
+            'data'  => ['confirm' => LANG_PHOTOS_SET_COVER_CONFIRM],
             'href'  => $this->href_to('set_cover', $photo['id'])
         ]);
     }

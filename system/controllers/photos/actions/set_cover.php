@@ -2,9 +2,9 @@
 
 class actionPhotosSetCover extends cmsAction {
 
-    public function run($photo_id = 0) {
+    public function run($photo_id) {
 
-        if (!$photo_id) {
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token', ''))) {
             return cmsCore::error404();
         }
 

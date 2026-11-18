@@ -20,6 +20,7 @@
     define('LANG_PHOTOS_PRESET_DEF',            'По умолчанию');
     define('LANG_PHOTOS_EDIT_PHOTO',            'Редактировать фото');
     define('LANG_PHOTOS_SET_COVER',             'Сделать обложкой альбома');
+    define('LANG_PHOTOS_SET_COVER_CONFIRM',     'Сделать текущее фото обложкой альбома?');
     define('LANG_PHOTOS_DELETE_PHOTO',          'Удалить фото');
     define('LANG_PHOTOS_DELETE_PHOTO_CONFIRM',  'Удалить эту фотографию?');
     define('LANG_PHOTOS_TYPES',                 'Типы фотографий');
