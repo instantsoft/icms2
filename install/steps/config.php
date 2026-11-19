@@ -2,7 +2,7 @@
 
 function step($is_submit) {
 
-    $root = $_SESSION['install']['paths']['root'];
+    $root = $_SESSION['install']['paths']['root'] ?? '';
 
     $path = $_SERVER['DOCUMENT_ROOT'] . $root . 'system/config';
     $file = 'config.php';
@@ -21,7 +21,7 @@ function step($is_submit) {
 
 function create_config($path, $file) {
 
-    if (!is_writable($path)) {
+    if (!is_writable($path) || empty($_SESSION['install'])) {
         return [
             'error'   => true,
             'message' => LANG_CONFIG_NOT_WRITABLE
@@ -67,16 +67,16 @@ function create_config($path, $file) {
         'ct_autoload'                 => 'frontpage',
         'ct_default'                  => 'content',
         'frontpage'                   => 'none',
-        'debug'                       => 0,
-        'emulate_lag'                 => '',
-        'cache_enabled'               => 0,
+        'debug'                       => NULL,
+        'emulate_lag'                 => NULL,
+        'cache_enabled'               => NULL,
         'cache_method'                => 'files',
         'cache_ttl'                   => 300,
         'cache_host'                  => 'localhost',
         'cache_port'                  => 11211,
-        'min_html'                    => 0,
-        'merge_css'                   => 0,
-        'merge_js'                    => 0,
+        'min_html'                    => NULL,
+        'merge_css'                   => NULL,
+        'merge_js'                    => NULL,
         'mail_transport'              => 'mail',
         'mail_from'                   => 'noreply@example.com',
         'mail_from_name'              => '',
@@ -99,8 +99,15 @@ function create_config($path, $file) {
         'session_maxlifetime'         => ini_get('session.gc_maxlifetime') / 60,
         'controllers_without_widgets' => ['admin'],
         'ctype_default'               => [],
-        'is_404_layout'               => 0,
-        'server_secret'               => bin2hex(random_bytes(32))
+        'is_404_layout'               => NULL,
+        'server_secret'               => bin2hex(random_bytes(32)),
+        'is_no_meta'                  => NULL,
+        'disable_metakeys'            => NULL,
+        'is_user_change_lang'         => NULL,
+        'is_browser_auto_lang'        => NULL,
+        'mail_smtp_enc'               => '0',
+        'cookie_domain'               => '',
+        'is_dev_mode'                 => false
     ];
 
     write_config($file, $config);
@@ -136,5 +143,5 @@ function write_config($file, $config) {
 
     $dump .= PHP_EOL . '];' . PHP_EOL;
 
-    return @file_put_contents($file, $dump);
+    return @file_put_contents($file, $dump, LOCK_EX);
 }

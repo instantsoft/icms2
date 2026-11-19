@@ -18,7 +18,7 @@ function step($is_submit) {
     return [
         'html' => render('step_admin', [
             'is_external_users' => $is_external_users,
-            'users_table'       => $_SESSION['install']['db']['users_table']
+            'users_table'       => $_SESSION['install']['db']['users_table'] ?? ''
         ])
     ];
 }

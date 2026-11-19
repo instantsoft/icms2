@@ -184,13 +184,19 @@ li:last-child {
     border-top:solid 1px #ECECEC;
     padding:10px;
     padding-top:8px;
-    text-align:right;
     position:absolute;
     left: 0;
     right:0;
     bottom:0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: space-between;
 }
 
+#layout #body .buttons > .negative {
+    font-size: 13px;
+}
 #layout #body .buttons input{
 	padding: 10px 15px;
 	line-height: 100%;
@@ -204,6 +210,7 @@ li:last-child {
 	vertical-align: middle;
 	border: 1px solid #CCC;
 	background: linear-gradient(to right, rgba(246, 246, 246, 1) 0%,rgba(224, 224, 224, 1) 100%);
+    margin-left: auto;
 }
 
 #layout #body .buttons input:hover{
@@ -213,6 +220,11 @@ li:last-child {
 
 #layout #body .buttons input:active{
     box-shadow: inset 0 2px 3px #ccc;
+}
+
+#layout #body .buttons input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 #layout #footer{

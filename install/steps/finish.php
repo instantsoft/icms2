@@ -2,7 +2,9 @@
 
 function step($is_submit = false) {
 
-    $host = $_SESSION['install']['hosts']['root'];
+    release_install_lock();
+
+    $host = $_SESSION['install']['hosts']['root'] ?? '';
 
     unset($_SESSION['install']);
 

@@ -1,3 +1,10 @@
+$(function() {
+    let buttons = $('#body').find('.buttons');
+    if (!is_exists_tmp_root) {
+        buttons.find('input').prop('disabled', true);
+        buttons.prepend('<span class="negative">'+LANG_ERROR_TMP_DIR+'</span>');
+    }
+});
 function nextStep() {
 
     if (current_step === false) {

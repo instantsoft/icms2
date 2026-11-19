@@ -4,6 +4,7 @@
     define('LANG_INSTALLATION_WIZARD',      'Installation wizard');
     define('LANG_NEXT',                     'Next &rarr;');
     define('LANG_ERROR',                    'Error');
+    define('LANG_ERROR_TMP_DIR',            'Folder for temporary files not found. Check your PHP settings.');
     define('LANG_FROM',                     'from');
     define('LANG_DEPRECATED',               'Deprecated');
 
@@ -137,6 +138,9 @@
 
     define('LANG_FINISH_1',                 'InstantCMS installation is complete.');
     define('LANG_FINISH_2',                 'Delete the <b>install</b> folder from the root directory before you proceed.');
+    define('LANG_STOP_HINT',                'If you want to reinstall InstantCMS, please refer to the documentation.');
+    define('LANG_LOCK',                     'InstantCMS installation blocked');
+    define('LANG_LOCK_HINT',                'Someone is already doing the installation.');
 
     define('LANG_FINISH_TO_SITE',           'Visit site');
 

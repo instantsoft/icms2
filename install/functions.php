@@ -44,7 +44,7 @@ function add_addons_step_if_needed($steps) {
 }
 
 function is_config_exists() {
-    return is_readable(dirname(PATH) . DS . 'system/config/config.php');
+    return file_exists(dirname(PATH) . DS . 'system/config/config.php');
 }
 
 function get_site_config_env() {
@@ -414,4 +414,141 @@ function preinstall_addon ($addon) {
     }
 
     return true;
+}
+
+function is_installation_blocked() {
+
+    if (!is_config_exists()) {
+        return false;
+    }
+
+    $cfg = get_site_config();
+
+    return !is_array($cfg) || empty($cfg['is_dev_mode']);
+}
+
+function get_temporary_directory() {
+
+    $candidates = [
+        ini_get('upload_tmp_dir'),
+        sys_get_temp_dir()
+    ];
+
+    foreach ($candidates as $dir) {
+
+        if (!$dir) {
+            continue;
+        }
+
+        $dir = realpath($dir);
+
+        if ($dir && is_writable($dir)) {
+            return rtrim($dir, '/\\');
+        }
+    }
+
+    return null;
+}
+
+function get_install_lock_file() {
+
+    $tmp_root = get_temporary_directory();
+    if (!$tmp_root) {
+        return null;
+    }
+    return $tmp_root . DS . 'instantcms-install-' . hash('sha256', PATH) . '.lock';
+}
+
+function check_install_lock() {
+
+    $lock_file = get_install_lock_file();
+    if (!$lock_file) {
+        return false;
+    }
+
+    // Если у пользователя уже есть токен, проверяем его
+    if (!empty($_SESSION['installer_token'])) {
+
+        if (!is_file($lock_file) || !is_readable($lock_file)) {
+            unset($_SESSION['installer_token']);
+            return false;
+        }
+
+        $stored_hash = trim(file_get_contents($lock_file));
+
+        if (!$stored_hash || !hash_equals($stored_hash, hash('sha256', $_SESSION['installer_token']))) {
+            unset($_SESSION['installer_token']);
+            return false;
+        }
+
+        @touch($lock_file);
+
+        return true;
+    }
+
+    if (is_file($lock_file) && @filemtime($lock_file) < time() - 900) {
+        @unlink($lock_file);
+        unset($_SESSION['installer_token']);
+    }
+
+    $handle = @fopen($lock_file, 'x');
+    if ($handle === false) {
+        return false;
+    }
+
+    $token = bin2hex(random_bytes(32));
+    $hash = hash('sha256', $token);
+
+    $written = fwrite($handle, $hash);
+    $flushed = $written === strlen($hash) && fflush($handle);
+
+    fclose($handle);
+
+    if (!$flushed) {
+        @unlink($lock_file);
+        return false;
+    }
+
+    if (!session_regenerate_id(true)) {
+        @unlink($lock_file);
+        return false;
+    }
+
+    $_SESSION['installer_token'] = $token;
+
+    return true;
+}
+
+function is_install_access_allowed(&$step) {
+
+    $step = 'lock';
+
+    if (!empty($_SESSION['installer_token'])) {
+        return check_install_lock();
+    }
+
+    if (is_installation_blocked()) {
+
+        $step = 'stop';
+
+        return false;
+    }
+
+    return check_install_lock();
+}
+
+function release_install_lock() {
+
+    $lock_file = get_install_lock_file();
+
+    if ($lock_file && is_file($lock_file) && is_readable($lock_file) && !empty($_SESSION['installer_token'])) {
+
+        $stored_hash = trim(file_get_contents($lock_file));
+
+        if ($stored_hash && hash_equals($stored_hash, hash('sha256', $_SESSION['installer_token']))) {
+            @unlink($lock_file);
+        }
+    }
+
+    unset($_SESSION['installer_token']);
 }

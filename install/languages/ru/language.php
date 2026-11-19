@@ -4,6 +4,7 @@
     define('LANG_INSTALLATION_WIZARD',      'Мастер установки');
     define('LANG_NEXT',                     'Далее &rarr;');
     define('LANG_ERROR',                    'Ошибка');
+    define('LANG_ERROR_TMP_DIR',            'Не найдена директория для временных файлов. Проверьте настройки PHP.');
     define('LANG_FROM',                     'от');
     define('LANG_DEPRECATED',               'Устаревшее');
 
@@ -137,6 +138,9 @@
 
     define('LANG_FINISH_1',                 'Установка InstantCMS завершена.');
     define('LANG_FINISH_2',                 'Перед тем как продолжить, удалите папку <b>install</b> в корне сайта.');
+    define('LANG_STOP_HINT',                'Если вы хотите переустановить InstantCMS, обратитесь к документации.');
+    define('LANG_LOCK',                     'Установка InstantCMS заблокирована');
+    define('LANG_LOCK_HINT',                'Кто-то уже выполняет установку.');
 
     define('LANG_FINISH_TO_SITE',           'Перейти на сайт');
 

@@ -59,9 +59,11 @@
     </div>
 
     <script>
+        var is_exists_tmp_root = <?php echo !empty($tmp_root) ? 'true' : 'false'; ?>;
         var current_step = <?php echo $current_step; ?>;
         var LANG_ERROR = '<?php echo LANG_ERROR; ?>';
         var LANG_MANUAL = '<?php echo LANG_MANUAL; ?>';
+        var LANG_ERROR_TMP_DIR = '<?php echo LANG_ERROR_TMP_DIR; ?>';
     </script>
 
 </body>

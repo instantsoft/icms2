@@ -13,6 +13,8 @@ date_default_timezone_set('UTC');
 
 include PATH . 'functions.php';
 
+$tmp_root = get_temporary_directory();
+
 $all_langs = get_langs();
 $default_lang = 'en';
 
@@ -24,7 +26,7 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 }
 
 if (isset($_REQUEST['lang'])) {
-    if (is_string($_REQUEST['lang']) && in_array($_REQUEST['lang'], $all_langs)) {
+    if (is_string($_REQUEST['lang']) && in_array($_REQUEST['lang'], $all_langs, true)) {
         $_SESSION['install']['lang'] = $_REQUEST['lang'];
         header('Location: ' . $_SERVER['SCRIPT_NAME']);
         die;
@@ -55,8 +57,26 @@ $steps = [
 $steps = add_addons_step_if_needed($steps);
 
 $current_step = 0;
+$error_step = 'stop';
 
-if (is_ajax_request()) {
+if ($tmp_root && !is_install_access_allowed($error_step)) {
+
+    $step_result = run_step(['id' => $error_step], false);
+
+    echo render('main', [
+        'tmp_root'         => $tmp_root,
+        'steps'            => $steps,
+        'is_lang_selected' => $is_lang_selected,
+        'lang'             => LANG,
+        'current_step'     => $current_step,
+        'step_html'        => $step_result['html'],
+        'langs'            => $all_langs
+    ]);
+
+    exit;
+}
+
+if (is_ajax_request() && $tmp_root) {
     $step      = $steps[(int) ($_POST['step'] ?? 0)] ?? $steps[1];
     $is_submit = isset($_POST['submit']);
     echo json_encode(run_step($step, $is_submit));
@@ -71,6 +91,7 @@ header('Retry-After: 3600');
 $step_result = run_step($steps[$current_step], false);
 
 echo render('main', [
+    'tmp_root'         => $tmp_root,
     'steps'            => $steps,
     'is_lang_selected' => $is_lang_selected,
     'lang'             => LANG,
