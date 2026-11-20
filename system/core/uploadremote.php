@@ -305,19 +305,40 @@ class cmsUploadremote {
     }
 
     /**
-     * Проверка IP
+     * Проверяет, является ли IP-адрес публичным.
      *
-     * @param string $ip
+     * IPv4-mapped IPv6 адреса предварительно преобразуются
+     * в IPv4 для корректной проверки на всех поддерживаемых
+     * версиях PHP.
+     *
+     * @param string $ip IP-адрес
      * @return bool
      */
     private function isAllowedIp(string $ip) {
+
+        $packed = @inet_pton($ip);
+        if ($packed === false) {
+            return false;
+        }
+
+        // IPv4-mapped IPv6
+        if (
+                strlen($packed) === 16 &&
+                substr($packed, 0, 12) ===
+                str_repeat("\0", 10) . "\xff\xff"
+        ) {
+            $ip = inet_ntop(substr($packed, 12));
+            if ($ip === false) {
+                return false;
+            }
+        }
 
         return filter_var(
             $ip,
             FILTER_VALIDATE_IP,
             FILTER_FLAG_NO_PRIV_RANGE |
             FILTER_FLAG_NO_RES_RANGE
-        ) === $ip;
+        ) !== false;
     }
 
     /**
