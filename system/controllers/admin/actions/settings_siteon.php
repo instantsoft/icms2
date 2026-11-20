@@ -7,7 +7,10 @@ class actionAdminSettingsSiteon extends cmsAction {
         $result = cmsConfig::getInstance()->update('is_site_on', 1);
 
         if (!$result) {
-            cmsUser::addSessionMessage(LANG_CP_SETTINGS_NOT_WRITABLE, 'error');
+            cmsUser::addSessionMessage(
+                LANG_CP_SETTINGS_NOT_WRITABLE . ' ' . sprintf(LANG_CP_CHECK_PERM_FILE_DIR, '/system/config/config.php', '/system/config/'),
+                'error'
+            );
         }
 
         return $this->redirectBack();

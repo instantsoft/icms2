@@ -3,7 +3,7 @@
  * Возвращает список директорий внутри указанной
  *
  * @param string $dir Полный путь к директории
- * @param boolean $asc_sort Сортировать по алфавиту, по умолчанию false
+ * @param bool $asc_sort Сортировать по алфавиту, по умолчанию false
  * @return array
  */
 function files_get_dirs_list($dir, $asc_sort = false) {
@@ -83,6 +83,7 @@ function files_copy_directory(string $directory_from, string $directory_to) {
 
 /**
  * Рекурсивно удаляет директорию
+ *
  * @param string $directory
  * @param bool $is_clear Если TRUE, то директория будет очищена, но не удалена
  * @return bool
@@ -164,7 +165,7 @@ function files_clear_directory(string $directory){
  *
  * @param string $file_path Относительный (от upload_path без начального слеша) или полный путь к файлу
  * @param int $delete_parent_dir Количество родительских директорий, которые нужно также удалить, если они пустые
- * @return boolean
+ * @return bool
  */
 function files_delete_file(string $file_path, $delete_parent_dir = 0) {
 
@@ -211,8 +212,51 @@ function files_delete_file(string $file_path, $delete_parent_dir = 0) {
 }
 
 /**
- * Возвращает дерево каталогов и файлов по указанному пути в виде
- * рекурсивного массива
+ * Атомарно записывает данные в файл через временный файл
+ * Устанавливает права 0644
+ *
+ * @param string $filename Полный путь к целевому файлу
+ * @param string $data     Данные для записи
+ *
+ * @return bool Возвращает true при успешной записи, иначе false.
+ */
+function files_write_atomic(string $filename, string $data) {
+
+    $dir = dirname($filename);
+
+    if (!is_dir($dir) || !is_writable($dir)) {
+        return false;
+    }
+
+    if (file_exists($filename) && !is_writable($filename)) {
+        return false;
+    }
+
+    $tmp_file = tempnam($dir, '.tmp_');
+
+    if ($tmp_file === false) {
+        return false;
+    }
+
+    if (file_put_contents($tmp_file, $data, LOCK_EX) === false) {
+        @unlink($tmp_file);
+        return false;
+    }
+
+    if (!rename($tmp_file, $filename)) {
+        @unlink($tmp_file);
+        return false;
+    }
+
+    chmod($filename, 0644);
+
+    return true;
+}
+
+/**
+ * Возвращает дерево каталогов и файлов
+ * по указанному пути в виде рекурсивного массива
+ *
  * @param string $path
  * @return array
  */
@@ -294,8 +338,9 @@ function files_convert_bytes($value) {
 }
 
 /**
- * Переводит байты в Гб, Мб или Кб и возвращает полученное число + единицу измерения
- * в виде единой строки
+ * Переводит байты в Гб, Мб или Кб и возвращает
+ * полученное число + единицу измерения в виде единой строки
+ *
  * @param int $bytes
  * @return string
  */
@@ -321,16 +366,18 @@ function files_format_bytes($bytes) {
 }
 
 /**
- * Возвращает 32-х символьный хэш, привязанный к ip адресу
- * используется для защиты от хотлинка
+ * Возвращает SHA-256 HMAC, привязанный к IP-адресу
+ * Используется для защиты от хотлинка
  *
  * @param string $file_path Путь к файлу
  * @return string
  */
-function files_user_file_hash($file_path = ''){
-    return md5(cmsUser::getIp().md5($file_path.cmsConfig::get('root_path')));
-}
+function files_user_file_hash($file_path = '') {
 
+    $data = cmsUser::getIp() . '|' . $file_path . '|' . cmsConfig::get('root_path');
+
+    return hash_hmac('sha256', $data, cmsConfig::get('server_secret'));
+}
 
 /**
  * Нормализует имя файла:
@@ -481,9 +528,10 @@ function file_get_contents_from_url($url, $timeout = 5, $json_decode = false, $p
 
 /**
  * Сохраняет удаленно расположенный файл
+ *
  * @param string $url url файла
  * @param string $destination Полный путь куда сохранить файл
- * @return boolean
+ * @return bool
  */
 function file_save_from_url($url, $destination) {
 
@@ -530,7 +578,7 @@ function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false
  * Возвращает параметры изображения
  *
  * @param string $path Полный путь к файлу
- * @return boolean|array
+ * @return bool|array
  */
 function img_get_params($path) {
 

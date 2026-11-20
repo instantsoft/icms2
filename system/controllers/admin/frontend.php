@@ -1043,7 +1043,7 @@ class admin extends cmsFrontend {
         }
 
         if ($cacheable) {
-            file_put_contents($cache_file, '<?php return ' . var_export($data, true) . ';');
+            files_write_atomic($cache_file, '<?php return ' . var_export($data, true) . ';');
         }
 
         return $data;

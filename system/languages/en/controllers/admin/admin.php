@@ -637,6 +637,7 @@
     define('LANG_CP_FILE_NOT_WRITABLE',         'Cannot overwrite file "%s". Set write permissions for it.');
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Configuration file is not writable!');
     define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Template configuration file is not writable!');
+    define('LANG_CP_CHECK_PERM_FILE_DIR',       'Check the permissions for the %s file and the %s directory. They must be writable.');
     define('LANG_CP_SAVE_SUCCESS',              'Settings saved successfully');
     define('LANG_CP_ORDER_SUCCESS',             'The order was successfully saved');
     define('LANG_CP_PERMISSIONS_SUCCESS',       'The access rules saved successfully');

@@ -664,8 +664,9 @@
     define('LANG_CP_CACHE_MOD_CONNECT_ERROR',   'Не удалось подключиться к %s - проверьте сервер и порт');
 
     define('LANG_CP_FILE_NOT_WRITABLE',         'Невозможно перезаписать файл "%s". Установите для него права на запись.');
-    define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Ошибка перезаписи файла конфигурации');
-    define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Файл конфигурации темы недоступен для записи');
+    define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Ошибка перезаписи файла конфигурации.');
+    define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Файл конфигурации темы недоступен для записи.');
+    define('LANG_CP_CHECK_PERM_FILE_DIR',       'Проверьте права на файл %s и директорию %s. Должны быть доступны для записи.');
     define('LANG_CP_SAVE_SUCCESS',              'Настройки успешно сохранены');
     define('LANG_CP_ORDER_SUCCESS',             'Порядок успешно сохранён');
     define('LANG_CP_PERMISSIONS_SUCCESS',       'Правила доступа успешно сохранены');

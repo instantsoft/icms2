@@ -125,14 +125,7 @@ class actionRssFeed extends cmsAction {
     }
 
     private function cacheRss($feed) {
-
-        if (!is_writable(dirname($this->cache_file_path))) {
-            return false;
-        }
-
-        file_put_contents($this->cache_file_path, $feed);
-
-        return;
+        return files_write_atomic($this->cache_file_path, $feed);
     }
 
 }

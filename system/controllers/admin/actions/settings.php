@@ -79,7 +79,10 @@ class actionAdminSettings extends cmsAction {
 
                     $errors = [];
 
-                    cmsUser::addSessionMessage(LANG_CP_SETTINGS_NOT_WRITABLE, 'error');
+                    cmsUser::addSessionMessage(
+                        LANG_CP_SETTINGS_NOT_WRITABLE . ' ' . sprintf(LANG_CP_CHECK_PERM_FILE_DIR, '/system/config/config.php', '/system/config/'),
+                        'error'
+                    );
 
                 } else {
 

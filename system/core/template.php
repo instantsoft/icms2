@@ -2216,7 +2216,7 @@ class cmsTemplate {
         $merged_contents = str_replace(["\t"], '', $merged_contents);
         $merged_contents = preg_replace('/ {2,}/', '', $merged_contents);
 
-        file_put_contents($cache_file_path, trim($merged_contents));
+        files_write_atomic($cache_file_path, trim($merged_contents));
 
         return $cache_file;
     }
@@ -2254,7 +2254,7 @@ class cmsTemplate {
             $merged_contents .= $contents;
         }
 
-        file_put_contents($cache_file_path, $merged_contents);
+        files_write_atomic($cache_file_path, $merged_contents);
 
         return $cache_file;
     }
@@ -3625,21 +3625,7 @@ class cmsTemplate {
 
         $options_file = $this->site_config->root_path . ltrim(ICMS_CONFIG_DIR, '/') . "theme_{$this->name}.yml";
 
-        if (file_exists($options_file)) {
-            if (!is_writable($options_file)) {
-                return false;
-            }
-        } else {
-            if (!is_writable(dirname($options_file))) {
-                return false;
-            }
-        }
-
-        $options_yaml = cmsModel::arrayToYaml($options);
-
-        $success = file_put_contents($options_file, $options_yaml);
-
-        return $success;
+        return files_write_atomic($options_file, cmsModel::arrayToYaml($options));
     }
 
 //============================================================================//

@@ -64,10 +64,16 @@ class actionAdminSettingsTheme extends cmsAction {
                     }
                 }
 
-                if($template->saveOptions($options)){
+                if ($template->saveOptions($options)) {
+
                     cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
                 } else {
-                    cmsUser::addSessionMessage(LANG_CP_SETTINGS_TPL_NOT_WRITABLE, 'error');
+
+                    cmsUser::addSessionMessage(
+                        LANG_CP_SETTINGS_TPL_NOT_WRITABLE . ' ' . sprintf(LANG_CP_CHECK_PERM_FILE_DIR, "/system/config/theme_{$template->getName()}.yml", '/system/config/'),
+                        'error'
+                    );
                 }
 
                 $this->redirectToAction('settings', ['theme', $template_name]);

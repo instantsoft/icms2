@@ -280,23 +280,16 @@ class cmsConfigs {
 
         $file = PATH . $this->getFilePath();
 
-        $success = false;
-
-        if (is_writable($file)) {
-
-            if (function_exists('opcache_reset')) {
-                @opcache_reset();
-            }
-
-            $success = file_put_contents($file, $dump);
+        if (function_exists('opcache_reset')) {
+            @opcache_reset();
         }
 
-        return $success;
+        return files_write_atomic($file, $dump);
     }
 
     /**
      * Доступен ли файл для записи?
-     * 
+     *
      * @return bool
      */
     public function isWritable() {
