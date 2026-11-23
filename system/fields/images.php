@@ -218,31 +218,29 @@ class fieldImages extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value = null) {
 
-        if (!is_array($old_value)) {
-            $old_value = cmsModel::yamlToArray($old_value);
-        }
+        $old_images = is_array($old_value) ?
+                    $old_value :
+                    cmsModel::yamlToArray($old_value);
 
-        foreach ($old_value as $old_image) {
-            if (!is_array($value) || !in_array($old_image, $value)) {
+        foreach ($old_images as $old_image) {
+            if (!$value || !in_array($old_image, $value)) {
                 foreach ($old_image as $size => $image_rel_path) {
                     files_delete_file($image_rel_path, 2);
                 }
             }
         }
 
-        if (!$value) {
-            return null;
-        }
-
         $sizes = $this->getOption('sizes');
-        if (!$sizes) {
-            $this->delete($value);
+
+        if (!$sizes || !$value) {
             return null;
         }
 
         $results = [];
 
+        $files = cmsCore::getModel('files');
         $upload_path = cmsConfig::get('upload_path');
+        $current_user_id = cmsUser::get('id');
 
         foreach ($value as $key => $image) {
 
@@ -254,7 +252,7 @@ class fieldImages extends cmsFormField {
 
             foreach ($image as $size => $image_rel_path) {
 
-                if (is_array($image_rel_path)) {
+                if (!is_string($image_rel_path) || !in_array($size, $sizes, true)) {
                     continue;
                 }
 
@@ -270,9 +268,14 @@ class fieldImages extends cmsFormField {
                     continue;
                 }
 
-                // удаляем ненужные пресеты, если умельцы правили параметры вручную
-                if (!in_array($size, $sizes)) {
-                    files_delete_file($image_rel_path, 2);
+                $file = $files->getFileByPath($image_rel_path);
+                if (!$file || $file['type'] !== 'image') {
+                    continue;
+                }
+
+                $is_old_file = isset($old_images[$size]) &&
+                               $old_images[$size] === $image_rel_path;
+                if (!$is_old_file && $file['user_id'] != $current_user_id) {
                     continue;
                 }
 
@@ -284,7 +287,7 @@ class fieldImages extends cmsFormField {
             }
         }
 
-        if (empty($results)) {
+        if (!$results) {
             return null;
         }
 
@@ -294,11 +297,6 @@ class fieldImages extends cmsFormField {
 
             $chunks  = array_chunk($results, $this->options['max_photos'], true);
             $results = $chunks[0];
-            unset($chunks[0]);
-
-            foreach ($chunks as $chunk) {
-                $this->delete($chunk);
-            }
         }
 
         return $results;

@@ -171,30 +171,31 @@ class fieldImage extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value = null) {
 
-        if (!is_null($old_value) && !is_array($old_value)) {
+        $old_images = is_array($old_value) ?
+                    $old_value :
+                    cmsModel::yamlToArray($old_value);
 
-            $old_value = cmsModel::yamlToArray($old_value);
-
-            if ($old_value != $value) {
-                foreach ($old_value as $image_url) {
-                    files_delete_file($image_url, 2);
-                }
+        if ($old_images) {
+            if ($old_images != $value) {
+                $this->delete($old_images);
             }
         }
 
         $sizes = $this->getOption('sizes');
 
-        if (empty($sizes) || empty($value)) {
-            return $value;
+        if (!$sizes || !$value) {
+            return null;
         }
 
+        $files = cmsCore::getModel('files');
         $upload_path = cmsConfig::get('upload_path');
+        $current_user_id = cmsUser::get('id');
 
         $image_urls = [];
 
         foreach ($value as $size => $image_rel_path) {
 
-            if (is_array($image_rel_path)) {
+            if (!is_string($image_rel_path) || !in_array($size, $sizes, true)) {
                 continue;
             }
 
@@ -210,8 +211,14 @@ class fieldImage extends cmsFormField {
                 continue;
             }
 
-            if (!in_array($size, $sizes)) {
-                files_delete_file($image_rel_path, 2);
+            $file = $files->getFileByPath($image_rel_path);
+            if (!$file || $file['type'] !== 'image') {
+                continue;
+            }
+
+            $is_old_file = isset($old_images[$size]) &&
+                           $old_images[$size] === $image_rel_path;
+            if (!$is_old_file && $file['user_id'] != $current_user_id) {
                 continue;
             }
 

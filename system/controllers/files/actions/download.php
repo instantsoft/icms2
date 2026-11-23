@@ -9,7 +9,7 @@ class actionFilesDownload extends cmsAction {
             return cmsCore::error404();
         }
 
-        if (files_user_file_hash($file['path']) !== $url_key) {
+        if (!hash_equals(files_user_file_hash($file['path']), $url_key)) {
             return cmsCore::errorForbidden();
         }
 
