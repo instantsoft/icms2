@@ -16,7 +16,7 @@ class actionBillingPlansUsers extends cmsAction {
 
         $this->plan = $this->model->getPlan($plan_id);
         if (!$this->plan) {
-            return cmsCore::error404();
+            cmsCore::error404();
         }
 
         $this->table_name = 'billing_plans_log';

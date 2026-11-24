@@ -18,7 +18,7 @@ class actionAdminCtypesFields extends cmsAction {
 
         $this->ctype = $this->model_backend_content->getContentType($ctype_id);
         if (!$this->ctype) {
-            return cmsCore::error404();
+            cmsCore::error404();
         }
 
         $this->table_name = $this->model->getContentTypeTableName($this->ctype['name'], '_fields');

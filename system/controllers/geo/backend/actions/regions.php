@@ -15,7 +15,7 @@ class actionGeoRegions extends cmsAction {
 
         $country = $this->model->getItemById('geo_countries', $country_id);
         if (!$country) {
-            return cmsCore::error404();
+            cmsCore::error404();
         }
 
         $this->list_callback = function ($model) use ($country_id) {

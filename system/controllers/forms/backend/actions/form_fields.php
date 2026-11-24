@@ -13,7 +13,7 @@ class actionFormsFormFields extends cmsAction {
         $form_data = $this->model->getForm($form_id);
 
         if (!$form_data) {
-            return cmsCore::error404();
+            cmsCore::error404();
         }
 
         $this->table_name = 'forms_fields';

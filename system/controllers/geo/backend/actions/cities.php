@@ -16,12 +16,12 @@ class actionGeoCities extends cmsAction {
 
         $country = $this->model->getItemById('geo_countries', $country_id);
         if (!$country) {
-            return cmsCore::error404();
+            cmsCore::error404();
         }
 
         $region = $this->model->getItemById('geo_regions', $region_id);
         if (!$region) {
-            return cmsCore::error404();
+            cmsCore::error404();
         }
 
         $this->list_callback = function ($model) use ($region_id) {

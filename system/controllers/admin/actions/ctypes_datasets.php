@@ -18,7 +18,7 @@ class actionAdminCtypesDatasets extends cmsAction {
 
         $this->ctype = $this->model_backend_content->getContentType($ctype_id);
         if (!$this->ctype) {
-            return cmsCore::error404();
+            cmsCore::error404();
         }
 
         $this->table_name = 'content_datasets';

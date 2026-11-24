@@ -417,14 +417,14 @@ class cmsCore {
         $model_class = 'model' . string_to_camel($delimitter, $controller);
 
         try {
-            $model = new $model_class();
-        } catch (Exception $e) {
+            return new $model_class();
+        } catch (Throwable $e) {
             if ($display_error) {
                 self::error(ERR_MODEL_NOT_FOUND . ': ' . $e->getMessage());
             }
-        } finally {
-            return isset($model) ? $model : null;
         }
+
+        return null;
     }
 
     /**
