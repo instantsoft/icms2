@@ -655,6 +655,7 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (6, 'content', 'delete_cat', 'flag', NULL),
 (8, 'content', 'rate', 'flag', NULL),
 (9, 'content', 'privacy', 'flag', NULL),
+(10, 'images', 'rate_limit', 'number', NULL),
 (13, 'content', 'view_all', 'flag', NULL),
 (18, 'content', 'limit', 'number', NULL),
 (19, 'users', 'vote_karma', 'flag', NULL),
@@ -753,6 +754,14 @@ CREATE TABLE `{#}uploaded_files` (
   KEY `user_id` (`user_id`),
   KEY `target_controller` (`target_controller`,`target_subject`,`target_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Загруженные файлы';
+
+DROP TABLE IF EXISTS `{#}upload_rate_limits`;
+CREATE TABLE `{#}upload_rate_limits` (
+  `user_id` int(11) UNSIGNED NOT NULL COMMENT 'ID пользователя',
+  `tokens` decimal(10,4) NOT NULL DEFAULT 0.0000 COMMENT 'Текущее количество токенов',
+  `date_updated` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Время последнего обновления корзины',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ограничение частоты загрузки файлов';
 
 DROP TABLE IF EXISTS `{#}users`;
 CREATE TABLE `{#}users` (

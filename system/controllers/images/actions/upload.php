@@ -15,6 +15,18 @@ class actionImagesUpload extends cmsAction {
             ]);
         }
 
+        $imgs_limit = (int) cmsUser::getPermissionValue('images', 'rate_limit');
+
+        $wait = $this->model->filesCheckUploadRateLimit($this->cms_user->id, $imgs_limit);
+
+        if ($wait > 0) {
+
+            return $this->cms_template->renderJSON([
+                'success' => false,
+                'error'   => sprintf(LANG_IMAGES_LIMIT_ERROR, $wait)
+            ]);
+        }
+
         // Переданные пресеты
         $sizes = $this->request->get('sizes', '');
         // Желаемое имя файла

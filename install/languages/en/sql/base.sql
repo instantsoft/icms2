@@ -655,6 +655,7 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (6, 'content', 'delete_cat', 'flag', NULL),
 (8, 'content', 'rate', 'flag', NULL),
 (9, 'content', 'privacy', 'flag', NULL),
+(10, 'images', 'rate_limit', 'number', NULL),
 (13, 'content', 'view_all', 'flag', NULL),
 (18, 'content', 'limit', 'number', NULL),
 (19, 'users', 'vote_karma', 'flag', NULL),
@@ -753,6 +754,14 @@ CREATE TABLE `{#}uploaded_files` (
   KEY `user_id` (`user_id`),
   KEY `target_controller` (`target_controller`,`target_subject`,`target_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `{#}upload_rate_limits`;
+CREATE TABLE `{#}upload_rate_limits` (
+  `user_id` int(11) UNSIGNED NOT NULL COMMENT 'User ID',
+  `tokens` decimal(10,4) NOT NULL DEFAULT 0.0000 COMMENT 'Current number of tokens',
+  `date_updated` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Last bucket update tim',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='File upload rate limiting';
 
 DROP TABLE IF EXISTS `{#}users_auth_tokens`;
 CREATE TABLE `{#}users_auth_tokens` (

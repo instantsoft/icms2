@@ -5,3 +5,11 @@ SELECT 'user_cover', 'Обложка профиля', 1200, 200, 1, NULL, NULL, 
 WHERE NOT EXISTS (
     SELECT 1 FROM `{#}images_presets` WHERE `name` = 'user_cover'
 );
+
+DROP TABLE IF EXISTS `{#}upload_rate_limits`;
+CREATE TABLE `{#}upload_rate_limits` (
+  `user_id` int(11) UNSIGNED NOT NULL COMMENT 'ID пользователя',
+  `tokens` decimal(10,4) NOT NULL DEFAULT 0.0000 COMMENT 'Текущее количество токенов',
+  `date_updated` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Время последнего обновления корзины',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ограничение частоты загрузки файлов';

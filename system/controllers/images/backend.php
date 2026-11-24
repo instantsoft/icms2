@@ -2,7 +2,31 @@
 
 class backendImages extends cmsBackend {
 
+    public $useDefaultPermissionsAction = true;
+
     private $default_images_types = ['private'];
+
+    public function __construct(cmsRequest $request) {
+
+        parent::__construct($request);
+
+        array_unshift($this->backend_menu,
+            [
+                'title' => LANG_IMAGES_PRESETS,
+                'url'   => href_to($this->root_url, 'presets'),
+                'options' => [
+                    'icon' => 'cog'
+                ]
+            ],
+            [
+                'title' => LANG_PERMISSIONS,
+                'url'   => href_to($this->root_url, 'perms', 'images'),
+                'options' => [
+                    'icon' => 'key'
+                ]
+            ]
+        );
+    }
 
     public function actionIndex() {
         $this->redirectToAction('presets');

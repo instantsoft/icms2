@@ -18,6 +18,18 @@ class actionImagesUploadWithPreset extends cmsAction {
             ]);
         }
 
+        $imgs_limit = (int) cmsUser::getPermissionValue('images', 'rate_limit');
+
+        $wait = $this->model->filesCheckUploadRateLimit($this->cms_user->id, $imgs_limit);
+
+        if ($wait > 0) {
+
+            return $this->cms_template->renderJSON([
+                'success' => false,
+                'error'   => sprintf(LANG_IMAGES_LIMIT_ERROR, $wait)
+            ]);
+        }
+
         return $this->cms_template->renderJSON($this->uploadWithPreset($name, $preset_name));
     }
 

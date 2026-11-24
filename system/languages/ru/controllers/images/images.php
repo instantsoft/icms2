@@ -38,3 +38,6 @@ define('LANG_IMAGES_PRESET_OUT_ASIS', 'Как исходный');
 define('LANG_IMAGES_PRESET_GIF_TO_GIF', 'Конвертировать анимированный файл, сохраняя анимацию и исходный формат');
 define('LANG_IMAGES_CROP_IMG', 'Обрезать изображение');
 define('LANG_IMAGES_ENGINE', 'Драйвер обработки');
+define('LANG_RULE_IMAGES_RATE_LIMIT', 'Лимит загрузки изображений');
+define('LANG_RULE_IMAGES_RATE_LIMIT_HINT', 'Максимальное количество изображений, которое можно загрузить подряд');
+define('LANG_IMAGES_LIMIT_ERROR', 'Превышен лимит загрузки изображений, повторите попытку через %s секунд');

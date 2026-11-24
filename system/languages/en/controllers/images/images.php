@@ -38,3 +38,6 @@ define('LANG_IMAGES_PRESET_OUT_ASIS', 'As an original');
 define('LANG_IMAGES_PRESET_GIF_TO_GIF', 'Convert animated file while preserving animation and the original format');
 define('LANG_IMAGES_CROP_IMG', 'Crop the image');
 define('LANG_IMAGES_ENGINE', 'Processing Driver');
+define('LANG_RULE_IMAGES_RATE_LIMIT', 'Image upload limit');
+define('LANG_RULE_IMAGES_RATE_LIMIT_HINT', 'The maximum number of images that can be uploaded in a row');
+define('LANG_IMAGES_LIMIT_ERROR', 'The image upload limit has been exceeded. Please try again in %s seconds.');
