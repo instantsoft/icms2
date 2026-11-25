@@ -1,10 +1,13 @@
 <?php
 
+use GlobusStudio\QRCode\QRCode;
+use GlobusStudio\QRCode\ErrorCorrection\ErrorCorrectionLevel;
+
 class onAuthgaFormUsersPassword2fa extends cmsAction {
 
     public function run($data) {
 
-        list($form, $params) = $data;
+        [$form, $params] = $data;
 
         $profile = $params[0];
 
@@ -43,9 +46,17 @@ class onAuthgaFormUsersPassword2fa extends cmsAction {
 
         $ga_secret = $ga->createSecret();
 
+        $otpauth = $ga->getQRCodeOtpauth($this->cms_config->sitename, $ga_secret);
+
+        $svg = QRCode::svg($otpauth, [
+            'level'  => ErrorCorrectionLevel::Q,
+            'size'   => 4,
+            'margin' => 2
+        ]);
+
         $form->addField('twofa', new cmsFormField('ga_qrcode', [
                 'title'          => LANG_AUTHGA_GA_QRCODE,
-                'html'           => '<img src="' . $ga->getQRCodeGoogleUrl($this->cms_config->sitename, $ga_secret) . '">',
+                'html'           => '<img src="data:image/svg+xml;base64,' . base64_encode($svg) . '" width="200" height="200">',
                 'visible_depend' => ['2fa' => ['show' => [$this->name]]]
             ])
         )->disableField('ga_qrcode');

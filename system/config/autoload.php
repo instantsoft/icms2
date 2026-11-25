@@ -6,6 +6,7 @@
 
 return [
     ['ScssPhp\ScssPhp', 'system/libs/scssphp/'],
+    ['GlobusStudio\QRCode', 'system/libs/qrcode/'],
     ['PHPMailer\PHPMailer', 'system/libs/phpmailer/'],
     ['googleAuthenticator', 'system/libs/google_authenticator.class'],
     ['idna_convert', 'system/libs/idna_convert.class'],

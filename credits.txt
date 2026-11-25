@@ -6,6 +6,10 @@ Third-party plugins, libraries and resources included in InstantCMS:
         by Leaf Corcoran
         https://scssphp.github.io/scssphp/
 
+    phpQRcode
+        by Leonidov Yevhen
+        https://github.com/MADEVAL/phpQRcode
+
     Bootstrap
         by Twitter, Inc
         https://getbootstrap.com
